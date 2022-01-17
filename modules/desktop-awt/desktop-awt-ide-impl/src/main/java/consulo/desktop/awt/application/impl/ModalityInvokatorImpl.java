@@ -15,11 +15,10 @@
  */
 package consulo.desktop.awt.application.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import consulo.desktop.awt.application.impl.ModalityInvokator;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import java.util.function.BooleanSupplier;

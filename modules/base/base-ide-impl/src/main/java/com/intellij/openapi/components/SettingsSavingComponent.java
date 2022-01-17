@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 
 /**
  * Component or service which implements this interfaces will be asked to save ({@link #save}) custom settings (in their own custom way)

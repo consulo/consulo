@@ -20,6 +20,7 @@
 package com.intellij.concurrency;
 
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.Application;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,7 +30,7 @@ public abstract class JobScheduler {
    * Returns application-wide instance of {@link ScheduledExecutorService} which is:
    * <ul>
    * <li>Unbounded. I.e. multiple {@link ScheduledExecutorService#schedule}(command, 0, TimeUnit.SECONDS) will lead to multiple executions of the {@code command} in parallel.</li>
-   * <li>Backed by the application thread pool. I.e. every scheduled task will be executed in IDEA own thread pool. See {@link com.intellij.openapi.application.Application#executeOnPooledThread(Runnable)}</li>
+   * <li>Backed by the application thread pool. I.e. every scheduled task will be executed in IDEA own thread pool. See {@link Application#executeOnPooledThread(Runnable)}</li>
    * <li>Non-shutdownable singleton. Any attempts to call {@link ExecutorService#shutdown()}, {@link ExecutorService#shutdownNow()} will be severely punished.</li>
    * <li>{@link ScheduledExecutorService#scheduleAtFixedRate(Runnable, long, long, TimeUnit)} is disallowed because it's bad for hibernation.
    * Use {@link ScheduledExecutorService#scheduleWithFixedDelay(Runnable, long, long, TimeUnit)} instead.</li>

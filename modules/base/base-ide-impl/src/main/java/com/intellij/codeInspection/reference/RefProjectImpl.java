@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInspection.reference;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.ui.image.Image;
 
 public class RefProjectImpl extends RefEntityImpl implements RefProject {

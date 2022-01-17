@@ -20,7 +20,7 @@ import com.intellij.history.core.changes.Change;
 import com.intellij.history.core.changes.ChangeSet;
 import com.intellij.history.core.changes.ChangeVisitor;
 import com.intellij.history.utils.LocalHistoryLog;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Clock;
 import com.intellij.util.Consumer;
 import consulo.util.collection.primitive.ints.IntSet;

@@ -20,7 +20,7 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.RunProfileStarter;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.util.concurrent.AsyncResult;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 

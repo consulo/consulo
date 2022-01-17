@@ -18,8 +18,8 @@ package com.intellij.ide.diff;
 import com.intellij.diff.chains.DiffRequestProducerException;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import consulo.ui.image.Image;
 

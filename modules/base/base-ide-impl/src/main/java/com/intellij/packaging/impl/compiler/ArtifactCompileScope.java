@@ -31,7 +31,7 @@ import com.intellij.packaging.impl.elements.ArtifactElementType;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import com.intellij.packaging.impl.elements.ModuleOutputPackagingElement;
 import com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

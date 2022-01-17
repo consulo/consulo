@@ -15,9 +15,9 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import javax.annotation.Nonnull;
 
 import java.text.MessageFormat;

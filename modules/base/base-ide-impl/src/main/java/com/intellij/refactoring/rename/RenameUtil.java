@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.ide.actions.CopyReferenceAction;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageNamesValidation;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UndoableAction;

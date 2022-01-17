@@ -22,7 +22,7 @@ import com.intellij.lang.Language;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.pom.Navigatable;

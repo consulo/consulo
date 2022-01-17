@@ -31,7 +31,7 @@ import com.intellij.execution.ui.RunContentManager;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.project.Project;

@@ -16,6 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Processor;
 
 /**
  * @author max

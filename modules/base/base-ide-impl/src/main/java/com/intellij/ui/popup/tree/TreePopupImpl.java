@@ -4,7 +4,7 @@ package com.intellij.ui.popup.tree;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.AlphaComparator;
 import com.intellij.ide.util.treeView.NodeRenderer;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;

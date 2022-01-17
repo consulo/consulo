@@ -18,7 +18,7 @@ package com.intellij.application.options.colors;
 
 import com.intellij.application.options.SaveSchemeDialog;
 import com.intellij.application.options.SkipSelfSearchComponent;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.util.EventDispatcher;

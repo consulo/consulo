@@ -15,7 +15,7 @@
  */
 package com.intellij.find.findUsages;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.NullableComputable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiCompiledElement;
@@ -26,7 +26,7 @@ import com.intellij.psi.impl.search.PsiSearchHelperImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageInfoFactory;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

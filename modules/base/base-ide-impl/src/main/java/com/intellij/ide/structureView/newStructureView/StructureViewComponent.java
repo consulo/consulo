@@ -17,7 +17,7 @@ import com.intellij.ide.util.treeView.*;
 import com.intellij.ide.util.treeView.smartTree.*;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
@@ -54,9 +54,9 @@ import javax.annotation.Nullable;
 
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
-import org.jetbrains.concurrency.Promises;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.Promise;
+import consulo.util.concurrent.Promises;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;

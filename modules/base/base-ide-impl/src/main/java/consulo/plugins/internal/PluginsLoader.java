@@ -17,7 +17,7 @@ package consulo.plugins.internal;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.StartupProgress;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.Couple;

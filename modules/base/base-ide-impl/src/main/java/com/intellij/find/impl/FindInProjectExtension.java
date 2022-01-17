@@ -17,7 +17,7 @@ package com.intellij.find.impl;
 
 import com.intellij.find.FindModel;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.component.extension.Extension;
 import consulo.component.extension.ExtensionList;
 

@@ -21,7 +21,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;

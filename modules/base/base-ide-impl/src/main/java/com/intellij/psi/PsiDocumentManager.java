@@ -4,8 +4,10 @@ package com.intellij.psi;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.application.TransactionGuard;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -76,7 +78,7 @@ public abstract class PsiDocumentManager {
    * Before a modified document is committed, accessing its PSI may return elements
    * corresponding to original (unmodified) state of the document.<p/>
    * <p>
-   * Should be called in UI thread in a write-safe context (see {@link com.intellij.openapi.application.TransactionGuard})
+   * Should be called in UI thread in a write-safe context (see {@link TransactionGuard})
    */
   public abstract void commitAllDocuments();
 
@@ -98,7 +100,7 @@ public abstract class PsiDocumentManager {
    * Before a modified document is committed, accessing its PSI may return elements
    * corresponding to original (unmodified) state of the document.<p/>
    * <p>
-   * Should be called in UI thread in a write-safe context (see {@link com.intellij.openapi.application.TransactionGuard}).
+   * Should be called in UI thread in a write-safe context (see {@link TransactionGuard}).
    *
    * @param document the document to commit.
    */

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.navigation;
 
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;

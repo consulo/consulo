@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.util.NotNullFunction;
 import consulo.logging.Logger;
 

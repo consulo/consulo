@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui.classpath;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;

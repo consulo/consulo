@@ -2,8 +2,8 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.execution.process.ProcessIOExecutorService;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import consulo.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import javax.annotation.Nonnull;
 

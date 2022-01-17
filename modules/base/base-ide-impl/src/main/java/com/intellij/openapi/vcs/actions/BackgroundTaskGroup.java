@@ -18,13 +18,13 @@ package com.intellij.openapi.vcs.actions;
 import com.intellij.openapi.application.ModalityState;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.BackgroundTaskQueue;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.util.ThrowableConsumer;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.ThrowableRunnable;
 import javax.annotation.Nonnull;
 
 import java.util.List;

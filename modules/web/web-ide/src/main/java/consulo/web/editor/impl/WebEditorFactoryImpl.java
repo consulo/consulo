@@ -15,7 +15,7 @@
  */
 package consulo.web.editor.impl;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorKind;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;

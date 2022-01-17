@@ -29,7 +29,7 @@ import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.openapi.actionSystem.Shortcut;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.FinishMarkAction;
@@ -80,6 +80,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Query;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.PositionTracker;
+import consulo.application.Result;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -336,7 +337,7 @@ public abstract class InplaceRefactoring {
 
     new WriteCommandAction(myProject, getCommandName()) {
       @Override
-      protected void run(com.intellij.openapi.application.Result result) throws Throwable {
+      protected void run(Result result) throws Throwable {
         startTemplate(builder);
       }
     }.execute();

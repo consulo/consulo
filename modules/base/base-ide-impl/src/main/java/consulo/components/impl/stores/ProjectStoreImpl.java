@@ -16,7 +16,7 @@
 package consulo.components.impl.stores;
 
 import com.intellij.notification.NotificationsManager;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;

@@ -29,7 +29,7 @@ import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerUIActionsHandl
 import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm;
 import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.testIntegration.TestLocationProvider;
 import consulo.disposer.Disposer;
 import consulo.net.util.NetUtil;

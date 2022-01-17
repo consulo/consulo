@@ -29,6 +29,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.io.URLUtil;
+import consulo.application.util.function.Processor;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.vfs.ArchiveFileSystem;

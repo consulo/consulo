@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.application.impl;
 
-import com.intellij.openapi.application.constraints.ConstrainedExecution;
-import com.intellij.openapi.application.constraints.ExpirableConstrainedExecution;
-import com.intellij.openapi.application.constraints.Expiration;
-import org.jetbrains.concurrency.CancellablePromise;
+import consulo.application.constraint.ConstrainedExecution;
+import consulo.application.constraint.ExpirableConstrainedExecution;
+import consulo.application.constraint.Expiration;
+import consulo.util.concurrent.CancellablePromise;
 
 import javax.annotation.Nullable;
 import java.util.Set;

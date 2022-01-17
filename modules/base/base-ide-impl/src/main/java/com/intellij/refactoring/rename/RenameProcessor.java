@@ -17,7 +17,7 @@
 package com.intellij.refactoring.rename;
 
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.logging.Logger;
 import consulo.component.extension.Extensions;
@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;

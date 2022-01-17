@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.ui.playback.PlaybackContext;
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
 

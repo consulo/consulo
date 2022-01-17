@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.patch.tool;
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.merge.*;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.awt.RelativePoint;

@@ -2,7 +2,7 @@
 package com.intellij.vfs;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import javax.annotation.Nonnull;
 

@@ -3,12 +3,12 @@ package com.intellij.openapi.application.impl;
 
 import com.intellij.codeWithMe.ClientId;
 import com.intellij.diagnostic.EventWatcher;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.ActionCallback;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.util.ExceptionUtil;
+import consulo.util.concurrent.ActionCallback;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 

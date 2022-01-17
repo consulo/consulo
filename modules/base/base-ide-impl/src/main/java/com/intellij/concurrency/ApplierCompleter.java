@@ -15,13 +15,13 @@
  */
 package com.intellij.concurrency;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 
 import javax.annotation.Nonnull;

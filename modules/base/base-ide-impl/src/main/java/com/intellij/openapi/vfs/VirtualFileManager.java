@@ -17,6 +17,7 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import consulo.application.Application;
 import consulo.component.messagebus.Topic;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.extension.internal.RootComponentHolder;
@@ -62,7 +63,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * <p>Refreshes the cached file systems information from the physical file systems synchronously.<p/>
    * <p>
    * <p><strong>Note</strong>: this method should be only called within a write-action
-   * (see {@linkplain com.intellij.openapi.application.Application#runWriteAction})</p>
+   * (see {@linkplain Application#runWriteAction})</p>
    *
    * @return refresh session ID.
    */
@@ -113,7 +114,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * corresponding to it.<p>
    * <p>
    * This method should be only called within write-action.
-   * See {@link com.intellij.openapi.application.Application#runWriteAction}.
+   * See {@link Application#runWriteAction}.
    *
    * @param url the URL
    * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise

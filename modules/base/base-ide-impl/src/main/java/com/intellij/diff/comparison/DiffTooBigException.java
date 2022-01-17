@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.comparison;
 
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.progress.ProcessCanceledException;
 
 public class DiffTooBigException extends ProcessCanceledException {
   public static final String MESSAGE = "File is too big and there are too many changes.";

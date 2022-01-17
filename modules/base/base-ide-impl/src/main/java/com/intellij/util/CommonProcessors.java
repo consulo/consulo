@@ -17,6 +17,7 @@ package com.intellij.util;
 
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.util.function.Processor;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 

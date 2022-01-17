@@ -16,11 +16,11 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.container.plugin.PluginId;
-import com.intellij.openapi.util.ActionCallback;
 import consulo.disposer.Disposable;
+import consulo.util.concurrent.ActionCallback;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

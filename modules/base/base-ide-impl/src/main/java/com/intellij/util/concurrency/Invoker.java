@@ -2,18 +2,18 @@
 package com.intellij.util.concurrency;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.CancellablePromise;
-import org.jetbrains.concurrency.Obsolescent;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.CancellablePromise;
+import consulo.util.concurrent.Obsolescent;
 
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-import static com.intellij.openapi.application.ApplicationManager.getApplication;
+import static consulo.application.ApplicationManager.getApplication;
 import static com.intellij.openapi.progress.util.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
 import static consulo.disposer.Disposer.register;
 import static java.awt.EventQueue.isDispatchThread;

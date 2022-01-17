@@ -22,7 +22,7 @@ import com.intellij.diff.contents.FileContent;
 import com.intellij.diff.merge.MergeRequest;
 import com.intellij.diff.merge.ThreesideMergeRequest;
 import com.intellij.execution.ExecutionException;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.logging.Logger;

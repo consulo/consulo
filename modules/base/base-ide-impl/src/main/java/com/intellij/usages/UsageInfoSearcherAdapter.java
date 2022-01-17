@@ -15,14 +15,14 @@
  */
 package com.intellij.usages;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 
 public abstract class UsageInfoSearcherAdapter implements UsageSearcher {

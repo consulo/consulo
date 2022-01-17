@@ -15,8 +15,8 @@
  */
 package consulo.web.application;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import javax.annotation.Nullable;

@@ -4,7 +4,7 @@
 package com.intellij.execution.process;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 
 import java.util.function.Function;

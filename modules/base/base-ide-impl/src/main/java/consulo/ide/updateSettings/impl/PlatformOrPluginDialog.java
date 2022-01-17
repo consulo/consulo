@@ -18,7 +18,7 @@ package consulo.ide.updateSettings.impl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.SettingsEntryPointAction;
 import com.intellij.ide.plugins.*;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;

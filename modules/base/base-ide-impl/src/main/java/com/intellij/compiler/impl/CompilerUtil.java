@@ -21,7 +21,7 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerBundle;
 import consulo.logging.Logger;
@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.ContentFolderScopes;
 

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.intention;
 
 import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.logging.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.util.Function;

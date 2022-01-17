@@ -20,7 +20,7 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 

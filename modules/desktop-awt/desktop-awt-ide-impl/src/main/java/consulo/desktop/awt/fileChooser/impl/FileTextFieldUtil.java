@@ -1,13 +1,13 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.fileChooser.impl;
 
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import consulo.desktop.awt.fileChooser.impl.FileLookup.Finder;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.ThrowableRunnable;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

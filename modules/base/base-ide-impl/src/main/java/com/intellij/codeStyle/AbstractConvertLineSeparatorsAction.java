@@ -16,7 +16,7 @@
 package com.intellij.codeStyle;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.Result;
+import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
@@ -28,7 +28,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.LineSeparator;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.containers.Convertor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

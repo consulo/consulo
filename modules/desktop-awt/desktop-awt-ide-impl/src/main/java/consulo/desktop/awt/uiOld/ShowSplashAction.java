@@ -17,7 +17,7 @@ package consulo.desktop.awt.uiOld;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.ui.annotation.RequiredUIAccess;

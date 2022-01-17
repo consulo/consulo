@@ -4,7 +4,7 @@
 package consulo.editor.impl;
 
 import com.intellij.diagnostic.Dumpable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.event.CaretEvent;

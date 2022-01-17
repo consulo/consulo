@@ -29,7 +29,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

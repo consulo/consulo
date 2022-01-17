@@ -2,9 +2,9 @@
 package com.intellij.ide.actions.searcheverywhere;
 
 import com.intellij.concurrency.SensitiveProgressWrapper;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.application.ApplicationManager;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.ConcurrencyUtil;

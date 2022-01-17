@@ -3,7 +3,7 @@ package com.intellij.ui.tree;
 
 import com.intellij.util.Function;
 import javax.annotation.Nonnull;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.Promise;
 
 import javax.swing.tree.TreePath;
 

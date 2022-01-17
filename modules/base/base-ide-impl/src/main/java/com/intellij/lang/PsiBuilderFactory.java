@@ -17,7 +17,7 @@
 package com.intellij.lang;
 
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.project.Project;
 import consulo.lang.LanguageVersion;
 

@@ -1,9 +1,9 @@
 package consulo.web.application.impl;
 
 import com.intellij.ide.StartupProgress;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.TransactionGuard;
+import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.access.RequiredReadAction;

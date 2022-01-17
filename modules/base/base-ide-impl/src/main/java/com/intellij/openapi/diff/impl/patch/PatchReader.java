@@ -23,7 +23,7 @@
 package com.intellij.openapi.diff.impl.patch;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;

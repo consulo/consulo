@@ -13,7 +13,10 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.RefreshWorker;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.TransactionGuardEx;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
+import consulo.application.TransactionId;
+import consulo.application.internal.TransactionGuardEx;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.concurrency;
 
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import javax.annotation.Nonnull;
 

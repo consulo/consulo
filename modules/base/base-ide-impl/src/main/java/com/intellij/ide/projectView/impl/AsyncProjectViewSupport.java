@@ -29,7 +29,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
 
 import consulo.logging.Logger;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.Promise;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

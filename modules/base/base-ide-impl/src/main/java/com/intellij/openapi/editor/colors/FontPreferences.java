@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.FontSize;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.platform.Platform;

@@ -22,7 +22,7 @@ import com.intellij.execution.ui.layout.actions.MinimizeViewAction;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.MutualMap;
 import com.intellij.ui.awt.RelativePoint;

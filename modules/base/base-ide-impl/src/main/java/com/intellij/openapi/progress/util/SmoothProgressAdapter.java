@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.progress.util;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.application.ApplicationManager;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.StandardProgressIndicator;
 import com.intellij.openapi.progress.WrappedProgressIndicator;
 import com.intellij.openapi.project.Project;

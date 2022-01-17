@@ -1,6 +1,6 @@
 package com.intellij.vcs.log.data;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.*;

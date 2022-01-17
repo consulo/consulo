@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.classpath;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import consulo.component.extension.Extension;
 import consulo.component.extension.ExtensionList;

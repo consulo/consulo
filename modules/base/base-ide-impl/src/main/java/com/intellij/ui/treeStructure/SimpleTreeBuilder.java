@@ -18,7 +18,7 @@ package com.intellij.ui.treeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nullable;

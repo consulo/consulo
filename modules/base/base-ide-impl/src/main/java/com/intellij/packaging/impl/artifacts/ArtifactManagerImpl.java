@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.State;

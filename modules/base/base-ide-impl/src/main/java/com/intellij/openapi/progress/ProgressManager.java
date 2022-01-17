@@ -15,10 +15,13 @@
  */
 package com.intellij.openapi.progress;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicatorProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

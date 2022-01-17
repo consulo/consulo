@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.ActionCallback;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;

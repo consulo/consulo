@@ -10,6 +10,7 @@ import com.intellij.psi.util.CachedValueProfiler;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.NotNullList;
+import consulo.application.util.function.Computable;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;

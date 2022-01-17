@@ -2,7 +2,7 @@
 package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;

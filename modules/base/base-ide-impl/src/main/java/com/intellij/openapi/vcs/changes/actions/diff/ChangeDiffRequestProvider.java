@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.changes.actions.diff;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.diff.chains.DiffRequestProducerException;

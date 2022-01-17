@@ -16,17 +16,17 @@
 
 package com.intellij.openapi.progress;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.progress.impl.ProgressManagerImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.QueueProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.progress.ProgressIndicator;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

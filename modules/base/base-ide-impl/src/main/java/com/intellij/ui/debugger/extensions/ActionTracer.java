@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeymapManager;

@@ -3,17 +3,16 @@ package com.intellij.ide.actions.runAnything.groups;
 
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.util.Function;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import gnu.trove.TIntArrayList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

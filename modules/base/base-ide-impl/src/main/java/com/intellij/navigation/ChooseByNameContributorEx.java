@@ -4,7 +4,7 @@ package com.intellij.navigation;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import javax.annotation.Nonnull;

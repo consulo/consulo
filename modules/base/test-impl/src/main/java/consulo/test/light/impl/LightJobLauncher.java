@@ -15,24 +15,32 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.concurrency.Job;
-import com.intellij.concurrency.JobLauncher;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.util.Consumer;
-import com.intellij.util.Processor;
-import javax.annotation.Nonnull;
+import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.Application;
+import consulo.application.internal.concurrency.Job;
+import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.util.function.Processor;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 2018-08-25
  */
 public class LightJobLauncher extends JobLauncher {
+  @Override
+  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException {
+    ApplicationEx app = (ApplicationEx)Application.get();
+    return invokeConcurrentlyUnderProgress(things, progress, app.isReadAccessAllowed(), app.isInImpatientReader(), thingProcessor);
+  }
+
   @Override
   public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things,
                                                      ProgressIndicator progress,
@@ -50,7 +58,7 @@ public class LightJobLauncher extends JobLauncher {
   public Job<Void> submitToJobThread(@Nonnull Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback) {
     action.run();
     if (onDoneCallback != null) {
-      onDoneCallback.consume(CompletableFuture.completedFuture(null));
+      onDoneCallback.accept(CompletableFuture.completedFuture(null));
     }
     return Job.NULL_JOB;
   }

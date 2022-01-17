@@ -3,10 +3,13 @@ package com.intellij.openapi.application;
 
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import com.intellij.util.Processor;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
 import com.intellij.util.QueryExecutor;
 import com.intellij.util.QueryParameters;
+import consulo.application.Application;
+
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;

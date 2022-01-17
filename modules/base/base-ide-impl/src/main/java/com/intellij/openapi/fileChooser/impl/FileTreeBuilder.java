@@ -21,7 +21,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.RootFileElement;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.*;

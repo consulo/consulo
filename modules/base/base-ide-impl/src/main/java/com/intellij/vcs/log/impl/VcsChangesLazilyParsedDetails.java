@@ -17,7 +17,7 @@ package com.intellij.vcs.log.impl;
 
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.vcs.LocalFilePath;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;

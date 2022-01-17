@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.util.Pair;
 import consulo.injecting.InjectingContainer;
 import consulo.util.dataholder.UserDataHolder;

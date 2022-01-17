@@ -10,6 +10,8 @@ import com.intellij.concurrency.AsyncFutureFactory;
 import com.intellij.concurrency.AsyncFutureResult;
 import com.intellij.concurrency.DefaultResultConsumer;
 import com.intellij.util.concurrency.SameThreadExecutor;
+import consulo.application.util.function.Processor;
+
 import javax.annotation.Nonnull;
 
 public class MergeQuery<T> extends AbstractQuery<T> {

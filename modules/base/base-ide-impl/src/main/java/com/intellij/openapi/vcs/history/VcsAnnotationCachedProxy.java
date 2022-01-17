@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.ApplicationManager;
+import consulo.progress.ProcessCanceledException;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;

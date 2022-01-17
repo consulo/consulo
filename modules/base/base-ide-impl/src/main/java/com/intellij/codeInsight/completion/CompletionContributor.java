@@ -19,12 +19,12 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.openapi.util.Pair;
 import com.intellij.patterns.ElementPattern;
@@ -35,6 +35,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeInsight.completion.CompletionProvider;
 import consulo.container.plugin.PluginIds;
 import org.jetbrains.annotations.NonNls;
@@ -59,7 +60,7 @@ import java.util.Set;
  * {@link #extend(CompletionType, ElementPattern, CompletionProvider)}.<br>
  * A more generic way is to override default {@link #fillCompletionVariants(CompletionParameters, CompletionResultSet)} implementation
  * and provide your own. It's easier to debug, but harder to write. Remember, that completion variant collection is done in a dedicated thread
- * WITHOUT read action, so you'll have to manually invoke {@link com.intellij.openapi.application.Application#runReadAction(Runnable)} each time
+ * WITHOUT read action, so you'll have to manually invoke {@link Application#runReadAction(Runnable)} each time
  * you access PSI. Don't spend long time inside read action, since this will prevent user from selecting lookup element or cancelling completion.<p>
  *
  * Q: What does the {@link CompletionParameters#getPosition()} return?<br>
@@ -148,7 +149,7 @@ public abstract class CompletionContributor {
    * If you want to implement this functionality directly by overriding this method, the following is for you.
    * Always check that parameters match your situation, and that completion type ({@link CompletionParameters#getCompletionType()}
    * is of your favourite kind. This method is run outside of read action, so you have to manage this manually
-   * ({@link com.intellij.openapi.application.Application#runReadAction(Runnable)}). Don't take read actions for too long.<p>
+   * ({@link Application#runReadAction(Runnable)}). Don't take read actions for too long.<p>
    *
    * @param parameters
    * @param result

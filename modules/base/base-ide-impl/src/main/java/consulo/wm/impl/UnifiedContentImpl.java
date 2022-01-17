@@ -18,7 +18,7 @@ package consulo.wm.impl;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.util.BusyObject;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import com.intellij.ui.content.AlertIcon;
 import com.intellij.ui.content.ContentManager;
 import consulo.awt.TargetAWT;

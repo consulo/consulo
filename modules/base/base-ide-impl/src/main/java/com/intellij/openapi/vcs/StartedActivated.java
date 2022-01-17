@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.disposer.Disposer;
 import com.intellij.util.ThreeState;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.ThrowableRunnable;
 
 import java.util.ArrayList;
 import java.util.List;

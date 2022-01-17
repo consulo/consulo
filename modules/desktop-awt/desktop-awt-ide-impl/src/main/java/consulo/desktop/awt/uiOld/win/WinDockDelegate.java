@@ -18,7 +18,7 @@ package consulo.desktop.awt.uiOld.win;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
 import consulo.platform.Platform;

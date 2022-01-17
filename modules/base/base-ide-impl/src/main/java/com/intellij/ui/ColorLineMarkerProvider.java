@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.*;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;

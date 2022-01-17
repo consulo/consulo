@@ -24,7 +24,7 @@ import com.intellij.ide.TreeExpander;
 import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.dnd.DnDEvent;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;

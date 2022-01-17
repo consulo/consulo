@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryKind;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;

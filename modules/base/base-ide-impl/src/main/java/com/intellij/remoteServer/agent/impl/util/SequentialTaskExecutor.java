@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.agent.impl.util;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.concurrency.Semaphore;

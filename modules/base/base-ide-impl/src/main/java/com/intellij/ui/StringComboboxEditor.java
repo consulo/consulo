@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import com.intellij.openapi.application.Result;
+import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.UndoConstants;
 import consulo.logging.Logger;

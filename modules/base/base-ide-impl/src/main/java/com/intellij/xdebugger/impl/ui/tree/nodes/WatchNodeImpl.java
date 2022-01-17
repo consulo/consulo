@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.application.ApplicationManager;
+import consulo.util.concurrent.AsyncResult;
 import com.intellij.util.ThreeState;
 import com.intellij.xdebugger.Obsolescent;
 import com.intellij.xdebugger.XExpression;

@@ -16,6 +16,7 @@
 package com.intellij.openapi.application;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.application.Application;
 
 public interface WriteActionAware {
   /**

@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io.socketConnection.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.util.io.socketConnection.*;
 import consulo.logging.Logger;
 

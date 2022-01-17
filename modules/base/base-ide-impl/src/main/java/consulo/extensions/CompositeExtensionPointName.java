@@ -15,7 +15,7 @@
  */
 package consulo.extensions;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import consulo.component.ComponentManager;

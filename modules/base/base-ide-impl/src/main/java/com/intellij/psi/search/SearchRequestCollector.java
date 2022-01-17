@@ -2,14 +2,14 @@
 package com.intellij.psi.search;
 
 import com.intellij.codeInsight.ContainerProvider;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 
 import java.util.*;

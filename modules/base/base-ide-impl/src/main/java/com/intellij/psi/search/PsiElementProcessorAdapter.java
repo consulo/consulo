@@ -21,7 +21,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.application.ReadActionProcessor;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import consulo.annotation.access.RequiredReadAction;
 
 public class PsiElementProcessorAdapter<T extends PsiElement> extends ReadActionProcessor<T> implements Processor<T> {

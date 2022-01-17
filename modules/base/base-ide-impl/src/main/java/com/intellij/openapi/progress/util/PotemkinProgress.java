@@ -2,9 +2,9 @@
 package com.intellij.openapi.progress.util;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.Semaphore;

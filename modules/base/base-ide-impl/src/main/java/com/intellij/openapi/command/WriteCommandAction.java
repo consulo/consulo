@@ -16,15 +16,15 @@
 package com.intellij.openapi.command;
 
 import com.intellij.codeInsight.FileModificationService;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.application.*;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.ThrowableRunnable;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

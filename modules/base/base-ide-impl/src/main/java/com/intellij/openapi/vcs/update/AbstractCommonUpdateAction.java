@@ -23,7 +23,7 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.UpdateInBackground;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.Project;
@@ -48,6 +48,8 @@ import com.intellij.util.ui.OptionsDialog;
 import com.intellij.vcs.ViewUpdateInfoNotification;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.logging.Logger;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.ide.util.DelegatingProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.localize.LocalizeValue;
 

@@ -15,7 +15,7 @@
  */
 package consulo.roots;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.Module;
 import consulo.module.extension.ModuleExtension;

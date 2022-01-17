@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.EditSourceAction;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.OpenSourceUtil;

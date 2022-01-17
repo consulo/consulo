@@ -15,8 +15,8 @@
  */
 package com.intellij.vfs;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.application.Application;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;

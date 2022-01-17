@@ -3,11 +3,11 @@ package com.intellij.psi.impl;
 
 import com.intellij.lang.PsiBuilderFactory;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import consulo.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.project.Project;

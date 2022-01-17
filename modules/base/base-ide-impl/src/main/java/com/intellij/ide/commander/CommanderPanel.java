@@ -35,7 +35,7 @@ import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.EditorHelper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;

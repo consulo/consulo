@@ -20,7 +20,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
@@ -37,8 +37,8 @@ import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Computable;
+import consulo.util.concurrent.AsyncResult;
+import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -50,7 +50,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.DocumentUtil;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.xdebugger.*;
 import com.intellij.xdebugger.breakpoints.*;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
@@ -133,10 +133,10 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Nonnull
   public static <P extends XBreakpointProperties> AsyncResult<XLineBreakpoint> toggleAndReturnLineBreakpoint(@Nonnull final Project project,
-                                                                                                             @Nonnull final XLineBreakpointType<P> type,
-                                                                                                             @Nonnull final XSourcePosition position,
-                                                                                                             final boolean temporary,
-                                                                                                             @Nullable final Editor editor) {
+                                                                                                                                     @Nonnull final XLineBreakpointType<P> type,
+                                                                                                                                     @Nonnull final XSourcePosition position,
+                                                                                                                                     final boolean temporary,
+                                                                                                                                     @Nullable final Editor editor) {
     return WriteAction.compute(() -> {
       final VirtualFile file = position.getFile();
       final int line = position.getLine();

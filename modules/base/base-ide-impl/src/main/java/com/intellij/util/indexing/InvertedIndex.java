@@ -16,7 +16,7 @@
 
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -32,7 +32,7 @@ import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.elements.*;
 import com.intellij.util.PathUtil;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;

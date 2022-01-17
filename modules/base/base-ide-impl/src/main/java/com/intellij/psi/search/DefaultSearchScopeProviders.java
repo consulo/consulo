@@ -4,7 +4,7 @@ package com.intellij.psi.search;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import com.intellij.ide.projectView.impl.AbstractUrl;
 import com.intellij.ide.util.treeView.WeighedItem;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ColoredItem;

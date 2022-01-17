@@ -4,7 +4,7 @@ package com.intellij.psi.search;
 import com.intellij.openapi.application.ReadActionProcessor;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.PairProcessor;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.Query;
 import javax.annotation.Nonnull;
 

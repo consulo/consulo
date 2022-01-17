@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.wm.IdeFocusManager;
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;

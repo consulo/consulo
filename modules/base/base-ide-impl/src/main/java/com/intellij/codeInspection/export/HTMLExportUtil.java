@@ -16,12 +16,12 @@
 package com.intellij.codeInspection.export;
 
 import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.ThrowableRunnable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

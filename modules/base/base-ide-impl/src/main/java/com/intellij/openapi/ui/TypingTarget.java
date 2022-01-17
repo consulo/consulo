@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.ActionCallback;
 
 public interface TypingTarget {
 

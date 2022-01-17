@@ -21,7 +21,7 @@ import com.intellij.build.progress.BuildProgressDescriptor;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.*;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;

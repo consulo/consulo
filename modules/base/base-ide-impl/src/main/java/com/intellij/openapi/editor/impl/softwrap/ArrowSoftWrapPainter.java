@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.ArrowPainter;
 import com.intellij.openapi.editor.impl.ColorProvider;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

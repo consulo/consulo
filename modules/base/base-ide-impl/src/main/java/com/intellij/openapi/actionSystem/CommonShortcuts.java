@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.util.SystemInfo;
 import javax.annotation.Nonnull;

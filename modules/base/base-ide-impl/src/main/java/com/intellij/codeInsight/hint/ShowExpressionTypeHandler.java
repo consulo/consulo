@@ -6,7 +6,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.lang.ExpressionTypeProvider;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExpressionTypes;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.DumbService;

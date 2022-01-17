@@ -16,10 +16,10 @@
 package com.intellij.idea;
 
 import com.intellij.ide.StartupProgress;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.TransactionGuard;
+import consulo.application.Application;
+import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import consulo.application.TransactionGuardEx;
+import consulo.application.internal.TransactionGuardEx;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;

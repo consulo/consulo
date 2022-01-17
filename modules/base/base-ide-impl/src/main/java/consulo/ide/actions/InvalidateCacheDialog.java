@@ -16,7 +16,7 @@
 package consulo.ide.actions;
 
 import com.intellij.ide.caches.CachesInvalidator;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

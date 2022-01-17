@@ -1,10 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.application.options.codeStyle.cache;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SimpleModificationTracker;
@@ -20,7 +20,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.util.lang.ObjectUtil;
 import javax.annotation.Nonnull;
 
-import org.jetbrains.concurrency.CancellablePromise;
+import consulo.util.concurrent.CancellablePromise;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;

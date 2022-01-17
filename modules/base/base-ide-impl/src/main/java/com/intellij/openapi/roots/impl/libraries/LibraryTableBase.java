@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.impl.libraries;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;

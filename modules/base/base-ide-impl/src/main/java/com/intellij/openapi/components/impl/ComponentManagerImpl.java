@@ -16,15 +16,15 @@
 package com.intellij.openapi.components.impl;
 
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.NamedComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import consulo.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.impl.MessageBusFactory;

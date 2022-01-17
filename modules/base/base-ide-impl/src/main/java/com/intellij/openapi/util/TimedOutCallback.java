@@ -18,6 +18,7 @@ package com.intellij.openapi.util;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.util.concurrent.ActionCallback;
 
 import javax.swing.*;
 

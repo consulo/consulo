@@ -17,7 +17,7 @@ package com.intellij.reporting;
 
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;

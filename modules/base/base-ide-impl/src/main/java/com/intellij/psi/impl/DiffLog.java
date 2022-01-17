@@ -3,7 +3,7 @@ package com.intellij.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.pom.PomManager;
 import com.intellij.pom.PomModel;
 import com.intellij.pom.event.PomModelEvent;

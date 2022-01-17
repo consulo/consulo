@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.NonBlockingReadAction;
+import consulo.application.NonBlockingReadAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.project.Project;
@@ -23,7 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.editor.internal.EditorInternal;
 import consulo.ui.image.Image;
-import org.jetbrains.concurrency.CancellablePromise;
+import consulo.util.concurrent.CancellablePromise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

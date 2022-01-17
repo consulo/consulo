@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import consulo.roots.ModuleRootLayer;
 
 import javax.annotation.Nonnull;

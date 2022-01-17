@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.Condition;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.concurrency.Semaphore;
 import consulo.util.collection.HashingStrategy;
 import org.jetbrains.annotations.NonNls;

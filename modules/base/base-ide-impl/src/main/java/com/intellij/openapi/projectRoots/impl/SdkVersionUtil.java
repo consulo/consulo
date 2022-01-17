@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.util.NotNullFunction;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

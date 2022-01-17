@@ -19,8 +19,8 @@
  */
 package com.intellij.openapi.util.process;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.ui.GuiUtils;
 import consulo.logging.Logger;
 

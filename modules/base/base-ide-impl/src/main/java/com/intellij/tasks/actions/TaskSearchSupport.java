@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
 
 import javax.annotation.Nonnull;
 
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.tasks.Task;

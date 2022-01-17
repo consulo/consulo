@@ -3,7 +3,7 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
-import org.jetbrains.concurrency.CancellablePromise;
+import consulo.util.concurrent.CancellablePromise;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

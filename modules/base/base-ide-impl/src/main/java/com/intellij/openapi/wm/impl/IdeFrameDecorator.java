@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;

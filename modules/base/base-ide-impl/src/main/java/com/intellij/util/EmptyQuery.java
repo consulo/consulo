@@ -3,6 +3,8 @@ package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncUtil;
+import consulo.application.util.function.Processor;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

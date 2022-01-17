@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.uiOld.win;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

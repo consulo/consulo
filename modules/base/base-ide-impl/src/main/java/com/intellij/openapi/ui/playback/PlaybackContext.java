@@ -15,8 +15,7 @@
  */
 package com.intellij.openapi.ui.playback;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.ApplicationManager;
 
 import javax.swing.*;
 import java.awt.*;

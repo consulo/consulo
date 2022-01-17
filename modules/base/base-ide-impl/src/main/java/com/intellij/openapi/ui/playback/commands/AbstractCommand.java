@@ -15,11 +15,10 @@
  */
 package com.intellij.openapi.ui.playback.commands;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.playback.PlaybackCommand;
 import com.intellij.openapi.ui.playback.PlaybackContext;
-import com.intellij.openapi.ui.playback.PlaybackRunner;
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.ActionCallback;
 
 import java.io.File;
 

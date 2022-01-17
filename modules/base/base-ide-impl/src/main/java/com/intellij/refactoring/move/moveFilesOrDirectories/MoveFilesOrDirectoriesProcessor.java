@@ -16,7 +16,7 @@
 package com.intellij.refactoring.move.moveFilesOrDirectories;
 
 import com.intellij.ide.util.EditorHelper;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.paths.PsiDynaReference;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;

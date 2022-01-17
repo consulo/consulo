@@ -15,8 +15,8 @@
  */
 package com.intellij.util.net;
 
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import consulo.net.util.NetUtil;
 
 import javax.annotation.Nonnull;
@@ -87,7 +87,7 @@ public class NetUtils {
    * @param expectedContentSize expected content size, used in progress indicator. can be -1.
    * @return bytes copied
    * @throws IOException                                            if IO error occur
-   * @throws com.intellij.openapi.progress.ProcessCanceledException if process was canceled.
+   * @throws ProcessCanceledException if process was canceled.
    */
 
   // TODO [VISTALL] move to another util
@@ -104,7 +104,7 @@ public class NetUtils {
    * @param expectedContentSize expected content size, used in progress indicator. can be -1.
    * @return bytes copied
    * @throws IOException                                            if IO error occur
-   * @throws com.intellij.openapi.progress.ProcessCanceledException if process was canceled.
+   * @throws ProcessCanceledException if process was canceled.
    */
 
   // TODO [VISTALL] move to another util

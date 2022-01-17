@@ -15,7 +15,7 @@
  */
 package consulo.vfs.newvfs;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;

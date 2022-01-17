@@ -2,8 +2,8 @@
 package com.intellij.psi.impl;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.TransactionGuard;
+import consulo.application.Application;
+import consulo.application.TransactionGuard;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -15,7 +15,7 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import consulo.component.messagebus.MessageBus;
-import consulo.application.TransactionGuardEx;
+import consulo.application.internal.TransactionGuardEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

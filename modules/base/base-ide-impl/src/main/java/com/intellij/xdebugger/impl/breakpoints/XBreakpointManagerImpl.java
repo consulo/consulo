@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;

@@ -2,18 +2,19 @@
 package com.intellij.openapi.progress.util;
 
 import com.intellij.concurrency.SensitiveProgressWrapper;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationListener;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationListener;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import consulo.application.NonBlockingReadAction;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;
@@ -90,7 +91,7 @@ public class ProgressIndicatorUtils {
    * write action</li>
    * </ul>
    * If caller needs to retry the invocation of this method in a loop, it should consider pausing between attempts, to avoid potential
-   * 100% CPU usage. There is also alternative that implements the re-trying logic {@link com.intellij.openapi.application.NonBlockingReadAction}
+   * 100% CPU usage. There is also alternative that implements the re-trying logic {@link NonBlockingReadAction}
    */
   public static boolean runInReadActionWithWriteActionPriority(@Nonnull final Runnable action) {
     return runInReadActionWithWriteActionPriority(action, null);

@@ -17,7 +17,7 @@ package consulo.ide.plugins.pluginsAdvertisement;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.RepositoryHelper;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;

@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.runtime;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;

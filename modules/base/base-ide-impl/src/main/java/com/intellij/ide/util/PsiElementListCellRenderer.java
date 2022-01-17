@@ -5,7 +5,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.EditorColorsManager;

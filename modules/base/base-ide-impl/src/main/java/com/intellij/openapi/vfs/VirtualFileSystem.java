@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;

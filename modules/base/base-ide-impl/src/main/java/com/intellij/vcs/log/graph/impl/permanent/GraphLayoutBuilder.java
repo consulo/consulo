@@ -17,7 +17,7 @@
 package com.intellij.vcs.log.graph.impl.permanent;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.utils.DfsUtil;

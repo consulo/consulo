@@ -22,7 +22,7 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.ide.HelpIdProvider;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.content.Content;

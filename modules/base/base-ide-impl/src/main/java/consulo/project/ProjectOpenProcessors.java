@@ -15,7 +15,7 @@
  */
 package consulo.project;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.projectImport.ProjectOpenProcessor;
 
 import javax.annotation.Nonnull;

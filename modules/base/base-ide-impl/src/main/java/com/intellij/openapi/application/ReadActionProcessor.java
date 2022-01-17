@@ -16,8 +16,9 @@
 
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.util.Computable;
-import com.intellij.util.Processor;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 

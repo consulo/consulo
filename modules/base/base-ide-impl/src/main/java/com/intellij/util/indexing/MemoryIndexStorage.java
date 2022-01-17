@@ -17,7 +17,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.ChangeTrackingValueContainer;
 import com.intellij.util.indexing.impl.DebugAssertions;

@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.tree;
 
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.ui.LoadingNode;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.Command;
@@ -14,9 +14,9 @@ import com.intellij.util.ui.tree.TreeModelAdapter;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Obsolescent;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.Obsolescent;
+import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ import java.util.function.ToIntFunction;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.jetbrains.concurrency.Promises.rejectedPromise;
+import static consulo.util.concurrent.Promises.rejectedPromise;
 
 /**
  * @author Sergey.Malenkov

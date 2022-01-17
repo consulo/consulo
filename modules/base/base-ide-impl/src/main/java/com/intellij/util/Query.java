@@ -3,6 +3,7 @@ package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncUtil;
+import consulo.application.util.function.Processor;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

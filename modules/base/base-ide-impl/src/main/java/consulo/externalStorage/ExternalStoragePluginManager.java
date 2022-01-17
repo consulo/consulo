@@ -17,8 +17,8 @@ package consulo.externalStorage;
 
 import com.intellij.ide.plugins.PluginInstallUtil;
 import com.intellij.ide.plugins.RepositoryHelper;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.application.Application;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;

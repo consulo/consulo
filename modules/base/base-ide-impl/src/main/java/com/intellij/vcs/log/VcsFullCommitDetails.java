@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log;
 
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;

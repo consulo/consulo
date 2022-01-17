@@ -19,12 +19,12 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.BitUtil;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.util.lang.ObjectUtil;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

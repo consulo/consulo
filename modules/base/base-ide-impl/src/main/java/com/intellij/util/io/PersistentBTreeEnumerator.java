@@ -2,7 +2,7 @@
 package com.intellij.util.io;
 
 import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.SystemProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

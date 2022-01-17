@@ -16,8 +16,8 @@
 package consulo.desktop.awt.uiOld;
 
 import com.intellij.ide.AppLifecycleListener;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.ui.AppUIUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import com.sun.jna.Library;

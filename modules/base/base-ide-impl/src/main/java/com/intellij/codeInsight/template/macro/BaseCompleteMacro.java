@@ -20,7 +20,7 @@ import com.intellij.codeInsight.lookup.*;
 import com.intellij.codeInsight.template.*;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -152,7 +152,7 @@ public abstract class BaseCompleteMacro extends Macro {
         public void run() {
           new WriteCommandAction(project) {
             @Override
-            protected void run(com.intellij.openapi.application.Result result) throws Throwable {
+            protected void run(consulo.application.Result result) throws Throwable {
               Editor editor = myContext.getEditor();
               if (editor != null) {
                 considerNextTab(editor);

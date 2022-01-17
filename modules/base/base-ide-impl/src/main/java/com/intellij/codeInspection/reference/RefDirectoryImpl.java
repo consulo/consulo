@@ -16,8 +16,8 @@
 
 package com.intellij.codeInspection.reference;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;

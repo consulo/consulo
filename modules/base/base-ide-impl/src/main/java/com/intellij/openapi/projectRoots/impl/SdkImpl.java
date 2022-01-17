@@ -2,7 +2,7 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.projectRoots.*;

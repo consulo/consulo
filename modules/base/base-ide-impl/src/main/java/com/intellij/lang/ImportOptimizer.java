@@ -18,6 +18,7 @@ package com.intellij.lang;
 
 import com.intellij.idea.ActionsBundle;
 import com.intellij.psi.PsiFile;
+import consulo.application.Application;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,8 +42,8 @@ public interface ImportOptimizer {
   /**
    * Implementers of the method are expected to perform all necessary calculations synchronously and return a <code>Runnable</code>,
    * which performs modifications based on preprocessing results.
-   * processFile() is guaranteed to run with {@link com.intellij.openapi.application.Application#runReadAction(Runnable)} privileges and
-   * the Runnable returned is guaranteed to run with {@link com.intellij.openapi.application.Application#runWriteAction(Runnable)} privileges.
+   * processFile() is guaranteed to run with {@link Application#runReadAction(Runnable)} privileges and
+   * the Runnable returned is guaranteed to run with {@link Application#runWriteAction(Runnable)} privileges.
    * <p>
    * One can theoretically delay all the calculation until Runnable is called but this code will be executed in Swing thread thus
    * lengthy calculations may block user interface for some significant time.

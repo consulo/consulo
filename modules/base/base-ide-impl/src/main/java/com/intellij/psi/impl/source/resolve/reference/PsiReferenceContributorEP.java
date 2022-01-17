@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.source.resolve.reference;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiReferenceContributor;

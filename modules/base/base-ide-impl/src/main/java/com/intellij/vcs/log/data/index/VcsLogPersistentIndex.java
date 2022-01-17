@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.data.index;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.Project;
@@ -26,8 +26,8 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EmptyConsumer;
-import com.intellij.util.Processor;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.Processor;
+import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.io.*;
@@ -40,6 +40,8 @@ import com.intellij.vcs.log.util.PersistentSetImpl;
 import com.intellij.vcs.log.util.StopWatch;
 import com.intellij.vcs.log.util.TroveUtil;
 import consulo.logging.Logger;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import gnu.trove.TIntHashSet;

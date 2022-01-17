@@ -23,7 +23,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import consulo.logging.Logger;

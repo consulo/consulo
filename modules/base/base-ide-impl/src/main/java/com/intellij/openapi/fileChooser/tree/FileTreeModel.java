@@ -44,7 +44,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import static com.intellij.openapi.application.ApplicationManager.getApplication;
+import static consulo.application.ApplicationManager.getApplication;
 import static consulo.disposer.Disposer.register;
 import static com.intellij.openapi.util.io.FileUtil.toSystemIndependentName;
 import static com.intellij.openapi.util.text.StringUtil.naturalCompare;

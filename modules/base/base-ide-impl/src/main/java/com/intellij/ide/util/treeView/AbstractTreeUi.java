@@ -5,8 +5,9 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.UiActivity;
 import com.intellij.ide.UiActivityMonitor;
 import com.intellij.ide.util.treeView.TreeRunnable.TreeConsumer;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.*;
@@ -26,10 +27,14 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
+import consulo.util.concurrent.ActionCallback;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
-import org.jetbrains.concurrency.Promises;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.Promise;
+import consulo.util.concurrent.Promises;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -1134,13 +1139,13 @@ public class AbstractTreeUi {
 
   @Nonnull
   private ActionCallback updateNodeChildren(@Nonnull final DefaultMutableTreeNode node,
-                                            @Nonnull final TreeUpdatePass pass,
-                                            @Nullable final LoadedChildren loadedChildren,
-                                            final boolean forcedNow,
-                                            final boolean toSmartExpand,
-                                            final boolean forceUpdate,
-                                            final boolean descriptorIsUpToDate,
-                                            final boolean updateChildren) {
+                                                                    @Nonnull final TreeUpdatePass pass,
+                                                                    @Nullable final LoadedChildren loadedChildren,
+                                                                    final boolean forcedNow,
+                                                                    final boolean toSmartExpand,
+                                                                    final boolean forceUpdate,
+                                                                    final boolean descriptorIsUpToDate,
+                                                                    final boolean updateChildren) {
     AbstractTreeStructure treeStructure = getTreeStructure();
     ActionCallback result = treeStructure.asyncCommit();
     result.doWhenDone(new TreeRunnable("AbstractTreeUi.updateNodeChildren: on done") {
@@ -2155,10 +2160,10 @@ public class AbstractTreeUi {
 
   @Nonnull
   private AsyncResult<List<TreeNode>> collectNodesToInsert(final NodeDescriptor descriptor,
-                                                           @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
-                                                           final DefaultMutableTreeNode parent,
-                                                           final boolean addLoadingNode,
-                                                           @Nonnull final LoadedChildren loadedChildren) {
+                                                                                   @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
+                                                                                   final DefaultMutableTreeNode parent,
+                                                                                   final boolean addLoadingNode,
+                                                                                   @Nonnull final LoadedChildren loadedChildren) {
     final AsyncResult<List<TreeNode>> result = new AsyncResult<>();
 
     final List<TreeNode> nodesToInsert = new ArrayList<>();

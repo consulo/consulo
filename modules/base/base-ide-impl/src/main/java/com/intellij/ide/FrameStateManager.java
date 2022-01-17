@@ -16,8 +16,8 @@
 package com.intellij.ide;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.application.ApplicationManager;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

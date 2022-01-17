@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.ex;
 
-import com.intellij.openapi.application.TransactionGuard;
+import consulo.application.TransactionGuard;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;

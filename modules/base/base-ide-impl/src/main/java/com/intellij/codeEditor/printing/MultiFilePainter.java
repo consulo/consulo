@@ -17,8 +17,8 @@
 package com.intellij.codeEditor.printing;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
 

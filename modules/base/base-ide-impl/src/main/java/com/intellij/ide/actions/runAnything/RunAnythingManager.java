@@ -4,7 +4,7 @@ package com.intellij.ide.actions.runAnything;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.BigPopupUI;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;

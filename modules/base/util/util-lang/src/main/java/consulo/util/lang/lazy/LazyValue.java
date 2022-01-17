@@ -32,4 +32,9 @@ public interface LazyValue<T> extends Supplier<T> {
   static <K> LazyValue<K> notNull(@Nonnull Supplier<K> factory) {
     return new DefaultLazyValueImpl<>(factory);
   }
+
+  @Nonnull
+  static <K> LazyValue<K> nullable(@Nonnull Supplier<K> factory) {
+    return new NullableLazyValueImpl<>(factory);
+  }
 }

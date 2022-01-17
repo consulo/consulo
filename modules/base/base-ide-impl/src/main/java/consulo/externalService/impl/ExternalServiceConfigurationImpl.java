@@ -15,7 +15,7 @@
  */
 package consulo.externalService.impl;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.components.*;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.ui.JBUI;

@@ -15,11 +15,14 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.ThrowableRunnable;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.AccessToken;
+import consulo.application.Application;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;

@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.reference.SoftReference;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.text.ImmutableCharSequence;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

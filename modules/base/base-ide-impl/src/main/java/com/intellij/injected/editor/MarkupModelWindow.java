@@ -29,7 +29,7 @@ import com.intellij.openapi.util.TextRange;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.util.Consumer;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 
 /**

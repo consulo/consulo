@@ -16,7 +16,7 @@
 package consulo.desktop.awt.uiOld;
 
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.util.AtomicNullableLazyValue;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.SystemInfo;

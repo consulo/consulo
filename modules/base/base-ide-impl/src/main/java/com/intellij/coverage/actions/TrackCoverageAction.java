@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.ToggleModelAction;
 import com.intellij.icons.AllIcons;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Alarm;

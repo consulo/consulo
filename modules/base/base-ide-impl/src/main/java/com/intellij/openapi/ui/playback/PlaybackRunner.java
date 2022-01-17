@@ -19,17 +19,18 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.UiActivityMonitor;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.playback.commands.AssertFocused;
 import consulo.logging.Logger;
 import com.intellij.openapi.ui.playback.commands.*;
 import com.intellij.openapi.ui.playback.commands.ActionCommand;
-import com.intellij.openapi.util.ActionCallback;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.text.StringTokenizer;
+import consulo.util.concurrent.ActionCallback;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

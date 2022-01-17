@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import java.util.HashSet;
 import com.intellij.util.graph.Graph;
 import consulo.annotation.access.RequiredReadAction;

@@ -20,7 +20,7 @@
 package consulo.desktop.awt.application.impl;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import java.util.function.BooleanSupplier;

@@ -16,8 +16,8 @@
 package com.intellij.openapi.ui.playback.commands;
 
 import com.intellij.openapi.ui.playback.PlaybackContext;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.util.concurrent.ActionCallback;
+import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.Pair;
 
 import java.lang.reflect.InvocationTargetException;

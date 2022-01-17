@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.progress;
 
+import consulo.progress.ProgressIndicator;
+
 /**
  * Marker interface which means this indicator cancellation behaves in a standard way:
  * - checkCanceled() checks for isCanceled() and throws PCE if returned true

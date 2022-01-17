@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.script;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

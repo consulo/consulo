@@ -30,6 +30,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
+import consulo.application.util.function.ThrowableRunnable;
 import consulo.desktop.awt.util.DarkThemeCalculator;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.desktop.util.awt.StringHtmlUtil;
@@ -2619,7 +2622,7 @@ public class UIUtil {
    * DO NOT INVOKE THIS METHOD FROM UNDER READ ACTION.
    *
    * @param runnable a runnable to invoke
-   * @see #invokeAndWaitIfNeeded(com.intellij.util.ThrowableRunnable)
+   * @see #invokeAndWaitIfNeeded(ThrowableRunnable)
    */
   public static void invokeAndWaitIfNeeded(@Nonnull Runnable runnable) {
     if (EDT.isCurrentThreadEdt()) {

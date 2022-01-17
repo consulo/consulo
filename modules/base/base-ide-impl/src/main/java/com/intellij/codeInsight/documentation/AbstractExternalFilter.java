@@ -16,11 +16,11 @@
 package com.intellij.codeInsight.documentation;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Computable;
+import consulo.progress.ProcessCanceledException;
+import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.CharsetToolkit;

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.project;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.impl.DebugUtil;

@@ -15,17 +15,11 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import jakarta.inject.Inject;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import jakarta.inject.Singleton;
 

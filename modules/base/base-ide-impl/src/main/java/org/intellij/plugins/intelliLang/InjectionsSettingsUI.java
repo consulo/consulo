@@ -44,6 +44,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
+import consulo.application.util.function.Processor;
 import consulo.awt.TargetAWT;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.logging.Logger;

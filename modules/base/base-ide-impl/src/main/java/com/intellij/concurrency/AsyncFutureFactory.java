@@ -15,7 +15,7 @@
  */
 package com.intellij.concurrency;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 
 /**
  * Author: dmitrylomov

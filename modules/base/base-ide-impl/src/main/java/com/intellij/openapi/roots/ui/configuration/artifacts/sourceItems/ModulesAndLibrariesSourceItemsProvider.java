@@ -34,7 +34,7 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.PackagingSourceItemsProvider;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.types.BinariesOrderRootType;
 

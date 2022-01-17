@@ -22,7 +22,7 @@ import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.usages.FindUsagesProcessPresentation;
 import com.intellij.usages.UsageInfo2UsageAdapter;
 import com.intellij.usages.UsageInfoAdapter;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

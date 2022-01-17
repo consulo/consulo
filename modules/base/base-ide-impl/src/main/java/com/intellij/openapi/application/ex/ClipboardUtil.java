@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application.ex;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.logging.Logger;

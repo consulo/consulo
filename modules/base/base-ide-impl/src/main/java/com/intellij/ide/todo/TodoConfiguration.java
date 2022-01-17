@@ -16,7 +16,7 @@
 
 package com.intellij.ide.todo;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;

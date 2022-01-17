@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.actionSystem;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;

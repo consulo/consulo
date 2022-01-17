@@ -16,7 +16,7 @@
 
 package com.intellij.tools;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.util.InvalidDataException;

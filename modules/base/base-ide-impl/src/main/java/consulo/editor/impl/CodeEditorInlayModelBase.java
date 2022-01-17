@@ -2,7 +2,7 @@
 package consulo.editor.impl;
 
 import com.intellij.diagnostic.Dumpable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
@@ -11,7 +11,7 @@ import com.intellij.openapi.editor.impl.*;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;

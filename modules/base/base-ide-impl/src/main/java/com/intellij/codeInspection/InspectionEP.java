@@ -19,7 +19,7 @@ import com.intellij.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.lang.LanguageExtensionPoint;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;

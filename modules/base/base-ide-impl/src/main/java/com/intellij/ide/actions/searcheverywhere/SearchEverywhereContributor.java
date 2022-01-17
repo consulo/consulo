@@ -3,10 +3,10 @@ package com.intellij.ide.actions.searcheverywhere;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import consulo.util.dataholder.Key;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.progress.impl;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import consulo.progress.util.ProgressDialog;

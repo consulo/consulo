@@ -25,7 +25,7 @@ import com.intellij.ide.TreeExpander;
 import com.intellij.ide.util.treeView.*;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;

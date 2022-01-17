@@ -2,7 +2,7 @@ package com.intellij.coverage;
 
 import com.intellij.coverage.view.CoverageView;
 import com.intellij.coverage.view.CoverageViewManager;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;

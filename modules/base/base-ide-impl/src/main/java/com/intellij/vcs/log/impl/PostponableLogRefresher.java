@@ -17,7 +17,7 @@ package com.intellij.vcs.log.impl;
 
 import com.intellij.ide.PowerSaveMode;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;

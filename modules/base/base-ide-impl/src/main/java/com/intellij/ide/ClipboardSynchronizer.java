@@ -2,7 +2,7 @@
 package com.intellij.ide;
 
 import com.intellij.Patches;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.application.ex.ClipboardUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;

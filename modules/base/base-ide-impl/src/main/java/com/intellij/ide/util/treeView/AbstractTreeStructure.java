@@ -17,8 +17,8 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.util.concurrent.ActionCallback;
+import consulo.util.concurrent.AsyncResult;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.tree.LeafState;
 import javax.annotation.Nonnull;

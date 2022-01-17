@@ -19,7 +19,7 @@ import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.io.FileUtil;

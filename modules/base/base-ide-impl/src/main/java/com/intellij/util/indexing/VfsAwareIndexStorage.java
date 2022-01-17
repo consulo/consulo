@@ -16,7 +16,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.impl.IndexStorage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

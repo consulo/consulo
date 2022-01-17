@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.rename;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;

@@ -17,7 +17,7 @@ package com.intellij.internal;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.component.ComponentManager;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import consulo.component.extension.ExtensionPoint;

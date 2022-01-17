@@ -4,7 +4,7 @@ import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.impl.TemplateEditorUtil;
 import com.intellij.codeInsight.template.impl.TemplateImpl;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;

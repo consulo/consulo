@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source;
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;

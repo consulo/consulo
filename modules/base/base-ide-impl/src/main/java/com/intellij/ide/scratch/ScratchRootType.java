@@ -17,8 +17,8 @@ package com.intellij.ide.scratch;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.application.RunResult;
+import consulo.application.Result;
+import consulo.application.RunResult;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;

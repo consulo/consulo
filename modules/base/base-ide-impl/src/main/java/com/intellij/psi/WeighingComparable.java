@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import consulo.util.dataholder.UserDataHolderBase;

@@ -24,7 +24,7 @@ import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.containers.PeekableIterator;
 import com.intellij.util.containers.PeekableIteratorWrapper;
 import com.intellij.util.text.CharArrayUtil;
@@ -39,7 +39,6 @@ import consulo.ui.util.ColorValueUtil;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import gnu.trove.TFloatArrayList;
-import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

@@ -18,7 +18,7 @@ package com.intellij.ui.content;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

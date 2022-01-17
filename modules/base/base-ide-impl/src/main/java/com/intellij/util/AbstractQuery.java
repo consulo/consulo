@@ -3,8 +3,10 @@ package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncUtil;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ReadActionProcessor;
+import consulo.application.util.function.Processor;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

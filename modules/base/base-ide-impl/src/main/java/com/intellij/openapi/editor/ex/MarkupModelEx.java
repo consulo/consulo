@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.Consumer;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

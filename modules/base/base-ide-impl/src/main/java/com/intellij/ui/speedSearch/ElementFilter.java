@@ -6,8 +6,8 @@ import consulo.disposer.Disposer;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.concurrency.Promise;
-import org.jetbrains.concurrency.Promises;
+import consulo.util.concurrent.Promise;
+import consulo.util.concurrent.Promises;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;

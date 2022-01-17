@@ -2,7 +2,7 @@
 package com.intellij.openapi.file.exclude;
 
 import com.google.common.collect.Sets;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.fileTypes.FileType;

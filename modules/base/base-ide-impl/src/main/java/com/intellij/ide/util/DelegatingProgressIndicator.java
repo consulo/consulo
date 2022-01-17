@@ -18,6 +18,8 @@ package com.intellij.ide.util;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.*;
 import consulo.localize.LocalizeValue;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 
 import javax.annotation.Nonnull;
 

@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.ModifiableModuleModel;
@@ -54,9 +54,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
-import org.jetbrains.concurrency.Promises;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.Promise;
+import consulo.util.concurrent.Promises;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

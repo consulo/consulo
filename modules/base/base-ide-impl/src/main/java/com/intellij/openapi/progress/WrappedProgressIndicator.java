@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.progress;
 
+import consulo.progress.ProgressIndicator;
+
 import javax.annotation.Nonnull;
 
 public interface WrappedProgressIndicator extends ProgressIndicator {

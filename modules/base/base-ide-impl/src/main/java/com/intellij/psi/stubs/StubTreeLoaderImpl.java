@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.*;
 import consulo.logging.Logger;

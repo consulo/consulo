@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.awt.RelativePoint;
+import consulo.application.util.function.Computable;
 import consulo.disposer.Disposable;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -117,7 +118,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
    * Checks if it's currently allowed to close the popup.
    *
    * @return {@code true} if the popup can be closed, {@code false} if a callback disallowed closing the popup.
-   * @see ComponentPopupBuilder#setCancelCallback(com.intellij.openapi.util.Computable)
+   * @see ComponentPopupBuilder#setCancelCallback(Computable)
    */
   boolean canClose();
 

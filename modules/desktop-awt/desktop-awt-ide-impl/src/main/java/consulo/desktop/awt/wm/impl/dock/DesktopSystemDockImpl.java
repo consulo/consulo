@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl.dock;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.wm.impl.SystemDock;
 import consulo.desktop.awt.uiOld.win.WinDockDelegate;
 import consulo.disposer.Disposable;

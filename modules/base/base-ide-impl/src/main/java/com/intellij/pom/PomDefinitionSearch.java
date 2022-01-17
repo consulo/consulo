@@ -4,7 +4,7 @@ package com.intellij.pom;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiTarget;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.QueryExecutor;
 
 import javax.annotation.Nonnull;

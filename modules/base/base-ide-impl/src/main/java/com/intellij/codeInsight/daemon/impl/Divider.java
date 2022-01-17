@@ -25,7 +25,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.reference.SoftReference;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import consulo.util.collection.primitive.ints.IntStack;
 import com.intellij.util.containers.Stack;
 import consulo.util.dataholder.Key;

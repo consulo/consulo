@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.util.diff.ShallowNodeComparator;
 import consulo.util.lang.ThreeState;

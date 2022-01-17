@@ -22,7 +22,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 
 import javax.swing.*;

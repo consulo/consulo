@@ -18,7 +18,7 @@ package consulo.compiler.impl;
 import com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl;
 import com.intellij.compiler.impl.TranslationOutputFileInfo;
 import com.intellij.compiler.impl.TranslationSourceFileInfo;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.DummyCompileContext;
 import com.intellij.openapi.compiler.TranslatingCompiler;

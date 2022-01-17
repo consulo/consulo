@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.EditorTextField;

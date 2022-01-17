@@ -2,6 +2,7 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import consulo.application.ReadAction;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -40,7 +41,7 @@ import java.util.List;
  * If possible, consider moving heavy processing into background threads and/or performing it lazily.
  * There's no general solution, each "after" event processing should be evaluated separately considering the needs and contracts
  * of each specific subsystem it serves. Note that it'll likely need a consistent model of the world, probably with the help of
- * {@link com.intellij.openapi.application.ReadAction#nonBlocking} (and note that other changes might happen after yours, and
+ * {@link ReadAction#nonBlocking} (and note that other changes might happen after yours, and
  * the state of the system can change when your asynchronous handler starts). This might also
  * introduce a discrepancy in the world when the VFS is already changed but other subsystems aren't, and this discrepancy
  * should be made as explicit as possible.

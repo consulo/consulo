@@ -16,6 +16,8 @@
 
 package com.intellij.util;
 
+import consulo.application.util.function.Processor;
+
 import javax.annotation.Nonnull;
 
 /**

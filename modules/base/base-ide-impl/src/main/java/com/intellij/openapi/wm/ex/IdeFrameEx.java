@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.ex;
 
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.IdeFrame;
 

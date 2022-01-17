@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl.analysis;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.roots.ProjectFileIndex;

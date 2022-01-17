@@ -15,8 +15,8 @@
  */
 package com.intellij.execution;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;

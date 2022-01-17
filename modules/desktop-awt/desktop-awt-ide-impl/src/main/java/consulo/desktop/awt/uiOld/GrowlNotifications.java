@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.desktop.awt.uiOld.mac.growl.Growl;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;

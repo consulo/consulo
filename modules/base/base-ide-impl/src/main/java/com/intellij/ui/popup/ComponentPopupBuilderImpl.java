@@ -15,15 +15,15 @@
  */
 package com.intellij.ui.popup;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ActiveComponent;
 import com.intellij.util.BooleanFunction;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 

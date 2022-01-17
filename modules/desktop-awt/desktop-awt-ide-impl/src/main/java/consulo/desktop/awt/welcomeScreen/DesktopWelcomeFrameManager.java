@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.wm.IdeFrame;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;

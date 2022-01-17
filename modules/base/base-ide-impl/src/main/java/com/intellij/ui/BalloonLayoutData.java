@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

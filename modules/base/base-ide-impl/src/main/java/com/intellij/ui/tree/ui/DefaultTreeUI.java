@@ -2,7 +2,7 @@
 package com.intellij.ui.tree.ui;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.util.ColoredItem;
 import com.intellij.ui.BackgroundSupplier;
 import com.intellij.ui.ComponentUtil;
@@ -34,7 +34,7 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
-import static com.intellij.openapi.application.ApplicationManager.getApplication;
+import static consulo.application.ApplicationManager.getApplication;
 import static com.intellij.openapi.util.SystemInfo.isMac;
 import static com.intellij.openapi.util.registry.Registry.is;
 import static com.intellij.ui.paint.RectanglePainter.DRAW;

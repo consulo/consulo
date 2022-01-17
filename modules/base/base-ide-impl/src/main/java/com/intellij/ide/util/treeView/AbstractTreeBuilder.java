@@ -3,21 +3,21 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Progressive;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import consulo.disposer.Disposable;
+import consulo.util.concurrent.ActionCallback;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
-import org.jetbrains.concurrency.Promises;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.Promise;
+import consulo.util.concurrent.Promises;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

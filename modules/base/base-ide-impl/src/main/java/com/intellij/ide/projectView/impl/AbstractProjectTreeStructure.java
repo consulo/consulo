@@ -21,7 +21,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import com.intellij.psi.PsiDocumentManager;
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package com.intellij.psi.formatter.common;
 
 import com.intellij.formatting.Block;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

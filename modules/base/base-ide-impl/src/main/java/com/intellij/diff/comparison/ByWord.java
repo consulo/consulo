@@ -23,7 +23,7 @@ import com.intellij.diff.fragments.DiffFragment;
 import com.intellij.diff.fragments.MergeWordFragment;
 import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.Range;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.text.MergingCharSequence;

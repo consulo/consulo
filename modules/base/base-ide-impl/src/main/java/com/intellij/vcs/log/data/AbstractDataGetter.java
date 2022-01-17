@@ -2,7 +2,7 @@ package com.intellij.vcs.log.data;
 
 import consulo.disposer.Disposable;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.Comparing;

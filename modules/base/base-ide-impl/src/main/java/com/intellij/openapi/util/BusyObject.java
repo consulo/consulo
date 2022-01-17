@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.util.concurrent.ActionCallback;
+import consulo.util.concurrent.AsyncResult;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

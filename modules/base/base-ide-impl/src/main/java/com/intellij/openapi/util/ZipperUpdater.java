@@ -2,7 +2,7 @@
 package com.intellij.openapi.util;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.util.Alarm;

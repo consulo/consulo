@@ -2,7 +2,7 @@
 package com.intellij.util.io.storage;
 
 import com.intellij.codeInsight.daemon.DaemonBundle;
-import com.intellij.openapi.application.AccessToken;
+import consulo.application.AccessToken;
 import consulo.logging.Logger;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;

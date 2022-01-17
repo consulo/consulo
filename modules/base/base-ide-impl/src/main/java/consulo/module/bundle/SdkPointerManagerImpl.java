@@ -15,7 +15,7 @@
  */
 package consulo.module.bundle;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import consulo.bundle.SdkPointerManager;

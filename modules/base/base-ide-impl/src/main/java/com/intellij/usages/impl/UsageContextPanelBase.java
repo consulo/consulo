@@ -16,7 +16,7 @@
 
 package com.intellij.usages.impl;
 
-import com.intellij.openapi.application.AppUIExecutor;
+import consulo.application.AppUIExecutor;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBPanelWithEmptyText;
 import com.intellij.usageView.UsageInfo;

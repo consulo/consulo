@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.module;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.component.ComponentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;

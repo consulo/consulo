@@ -16,7 +16,7 @@
 package com.intellij.util.config;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 
 import java.util.Collections;

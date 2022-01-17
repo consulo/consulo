@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;

@@ -4,12 +4,12 @@ package com.intellij.ui.components;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.ide.RemoteDesktopService;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static com.intellij.openapi.application.ApplicationManager.getApplication;
+import static consulo.application.ApplicationManager.getApplication;
 
 final class ScrollSettings {
   static boolean isEligibleFor(Component component) {

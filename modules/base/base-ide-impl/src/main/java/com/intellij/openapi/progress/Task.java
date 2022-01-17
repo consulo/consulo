@@ -16,14 +16,16 @@
 package com.intellij.openapi.progress;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.EdtReplacementThread;
+import consulo.application.ApplicationManager;
+import consulo.application.EdtReplacementThread;
 import com.intellij.openapi.project.DumbModeAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
 import consulo.logging.Logger;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;

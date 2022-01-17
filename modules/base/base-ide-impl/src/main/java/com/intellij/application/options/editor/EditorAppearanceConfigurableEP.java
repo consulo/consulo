@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.editor;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import consulo.options.ApplicationConfigurableEP;
 

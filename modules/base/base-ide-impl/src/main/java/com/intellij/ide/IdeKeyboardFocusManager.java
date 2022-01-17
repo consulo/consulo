@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.application.AccessToken;
+import consulo.application.AccessToken;
 import consulo.awt.hacking.AppContextHacking;
 
 import java.awt.*;

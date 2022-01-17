@@ -20,6 +20,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

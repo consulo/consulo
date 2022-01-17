@@ -17,7 +17,7 @@ package com.intellij.refactoring.changeSignature.inplace;
 
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
-import com.intellij.openapi.application.Result;
+import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;

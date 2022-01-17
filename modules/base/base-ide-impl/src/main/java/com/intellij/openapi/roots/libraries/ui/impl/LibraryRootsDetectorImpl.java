@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries.ui.impl;
 
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.roots.libraries.LibraryRootType;
 import com.intellij.openapi.roots.libraries.ui.DetectedLibraryRoot;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsDetector;

@@ -19,6 +19,8 @@
  */
 package com.intellij.util;
 
+import consulo.application.util.function.Processor;
+
 public class AdapterProcessor<T, S> implements Processor<T> {
   private final Processor<S> myAdaptee;
   private final Function<T, S> myConversion;

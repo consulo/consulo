@@ -1,7 +1,7 @@
 package com.intellij.util.net.ssl;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.PersistentStateComponent;

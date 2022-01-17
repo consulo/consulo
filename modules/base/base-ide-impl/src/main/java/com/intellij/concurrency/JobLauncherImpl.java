@@ -1,27 +1,30 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.concurrency;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;
-import com.intellij.util.Consumer;
-import com.intellij.util.Processor;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.internal.concurrency.Job;
+import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
  * @author cdr
@@ -30,6 +33,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class JobLauncherImpl extends JobLauncher {
   private static final Logger LOG = Logger.getInstance(JobLauncherImpl.class);
   static final int CORES_FORK_THRESHOLD = 1;
+
+  @Override
+  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException {
+    ApplicationEx app = (ApplicationEx)Application.get();
+    return invokeConcurrentlyUnderProgress(things, progress, app.isReadAccessAllowed(), app.isInImpatientReader(), thingProcessor);
+  }
 
   @Override
   public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull final List<? extends T> things,
@@ -170,7 +179,7 @@ public class JobLauncherImpl extends JobLauncher {
         finally {
           myStatus = Status.EXECUTED;
           if (myOnDoneCallback != null) {
-            myOnDoneCallback.consume(this);
+            myOnDoneCallback.accept(this);
           }
         }
         return true;

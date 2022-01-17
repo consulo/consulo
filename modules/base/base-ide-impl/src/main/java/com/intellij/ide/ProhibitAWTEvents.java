@@ -15,8 +15,8 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.Application;
+import consulo.application.AccessToken;
+import consulo.application.Application;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

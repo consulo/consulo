@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.project;
 
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;

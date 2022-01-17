@@ -19,7 +19,7 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.ActionToolbarPosition;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.*;
 import com.intellij.openapi.options.Configurable;

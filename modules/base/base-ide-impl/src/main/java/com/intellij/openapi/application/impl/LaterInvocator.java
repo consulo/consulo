@@ -16,10 +16,15 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.EDT;
 import com.intellij.util.ui.UIUtil;
-import consulo.application.TransactionGuardEx;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
+import consulo.application.internal.TransactionGuardEx;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.disposer.Disposable;
 import consulo.util.collection.Maps;
+import consulo.util.concurrent.ActionCallback;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 

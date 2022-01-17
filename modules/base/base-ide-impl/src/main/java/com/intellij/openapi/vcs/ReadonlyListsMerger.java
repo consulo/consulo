@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Consumer;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ReadonlyList;
 import com.intellij.util.containers.StepList;
 import javax.annotation.Nullable;

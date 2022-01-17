@@ -21,7 +21,8 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
+import consulo.progress.ProgressIndicator;
 
 import java.util.Collection;
 import java.util.Set;
@@ -29,7 +30,7 @@ import java.util.Set;
 /**
  * <p>The dirty scope for a version control system. The instance of this interface
  * is passed to implementers of the {@link com.intellij.openapi.vcs.changes.ChangeProvider}
- * interface to the method {@link ChangeProvider#getChanges(VcsDirtyScope, ChangelistBuilder, com.intellij.openapi.progress.ProgressIndicator, ChangeListManagerGate)}.</p>
+ * interface to the method {@link ChangeProvider#getChanges(VcsDirtyScope, ChangelistBuilder, ProgressIndicator, ChangeListManagerGate)}.</p>
  * <p/>
  * <p>The instance of this class is valid only while the project is valid.</p>
  *

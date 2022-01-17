@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util.io;
 
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.util.ThrowableConsumer;
 import javax.annotation.Nonnull;
 

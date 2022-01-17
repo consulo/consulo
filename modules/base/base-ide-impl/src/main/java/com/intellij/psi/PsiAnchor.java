@@ -4,8 +4,8 @@ package com.intellij.psi;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.Language;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;

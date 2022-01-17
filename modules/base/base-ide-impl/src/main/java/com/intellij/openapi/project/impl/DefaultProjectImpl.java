@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.project.impl;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.project.ProjectManager;
 import org.jdom.Element;
 

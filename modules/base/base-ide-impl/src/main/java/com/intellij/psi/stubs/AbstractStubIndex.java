@@ -18,7 +18,7 @@ package com.intellij.psi.stubs;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 
 import java.util.Collection;
 

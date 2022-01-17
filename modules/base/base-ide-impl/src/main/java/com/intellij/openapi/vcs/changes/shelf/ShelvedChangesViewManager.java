@@ -28,7 +28,7 @@ import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.actions.EditSourceAction;
 import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diff.impl.patch.FilePatch;

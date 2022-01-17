@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.frame;
 
-import com.intellij.openapi.util.AsyncResult;
+import consulo.util.concurrent.AsyncResult;
 import com.intellij.util.ThreeState;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;

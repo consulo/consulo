@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.PathUtil;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;

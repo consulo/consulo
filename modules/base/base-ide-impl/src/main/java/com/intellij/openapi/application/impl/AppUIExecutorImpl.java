@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.application.impl;
 
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.constraints.Expiration;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
+import consulo.application.*;
+import consulo.application.constraint.Expiration;
+import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 
@@ -140,14 +142,14 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
 
   @Nonnull
   @Override
-  public AppUIExecutor withDocumentsCommitted(@Nonnull Project project) {
-    return withConstraint(new WithDocumentsCommitted(project, modality), project);
+  public AppUIExecutor withDocumentsCommitted(@Nonnull ComponentManager project) {
+    return withConstraint(new WithDocumentsCommitted((Project)project, modality), project);
   }
 
   @Nonnull
   @Override
-  public AppUIExecutor inSmartMode(@Nonnull Project project) {
-    return withConstraint(new InSmartMode(project), project);
+  public AppUIExecutor inSmartMode(@Nonnull ComponentManager project) {
+    return withConstraint(new InSmartMode((Project)project), project);
   }
 
   @Nonnull

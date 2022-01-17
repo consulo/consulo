@@ -6,6 +6,7 @@ import com.intellij.codeInsight.AutoPopupControllerImpl;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
+import consulo.application.AppUIExecutor;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -50,7 +51,7 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
   }
 
   /**
-   * @deprecated can be emulated with {@link com.intellij.openapi.application.AppUIExecutor}
+   * @deprecated can be emulated with {@link AppUIExecutor}
    */
   @Deprecated
   public static void runLaterWithCommitted(@Nonnull final Project project, final Document document, @Nonnull final Runnable runnable) {

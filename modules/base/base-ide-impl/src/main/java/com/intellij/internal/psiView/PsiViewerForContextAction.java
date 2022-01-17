@@ -1,7 +1,7 @@
 package com.intellij.internal.psiView;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;

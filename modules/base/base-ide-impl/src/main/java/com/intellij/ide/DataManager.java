@@ -18,12 +18,12 @@ package com.intellij.ide;
 import com.intellij.openapi.actionSystem.AsyncDataContext;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.application.Application;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.impl;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;

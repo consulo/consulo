@@ -18,8 +18,7 @@ package com.intellij.ui.mac;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.ActionCallback;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
@@ -37,6 +36,7 @@ import consulo.eawt.wrapper.FullScreenUtilitiesWrapper;
 import consulo.eawt.wrapper.event.AppFullScreenEventWrapper;
 import consulo.eawt.wrapper.event.FullScreenListenerWrapper;
 import consulo.logging.Logger;
+import consulo.util.concurrent.ActionCallback;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

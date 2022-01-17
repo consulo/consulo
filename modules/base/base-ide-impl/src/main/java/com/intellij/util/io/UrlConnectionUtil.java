@@ -16,9 +16,9 @@
 
 package com.intellij.util.io;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.application.ApplicationManager;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import javax.annotation.Nullable;
 
 import java.io.IOException;

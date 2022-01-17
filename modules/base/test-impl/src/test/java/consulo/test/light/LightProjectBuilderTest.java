@@ -15,7 +15,7 @@
  */
 package consulo.test.light;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;
@@ -23,7 +23,7 @@ import consulo.disposer.Disposer;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.impl.DebugUtil;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.ThrowableRunnable;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -2,11 +2,12 @@
 package com.intellij.util;
 
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.exception.FrequentErrorLogger;
+import consulo.application.util.function.ThrowableRunnable;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 

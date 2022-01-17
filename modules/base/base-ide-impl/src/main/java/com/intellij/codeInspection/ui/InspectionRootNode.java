@@ -17,9 +17,8 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.project.Project;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 /**

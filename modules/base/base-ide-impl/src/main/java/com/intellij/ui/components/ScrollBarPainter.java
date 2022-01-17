@@ -2,7 +2,7 @@
 package com.intellij.ui.components;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.openapi.util.SystemInfo;

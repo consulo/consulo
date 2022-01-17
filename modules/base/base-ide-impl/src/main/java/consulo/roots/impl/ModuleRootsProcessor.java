@@ -20,7 +20,7 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.roots.ContentFolderTypeProvider;

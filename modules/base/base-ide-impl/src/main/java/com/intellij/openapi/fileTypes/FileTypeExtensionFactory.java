@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.util.KeyedExtensionFactory;

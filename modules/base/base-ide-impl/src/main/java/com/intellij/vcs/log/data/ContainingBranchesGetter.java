@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.data;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Condition;

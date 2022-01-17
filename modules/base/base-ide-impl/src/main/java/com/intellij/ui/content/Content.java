@@ -18,7 +18,7 @@ package com.intellij.ui.content;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.ui.ComponentContainer;
 import com.intellij.openapi.util.BusyObject;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.image.Image;

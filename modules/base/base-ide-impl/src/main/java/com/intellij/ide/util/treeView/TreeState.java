@@ -3,7 +3,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Progressive;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringHash;
@@ -21,13 +21,14 @@ import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import consulo.logging.Logger;
+import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
-import org.jetbrains.concurrency.Promises;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.Promise;
+import consulo.util.concurrent.Promises;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

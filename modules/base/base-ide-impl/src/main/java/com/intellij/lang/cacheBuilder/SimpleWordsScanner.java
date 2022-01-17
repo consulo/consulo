@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.cacheBuilder;
 
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.text.CharArrayUtil;
 
 /**

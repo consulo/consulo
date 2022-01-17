@@ -18,7 +18,7 @@ package com.intellij.application.options.editor;
 
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;

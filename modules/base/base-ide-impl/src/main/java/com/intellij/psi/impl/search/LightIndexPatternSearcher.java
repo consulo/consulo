@@ -3,7 +3,7 @@ package com.intellij.psi.impl.search;
 
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.searches.IndexPatternSearch;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 
 /**

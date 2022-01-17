@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionPopupMenu;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

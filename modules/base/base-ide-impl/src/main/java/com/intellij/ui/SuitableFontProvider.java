@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;

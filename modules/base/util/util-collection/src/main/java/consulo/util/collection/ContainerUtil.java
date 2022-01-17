@@ -655,4 +655,21 @@ public class ContainerUtil {
   public static <T> T[] toArray(@Nullable Collection<T> c, @Nonnull IntFunction<? extends T[]> factory) {
     return c != null ? c.toArray(factory.apply(c.size())) : factory.apply(0);
   }
+
+  @Nullable
+  @Contract(pure = true)
+  public static <T> T getFirstItem(@Nullable Collection<T> items) {
+    return getFirstItem(items, null);
+  }
+
+  @Nullable
+  @Contract(pure = true)
+  public static <T> T getFirstItem(@Nullable List<T> items) {
+    return items == null || items.isEmpty() ? null : items.get(0);
+  }
+
+  @Contract(pure = true)
+  public static <T> T getFirstItem(@Nullable final Collection<T> items, @Nullable final T defaultResult) {
+    return items == null || items.isEmpty() ? defaultResult : items.iterator().next();
+  }
 }

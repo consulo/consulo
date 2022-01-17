@@ -21,6 +21,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.*;
+import consulo.application.util.function.Processor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

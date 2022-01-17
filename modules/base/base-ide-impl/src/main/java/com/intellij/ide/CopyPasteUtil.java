@@ -18,8 +18,8 @@ package com.intellij.ide;
 
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;

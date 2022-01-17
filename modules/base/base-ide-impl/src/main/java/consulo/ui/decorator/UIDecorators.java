@@ -15,7 +15,7 @@
  */
 package consulo.ui.decorator;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.container.plugin.PluginManager;
 

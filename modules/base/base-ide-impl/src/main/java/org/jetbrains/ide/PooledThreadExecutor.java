@@ -16,6 +16,7 @@
 package org.jetbrains.ide;
 
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.Application;
 
 import java.util.concurrent.ExecutorService;
 
@@ -26,7 +27,7 @@ import java.util.concurrent.ExecutorService;
  * <li>Application-wide, always active, non-shutdownable singleton.</li>
  * </ul>
  * You can use this pool for long-running and/or IO-bound tasks.
- * @see com.intellij.openapi.application.Application#executeOnPooledThread(Runnable)
+ * @see Application#executeOnPooledThread(Runnable)
  */
 public final class PooledThreadExecutor {
   public static final ExecutorService INSTANCE = AppExecutorUtil.getAppExecutorService();

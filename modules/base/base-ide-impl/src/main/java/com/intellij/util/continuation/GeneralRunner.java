@@ -15,7 +15,7 @@
  */
 package com.intellij.util.continuation;
 
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;

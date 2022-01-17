@@ -2,9 +2,9 @@
 package com.intellij.execution.impl;
 
 import com.intellij.execution.filters.Filter;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -17,7 +17,7 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.Promise;
 
 import java.util.ArrayList;
 import java.util.List;

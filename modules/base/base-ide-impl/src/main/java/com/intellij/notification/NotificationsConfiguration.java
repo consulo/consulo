@@ -15,7 +15,7 @@
  */
 package com.intellij.notification;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 
 public abstract class NotificationsConfiguration extends NotificationsAdapter {
   public abstract void changeSettings(String groupDisplayName, NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud);

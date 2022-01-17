@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;

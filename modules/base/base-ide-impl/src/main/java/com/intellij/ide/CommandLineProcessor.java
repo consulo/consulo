@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;

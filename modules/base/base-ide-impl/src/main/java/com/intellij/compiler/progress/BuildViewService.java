@@ -3,7 +3,7 @@ package com.intellij.compiler.progress;
 
 import com.intellij.compiler.impl.ExitStatus;
 import com.intellij.openapi.compiler.CompilerMessage;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 
 /**
  * {@link BuildViewService} implementations are expected to visualize somehow compiler progress/messages for {@link CompilerTask}.

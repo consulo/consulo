@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;

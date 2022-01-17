@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.util;
 
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.util.Function;
 import consulo.ui.annotation.RequiredUIAccess;

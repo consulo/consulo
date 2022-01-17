@@ -18,14 +18,13 @@ package com.intellij.navigation;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import consulo.awt.TargetAWT;
 import consulo.roots.ContentFolderTypeProvider;
 
 public class DirectoryPresentationProvider implements ItemPresentationProvider<PsiDirectory> {

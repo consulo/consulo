@@ -23,6 +23,7 @@
       <includes>
         <include>consulo:consulo-annotation</include>
         <include>consulo:consulo-component-api</include>
+        <include>consulo:consulo-application-api</include>
         <include>consulo:consulo-base-ide-impl</include>
         <include>consulo:consulo-disposer-api</include>
         <include>consulo:consulo-disposer-impl</include>

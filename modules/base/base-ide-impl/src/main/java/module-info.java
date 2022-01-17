@@ -30,6 +30,7 @@ open module consulo.ide.impl {
   requires transitive consulo.logging.api;
   requires transitive consulo.localize.api;
   requires transitive consulo.component.api;
+  requires transitive consulo.application.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -228,7 +229,6 @@ open module consulo.ide.impl {
   exports com.intellij.concurrency;
   exports com.intellij.configurationStore;
   exports com.intellij.conversion;
-  exports com.intellij.core;
   exports com.intellij.coverage;
   exports com.intellij.coverage.actions;
   exports com.intellij.coverage.view;
@@ -489,8 +489,6 @@ open module consulo.ide.impl {
   exports com.intellij.lang.refactoring;
   exports com.intellij.lang.surroundWith;
   exports com.intellij.lexer;
-  exports com.intellij.mock;
-  //exports com.intellij.model;
   exports com.intellij.model.search;
   exports com.intellij.model.search.impl;
   exports com.intellij.moduleDependencies;
@@ -506,7 +504,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.actionSystem.impl;
   exports com.intellij.openapi.actionSystem.impl.actionholder;
   exports com.intellij.openapi.application;
-  exports com.intellij.openapi.application.constraints;
   exports com.intellij.openapi.application.ex;
   exports com.intellij.openapi.application.impl;
   exports com.intellij.openapi.command;
@@ -1094,9 +1091,7 @@ open module consulo.ide.impl {
   exports consulo.actionSystem;
   exports consulo.actionSystem.ex;
   exports consulo.actionSystem.impl;
-  exports consulo.application;
   exports consulo.application.impl;
-  exports consulo.application.internal;
   exports consulo.application.options;
   exports consulo.application.ui;
   //exports consulo.async;
@@ -1414,8 +1409,6 @@ open module consulo.ide.impl {
   exports org.intellij.plugins.intelliLang.inject.config.ui.configurables;
   exports org.intellij.plugins.intelliLang.references;
   exports org.intellij.plugins.intelliLang.util;
-  exports org.jetbrains.concurrency;
-  exports org.jetbrains.concurrency.internal;
   exports org.jetbrains.ide;
   exports org.jetbrains.ide.script;
   exports org.jetbrains.io;

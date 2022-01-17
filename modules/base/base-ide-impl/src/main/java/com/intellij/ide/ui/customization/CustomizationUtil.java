@@ -16,7 +16,7 @@
 package com.intellij.ide.ui.customization;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.impl.ui.Group;

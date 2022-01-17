@@ -19,7 +19,7 @@ package com.intellij.execution.ui.layout.impl;
 import com.intellij.execution.ui.layout.GridCell;
 import com.intellij.execution.ui.layout.ViewContext;
 import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.util.AsyncResult;
+import consulo.util.concurrent.AsyncResult;
 
 public interface ViewContextEx extends ViewContext {
   RunnerLayout getLayoutSettings();

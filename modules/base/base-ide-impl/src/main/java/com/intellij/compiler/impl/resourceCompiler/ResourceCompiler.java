@@ -19,7 +19,7 @@ package com.intellij.compiler.impl.resourceCompiler;
 
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.make.MakeUtil;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;

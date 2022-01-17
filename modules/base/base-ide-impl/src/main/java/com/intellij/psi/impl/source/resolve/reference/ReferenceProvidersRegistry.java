@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.resolve.reference;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.psi.*;
 import com.intellij.util.ProcessingContext;
 import javax.annotation.Nonnull;

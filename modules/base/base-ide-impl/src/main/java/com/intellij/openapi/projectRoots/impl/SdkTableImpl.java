@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;

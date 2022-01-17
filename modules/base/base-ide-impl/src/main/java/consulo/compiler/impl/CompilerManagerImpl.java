@@ -17,7 +17,7 @@ package consulo.compiler.impl;
 
 import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.compiler.impl.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;

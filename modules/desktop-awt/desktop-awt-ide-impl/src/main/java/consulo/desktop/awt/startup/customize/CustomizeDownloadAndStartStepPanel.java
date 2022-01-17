@@ -15,20 +15,20 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import com.intellij.mock.MockProgressIndicator;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.ui.components.JBLabel;
-import consulo.desktop.application.util.Restarter;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.Application;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.desktop.application.util.Restarter;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.progress.ProgressIndicator;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -45,7 +45,7 @@ import java.util.Set;
 public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardStep {
   private static final Logger LOG = Logger.getInstance(CustomizeDownloadAndStartStepPanel.class);
 
-  private static class MyProgressIndicator extends MockProgressIndicator {
+  private static class MyProgressIndicator extends EmptyProgressIndicator {
     private final JBLabel myLabel;
     private final JProgressBar myProgressBar;
 

@@ -23,7 +23,7 @@ import com.intellij.build.progress.BuildProgressDescriptor;
 import com.intellij.execution.filters.UrlFilter;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;

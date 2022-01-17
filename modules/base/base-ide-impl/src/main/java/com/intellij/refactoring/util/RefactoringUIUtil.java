@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NonNls;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ElementDescriptionUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.refactoring.RefactoringBundle;

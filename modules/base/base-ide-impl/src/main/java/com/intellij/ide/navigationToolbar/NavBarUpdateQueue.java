@@ -6,7 +6,6 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
@@ -17,6 +16,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.util.concurrent.ActionCallback;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

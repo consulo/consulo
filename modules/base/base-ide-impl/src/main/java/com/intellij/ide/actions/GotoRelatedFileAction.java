@@ -19,7 +19,7 @@ import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -35,7 +35,7 @@ import com.intellij.ui.SeparatorWithText;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.image.Image;
 

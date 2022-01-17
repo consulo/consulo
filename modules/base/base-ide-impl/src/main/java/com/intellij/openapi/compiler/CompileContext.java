@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;

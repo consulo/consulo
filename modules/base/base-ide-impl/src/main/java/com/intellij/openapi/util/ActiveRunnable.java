@@ -16,6 +16,8 @@
 package com.intellij.openapi.util;
 
 import com.intellij.util.ui.update.ComparableObject;
+import consulo.util.concurrent.AsyncResult;
+
 import javax.annotation.Nonnull;
 
 public abstract class ActiveRunnable extends ComparableObject.Impl {

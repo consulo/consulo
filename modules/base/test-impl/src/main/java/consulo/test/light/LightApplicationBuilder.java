@@ -15,7 +15,7 @@
  */
 package consulo.test.light;
 
-import com.intellij.concurrency.JobLauncher;
+import consulo.application.internal.concurrency.JobLauncher;
 import com.intellij.ide.UiActivityMonitor;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.treeView.TreeAnchorizer;
@@ -24,7 +24,7 @@ import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.impl.PsiBuilderFactoryImpl;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;

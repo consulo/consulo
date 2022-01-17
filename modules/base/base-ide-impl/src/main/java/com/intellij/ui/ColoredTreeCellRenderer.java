@@ -3,7 +3,7 @@ package com.intellij.ui;
 
 import com.intellij.ide.util.treeView.AbstractTreeUi;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.ui.render.RenderingUtil;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ui.UIUtil;

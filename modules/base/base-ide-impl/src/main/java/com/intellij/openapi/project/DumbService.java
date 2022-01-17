@@ -1,20 +1,24 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.project;
 
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.AccessToken;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
+import consulo.application.NonBlockingReadAction;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.*;
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.ThrowableRunnable;
 import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
 import consulo.component.extension.ExtensionList;
+import consulo.progress.ProgressIndicator;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -33,7 +37,7 @@ import java.util.List;
  * on a background thread, it won't suddenly begin in the middle of your operation. But note that whenever you start
  * a top-level read action on a background thread, you should be prepared to anything being changed, including "dumb"
  * mode being suddenly on and off. To avoid executing a read action in "dumb" mode, please use {@link #runReadActionInSmartMode} or
- * {@link com.intellij.openapi.application.NonBlockingReadAction#inSmartMode}.
+ * {@link NonBlockingReadAction#inSmartMode}.
  * <p>
  * More information about dumb mode could be found here: {@link IndexNotReadyException}
  *
@@ -241,7 +245,7 @@ public abstract class DumbService {
   public abstract void queueTask(@Nonnull DumbModeTask task);
 
   /**
-   * Cancels the given task. If it's in the queue, it won't be executed. If it's already running, its {@link com.intellij.openapi.progress.ProgressIndicator} is canceled, so the next {@link ProgressManager#checkCanceled()} call
+   * Cancels the given task. If it's in the queue, it won't be executed. If it's already running, its {@link ProgressIndicator} is canceled, so the next {@link ProgressManager#checkCanceled()} call
    * will throw {@link ProcessCanceledException}.
    */
   public abstract void cancelTask(@Nonnull DumbModeTask task);

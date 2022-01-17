@@ -16,6 +16,8 @@
 
 package com.intellij.openapi.util;
 
+import consulo.application.util.function.ThrowableComputable;
+
 import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;

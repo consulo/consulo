@@ -22,7 +22,7 @@ import com.intellij.execution.configurations.coverage.CoverageEnabledConfigurati
 import com.intellij.execution.process.ProcessHandler;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -118,7 +118,7 @@ public abstract class CoverageDataManager {
    * runs computation in read action, blocking project close till action has been run,
    * and doing nothing in case projectClosing() event has been already broadcasted.
    *  Note that actions must not be long running not to cause significant pauses on project close.  
-   * @param computation {@link com.intellij.openapi.util.Computable to be run}
+   * @param computation {@link Computable to be run}
    * @return result of the computation or null if the project is already closing.
    */
   @Nullable

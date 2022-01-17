@@ -20,7 +20,7 @@ import com.intellij.diff.requests.ContentDiffRequest;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import com.intellij.diff.tools.util.side.ThreesideDiffViewer;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.util.EmptyRunnable;
 import javax.annotation.Nonnull;
 

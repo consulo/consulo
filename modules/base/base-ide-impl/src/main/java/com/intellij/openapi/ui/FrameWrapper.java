@@ -36,6 +36,7 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

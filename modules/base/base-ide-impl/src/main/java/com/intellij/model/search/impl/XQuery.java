@@ -1,6 +1,6 @@
 package com.intellij.model.search.impl;
 
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import com.intellij.util.Query;
 import javax.annotation.Nonnull;
 

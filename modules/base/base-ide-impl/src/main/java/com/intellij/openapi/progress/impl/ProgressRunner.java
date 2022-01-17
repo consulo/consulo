@@ -2,8 +2,8 @@
 package com.intellij.openapi.progress.impl;
 
 import com.intellij.codeWithMe.ClientId;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.application.impl.ModalityStateEx;
@@ -18,6 +18,8 @@ import com.intellij.util.ui.EDT;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

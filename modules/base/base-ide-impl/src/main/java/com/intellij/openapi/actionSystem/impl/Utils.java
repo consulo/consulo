@@ -10,8 +10,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.concurrency.CancellablePromise;
+import consulo.util.concurrent.CancellablePromise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -4,6 +4,8 @@ package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
 import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Processor;
+
 import javax.annotation.Nonnull;
 
 /**

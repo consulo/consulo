@@ -4,24 +4,28 @@ package com.intellij.openapi.application.impl;
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.concurrency.SensitiveProgressWrapper;
 import com.intellij.diagnostic.ThreadDumper;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.constraints.ExpirableConstrainedExecution;
-import com.intellij.openapi.application.constraints.Expiration;
+import com.intellij.openapi.application.ModalityState;
+import consulo.application.ReadAction;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.NonBlockingReadAction;
+import consulo.application.constraint.ExpirableConstrainedExecution;
+import consulo.application.constraint.Expiration;
+import consulo.component.ComponentManager;
 import consulo.logging.Logger;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.CancellablePromise;
+import consulo.util.concurrent.Promises;
 import org.jetbrains.annotations.TestOnly;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.CancellablePromise;
-import org.jetbrains.concurrency.Promises;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -89,13 +93,13 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
   }
 
   @Override
-  public NonBlockingReadAction<T> inSmartMode(@Nonnull Project project) {
-    return withConstraint(new InSmartMode(project), project);
+  public NonBlockingReadAction<T> inSmartMode(@Nonnull ComponentManager project) {
+    return withConstraint(new InSmartMode((Project)project), project);
   }
 
   @Override
-  public NonBlockingReadAction<T> withDocumentsCommitted(@Nonnull Project project) {
-    return withConstraint(new WithDocumentsCommitted(project, ModalityState.any()), project);
+  public NonBlockingReadAction<T> withDocumentsCommitted(@Nonnull ComponentManager project) {
+    return withConstraint(new WithDocumentsCommitted((Project)project, ModalityState.any()), project);
   }
 
   @Override
@@ -110,8 +114,8 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
   }
 
   @Override
-  public NonBlockingReadAction<T> finishOnUiThread(@Nonnull ModalityState modality, @Nonnull Consumer<T> uiThreadAction) {
-    return new NonBlockingReadActionImpl<>(myComputation, Pair.create(modality, uiThreadAction), getConstraints(), getCancellationConditions(), getExpirationSet(), myCoalesceEquality,
+  public NonBlockingReadAction<T> finishOnUiThread(@Nonnull consulo.ui.ModalityState modality, @Nonnull Consumer<T> uiThreadAction) {
+    return new NonBlockingReadActionImpl<>(myComputation, Pair.create((ModalityState)modality, uiThreadAction), getConstraints(), getCancellationConditions(), getExpirationSet(), myCoalesceEquality,
                                            myProgressIndicator);
   }
 

@@ -2,7 +2,7 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.util.ThreadLocalCachedValue;
-import com.intellij.openapi.util.ThrowableComputable;
+import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.SystemProperties;
 

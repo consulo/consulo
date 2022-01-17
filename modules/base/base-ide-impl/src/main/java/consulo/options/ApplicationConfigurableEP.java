@@ -15,7 +15,7 @@
  */
 package consulo.options;
 
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.options.ConfigurableEP;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.util.xmlb.annotations.AbstractCollection;

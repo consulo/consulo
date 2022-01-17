@@ -2,6 +2,7 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.openapi.application.*;
+import consulo.application.*;
 import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 
@@ -33,14 +34,14 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   //
   @Nonnull
   @Override
-  protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
+  protected AppUIExecutor createUIExecutor(@Nonnull consulo.ui.ModalityState modalityState) {
+    return new AppUIExecutorImpl((ModalityState)modalityState, ExecutionThread.EDT);
   }
 
   @Nonnull
   @Override
-  protected AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
+  protected AppUIExecutor createWriteThreadExecutor(@Nonnull consulo.ui.ModalityState modalityState) {
+    return new AppUIExecutorImpl((ModalityState)modalityState, ExecutionThread.WT);
   }
 
   @Nonnull

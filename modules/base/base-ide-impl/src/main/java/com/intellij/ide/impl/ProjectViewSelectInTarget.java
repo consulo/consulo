@@ -23,11 +23,10 @@ import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.TreeStructureProvider;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
@@ -36,6 +35,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
+import consulo.util.concurrent.ActionCallback;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -57,11 +58,11 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
 
   @Nonnull
   public static ActionCallback select(@Nonnull Project project,
-                                      final Object toSelect,
-                                      @Nullable final String viewId,
-                                      @Nullable final String subviewId,
-                                      final VirtualFile virtualFile,
-                                      final boolean requestFocus) {
+                                                              final Object toSelect,
+                                                              @Nullable final String viewId,
+                                                              @Nullable final String subviewId,
+                                                              final VirtualFile virtualFile,
+                                                              final boolean requestFocus) {
     final ActionCallback result = new ActionCallback();
 
     final ProjectView projectView = ProjectView.getInstance(project);

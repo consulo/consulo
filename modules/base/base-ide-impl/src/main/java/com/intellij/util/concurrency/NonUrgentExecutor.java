@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.concurrency;
 
+import consulo.application.ReadAction;
+
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.Executor;
@@ -9,7 +11,7 @@ import java.util.concurrent.Executor;
  * A common executor for non-urgent tasks, which are expected to be fast most of the time.
  * Used to avoid spawning a lot of threads by different subsystems all reacting to the same event,
  * when all they have to do is several short PSI/index queries in reaction to a file or project model change,
- * or on project opening. If you're using {@link com.intellij.openapi.application.ReadAction#nonBlocking},
+ * or on project opening. If you're using {@link ReadAction#nonBlocking},
  * you might consider this executor as backend. This executor is bounded, so please don't perform long-running
  * or potentially blocking operations here.
  * <p></p>

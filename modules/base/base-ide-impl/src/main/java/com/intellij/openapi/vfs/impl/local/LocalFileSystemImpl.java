@@ -16,8 +16,8 @@
 package com.intellij.openapi.vfs.impl.local;
 
 import com.intellij.concurrency.JobScheduler;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,7 +35,6 @@ import com.intellij.util.io.URLUtil;
 import consulo.disposer.Disposer;
 import consulo.util.collection.Maps;
 import consulo.vfs.RefreshableFileSystem;
-import gnu.trove.THashSet;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 

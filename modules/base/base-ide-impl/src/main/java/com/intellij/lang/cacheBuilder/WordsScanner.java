@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.cacheBuilder;
 
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 
 /**
  * Implemented by a custom language plugin to define how texts in the language are

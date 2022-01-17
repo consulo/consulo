@@ -13,7 +13,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

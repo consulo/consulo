@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application.impl;
 
-import com.intellij.openapi.application.constraints.ConstrainedExecution;
+import consulo.application.constraint.ConstrainedExecution;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 

@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.table.TableView;

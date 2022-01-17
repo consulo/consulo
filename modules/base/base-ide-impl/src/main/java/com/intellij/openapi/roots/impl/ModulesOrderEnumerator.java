@@ -19,7 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

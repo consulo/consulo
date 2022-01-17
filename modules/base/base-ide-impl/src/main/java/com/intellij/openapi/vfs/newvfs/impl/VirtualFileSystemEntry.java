@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.*;

@@ -20,6 +20,8 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.progress.ProgressIndicator;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -28,7 +30,7 @@ import javax.swing.*;
  * Builder for the changes list in the file system. The instances of
  * this class are used to collect changes that happened in the file system.
  *
- * @see ChangeProvider#getChanges(VcsDirtyScope, ChangelistBuilder,com.intellij.openapi.progress.ProgressIndicator, ChangeListManagerGate)
+ * @see ChangeProvider#getChanges(VcsDirtyScope, ChangelistBuilder, ProgressIndicator, ChangeListManagerGate)
  * @author max
  */
 public interface ChangelistBuilder {

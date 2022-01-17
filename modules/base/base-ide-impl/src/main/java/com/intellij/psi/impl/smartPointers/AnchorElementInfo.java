@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.lang.LanguageUtil;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.Segment;

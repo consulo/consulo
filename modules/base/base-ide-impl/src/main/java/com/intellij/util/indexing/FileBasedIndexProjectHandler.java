@@ -21,11 +21,11 @@ package com.intellij.util.indexing;
 
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.TransactionGuard;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
@@ -35,7 +35,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.process.InterruptibleProcess;
 
 import java.io.IOException;

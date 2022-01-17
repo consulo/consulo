@@ -15,22 +15,22 @@
  */
 package com.intellij.openapi.application.ex;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.EdtReplacementThread;
+import consulo.application.EdtReplacementThread;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;

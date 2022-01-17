@@ -20,7 +20,7 @@ import com.intellij.concurrency.ResultConsumer;
 import com.intellij.icons.AllIcons;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;

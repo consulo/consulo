@@ -17,7 +17,7 @@ package consulo.externalService.impl.ui;
 
 import com.intellij.internal.statistic.configurable.SendPeriod;
 import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;

@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor.colors.impl;
 
 import com.intellij.ide.ui.LafManager;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;

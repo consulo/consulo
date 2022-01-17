@@ -21,7 +21,7 @@ import com.intellij.notification.impl.NotificationsManagerImpl;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.Computable;
+import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;

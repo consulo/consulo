@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.ActionCallback;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import com.intellij.util.ArrayUtil;
+import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nullable;

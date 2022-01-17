@@ -2,7 +2,7 @@
 package com.intellij.ui.popup.async;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.PopupStep;
 import consulo.disposer.Disposer;

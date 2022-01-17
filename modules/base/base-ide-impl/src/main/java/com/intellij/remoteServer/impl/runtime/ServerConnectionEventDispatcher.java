@@ -15,7 +15,7 @@
  */
 package com.intellij.remoteServer.impl.runtime;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionListener;
 import consulo.component.messagebus.MessageBus;

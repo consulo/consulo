@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.ThrowableRunnable;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.application.util.function.ThrowableRunnable;
 
 public class ClassLoaderUtil {
   private ClassLoaderUtil() {

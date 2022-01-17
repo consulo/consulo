@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileTypes.ex;
 
 import com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.FileTypeRenderer;
 import com.intellij.openapi.project.Project;

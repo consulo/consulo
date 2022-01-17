@@ -15,6 +15,8 @@
  */
 package com.intellij.util;
 
+import consulo.application.util.function.Processor;
+
 public interface Generator<T> {
   void generate(Processor<T> processor);
 }

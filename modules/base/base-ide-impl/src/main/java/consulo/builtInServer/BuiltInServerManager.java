@@ -16,7 +16,7 @@
 package consulo.builtInServer;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.util.Url;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -17,7 +17,7 @@ package com.intellij.ui.breadcrumbs;
 
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
+import consulo.application.ReadAction;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -30,7 +30,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

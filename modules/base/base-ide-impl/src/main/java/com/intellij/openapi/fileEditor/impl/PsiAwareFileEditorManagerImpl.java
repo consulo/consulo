@@ -17,8 +17,8 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.PowerSaveMode;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;

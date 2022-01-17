@@ -17,7 +17,7 @@ package consulo.desktop.awt.startup.customize;
 
 import com.intellij.ide.plugins.RepositoryHelper;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
-import com.intellij.openapi.application.Application;
+import consulo.application.Application;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;

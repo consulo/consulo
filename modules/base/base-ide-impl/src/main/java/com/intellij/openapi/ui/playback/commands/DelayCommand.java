@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui.playback.commands;
 
 import com.intellij.openapi.ui.playback.PlaybackContext;
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.ActionCallback;
 
 public class DelayCommand extends AbstractCommand {
   public static String PREFIX = CMD_PREFIX + "delay";

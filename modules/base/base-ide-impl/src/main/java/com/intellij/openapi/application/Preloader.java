@@ -15,20 +15,21 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.Application;
 import consulo.container.util.StatCollector;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promises;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.Promises;
 
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;

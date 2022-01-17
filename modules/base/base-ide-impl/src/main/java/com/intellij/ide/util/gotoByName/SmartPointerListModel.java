@@ -16,7 +16,7 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.ide.util.treeView.TreeAnchorizer;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.util.containers.ContainerUtil;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application.ex;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 
 /**
  * @author max

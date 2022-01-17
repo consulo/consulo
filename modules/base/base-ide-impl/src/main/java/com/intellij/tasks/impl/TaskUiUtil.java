@@ -8,10 +8,10 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 
 import javax.annotation.Nullable;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.tasks.config.TaskRepositoryEditor;

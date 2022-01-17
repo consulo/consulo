@@ -13,8 +13,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static java.util.Collections.*;
-import static org.jetbrains.concurrency.Promises.rejectedPromise;
+import static consulo.util.concurrent.Promises.rejectedPromise;
 
 /**
  * @author Sergey.Malenkov

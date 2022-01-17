@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.ex;
 
-import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
 import javax.annotation.Nonnull;
 

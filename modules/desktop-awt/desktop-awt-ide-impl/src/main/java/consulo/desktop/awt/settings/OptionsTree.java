@@ -44,7 +44,7 @@ import consulo.ui.app.impl.settings.UnifiedConfigurableComparator;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

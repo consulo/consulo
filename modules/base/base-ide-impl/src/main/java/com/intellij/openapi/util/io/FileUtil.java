@@ -24,6 +24,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
 import com.intellij.util.text.StringFactory;
+import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import org.intellij.lang.annotations.RegExp;
@@ -384,7 +385,7 @@ public class FileUtil extends FileUtilRt {
 
     try {
       // attempt to execute on pooled thread
-      final Class<?> aClass = Class.forName("com.intellij.openapi.application.ApplicationManager");
+      final Class<?> aClass = Class.forName("consulo.application.ApplicationManager");
       final Method getApplicationMethod = aClass.getMethod("getApplication");
       final Object application = getApplicationMethod.invoke(null);
       final Method executeOnPooledThreadMethod = application.getClass().getMethod("executeOnPooledThread", Runnable.class);
