@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * Interface which can be used to receive the contents of a project.

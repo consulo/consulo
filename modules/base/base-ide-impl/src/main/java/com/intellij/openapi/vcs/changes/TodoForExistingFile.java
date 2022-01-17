@@ -16,11 +16,11 @@
 package com.intellij.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.PsiTodoSearchHelper;

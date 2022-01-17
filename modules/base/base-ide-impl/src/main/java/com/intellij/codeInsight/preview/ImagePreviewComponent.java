@@ -18,7 +18,7 @@ package com.intellij.codeInsight.preview;
 
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiReference;

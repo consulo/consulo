@@ -33,7 +33,7 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.ProblemListener;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;

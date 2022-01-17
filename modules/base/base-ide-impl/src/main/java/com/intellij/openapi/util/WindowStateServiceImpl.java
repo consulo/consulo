@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.ScreenUtil;
+import consulo.component.util.ModificationTracker;
 import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

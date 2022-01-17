@@ -18,10 +18,10 @@ package com.intellij.ide.highlighter;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public class HighlighterFactory {

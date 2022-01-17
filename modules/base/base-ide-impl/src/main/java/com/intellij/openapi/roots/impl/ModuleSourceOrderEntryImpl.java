@@ -21,7 +21,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.types.SourcesOrderRootType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;

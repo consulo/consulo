@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.actions.VcsContextFactory;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesFilterDialog;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author yole

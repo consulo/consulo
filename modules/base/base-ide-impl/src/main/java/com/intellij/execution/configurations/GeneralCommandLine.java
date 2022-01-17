@@ -23,7 +23,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;

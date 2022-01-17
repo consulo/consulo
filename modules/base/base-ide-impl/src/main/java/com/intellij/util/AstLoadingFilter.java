@@ -4,7 +4,7 @@ package com.intellij.util;
 import com.intellij.injected.editor.VirtualFileWindow;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.exception.FrequentErrorLogger;
 import consulo.application.util.function.ThrowableRunnable;

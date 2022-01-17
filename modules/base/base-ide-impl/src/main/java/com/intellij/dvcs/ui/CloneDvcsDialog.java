@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.EditorComboBox;
 import com.intellij.util.ArrayUtil;

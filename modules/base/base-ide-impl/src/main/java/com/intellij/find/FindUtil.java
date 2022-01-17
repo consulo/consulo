@@ -56,7 +56,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.ui.LightweightHint;
 import com.intellij.usageView.UsageInfo;

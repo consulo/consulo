@@ -16,7 +16,7 @@
 package com.maddyhome.idea.copyright;
 
 import com.intellij.openapi.fileTypes.FileTypeExtension;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import consulo.container.plugin.PluginIds;

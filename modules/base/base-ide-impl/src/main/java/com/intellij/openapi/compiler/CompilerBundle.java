@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.compiler;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import org.jetbrains.annotations.PropertyKey;
 

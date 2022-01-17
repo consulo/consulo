@@ -18,11 +18,11 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.VFileContentChangeEvent;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.BulkFileListener;
+import consulo.virtualFileSystem.event.VFileContentChangeEvent;
+import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

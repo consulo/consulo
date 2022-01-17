@@ -17,7 +17,7 @@ package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

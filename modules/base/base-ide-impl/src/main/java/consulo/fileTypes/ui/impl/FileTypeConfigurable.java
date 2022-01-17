@@ -40,6 +40,7 @@ import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

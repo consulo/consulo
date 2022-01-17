@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryKind;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.ui.image.Image;
 

@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;

@@ -18,8 +18,8 @@ package com.intellij.openapi.vfs.ex.http;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
 import com.intellij.openapi.vfs.StandardFileSystems;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

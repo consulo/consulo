@@ -20,7 +20,7 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

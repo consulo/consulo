@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.BundleBase;
+import consulo.component.util.localize.BundleBase;
 import com.intellij.diff.util.DiffPlaces;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.ide.util.PropertiesComponent;
@@ -41,7 +41,7 @@ import com.intellij.openapi.vcs.impl.CheckinHandlersManager;
 import com.intellij.openapi.vcs.ui.CommitMessage;
 import com.intellij.openapi.vcs.ui.Refreshable;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;

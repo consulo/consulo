@@ -7,6 +7,7 @@ import com.intellij.openapi.util.TextRange;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.CharArrayUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.Contract;
 
@@ -182,7 +183,7 @@ public interface Document extends UserDataHolder {
    *
    * @return the modification stamp value.
    * @see com.intellij.psi.PsiFile#getModificationStamp()
-   * @see com.intellij.openapi.vfs.VirtualFile#getModificationStamp()
+   * @see VirtualFile#getModificationStamp()
    */
   @Contract(pure = true)
   long getModificationStamp();

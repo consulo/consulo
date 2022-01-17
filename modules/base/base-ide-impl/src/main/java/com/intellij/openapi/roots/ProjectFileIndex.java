@@ -18,7 +18,8 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -181,16 +182,16 @@ public interface ProjectFileIndex extends FileIndex {
   }
 
   /**
-   * @deprecated name of this method may be confusing. If you want to check if the file is excluded or ignored use {@link #isExcluded(com.intellij.openapi.vfs.VirtualFile)}.
-   * If you want to check if the file is ignored use {@link com.intellij.openapi.fileTypes.FileTypeRegistry#isFileIgnored(com.intellij.openapi.vfs.VirtualFile)}.
-   * If you want to check if the file or one of its parents is ignored use {@link #isUnderIgnored(com.intellij.openapi.vfs.VirtualFile)}.
+   * @deprecated name of this method may be confusing. If you want to check if the file is excluded or ignored use {@link #isExcluded(VirtualFile)}.
+   * If you want to check if the file is ignored use {@link FileTypeRegistry#isFileIgnored(VirtualFile)}.
+   * If you want to check if the file or one of its parents is ignored use {@link #isUnderIgnored(VirtualFile)}.
    */
   @Deprecated
   boolean isIgnored(@Nonnull VirtualFile file);
 
   /**
    * Checks if the specified file or directory is located under project roots but the file itself or one of its parent directories is
-   * either excluded from the project or ignored by {@link com.intellij.openapi.fileTypes.FileTypeRegistry#isFileIgnored(com.intellij.openapi.vfs.VirtualFile)}).
+   * either excluded from the project or ignored by {@link FileTypeRegistry#isFileIgnored(VirtualFile)}).
    *
    * @param file the file to check.
    * @return true if <code>file</code> is excluded or ignored, false otherwise.
@@ -199,7 +200,7 @@ public interface ProjectFileIndex extends FileIndex {
 
   /**
    * Checks if the specified file or directory is located under project roots but the file itself or one of its parent directories is ignored
-   * by {@link com.intellij.openapi.fileTypes.FileTypeRegistry#isFileIgnored(com.intellij.openapi.vfs.VirtualFile)}).
+   * by {@link FileTypeRegistry#isFileIgnored(VirtualFile)}).
    *
    * @param file the file to check.
    * @return true if <code>file</code> is ignored, false otherwise.

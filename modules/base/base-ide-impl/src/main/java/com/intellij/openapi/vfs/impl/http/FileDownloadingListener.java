@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.impl.http;
 
 import javax.annotation.Nonnull;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author nik

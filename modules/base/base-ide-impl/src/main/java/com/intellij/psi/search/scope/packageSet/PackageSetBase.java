@@ -17,7 +17,7 @@ package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.diagnostic.PluginException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import javax.annotation.Nonnull;
@@ -47,7 +47,7 @@ public abstract class PackageSetBase implements PackageSet {
   }
 
   /**
-   * @see PackageSetBase#getPsiFile(com.intellij.openapi.vfs.VirtualFile, com.intellij.psi.search.scope.packageSet.NamedScopesHolder)
+   * @see PackageSetBase#getPsiFile(VirtualFile, com.intellij.psi.search.scope.packageSet.NamedScopesHolder)
    */
   @Deprecated
   @Nullable

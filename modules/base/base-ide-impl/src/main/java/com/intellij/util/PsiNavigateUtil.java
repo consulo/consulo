@@ -17,7 +17,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nullable;

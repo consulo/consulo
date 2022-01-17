@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.impl.EditorTextFieldRendererDocument;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.LineTokenizer;

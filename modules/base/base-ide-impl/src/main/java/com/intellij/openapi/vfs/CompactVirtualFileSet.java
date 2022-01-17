@@ -5,6 +5,8 @@ import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import java.util.*;

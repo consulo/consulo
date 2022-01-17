@@ -35,7 +35,7 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDirectoryMapping;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;

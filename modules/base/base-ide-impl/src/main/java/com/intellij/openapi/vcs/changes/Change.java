@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.impl.VcsPathPresenter;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcsUtil.VcsFilePathUtil;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

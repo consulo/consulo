@@ -8,7 +8,7 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.VfsPresentationUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

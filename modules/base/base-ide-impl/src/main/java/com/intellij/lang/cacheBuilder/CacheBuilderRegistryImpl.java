@@ -16,7 +16,7 @@
 
 package com.intellij.lang.cacheBuilder;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

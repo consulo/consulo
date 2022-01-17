@@ -3,11 +3,11 @@ package com.intellij.openapi.file.exclude;
 
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;

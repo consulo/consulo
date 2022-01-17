@@ -2,8 +2,8 @@
 package com.intellij.openapi.projectRoots;
 
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.ArrayUtil;
 

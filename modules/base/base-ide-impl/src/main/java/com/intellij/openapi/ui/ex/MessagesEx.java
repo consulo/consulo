@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.image.Image;

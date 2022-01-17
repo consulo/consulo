@@ -6,14 +6,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.*;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.*;
 import com.intellij.psi.*;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.concurrency.Invoker;
 import com.intellij.util.containers.SmartHashSet;
 import consulo.component.messagebus.MessageBusConnection;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.intellij.ProjectTopics.PROJECT_ROOTS;
-import static com.intellij.openapi.vfs.VirtualFileManager.VFS_CHANGES;
+import static consulo.virtualFileSystem.VirtualFileManager.VFS_CHANGES;
 import static com.intellij.psi.util.PsiUtilCore.getVirtualFile;
 
 public abstract class ProjectFileNodeUpdater {

@@ -26,7 +26,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.PsiElement;

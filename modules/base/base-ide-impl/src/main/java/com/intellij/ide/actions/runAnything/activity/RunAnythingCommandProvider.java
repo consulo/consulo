@@ -17,7 +17,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

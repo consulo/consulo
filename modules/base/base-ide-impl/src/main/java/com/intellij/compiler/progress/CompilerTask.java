@@ -34,7 +34,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.pom.Navigatable;

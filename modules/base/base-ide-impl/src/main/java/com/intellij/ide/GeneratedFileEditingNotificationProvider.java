@@ -19,7 +19,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;

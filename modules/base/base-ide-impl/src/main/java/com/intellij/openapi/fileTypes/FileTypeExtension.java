@@ -20,6 +20,7 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import java.util.List;

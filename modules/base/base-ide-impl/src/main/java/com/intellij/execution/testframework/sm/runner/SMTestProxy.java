@@ -34,7 +34,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.ContainerUtil;

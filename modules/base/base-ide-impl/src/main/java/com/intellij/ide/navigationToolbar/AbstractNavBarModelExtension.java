@@ -16,7 +16,7 @@
 package com.intellij.ide.navigationToolbar;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 
 import javax.annotation.Nonnull;

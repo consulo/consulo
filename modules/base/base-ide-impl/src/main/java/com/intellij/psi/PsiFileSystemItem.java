@@ -15,9 +15,9 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.PsiElementProcessor;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -62,6 +62,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

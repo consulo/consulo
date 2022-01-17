@@ -19,7 +19,7 @@ package com.intellij.psi.impl.cache.impl.todo;
 import com.intellij.openapi.fileTypes.FileTypeExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.indexing.DataIndexer;
 import com.intellij.util.indexing.FileContent;
 import consulo.container.plugin.PluginIds;

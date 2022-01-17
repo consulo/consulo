@@ -16,8 +16,8 @@
  */
 package com.intellij.openapi.vfs.ex.dummy;
 
-import com.intellij.openapi.vfs.VfsBundle;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VfsBundle;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

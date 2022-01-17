@@ -34,7 +34,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.meta.PsiMetaData;

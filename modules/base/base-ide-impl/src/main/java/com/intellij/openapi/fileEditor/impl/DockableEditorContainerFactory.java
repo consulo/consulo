@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockContainerFactory;

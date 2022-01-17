@@ -2066,7 +2066,9 @@ public class AbstractTreeUi {
     setCancelRequested(false);
     myResettingToReadyNow.set(false);
 
-    myInitialized.setDone();
+    if (!myInitialized.isProcessed()) {
+      myInitialized.setDone();
+    }
 
     if (canInitiateNewActivity()) {
       if (myUpdaterState != null && !myUpdaterState.isProcessingNow()) {

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.ex.http;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.util.EventListener;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ImmutableList;

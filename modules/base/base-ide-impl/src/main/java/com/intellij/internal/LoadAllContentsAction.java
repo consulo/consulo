@@ -31,8 +31,8 @@ import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VFileProperty;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 
 import java.io.File;

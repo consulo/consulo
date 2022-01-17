@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.Component;

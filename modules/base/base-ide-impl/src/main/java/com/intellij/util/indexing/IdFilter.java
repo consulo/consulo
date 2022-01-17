@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectRootManager;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.CachedValue;

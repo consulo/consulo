@@ -17,10 +17,10 @@ package com.intellij.openapi.vfs.impl.http;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.FileContentUtilCore;
 

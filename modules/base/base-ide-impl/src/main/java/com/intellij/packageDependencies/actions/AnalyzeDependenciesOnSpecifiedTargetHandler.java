@@ -21,7 +21,7 @@ import com.intellij.notification.NotificationGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.ForwardDependenciesBuilder;

@@ -19,7 +19,7 @@ import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 

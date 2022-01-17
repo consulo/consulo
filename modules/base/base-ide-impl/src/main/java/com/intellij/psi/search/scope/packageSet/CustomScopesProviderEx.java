@@ -16,7 +16,7 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package com.intellij.ide.diff;
 
 import consulo.fileTypes.ArchiveFileType;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
 import javax.annotation.Nonnull;

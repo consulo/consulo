@@ -31,6 +31,11 @@ import com.intellij.util.containers.DistinctRootsCollection;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -62,13 +67,7 @@ public class VfsUtilCore {
    * @return <code>true</code> if <code>ancestor</code> is parent of <code>file</code>; <code>false</code> otherwise
    */
   public static boolean isAncestor(@Nonnull VirtualFile ancestor, @Nonnull VirtualFile file, boolean strict) {
-    if (!file.getFileSystem().equals(ancestor.getFileSystem())) return false;
-    VirtualFile parent = strict ? file.getParent() : file;
-    while (true) {
-      if (parent == null) return false;
-      if (parent.equals(ancestor)) return true;
-      parent = parent.getParent();
-    }
+    return VirtualFileUtil.isAncestor(ancestor, file, strict);
   }
 
   /**

@@ -17,8 +17,7 @@ import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.events.*;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.file.impl.FileManagerImpl;
 import com.intellij.ui.GuiUtils;
@@ -28,6 +27,7 @@ import com.intellij.util.indexing.FileBasedIndexProjectHandler;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.logging.Logger;
+import consulo.virtualFileSystem.event.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

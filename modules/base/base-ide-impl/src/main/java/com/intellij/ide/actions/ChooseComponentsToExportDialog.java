@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.FieldPanel;
 import com.intellij.util.containers.MultiMap;
 import consulo.container.boot.ContainerPathManager;

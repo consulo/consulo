@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import com.intellij.openapi.vcs.impl.projectlevelman.NewMappings;
 import com.intellij.openapi.vcs.roots.VcsRootErrorsFinder;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;

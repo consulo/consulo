@@ -35,7 +35,7 @@ import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.compiler.CompilerConfiguration;

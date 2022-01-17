@@ -35,7 +35,7 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;

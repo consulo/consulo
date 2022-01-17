@@ -36,7 +36,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;

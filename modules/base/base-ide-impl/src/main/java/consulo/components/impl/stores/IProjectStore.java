@@ -18,7 +18,7 @@ package consulo.components.impl.stores;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

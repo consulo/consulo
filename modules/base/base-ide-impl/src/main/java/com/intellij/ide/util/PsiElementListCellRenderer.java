@@ -18,7 +18,7 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;

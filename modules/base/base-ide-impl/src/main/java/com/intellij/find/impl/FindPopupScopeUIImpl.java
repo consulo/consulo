@@ -15,7 +15,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.ui.SimpleListCellRenderer;

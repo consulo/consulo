@@ -19,7 +19,7 @@
  */
 package com.intellij.injected.editor;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public interface VirtualFileWindow {

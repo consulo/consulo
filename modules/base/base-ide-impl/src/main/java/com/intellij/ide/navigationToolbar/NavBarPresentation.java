@@ -31,7 +31,7 @@ import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDirectoryContainer;

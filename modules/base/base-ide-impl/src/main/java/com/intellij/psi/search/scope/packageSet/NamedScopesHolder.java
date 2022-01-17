@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;

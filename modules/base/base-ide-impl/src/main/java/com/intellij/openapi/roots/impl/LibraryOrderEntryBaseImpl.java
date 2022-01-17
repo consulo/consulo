@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.roots.OrderEntryWithTracking;

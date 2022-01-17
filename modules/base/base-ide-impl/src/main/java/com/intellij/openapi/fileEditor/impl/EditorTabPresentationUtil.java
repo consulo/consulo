@@ -5,7 +5,7 @@ import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

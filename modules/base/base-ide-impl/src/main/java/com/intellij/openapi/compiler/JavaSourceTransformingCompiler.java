@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.compiler;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * This compiler is called right before the java sources compiler.
@@ -27,7 +27,7 @@ public interface JavaSourceTransformingCompiler extends Compiler {
    *
    * @param file an original file that is about to be compiled with java compiler
    * @return true if compiler would like to transform the file, false otherwise.
-   *         If true is returned, a copy of original file will be made and {@link #transform(CompileContext,com.intellij.openapi.vfs.VirtualFile,com.intellij.openapi.vfs.VirtualFile)}
+   *         If true is returned, a copy of original file will be made and {@link #transform(CompileContext, VirtualFile, VirtualFile)}
    *         method will be called on it. If transformation succeeded, the transformed copy will be passed to java compiler instead of original file.
    */
   boolean isTransformable(VirtualFile file);

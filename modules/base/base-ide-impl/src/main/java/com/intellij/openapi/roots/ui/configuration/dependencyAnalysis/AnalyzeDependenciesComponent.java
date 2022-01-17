@@ -33,7 +33,7 @@ import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.SimpleColoredComponent;

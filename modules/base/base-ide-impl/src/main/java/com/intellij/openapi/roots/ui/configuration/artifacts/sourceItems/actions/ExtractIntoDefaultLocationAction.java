@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;

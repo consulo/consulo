@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;

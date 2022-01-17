@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.impl;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.ContentRevision;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author yole

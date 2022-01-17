@@ -18,7 +18,7 @@ package com.intellij.compiler.impl;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.ExportableUserDataHolderBase;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -27,7 +27,7 @@ import com.intellij.openapi.roots.FileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

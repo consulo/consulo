@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.diff.impl.patch.formove.FilePathComparator;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VfsUtil;
 
 import java.util.Collections;

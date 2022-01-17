@@ -16,9 +16,9 @@
 package com.intellij.diff.contents;
 
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

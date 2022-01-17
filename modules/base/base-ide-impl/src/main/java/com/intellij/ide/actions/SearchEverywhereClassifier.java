@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

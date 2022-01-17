@@ -26,7 +26,7 @@ import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotation.access.RequiredReadAction;

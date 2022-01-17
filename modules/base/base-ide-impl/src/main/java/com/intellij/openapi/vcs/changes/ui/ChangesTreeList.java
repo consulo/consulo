@@ -37,7 +37,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.treeStructure.Tree;

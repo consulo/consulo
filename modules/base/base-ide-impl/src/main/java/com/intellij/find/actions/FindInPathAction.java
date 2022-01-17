@@ -23,7 +23,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.PsiElement;

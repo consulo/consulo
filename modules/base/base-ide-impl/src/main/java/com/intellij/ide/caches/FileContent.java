@@ -17,7 +17,7 @@
 package com.intellij.ide.caches;
 
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 
 import java.io.IOException;

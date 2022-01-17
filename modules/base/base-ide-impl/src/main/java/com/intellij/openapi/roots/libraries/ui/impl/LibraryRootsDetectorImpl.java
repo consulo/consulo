@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.libraries.LibraryRootType;
 import com.intellij.openapi.roots.libraries.ui.DetectedLibraryRoot;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsDetector;
 import com.intellij.openapi.roots.libraries.ui.RootDetector;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

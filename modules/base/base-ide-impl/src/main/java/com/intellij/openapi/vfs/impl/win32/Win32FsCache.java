@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.vfs.impl.win32;
 
-import com.intellij.openapi.util.io.FileAttributes;
+import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.win32.FileInfo;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.util.ArrayUtil;
 import consulo.util.collection.DelegateMap;

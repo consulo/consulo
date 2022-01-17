@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;

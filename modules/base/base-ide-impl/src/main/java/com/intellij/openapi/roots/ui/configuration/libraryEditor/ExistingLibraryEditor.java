@@ -22,7 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

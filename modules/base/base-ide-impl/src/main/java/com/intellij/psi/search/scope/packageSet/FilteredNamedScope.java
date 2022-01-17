@@ -2,7 +2,7 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;

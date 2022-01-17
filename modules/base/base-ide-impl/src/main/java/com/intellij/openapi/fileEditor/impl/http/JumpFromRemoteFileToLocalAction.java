@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.openapi.vfs.impl.http.RemoteFileState;
 import com.intellij.psi.search.FilenameIndex;

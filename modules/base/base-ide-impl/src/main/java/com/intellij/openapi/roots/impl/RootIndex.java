@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -25,8 +25,8 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.util.CollectionQuery;
 import com.intellij.util.EmptyQuery;
 import com.intellij.util.Query;

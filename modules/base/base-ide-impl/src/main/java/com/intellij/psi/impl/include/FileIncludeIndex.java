@@ -2,9 +2,9 @@
 
 package com.intellij.psi.impl.include;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;

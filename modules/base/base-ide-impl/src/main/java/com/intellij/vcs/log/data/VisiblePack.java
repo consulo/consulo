@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.data;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcs.log.VcsLogDataPack;
 import com.intellij.vcs.log.VcsLogFilterCollection;
 import com.intellij.vcs.log.VcsLogProvider;

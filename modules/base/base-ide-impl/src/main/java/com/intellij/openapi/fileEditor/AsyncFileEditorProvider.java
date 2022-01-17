@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public interface AsyncFileEditorProvider extends FileEditorProvider {

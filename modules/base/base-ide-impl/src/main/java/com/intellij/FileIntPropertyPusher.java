@@ -3,7 +3,7 @@ package com.intellij;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.FilePropertyPusher;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.util.io.DataInputOutputUtil;
 import javax.annotation.Nonnull;

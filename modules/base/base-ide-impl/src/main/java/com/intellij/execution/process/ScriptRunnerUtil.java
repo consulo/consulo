@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

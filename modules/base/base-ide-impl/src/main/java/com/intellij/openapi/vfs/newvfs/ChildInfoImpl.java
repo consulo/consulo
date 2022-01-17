@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.newvfs;
 
-import com.intellij.openapi.util.io.FileAttributes;
+import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.newvfs.events.ChildInfo;
+import consulo.virtualFileSystem.event.ChildInfo;
 import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

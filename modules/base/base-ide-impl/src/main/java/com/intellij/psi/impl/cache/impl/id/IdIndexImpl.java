@@ -2,8 +2,8 @@
 package com.intellij.psi.impl.cache.impl.id;
 
 import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.util.indexing.CustomInputsIndexFileBasedIndexExtension;

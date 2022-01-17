@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.tasks.impl.RequestFailedException;
 import com.intellij.tasks.impl.TaskUtil;
 import org.apache.http.Header;

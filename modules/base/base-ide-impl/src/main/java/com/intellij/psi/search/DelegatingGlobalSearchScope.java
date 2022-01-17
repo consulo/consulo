@@ -1,7 +1,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;

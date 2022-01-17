@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vfs.impl.jar;
 
-import com.intellij.openapi.util.io.FileAttributes;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.util.io.FileAttributes;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.ZipHandler;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.zip.ZipArchiveFile;

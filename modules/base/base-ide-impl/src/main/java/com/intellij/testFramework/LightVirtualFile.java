@@ -17,10 +17,10 @@ package com.intellij.testFramework;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.CharsetUtil;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.LocalTimeCounter;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

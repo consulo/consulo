@@ -17,7 +17,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 

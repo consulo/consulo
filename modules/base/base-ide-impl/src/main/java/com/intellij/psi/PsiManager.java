@@ -18,7 +18,7 @@ package com.intellij.psi;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.util.PsiModificationTracker;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;

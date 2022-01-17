@@ -18,7 +18,7 @@ package consulo.ide.impl;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.io.ZipUtil;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;

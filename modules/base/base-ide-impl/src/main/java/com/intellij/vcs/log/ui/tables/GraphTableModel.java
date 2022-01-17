@@ -2,7 +2,7 @@ package com.intellij.vcs.log.ui.tables;
 
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;

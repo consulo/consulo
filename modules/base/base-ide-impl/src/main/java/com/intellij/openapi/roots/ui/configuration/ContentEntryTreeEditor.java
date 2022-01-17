@@ -38,7 +38,7 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TreeSpeedSearch;

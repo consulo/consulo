@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import java.util.HashSet;
 import com.intellij.util.io.ReadOnlyAttributeUtil;
 import javax.annotation.Nonnull;

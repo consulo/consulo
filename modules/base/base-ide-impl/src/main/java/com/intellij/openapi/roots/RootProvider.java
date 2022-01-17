@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.EventListener;

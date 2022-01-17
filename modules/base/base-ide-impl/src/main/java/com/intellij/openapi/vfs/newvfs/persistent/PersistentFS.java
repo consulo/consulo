@@ -2,15 +2,15 @@
 package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileAttributes;
+import consulo.util.io.FileAttributes;
 import com.intellij.openapi.vfs.DiskQueryRelay;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.win32.Win32LocalFileSystem;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import consulo.virtualFileSystem.event.VFileEvent;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 

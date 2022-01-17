@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.PropertyKey;
 

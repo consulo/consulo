@@ -2,12 +2,12 @@
 package com.intellij.ui.tree.project;
 
 import consulo.component.ComponentManager;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

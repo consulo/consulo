@@ -23,7 +23,7 @@ import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
 import consulo.roots.ContentFolderScopes;

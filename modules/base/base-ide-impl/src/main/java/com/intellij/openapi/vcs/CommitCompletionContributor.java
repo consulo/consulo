@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.ui.CommitMessage;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider;import consulo.annotation.access.RequiredReadAction;

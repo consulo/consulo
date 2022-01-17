@@ -3,14 +3,15 @@ package com.intellij.vfs;
 
 import consulo.disposer.Disposable;
 import consulo.application.Application;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import consulo.virtualFileSystem.event.AsyncFileListener;
+import consulo.virtualFileSystem.event.VFileEvent;
 import javax.annotation.Nonnull;
 
 /**
  * Subscribes to VFS events and processes them further on a dedicated pooled thread to {@link AsyncVfsEventsListener}s. <br/><br/>
  * <p>
  * If your event processing code might be slow (in particular, if it calls {@link VFileEvent#getPath()}), this listener is preferred
- * over original ones. Please also consider a safer {@link com.intellij.openapi.vfs.AsyncFileListener}.<br/><br/>
+ * over original ones. Please also consider a safer {@link AsyncFileListener}.<br/><br/>
  *
  * <b>NB:</b> All listeners are executed on a pooled thread, without read action,
  * so the VFS state is unreliable without additional checks. <br/><br/>

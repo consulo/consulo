@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.merge;
 
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsProviderMarker;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 

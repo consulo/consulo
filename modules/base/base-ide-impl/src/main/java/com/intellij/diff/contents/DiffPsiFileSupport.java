@@ -24,7 +24,7 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

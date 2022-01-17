@@ -48,7 +48,7 @@ import com.intellij.openapi.vcs.changes.FilePathsHelper;
 import com.intellij.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchForBaseRevisionTexts;
 import com.intellij.openapi.vcs.changes.patch.PatchDiffRequestFactory;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;

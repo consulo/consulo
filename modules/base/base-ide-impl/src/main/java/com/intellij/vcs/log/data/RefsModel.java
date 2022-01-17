@@ -2,7 +2,7 @@ package com.intellij.vcs.log.data;
 
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcs.log.*;
 import gnu.trove.TIntObjectHashMap;
 import javax.annotation.Nonnull;

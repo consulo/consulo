@@ -19,7 +19,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiManager;
 import javax.annotation.Nonnull;

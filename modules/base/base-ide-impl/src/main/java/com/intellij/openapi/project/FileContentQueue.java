@@ -6,9 +6,9 @@ import consulo.logging.Logger;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
-import com.intellij.openapi.vfs.VFileProperty;
+import consulo.virtualFileSystem.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import javax.annotation.Nonnull;
 

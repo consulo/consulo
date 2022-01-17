@@ -22,7 +22,7 @@ import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 
 public class ProjectPaneSelectInTarget extends ProjectViewSelectInTarget implements DumbAware {

@@ -14,7 +14,7 @@ import com.intellij.openapi.vcs.changes.TextRevisionNumber;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
 import com.intellij.openapi.vcs.changes.committed.RepositoryChangesBrowser;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.ui.components.panels.Wrapper;

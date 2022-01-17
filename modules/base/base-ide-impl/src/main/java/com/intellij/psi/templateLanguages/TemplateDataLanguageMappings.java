@@ -25,7 +25,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.FilePropertyPusher;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

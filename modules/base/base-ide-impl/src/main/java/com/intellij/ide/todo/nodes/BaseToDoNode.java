@@ -21,7 +21,7 @@ import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.todo.TodoTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public abstract class BaseToDoNode<Value> extends AbstractTreeNode<Value> {

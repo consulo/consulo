@@ -18,7 +18,7 @@ package com.intellij.openapi.compiler.options;
 
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import org.jdom.Element;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes.ex;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 

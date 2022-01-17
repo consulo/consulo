@@ -34,7 +34,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.problems.ProblemListener;

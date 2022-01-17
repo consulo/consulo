@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import consulo.virtualFileSystem.fileType.FileType;
+
 /**
  * Markup interface for file types based on some non-binary format (text, xml, etc).
  * However, some advanced UI editors/viewers are required to edit/view files of this

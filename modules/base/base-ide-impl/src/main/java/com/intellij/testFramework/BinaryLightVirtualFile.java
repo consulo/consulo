@@ -15,9 +15,9 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
 import org.jetbrains.annotations.NonNls;

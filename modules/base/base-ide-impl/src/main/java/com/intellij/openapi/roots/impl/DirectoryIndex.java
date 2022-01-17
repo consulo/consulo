@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Query;
 import consulo.roots.ContentFolderTypeProvider;
 
@@ -37,7 +37,7 @@ public abstract class DirectoryIndex {
    * The same as {@link #getInfoForFile} but works only for directories or file roots and returns {@code null} for directories
    * which aren't included in project content or libraries
    *
-   * @deprecated use {@link #getInfoForFile(com.intellij.openapi.vfs.VirtualFile)} instead
+   * @deprecated use {@link #getInfoForFile(VirtualFile)} instead
    */
   @Deprecated
   public abstract DirectoryInfo getInfoForDirectory(@Nonnull VirtualFile dir);

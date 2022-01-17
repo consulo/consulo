@@ -20,7 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

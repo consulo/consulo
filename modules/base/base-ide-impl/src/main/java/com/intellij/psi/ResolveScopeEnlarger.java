@@ -17,7 +17,7 @@ package com.intellij.psi;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.SearchScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

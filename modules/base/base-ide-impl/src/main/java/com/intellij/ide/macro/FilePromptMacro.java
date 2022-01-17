@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author yole

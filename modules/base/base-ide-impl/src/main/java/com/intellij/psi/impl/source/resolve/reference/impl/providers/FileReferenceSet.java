@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;

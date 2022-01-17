@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelPr
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorListener;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureLibraryTableModifiableModelProvider;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.EventDispatcher;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;

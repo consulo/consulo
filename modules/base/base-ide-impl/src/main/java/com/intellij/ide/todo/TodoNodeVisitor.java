@@ -7,7 +7,7 @@ import com.intellij.ide.todo.nodes.SummaryNode;
 import com.intellij.ide.todo.nodes.ToDoRootNode;
 import com.intellij.ide.todo.nodes.TodoTreeHelper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.tree.AbstractTreeNodeVisitor;
 import javax.annotation.Nonnull;
 

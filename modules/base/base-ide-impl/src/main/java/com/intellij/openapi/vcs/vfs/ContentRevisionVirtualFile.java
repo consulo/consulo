@@ -22,7 +22,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.ContentRevision;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 

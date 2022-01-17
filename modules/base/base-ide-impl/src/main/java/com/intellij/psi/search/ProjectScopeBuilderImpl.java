@@ -9,7 +9,7 @@ import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.impl.ProjectFileIndexImpl;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

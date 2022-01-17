@@ -60,6 +60,8 @@ import consulo.roots.ContentFolderScopes;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntObjectHashMap;

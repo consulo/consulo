@@ -41,6 +41,7 @@
         <include>consulo:consulo-ui-impl</include>
         <include>consulo:consulo-xcoverage-data</include>
         <include>consulo:consulo-proxy</include>
+        <include>consulo:consulo-virtual-file-system-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

@@ -20,7 +20,7 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.PomModel;
 import com.intellij.pom.PomModelAspect;
 import com.intellij.pom.event.PomModelEvent;

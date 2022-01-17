@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.types.BinariesOrderRootType;

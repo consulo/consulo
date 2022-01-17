@@ -3,7 +3,7 @@ package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@
 package com.intellij.psi.injection;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -3,13 +3,13 @@ package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.codeInsight.daemon.impl.FileStatusMap;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.vfs.AsyncFileListener;
+import consulo.virtualFileSystem.event.AsyncFileListener;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.RefreshWorker;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;

@@ -17,7 +17,7 @@ package consulo.vfs;
 
 import com.intellij.openapi.vfs.ArchiveCopyingFileSystem;
 import com.intellij.openapi.vfs.LocalFileProvider;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.io.URLUtil;
 

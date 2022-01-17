@@ -32,7 +32,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangeNodeDecorator;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowserNode;
 import com.intellij.openapi.vcs.changes.ui.ChangesTreeList;
 import com.intellij.openapi.vcs.changes.ui.TreeModelBuilder;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;

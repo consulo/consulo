@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.update;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.ui.image.Image;
 

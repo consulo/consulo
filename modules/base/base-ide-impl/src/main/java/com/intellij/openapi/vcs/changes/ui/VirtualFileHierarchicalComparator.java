@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Comparator;
 

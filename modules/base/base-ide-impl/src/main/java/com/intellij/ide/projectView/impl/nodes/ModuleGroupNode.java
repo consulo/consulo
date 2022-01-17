@@ -29,7 +29,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.module.Module;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;

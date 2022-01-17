@@ -22,6 +22,7 @@ import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

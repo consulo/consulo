@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.CachingCommittedChangesProvider;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.util.Consumer;
 import consulo.component.messagebus.MessageBusConnection;

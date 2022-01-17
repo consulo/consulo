@@ -29,7 +29,7 @@ import com.intellij.openapi.vcs.history.impl.VcsSelectionHistoryDialog;
 import com.intellij.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import com.intellij.openapi.vcs.impl.VcsBackgroundableActions;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.vcsUtil.VcsSelection;
 import com.intellij.vcsUtil.VcsSelectionUtil;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 

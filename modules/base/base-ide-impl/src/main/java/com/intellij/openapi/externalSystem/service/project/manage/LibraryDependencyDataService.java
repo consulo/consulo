@@ -32,7 +32,7 @@ import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -22,7 +22,7 @@ import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

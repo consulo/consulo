@@ -17,8 +17,8 @@
 package consulo.copyright.config;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;

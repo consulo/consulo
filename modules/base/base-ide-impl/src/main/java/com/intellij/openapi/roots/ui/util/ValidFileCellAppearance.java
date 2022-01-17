@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.util;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
 
 import java.io.File;

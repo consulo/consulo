@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * Created with IntelliJ IDEA.

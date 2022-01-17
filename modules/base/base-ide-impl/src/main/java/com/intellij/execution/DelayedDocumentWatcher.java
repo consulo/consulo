@@ -29,7 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.PsiErrorElementUtil;

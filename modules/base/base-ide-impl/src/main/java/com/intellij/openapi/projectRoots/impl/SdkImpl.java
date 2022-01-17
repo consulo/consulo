@@ -15,7 +15,7 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.StandardFileSystems;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;

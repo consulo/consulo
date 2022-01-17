@@ -26,7 +26,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;

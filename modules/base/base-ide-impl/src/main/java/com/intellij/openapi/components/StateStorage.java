@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.vfs.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

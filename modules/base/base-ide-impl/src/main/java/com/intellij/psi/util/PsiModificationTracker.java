@@ -5,7 +5,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import consulo.component.messagebus.MessageBus;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.ModificationTracker;
+import consulo.component.util.ModificationTracker;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 

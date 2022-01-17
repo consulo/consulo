@@ -3,7 +3,7 @@ package com.intellij.psi.impl.search;
 
 import com.intellij.openapi.application.QueryExecutorBase;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiNamedElement;

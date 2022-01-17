@@ -7,7 +7,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;

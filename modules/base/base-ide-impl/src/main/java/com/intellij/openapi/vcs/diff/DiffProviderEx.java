@@ -1,7 +1,7 @@
 package com.intellij.openapi.vcs.diff;
 
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import java.util.Map;

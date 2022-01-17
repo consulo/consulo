@@ -17,7 +17,7 @@ package com.intellij.packaging.artifacts;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ModificationTracker;
+import consulo.component.util.ModificationTracker;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import consulo.component.messagebus.Topic;

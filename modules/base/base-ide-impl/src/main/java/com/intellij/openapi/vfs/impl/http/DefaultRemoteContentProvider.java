@@ -18,11 +18,11 @@ package com.intellij.openapi.vfs.impl.http;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsBundle;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VfsBundle;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.io.UrlConnectionUtil;
 import javax.annotation.Nonnull;
 

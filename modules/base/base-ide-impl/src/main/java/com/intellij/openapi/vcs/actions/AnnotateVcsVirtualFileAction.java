@@ -34,7 +34,7 @@ import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.vfs.ContentRevisionVirtualFile;
 import com.intellij.openapi.vcs.vfs.VcsVirtualFile;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.AnnotationProviderEx;
 import com.intellij.vcsUtil.VcsUtil;

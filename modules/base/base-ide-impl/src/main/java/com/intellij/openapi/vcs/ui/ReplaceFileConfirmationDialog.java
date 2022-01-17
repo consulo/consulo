@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ui.FilePathSplittingPolicy;
 import com.intellij.CommonBundle;
 

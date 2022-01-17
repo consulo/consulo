@@ -45,6 +45,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.logging.Logger;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

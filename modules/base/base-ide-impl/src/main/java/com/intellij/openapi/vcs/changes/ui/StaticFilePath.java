@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.vcs.changes.FilePathsHelper;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class StaticFilePath {
   private final String myKey;

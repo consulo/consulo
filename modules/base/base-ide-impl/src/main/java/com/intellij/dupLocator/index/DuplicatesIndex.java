@@ -23,7 +23,7 @@ import com.intellij.dupLocator.treeHash.FragmentsCollector;
 import com.intellij.dupLocator.util.PsiFragment;
 import com.intellij.lang.Language;
 import com.intellij.lang.LighterAST;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.*;

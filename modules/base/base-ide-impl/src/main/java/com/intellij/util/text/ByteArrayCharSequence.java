@@ -17,8 +17,6 @@ package com.intellij.util.text;
 
 import com.intellij.openapi.util.text.CharSequenceWithStringHash;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

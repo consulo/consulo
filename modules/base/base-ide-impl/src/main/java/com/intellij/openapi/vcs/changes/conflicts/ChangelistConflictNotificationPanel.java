@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.changes.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.InplaceButton;
 import javax.annotation.Nullable;

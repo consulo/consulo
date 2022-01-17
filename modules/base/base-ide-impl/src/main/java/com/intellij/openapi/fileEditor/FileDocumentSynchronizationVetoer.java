@@ -21,7 +21,7 @@ package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.editor.Document;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public abstract class FileDocumentSynchronizationVetoer {

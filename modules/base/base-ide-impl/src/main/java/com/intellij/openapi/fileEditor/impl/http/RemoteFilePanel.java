@@ -27,7 +27,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.FileDownloadingListener;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.openapi.vfs.impl.http.RemoteFileInfo;

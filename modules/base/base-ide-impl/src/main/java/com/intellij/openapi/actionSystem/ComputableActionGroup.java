@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.ModificationTracker;
+import consulo.component.util.ModificationTracker;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.util.CachedValueImpl;

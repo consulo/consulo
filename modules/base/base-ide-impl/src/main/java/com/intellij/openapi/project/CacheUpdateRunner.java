@@ -15,7 +15,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
 import consulo.disposer.Disposable;

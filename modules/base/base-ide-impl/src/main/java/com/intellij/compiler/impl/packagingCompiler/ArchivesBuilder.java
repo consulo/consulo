@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.impl.compiler.ArtifactCompilerUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.graph.CachingSemiGraph;

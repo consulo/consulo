@@ -17,7 +17,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 
 import javax.annotation.Nonnull;

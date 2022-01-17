@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.disposer.Disposable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

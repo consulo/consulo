@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 /**

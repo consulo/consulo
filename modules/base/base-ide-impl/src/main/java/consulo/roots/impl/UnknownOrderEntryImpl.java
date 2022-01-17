@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.impl.ClonableOrderEntry;
 import com.intellij.openapi.roots.impl.OrderEntryBaseImpl;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.roots.orderEntry.OrderEntryType;
 import javax.annotation.Nonnull;

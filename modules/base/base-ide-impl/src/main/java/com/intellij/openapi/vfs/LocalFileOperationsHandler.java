@@ -16,6 +16,7 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.util.ThrowableConsumer;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;
 import java.io.File;

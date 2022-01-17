@@ -2,7 +2,7 @@ package com.intellij.diff.editor;
 
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 

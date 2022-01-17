@@ -20,7 +20,7 @@ import com.intellij.ide.DataManager;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.SingleAlarm;
 import com.intellij.xdebugger.XDebugSession;

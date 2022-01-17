@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util.io.win32;
 
-import com.intellij.openapi.util.io.FileAttributes;
+import consulo.util.io.FileAttributes;
 import javax.annotation.Nonnull;
 
 import static com.intellij.util.BitUtil.isSet;

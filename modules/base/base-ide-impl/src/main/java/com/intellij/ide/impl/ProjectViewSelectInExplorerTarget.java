@@ -21,7 +21,7 @@ import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.actions.RevealFileAction;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;
 

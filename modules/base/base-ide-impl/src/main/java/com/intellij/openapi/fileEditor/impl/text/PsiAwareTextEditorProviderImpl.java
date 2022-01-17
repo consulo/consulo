@@ -30,7 +30,7 @@ import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
 import consulo.logging.Logger;

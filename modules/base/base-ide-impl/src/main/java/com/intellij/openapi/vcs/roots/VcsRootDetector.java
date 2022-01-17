@@ -1,7 +1,7 @@
 package com.intellij.openapi.vcs.roots;
 
 import com.intellij.openapi.vcs.VcsRoot;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

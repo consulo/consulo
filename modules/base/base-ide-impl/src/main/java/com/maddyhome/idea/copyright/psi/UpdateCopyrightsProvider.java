@@ -15,7 +15,7 @@
  */
 package com.maddyhome.idea.copyright.psi;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.maddyhome.idea.copyright.CopyrightProfile;

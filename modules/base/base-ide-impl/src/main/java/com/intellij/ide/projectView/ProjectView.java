@@ -21,7 +21,7 @@ import com.intellij.ide.projectView.impl.AbstractProjectViewPSIPane;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import consulo.util.concurrent.AsyncResult;
 

@@ -23,7 +23,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiElementBase;

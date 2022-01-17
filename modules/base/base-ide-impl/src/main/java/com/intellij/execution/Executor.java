@@ -16,7 +16,7 @@
 
 package com.intellij.execution;
 
-import com.intellij.BundleBase;
+import consulo.component.util.localize.BundleBase;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

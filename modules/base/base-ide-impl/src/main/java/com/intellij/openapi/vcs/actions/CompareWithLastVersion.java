@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.actions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.diff.DiffProvider;
 import com.intellij.openapi.vcs.impl.VcsBackgroundableActions;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class CompareWithLastVersion extends AbstractShowDiffAction{
   @Override

@@ -17,7 +17,7 @@
 package com.intellij.internal.psiView;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@
 
 package com.maddyhome.idea.copyright.pattern;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 
 public class FileInfo {

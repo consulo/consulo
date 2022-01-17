@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import consulo.roots.ContentFolderPropertyProvider;

@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

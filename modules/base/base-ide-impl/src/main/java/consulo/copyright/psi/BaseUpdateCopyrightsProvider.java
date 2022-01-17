@@ -15,7 +15,7 @@
  */
 package consulo.copyright.psi;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import com.maddyhome.idea.copyright.ui.TemplateCommentPanel;

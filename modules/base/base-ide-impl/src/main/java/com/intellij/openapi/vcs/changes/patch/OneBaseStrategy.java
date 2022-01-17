@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.patch;
 
 import com.intellij.openapi.diff.impl.patch.TextFilePatch;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.MultiMap;
 
 import java.util.*;

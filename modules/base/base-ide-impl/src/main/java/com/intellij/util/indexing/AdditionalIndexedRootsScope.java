@@ -16,7 +16,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.annotation.Nonnull;
 

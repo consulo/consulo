@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.compiler;
 
 import com.intellij.compiler.impl.packagingCompiler.ExplodedDestinationInfo;
 import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.packaging.elements.ArchivePackageWriter;
 import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
 import javax.annotation.Nonnull;

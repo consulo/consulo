@@ -28,7 +28,7 @@ import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;

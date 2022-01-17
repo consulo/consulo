@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.FileIndex;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.util.ObjectUtil;
 import consulo.application.AccessRule;

@@ -18,7 +18,7 @@ package com.intellij.util.treeWithCheckedNodes;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vcs.impl.CollectionsDelta;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.PairProcessor;
 import com.intellij.openapi.vcs.changes.ui.PlusMinus;
 import com.intellij.util.containers.Convertor;

@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSetBase;
 import com.intellij.ui.SimpleTextAttributes;

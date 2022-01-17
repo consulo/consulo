@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser.tree;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

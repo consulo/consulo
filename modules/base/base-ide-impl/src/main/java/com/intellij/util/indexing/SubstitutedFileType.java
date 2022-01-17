@@ -16,10 +16,10 @@
 package com.intellij.util.indexing;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;

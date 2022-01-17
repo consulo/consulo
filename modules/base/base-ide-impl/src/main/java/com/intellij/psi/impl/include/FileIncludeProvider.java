@@ -17,8 +17,8 @@
 package com.intellij.psi.impl.include;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.Consumer;

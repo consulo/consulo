@@ -18,7 +18,7 @@ package com.intellij.psi.search.scope;
 import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.NonPhysicalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;

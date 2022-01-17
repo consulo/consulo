@@ -31,6 +31,9 @@ import com.intellij.util.LineSeparator;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.StreamProvider;
 import consulo.disposer.Disposable;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 

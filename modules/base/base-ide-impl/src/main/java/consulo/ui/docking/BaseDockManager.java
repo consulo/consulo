@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.MutualMap;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockContainerFactory;

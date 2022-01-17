@@ -17,9 +17,9 @@ package com.intellij.psi;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import consulo.lang.LanguageVersion;
 import consulo.util.dataholder.Key;
@@ -38,7 +38,7 @@ public abstract class PsiFileFactory {
   }
 
   /**
-   * Please use {@link #createFileFromText(String, com.intellij.openapi.fileTypes.FileType, CharSequence)},
+   * Please use {@link #createFileFromText(String, FileType, CharSequence)},
    * since file type detecting by file extension becomes vulnerable when file type mappings are changed.
    * <p/>
    * Creates a file from the specified text.

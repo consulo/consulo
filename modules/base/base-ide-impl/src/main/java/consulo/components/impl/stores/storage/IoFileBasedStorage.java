@@ -24,7 +24,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.util.LineSeparator;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.StreamProvider;

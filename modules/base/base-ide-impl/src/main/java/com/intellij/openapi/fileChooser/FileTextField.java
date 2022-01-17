@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.fileChooser;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

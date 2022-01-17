@@ -16,6 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.util.xmlb.annotations.Transient;
+import consulo.component.util.ModificationTracker;
 
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 

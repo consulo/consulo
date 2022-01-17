@@ -35,7 +35,7 @@ import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.changes.actions.diff.ShowDiffAction;
 import com.intellij.openapi.vcs.changes.actions.diff.ShowDiffContext;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;

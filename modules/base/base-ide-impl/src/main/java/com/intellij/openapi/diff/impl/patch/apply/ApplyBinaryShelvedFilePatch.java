@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchForBaseRevisionTexts;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedBinaryContentRevision;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 
 import java.io.IOException;

@@ -20,7 +20,8 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

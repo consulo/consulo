@@ -22,7 +22,7 @@ import com.intellij.openapi.module.ModuleManager;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.JBIterable;
 import consulo.application.AccessRule;
 import consulo.roots.OrderEntryWithTracking;

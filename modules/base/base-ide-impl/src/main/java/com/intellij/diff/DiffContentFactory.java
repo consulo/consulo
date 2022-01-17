@@ -21,10 +21,10 @@ import com.intellij.diff.contents.EmptyContent;
 import com.intellij.diff.contents.FileContent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,7 +16,7 @@
  */
 package com.intellij.openapi.vfs.ex;
 
-import com.intellij.openapi.vfs.VirtualFileManagerListener;
+import consulo.virtualFileSystem.event.VirtualFileManagerListener;
 
 public abstract class VirtualFileManagerAdapter implements VirtualFileManagerListener {
   @Override

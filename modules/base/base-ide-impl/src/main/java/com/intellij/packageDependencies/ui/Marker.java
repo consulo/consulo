@@ -20,7 +20,7 @@
  */
 package com.intellij.packageDependencies.ui;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 public interface Marker {
   boolean isMarked(VirtualFile file);

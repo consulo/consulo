@@ -3,7 +3,8 @@ package com.intellij.openapi.vfs.encoding;
 
 import consulo.application.Application;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.encoding.EncodingRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

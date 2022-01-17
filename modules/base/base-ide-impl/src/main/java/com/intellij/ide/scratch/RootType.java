@@ -19,11 +19,11 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 

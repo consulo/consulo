@@ -5,6 +5,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import consulo.component.util.ModificationTracker;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 
@@ -17,7 +18,7 @@ import java.util.Set;
  * Defines a single folding region in the code.
  *
  * <p><a name="Dependencies"><b>Dependencies</b></a></p>
- * Dependencies are objects (in particular, instances of {@link com.intellij.openapi.util.ModificationTracker},
+ * Dependencies are objects (in particular, instances of {@link ModificationTracker},
  * more info - {@link com.intellij.psi.util.CachedValueProvider.Result#getDependencyItems here}),
  * which can be tracked for changes, that should trigger folding regions recalculation for an editor (initiating code folding pass).
  *

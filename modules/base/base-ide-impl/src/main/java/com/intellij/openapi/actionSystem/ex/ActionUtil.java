@@ -31,7 +31,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.TextWithMnemonic;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PausesStat;
 import com.intellij.util.ui.UIUtil;

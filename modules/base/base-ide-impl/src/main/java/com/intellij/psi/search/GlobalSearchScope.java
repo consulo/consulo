@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleScopeProvider;
 import com.intellij.openapi.module.UnloadedModuleDescription;
@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

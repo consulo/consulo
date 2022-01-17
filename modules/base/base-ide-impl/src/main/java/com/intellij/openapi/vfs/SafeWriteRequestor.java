@@ -2,6 +2,7 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.ide.GeneralSettings;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * A marker interface for {@link VirtualFile#getOutputStream(Object)} to take extra caution w.r.t. an existing content.

@@ -41,6 +41,8 @@ import consulo.components.impl.stores.storage.DirectoryStorageData;
 import consulo.components.impl.stores.storage.VfsDirectoryBasedStorage;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

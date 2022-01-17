@@ -24,7 +24,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;

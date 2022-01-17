@@ -4,10 +4,10 @@ package com.intellij.psi.impl.file;
 
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.file.impl.FileManagerImpl;

@@ -19,7 +19,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.pom.Navigatable;
 import consulo.localize.LocalizeValue;

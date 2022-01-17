@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.configuration.deployment.ModuleDeploymentSource;
 import com.intellij.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType;

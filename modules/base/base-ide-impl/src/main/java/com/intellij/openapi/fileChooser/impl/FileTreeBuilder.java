@@ -25,6 +25,11 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.*;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

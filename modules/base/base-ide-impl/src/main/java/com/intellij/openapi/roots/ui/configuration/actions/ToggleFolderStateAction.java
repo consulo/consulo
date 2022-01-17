@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryTreeEditor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;

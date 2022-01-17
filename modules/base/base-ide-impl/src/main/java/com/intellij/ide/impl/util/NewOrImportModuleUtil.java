@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.ui.NewProjectPanel;

@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;

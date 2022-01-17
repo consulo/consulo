@@ -17,10 +17,10 @@
 package com.intellij.util;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

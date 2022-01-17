@@ -18,7 +18,7 @@ package com.intellij.psi.search;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;

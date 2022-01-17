@@ -17,7 +17,7 @@ package com.intellij.psi.impl.cache;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;

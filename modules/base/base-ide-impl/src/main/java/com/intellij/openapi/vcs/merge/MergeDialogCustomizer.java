@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.merge;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -80,7 +80,7 @@ public class MergeDialogCustomizer {
 
   /**
    * @return The title of multiple files merge dialog.
-   * Don't mix with {@link #getMergeWindowTitle(com.intellij.openapi.vfs.VirtualFile)} which is the title of a 3-way merge dialog
+   * Don't mix with {@link #getMergeWindowTitle(VirtualFile)} which is the title of a 3-way merge dialog
    * displayed for a single file.
    */
   public @Nonnull

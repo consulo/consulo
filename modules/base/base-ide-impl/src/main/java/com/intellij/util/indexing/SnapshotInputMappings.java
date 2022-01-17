@@ -4,7 +4,7 @@ package com.intellij.util.indexing;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.psi.PsiDocumentManager;

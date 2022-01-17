@@ -7,7 +7,7 @@ import consulo.application.TransactionGuard;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.ModificationTracker;
+import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.psi.*;
 import com.intellij.psi.tree.IElementType;

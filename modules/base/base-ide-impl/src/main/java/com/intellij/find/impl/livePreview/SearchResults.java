@@ -22,7 +22,7 @@ import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.concurrency.FutureResult;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;

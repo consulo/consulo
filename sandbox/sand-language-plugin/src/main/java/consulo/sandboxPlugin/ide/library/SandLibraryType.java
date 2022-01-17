@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.libraries.NewLibraryConfiguration;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
 import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;

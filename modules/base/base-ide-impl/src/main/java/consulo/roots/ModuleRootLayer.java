@@ -19,7 +19,7 @@ import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
 import consulo.annotation.DeprecationInfo;
 import consulo.module.extension.ModuleExtension;

@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.progress.DumbProgressIndicator;
 import consulo.progress.ProgressIndicator;
 import consulo.progress.ProgressIndicatorProvider;

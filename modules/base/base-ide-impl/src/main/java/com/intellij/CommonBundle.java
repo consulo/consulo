@@ -17,6 +17,7 @@
 package com.intellij;
 
 import com.intellij.openapi.util.SystemInfo;
+import consulo.component.util.localize.BundleBase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 

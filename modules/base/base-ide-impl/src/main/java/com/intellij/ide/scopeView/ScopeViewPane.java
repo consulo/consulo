@@ -29,7 +29,7 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import com.intellij.psi.PsiElement;

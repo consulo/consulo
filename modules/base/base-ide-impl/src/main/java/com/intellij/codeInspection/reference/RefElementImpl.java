@@ -20,7 +20,7 @@ import com.intellij.codeInspection.SuppressionUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;

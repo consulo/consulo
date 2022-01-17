@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.fileTemplates;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import consulo.annotation.DeprecationInfo;
 import org.apache.velocity.runtime.parser.ParseException;
 import javax.annotation.Nonnull;

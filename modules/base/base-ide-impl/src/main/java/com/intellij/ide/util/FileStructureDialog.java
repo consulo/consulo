@@ -41,7 +41,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiDocumentManager;

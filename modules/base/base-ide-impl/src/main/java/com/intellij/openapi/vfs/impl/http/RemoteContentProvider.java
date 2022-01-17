@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

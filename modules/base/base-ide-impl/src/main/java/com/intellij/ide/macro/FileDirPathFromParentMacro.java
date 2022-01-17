@@ -18,7 +18,7 @@ package com.intellij.ide.macro;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class FileDirPathFromParentMacro extends Macro {
   @Override

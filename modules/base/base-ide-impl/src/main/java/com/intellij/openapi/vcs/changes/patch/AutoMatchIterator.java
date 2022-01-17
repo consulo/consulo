@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.patch.TextFilePatch;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
 import java.util.LinkedList;

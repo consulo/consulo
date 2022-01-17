@@ -18,6 +18,12 @@ import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.SafeFileOutputStream;
 import consulo.logging.Logger;
+import consulo.util.io.FileAttributes;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VfsBundle;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

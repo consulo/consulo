@@ -33,7 +33,7 @@ import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import com.intellij.openapi.vcs.impl.projectlevelman.NewMappings;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.project.ProjectKt;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;

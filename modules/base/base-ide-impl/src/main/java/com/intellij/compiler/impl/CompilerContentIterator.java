@@ -15,10 +15,10 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.FileIndex;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
 

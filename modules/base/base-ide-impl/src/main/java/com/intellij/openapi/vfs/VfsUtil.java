@@ -16,7 +16,8 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
@@ -33,6 +34,9 @@ import consulo.application.util.function.Processor;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -8,7 +8,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.local.FileWatcherNotificationSink;
 import com.intellij.openapi.vfs.local.PluggableFileWatcher;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;

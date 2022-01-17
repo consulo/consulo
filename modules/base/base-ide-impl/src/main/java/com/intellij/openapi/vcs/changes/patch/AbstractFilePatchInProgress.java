@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.CurrentContentRevision;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.PathUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;

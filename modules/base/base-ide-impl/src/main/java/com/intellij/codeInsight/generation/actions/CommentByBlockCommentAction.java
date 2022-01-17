@@ -23,7 +23,7 @@ import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;

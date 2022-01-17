@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs.pointers;
 
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

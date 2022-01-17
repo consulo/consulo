@@ -23,7 +23,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import consulo.codeStyle.ApplicationCodeStyleFacade;

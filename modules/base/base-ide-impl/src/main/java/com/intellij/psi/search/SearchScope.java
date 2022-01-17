@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import consulo.ui.image.Image;
 

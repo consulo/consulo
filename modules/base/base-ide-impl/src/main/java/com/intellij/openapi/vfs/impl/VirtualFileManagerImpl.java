@@ -20,15 +20,16 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import consulo.virtualFileSystem.event.*;
 import com.intellij.openapi.vfs.newvfs.CachingVirtualFileSystem;
-import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
+import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.vfs.RefreshableFileSystem;
+import consulo.virtualFileSystem.*;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

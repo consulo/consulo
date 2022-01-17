@@ -16,7 +16,7 @@
 
 package com.intellij.history.core;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.TestOnly;

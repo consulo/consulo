@@ -25,7 +25,7 @@ import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.CustomHighlighterTokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;

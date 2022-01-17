@@ -4,7 +4,7 @@ package com.intellij.ide.actions.runAnything.commands;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 

@@ -17,7 +17,7 @@
 package com.intellij.util;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
@@ -27,7 +27,7 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.roots.ContentFolderScopes;

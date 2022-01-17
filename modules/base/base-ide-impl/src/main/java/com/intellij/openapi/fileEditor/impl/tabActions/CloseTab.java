@@ -23,7 +23,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ShadowAction;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.BitUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.platform.base.icon.PlatformIconGroup;

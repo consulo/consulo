@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.Convertor;
 
 public class IntoSelfVirtualFileConvertor extends Convertor.IntoSelf<VirtualFile> {

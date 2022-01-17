@@ -17,7 +17,7 @@ package com.intellij.dvcs.cherrypick;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vcs.VcsKey;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLog;

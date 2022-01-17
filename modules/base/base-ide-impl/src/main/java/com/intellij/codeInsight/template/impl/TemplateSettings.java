@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;

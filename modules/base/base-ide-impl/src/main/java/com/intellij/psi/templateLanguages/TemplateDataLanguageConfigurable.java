@@ -20,7 +20,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ObjectUtils;

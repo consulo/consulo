@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.SmartExpander;
 import com.intellij.ui.TreeSpeedSearch;

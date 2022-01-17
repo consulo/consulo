@@ -18,11 +18,11 @@ package com.intellij.util;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.BulkFileListener;
+import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.annotation.RequiredUIAccess;
 

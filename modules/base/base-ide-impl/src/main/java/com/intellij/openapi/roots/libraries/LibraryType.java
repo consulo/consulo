@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
 import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.roots.types.BinariesOrderRootType;
 
 import javax.annotation.Nonnull;

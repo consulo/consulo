@@ -15,8 +15,8 @@
  */
 package consulo.vfs.util;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.vfs.ArchiveFileSystem;

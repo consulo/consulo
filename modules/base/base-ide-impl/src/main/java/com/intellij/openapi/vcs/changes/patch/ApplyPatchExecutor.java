@@ -19,7 +19,7 @@ import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;

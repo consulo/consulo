@@ -16,7 +16,7 @@
 package consulo.xdebugger.breakpoints;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import javax.annotation.Nonnull;
 

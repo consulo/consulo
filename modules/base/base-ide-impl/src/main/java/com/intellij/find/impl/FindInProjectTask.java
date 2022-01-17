@@ -43,6 +43,7 @@ import com.intellij.usages.impl.UsageViewManagerImpl;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

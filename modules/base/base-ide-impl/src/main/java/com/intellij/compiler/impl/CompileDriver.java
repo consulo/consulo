@@ -35,7 +35,7 @@ import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.compiler.ex.CompilerPathsEx;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.progress.ProcessCanceledException;
@@ -96,6 +96,8 @@ import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

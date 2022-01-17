@@ -16,7 +16,7 @@
 package consulo.vfs.impl.mediator;
 
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileAttributes;
+import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.util.SystemProperties;
 import com.sun.jna.Library;

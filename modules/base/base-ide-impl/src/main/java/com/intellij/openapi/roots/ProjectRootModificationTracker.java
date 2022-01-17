@@ -17,7 +17,7 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ModificationTracker;
+import consulo.component.util.ModificationTracker;
 
 /**
  * @author yole

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.TextRange;

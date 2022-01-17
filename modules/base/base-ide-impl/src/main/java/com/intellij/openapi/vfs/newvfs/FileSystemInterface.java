@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.vfs.newvfs;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -61,13 +61,13 @@ public interface FileSystemInterface {
   byte[] contentsToByteArray(@Nonnull VirtualFile file) throws IOException;
 
   /**
-   * Does NOT strip the BOM from the beginning of the stream, unlike the {@link com.intellij.openapi.vfs.VirtualFile#getInputStream()}
+   * Does NOT strip the BOM from the beginning of the stream, unlike the {@link VirtualFile#getInputStream()}
    */
   @Nonnull
   InputStream getInputStream(@Nonnull VirtualFile file) throws IOException;
 
   /**
-   * Does NOT add the BOM to the beginning of the stream, unlike the {@link com.intellij.openapi.vfs.VirtualFile#getOutputStream(Object)}
+   * Does NOT add the BOM to the beginning of the stream, unlike the {@link VirtualFile#getOutputStream(Object)}
    */
   @Nonnull
   OutputStream getOutputStream(@Nonnull VirtualFile file, final Object requestor, final long modStamp, final long timeStamp) throws IOException;

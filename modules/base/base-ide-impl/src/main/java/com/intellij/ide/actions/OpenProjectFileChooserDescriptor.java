@@ -20,7 +20,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.project.ProjectOpenProcessors;

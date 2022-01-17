@@ -26,7 +26,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.PathUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;

@@ -19,7 +19,7 @@ import com.intellij.find.impl.FindDialog;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import javax.annotation.Nonnull;

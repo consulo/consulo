@@ -2,7 +2,7 @@ package com.intellij.ide.presentation;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.TypePresentationService;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

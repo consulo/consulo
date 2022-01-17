@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.compiler.generic;
 
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.IOUtil;
 import javax.annotation.Nonnull;

@@ -39,7 +39,7 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.FilterComponent;
 import com.intellij.util.AsynchConsumer;
 import com.intellij.util.BufferedListConsumer;

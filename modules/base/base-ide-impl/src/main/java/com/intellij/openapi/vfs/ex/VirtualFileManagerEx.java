@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.ex;
 
 import com.intellij.openapi.vfs.LocalFileProvider;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import java.util.List;
 

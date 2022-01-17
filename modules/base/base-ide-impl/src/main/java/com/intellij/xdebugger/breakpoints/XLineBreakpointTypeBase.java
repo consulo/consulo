@@ -1,7 +1,7 @@
 package com.intellij.xdebugger.breakpoints;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;

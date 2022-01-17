@@ -16,7 +16,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.psi.search.GlobalSearchScope;
 

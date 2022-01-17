@@ -29,7 +29,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
 import com.intellij.openapi.vcs.vfs.ContentRevisionVirtualFile;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 
 /**

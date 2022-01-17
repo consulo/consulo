@@ -18,7 +18,7 @@ package consulo.roots.ui.configuration.classpath;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;

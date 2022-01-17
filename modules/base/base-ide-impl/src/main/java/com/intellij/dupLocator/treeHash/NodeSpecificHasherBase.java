@@ -7,7 +7,7 @@ import com.intellij.dupLocator.iterators.SiblingNodeIterator;
 import com.intellij.dupLocator.util.DuplocatorUtil;
 import com.intellij.dupLocator.util.NodeFilter;
 import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;

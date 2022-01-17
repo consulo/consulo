@@ -17,10 +17,10 @@ package com.intellij.compiler.impl;
 
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.ExportableUserDataHolderBase;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.roots.FileIndex;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

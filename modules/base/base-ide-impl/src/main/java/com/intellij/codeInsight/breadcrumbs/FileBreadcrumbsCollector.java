@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;

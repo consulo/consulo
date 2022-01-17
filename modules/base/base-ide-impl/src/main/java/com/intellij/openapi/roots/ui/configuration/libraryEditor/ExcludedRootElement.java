@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 

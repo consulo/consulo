@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsKey;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nullable;

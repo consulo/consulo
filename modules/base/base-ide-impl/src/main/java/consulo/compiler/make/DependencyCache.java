@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.Trinity;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

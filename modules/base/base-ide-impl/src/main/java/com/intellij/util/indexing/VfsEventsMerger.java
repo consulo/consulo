@@ -17,7 +17,7 @@ package com.intellij.util.indexing;
 
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import org.intellij.lang.annotations.MagicConstant;

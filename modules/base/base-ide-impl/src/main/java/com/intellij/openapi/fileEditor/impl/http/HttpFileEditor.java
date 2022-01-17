@@ -25,7 +25,7 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;

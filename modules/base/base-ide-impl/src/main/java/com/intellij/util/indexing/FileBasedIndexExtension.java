@@ -2,9 +2,9 @@
 package com.intellij.util.indexing;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.vfs.PersistentFSConstants;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

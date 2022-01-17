@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.Queryable;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import consulo.psi.PsiPackage;
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;
 
 /**

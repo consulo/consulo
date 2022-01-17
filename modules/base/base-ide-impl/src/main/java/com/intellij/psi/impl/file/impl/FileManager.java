@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.file.impl;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;

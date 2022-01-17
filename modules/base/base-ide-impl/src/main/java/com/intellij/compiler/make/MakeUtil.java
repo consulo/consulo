@@ -25,7 +25,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class MakeUtil {
   public static VirtualFile getSourceRoot(CompileContext context, Module module, VirtualFile file) {

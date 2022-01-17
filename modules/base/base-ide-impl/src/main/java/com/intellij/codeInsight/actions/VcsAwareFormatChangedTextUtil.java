@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.ex.LineStatusTracker;
 import com.intellij.openapi.vcs.ex.Range;
 import com.intellij.openapi.vcs.ex.RangesBuilder;
 import com.intellij.openapi.vcs.impl.LineStatusTrackerManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;

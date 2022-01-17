@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.util;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
 
 public class HttpUrlCellAppearance extends ValidFileCellAppearance {

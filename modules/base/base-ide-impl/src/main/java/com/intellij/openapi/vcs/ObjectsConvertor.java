@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.Convertor;
 import javax.annotation.Nonnull;

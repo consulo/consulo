@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.CommonProcessors;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.ID;

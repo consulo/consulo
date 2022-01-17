@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.diff;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author dyoma

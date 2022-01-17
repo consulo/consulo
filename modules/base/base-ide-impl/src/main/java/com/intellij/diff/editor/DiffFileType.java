@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.editor;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.DiffLocalize;

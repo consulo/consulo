@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.diff;
 
 import com.intellij.openapi.vcs.history.VcsRevisionDescription;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * Created by IntelliJ IDEA.

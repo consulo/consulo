@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 public enum VcsBackgroundableActions {
   ANNOTATE,

@@ -28,7 +28,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
 import com.intellij.xml.util.XmlStringUtil;

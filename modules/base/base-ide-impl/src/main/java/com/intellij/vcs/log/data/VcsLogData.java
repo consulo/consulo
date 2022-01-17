@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vcs.VcsException;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.containers.ContainerUtil;

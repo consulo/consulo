@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;

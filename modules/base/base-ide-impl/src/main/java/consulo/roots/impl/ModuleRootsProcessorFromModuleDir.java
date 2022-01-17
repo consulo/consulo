@@ -18,7 +18,7 @@ package consulo.roots.impl;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.collection.primitive.objects.ObjectIntMap;

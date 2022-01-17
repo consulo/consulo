@@ -24,7 +24,7 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

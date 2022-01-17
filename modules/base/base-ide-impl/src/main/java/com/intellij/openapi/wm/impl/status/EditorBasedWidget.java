@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ArrayUtil;

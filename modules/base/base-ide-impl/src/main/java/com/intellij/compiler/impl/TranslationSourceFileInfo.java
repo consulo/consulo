@@ -17,8 +17,8 @@ package com.intellij.compiler.impl;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.DataInputOutputUtil;

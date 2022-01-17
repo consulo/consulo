@@ -16,7 +16,7 @@
 
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import javax.annotation.Nonnull;

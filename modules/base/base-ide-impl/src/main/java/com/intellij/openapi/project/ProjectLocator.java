@@ -21,7 +21,7 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

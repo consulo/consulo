@@ -21,7 +21,7 @@ import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;

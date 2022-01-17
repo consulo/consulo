@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.impl.rules;
 
-import com.intellij.BundleBase;
+import consulo.component.util.localize.BundleBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.UsageViewPresentation;

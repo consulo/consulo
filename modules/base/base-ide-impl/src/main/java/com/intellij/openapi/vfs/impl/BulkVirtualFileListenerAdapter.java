@@ -19,9 +19,9 @@
  */
 package com.intellij.openapi.vfs.impl;
 
-import com.intellij.openapi.vfs.*;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.*;
+import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -21,7 +21,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import consulo.roots.types.BinariesOrderRootType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementOutputKind;

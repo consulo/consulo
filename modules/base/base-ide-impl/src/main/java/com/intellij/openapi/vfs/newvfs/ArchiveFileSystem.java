@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.vfs.newvfs;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import consulo.virtualFileSystem.VfsBundle;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
-import com.intellij.openapi.util.io.FileAttributes;
+import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.impl.ArchiveHandler;
@@ -26,6 +27,7 @@ import com.intellij.util.io.URLUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

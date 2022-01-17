@@ -25,7 +25,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettings;

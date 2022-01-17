@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.libraries.ui;
 
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.roots.libraries.LibraryRootType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

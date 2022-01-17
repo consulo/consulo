@@ -3,7 +3,7 @@ package com.intellij.refactoring.move.moveClassesOrPackages;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.refactoring.util.MoveRenameUsageInfo;

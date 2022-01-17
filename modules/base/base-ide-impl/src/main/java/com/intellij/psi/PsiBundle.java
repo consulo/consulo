@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 

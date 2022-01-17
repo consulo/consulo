@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.impl.DesktopEditorWithProviderComposite;
 import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.docking.DockManager;

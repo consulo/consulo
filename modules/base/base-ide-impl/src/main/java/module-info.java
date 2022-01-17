@@ -31,6 +31,7 @@ open module consulo.ide.impl {
   requires transitive consulo.localize.api;
   requires transitive consulo.component.api;
   requires transitive consulo.application.api;
+  requires transitive consulo.virtual.file.system.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -714,7 +715,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.vfs.impl.win32;
   exports com.intellij.openapi.vfs.local;
   exports com.intellij.openapi.vfs.newvfs;
-  exports com.intellij.openapi.vfs.newvfs.events;
   exports com.intellij.openapi.vfs.newvfs.impl;
   exports com.intellij.openapi.vfs.newvfs.persistent;
   exports com.intellij.openapi.vfs.pointers;
@@ -1386,8 +1386,6 @@ open module consulo.ide.impl {
   exports consulo.vfs.newvfs;
   exports consulo.vfs.newvfs.persistent;
   exports consulo.vfs.util;
-  //exports consulo.virtualFileSystem;
-  exports consulo.virtualFileSystem.internal;
   exports consulo.wm;
   exports consulo.wm.impl;
   exports consulo.wm.impl.layout;

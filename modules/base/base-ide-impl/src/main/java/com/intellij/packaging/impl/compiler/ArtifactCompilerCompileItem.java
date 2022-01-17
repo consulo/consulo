@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.compiler;
 import com.intellij.openapi.compiler.generic.VirtualFileCompileItem;
 import com.intellij.compiler.impl.packagingCompiler.DestinationInfo;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.io.DataExternalizer;
 import javax.annotation.Nonnull;

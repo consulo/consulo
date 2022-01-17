@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;

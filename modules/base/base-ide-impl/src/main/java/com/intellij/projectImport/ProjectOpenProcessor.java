@@ -20,7 +20,7 @@
 package com.intellij.projectImport;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;

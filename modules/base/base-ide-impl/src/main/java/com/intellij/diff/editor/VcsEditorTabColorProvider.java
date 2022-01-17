@@ -4,7 +4,7 @@ package com.intellij.diff.editor;
 import com.intellij.openapi.fileEditor.impl.EditorTabColorProvider;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.FileColorManager;
 
 import javax.annotation.Nonnull;

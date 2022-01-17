@@ -32,7 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ui.UIUtil;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 

@@ -16,8 +16,9 @@
 package com.intellij.openapi.roots;
 
 import com.google.common.base.Predicate;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,11 +26,11 @@ import javax.annotation.Nullable;
 /**
  * Represents a module content root.
  * You can get existing entries with {@link com.intellij.openapi.roots.ModuleRootModel#getContentEntries()} or
- * create a new one with {@link ModifiableRootModel#addContentEntry(com.intellij.openapi.vfs.VirtualFile)}.
+ * create a new one with {@link ModifiableRootModel#addContentEntry(VirtualFile)}.
  *
  * @author dsl
  * @see ModuleRootModel#getContentEntries()
- * @see ModifiableRootModel#addContentEntry(com.intellij.openapi.vfs.VirtualFile)
+ * @see ModifiableRootModel#addContentEntry(VirtualFile)
  */
 public interface ContentEntry extends Synthetic {
   /**
@@ -43,7 +44,7 @@ public interface ContentEntry extends Synthetic {
   /**
    * Returns the URL of content root.
    * To validate returned roots, use
-   * <code>{@link com.intellij.openapi.vfs.VirtualFileManager#findFileByUrl(String)}</code>
+   * <code>{@link VirtualFileManager#findFileByUrl(String)}</code>
    *
    * @return URL of content root, that should never be null.
    */

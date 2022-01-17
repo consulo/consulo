@@ -17,7 +17,7 @@ package consulo.compiler;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import consulo.annotation.DeprecationInfo;
 import consulo.roots.ContentFolderTypeProvider;

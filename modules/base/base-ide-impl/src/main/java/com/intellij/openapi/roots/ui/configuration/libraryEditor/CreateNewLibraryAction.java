@@ -32,7 +32,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.BaseLibrariesConf
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

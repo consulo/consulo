@@ -16,11 +16,11 @@
 package com.intellij.openapi.roots.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.roots.ui.util.*;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.SimpleColoredComponent;
 import consulo.vfs.ArchiveFileSystem;

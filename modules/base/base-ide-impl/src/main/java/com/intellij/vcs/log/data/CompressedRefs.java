@@ -18,7 +18,7 @@ package com.intellij.vcs.log.data;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsRef;

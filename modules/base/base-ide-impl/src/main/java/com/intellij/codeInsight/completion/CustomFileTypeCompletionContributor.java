@@ -19,7 +19,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.CustomHighlighterTokenType;

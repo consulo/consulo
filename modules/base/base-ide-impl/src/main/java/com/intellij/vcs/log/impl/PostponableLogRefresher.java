@@ -20,7 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsLogRefresher;
 import com.intellij.vcs.log.data.VcsLogData;

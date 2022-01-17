@@ -2,7 +2,7 @@
 package com.intellij.injected.editor;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import javax.annotation.Nonnull;
 

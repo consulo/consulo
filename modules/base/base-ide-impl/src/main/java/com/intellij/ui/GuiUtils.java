@@ -28,7 +28,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;

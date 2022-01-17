@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.ui.render;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ObjectUtils;

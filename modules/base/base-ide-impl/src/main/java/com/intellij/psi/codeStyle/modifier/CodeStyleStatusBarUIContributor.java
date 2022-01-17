@@ -3,7 +3,7 @@ package com.intellij.psi.codeStyle.modifier;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

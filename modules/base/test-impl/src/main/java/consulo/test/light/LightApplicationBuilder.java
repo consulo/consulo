@@ -29,7 +29,7 @@ import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.vfs.encoding.EncodingManager;

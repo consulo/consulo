@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ui.TimerUtil;
 import consulo.desktop.editor.DesktopEditorFloatPanel;
 import consulo.desktop.editor.impl.DesktopEditorPanelLayer;

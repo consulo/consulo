@@ -19,7 +19,7 @@ import com.intellij.codeInsight.intention.impl.config.ActionUsagePanel;
 import com.intellij.codeInsight.intention.impl.config.TextDescriptor;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.disposer.Disposer;

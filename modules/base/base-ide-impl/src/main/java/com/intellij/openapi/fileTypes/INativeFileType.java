@@ -16,7 +16,8 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import javax.annotation.Nonnull;
 

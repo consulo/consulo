@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

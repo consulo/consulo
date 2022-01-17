@@ -2,6 +2,8 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.SystemIndependent;
 
 import javax.annotation.Nonnull;

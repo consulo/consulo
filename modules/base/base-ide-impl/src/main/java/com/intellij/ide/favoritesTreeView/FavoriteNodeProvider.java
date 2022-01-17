@@ -21,7 +21,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

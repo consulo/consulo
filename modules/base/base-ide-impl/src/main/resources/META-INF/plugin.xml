@@ -70,7 +70,7 @@
     <extensionPoint name="editorFactoryMouseMotionListener" interface="com.intellij.openapi.editor.event.EditorMouseMotionListener"/>
     <extensionPoint name="editorFactoryListener" interface="com.intellij.openapi.editor.event.EditorFactoryListener"/>
 
-    <extensionPoint name="vfs.asyncListener" interface="com.intellij.openapi.vfs.AsyncFileListener"/>
+    <extensionPoint name="vfs.asyncListener" interface="consulo.virtualFileSystem.event.AsyncFileListener"/>
 
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="testSourcesFilter" interface="com.intellij.openapi.roots.TestSourcesFilter"/>
@@ -111,7 +111,7 @@
     <extensionPoint name="fileType"
                     beanClass="com.intellij.openapi.fileTypes.impl.FileTypeBean"/>
 
-    <extensionPoint name="virtualFileSystem" interface="com.intellij.openapi.vfs.VirtualFileSystem"/>
+    <extensionPoint name="virtualFileSystem" interface="consulo.virtualFileSystem.VirtualFileSystem"/>
 
     <extensionPoint name="keymapExtension"
                     interface="com.intellij.openapi.keymap.KeymapExtension"/>
@@ -231,7 +231,7 @@
 
     <extensionPoint name="intentionMenuContributor" interface="com.intellij.codeInsight.daemon.impl.IntentionMenuContributor"/>
 
-    <extensionPoint name="fileTypeDetector" interface="com.intellij.openapi.fileTypes.FileTypeRegistry$FileTypeDetector"/>
+    <extensionPoint name="fileTypeDetector" interface="consulo.virtualFileSystem.fileType.FileTypeRegistry$FileTypeDetector"/>
 
     <extensionPoint name="pathMacroFilter" interface="com.intellij.openapi.application.PathMacroFilter"/>
     <extensionPoint name="pathMacroExpendableProtocol" beanClass="com.intellij.application.options.PathMacroExpendableProtocolBean"/>
@@ -2803,7 +2803,7 @@
   </extensions>
 
   <applicationListeners>
-    <listener class="com.intellij.util.gist.GistManagerImpl$MyBulkFileListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+    <listener class="com.intellij.util.gist.GistManagerImpl$MyBulkFileListener" topic="consulo.virtualFileSystem.event.BulkFileListener"/>
     <listener class="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$ProjectListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>
   </applicationListeners>
 

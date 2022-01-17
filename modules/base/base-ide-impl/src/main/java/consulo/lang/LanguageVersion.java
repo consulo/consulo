@@ -16,7 +16,7 @@
 package consulo.lang;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

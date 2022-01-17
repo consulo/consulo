@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.impl.FileStatusManagerImpl;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.CompressionUtil;
 import org.jetbrains.annotations.NonNls;

@@ -18,7 +18,7 @@ package com.intellij.execution.filters.impl;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.filters.HyperlinkInfoFactory;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;

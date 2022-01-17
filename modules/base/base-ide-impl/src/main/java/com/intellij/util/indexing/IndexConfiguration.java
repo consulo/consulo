@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.Pair;
 import gnu.trove.TObjectIntHashMap;
 

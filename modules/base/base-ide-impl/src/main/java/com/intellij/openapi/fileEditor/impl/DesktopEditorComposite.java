@@ -35,7 +35,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NullUtils;
 import com.intellij.openapi.util.Weighted;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.PrevNextActionsDescriptor;

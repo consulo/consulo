@@ -16,7 +16,7 @@
 package com.intellij.usages;
 
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.usages.rules.UsageInFiles;
 import com.intellij.util.containers.ContainerUtil;

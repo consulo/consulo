@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemBase;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Consumer;
@@ -403,7 +403,7 @@ public class WSLDistribution {
 
   /**
    * @return UNC root for the distribution, e.g. {@code \\wsl$\Ubuntu}
-   * @implNote there is a hack in {@link LocalFileSystemBase#getAttributes(com.intellij.openapi.vfs.VirtualFile)} which causes all network
+   * @implNote there is a hack in {@link LocalFileSystemBase#getAttributes(VirtualFile)} which causes all network
    * virtual files to exists all the time. So we need to check explicitly that root exists. After implementing proper non-blocking check
    * for the network resource availability, this method may be simplified to findFileByIoFile
    * @see VfsUtil#findFileByIoFile(java.io.File, boolean)

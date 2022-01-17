@@ -20,7 +20,7 @@
 package com.intellij.openapi.fileChooser.impl;
 
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 
 import java.util.Comparator;

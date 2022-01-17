@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public interface BinaryFileDecompiler {

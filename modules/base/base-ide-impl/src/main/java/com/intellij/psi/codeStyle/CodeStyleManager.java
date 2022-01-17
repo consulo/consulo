@@ -5,7 +5,7 @@ import com.intellij.formatting.FormattingMode;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.TextRange;

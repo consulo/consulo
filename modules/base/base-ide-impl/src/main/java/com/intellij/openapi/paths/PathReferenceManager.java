@@ -17,7 +17,7 @@
 package com.intellij.openapi.paths;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiElement;

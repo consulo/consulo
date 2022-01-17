@@ -3,7 +3,7 @@ package com.intellij.psi.codeStyle.modifier;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ModificationTracker;
+import consulo.component.util.ModificationTracker;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.Nls;

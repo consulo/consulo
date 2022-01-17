@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.diff.DiffProvider;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.impl.ContentRevisionCache;
 import com.intellij.openapi.vcs.impl.CurrentRevisionProvider;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

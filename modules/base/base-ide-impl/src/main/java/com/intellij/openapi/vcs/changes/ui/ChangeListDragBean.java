@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.vcs.changes.Change;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 import java.util.List;

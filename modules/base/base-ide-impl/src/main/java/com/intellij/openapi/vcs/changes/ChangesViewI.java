@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author irengrig

@@ -2,7 +2,7 @@
 package com.intellij.application.options.codeStyle.cache;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import consulo.util.dataholder.Key;

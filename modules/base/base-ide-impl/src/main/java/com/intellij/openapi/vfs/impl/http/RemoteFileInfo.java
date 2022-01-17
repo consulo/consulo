@@ -17,12 +17,12 @@ package com.intellij.openapi.vfs.impl.http;
 
 import com.intellij.openapi.application.WriteAction;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsBundle;
+import consulo.virtualFileSystem.VfsBundle;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

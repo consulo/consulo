@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.compiler;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Chunk;
 import javax.annotation.Nonnull;
 
@@ -67,7 +67,7 @@ public interface TranslatingCompiler extends Compiler {
    * @param file    the file to check.
    * @param context the context for the current compile operation.
    * @return true if can compile the file, false otherwise. If the method returns false, <code>file</code>
-   *         will not be included in the list of files passed to {@link #compile(CompileContext,Chunk<Module>,com.intellij.openapi.vfs.VirtualFile[], com.intellij.openapi.compiler.TranslatingCompiler.OutputSink)}.
+   *         will not be included in the list of files passed to {@link #compile(CompileContext,Chunk<Module>, VirtualFile[], com.intellij.openapi.compiler.TranslatingCompiler.OutputSink)}.
    */
   boolean isCompilableFile(VirtualFile file, CompileContext context);
 

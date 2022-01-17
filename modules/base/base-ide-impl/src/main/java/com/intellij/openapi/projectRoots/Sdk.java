@@ -17,7 +17,7 @@ package com.intellij.openapi.projectRoots;
 
 import com.intellij.openapi.roots.RootProvider;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayFactory;
 import consulo.util.pointers.Named;
 import javax.annotation.Nonnull;

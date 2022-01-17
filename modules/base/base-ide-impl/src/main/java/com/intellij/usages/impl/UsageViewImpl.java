@@ -26,7 +26,7 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiDocumentManagerBase;

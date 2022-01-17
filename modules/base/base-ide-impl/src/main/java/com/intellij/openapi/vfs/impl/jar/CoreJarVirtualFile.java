@@ -17,10 +17,10 @@ package com.intellij.openapi.vfs.impl.jar;
 
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
-import com.intellij.openapi.util.io.FileAttributes;
+import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import com.intellij.util.SmartList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

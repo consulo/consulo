@@ -22,7 +22,7 @@ package com.intellij.psi;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.psi.impl.SharedPsiElementImplUtil;
 import com.intellij.psi.impl.source.PsiFileImpl;

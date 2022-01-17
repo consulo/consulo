@@ -5,7 +5,6 @@ package com.intellij.ide.todo.nodes;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.todo.TodoTreeStructure;
@@ -13,10 +12,10 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import consulo.ide.IconDescriptorUpdaters;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

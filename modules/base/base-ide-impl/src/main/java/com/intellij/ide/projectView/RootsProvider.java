@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.projectView;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
 import java.util.Collections;

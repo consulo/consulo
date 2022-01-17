@@ -7,7 +7,7 @@ import com.intellij.execution.process.BaseProcessHandler;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.execution.process.OSProcessUtil;
 
 import javax.annotation.Nonnull;

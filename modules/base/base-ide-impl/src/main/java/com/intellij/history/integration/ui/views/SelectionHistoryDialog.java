@@ -20,7 +20,7 @@ import com.intellij.history.core.LocalHistoryFacade;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.ui.models.FileHistoryDialogModel;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public class SelectionHistoryDialog extends FileHistoryDialog {

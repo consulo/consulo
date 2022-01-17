@@ -16,7 +16,7 @@
 
 package com.intellij.problems;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author cdr

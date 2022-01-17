@@ -53,6 +53,9 @@ import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

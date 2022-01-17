@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.MultiMap;
 import javax.annotation.Nullable;
 

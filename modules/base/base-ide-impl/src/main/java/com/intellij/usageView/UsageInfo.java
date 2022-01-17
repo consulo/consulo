@@ -21,7 +21,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

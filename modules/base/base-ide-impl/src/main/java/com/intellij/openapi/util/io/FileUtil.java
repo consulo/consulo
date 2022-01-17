@@ -27,6 +27,7 @@ import com.intellij.util.text.StringFactory;
 import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.io.FileAttributes;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;

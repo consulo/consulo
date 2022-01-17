@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.util.*;

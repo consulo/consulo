@@ -48,7 +48,7 @@ import com.intellij.openapi.ui.TypingTarget;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.Grayer;
 import com.intellij.ui.components.Magnificator;
 import com.intellij.ui.paint.PaintUtil;

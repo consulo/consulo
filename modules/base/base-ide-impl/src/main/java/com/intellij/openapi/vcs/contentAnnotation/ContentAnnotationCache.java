@@ -19,7 +19,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ThreeState;
 
 /**

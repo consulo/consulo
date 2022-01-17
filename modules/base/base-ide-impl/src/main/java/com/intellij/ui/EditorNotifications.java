@@ -19,7 +19,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;

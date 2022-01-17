@@ -20,7 +20,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public interface IndexableFileSet {

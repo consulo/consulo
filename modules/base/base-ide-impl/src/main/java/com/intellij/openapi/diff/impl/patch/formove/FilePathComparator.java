@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.patch.formove;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Comparator;
 

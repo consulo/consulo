@@ -4,7 +4,7 @@ package com.intellij.execution.filters;
 import consulo.application.Application;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 

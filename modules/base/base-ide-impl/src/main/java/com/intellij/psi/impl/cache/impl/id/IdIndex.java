@@ -3,7 +3,7 @@
 package com.intellij.psi.impl.cache.impl.id;
 
 import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.openapi.project.DumbService;

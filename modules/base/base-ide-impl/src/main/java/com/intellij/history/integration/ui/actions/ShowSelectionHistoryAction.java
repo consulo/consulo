@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.actions.VcsContext;
 import com.intellij.openapi.vcs.actions.VcsContextWrapper;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcsUtil.VcsSelection;
 import com.intellij.vcsUtil.VcsSelectionUtil;
 import javax.annotation.Nullable;

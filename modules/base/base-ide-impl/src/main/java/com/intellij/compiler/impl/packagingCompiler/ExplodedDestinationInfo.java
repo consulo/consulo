@@ -16,7 +16,7 @@
 
 package com.intellij.compiler.impl.packagingCompiler;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;
 
 /**

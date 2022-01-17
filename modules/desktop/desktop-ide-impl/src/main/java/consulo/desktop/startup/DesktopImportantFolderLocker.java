@@ -22,7 +22,7 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.JetBrainsProtocolHandler;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.containers.ContainerUtil;

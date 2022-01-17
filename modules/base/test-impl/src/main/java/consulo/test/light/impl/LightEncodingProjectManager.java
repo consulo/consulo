@@ -16,8 +16,8 @@
 package consulo.test.light.impl;
 
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import javax.annotation.Nonnull;
 

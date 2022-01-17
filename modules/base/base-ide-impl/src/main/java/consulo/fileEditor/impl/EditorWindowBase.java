@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.logging.Logger;

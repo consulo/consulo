@@ -26,6 +26,10 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.vfs.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

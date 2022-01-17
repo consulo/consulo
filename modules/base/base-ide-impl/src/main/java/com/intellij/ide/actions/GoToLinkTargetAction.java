@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VFileProperty;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiManager;
 

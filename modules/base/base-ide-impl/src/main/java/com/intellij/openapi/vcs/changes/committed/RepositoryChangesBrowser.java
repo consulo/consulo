@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.changes.actions.OpenRepositoryVersionAction;
 import com.intellij.openapi.vcs.changes.actions.RevertSelectedChangesAction;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 
 import javax.annotation.Nonnull;

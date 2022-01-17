@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.KeyDescriptor;

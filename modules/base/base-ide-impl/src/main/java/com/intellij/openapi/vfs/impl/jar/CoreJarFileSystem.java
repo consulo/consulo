@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.impl.jar;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
 import com.intellij.openapi.vfs.StandardFileSystems;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import org.jetbrains.annotations.NonNls;
 

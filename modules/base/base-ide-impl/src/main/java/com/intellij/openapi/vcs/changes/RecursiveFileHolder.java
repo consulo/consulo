@@ -6,7 +6,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 

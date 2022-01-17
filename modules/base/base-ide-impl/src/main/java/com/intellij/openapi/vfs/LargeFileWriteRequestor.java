@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.vfs;
 
+import consulo.virtualFileSystem.VirtualFile;
+
 /**
  * A marker interface for {@link VirtualFile#getOutputStream(Object)} to not assert file content size.
  *

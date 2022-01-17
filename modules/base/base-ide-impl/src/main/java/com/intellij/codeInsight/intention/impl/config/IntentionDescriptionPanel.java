@@ -23,7 +23,7 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.ui.HyperlinkLabel;

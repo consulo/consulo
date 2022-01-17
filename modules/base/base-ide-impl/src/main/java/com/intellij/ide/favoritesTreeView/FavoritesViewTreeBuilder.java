@@ -18,7 +18,7 @@ import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.component.messagebus.MessageBusConnection;

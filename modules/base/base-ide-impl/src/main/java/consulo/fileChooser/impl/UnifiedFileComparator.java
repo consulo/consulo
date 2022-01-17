@@ -16,7 +16,7 @@
 package consulo.fileChooser.impl;
 
 import com.intellij.openapi.fileChooser.FileElement;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.TreeNode;
 
 import java.util.Comparator;

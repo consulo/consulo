@@ -16,6 +16,8 @@
 
 package com.intellij.openapi.vfs;
 
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,7 +31,7 @@ import java.io.IOException;
  * on demand.
  *
  * @author Konstantin Bulenkov
- * @see com.intellij.openapi.vfs.VirtualFile
+ * @see VirtualFile
  * @since 9.0
  */
 public class VirtualFileWrapper {

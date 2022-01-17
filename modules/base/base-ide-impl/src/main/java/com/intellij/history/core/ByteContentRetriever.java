@@ -24,7 +24,7 @@ import com.intellij.history.core.changes.ContentChange;
 import com.intellij.history.core.tree.Entry;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
 import java.util.List;

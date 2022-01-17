@@ -16,7 +16,6 @@
 package consulo.builtInServer.json;
 
 import com.google.gson.Gson;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ExceptionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;

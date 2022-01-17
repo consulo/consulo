@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.ui.ColoredListCellRenderer;

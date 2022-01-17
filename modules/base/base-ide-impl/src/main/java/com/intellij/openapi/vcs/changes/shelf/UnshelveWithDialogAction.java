@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.changes.patch.ApplyPatchExecutor;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchMode;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;
 import java.util.Collections;

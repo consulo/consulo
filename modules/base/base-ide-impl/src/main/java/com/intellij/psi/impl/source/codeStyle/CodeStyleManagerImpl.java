@@ -11,7 +11,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;

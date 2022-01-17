@@ -17,7 +17,7 @@ package com.intellij.dupLocator;
 
 import com.intellij.lang.LighterAST;
 import com.intellij.lang.LighterASTNode;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public interface LightDuplicateProfile {

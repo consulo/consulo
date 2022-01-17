@@ -16,10 +16,10 @@
 package com.intellij.openapi.vcs.annotate;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileAdapter;
-import com.intellij.openapi.vfs.VirtualFileEvent;
-import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import javax.annotation.Nonnull;
 
 public class VFSForAnnotationListener extends VirtualFileAdapter {

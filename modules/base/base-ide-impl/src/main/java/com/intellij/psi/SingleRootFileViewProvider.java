@@ -17,13 +17,13 @@ package com.intellij.psi;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.PersistentFSConstants;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.psi.impl.source.PsiFileImpl;

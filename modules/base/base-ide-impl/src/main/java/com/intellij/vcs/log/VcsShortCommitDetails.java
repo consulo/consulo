@@ -1,6 +1,6 @@
 package com.intellij.vcs.log;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.util.List;

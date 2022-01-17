@@ -4,6 +4,8 @@ package com.intellij.openapi.util;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import consulo.awt.TargetAWT;
+import consulo.component.util.ModificationTracker;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

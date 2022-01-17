@@ -20,7 +20,7 @@ import com.intellij.ide.util.DirectoryUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;

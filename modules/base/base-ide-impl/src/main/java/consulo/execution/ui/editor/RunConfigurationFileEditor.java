@@ -26,7 +26,7 @@ import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.update.UiNotifyConnector;

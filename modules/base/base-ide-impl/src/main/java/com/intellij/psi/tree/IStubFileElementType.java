@@ -17,7 +17,7 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.stubs.*;
 import com.intellij.psi.templateLanguages.TemplateLanguage;

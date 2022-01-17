@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.vfs;
 
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -24,7 +26,7 @@ import javax.annotation.Nonnull;
  * will be used instead of <code>VirtualFile.getPath()</code>
  *
  * @author Konstantin Bulenkov
- * @see VirtualFile#getPath() 
+ * @see VirtualFile#getPath()
  */
 public interface VirtualFilePathWrapper {
   @Nonnull

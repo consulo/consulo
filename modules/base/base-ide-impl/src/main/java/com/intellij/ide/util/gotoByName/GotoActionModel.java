@@ -3,7 +3,7 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.BundleBase;
+import consulo.component.util.localize.BundleBase;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.ApplyIntentionAction;
 import com.intellij.ide.ui.UISettings;

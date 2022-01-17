@@ -16,9 +16,10 @@
 package com.intellij.openapi.vfs.tracker;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.vfs.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

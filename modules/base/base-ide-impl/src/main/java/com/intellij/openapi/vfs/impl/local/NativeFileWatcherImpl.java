@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.openapi.vfs.local.FileWatcherNotificationSink;
 import com.intellij.openapi.vfs.local.PluggableFileWatcher;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;

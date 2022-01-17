@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import javax.annotation.Nullable;

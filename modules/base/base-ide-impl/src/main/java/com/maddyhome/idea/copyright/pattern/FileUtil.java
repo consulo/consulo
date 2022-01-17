@@ -16,7 +16,7 @@
 
 package com.maddyhome.idea.copyright.pattern;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class FileUtil {
   public static boolean areFiles(VirtualFile[] files) {

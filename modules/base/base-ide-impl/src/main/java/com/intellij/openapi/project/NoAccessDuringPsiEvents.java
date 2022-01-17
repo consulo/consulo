@@ -18,7 +18,7 @@ package com.intellij.openapi.project;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.util.PsiModificationTracker;
 import consulo.component.messagebus.MessageBus;

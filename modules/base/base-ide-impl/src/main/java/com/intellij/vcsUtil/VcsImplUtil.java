@@ -18,7 +18,7 @@ package com.intellij.vcsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.WaitForProgressToShow;
 import javax.annotation.Nonnull;
 

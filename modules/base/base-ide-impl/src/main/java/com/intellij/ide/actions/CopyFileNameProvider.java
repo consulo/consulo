@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nullable;

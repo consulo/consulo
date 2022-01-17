@@ -22,7 +22,7 @@ import com.intellij.ide.impl.SelectInTargetPsiWrapper;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.psi.PsiElement;

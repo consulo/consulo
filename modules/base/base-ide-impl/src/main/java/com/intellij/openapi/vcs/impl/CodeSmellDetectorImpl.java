@@ -37,7 +37,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.CodeSmellDetector;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;

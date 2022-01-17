@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.contents;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public interface FileContent extends DiffContent {

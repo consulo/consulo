@@ -5,7 +5,7 @@ package com.intellij.openapi.roots.impl;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.MessageBus;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;

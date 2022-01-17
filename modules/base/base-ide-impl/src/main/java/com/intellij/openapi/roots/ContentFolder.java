@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots;
 
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;

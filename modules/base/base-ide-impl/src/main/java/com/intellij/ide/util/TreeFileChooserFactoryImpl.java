@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;

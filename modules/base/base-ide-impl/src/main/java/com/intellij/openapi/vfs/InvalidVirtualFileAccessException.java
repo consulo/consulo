@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.vfs;
 
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+
 /**
  * @author max
  */

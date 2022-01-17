@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import consulo.virtualFileSystem.fileType.FileType;
+
 /**
  * Use this marker interface to indicate that the file type signifies a directory (not a file)
  */

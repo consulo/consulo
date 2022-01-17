@@ -18,8 +18,8 @@ package com.intellij.internal.encodings;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.fileChooser.FileChooser;
 
 import javax.swing.*;

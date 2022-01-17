@@ -16,9 +16,9 @@
 package consulo.ide.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VFileProperty;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;

@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.elements;
 
 import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.ArtifactElementPresentation;

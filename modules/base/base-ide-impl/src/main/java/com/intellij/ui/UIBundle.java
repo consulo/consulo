@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 public class UIBundle extends AbstractBundle{

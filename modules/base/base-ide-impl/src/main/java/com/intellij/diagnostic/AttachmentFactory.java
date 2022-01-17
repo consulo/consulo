@@ -3,7 +3,7 @@ package com.intellij.diagnostic;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.attachment.Attachment;
 import javax.annotation.Nonnull;
 

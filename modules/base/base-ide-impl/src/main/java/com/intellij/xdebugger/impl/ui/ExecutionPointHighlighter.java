@@ -18,7 +18,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.xdebugger.XSourcePosition;

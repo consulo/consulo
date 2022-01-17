@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.VcsProviderMarker;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.PairConsumer;
 import org.jetbrains.annotations.NonNls;

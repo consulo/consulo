@@ -15,7 +15,7 @@
  */
 package consulo.actionSystem.impl;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import com.intellij.CommonBundle;
 import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;

@@ -19,7 +19,7 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;

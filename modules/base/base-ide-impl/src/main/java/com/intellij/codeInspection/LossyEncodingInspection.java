@@ -37,7 +37,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.ChangeFileEncodingAction;
 import com.intellij.openapi.vfs.encoding.EncodingUtil;
 import com.intellij.psi.FileViewProvider;

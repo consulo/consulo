@@ -18,7 +18,7 @@ package com.intellij.psi;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.PsiDeclaredTarget;
 import com.intellij.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;

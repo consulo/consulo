@@ -20,7 +20,7 @@ import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.container.plugin.PluginListenerDescriptor;

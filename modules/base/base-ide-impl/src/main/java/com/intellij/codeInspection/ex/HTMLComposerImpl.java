@@ -35,7 +35,7 @@ import com.intellij.lang.Language;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.project.ProjectUtilCore;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;

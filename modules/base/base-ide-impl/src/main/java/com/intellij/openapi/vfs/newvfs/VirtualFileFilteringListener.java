@@ -19,7 +19,9 @@
  */
 package com.intellij.openapi.vfs.newvfs;
 
-import com.intellij.openapi.vfs.*;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.*;
+
 import javax.annotation.Nonnull;
 
 public class VirtualFileFilteringListener implements VirtualFileListener {

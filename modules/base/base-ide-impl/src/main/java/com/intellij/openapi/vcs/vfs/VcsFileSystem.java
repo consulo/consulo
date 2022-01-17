@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.vfs;
 
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

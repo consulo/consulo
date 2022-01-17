@@ -34,6 +34,10 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileSystem;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

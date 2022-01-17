@@ -18,7 +18,7 @@ package com.intellij.execution.testframework;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import java.util.HashMap;
 import com.intellij.util.graph.Graph;

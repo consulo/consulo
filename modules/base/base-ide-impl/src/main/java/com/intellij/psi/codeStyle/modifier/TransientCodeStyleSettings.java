@@ -2,8 +2,8 @@
 package com.intellij.psi.codeStyle.modifier;
 
 import com.intellij.application.options.CodeStyle;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.ModificationTracker;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;

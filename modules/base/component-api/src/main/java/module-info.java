@@ -11,6 +11,7 @@ module consulo.component.api {
   requires transitive consulo.annotation;
   requires transitive consulo.ui.api;
   requires transitive consulo.util.serializer;
+  requires transitive consulo.platform.api;
 
   requires consulo.injecting.api;
 
@@ -19,6 +20,7 @@ module consulo.component.api {
   exports consulo.component.persist;
   exports consulo.component.messagebus;
   exports consulo.component.util;
+  exports consulo.component.util.localize;
 
   // TODO only to impl module
   exports consulo.component.extension.internal;

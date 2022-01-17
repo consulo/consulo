@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.roots.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;

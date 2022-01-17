@@ -28,7 +28,7 @@ import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFilePathWrapper;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.PathUtilRt;

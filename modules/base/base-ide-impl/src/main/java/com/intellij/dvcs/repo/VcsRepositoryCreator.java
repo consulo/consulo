@@ -17,7 +17,7 @@ package com.intellij.dvcs.repo;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vcs.VcsKey;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

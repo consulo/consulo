@@ -9,7 +9,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.CacheUpdateRunner;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.psi.stubs.StubUpdatingIndex;

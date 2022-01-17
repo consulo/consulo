@@ -19,7 +19,7 @@ import com.intellij.find.FindManager;
 import com.intellij.find.FindSettings;
 import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usages.UsageInfoToUsageConverter;

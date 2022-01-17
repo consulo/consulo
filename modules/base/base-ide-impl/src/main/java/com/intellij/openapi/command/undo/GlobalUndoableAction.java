@@ -17,7 +17,7 @@
 package com.intellij.openapi.command.undo;
 
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public abstract class GlobalUndoableAction extends BasicUndoableAction {

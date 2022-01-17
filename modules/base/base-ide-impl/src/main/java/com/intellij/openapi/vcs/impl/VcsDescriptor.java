@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class VcsDescriptor implements Comparable<VcsDescriptor> {
   private final String myName;

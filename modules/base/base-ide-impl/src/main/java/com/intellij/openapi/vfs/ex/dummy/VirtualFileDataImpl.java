@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.ex.dummy;
 
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
 import javax.annotation.Nonnull;

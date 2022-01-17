@@ -40,7 +40,7 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
 

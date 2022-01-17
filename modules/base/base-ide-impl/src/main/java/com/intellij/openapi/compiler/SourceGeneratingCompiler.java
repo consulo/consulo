@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * A tag interface indicating that the compiler will generate Java sources.

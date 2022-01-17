@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.*;
 

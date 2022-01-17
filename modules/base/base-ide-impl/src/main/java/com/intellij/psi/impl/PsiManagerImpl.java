@@ -14,7 +14,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vfs.NonPhysicalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.psi.*;

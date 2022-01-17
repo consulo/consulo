@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TitlePanel;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.treetable.TreeColumnInfo;
 import com.intellij.util.ui.ColumnInfo;

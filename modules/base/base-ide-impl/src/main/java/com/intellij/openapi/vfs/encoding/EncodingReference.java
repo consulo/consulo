@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.encoding;
 
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

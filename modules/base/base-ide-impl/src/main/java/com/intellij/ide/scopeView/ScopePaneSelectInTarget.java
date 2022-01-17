@@ -21,7 +21,7 @@ import com.intellij.ide.SelectInManager;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.impl.ProjectViewSelectInTarget;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;

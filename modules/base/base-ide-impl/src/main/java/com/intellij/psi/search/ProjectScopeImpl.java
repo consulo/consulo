@@ -19,7 +19,7 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import javax.annotation.Nonnull;
 

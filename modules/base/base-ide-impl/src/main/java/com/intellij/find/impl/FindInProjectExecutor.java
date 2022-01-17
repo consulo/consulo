@@ -17,7 +17,7 @@ package com.intellij.find.impl;
 
 import com.intellij.find.FindModel;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.usages.FindUsagesProcessPresentation;
 import com.intellij.usages.UsageInfo2UsageAdapter;

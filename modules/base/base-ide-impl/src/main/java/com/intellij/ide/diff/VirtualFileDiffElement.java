@@ -34,6 +34,8 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.pom.Navigatable;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

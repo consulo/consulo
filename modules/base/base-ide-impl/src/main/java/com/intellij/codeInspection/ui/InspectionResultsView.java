@@ -48,7 +48,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.pom.Navigatable;

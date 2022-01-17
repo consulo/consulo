@@ -23,7 +23,7 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.core.impl.PomModelImpl;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;

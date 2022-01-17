@@ -12,10 +12,10 @@ import com.intellij.openapi.command.undo.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.*;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.*;
 import com.intellij.util.FileContentUtilCore;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package com.intellij.tasks.impl.httpclient;
 
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.tasks.TaskRepositoryType;
 import com.intellij.tasks.config.TaskSettings;
 import com.intellij.tasks.impl.BaseRepository;

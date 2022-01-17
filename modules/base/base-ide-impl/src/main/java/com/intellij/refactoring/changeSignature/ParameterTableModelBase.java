@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiElement;

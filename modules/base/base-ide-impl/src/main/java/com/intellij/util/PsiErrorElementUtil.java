@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;

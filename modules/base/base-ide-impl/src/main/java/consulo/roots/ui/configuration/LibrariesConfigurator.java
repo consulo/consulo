@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorListener;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
 

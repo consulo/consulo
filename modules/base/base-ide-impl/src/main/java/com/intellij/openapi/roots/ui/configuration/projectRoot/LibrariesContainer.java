@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.NewLibraryEditor;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

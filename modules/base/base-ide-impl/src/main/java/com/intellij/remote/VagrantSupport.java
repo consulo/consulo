@@ -20,7 +20,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

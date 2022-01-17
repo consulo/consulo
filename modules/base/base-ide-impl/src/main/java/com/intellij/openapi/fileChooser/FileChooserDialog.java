@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;

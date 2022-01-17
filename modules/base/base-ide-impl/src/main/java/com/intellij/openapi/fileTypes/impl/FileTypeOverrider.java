@@ -2,15 +2,17 @@
 package com.intellij.openapi.fileTypes.impl;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Allows to override the file type for a file. Overrides take precedence over all other ways of determining the type of the file
- * (name checks, content checks, {@link com.intellij.openapi.fileTypes.FileTypeRegistry.FileTypeDetector}). An overridden file type
+ * (name checks, content checks, {@link FileTypeRegistry.FileTypeDetector}). An overridden file type
  * completely replaces the file's normal file type for PSI, actions and all other features.
  * <p>
  * If the override conditions for a given {@code FileTypeOverrider} change, it needs to call

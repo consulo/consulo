@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.rollback;
 
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.List;
 

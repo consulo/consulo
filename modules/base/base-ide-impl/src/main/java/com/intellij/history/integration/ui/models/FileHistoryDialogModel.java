@@ -22,7 +22,7 @@ import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.revertion.DifferenceReverter;
 import com.intellij.history.integration.revertion.Reverter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 public abstract class FileHistoryDialogModel extends HistoryDialogModel {
   public FileHistoryDialogModel(Project p, IdeaGateway gw, LocalHistoryFacade vcs, VirtualFile f) {

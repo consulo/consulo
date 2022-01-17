@@ -31,7 +31,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ui.PlusMinus;
 import com.intellij.openapi.vcs.changes.ui.VirtualFileListCellRenderer;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;

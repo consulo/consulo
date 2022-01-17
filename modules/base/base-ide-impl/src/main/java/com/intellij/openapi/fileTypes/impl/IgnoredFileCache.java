@@ -2,12 +2,12 @@
 package com.intellij.openapi.fileTypes.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
+import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import com.intellij.util.containers.ConcurrentBitSet;
 import consulo.component.messagebus.MessageBusConnection;
 import javax.annotation.Nonnull;

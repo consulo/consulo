@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.vfs;
 
+import consulo.virtualFileSystem.VirtualFile;
+
 public interface VirtualFileFilter {
   boolean accept(VirtualFile file);
 

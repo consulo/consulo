@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.PsiManagerEx;

@@ -17,6 +17,7 @@ package com.intellij.openapi.util.io;
 
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.util.io.FileAttributes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -19,7 +19,7 @@ import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.SettableFuture;
 import consulo.application.ApplicationManager;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.data.VcsLogData;

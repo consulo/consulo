@@ -28,7 +28,7 @@ import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsDetector;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;

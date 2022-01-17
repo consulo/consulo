@@ -39,7 +39,7 @@ import com.intellij.openapi.vcs.changes.VcsAnnotationLocalChangesListener;
 import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.LightColors;
 import com.intellij.util.ObjectUtils;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.vcs.changes.CommitContext;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import javax.annotation.Nonnull;
 
 import java.io.*;

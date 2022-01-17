@@ -32,7 +32,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.changes.ui.CommitHelper;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import jakarta.inject.Inject;

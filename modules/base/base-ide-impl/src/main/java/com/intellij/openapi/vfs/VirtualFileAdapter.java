@@ -16,6 +16,8 @@
 package com.intellij.openapi.vfs;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.virtualFileSystem.event.*;
+
 import javax.annotation.Nonnull;
 
 @Deprecated

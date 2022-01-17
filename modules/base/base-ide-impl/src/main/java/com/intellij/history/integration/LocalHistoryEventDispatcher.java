@@ -24,12 +24,11 @@ import com.intellij.openapi.command.CommandListener;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManagerListener;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.*;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.*;
 import com.intellij.util.containers.DisposableWrapperList;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;

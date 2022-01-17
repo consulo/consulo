@@ -32,7 +32,7 @@ import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.SimpleContentRevision;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 

@@ -20,7 +20,7 @@ import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.NullableFunction;

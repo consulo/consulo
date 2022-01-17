@@ -18,7 +18,7 @@ package com.intellij.openapi.module;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayFactory;
 import consulo.disposer.Disposable;
 import consulo.util.pointers.Named;

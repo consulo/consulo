@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.libraries;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

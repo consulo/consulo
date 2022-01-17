@@ -10,7 +10,7 @@ import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.tree.LeafState;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;

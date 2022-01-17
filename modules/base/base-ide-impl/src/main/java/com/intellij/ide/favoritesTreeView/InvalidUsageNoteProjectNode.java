@@ -18,7 +18,7 @@ package com.intellij.ide.favoritesTreeView;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.usages.TextChunk;
 import javax.annotation.Nonnull;
 

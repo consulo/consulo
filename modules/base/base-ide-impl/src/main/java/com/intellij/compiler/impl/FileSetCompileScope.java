@@ -18,11 +18,11 @@ package com.intellij.compiler.impl;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.ExportableUserDataHolderBase;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import javax.annotation.Nonnull;
 

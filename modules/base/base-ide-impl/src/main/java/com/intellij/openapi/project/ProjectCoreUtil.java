@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.project;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 

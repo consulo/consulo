@@ -15,12 +15,12 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.BundleBase;
+import consulo.component.util.localize.BundleBase;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.ui.*;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.paint.LinePainter2D;

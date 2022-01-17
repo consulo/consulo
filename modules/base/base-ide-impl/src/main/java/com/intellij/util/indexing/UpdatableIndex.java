@@ -16,7 +16,7 @@
 
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.impl.AbstractUpdateData;

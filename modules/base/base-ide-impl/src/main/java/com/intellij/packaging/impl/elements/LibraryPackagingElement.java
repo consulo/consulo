@@ -24,7 +24,7 @@ import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.ComplexPackagingElement;
 import com.intellij.packaging.elements.PackagingElement;

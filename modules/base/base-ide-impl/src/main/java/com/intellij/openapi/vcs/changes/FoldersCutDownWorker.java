@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.HashSet;
 import java.util.Set;

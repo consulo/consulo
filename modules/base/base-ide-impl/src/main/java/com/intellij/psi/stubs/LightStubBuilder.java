@@ -16,7 +16,7 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.lang.*;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiFile;

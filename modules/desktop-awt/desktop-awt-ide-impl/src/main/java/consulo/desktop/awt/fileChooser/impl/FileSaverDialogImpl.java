@@ -20,7 +20,7 @@ import com.intellij.openapi.fileChooser.FileSaverDialog;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.UIBundle;

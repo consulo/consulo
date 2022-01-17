@@ -18,7 +18,7 @@ package consulo.ide.newProject.ui;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.start.WelcomeFrameManager;

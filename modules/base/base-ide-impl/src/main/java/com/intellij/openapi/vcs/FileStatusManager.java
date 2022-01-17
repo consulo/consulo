@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
 import consulo.ui.color.ColorValue;
 

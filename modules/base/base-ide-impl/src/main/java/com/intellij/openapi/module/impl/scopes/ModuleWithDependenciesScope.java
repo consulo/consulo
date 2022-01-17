@@ -18,7 +18,7 @@ package com.intellij.openapi.module.impl.scopes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.NotNullFunction;

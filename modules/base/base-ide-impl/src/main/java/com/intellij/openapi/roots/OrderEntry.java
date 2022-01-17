@@ -16,10 +16,11 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.roots.orderEntry.OrderEntryType;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 /**
  * Represents an entry in the classpath of a module (as shown in the "Order/Export" page
@@ -57,7 +58,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
 
   /**
    * Returns list of roots of given type for this entry. To validate returned roots,
-   * use <code>{@link com.intellij.openapi.vfs.VirtualFileManager#findFileByUrl(java.lang.String)}</code> <br>
+   * use <code>{@link VirtualFileManager#findFileByUrl(java.lang.String)}</code> <br>
    *
    * Note that list of roots is project-dependent.
    *

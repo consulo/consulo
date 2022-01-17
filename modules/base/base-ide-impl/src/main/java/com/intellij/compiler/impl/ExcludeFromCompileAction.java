@@ -28,7 +28,7 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.options.ExcludeEntryDescription;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
 * @author Eugene Zhuravlev

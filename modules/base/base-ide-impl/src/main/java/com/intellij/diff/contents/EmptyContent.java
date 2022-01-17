@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.contents;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nullable;
 
 /**

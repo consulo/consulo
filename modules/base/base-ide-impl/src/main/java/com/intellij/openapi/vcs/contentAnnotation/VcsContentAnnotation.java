@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.contentAnnotation;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.RichTextItem;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;
 
 import java.util.List;

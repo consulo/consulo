@@ -3,7 +3,7 @@ package com.intellij.openapi.externalSystem.service.settings;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -19,7 +19,7 @@ import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.io.UnsyncByteArrayInputStream;

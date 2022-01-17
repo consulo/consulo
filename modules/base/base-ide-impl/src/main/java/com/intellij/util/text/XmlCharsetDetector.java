@@ -16,7 +16,7 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 

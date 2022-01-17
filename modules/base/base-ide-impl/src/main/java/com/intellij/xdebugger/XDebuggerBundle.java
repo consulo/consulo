@@ -16,7 +16,7 @@
 
 package com.intellij.xdebugger;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 /**

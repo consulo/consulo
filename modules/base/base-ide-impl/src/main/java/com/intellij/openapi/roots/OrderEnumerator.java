@@ -19,7 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.PathsList;
 import consulo.application.util.function.Processor;

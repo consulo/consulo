@@ -58,6 +58,8 @@ import consulo.logging.Logger;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;

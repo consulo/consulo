@@ -15,8 +15,7 @@
  */
 package com.intellij.idea;
 
-import com.intellij.AbstractBundle;
-import org.jetbrains.annotations.NonNls;
+import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 /**

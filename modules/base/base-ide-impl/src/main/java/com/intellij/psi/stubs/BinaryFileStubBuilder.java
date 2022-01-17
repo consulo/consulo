@@ -19,7 +19,7 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.indexing.FileContent;
 
 import javax.annotation.Nullable;

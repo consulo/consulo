@@ -21,7 +21,7 @@ import com.intellij.ide.fileTemplates.impl.CustomFileTemplate;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;

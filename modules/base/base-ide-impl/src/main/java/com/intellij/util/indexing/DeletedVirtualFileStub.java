@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.testFramework.LightVirtualFile;
 import javax.annotation.Nonnull;

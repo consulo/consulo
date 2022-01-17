@@ -21,7 +21,7 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import consulo.compiler.ModuleCompilerPathsManager;
 import javax.annotation.Nonnull;

@@ -16,8 +16,8 @@
 
 package com.intellij.patterns;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ProcessingContext;
 import javax.annotation.Nonnull;
 

@@ -33,7 +33,7 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.DefaultLibraryRootsComponentDescriptor;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;

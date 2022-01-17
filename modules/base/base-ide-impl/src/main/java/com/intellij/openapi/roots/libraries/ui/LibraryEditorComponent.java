@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.libraries.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

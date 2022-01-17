@@ -17,7 +17,7 @@
 package com.intellij.lang.cacheBuilder;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;

@@ -1,5 +1,7 @@
 package com.intellij.openapi.util;
 
+import consulo.component.util.ModificationTracker;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 public class DefaultModificationTracker implements ModificationTracker {

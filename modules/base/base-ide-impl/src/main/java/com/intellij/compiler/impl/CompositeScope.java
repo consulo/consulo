@@ -23,10 +23,10 @@ package com.intellij.compiler.impl;
 
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.ExportableUserDataHolderBase;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 

@@ -19,7 +19,7 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
 import consulo.ui.image.Image;

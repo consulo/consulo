@@ -20,6 +20,9 @@ import com.intellij.util.io.URLUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.fileTypes.ZipArchiveFileType;
 import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileSystem;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.vfs;
 
+import consulo.virtualFileSystem.VirtualFile;
+
 /**
  * An interface to mark virtual files for which {@link VirtualFile#contentsToByteArray} and {@link VirtualFile#getInputStream}
  * operations do not make sense and would likely result in {@link UnsupportedOperationException}.

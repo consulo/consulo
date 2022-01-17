@@ -17,7 +17,7 @@
 package com.intellij.xdebugger;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;
 

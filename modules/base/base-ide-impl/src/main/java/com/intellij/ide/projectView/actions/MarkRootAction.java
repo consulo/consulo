@@ -24,7 +24,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.ui.annotation.RequiredUIAccess;

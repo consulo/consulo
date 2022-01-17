@@ -31,7 +31,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import com.intellij.util.concurrency.NonUrgentExecutor;

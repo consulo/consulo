@@ -26,7 +26,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import javax.annotation.Nonnull;
 

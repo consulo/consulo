@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.errorTreeView;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public class SimpleErrorData {

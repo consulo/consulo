@@ -15,9 +15,9 @@
  */
 package com.intellij.ui.debugger.extensions;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 

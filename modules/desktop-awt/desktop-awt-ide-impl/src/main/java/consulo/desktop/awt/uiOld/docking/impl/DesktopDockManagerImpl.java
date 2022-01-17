@@ -33,7 +33,7 @@ import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.MutualMap;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;

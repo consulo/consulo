@@ -4,7 +4,7 @@ package com.intellij.ide.scopeView;
 import com.intellij.ide.scratch.ScratchesNamedScope;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.NonProjectFilesScope;

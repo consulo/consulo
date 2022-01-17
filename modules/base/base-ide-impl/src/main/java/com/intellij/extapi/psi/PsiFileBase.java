@@ -19,7 +19,7 @@ package com.intellij.extapi.psi;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.PsiFileImpl;

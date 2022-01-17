@@ -16,7 +16,7 @@
 
 package com.intellij.ide;
 
-import com.intellij.AbstractBundle;
+import consulo.component.util.localize.AbstractBundle;
 import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.PropertyKey;
 

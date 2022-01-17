@@ -8,7 +8,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.VcsException;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;

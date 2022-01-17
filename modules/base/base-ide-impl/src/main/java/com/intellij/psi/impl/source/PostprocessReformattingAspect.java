@@ -16,7 +16,7 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.PomManager;
 import com.intellij.pom.PomModelAspect;
 import com.intellij.pom.event.PomModelEvent;

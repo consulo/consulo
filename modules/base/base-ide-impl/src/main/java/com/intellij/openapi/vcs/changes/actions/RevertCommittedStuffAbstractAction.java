@@ -35,7 +35,7 @@ import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.changes.ui.ChangeListChooser;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.WaitForProgressToShow;
 import com.intellij.util.containers.Convertor;
 import javax.annotation.Nonnull;

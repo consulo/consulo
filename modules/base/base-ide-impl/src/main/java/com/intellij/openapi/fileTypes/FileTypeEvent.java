@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

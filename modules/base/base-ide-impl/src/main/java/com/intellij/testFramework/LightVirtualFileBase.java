@@ -15,11 +15,11 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
 import com.intellij.openapi.vfs.NonPhysicalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.util.lang.LocalTimeCounter;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

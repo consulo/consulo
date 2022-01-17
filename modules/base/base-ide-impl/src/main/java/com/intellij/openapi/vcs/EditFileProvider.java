@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * VCS interface for invoking "check out"/"edit file" operations.

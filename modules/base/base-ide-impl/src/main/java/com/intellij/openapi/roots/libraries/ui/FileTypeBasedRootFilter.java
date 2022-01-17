@@ -16,11 +16,11 @@
 package com.intellij.openapi.roots.libraries.ui;
 
 import consulo.fileTypes.ArchiveFileType;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.vfs.util.ArchiveVfsUtil;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;

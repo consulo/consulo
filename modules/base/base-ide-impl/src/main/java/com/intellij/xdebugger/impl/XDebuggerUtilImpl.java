@@ -41,7 +41,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.NonNavigatable;
 import com.intellij.psi.*;

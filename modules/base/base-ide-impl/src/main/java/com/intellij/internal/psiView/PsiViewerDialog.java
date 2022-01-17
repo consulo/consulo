@@ -81,6 +81,7 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.ex.util.LightDarkColorValue;
 import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

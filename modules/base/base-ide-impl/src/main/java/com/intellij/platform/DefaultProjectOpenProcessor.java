@@ -18,7 +18,7 @@ package com.intellij.platform;
 import consulo.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;

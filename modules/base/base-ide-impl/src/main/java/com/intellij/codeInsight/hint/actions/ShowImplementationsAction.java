@@ -40,7 +40,7 @@ import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.*;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;

@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.libraries.ui;
 
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.LibraryRootType;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;

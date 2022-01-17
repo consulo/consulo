@@ -20,7 +20,7 @@ import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.Component;
 import consulo.ui.Size;
 import consulo.ui.Tree;

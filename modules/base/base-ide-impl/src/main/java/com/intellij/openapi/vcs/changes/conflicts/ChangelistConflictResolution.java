@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.changes.shelf.ShelveChangesCommitExecutor;
 import com.intellij.openapi.vcs.changes.ui.CommitChangeListDialog;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
 import java.util.HashSet;

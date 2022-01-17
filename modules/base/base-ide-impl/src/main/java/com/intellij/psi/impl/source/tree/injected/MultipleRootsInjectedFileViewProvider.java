@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.Language;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import com.intellij.psi.impl.PsiManagerEx;

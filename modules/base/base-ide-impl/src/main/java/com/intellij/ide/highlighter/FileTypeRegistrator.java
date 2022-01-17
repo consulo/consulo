@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.highlighter;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.component.extension.ExtensionPointName;
 
 public interface FileTypeRegistrator {

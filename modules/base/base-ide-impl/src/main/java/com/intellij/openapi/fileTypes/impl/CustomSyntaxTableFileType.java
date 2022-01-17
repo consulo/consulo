@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileTypes.impl;
 
 import com.intellij.ide.highlighter.custom.SyntaxTable;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 
 /**
  * Author: dmitrylomov

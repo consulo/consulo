@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.merge;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ui.ColumnInfo;
 
 /**

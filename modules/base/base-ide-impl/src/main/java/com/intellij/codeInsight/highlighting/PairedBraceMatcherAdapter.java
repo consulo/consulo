@@ -20,7 +20,7 @@ import com.intellij.lang.BracePair;
 import com.intellij.lang.Language;
 import com.intellij.lang.PairedBraceMatcher;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import javax.annotation.Nonnull;

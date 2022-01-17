@@ -17,7 +17,7 @@ package com.intellij.psi;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;

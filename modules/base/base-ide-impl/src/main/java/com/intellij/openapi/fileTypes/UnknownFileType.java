@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 

@@ -27,7 +27,7 @@ import com.intellij.openapi.fileTypes.INativeFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vfs.PersistentFSConstants;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.Alarm;

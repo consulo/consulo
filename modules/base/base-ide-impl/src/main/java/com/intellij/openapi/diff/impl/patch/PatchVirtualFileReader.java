@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.patch;
 
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.IOException;
 

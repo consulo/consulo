@@ -28,7 +28,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyUISettings;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;

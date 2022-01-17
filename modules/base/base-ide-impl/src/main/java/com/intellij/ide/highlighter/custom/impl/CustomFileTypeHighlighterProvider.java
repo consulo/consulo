@@ -18,11 +18,11 @@ package com.intellij.ide.highlighter.custom.impl;
 
 import com.intellij.openapi.fileTypes.SyntaxHighlighterProvider;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ide.highlighter.custom.CustomFileHighlighter;
 import javax.annotation.Nullable;
 

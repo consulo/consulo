@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.elements;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.packaging.elements.ArchivePackageWriter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

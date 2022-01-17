@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.PairProcessor;
 import consulo.container.boot.ContainerPathManager;

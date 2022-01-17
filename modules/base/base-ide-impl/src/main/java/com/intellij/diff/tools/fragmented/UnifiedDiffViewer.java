@@ -47,7 +47,7 @@ import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAware;

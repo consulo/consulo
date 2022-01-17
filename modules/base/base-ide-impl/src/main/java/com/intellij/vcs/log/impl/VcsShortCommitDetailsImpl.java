@@ -1,6 +1,6 @@
 package com.intellij.vcs.log.impl;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsShortCommitDetails;
 import com.intellij.vcs.log.VcsUser;

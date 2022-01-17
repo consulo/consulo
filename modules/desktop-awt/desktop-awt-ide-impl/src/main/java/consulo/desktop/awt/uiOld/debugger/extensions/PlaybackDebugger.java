@@ -30,7 +30,8 @@ import com.intellij.openapi.ui.playback.PlaybackContext;
 import com.intellij.openapi.ui.playback.PlaybackRunner;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
-import com.intellij.openapi.vfs.encoding.EncodingRegistry;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -46,6 +47,8 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.desktop.awt.wm.impl.DesktopIdeFrameImpl;
 import consulo.logging.Logger;
 import consulo.ui.Window;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.wm.util.IdeFrameUtil;
 import org.jdom.Element;
 

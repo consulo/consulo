@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ObjectLongHashMap;
 import com.intellij.util.ui.components.BorderLayoutPanel;

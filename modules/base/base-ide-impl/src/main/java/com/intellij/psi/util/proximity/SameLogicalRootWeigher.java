@@ -16,7 +16,7 @@
 package com.intellij.psi.util.proximity;
 
 import com.intellij.openapi.util.NullableLazyKey;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.ProximityLocation;

@@ -26,7 +26,7 @@ import com.intellij.openapi.roots.libraries.ui.OrderRootTypePresentation;
 import com.intellij.openapi.roots.libraries.ui.RootDetector;
 import consulo.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

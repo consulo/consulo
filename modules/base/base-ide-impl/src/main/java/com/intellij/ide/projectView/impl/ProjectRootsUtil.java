@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.TestSourcesFilter;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;

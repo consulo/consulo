@@ -37,7 +37,7 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.IdeBorderFactory;

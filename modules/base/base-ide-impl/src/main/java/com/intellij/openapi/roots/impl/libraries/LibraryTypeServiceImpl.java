@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.PathUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

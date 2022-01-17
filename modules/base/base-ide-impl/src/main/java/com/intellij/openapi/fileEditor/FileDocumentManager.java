@@ -8,8 +8,8 @@ import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.vfs.SavingRequestor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.SavingRequestor;
+import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

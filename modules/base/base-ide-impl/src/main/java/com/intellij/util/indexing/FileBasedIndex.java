@@ -2,7 +2,8 @@
 package com.intellij.util.indexing;
 
 import consulo.application.ReadAction;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
@@ -17,6 +18,8 @@ import com.intellij.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 import com.intellij.util.SystemProperties;
 import consulo.application.internal.PerApplicationInstance;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

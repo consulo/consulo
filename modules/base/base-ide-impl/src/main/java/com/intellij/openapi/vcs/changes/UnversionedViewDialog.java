@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.impl.Utils;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesListView;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

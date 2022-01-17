@@ -17,8 +17,8 @@ package com.intellij.codeInspection.reference;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;

@@ -24,7 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import com.intellij.psi.impl.PsiDocumentManagerBase;

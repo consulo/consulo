@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.PathsList;
 import javax.annotation.Nonnull;

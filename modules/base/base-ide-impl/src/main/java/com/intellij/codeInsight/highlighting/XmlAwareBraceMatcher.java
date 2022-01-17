@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.highlighting;
 
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nullable;
 
 public interface XmlAwareBraceMatcher extends BraceMatcher {

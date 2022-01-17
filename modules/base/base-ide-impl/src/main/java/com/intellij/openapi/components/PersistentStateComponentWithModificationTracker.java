@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.util.ModificationTracker;
+import consulo.component.util.ModificationTracker;
 import consulo.component.persist.PersistentStateComponent;
 
 /**

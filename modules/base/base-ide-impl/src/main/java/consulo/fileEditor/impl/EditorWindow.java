@@ -17,7 +17,7 @@ package consulo.fileEditor.impl;
 
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -19,7 +19,7 @@
  */
 package com.intellij.find.ngrams;
 
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.openapi.util.text.TrigramBuilder;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;

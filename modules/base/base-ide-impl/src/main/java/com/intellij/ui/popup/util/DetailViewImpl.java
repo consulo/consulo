@@ -31,7 +31,7 @@ import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.UIBundle;

@@ -18,8 +18,8 @@ package com.intellij.openapi.projectRoots.ui;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.swing.*;
 import java.net.MalformedURLException;

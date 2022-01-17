@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 

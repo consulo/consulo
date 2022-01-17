@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.WeakList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

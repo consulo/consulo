@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.history.VcsHistoryCache;
 import com.intellij.openapi.vcs.impl.ContentRevisionCache;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import com.intellij.openapi.vcs.update.UpdatedFiles;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
 import consulo.component.messagebus.Topic;
 import consulo.localize.LocalizeValue;

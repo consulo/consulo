@@ -1,7 +1,7 @@
 package com.intellij.vcs.log.data;
 
 import com.intellij.openapi.vcs.VcsException;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.data.index.VcsLogIndex;

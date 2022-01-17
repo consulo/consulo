@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import javax.annotation.Nonnull;
 

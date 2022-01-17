@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;

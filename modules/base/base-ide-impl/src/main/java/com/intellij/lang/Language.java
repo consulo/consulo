@@ -15,8 +15,8 @@
  */
 package com.intellij.lang;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.containers.MultiMap;

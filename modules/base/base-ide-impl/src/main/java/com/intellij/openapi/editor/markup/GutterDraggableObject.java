@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.markup;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;

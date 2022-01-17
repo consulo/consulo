@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
 import consulo.disposer.Disposable;

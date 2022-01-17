@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import consulo.ui.image.Image;
 

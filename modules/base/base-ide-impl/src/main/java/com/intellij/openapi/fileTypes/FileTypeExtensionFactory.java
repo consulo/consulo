@@ -23,6 +23,7 @@ import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.util.KeyedExtensionFactory;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

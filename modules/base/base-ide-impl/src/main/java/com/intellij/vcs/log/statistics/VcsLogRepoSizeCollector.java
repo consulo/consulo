@@ -21,7 +21,7 @@ import com.intellij.internal.statistic.StatisticsUtilKt;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsKey;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcs.log.VcsLogProvider;

@@ -40,7 +40,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangesComparator;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.CacheOneStepIterator;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;

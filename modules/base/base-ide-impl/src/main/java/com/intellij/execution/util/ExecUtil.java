@@ -23,7 +23,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.util.io.CharsetToolkit;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.platform.Platform;

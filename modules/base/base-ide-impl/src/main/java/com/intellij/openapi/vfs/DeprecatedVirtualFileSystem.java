@@ -23,6 +23,9 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.vfs.impl.BulkVirtualFileListenerAdapter;
 import com.intellij.util.EventDispatcher;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

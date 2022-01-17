@@ -45,7 +45,7 @@ import com.intellij.openapi.vcs.annotate.ShowAllAffectedGenericAction;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import com.intellij.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import com.intellij.openapi.vcs.history.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.PopupHandler;

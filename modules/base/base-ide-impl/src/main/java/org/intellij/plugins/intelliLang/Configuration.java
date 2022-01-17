@@ -37,6 +37,7 @@ import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
+import consulo.component.util.ModificationTracker;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
 import consulo.psi.injection.LanguageInjectionSupport;

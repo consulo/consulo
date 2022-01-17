@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.annotate.VcsAnnotation;
 import com.intellij.openapi.vcs.annotate.VcsCacheableAnnotationProvider;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.diff.DiffProvider;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.logging.Logger;

@@ -20,7 +20,7 @@ import com.intellij.analysis.AnalysisScopeBundle;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.usageView.UsageInfo;

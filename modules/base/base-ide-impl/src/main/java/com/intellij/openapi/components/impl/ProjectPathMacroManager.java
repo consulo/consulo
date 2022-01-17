@@ -20,7 +20,7 @@ import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nullable;

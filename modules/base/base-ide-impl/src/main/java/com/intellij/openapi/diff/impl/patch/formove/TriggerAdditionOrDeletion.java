@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.changes.SortByVcsRoots;
 import com.intellij.openapi.vcs.checkin.CheckinEnvironment;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.FilePathByPathComparator;
 import com.intellij.util.ObjectUtils;
 import consulo.application.util.function.Processor;

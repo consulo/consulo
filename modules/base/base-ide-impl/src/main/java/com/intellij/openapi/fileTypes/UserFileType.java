@@ -2,7 +2,8 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;

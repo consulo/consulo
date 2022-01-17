@@ -21,7 +21,7 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.vfs.VirtualFileManager</interface-class>
+      <interface-class>consulo.virtualFileSystem.VirtualFileManager</interface-class>
       <implementation-class>com.intellij.openapi.vfs.PlatformVirtualFileManager</implementation-class>
     </component>
 

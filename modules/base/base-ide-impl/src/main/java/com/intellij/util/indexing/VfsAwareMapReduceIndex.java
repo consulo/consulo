@@ -8,7 +8,7 @@ import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.io.ByteArraySequence;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;

@@ -15,6 +15,10 @@
  */
 package com.intellij.openapi.vfs;
 
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -45,7 +45,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.packageDependencies.*;
 import com.intellij.packageDependencies.actions.AnalyzeDependenciesHandler;

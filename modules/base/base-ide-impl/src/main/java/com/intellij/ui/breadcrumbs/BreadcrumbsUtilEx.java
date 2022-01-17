@@ -4,7 +4,7 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiManager;
 import javax.annotation.Nonnull;

@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 

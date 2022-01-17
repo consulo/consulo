@@ -18,7 +18,7 @@ package consulo.editor.notifications;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 

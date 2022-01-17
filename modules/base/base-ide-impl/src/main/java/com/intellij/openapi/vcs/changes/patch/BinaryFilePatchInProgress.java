@@ -31,7 +31,7 @@ import com.intellij.openapi.vcs.changes.shelf.ShelvedBinaryContentRevision;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedBinaryFile;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 

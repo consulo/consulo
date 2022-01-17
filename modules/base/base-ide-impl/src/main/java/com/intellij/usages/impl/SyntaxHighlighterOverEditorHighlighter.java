@@ -27,7 +27,7 @@ import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.search.LexerEditorHighlighterLexer;
 import com.intellij.psi.tree.IElementType;
 import javax.annotation.Nonnull;

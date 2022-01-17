@@ -11,6 +11,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.extension.ExtensionPointName;
+import consulo.component.util.ModificationTracker;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.*;

@@ -16,10 +16,10 @@
 package consulo.fileTypes;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileTypes.FileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.image.Image;

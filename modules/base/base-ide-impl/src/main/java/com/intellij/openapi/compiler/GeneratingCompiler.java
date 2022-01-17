@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * A base interface for all compilers that generate new files. The generated files may be processed by other compilers.

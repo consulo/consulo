@@ -3,7 +3,7 @@ package com.intellij.psi.stubs;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.indexing.FileBasedIndex;
 
 import javax.annotation.Nullable;

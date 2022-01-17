@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source.tree.injected;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.Language;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;

@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.markup.InspectionsLevel;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 

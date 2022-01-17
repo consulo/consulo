@@ -28,7 +28,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.CharArrayUtil;

@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.CheckoutProvider;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 

@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Couple;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.vcs.LocalFilePath;
 import com.intellij.openapi.vcs.changes.Change;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsFullCommitDetails;

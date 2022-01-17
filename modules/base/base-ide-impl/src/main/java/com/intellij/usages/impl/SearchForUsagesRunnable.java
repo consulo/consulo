@@ -38,7 +38,7 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiElement;
