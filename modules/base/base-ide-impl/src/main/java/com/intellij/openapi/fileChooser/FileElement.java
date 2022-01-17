@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.fileChooser;
 
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

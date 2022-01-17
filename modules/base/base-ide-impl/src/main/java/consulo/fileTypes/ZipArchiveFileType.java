@@ -17,6 +17,8 @@ package consulo.fileTypes;
 
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 
 import javax.annotation.Nonnull;
 
@@ -27,6 +29,10 @@ import javax.annotation.Nonnull;
 public final class ZipArchiveFileType extends ArchiveFileType {
   public static final String PROTOCOL = "zip";
   public static final ArchiveFileType INSTANCE = new ZipArchiveFileType();
+
+  public ZipArchiveFileType() {
+    super(VirtualFileManager.getInstance());
+  }
 
   @Nonnull
   @Override

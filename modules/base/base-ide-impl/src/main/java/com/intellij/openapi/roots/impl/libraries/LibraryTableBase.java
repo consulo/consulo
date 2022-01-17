@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.roots.impl.libraries;
 
+import consulo.component.persist.InvalidDataException;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;

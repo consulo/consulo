@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.ArtifactManager;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
 import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;

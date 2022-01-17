@@ -29,11 +29,11 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFilePathWrapper;
+import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.io.PathKt;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

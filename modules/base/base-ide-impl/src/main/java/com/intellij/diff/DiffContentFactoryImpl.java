@@ -44,7 +44,7 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.PathUtil;
 import consulo.application.AccessRule;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.ui.style.StandardColors;
 import jakarta.inject.Singleton;

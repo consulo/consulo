@@ -28,7 +28,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.vfs.RefreshableFileSystem;
+import consulo.virtualFileSystem.RefreshableFileSystem;
 import consulo.virtualFileSystem.*;
 import jakarta.inject.Inject;
 

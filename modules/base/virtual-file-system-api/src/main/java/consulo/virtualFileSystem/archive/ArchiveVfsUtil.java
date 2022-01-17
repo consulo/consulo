@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.vfs.util;
+package consulo.virtualFileSystem.archive;
 
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
-import consulo.fileTypes.ArchiveFileType;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nullable;
 

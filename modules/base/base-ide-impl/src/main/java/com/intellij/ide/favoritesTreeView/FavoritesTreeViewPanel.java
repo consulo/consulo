@@ -64,7 +64,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

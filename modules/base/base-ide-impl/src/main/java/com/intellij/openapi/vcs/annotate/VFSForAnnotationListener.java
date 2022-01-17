@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.annotate;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
+import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import javax.annotation.Nonnull;

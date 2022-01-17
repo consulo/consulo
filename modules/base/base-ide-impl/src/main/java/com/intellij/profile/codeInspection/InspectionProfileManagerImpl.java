@@ -36,7 +36,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.Profile;
 import com.intellij.util.ArrayUtil;

@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.impl.ArchiveHandler;
 import com.intellij.util.io.URLUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 

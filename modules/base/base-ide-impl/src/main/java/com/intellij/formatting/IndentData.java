@@ -16,7 +16,7 @@
 
 package com.intellij.formatting;
 
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

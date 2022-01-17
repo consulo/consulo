@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework;
 
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;

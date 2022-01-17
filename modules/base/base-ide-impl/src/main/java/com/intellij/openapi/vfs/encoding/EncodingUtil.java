@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.ArrayUtil;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.fileTypes.FileTypeWithPredefinedCharset;
+import consulo.virtualFileSystem.fileType.FileTypeWithPredefinedCharset;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

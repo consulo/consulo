@@ -46,7 +46,7 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import consulo.application.util.function.Processor;
 import consulo.awt.TargetAWT;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.psi.injection.AbstractLanguageInjectionSupport;
 import consulo.psi.injection.LanguageInjectionSupport;

@@ -48,7 +48,7 @@ import consulo.application.AccessRule;
 import consulo.logging.Logger;
 import consulo.packaging.impl.util.DeploymentUtilImpl;
 import consulo.util.collection.Sets;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;
 import java.io.*;

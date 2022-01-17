@@ -18,7 +18,7 @@ package com.intellij.tasks.context;
 import javax.annotation.Nonnull;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.xmlb.Accessor;
 import com.intellij.util.xmlb.SerializationFilter;

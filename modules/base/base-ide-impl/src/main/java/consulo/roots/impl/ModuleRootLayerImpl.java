@@ -27,7 +27,7 @@ import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeat
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.SmartList;

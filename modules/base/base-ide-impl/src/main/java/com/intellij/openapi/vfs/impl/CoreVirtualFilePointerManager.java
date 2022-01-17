@@ -18,10 +18,10 @@ package com.intellij.openapi.vfs.impl;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

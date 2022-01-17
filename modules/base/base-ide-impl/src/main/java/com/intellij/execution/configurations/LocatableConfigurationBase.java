@@ -16,7 +16,7 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import javax.annotation.Nullable;

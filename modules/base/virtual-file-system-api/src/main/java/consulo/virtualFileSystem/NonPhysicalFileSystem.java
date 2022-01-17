@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.vfs;
+package consulo.virtualFileSystem;
 
 /**
- * @author VISTALL
- * @since 2018-08-19
+ * Marker interface for filesystem implementations files in which are considered non-physical.
  *
- * Marker for file system, which need refresh by methods com.intellij.openapi.vfs.VirtualFileManager#syncRefresh()
+ * @author yole
  */
-public interface RefreshableFileSystem {
+public interface NonPhysicalFileSystem {
 }

@@ -21,7 +21,7 @@ import consulo.util.io.FileAttributes;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFilePointerCapableFileSystem;
+import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
-import consulo.vfs.RefreshableFileSystem;
+import consulo.virtualFileSystem.RefreshableFileSystem;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

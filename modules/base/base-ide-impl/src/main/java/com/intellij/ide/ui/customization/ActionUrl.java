@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.keymap.impl.ui.ActionsTreeUtil;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import com.intellij.openapi.util.*;
+import consulo.component.persist.InvalidDataException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;

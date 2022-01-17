@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.profile.codeInspection.InspectionProfileManager;

@@ -17,7 +17,7 @@
 package com.intellij.util.config;
 
 import com.intellij.openapi.util.Factory;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;

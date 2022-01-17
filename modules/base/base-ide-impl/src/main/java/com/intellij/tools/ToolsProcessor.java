@@ -19,7 +19,7 @@ package com.intellij.tools;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.options.BaseSchemeProcessor;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Document;
 import org.jdom.Element;

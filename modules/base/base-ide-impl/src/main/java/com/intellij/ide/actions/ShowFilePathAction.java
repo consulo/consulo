@@ -51,8 +51,8 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.vfs.ArchiveFileSystem;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;

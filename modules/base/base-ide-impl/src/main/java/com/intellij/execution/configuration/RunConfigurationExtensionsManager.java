@@ -24,7 +24,7 @@ import com.intellij.execution.process.ProcessHandler;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.SmartList;

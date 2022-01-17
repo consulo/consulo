@@ -19,7 +19,7 @@ package consulo.copyright.config;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;

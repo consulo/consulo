@@ -33,7 +33,7 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.FocusWatcher;

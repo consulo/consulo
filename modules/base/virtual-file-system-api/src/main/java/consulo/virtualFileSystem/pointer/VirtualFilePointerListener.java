@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.virtualFileSystem.pointer;
 
-public class InvalidDataException extends RuntimeException {
-  public InvalidDataException() {
-    super();
+import consulo.component.messagebus.Topic;
+
+import javax.annotation.Nonnull;
+
+public interface VirtualFilePointerListener {
+  Topic<VirtualFilePointerListener> TOPIC = Topic.create("VirtualFilePointer", VirtualFilePointerListener.class);
+
+  default void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
   }
 
-  public InvalidDataException(String s) {
-    super(s);
-  }
-
-  public InvalidDataException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  public InvalidDataException(Throwable cause) {
-    super(cause);
+  default void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
   }
 }

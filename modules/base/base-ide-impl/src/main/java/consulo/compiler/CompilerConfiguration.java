@@ -18,7 +18,7 @@ package consulo.compiler;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

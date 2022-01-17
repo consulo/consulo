@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.vfs;
+package consulo.virtualFileSystem.event;
 
 import consulo.progress.ProgressIndicator;
-import consulo.virtualFileSystem.event.AsyncFileListener;
-import consulo.virtualFileSystem.event.VirtualFileListener;
-import consulo.virtualFileSystem.event.BulkFileListener;
-import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

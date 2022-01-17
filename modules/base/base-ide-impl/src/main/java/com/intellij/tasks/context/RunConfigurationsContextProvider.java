@@ -18,7 +18,7 @@ package com.intellij.tasks.context;
 
 import com.intellij.execution.RunManager;
 import com.intellij.execution.impl.RunManagerImpl;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 

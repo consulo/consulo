@@ -19,6 +19,8 @@ import consulo.application.Application;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.AsyncVfsEventsListener;
+import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.util.concurrency.QueueProcessor;

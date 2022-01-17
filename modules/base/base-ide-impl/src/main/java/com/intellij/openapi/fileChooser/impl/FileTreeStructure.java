@@ -26,10 +26,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

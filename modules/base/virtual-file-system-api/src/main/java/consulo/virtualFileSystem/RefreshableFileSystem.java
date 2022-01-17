@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileTypes;
-
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.Pair;
-
-import javax.annotation.Nonnull;
-import java.nio.charset.Charset;
+package consulo.virtualFileSystem;
 
 /**
  * @author VISTALL
- * @since 29.04.14
+ * @since 2018-08-19
+ *
+ * Marker for file system, which need refresh by methods com.intellij.openapi.vfs.VirtualFileManager#syncRefresh()
  */
-public interface FileTypeWithPredefinedCharset extends FileType {
-  @Nonnull
-  Pair<Charset, String> getPredefinedCharset(@Nonnull VirtualFile virtualFile);
+public interface RefreshableFileSystem {
 }

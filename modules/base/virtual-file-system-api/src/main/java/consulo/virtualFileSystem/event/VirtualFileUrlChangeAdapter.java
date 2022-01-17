@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs;
+package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
-import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 
 import javax.annotation.Nonnull;
 

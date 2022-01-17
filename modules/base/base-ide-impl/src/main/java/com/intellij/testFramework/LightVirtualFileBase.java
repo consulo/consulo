@@ -17,7 +17,7 @@ package com.intellij.testFramework;
 
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
-import com.intellij.openapi.vfs.NonPhysicalFileSystem;
+import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.util.lang.LocalTimeCounter;

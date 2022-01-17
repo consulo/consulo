@@ -11,15 +11,14 @@ import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.Pair;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.VirtualFilePointerContainerImpl;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
@@ -383,9 +382,9 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
     final List<OrderRootType> rootTypes = sortRootTypes(myRoots.keySet());
     for (OrderRootType rootType : rootTypes) {
       VirtualFilePointerContainer container = myRoots.get(rootType);
-      List<Pair<String, Boolean>> jarDirectories = new ArrayList<>(container.getJarDirectories());
+      List<consulo.util.lang.Pair<String, Boolean>> jarDirectories = new ArrayList<>(container.getJarDirectories());
       Collections.sort(jarDirectories, Comparator.comparing(p -> p.getFirst(), String.CASE_INSENSITIVE_ORDER));
-      for (Pair<String, Boolean> pair : jarDirectories) {
+      for (consulo.util.lang.Pair<String, Boolean> pair : jarDirectories) {
         String url = pair.getFirst();
         boolean isRecursive = pair.getSecond();
         final Element jarDirElement = new Element(VirtualFilePointerContainerImpl.JAR_DIRECTORY_ELEMENT);
@@ -509,8 +508,8 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   public boolean isJarDirectory(@Nonnull final String url, @Nonnull final OrderRootType rootType) {
     VirtualFilePointerContainer container = myRoots.get(rootType);
     if (container == null) return false;
-    List<Pair<String, Boolean>> jarDirectories = container.getJarDirectories();
-    return jarDirectories.contains(Pair.create(url, false)) || jarDirectories.contains(Pair.create(url, true));
+    List<consulo.util.lang.Pair<String, Boolean>> jarDirectories = container.getJarDirectories();
+    return jarDirectories.contains(consulo.util.lang.Pair.create(url, false)) || jarDirectories.contains(consulo.util.lang.Pair.create(url, true));
   }
 
   @Override

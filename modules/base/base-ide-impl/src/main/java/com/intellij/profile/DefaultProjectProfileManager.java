@@ -19,7 +19,7 @@ import com.intellij.openapi.components.MainConfigurationStateSplitter;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;

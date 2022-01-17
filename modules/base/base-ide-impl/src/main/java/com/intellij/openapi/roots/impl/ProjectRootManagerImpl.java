@@ -27,14 +27,14 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;
 import java.util.*;

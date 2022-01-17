@@ -18,8 +18,8 @@ package com.intellij.openapi.roots.impl;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.roots.OrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

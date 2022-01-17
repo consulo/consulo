@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.PersistentStateComponent;
 import org.jdom.Element;
 

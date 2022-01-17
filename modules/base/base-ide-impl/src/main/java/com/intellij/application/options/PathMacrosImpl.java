@@ -17,7 +17,7 @@ package com.intellij.application.options;
 
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;

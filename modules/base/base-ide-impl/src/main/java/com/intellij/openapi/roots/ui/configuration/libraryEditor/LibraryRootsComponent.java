@@ -58,7 +58,7 @@ import consulo.disposer.Disposer;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

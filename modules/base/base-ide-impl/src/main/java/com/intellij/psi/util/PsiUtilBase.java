@@ -31,7 +31,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.NonPhysicalFileSystem;
+import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;

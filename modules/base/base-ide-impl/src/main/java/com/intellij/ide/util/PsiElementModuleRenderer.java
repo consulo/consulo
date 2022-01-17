@@ -25,7 +25,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
 import javax.swing.*;
 import java.awt.*;

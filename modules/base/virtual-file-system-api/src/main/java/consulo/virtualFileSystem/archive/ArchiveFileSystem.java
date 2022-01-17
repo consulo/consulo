@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.vfs;
+package consulo.virtualFileSystem.archive;
 
-import com.intellij.openapi.vfs.ArchiveCopyingFileSystem;
-import com.intellij.openapi.vfs.LocalFileProvider;
-import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.io.URLUtil;
+import consulo.virtualFileSystem.LocalFileProvider;
+import consulo.virtualFileSystem.RefreshableFileSystem;
+import consulo.virtualFileSystem.VirtualFileSystem;
 
 /**
  * @author VISTALL

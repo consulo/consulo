@@ -23,7 +23,7 @@ import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposable;

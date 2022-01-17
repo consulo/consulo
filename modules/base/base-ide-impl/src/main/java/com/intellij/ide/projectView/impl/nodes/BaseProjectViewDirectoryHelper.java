@@ -46,8 +46,8 @@ import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.logging.Logger;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import consulo.vfs.ArchiveFileSystem;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

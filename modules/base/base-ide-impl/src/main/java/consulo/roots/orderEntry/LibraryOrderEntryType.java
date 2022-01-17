@@ -20,7 +20,7 @@ import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.LibraryOrderEntryImpl;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

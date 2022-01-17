@@ -39,7 +39,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.util.containers.SmartHashSet;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

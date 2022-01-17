@@ -27,6 +27,7 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
+import consulo.component.persist.InvalidDataException;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;

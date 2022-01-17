@@ -717,7 +717,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.vfs.newvfs;
   exports com.intellij.openapi.vfs.newvfs.impl;
   exports com.intellij.openapi.vfs.newvfs.persistent;
-  exports com.intellij.openapi.vfs.pointers;
   exports com.intellij.openapi.vfs.tracker;
   exports com.intellij.openapi.wm;
   exports com.intellij.openapi.wm.ex;
@@ -1378,14 +1377,11 @@ open module consulo.ide.impl {
   //exports consulo.vcs;
   //exports consulo.vcs.changes;
   exports consulo.vcs.changes.ui;
-  exports consulo.vfs;
-  //exports consulo.vfs.impl;
   exports consulo.vfs.impl.archive;
   exports consulo.vfs.impl.mediator;
   exports consulo.vfs.impl.zip;
   exports consulo.vfs.newvfs;
   exports consulo.vfs.newvfs.persistent;
-  exports consulo.vfs.util;
   exports consulo.wm;
   exports consulo.wm.impl;
   exports consulo.wm.impl.layout;

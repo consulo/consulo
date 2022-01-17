@@ -72,6 +72,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;

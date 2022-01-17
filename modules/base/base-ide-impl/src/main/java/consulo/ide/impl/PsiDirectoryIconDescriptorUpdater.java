@@ -31,7 +31,7 @@ import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.ui.image.Image;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

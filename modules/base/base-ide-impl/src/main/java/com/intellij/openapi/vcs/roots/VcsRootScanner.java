@@ -18,7 +18,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.util.Alarm;
-import com.intellij.vfs.AsyncVfsEventsPostProcessor;
+import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.disposer.Disposable;
 import jakarta.inject.Singleton;
 

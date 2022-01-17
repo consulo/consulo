@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
 import com.intellij.openapi.vcs.VcsShowConfirmationOptionImpl;

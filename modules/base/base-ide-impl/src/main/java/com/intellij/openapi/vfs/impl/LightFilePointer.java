@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

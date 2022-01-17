@@ -14,7 +14,7 @@ import com.intellij.openapi.vfs.impl.LightFilePointer;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.URLUtil;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

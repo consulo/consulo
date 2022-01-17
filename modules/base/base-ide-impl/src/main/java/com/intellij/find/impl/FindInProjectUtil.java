@@ -50,6 +50,7 @@ import com.intellij.util.PatternUtil;
 import consulo.application.util.function.Processor;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.LocalFileProvider;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.PropertyKey;

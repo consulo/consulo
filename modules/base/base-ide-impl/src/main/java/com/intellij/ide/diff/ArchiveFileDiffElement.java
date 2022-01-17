@@ -15,11 +15,11 @@
  */
 package com.intellij.ide.diff;
 
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import javax.annotation.Nonnull;
 
 /**

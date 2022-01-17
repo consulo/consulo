@@ -33,7 +33,7 @@ import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.util.PathUtil;
 import com.intellij.util.ReflectionUtil;
 import consulo.logging.Logger;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
 import javax.annotation.Nonnull;
 import java.io.*;

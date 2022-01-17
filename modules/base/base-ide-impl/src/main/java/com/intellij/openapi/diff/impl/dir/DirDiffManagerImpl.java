@@ -20,7 +20,7 @@ import com.intellij.openapi.diff.DirDiffManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.HashSet;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.io.URLUtil;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import javax.annotation.Nonnull;
 
 import java.io.File;

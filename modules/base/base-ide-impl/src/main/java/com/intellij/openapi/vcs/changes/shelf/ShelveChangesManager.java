@@ -17,6 +17,7 @@
 package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.concurrency.JobScheduler;
+import consulo.component.persist.InvalidDataException;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

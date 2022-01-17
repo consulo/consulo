@@ -23,7 +23,7 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Attribute;

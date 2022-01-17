@@ -21,7 +21,7 @@ package com.intellij.openapi.editor.markup;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.util.ConcurrencyUtil;
 import consulo.logging.Logger;
@@ -33,7 +33,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

@@ -35,7 +35,7 @@ import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.StatusText;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.ide.plugins.PluginsPanel;
 import consulo.localize.LocalizeValue;
 import consulo.plugins.internal.PluginsLoader;

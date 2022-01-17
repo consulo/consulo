@@ -17,7 +17,7 @@
 package com.intellij.tasks.context;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

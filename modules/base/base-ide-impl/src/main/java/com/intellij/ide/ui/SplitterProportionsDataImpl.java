@@ -23,7 +23,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.SmartList;
 import com.intellij.util.text.StringTokenizer;

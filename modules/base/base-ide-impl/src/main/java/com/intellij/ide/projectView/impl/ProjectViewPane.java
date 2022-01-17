@@ -24,8 +24,8 @@ import com.intellij.psi.PsiDirectory;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.Comparing;
-import consulo.vfs.ArchiveFileSystem;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

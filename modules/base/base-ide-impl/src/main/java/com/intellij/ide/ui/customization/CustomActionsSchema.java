@@ -32,6 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.component.persist.InvalidDataException;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;

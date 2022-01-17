@@ -13,39 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileTypes;
+package consulo.virtualFileSystem.archive;
 
-import com.intellij.icons.AllIcons;
-import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.util.NotNullLazyValue;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.image.Image;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 19:19/13.07.13
  */
 public abstract class ArchiveFileType implements FileType {
-  private final NotNullLazyValue<ArchiveFileSystem> myFileSystemLazyValue = NotNullLazyValue.createValue(() -> {
-    VirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(getProtocol());
-    if(fileSystem == null) {
-      throw new IllegalArgumentException("VirtualFileSystem with protocol: " + getProtocol() + " is not registered");
-    }
-    return (ArchiveFileSystem) fileSystem;
-  });
+  private final Supplier<ArchiveFileSystem> myFileSystemLazyValue;
+
+  protected ArchiveFileType(VirtualFileManager virtualFileManager) {
+    myFileSystemLazyValue = LazyValue.notNull(() -> {
+      VirtualFileSystem fileSystem = virtualFileManager.getFileSystem(getProtocol());
+      if (fileSystem == null) {
+        throw new IllegalArgumentException("VirtualFileSystem with protocol: " + getProtocol() + " is not registered");
+      }
+      return (ArchiveFileSystem)fileSystem;
+    });
+  }
 
   @Nonnull
   public abstract String getProtocol();
 
   @Nonnull
   public ArchiveFileSystem getFileSystem() {
-    return myFileSystemLazyValue.getValue();
+    return myFileSystemLazyValue.get();
   }
 
   @Override
@@ -63,7 +67,7 @@ public abstract class ArchiveFileType implements FileType {
   @Nonnull
   @Override
   public Image getIcon() {
-    return AllIcons.FileTypes.Archive;
+    return PlatformIconGroup.fileTypesArchive();
   }
 
   @Override

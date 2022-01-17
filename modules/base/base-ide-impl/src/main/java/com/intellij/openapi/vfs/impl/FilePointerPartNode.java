@@ -29,7 +29,7 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
 import com.intellij.openapi.vfs.newvfs.impl.NullVirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.PathUtil;
@@ -304,7 +304,7 @@ class FilePointerPartNode {
     if (fileAndUrl != null && fileAndUrl.second != null) {
       String url = fileAndUrl.second;
       String path = VfsUtilCore.urlToPath(url);
-      path = StringUtil.trimEnd(path, consulo.vfs.ArchiveFileSystem.ARCHIVE_SEPARATOR);
+      path = StringUtil.trimEnd(path, consulo.virtualFileSystem.archive.ArchiveFileSystem.ARCHIVE_SEPARATOR);
       String nameFromPath = PathUtil.getFileName(path);
       if (!path.isEmpty() && nameFromPath.isEmpty() && SystemInfo.isUnix) {
         nameFromPath = "/";

@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs.impl;
 
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import javax.annotation.Nonnull;
 
 /**

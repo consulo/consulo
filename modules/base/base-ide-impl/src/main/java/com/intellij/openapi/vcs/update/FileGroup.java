@@ -21,6 +21,7 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.awt.TargetAWT;
+import consulo.component.persist.InvalidDataException;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

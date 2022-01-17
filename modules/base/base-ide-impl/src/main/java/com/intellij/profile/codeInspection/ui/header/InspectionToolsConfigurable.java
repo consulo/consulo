@@ -48,6 +48,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.component.persist.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.profile.Profile;
 import com.intellij.profile.ProfileManager;

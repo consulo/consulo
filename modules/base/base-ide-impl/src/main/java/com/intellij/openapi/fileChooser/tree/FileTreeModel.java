@@ -32,7 +32,7 @@ import com.intellij.util.concurrency.InvokerSupplier;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.AbstractTreeModel;
 import consulo.ui.image.Image;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
 import javax.annotation.Nonnull;
 

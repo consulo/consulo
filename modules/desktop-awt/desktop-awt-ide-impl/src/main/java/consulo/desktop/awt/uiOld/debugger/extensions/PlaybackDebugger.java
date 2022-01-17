@@ -48,6 +48,7 @@ import consulo.desktop.awt.wm.impl.DesktopIdeFrameImpl;
 import consulo.logging.Logger;
 import consulo.ui.Window;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.wm.util.IdeFrameUtil;
 import org.jdom.Element;

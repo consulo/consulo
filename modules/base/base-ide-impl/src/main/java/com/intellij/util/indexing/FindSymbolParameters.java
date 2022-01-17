@@ -2,7 +2,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.HiddenFileSystem;
+import consulo.virtualFileSystem.HiddenFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.EverythingGlobalScope;
 import com.intellij.psi.search.GlobalSearchScope;

@@ -55,7 +55,7 @@ import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
 import consulo.logging.Logger;
 import consulo.util.nodep.classloader.UrlClassLoader;
 import consulo.util.rmi.RemoteUtil;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

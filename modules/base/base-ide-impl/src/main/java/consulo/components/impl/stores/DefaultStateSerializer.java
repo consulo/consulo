@@ -17,7 +17,7 @@ package consulo.components.impl.stores;
 
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.ReflectionUtil;

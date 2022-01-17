@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.ui.SimpleTextAttributes;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;

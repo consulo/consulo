@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.impl;
 import consulo.component.extension.ExtensionPointName;
 import consulo.roots.ModuleRootLayer;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import javax.annotation.Nonnull;
 
 /**

@@ -4,6 +4,7 @@ package com.intellij.openapi.vfs.impl;
 import com.intellij.concurrency.ConcurrentCollectionFactory;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
+import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -23,10 +24,10 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.SmartList;
@@ -35,7 +36,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.URLUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;
 import consulo.util.collection.Sets;
@@ -350,7 +351,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
 
   @Nonnull
   private static String trimTrailingSeparators(@Nonnull String path) {
-    path = StringUtil.trimEnd(path, consulo.vfs.ArchiveFileSystem.ARCHIVE_SEPARATOR);
+    path = StringUtil.trimEnd(path, consulo.virtualFileSystem.archive.ArchiveFileSystem.ARCHIVE_SEPARATOR);
     path = StringUtil.trimTrailing(path, '/');
     return path;
   }

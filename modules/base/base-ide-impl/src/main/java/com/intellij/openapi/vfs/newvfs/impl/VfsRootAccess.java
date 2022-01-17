@@ -24,7 +24,7 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.collection.Sets;
-import consulo.vfs.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

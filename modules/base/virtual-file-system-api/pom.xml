@@ -39,6 +39,16 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-base-icon-library</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-base-localize-library</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-application-api</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -46,6 +56,10 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-io</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom-core</artifactId>
     </dependency>
   </dependencies>
 </project>

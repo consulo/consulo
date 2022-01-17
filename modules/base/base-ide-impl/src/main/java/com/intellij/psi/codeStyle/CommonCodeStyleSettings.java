@@ -17,6 +17,7 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
+import consulo.component.persist.InvalidDataException;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.*;
 import com.intellij.psi.PsiDocumentManager;

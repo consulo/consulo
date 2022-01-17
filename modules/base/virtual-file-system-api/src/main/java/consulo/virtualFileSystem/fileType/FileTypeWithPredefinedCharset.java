@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.pointers;
+package consulo.virtualFileSystem.fileType;
 
-import consulo.component.messagebus.Topic;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
+import java.nio.charset.Charset;
 
-public interface VirtualFilePointerListener {
-  Topic<VirtualFilePointerListener> TOPIC = Topic.create("VirtualFilePointer", VirtualFilePointerListener.class);
-
-  default void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
-  }
-
-  default void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
-  }
+/**
+ * @author VISTALL
+ * @since 29.04.14
+ */
+public interface FileTypeWithPredefinedCharset extends FileType {
+  @Nonnull
+  Pair<Charset, String> getPredefinedCharset(@Nonnull VirtualFile virtualFile);
 }

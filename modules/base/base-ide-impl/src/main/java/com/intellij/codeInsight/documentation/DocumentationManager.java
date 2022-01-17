@@ -69,7 +69,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.codeInsight.TargetElementUtil;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.ui.Rectangle2D;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.concurrent.ActionCallback;

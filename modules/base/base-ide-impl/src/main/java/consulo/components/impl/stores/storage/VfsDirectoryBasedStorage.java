@@ -33,6 +33,7 @@ import consulo.components.impl.stores.StorageUtil;
 import consulo.disposer.Disposable;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import org.jdom.Element;
 import org.jdom.JDOMException;

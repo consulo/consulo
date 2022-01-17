@@ -17,7 +17,7 @@ package com.intellij.psi.search;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Element;

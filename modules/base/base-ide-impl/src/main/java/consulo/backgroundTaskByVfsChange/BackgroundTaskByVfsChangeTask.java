@@ -17,7 +17,7 @@ package consulo.backgroundTaskByVfsChange;
 
 import com.intellij.openapi.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.pointers.Named;
 

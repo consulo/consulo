@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs;
-
-import consulo.virtualFileSystem.VirtualFile;
+package consulo.virtualFileSystem;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * For virtual files containing meta information in the path. Like,
- * <code>x=3746374;y=738495;size=45\id=6729304\id=34343\id=656543</code>
- * To wrap such a path into compact form implement getPresentablePath and it
- * will be used instead of <code>VirtualFile.getPath()</code>
- *
- * @author Konstantin Bulenkov
- * @see VirtualFile#getPath()
+ * To be used for those non-LocalFileSystems which can provide corresponding
+ * LocalFileSystem file for their element
  */
-public interface VirtualFilePathWrapper {
-  @Nonnull
-  String getPresentablePath();
+public interface LocalFileProvider {
+
+  @Nullable
+  VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile);
+
+  @Nullable
+  VirtualFile findLocalVirtualFileByPath(@Nonnull String path);
 }

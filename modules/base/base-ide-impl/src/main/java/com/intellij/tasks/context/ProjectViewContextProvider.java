@@ -18,7 +18,7 @@ package com.intellij.tasks.context;
 
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jdom.Element;

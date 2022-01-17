@@ -43,7 +43,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileUrlChangeAdapter;
+import consulo.virtualFileSystem.event.VirtualFileUrlChangeAdapter;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.BidirectionalMap;

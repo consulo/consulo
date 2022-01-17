@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFilePointerCapableFileSystem;
+import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
@@ -34,7 +34,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.disposer.Disposer;
 import consulo.util.collection.Maps;
-import consulo.vfs.RefreshableFileSystem;
+import consulo.virtualFileSystem.RefreshableFileSystem;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 

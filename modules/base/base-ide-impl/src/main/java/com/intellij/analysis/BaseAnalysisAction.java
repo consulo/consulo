@@ -16,7 +16,7 @@
 
 package com.intellij.analysis;
 
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

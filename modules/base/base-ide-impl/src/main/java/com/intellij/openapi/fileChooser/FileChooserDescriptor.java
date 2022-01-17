@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Iconable;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
-import consulo.fileTypes.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.UILocalize;

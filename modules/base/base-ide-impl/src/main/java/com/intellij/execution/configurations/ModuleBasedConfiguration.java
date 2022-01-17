@@ -19,7 +19,7 @@ package com.intellij.execution.configurations;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.component.persist.InvalidDataException;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.WriteExternalException;
 import consulo.application.AccessRule;

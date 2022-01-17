@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.module;
 
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import javax.annotation.Nonnull;
 
 import java.util.List;
