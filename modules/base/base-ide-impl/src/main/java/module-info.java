@@ -1296,9 +1296,6 @@ open module consulo.ide.impl {
   exports consulo.packaging.impl.elements.moduleContent;
   exports consulo.packaging.impl.run;
   exports consulo.packaging.impl.util;
-  //exports consulo.platform;
-  //exports consulo.platform.impl;
-  exports consulo.platform.impl.action;
   //exports consulo.plugins;
   exports consulo.plugins.internal;
   exports consulo.preferences;

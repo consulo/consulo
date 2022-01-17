@@ -47,7 +47,7 @@ import consulo.disposer.Disposer;
 import consulo.extensions.ListOfElementsEP;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.platform.impl.action.LastActionTracker;
+import consulo.actionSystem.impl.LastActionTracker;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;

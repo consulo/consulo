@@ -48,7 +48,7 @@ import consulo.ide.updateSettings.UpdateSettings;
 import consulo.externalService.impl.WebServiceApi;
 import consulo.externalService.impl.WebServiceException;
 import consulo.logging.Logger;
-import consulo.platform.impl.action.LastActionTracker;
+import consulo.actionSystem.impl.LastActionTracker;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

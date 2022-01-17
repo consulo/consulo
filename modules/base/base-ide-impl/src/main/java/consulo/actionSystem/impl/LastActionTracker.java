@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.platform.impl.action;
+package consulo.actionSystem.impl;
 
 /**
  * @author VISTALL
