@@ -25,7 +25,7 @@ import com.intellij.lang.annotation.ExternalAnnotator;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ide;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

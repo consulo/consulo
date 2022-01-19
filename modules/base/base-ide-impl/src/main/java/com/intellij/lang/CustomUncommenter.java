@@ -16,7 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

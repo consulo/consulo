@@ -12,7 +12,7 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.vcs.ex.LineStatusTracker;
 
 import javax.annotation.Nullable;

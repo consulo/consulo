@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vcs.FileStatus;
 import consulo.virtualFileSystem.VirtualFile;

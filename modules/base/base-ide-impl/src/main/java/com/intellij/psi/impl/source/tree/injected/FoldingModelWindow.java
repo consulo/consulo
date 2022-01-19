@@ -12,7 +12,7 @@ import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.util.dataholder.Key;
 import consulo.component.util.ModificationTracker;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -5,7 +5,7 @@ import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.editor.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -3,12 +3,15 @@ package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.lang.Language;
 import consulo.application.ReadAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
+import consulo.document.util.UnfairTextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiDocumentManagerBase;

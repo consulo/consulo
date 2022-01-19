@@ -2,17 +2,17 @@
 package com.intellij.openapi.editor.ex.util;
 
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterClient;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.openapi.project.Project;

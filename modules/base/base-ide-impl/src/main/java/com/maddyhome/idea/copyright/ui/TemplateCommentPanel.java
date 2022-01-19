@@ -18,7 +18,7 @@ package com.maddyhome.idea.copyright.ui;
 
 import com.intellij.lang.Commenter;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import consulo.virtualFileSystem.fileType.FileType;

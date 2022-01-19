@@ -26,6 +26,7 @@ import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
+import consulo.document.Document;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 

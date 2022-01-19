@@ -8,7 +8,7 @@ import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.application.AppUIExecutor;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.project.Project;

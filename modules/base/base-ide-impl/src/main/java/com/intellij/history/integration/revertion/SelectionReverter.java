@@ -23,7 +23,7 @@ import com.intellij.history.core.tree.Entry;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.ui.models.Progress;
 import com.intellij.history.integration.ui.models.SelectionCalculator;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.diff.FilesTooBigForDiffException;

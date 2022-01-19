@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

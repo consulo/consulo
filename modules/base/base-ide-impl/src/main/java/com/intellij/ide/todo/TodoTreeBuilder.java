@@ -25,7 +25,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;

@@ -23,7 +23,7 @@ import com.intellij.notification.NotificationType;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;

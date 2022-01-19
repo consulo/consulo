@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.diff.FilesTooBigForDiffException;

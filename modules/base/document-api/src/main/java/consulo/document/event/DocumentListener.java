@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.event;
+package consulo.document.event;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import java.util.EventListener;
  * Allows to receive notifications about changes in edited documents.
  * Implementations shouldn't modify the document, for which event is emitted, in listener methods.
  *
- * @see com.intellij.openapi.editor.Document#addDocumentListener(DocumentListener)
+ * @see Document#addDocumentListener(DocumentListener)
  * @see EditorEventMulticaster#addDocumentListener(DocumentListener)
  */
 public interface DocumentListener extends EventListener {

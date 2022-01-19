@@ -2,10 +2,10 @@ package com.intellij.codeInsight.editorActions.fillParagraph;
 
 import com.intellij.formatting.FormatterTagHandler;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.UnfairTextRange;
+import consulo.document.util.TextRange;
+import consulo.document.util.UnfairTextRange;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;

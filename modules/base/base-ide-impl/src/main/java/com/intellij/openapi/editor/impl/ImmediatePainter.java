@@ -28,6 +28,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.awt.hacking.SunVolatileImageHacking;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.util.LightDarkColorValue;

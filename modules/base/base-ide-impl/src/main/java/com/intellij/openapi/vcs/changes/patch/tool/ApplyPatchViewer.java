@@ -53,6 +53,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.primitive.ints.IntList;

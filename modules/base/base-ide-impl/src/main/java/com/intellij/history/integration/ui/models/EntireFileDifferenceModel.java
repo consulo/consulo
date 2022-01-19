@@ -21,7 +21,7 @@ import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.history.core.tree.Entry;
 import com.intellij.history.integration.IdeaGateway;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 
 public class EntireFileDifferenceModel extends FileDifferenceModel {

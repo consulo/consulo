@@ -6,7 +6,7 @@ import com.intellij.lang.Commenter;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageCommenters;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.bidi.BidiRegionsSeparator;
 import com.intellij.openapi.editor.bidi.LanguageBidiRegionsSeparator;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;

@@ -19,8 +19,8 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.event.DocumentListener;
+import consulo.document.Document;
+import consulo.document.event.DocumentListener;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 

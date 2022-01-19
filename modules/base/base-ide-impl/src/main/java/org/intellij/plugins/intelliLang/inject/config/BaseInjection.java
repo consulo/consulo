@@ -19,7 +19,7 @@ import com.intellij.lang.Language;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.patterns.StringPattern;
 import com.intellij.patterns.compiler.PatternCompiler;

@@ -1,18 +1,18 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.UnfairTextRange;
+import consulo.document.util.TextRange;
+import consulo.document.util.UnfairTextRange;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.virtualFileSystem.VirtualFile;

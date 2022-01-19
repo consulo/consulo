@@ -18,8 +18,8 @@ package com.intellij.diff.tools.fragmented;
 import com.intellij.diff.fragments.LineFragment;
 import com.intellij.diff.util.LineRange;
 import com.intellij.diff.util.Side;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.text;
+package consulo.document.util;
 
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

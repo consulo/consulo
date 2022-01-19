@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SimpleModificationTracker;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;

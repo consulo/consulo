@@ -16,7 +16,7 @@
 
 package com.intellij.tasks.impl;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.changes.ui.EditChangelistSupport;

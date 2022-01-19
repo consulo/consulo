@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.EditorCopyPasteHelper;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.util.Producer;
 import consulo.annotation.access.RequiredWriteAction;
 

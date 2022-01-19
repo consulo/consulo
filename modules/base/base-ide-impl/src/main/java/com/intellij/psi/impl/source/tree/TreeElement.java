@@ -6,7 +6,7 @@ import com.intellij.lang.ASTNode;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;

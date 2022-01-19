@@ -18,10 +18,10 @@ package com.intellij.lang.injection;
 
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

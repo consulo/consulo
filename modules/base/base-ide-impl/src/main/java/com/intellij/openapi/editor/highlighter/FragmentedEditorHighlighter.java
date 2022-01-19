@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.editor.highlighter;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.tree.IElementType;
 
 import java.util.List;

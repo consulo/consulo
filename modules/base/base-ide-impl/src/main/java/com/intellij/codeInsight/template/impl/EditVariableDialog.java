@@ -23,7 +23,7 @@ import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.codeInsight.template.macro.MacroFactory;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.ui.DialogWrapper;

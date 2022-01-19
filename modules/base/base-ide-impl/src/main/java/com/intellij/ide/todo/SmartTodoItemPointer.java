@@ -2,9 +2,9 @@
 
 package com.intellij.ide.todo;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
 import com.intellij.psi.search.TodoItem;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

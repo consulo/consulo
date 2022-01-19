@@ -17,6 +17,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.document.util.TextRange;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import consulo.progress.ProgressIndicatorProvider;

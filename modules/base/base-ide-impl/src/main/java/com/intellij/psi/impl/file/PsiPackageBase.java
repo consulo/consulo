@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.ui.Queryable;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.DebugUtil;

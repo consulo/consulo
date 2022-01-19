@@ -7,7 +7,7 @@ import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.diagnostic.AttachmentFactory;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.SelectionModel;

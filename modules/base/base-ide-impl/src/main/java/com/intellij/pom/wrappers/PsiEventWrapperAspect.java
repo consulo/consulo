@@ -18,8 +18,8 @@ package com.intellij.pom.wrappers;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.PomModel;
 import com.intellij.pom.PomModelAspect;

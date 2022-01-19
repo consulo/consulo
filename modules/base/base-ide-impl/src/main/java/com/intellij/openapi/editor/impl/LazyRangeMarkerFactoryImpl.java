@@ -17,13 +17,13 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.codeStyle.CodeStyleFacade;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.LazyRangeMarkerFactory;
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentAdapter;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.event.DocumentEvent;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;

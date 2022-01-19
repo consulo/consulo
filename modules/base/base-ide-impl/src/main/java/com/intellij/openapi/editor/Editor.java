@@ -26,6 +26,7 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.ui.Component;
 import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;

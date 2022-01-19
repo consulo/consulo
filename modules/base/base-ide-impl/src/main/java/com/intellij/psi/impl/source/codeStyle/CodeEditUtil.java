@@ -19,7 +19,7 @@ import com.intellij.lang.ASTFactory;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageTokenSeparatorGenerators;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.Factory;

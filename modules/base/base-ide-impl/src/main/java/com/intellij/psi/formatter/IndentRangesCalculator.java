@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.formatter;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import com.intellij.util.text.CharArrayUtil;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class IndentRangesCalculator {
   private int startOffset = textRange.getStartOffset();
   private int endOffset = textRange.getEndOffset();
 
-  public IndentRangesCalculator(Document document, com.intellij.openapi.util.TextRange textRange) {
+  public IndentRangesCalculator(Document document, TextRange textRange) {
     this.document = document;
     this.textRange = textRange;
   }

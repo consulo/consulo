@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes.conflicts;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusFactory;
 import com.intellij.openapi.vcs.changes.ChangeListManager;

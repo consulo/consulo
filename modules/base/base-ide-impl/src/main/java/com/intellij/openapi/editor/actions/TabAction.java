@@ -39,6 +39,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.document.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

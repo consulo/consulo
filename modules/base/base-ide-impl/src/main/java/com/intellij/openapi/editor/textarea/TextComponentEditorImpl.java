@@ -24,6 +24,7 @@ import com.intellij.openapi.editor.impl.EmptyIndentsModel;
 import com.intellij.openapi.editor.impl.SettingsImpl;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
+import consulo.document.Document;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.util.ui.JBUI;
 import javax.annotation.Nonnull;

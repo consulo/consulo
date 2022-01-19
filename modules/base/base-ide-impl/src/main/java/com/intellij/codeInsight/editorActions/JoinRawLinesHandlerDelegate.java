@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.psi.PsiFile;
 
 /**

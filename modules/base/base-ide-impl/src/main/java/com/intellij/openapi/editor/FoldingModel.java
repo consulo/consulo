@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
+import consulo.document.RangeMarker;
 import consulo.util.lang.DeprecatedMethodException;
 
 import javax.annotation.Nonnull;

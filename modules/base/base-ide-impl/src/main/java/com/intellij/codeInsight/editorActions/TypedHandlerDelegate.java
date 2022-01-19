@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;

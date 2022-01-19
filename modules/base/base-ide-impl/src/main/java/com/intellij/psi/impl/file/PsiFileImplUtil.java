@@ -16,8 +16,8 @@
 
 package com.intellij.psi.impl.file;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.UnknownFileType;

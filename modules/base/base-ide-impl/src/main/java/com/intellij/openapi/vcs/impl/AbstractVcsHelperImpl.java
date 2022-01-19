@@ -31,6 +31,7 @@ import com.intellij.openapi.diff.SimpleContent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.document.FileDocumentManager;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import javax.annotation.Nonnull;
 
 public interface PrioritizedInternalDocumentListener extends PrioritizedDocumentListener {

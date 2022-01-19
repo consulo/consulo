@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.util.ClassExtension;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.container.plugin.PluginIds;
 import consulo.logging.Logger;
 

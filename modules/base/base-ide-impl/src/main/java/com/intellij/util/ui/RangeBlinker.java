@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Segment;
+import consulo.document.util.Segment;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 

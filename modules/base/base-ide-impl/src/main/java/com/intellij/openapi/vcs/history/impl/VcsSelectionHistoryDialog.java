@@ -29,7 +29,7 @@ import com.intellij.icons.AllIcons;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.project.DumbAwareAction;

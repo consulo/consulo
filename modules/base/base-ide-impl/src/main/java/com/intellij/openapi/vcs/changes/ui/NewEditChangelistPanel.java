@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.event.DocumentAdapter;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;

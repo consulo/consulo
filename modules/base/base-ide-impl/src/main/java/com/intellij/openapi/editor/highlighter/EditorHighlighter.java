@@ -17,7 +17,7 @@
 package com.intellij.openapi.editor.highlighter;
 
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.DocumentListener;
+import consulo.document.event.DocumentListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

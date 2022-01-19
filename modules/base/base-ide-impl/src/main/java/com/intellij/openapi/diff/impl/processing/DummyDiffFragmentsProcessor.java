@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.processing;
 
 import com.intellij.openapi.diff.impl.fragments.LineFragment;
 import com.intellij.openapi.diff.impl.util.TextDiffTypeEnum;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 
 import java.util.ArrayList;

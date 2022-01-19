@@ -18,7 +18,7 @@ package com.intellij.formatting;
 
 import com.intellij.formatting.engine.BlockRangesMap;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;

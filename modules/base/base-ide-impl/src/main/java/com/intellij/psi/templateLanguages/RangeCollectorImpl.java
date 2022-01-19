@@ -6,7 +6,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.*;

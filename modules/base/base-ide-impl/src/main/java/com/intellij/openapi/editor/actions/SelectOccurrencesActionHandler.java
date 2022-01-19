@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorLastActionTracker;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.ui.LightweightHint;
 
 import javax.annotation.Nullable;

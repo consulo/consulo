@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 

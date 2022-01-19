@@ -16,7 +16,8 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Segment;
+import consulo.document.RangeMarker;
+import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 
@@ -51,7 +52,7 @@ public interface SmartPsiElementPointer<E extends PsiElement> {
 
   /**
    * @return the range in the document. For committed document, it's the same as {@link #getPsiRange()}, for non-committed documents
-   * the ranges may be changed (like in {@link com.intellij.openapi.editor.RangeMarker}) or even invalidated. In the latter case returns null.
+   * the ranges may be changed (like in {@link RangeMarker}) or even invalidated. In the latter case returns null.
    * Returns null for invalid pointers.
    */
   @Nullable

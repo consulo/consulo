@@ -24,7 +24,7 @@ import com.intellij.openapi.diff.impl.processing.DiffCorrection;
 import com.intellij.openapi.diff.impl.processing.Formatting;
 import com.intellij.openapi.diff.impl.processing.Word;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;

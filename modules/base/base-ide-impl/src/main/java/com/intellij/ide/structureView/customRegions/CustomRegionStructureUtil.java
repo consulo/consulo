@@ -9,7 +9,7 @@ import com.intellij.lang.folding.CustomFoldingProvider;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.LanguageFolding;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.util.SmartList;

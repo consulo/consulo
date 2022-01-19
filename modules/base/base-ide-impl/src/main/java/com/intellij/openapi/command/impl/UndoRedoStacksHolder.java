@@ -17,7 +17,7 @@ package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.util.containers.WeakList;
 import consulo.util.dataholder.Key;
 

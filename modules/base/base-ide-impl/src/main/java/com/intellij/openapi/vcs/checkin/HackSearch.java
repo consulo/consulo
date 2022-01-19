@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.checkin;
 
-import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.Convertor;
 
 import java.util.Collections;

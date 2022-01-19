@@ -2,7 +2,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.project.Project;

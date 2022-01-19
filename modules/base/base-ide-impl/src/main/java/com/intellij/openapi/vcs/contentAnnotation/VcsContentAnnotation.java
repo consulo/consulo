@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.contentAnnotation;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.RichTextItem;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;

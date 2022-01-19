@@ -39,9 +39,9 @@ public class UserActivityWatcher extends ComponentTreeWatcher {
     }
   };
 
-  private final com.intellij.openapi.editor.event.DocumentListener myIdeaDocumentListener = new com.intellij.openapi.editor.event.DocumentAdapter() {
+  private final consulo.document.event.DocumentListener myIdeaDocumentListener = new com.intellij.openapi.editor.event.DocumentAdapter() {
     @Override
-    public void documentChanged(final com.intellij.openapi.editor.event.DocumentEvent e) {
+    public void documentChanged(final consulo.document.event.DocumentEvent e) {
       fireUIChanged();
     }
   };

@@ -41,7 +41,7 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.fileEditor.FileDocumentManager</interface-class>
+      <interface-class>consulo.document.FileDocumentManager</interface-class>
       <implementation-class>com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl</implementation-class>
     </component>
 

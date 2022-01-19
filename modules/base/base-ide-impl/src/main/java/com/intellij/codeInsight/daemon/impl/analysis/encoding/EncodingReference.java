@@ -19,7 +19,7 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.util.io.CharsetToolkit;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;

@@ -1,10 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.editor;
+package consulo.document;
 
-import com.intellij.openapi.editor.event.BulkAwareDocumentListener;
-import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.util.TextRange;
 import consulo.disposer.Disposable;
+import consulo.document.event.DocumentListener;
+import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -24,7 +23,7 @@ import javax.annotation.Nullable;
  *
  * @see Editor#getDocument()
  * @see com.intellij.psi.PsiDocumentManager
- * @see com.intellij.openapi.fileEditor.FileDocumentManager
+ * @see FileDocumentManager
  * @see EditorFactory#createDocument(CharSequence)
  */
 public interface Document extends UserDataHolder {

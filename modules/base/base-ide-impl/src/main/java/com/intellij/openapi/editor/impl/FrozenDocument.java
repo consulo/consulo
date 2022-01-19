@@ -1,14 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.RangeMarker;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditReadOnlyListener;
 import com.intellij.openapi.editor.ex.LineIterator;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.reference.SoftReference;
 import consulo.application.util.function.Processor;
 import com.intellij.util.text.ImmutableCharSequence;

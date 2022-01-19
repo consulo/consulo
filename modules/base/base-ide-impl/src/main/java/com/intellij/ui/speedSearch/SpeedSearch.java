@@ -16,7 +16,7 @@
 package com.intellij.ui.speedSearch;
 
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.AllOccurrencesMatcher;
 import com.intellij.psi.codeStyle.FixingLayoutMatcher;
 import com.intellij.psi.codeStyle.MinusculeMatcher;

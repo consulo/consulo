@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.diff;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;

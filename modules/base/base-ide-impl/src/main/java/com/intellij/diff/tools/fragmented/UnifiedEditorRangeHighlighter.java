@@ -17,14 +17,14 @@ package com.intellij.diff.tools.fragmented;
 
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

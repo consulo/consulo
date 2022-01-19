@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.markup;
 
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.RangeMarker;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

@@ -4,7 +4,7 @@ package com.intellij.codeInsight.hint;
 import com.intellij.lang.parameterInfo.CreateParameterInfoContext;
 import com.intellij.lang.parameterInfo.ParameterInfoHandler;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorActivityManager;
 import com.intellij.openapi.project.DumbService;

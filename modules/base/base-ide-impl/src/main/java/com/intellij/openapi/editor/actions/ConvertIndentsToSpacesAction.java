@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 
 /**
  * @author yole

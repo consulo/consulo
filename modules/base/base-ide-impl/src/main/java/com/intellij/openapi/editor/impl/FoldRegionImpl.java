@@ -2,11 +2,11 @@
 
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingGroup;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import com.intellij.util.DocumentUtil;
 import consulo.editor.impl.CodeEditorBase;
 import consulo.editor.impl.CodeEditorFoldingModelBase;

@@ -24,8 +24,8 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.AppTopics;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;

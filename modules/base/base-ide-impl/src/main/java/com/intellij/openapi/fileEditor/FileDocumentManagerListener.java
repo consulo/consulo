@@ -2,7 +2,7 @@
 package com.intellij.openapi.fileEditor;
 
 import com.intellij.AppTopics;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

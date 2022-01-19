@@ -15,15 +15,15 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
-import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.component.ComponentManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -121,12 +121,12 @@ public class LightFileDocumentManager extends FileDocumentManager {
 
   @Override
   @Nonnull
-  public String getLineSeparator(VirtualFile file, Project project) {
+  public String getLineSeparator(VirtualFile file, ComponentManager project) {
     return LoadTextUtil.getDetectedLineSeparator(file);
   }
 
   @Override
-  public boolean requestWriting(@Nonnull Document document, @Nullable Project project) {
+  public boolean requestWriting(@Nonnull Document document, @Nullable ComponentManager project) {
     return true;
   }
 }

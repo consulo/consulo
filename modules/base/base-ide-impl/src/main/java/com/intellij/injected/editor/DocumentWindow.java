@@ -19,9 +19,9 @@
  */
 package com.intellij.injected.editor;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

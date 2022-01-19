@@ -17,8 +17,8 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

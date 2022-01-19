@@ -2,7 +2,7 @@
 package com.intellij.lang.annotation;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

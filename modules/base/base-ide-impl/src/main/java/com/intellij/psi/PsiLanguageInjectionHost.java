@@ -2,8 +2,8 @@
 package com.intellij.psi;
 
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

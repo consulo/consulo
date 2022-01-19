@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle;
 
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import javax.annotation.Nonnull;
 
 

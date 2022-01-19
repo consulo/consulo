@@ -17,9 +17,9 @@ package com.intellij.diff.actions;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.event.DocumentAdapter;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import kava.beans.PropertyChangeEvent;

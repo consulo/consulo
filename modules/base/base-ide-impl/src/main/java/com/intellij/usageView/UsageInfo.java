@@ -17,8 +17,10 @@ package com.intellij.usageView;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.virtualFileSystem.VirtualFile;

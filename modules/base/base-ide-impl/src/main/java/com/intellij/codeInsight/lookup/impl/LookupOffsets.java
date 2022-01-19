@@ -3,9 +3,9 @@ package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
+import consulo.document.RangeMarker;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import com.intellij.util.ExceptionUtil;
 import javax.annotation.Nonnull;
 

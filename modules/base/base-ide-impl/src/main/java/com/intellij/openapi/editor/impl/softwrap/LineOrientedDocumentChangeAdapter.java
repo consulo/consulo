@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.editor.impl.softwrap;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
 
 /**

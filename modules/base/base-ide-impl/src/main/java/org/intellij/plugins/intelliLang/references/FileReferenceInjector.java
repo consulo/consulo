@@ -17,7 +17,7 @@ package org.intellij.plugins.intelliLang.references;
 
 import javax.annotation.Nonnull;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;

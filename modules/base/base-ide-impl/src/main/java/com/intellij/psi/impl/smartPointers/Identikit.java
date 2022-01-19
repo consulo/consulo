@@ -4,7 +4,7 @@ package com.intellij.psi.impl.smartPointers;
 import com.google.common.base.MoreObjects;
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.AbstractFileViewProvider;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;

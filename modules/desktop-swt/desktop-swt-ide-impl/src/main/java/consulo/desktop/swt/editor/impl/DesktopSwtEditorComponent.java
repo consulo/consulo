@@ -15,7 +15,7 @@
  */
 package consulo.desktop.swt.editor.impl;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

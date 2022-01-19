@@ -12,7 +12,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.patterns.StringPattern;
 import com.intellij.psi.*;

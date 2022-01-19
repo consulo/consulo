@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.unwrap;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 
 import java.util.List;
 import java.util.ArrayList;

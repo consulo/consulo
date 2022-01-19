@@ -3,7 +3,7 @@ package com.intellij.formatting;
 
 import com.intellij.diagnostic.LogMessageEx;
 import com.intellij.lang.Language;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.formatter.FormattingDocumentModelImpl;
 import com.intellij.psi.impl.DebugUtil;

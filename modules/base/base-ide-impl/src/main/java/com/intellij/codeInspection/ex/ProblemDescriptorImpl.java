@@ -17,7 +17,7 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInspection.*;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

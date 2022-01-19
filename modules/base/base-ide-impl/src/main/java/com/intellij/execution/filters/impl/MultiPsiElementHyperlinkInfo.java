@@ -5,7 +5,7 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.filters.HyperlinkInfoBase;
 import com.intellij.execution.filters.OpenFileHyperlinkInfo;
 import com.intellij.ide.util.gotoByName.GotoFileCellRenderer;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

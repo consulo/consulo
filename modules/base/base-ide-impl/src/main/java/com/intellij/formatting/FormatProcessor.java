@@ -18,7 +18,7 @@ package com.intellij.formatting;
 
 import com.intellij.formatting.engine.*;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@
 package com.intellij.formatting.engine;
 
 import com.intellij.formatting.LeafBlockWrapper;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import gnu.trove.TIntObjectHashMap;
 import javax.annotation.Nullable;
 

@@ -21,7 +21,7 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.ExternallyDefinedPsiElement;

@@ -16,15 +16,15 @@
 package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;
 import com.intellij.openapi.editor.impl.ManualRangeMarker;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.UnfairTextRange;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
+import consulo.document.util.UnfairTextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;

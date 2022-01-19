@@ -22,7 +22,7 @@ import com.intellij.ide.actions.searcheverywhere.SearchEverywhereManager;
 import com.intellij.ide.util.gotoByName.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

@@ -19,7 +19,7 @@ package com.intellij.analysis;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;

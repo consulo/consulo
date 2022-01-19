@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.resolve.reference.impl;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;

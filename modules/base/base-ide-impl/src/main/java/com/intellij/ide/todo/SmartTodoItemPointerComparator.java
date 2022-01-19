@@ -17,7 +17,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.ide.todo.nodes.TodoItemNode;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 
 import java.util.Comparator;
 

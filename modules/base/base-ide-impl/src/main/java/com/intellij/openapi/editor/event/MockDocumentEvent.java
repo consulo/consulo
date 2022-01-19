@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.editor.event;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+
 import javax.annotation.Nonnull;
 
 public class MockDocumentEvent extends DocumentEvent {

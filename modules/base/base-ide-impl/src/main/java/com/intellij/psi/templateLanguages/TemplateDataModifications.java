@@ -2,7 +2,7 @@
 package com.intellij.psi.templateLanguages;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

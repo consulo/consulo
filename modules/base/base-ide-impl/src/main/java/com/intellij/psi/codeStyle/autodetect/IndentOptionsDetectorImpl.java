@@ -7,7 +7,7 @@ import com.intellij.formatting.FormattingContext;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.lang.LanguageFormatting;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;

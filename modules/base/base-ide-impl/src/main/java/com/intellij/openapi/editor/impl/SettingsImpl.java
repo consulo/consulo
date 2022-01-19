@@ -27,7 +27,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.application.options.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.lang.Language;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.EditorKind;
 import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.ex.DocumentEx;

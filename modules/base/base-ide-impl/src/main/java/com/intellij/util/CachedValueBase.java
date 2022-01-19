@@ -2,7 +2,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.component.util.ModificationTracker;

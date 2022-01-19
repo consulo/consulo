@@ -16,7 +16,7 @@
 package com.intellij.diff.contents;
 
 import com.intellij.diff.util.LineCol;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;

@@ -35,6 +35,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.registry.Registry;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import consulo.application.util.function.Processor;

@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.breakpoints;
 
 import com.intellij.codeInsight.folding.impl.FoldingUtil;
 import com.intellij.codeInsight.folding.impl.actions.ExpandRegionAction;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;

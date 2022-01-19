@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
+
 import javax.annotation.Nonnull;
 
 /**

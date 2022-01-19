@@ -29,7 +29,7 @@ import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.progress.*;

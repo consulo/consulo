@@ -31,6 +31,8 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.document.Document;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

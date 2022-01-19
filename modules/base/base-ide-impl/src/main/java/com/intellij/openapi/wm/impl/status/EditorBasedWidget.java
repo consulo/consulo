@@ -2,11 +2,12 @@
 package com.intellij.openapi.wm.impl.status;
 
 import consulo.application.Application;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.EditorTextField;

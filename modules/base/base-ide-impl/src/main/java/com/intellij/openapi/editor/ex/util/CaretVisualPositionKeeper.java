@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ScrollingModel;

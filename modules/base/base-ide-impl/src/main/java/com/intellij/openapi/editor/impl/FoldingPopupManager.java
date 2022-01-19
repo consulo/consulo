@@ -10,6 +10,8 @@ import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.document.Document;
+import consulo.document.DocumentFragment;
 import consulo.editor.impl.CodeEditorBase;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;

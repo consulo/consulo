@@ -18,7 +18,7 @@ package com.intellij.formatting.engine;
 import com.intellij.formatting.DependantSpacingImpl;
 import com.intellij.formatting.SpacingImpl;
 import com.intellij.formatting.WhiteSpace;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 
 import java.util.*;
 

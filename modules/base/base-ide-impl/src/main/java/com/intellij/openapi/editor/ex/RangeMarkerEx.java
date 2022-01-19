@@ -16,9 +16,9 @@
 
 package com.intellij.openapi.editor.ex;
 
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.util.Segment;
+import consulo.document.RangeMarker;
+import consulo.document.event.DocumentEvent;
+import consulo.document.util.Segment;
 import javax.annotation.Nonnull;
 
 public interface RangeMarkerEx extends RangeMarker, Segment {

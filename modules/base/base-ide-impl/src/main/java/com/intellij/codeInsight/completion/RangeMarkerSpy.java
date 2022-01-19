@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentAdapter;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 
 /**
  * @author peter

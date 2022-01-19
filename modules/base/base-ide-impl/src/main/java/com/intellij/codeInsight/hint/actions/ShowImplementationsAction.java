@@ -38,7 +38,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.PomTargetPsiElement;

@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.folding;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;

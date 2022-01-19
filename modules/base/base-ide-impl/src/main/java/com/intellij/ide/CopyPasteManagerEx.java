@@ -3,7 +3,7 @@ package com.intellij.ide;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.editor.CaretStateTransferableData;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ide.CutElementMarker;
 import com.intellij.openapi.ide.KillRingTransferable;

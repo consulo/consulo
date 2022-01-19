@@ -26,7 +26,7 @@ import com.intellij.diff.util.DiffDividerDrawUtil.DividerPaintable;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;

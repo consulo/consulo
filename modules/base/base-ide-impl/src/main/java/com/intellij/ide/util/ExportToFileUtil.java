@@ -20,7 +20,7 @@ import com.intellij.ide.ExporterToTextFile;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.components.PathMacroManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorSettings;

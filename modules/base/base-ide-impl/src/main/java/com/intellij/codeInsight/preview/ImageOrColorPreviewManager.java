@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.preview;
 
 import consulo.application.Application;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;

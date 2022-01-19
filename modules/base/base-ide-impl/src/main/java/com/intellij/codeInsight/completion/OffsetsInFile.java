@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.ChangedPsiRangeUtil;
 import com.intellij.psi.impl.DiffLog;

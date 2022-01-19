@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.impl.http;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

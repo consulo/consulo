@@ -28,7 +28,7 @@ import com.intellij.diff.util.DiffUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.patch.TextFilePatch;
 import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;

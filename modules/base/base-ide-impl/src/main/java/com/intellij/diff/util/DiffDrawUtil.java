@@ -16,7 +16,7 @@
 package com.intellij.diff.util;
 
 import com.intellij.diff.fragments.DiffFragment;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.util.BooleanGetter;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.ui.JBColor;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;

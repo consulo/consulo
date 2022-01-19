@@ -2,10 +2,10 @@
 package com.intellij.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.FileElement;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.command.undo.DocumentReference;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

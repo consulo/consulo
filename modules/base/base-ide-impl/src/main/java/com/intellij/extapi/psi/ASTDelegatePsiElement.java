@@ -25,7 +25,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import com.intellij.psi.PsiFile;

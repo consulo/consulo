@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.ChangedRangesInfo;
 import com.intellij.util.containers.ContainerUtil;

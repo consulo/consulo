@@ -32,7 +32,7 @@ import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle.arrangement.engine;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.ArrangementEntry;
 import com.intellij.util.text.CharArrayUtil;

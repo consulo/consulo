@@ -29,7 +29,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.progress.ProgressManager;

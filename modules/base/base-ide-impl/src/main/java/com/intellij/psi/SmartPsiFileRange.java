@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.util.Segment;
+import consulo.document.util.Segment;
 
 import javax.annotation.Nullable;
 

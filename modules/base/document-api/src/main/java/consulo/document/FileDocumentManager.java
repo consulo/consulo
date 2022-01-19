@@ -1,15 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.fileEditor;
+package consulo.document;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.EditorBundle;
-import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.io.FileUtilRt;
+import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -128,7 +126,7 @@ public abstract class FileDocumentManager implements SavingRequestor {
   public abstract void reloadFromDisk(@Nonnull Document document);
 
   @Nonnull
-  public abstract String getLineSeparator(@Nullable VirtualFile file, @Nullable Project project);
+  public abstract String getLineSeparator(@Nullable VirtualFile file, @Nullable ComponentManager project);
 
   /**
    * Requests writing access on the given document, possibly involving interaction with user.
@@ -138,17 +136,17 @@ public abstract class FileDocumentManager implements SavingRequestor {
    * @return true if writing access allowed
    * @see com.intellij.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(Project, VirtualFile...)
    */
-  public abstract boolean requestWriting(@Nonnull Document document, @Nullable Project project);
+  public abstract boolean requestWriting(@Nonnull Document document, @Nullable ComponentManager project);
 
   /**
    * Requests writing access info on the given document. Can involve interaction with user.
    */
   @Nonnull
-  public WriteAccessStatus requestWritingStatus(@Nonnull Document document, @Nullable Project project) {
+  public WriteAccessStatus requestWritingStatus(@Nonnull Document document, @Nullable ComponentManager project) {
     return requestWriting(document, project) ? WriteAccessStatus.WRITABLE : WriteAccessStatus.NON_WRITABLE;
   }
 
-  public static boolean fileForDocumentCheckedOutSuccessfully(@Nonnull Document document, @Nonnull Project project) {
+  public static boolean fileForDocumentCheckedOutSuccessfully(@Nonnull Document document, @Nonnull ComponentManager project) {
     return getInstance().requestWriting(document, project);
   }
 
@@ -173,7 +171,7 @@ public abstract class FileDocumentManager implements SavingRequestor {
 
     private WriteAccessStatus(boolean withWriteAccess) {
       myWithWriteAccess = withWriteAccess;
-      myReadOnlyMessage = withWriteAccess ? "" : EditorBundle.message("editing.read.only.file.hint");
+      myReadOnlyMessage = withWriteAccess ? "" : DocumentBundle.message("editing.read.only.file.hint");
     }
 
     public WriteAccessStatus(@Nonnull String readOnlyMessage) {

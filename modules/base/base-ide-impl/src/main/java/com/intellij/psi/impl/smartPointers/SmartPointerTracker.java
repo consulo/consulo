@@ -2,11 +2,11 @@
 package com.intellij.psi.impl.smartPointers;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.LowMemoryWatcher;
-import com.intellij.openapi.util.Segment;
+import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

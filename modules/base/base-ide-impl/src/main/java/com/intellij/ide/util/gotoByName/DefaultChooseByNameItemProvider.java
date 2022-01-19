@@ -9,7 +9,7 @@ import consulo.progress.ProgressIndicator;
 import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiCompiledElement;
 import com.intellij.psi.PsiElement;

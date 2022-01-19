@@ -27,6 +27,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.document.Document;
 
 public class DeleteAction extends EditorAction {
   public DeleteAction() {

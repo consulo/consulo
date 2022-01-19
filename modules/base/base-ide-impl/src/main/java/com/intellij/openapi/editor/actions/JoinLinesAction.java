@@ -21,6 +21,7 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.document.Document;
 
 public class JoinLinesAction extends TextComponentEditorAction {
   public JoinLinesAction() {

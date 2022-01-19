@@ -18,7 +18,7 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfoProcessor;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;

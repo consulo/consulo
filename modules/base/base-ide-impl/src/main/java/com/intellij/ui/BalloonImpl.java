@@ -14,6 +14,7 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import consulo.application.ApplicationManager;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.document.util.UnfairTextRange;
 import consulo.logging.Logger;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.impl.ShadowBorderPainter;

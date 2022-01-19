@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.ide.codeInsight.template.postfix.templates;
 
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;

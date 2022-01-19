@@ -16,6 +16,7 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.project.Project;
+import consulo.document.Document;
 
 import javax.annotation.Nullable;
 

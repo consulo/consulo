@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.event;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.util.lang.Pair;
 
 import java.util.EventObject;

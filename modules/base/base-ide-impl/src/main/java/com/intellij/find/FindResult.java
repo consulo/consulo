@@ -15,7 +15,7 @@
  */
 package com.intellij.find;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 
 /**
  * Represents the result of a Find operation.

@@ -3,7 +3,7 @@ package com.intellij.lang.folding;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.FoldingGroup;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import consulo.component.util.ModificationTracker;
 import consulo.util.lang.BitUtil;

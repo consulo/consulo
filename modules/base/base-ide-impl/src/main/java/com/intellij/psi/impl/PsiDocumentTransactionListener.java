@@ -19,7 +19,7 @@
  */
 package com.intellij.psi.impl;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.psi.PsiFile;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;

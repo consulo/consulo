@@ -18,10 +18,11 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.SelectInContext;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiDocumentManager;

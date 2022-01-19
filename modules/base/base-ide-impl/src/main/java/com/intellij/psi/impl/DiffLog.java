@@ -2,7 +2,7 @@
 package com.intellij.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.pom.PomManager;
 import com.intellij.pom.PomModel;

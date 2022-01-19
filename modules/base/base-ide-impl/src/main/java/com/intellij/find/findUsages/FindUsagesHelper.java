@@ -17,7 +17,7 @@ package com.intellij.find.findUsages;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.NullableComputable;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiCompiledElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;

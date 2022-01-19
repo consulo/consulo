@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;

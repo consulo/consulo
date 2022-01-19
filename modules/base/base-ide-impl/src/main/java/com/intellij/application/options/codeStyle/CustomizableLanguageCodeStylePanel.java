@@ -18,7 +18,7 @@ package com.intellij.application.options.codeStyle;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;

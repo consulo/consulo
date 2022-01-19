@@ -3,7 +3,7 @@
 package com.intellij.lang;
 
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;

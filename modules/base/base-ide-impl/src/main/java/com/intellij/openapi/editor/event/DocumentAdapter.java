@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.editor.event;
 
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
+
 public abstract class DocumentAdapter implements DocumentListener {
   @Override
   public void beforeDocumentChange(DocumentEvent e) {

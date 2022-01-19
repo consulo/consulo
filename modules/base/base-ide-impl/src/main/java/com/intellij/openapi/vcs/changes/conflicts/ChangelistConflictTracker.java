@@ -18,11 +18,11 @@ package com.intellij.openapi.vcs.changes.conflicts;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentAdapter;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.event.DocumentEvent;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.util.Comparing;

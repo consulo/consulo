@@ -57,6 +57,7 @@ import consulo.desktop.editor.impl.DesktopEditorAnalyzeStatusPanel;
 import consulo.desktop.editor.impl.DesktopEditorErrorPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;

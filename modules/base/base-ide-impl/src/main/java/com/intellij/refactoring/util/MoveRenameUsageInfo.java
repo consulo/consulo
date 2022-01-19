@@ -15,10 +15,10 @@
  */
 package com.intellij.refactoring.util;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.usageView.UsageInfo;
 import javax.annotation.Nullable;

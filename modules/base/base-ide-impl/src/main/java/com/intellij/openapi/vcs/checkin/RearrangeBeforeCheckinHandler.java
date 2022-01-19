@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.checkin;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.actions.RearrangeCodeProcessor;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;

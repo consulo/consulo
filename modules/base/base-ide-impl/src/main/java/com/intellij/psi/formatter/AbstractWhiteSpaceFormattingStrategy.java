@@ -16,7 +16,7 @@
 package com.intellij.psi.formatter;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;

@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;

@@ -20,7 +20,7 @@ import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.lang.folding.CustomFoldingProvider;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import consulo.ui.image.Image;

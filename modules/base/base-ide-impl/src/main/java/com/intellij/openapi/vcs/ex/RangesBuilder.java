@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.ex;
 
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.diff.Diff;

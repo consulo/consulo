@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;

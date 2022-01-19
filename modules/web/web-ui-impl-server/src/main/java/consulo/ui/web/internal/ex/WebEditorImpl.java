@@ -33,6 +33,7 @@ import com.intellij.openapi.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.editor.impl.*;
 import consulo.internal.arquill.editor.server.ArquillEditor;
 import consulo.internal.arquill.editor.server.event.MouseDownEvent;

@@ -6,7 +6,7 @@ import com.intellij.openapi.diagnostic.Attachment;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.FoldingListener;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
@@ -16,7 +16,7 @@ import com.intellij.openapi.editor.impl.softwrap.mapping.IncrementalCacheUpdateE
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.util.DocumentUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

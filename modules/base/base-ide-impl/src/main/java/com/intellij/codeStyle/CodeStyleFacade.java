@@ -21,7 +21,7 @@ package com.intellij.codeStyle;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.options.Configurable;

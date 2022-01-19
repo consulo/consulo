@@ -21,7 +21,7 @@
 package com.intellij.codeInsight.hint;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 

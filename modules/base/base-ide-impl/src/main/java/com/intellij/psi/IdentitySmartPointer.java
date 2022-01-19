@@ -20,7 +20,7 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Segment;
+import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

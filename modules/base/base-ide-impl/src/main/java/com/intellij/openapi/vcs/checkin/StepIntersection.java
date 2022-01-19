@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.checkin;
 
 import com.intellij.openapi.util.Getter;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.Convertor;
 

@@ -19,12 +19,14 @@ import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeStyle.CodeStyleFacade;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.Producer;
+import consulo.document.Document;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -5,7 +5,7 @@ import com.intellij.dupLocator.util.DuplocatorUtil;
 import com.intellij.dupLocator.util.PsiFragment;
 import com.intellij.openapi.components.PathMacroManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

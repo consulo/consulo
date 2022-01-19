@@ -305,7 +305,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     myRepositoryURL.setHistory(ArrayUtil.toObjectArray(urls, String.class));
     myRepositoryURL.addDocumentListener(new com.intellij.openapi.editor.event.DocumentAdapter() {
       @Override
-      public void documentChanged(com.intellij.openapi.editor.event.DocumentEvent e) {
+      public void documentChanged(consulo.document.event.DocumentEvent e) {
         // enable test button only if something is entered in repository URL
         final String url = getCurrentUrlText();
         myTestButton.setEnabled(url.length() != 0);

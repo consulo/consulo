@@ -21,7 +21,7 @@ import com.intellij.lang.LighterASTTokenNode;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.util.Ref;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.function.ThrowableRunnable;

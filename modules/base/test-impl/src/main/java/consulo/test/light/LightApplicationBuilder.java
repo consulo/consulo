@@ -28,7 +28,7 @@ import consulo.application.Application;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;

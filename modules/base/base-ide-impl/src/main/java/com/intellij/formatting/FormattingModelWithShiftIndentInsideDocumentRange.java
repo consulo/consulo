@@ -16,8 +16,8 @@
 package com.intellij.formatting;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 
 /**
  * Defines the psi-based formatting model that is responsible for multiline AST nodes indentation

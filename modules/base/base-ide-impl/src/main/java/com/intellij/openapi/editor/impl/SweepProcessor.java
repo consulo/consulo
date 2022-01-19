@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.util.Segment;
+import consulo.document.util.Segment;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

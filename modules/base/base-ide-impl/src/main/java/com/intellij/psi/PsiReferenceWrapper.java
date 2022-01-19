@@ -1,6 +1,6 @@
 package com.intellij.psi;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 

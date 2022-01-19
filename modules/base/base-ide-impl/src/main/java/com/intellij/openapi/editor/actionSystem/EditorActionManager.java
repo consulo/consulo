@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.actionSystem;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -67,7 +67,7 @@ public abstract class EditorActionManager {
    * Gets the default handler which is invoked on attempt to modify a read-only fragment in the editor.
    *
    * @return the handler instance.
-   * @see com.intellij.openapi.editor.Document#createGuardedBlock(int, int)
+   * @see Document#createGuardedBlock(int, int)
    */
   public abstract ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler();
 
@@ -76,7 +76,7 @@ public abstract class EditorActionManager {
    *
    * @param handler the handler instance.
    * @return the old instance of the handler.
-   * @see com.intellij.openapi.editor.Document#createGuardedBlock(int, int)
+   * @see Document#createGuardedBlock(int, int)
    */
   public abstract ReadonlyFragmentModificationHandler setReadonlyFragmentModificationHandler(@Nonnull ReadonlyFragmentModificationHandler handler);
 
@@ -85,7 +85,7 @@ public abstract class EditorActionManager {
    *
    * @param document target document
    * @return the handler instance.
-   * @see com.intellij.openapi.editor.Document#createGuardedBlock(int, int)
+   * @see Document#createGuardedBlock(int, int)
    */
   public abstract ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@Nonnull Document document);
 
@@ -94,7 +94,7 @@ public abstract class EditorActionManager {
    *
    * @param document target document
    * @param handler  new handler
-   * @see com.intellij.openapi.editor.Document#createGuardedBlock(int, int)
+   * @see Document#createGuardedBlock(int, int)
    */
   public abstract void setReadonlyFragmentModificationHandler(@Nonnull Document document, ReadonlyFragmentModificationHandler handler);
 

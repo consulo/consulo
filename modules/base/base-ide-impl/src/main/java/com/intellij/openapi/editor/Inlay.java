@@ -2,6 +2,7 @@
 package com.intellij.openapi.editor;
 
 import consulo.disposer.Disposable;
+import consulo.document.RangeMarker;
 import consulo.util.dataholder.UserDataHolderEx;
 import javax.annotation.Nonnull;
 

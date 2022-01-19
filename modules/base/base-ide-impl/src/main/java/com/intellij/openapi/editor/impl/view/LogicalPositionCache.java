@@ -2,9 +2,9 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.diagnostic.Dumpable;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import com.intellij.util.ArrayUtil;

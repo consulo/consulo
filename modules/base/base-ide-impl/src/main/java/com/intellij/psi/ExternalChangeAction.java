@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.DocumentRunnable;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nullable;

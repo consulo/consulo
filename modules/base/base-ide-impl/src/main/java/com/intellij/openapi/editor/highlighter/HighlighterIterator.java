@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.editor.highlighter;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.psi.tree.IElementType;
 

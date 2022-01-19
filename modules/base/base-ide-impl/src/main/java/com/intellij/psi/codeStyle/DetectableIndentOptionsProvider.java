@@ -15,7 +15,7 @@ import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;

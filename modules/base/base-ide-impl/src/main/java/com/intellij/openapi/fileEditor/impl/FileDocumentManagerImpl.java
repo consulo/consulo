@@ -4,28 +4,22 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.AppTopics;
 import com.intellij.CommonBundle;
 import com.intellij.application.options.CodeStyle;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import com.intellij.openapi.editor.impl.FrozenDocument;
 import com.intellij.openapi.editor.impl.TrailingSpacesStripper;
-import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
+import com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
-import consulo.virtualFileSystem.NonPhysicalFileSystem;
-import consulo.virtualFileSystem.event.AsyncFileListener;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -37,13 +31,10 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ReadonlyStatusHandler;
+import com.intellij.openapi.vfs.SafeWriteRequestor;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
-import consulo.virtualFileSystem.event.VFileContentChangeEvent;
-import consulo.virtualFileSystem.event.VFileDeleteEvent;
-import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.pom.core.impl.PomModelImpl;
 import com.intellij.psi.AbstractFileViewProvider;
@@ -56,15 +47,26 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBus;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
 import consulo.application.internal.TransactionGuardEx;
+import consulo.component.ComponentManager;
+import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.event.DocumentEvent;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -514,26 +516,26 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
 
   @Override
   @Nonnull
-  public String getLineSeparator(@Nullable VirtualFile file, @Nullable Project project) {
+  public String getLineSeparator(@Nullable VirtualFile file, @Nullable ComponentManager project) {
     String lineSeparator = file == null ? null : LoadTextUtil.getDetectedLineSeparator(file);
     if (lineSeparator == null) {
-      lineSeparator = CodeStyle.getProjectOrDefaultSettings(project).getLineSeparator();
+      lineSeparator = CodeStyle.getProjectOrDefaultSettings((Project)project).getLineSeparator();
     }
     return lineSeparator;
   }
 
   @Override
-  public boolean requestWriting(@Nonnull Document document, Project project) {
+  public boolean requestWriting(@Nonnull Document document, ComponentManager project) {
     return requestWritingStatus(document, project).hasWriteAccess();
   }
 
   @Nonnull
   @Override
-  public WriteAccessStatus requestWritingStatus(@Nonnull Document document, @Nullable Project project) {
+  public WriteAccessStatus requestWritingStatus(@Nonnull Document document, @Nullable ComponentManager project) {
     final VirtualFile file = getInstance().getFile(document);
     if (project != null && file != null && file.isValid()) {
       if (file.getFileType().isBinary()) return WriteAccessStatus.NON_WRITABLE;
-      ReadonlyStatusHandler.OperationStatus writableStatus = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(Collections.singletonList(file));
+      ReadonlyStatusHandler.OperationStatus writableStatus = ReadonlyStatusHandler.getInstance((Project)project).ensureFilesWritable(Collections.singletonList(file));
       if (writableStatus.hasReadonlyFiles()) {
         return new WriteAccessStatus(writableStatus.getReadonlyFilesMessage());
       }

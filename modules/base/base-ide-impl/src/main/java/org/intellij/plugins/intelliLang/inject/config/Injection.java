@@ -16,7 +16,7 @@
 package org.intellij.plugins.intelliLang.inject.config;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 
 import javax.annotation.Nonnull;

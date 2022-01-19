@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.issueLinks;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.IssueNavigationConfiguration;
 import com.intellij.util.containers.Convertor;
 import com.intellij.xml.util.XmlTagUtilBase;

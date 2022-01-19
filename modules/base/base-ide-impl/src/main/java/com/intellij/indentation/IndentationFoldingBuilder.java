@@ -3,7 +3,7 @@ package com.intellij.indentation;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.tree.TokenSet;
 import consulo.annotation.UsedInPlugin;

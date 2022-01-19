@@ -32,7 +32,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnSeparator;
 import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffNavigationContext;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import consulo.progress.ProgressIndicator;

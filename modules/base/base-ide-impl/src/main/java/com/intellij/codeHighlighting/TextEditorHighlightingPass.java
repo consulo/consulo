@@ -4,7 +4,7 @@ package com.intellij.codeHighlighting;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbService;

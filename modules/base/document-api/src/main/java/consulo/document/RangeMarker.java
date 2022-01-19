@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor;
+package consulo.document;
 
-import com.intellij.openapi.util.Segment;
+import consulo.document.util.Segment;
 import consulo.util.dataholder.UserDataHolder;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Comparator;
 
 /**

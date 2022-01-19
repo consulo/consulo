@@ -3,8 +3,8 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiLanguageInjectionHost;

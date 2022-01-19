@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 
 /**
  * @author Roman Chernyatchik

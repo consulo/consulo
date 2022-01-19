@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiFile;
 

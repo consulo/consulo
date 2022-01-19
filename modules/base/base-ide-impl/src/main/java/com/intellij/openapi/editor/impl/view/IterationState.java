@@ -14,6 +14,8 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;

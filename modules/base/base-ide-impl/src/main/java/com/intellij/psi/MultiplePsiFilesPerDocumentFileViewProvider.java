@@ -20,8 +20,8 @@
 package com.intellij.psi;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.psi.impl.SharedPsiElementImplUtil;

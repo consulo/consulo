@@ -15,9 +15,9 @@
  */
 package com.intellij.vcsUtil;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.VcsBundle;
 
 public class VcsSelection {

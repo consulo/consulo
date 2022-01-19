@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 
 import java.util.List;

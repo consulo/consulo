@@ -19,7 +19,7 @@ package com.intellij.codeInsight.highlighting;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageBraceMatching;
 import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;

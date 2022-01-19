@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
 

@@ -65,7 +65,7 @@
 
     <extensionPoint name="dateTimeFormatter" beanClass="com.intellij.util.text.DateTimeFormatterBean"/>
 
-    <extensionPoint name="editorFactoryDocumentListener" interface="com.intellij.openapi.editor.event.DocumentListener"/>
+    <extensionPoint name="editorFactoryDocumentListener" interface="consulo.document.event.DocumentListener"/>
     <extensionPoint name="editorFactoryMouseListener" interface="com.intellij.openapi.editor.event.EditorMouseListener"/>
     <extensionPoint name="editorFactoryMouseMotionListener" interface="com.intellij.openapi.editor.event.EditorMouseMotionListener"/>
     <extensionPoint name="editorFactoryListener" interface="com.intellij.openapi.editor.event.EditorFactoryListener"/>

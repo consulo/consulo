@@ -18,11 +18,11 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.problems.WolfTheProblemSolverImpl;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiFile;

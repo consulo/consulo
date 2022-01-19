@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.util.containers.WeakList;

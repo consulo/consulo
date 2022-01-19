@@ -12,7 +12,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.keymap.KeymapUtil;

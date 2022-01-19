@@ -21,7 +21,7 @@ import com.intellij.codeInsight.template.impl.TemplateState;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import jakarta.inject.Inject;
 
 public class SelectAllHandler extends EditorActionHandler {

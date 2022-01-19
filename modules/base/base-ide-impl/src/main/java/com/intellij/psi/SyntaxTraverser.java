@@ -13,6 +13,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteredTraverserBase;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.document.util.TextRange;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.postfix.templates;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;

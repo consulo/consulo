@@ -16,8 +16,8 @@
 package com.intellij.codeInsight;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

@@ -18,7 +18,7 @@ package com.intellij.refactoring.changeSignature;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColors;

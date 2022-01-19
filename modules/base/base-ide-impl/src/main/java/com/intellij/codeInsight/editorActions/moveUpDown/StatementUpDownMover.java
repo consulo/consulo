@@ -24,6 +24,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.lang.ASTNode;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

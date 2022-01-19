@@ -15,7 +15,7 @@
  */
 package com.intellij.util.text;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.annotation.internal.MigratedExtensionsTo;
 
 import javax.annotation.Nonnull;

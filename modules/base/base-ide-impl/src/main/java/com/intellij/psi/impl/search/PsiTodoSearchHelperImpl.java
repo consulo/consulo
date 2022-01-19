@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.search;
 
 import com.intellij.ide.todo.TodoIndexPatternProvider;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.cache.TodoCacheManager;

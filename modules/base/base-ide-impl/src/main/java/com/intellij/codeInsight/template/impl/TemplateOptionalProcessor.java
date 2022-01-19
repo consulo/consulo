@@ -17,9 +17,9 @@
 package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.template.Template;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.RangeMarker;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nls;

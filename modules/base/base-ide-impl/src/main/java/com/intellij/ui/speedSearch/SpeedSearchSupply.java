@@ -16,7 +16,7 @@
 package com.intellij.ui.speedSearch;
 
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;

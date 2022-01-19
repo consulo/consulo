@@ -15,10 +15,10 @@
  */
 package com.intellij.application.options;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.TextChange;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;

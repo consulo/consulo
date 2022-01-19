@@ -4,10 +4,10 @@ package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

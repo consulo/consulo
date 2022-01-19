@@ -18,7 +18,7 @@ package com.intellij.codeInsight;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.IndentData;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.codeInsight.CommentUtilCore;
 import com.intellij.util.text.CharArrayUtil;

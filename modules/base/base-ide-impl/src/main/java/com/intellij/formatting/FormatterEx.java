@@ -3,7 +3,7 @@ package com.intellij.formatting;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;

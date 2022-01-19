@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.checkin.StepIntersection;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;

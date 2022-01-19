@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.event;
+package consulo.document.event;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import javax.annotation.Nonnull;
 
 import java.util.EventObject;

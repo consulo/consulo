@@ -4,7 +4,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.VisualPosition;
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.event.DocumentEvent;
 import consulo.editor.impl.CodeEditorBase;
 import consulo.editor.impl.CodeEditorInlayModelBase;
 import consulo.util.dataholder.Key;

@@ -19,7 +19,7 @@ package org.intellij.plugins.intelliLang.inject;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.*;
 

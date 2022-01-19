@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.util.DocumentUtil;
+import consulo.document.Document;
 import consulo.editor.impl.CodeEditorFoldingModelBase;
 import consulo.logging.Logger;
 

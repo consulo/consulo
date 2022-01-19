@@ -17,6 +17,8 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.event.BulkAwareDocumentListener;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

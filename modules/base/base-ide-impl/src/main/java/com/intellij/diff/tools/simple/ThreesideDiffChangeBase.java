@@ -18,7 +18,7 @@ package com.intellij.diff.tools.simple;
 import com.intellij.diff.util.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;

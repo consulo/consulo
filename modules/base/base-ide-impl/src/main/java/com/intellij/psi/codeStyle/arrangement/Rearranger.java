@@ -16,9 +16,9 @@
 package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.lang.LanguageExtension;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;

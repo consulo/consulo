@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 
 public interface Result {
   boolean equalsToText (String text, PsiElement context);

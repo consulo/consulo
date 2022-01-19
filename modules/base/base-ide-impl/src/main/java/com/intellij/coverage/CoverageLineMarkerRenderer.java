@@ -26,7 +26,7 @@ import com.intellij.coverage.actions.HideCoverageInfoAction;
 import com.intellij.coverage.actions.ShowCoveringTestsAction;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ScrollType;

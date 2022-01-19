@@ -20,7 +20,7 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.lang.CodeDocumentationAwareCommenter;
 import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.impl.source.tree.PsiCommentImpl;
 import javax.annotation.Nonnull;

@@ -15,8 +15,8 @@
  */
 package com.intellij.refactoring.ui;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.event.DocumentListener;
+import consulo.document.Document;
+import consulo.document.event.DocumentListener;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiCodeFragment;

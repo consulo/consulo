@@ -20,7 +20,7 @@ import com.intellij.lang.ASTFactory;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.checkin.ReformatBeforeCheckinHandler;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.TokenType;

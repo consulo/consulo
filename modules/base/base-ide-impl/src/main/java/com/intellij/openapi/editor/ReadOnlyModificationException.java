@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
+import consulo.document.Document;
+
 import javax.annotation.Nonnull;
 
 public class ReadOnlyModificationException extends RuntimeException {

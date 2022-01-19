@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.editor.markup;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +26,7 @@ import javax.annotation.Nullable;
  * gutter and so on, and for retrieving information about highlighted ranges.
  *
  * @see com.intellij.openapi.editor.Editor#getMarkupModel()
- * @see com.intellij.openapi.editor.impl.DocumentMarkupModel#forDocument(com.intellij.openapi.editor.Document, com.intellij.openapi.project.Project, boolean)
+ * @see com.intellij.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, com.intellij.openapi.project.Project, boolean)
  */
 public interface MarkupModel extends UserDataHolder {
   /**
@@ -39,7 +40,7 @@ public interface MarkupModel extends UserDataHolder {
   /**
    * Adds a highlighter covering the specified range of the document, which can modify
    * the attributes used for text rendering, add a gutter marker and so on. Range highlighters are
-   * {@link com.intellij.openapi.editor.RangeMarker} instances and use the same rules for tracking
+   * {@link RangeMarker} instances and use the same rules for tracking
    * the range after document changes.
    *
    * @param startOffset    the start offset of the range to highlight.

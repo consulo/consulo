@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.document.util;
+
+import java.util.Comparator;
 
 /**
- * TextRange with arbitrary offsets, not intended to be checked by {@link com.intellij.openapi.util.TextRange#assertProperRange(int, int, Object)}.
- * Please use with caution.
- *
- * @author Dmitry Avdeev
- *         Date: 30.08.13
+ * User: cdr
  */
-public class UnfairTextRange extends TextRange {
+public interface Segment {
+  Segment[] EMPTY_ARRAY = new Segment[0];
+  int getStartOffset();
+  int getEndOffset();
 
-  public UnfairTextRange(int startOffset, int endOffset) {
-    super(startOffset, endOffset, false);
-  }
+  Comparator<Segment> BY_START_OFFSET_THEN_END_OFFSET = (r1, r2) -> {
+    int result = r1.getStartOffset() - r2.getStartOffset();
+    if (result == 0) result = r1.getEndOffset() - r2.getEndOffset();
+    return result;
+  };
 }

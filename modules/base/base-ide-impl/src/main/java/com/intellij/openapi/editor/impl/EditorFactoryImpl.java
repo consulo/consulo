@@ -4,7 +4,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.application.Application;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorKind;

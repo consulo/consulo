@@ -15,12 +15,12 @@
  */
 package com.intellij.formatting;
 
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.ChangedRangesInfo;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.TextRangeUtil;
+import consulo.document.util.TextRangeUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

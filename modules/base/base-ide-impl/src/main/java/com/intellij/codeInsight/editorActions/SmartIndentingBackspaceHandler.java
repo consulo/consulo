@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 import com.intellij.codeStyle.CodeStyleFacade;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.project.Project;

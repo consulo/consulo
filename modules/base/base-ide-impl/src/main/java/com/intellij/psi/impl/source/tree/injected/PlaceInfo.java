@@ -5,8 +5,8 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import javax.annotation.Nonnull;

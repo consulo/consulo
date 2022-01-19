@@ -22,8 +22,8 @@ import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -41,6 +41,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.disposer.Disposable;
+import consulo.document.util.TextRange;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

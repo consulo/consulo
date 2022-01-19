@@ -16,6 +16,8 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.openapi.editor.*;
+import consulo.document.Document;
+
 import javax.annotation.Nonnull;
 
 public class EditorPosition implements Cloneable {

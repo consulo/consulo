@@ -19,7 +19,7 @@ package com.intellij.codeInsight.template;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 
 public class InvokeActionResult implements Result{
   private final Runnable myAction;

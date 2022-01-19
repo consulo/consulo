@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.actionSystem;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.util.text.ImmutableCharSequence;
 import javax.annotation.Nonnull;

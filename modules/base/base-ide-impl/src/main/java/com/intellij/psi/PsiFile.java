@@ -16,6 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.lang.FileASTNode;
+import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.tree.IFileElementType;
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
  * @see com.intellij.openapi.actionSystem.CommonDataKeys#PSI_FILE
  * @see com.intellij.psi.PsiElement#getContainingFile()
  * @see PsiManager#findFile(VirtualFile)
- * @see PsiDocumentManager#getPsiFile(com.intellij.openapi.editor.Document)
+ * @see PsiDocumentManager#getPsiFile(Document)
  */
 public interface PsiFile extends PsiFileSystemItem {
   public static final PsiFile[] EMPTY_ARRAY = new PsiFile[0];

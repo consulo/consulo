@@ -22,6 +22,8 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProviderImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;

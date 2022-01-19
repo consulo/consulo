@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.document.RangeMarker;
+import consulo.document.event.DocumentEvent;
 import org.jetbrains.annotations.NonNls;
 
 public class ReadOnlyFragmentModificationException extends RuntimeException {

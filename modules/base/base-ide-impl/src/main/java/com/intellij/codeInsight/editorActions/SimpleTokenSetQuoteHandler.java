@@ -20,7 +20,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 
 public class SimpleTokenSetQuoteHandler implements QuoteHandler {
   protected final TokenSet myLiteralTokenSet;

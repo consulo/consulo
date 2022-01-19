@@ -1,7 +1,7 @@
 package com.intellij.diagnostic;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.attachment.Attachment;

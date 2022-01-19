@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.paths;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.io.URLUtil;
 import org.jetbrains.annotations.NonNls;

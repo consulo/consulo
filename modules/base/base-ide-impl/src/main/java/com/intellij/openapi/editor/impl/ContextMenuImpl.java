@@ -2,11 +2,11 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ui.TimerUtil;
 import consulo.desktop.editor.DesktopEditorFloatPanel;

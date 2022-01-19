@@ -16,8 +16,7 @@
 
 package com.intellij.codeInsight.template;
 
-import com.intellij.codeInsight.template.Result;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.psi.PsiFile;
 
 /**

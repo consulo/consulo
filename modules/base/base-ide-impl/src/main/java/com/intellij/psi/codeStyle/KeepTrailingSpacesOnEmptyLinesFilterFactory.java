@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.SmartStripTrailingSpacesFilter;
 import com.intellij.openapi.editor.StripTrailingSpacesFilter;
 import com.intellij.openapi.editor.StripTrailingSpacesFilterFactory;

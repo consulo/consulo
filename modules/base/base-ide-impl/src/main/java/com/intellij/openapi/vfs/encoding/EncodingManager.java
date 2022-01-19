@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.encoding;
 
 import consulo.application.Application;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 

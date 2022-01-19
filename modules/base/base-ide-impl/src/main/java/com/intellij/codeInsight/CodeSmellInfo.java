@@ -16,8 +16,8 @@
 package com.intellij.codeInsight;
 
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 
 /**

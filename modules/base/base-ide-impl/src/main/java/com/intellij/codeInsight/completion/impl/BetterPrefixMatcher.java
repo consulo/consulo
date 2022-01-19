@@ -18,7 +18,7 @@ package com.intellij.codeInsight.completion.impl;
 import com.intellij.codeInsight.completion.CompletionResult;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.PrefixMatcher;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.util.containers.FList;
 import javax.annotation.Nonnull;

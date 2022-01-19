@@ -16,7 +16,7 @@
 package com.intellij.psi.formatter.common;
 
 import com.intellij.formatting.FormattingRangesInfo;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 
 import java.util.List;

@@ -47,6 +47,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.patterns.StringPattern;

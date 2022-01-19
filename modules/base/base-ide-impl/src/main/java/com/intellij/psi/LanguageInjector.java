@@ -17,6 +17,8 @@
 package com.intellij.psi;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.document.util.TextRange;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -30,7 +32,7 @@ public interface LanguageInjector {
   /**
    * @param host PSI element inside which your language will be injected.
    * @param injectionPlacesRegistrar stores places where injection occurs. <br>
-   *        Call its {@link com.intellij.psi.InjectedLanguagePlaces#addPlace(com.intellij.lang.Language, com.intellij.openapi.util.TextRange, String, String)}
+   *        Call its {@link com.intellij.psi.InjectedLanguagePlaces#addPlace(com.intellij.lang.Language, TextRange, String, String)}
    *        method to register particular injection place.
    *        For example, to inject your language in string literal inside quotes, you might want to <br>
    *        <code>injectionPlacesRegistrar.addPlace(myLanguage, new TextRange(1,host.getTextLength()-1))</code>

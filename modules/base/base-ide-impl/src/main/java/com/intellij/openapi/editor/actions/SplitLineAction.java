@@ -25,6 +25,8 @@ import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 import consulo.util.dataholder.Key;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package com.intellij.psi.util;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;

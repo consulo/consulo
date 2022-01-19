@@ -16,7 +16,7 @@
 package com.intellij.openapi.command.undo;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

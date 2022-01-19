@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.evaluation;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;

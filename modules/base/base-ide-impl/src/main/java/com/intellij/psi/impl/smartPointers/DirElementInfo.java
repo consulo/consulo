@@ -17,7 +17,7 @@ package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Segment;
+import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;

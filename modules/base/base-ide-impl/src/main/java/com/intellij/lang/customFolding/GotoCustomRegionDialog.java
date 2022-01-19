@@ -18,7 +18,7 @@ package com.intellij.lang.customFolding;
 import com.intellij.ide.IdeBundle;
 import com.intellij.lang.Language;
 import com.intellij.lang.folding.*;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

@@ -17,7 +17,7 @@ package com.intellij.usages.impl;
 
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.ui.ColoredTreeCellRenderer;

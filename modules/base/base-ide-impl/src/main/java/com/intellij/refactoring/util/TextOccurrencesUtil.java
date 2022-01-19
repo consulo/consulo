@@ -28,7 +28,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.progress.ProcessCanceledException;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiPolyVariantReference;

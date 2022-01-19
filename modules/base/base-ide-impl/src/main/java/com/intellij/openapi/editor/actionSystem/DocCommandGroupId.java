@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.actionSystem;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 
 public class DocCommandGroupId {
   private final Document myDocument;

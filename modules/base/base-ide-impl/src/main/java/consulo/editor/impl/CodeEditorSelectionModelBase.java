@@ -10,7 +10,8 @@ import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 

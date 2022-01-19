@@ -17,7 +17,7 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.application.Application;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorKind;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;

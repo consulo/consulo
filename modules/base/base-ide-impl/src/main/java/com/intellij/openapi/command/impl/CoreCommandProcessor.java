@@ -4,7 +4,7 @@ package com.intellij.openapi.command.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.*;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;

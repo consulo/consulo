@@ -33,7 +33,7 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;

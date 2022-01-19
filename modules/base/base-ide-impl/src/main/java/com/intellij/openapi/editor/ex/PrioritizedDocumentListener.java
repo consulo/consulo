@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import com.intellij.openapi.editor.event.DocumentListener;
+import consulo.document.event.DocumentListener;
 
 import java.util.Comparator;
 

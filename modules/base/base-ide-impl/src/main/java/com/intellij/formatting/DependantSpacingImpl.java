@@ -17,7 +17,7 @@
 package com.intellij.formatting;
 
 import com.intellij.formatting.engine.BlockRangesMap;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

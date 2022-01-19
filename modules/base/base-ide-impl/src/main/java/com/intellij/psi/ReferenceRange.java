@@ -19,7 +19,7 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 
 import java.util.ArrayList;
 import java.util.Collections;

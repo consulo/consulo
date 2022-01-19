@@ -17,9 +17,9 @@ package com.intellij.util;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 
 import javax.annotation.Nonnull;
 

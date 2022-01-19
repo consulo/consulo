@@ -19,7 +19,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import consulo.logging.Logger;
 import com.intellij.openapi.paths.PsiDynaReference;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;

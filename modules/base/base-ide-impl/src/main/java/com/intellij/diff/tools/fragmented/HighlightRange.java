@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.fragmented;
 
 import com.intellij.diff.util.Side;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 
 class HighlightRange {

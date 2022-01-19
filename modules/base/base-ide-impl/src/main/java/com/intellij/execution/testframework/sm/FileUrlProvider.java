@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.sm;
 import com.intellij.execution.Location;
 import com.intellij.execution.PsiLocation;
 import com.intellij.execution.testframework.sm.runner.SMTestLocator;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;

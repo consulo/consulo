@@ -3,7 +3,7 @@ package com.intellij.psi.impl.search;
 
 import com.intellij.ide.todo.TodoConfiguration;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.TodoItem;

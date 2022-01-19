@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.generation;
 
 import com.intellij.lang.Commenter;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 
 /**
  * @author Dmitry Avdeev

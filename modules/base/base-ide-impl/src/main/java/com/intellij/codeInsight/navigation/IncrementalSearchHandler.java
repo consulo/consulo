@@ -23,9 +23,11 @@ import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBa
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;

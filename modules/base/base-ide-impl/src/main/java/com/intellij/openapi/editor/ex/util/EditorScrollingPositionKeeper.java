@@ -5,6 +5,8 @@ import com.intellij.openapi.editor.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

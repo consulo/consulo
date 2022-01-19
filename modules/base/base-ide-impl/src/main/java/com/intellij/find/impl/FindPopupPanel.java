@@ -17,7 +17,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.event.DocumentListener;
+import consulo.document.event.DocumentListener;
 import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.keymap.Keymap;
@@ -486,7 +486,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       final EditorTextField etf = (EditorTextField)editorComponent;
       etf.addDocumentListener(new DocumentListener() {
         @Override
-        public void documentChanged(@Nonnull com.intellij.openapi.editor.event.DocumentEvent event) {
+        public void documentChanged(@Nonnull consulo.document.event.DocumentEvent event) {
           onFileMaskChanged();
         }
       });

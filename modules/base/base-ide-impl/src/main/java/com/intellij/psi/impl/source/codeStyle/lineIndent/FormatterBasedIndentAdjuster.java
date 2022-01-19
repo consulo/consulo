@@ -4,7 +4,7 @@ package com.intellij.psi.impl.source.codeStyle.lineIndent;
 import com.intellij.formatting.FormattingMode;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;

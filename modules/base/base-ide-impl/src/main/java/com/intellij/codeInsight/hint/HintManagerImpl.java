@@ -32,6 +32,8 @@ import com.intellij.util.ui.TimerUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 

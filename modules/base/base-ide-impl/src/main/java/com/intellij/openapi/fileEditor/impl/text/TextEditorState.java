@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.util.Producer;

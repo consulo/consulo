@@ -1,13 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl.event;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import consulo.editor.internal.EditorInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 import kava.beans.PropertyChangeListener;

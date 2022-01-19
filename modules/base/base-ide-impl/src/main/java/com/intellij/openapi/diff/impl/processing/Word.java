@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.processing;
 
 import com.intellij.openapi.diff.impl.string.DiffString;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;

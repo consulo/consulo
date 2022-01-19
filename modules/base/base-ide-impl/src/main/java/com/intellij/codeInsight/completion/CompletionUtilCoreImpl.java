@@ -1,8 +1,8 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;

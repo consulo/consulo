@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.actions;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.util.Pair;
 
 import javax.annotation.Nonnull;

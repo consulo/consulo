@@ -13,7 +13,7 @@ import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import consulo.document.FileDocumentManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;

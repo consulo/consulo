@@ -18,7 +18,7 @@ package com.intellij.formatting;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.progress.ProgressIndicator;

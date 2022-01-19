@@ -21,7 +21,7 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.ex.GlobalInspectionContextUtil;
 import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;

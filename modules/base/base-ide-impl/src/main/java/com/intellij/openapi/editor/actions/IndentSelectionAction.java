@@ -30,6 +30,8 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.document.Document;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

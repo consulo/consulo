@@ -16,8 +16,8 @@
 
 package com.intellij.ui;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.event.DocumentListener;
+import consulo.document.Document;
+import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;

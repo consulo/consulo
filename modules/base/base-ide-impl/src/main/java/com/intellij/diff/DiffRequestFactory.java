@@ -20,7 +20,7 @@ import com.intellij.diff.merge.MergeResult;
 import com.intellij.diff.merge.TextMergeRequest;
 import com.intellij.diff.requests.ContentDiffRequest;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

@@ -2,7 +2,7 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;

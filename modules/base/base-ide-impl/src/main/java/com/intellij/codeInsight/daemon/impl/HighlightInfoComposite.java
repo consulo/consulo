@@ -2,9 +2,9 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.editor.RangeMarker;
+import consulo.document.RangeMarker;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
 

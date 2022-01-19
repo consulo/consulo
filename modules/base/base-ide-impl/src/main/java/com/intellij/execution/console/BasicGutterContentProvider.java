@@ -1,6 +1,6 @@
 package com.intellij.execution.console;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBColor;

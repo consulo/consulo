@@ -31,6 +31,7 @@ open module consulo.ide.impl {
   requires transitive consulo.localize.api;
   requires transitive consulo.component.api;
   requires transitive consulo.application.api;
+  requires transitive consulo.document.api;
   requires transitive consulo.virtual.file.system.api;
 
   requires consulo.ui.impl;

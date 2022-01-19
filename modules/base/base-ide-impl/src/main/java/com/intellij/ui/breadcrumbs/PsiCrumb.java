@@ -3,7 +3,7 @@ package com.intellij.ui.breadcrumbs;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.psi.PsiAnchor;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.breadcrumbs.Crumb;

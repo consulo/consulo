@@ -2,7 +2,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

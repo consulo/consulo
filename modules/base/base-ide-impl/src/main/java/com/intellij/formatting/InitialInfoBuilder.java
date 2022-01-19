@@ -3,8 +3,8 @@
 package com.intellij.formatting;
 
 import com.intellij.formatting.engine.ExpandableIndent;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.containers.LinkedMultiMap;
 import com.intellij.util.containers.MultiMap;

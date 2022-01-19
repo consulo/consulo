@@ -18,6 +18,8 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;

@@ -7,7 +7,7 @@ import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RawText;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;

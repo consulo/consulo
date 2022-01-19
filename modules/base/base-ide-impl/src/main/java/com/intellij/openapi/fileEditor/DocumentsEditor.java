@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor;
 
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 
 public interface DocumentsEditor extends FileEditor {
   Document[] getDocuments();

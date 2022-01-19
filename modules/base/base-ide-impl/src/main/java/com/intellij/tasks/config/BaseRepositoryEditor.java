@@ -33,7 +33,7 @@ import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
+import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -225,7 +225,7 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
   protected void installListener(final Document document) {
     document.addDocumentListener(new com.intellij.openapi.editor.event.DocumentAdapter() {
       @Override
-      public void documentChanged(com.intellij.openapi.editor.event.DocumentEvent e) {
+      public void documentChanged(consulo.document.event.DocumentEvent e) {
         doApply();
       }
     });
