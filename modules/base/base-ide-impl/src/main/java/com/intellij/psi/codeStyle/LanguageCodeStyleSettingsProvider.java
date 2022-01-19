@@ -21,7 +21,7 @@ import java.util.Set;
  * Base class and extension point for common code style settings for a specific language.
  */
 public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
-  public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME = ExtensionPointName.create("consulo.base.langCodeStyleSettingsProvider");
+  public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME = ExtensionPointName.create("consulo.langCodeStyleSettingsProvider");
 
   public enum SettingsType {
     BLANK_LINES_SETTINGS,

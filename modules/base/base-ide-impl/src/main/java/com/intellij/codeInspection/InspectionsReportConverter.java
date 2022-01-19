@@ -13,7 +13,7 @@ import java.util.Map;
  * @author Roman.Chernyatchik
  */
 public interface InspectionsReportConverter {
-  ExtensionPointName<InspectionsReportConverter> EP_NAME = ExtensionPointName.create("consulo.base.inspectionsReportConverter");
+  ExtensionPointName<InspectionsReportConverter> EP_NAME = ExtensionPointName.create("consulo.inspectionsReportConverter");
 
   /**
    * @return Format name which will be specified by user using --format option

@@ -23,5 +23,5 @@ import consulo.component.extension.ExtensionPointName;
  * Time: 19:08:33
  */
 public abstract class ImportFilteringRule implements UsageFilteringRule {
-  public static final ExtensionPointName<ImportFilteringRule> EP_NAME = ExtensionPointName.create("consulo.base.importFilteringRule");
+  public static final ExtensionPointName<ImportFilteringRule> EP_NAME = ExtensionPointName.create("consulo.importFilteringRule");
 }

@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class WorkingContextProvider {
 
-  public static final ExtensionPointName<WorkingContextProvider> EP_NAME = ExtensionPointName.create("consulo.base.tasks.contextProvider");
+  public static final ExtensionPointName<WorkingContextProvider> EP_NAME = ExtensionPointName.create("consulo.tasks.contextProvider");
 
   /**
    * Short unique name.

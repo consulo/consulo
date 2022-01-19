@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  */
 public abstract class VcsRootChecker {
 
-  public static final ExtensionPointName<VcsRootChecker> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.vcsRootChecker");
+  public static final ExtensionPointName<VcsRootChecker> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.vcsRootChecker");
 
   /**
    * @param path path to check if it is vcs root directory

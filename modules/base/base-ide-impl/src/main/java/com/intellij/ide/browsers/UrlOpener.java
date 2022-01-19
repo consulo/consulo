@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class UrlOpener {
-  public static final ExtensionPointName<UrlOpener> EP_NAME = ExtensionPointName.create("consulo.base.urlOpener");
+  public static final ExtensionPointName<UrlOpener> EP_NAME = ExtensionPointName.create("consulo.urlOpener");
 
   public abstract boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project);
 }

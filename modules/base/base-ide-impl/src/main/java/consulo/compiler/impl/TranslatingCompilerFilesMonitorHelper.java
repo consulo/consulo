@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @since 16.01.14
  */
 public interface TranslatingCompilerFilesMonitorHelper {
-  ExtensionPointName<TranslatingCompilerFilesMonitorHelper> EP_NAME = ExtensionPointName.create("consulo.base.compiler.translatingHelper");
+  ExtensionPointName<TranslatingCompilerFilesMonitorHelper> EP_NAME = ExtensionPointName.create("consulo.compiler.translatingHelper");
 
   @Nullable
   VirtualFile[] getRootsForModule(@Nonnull Module module);

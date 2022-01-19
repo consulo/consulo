@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 public abstract class PatternDialectProvider {
-  public static final ExtensionPointName<PatternDialectProvider> EP_NAME = ExtensionPointName.create("consulo.base.patternDialectProvider");
+  public static final ExtensionPointName<PatternDialectProvider> EP_NAME = ExtensionPointName.create("consulo.patternDialectProvider");
 
   public static PatternDialectProvider getInstance(String shortName) {
     for (PatternDialectProvider provider : Extensions.getExtensions(EP_NAME)) {

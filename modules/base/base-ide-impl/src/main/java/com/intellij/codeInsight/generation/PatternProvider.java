@@ -8,7 +8,7 @@ import consulo.component.extension.ExtensionPointName;
  */
 public interface PatternProvider {
 
-  ExtensionPointName<PatternProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.patternProvider");
+  ExtensionPointName<PatternProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.patternProvider");
 
   PatternDescriptor[] getDescriptors();
 

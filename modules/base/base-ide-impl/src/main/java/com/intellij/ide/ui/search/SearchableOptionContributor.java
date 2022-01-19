@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * @author peter
  */
 public abstract class SearchableOptionContributor {
-  public static final ExtensionPointName<SearchableOptionContributor> EP_NAME = ExtensionPointName.create("consulo.base.search.optionContributor");
+  public static final ExtensionPointName<SearchableOptionContributor> EP_NAME = ExtensionPointName.create("consulo.search.optionContributor");
 
   public abstract void processOptions(@Nonnull SearchableOptionProcessor processor);
 }

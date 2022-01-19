@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface CopyPastePreProcessor {
-  ExtensionPointName<CopyPastePreProcessor> EP_NAME = ExtensionPointName.create("consulo.base.copyPastePreProcessor");
+  ExtensionPointName<CopyPastePreProcessor> EP_NAME = ExtensionPointName.create("consulo.copyPastePreProcessor");
 
   /**
    *

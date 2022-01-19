@@ -40,7 +40,7 @@ import java.util.ResourceBundle;
 public class InspectionEP extends LanguageExtensionPoint implements InspectionProfileEntry.DefaultNameProvider {
 
   /** @see GlobalInspectionTool */
-  public static final ExtensionPointName<InspectionEP> GLOBAL_INSPECTION = ExtensionPointName.create("consulo.base.globalInspection");
+  public static final ExtensionPointName<InspectionEP> GLOBAL_INSPECTION = ExtensionPointName.create("consulo.globalInspection");
 
   /**
    * Short name is used in two cases: \inspectionDescriptions\&lt;short_name&gt;.html resource may contain short inspection

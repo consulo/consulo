@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.annotation.DeprecationInfo;
 
 public abstract class SchemesManagerFactory {
-  public static ExtensionPointName<ServiceBean> SCHEME_OWNER = ExtensionPointName.create("consulo.base.schemeOwner");
+  public static ExtensionPointName<ServiceBean> SCHEME_OWNER = ExtensionPointName.create("consulo.schemeOwner");
 
   public abstract <T, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(String fileSpec, SchemeProcessor<T, E> processor, RoamingType roamingType);
 

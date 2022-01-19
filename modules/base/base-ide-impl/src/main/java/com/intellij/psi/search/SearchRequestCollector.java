@@ -18,7 +18,7 @@ import java.util.*;
  * @author peter
  */
 public class SearchRequestCollector {
-  private static final ExtensionPointName<ScopeOptimizer> CODE_USAGE_SCOPE_OPTIMIZER_EP_NAME = ExtensionPointName.create("consulo.base.codeUsageScopeOptimizer");
+  private static final ExtensionPointName<ScopeOptimizer> CODE_USAGE_SCOPE_OPTIMIZER_EP_NAME = ExtensionPointName.create("consulo.codeUsageScopeOptimizer");
 
   private final Object lock = new Object();
   private final List<PsiSearchRequest> myWordRequests = new ArrayList<>();

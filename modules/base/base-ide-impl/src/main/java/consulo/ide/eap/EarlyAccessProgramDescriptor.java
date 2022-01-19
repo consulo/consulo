@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @since 17:09/15.10.13
  */
 public abstract class EarlyAccessProgramDescriptor {
-  public static final ExtensionPointName<EarlyAccessProgramDescriptor> EP_NAME = ExtensionPointName.create("consulo.base.eapDescriptor");
+  public static final ExtensionPointName<EarlyAccessProgramDescriptor> EP_NAME = ExtensionPointName.create("consulo.eapDescriptor");
 
   @Nonnull
   public abstract String getName();

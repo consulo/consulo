@@ -39,7 +39,7 @@ import java.util.List;
  * @deprecated please use {@link com.intellij.execution.actions.RunConfigurationProducer} instead
  */
 public abstract class RuntimeConfigurationProducer implements Comparable, Cloneable {
-  public static final ExtensionPointName<RuntimeConfigurationProducer> RUNTIME_CONFIGURATION_PRODUCER = ExtensionPointName.create("consulo.base.configurationProducer");
+  public static final ExtensionPointName<RuntimeConfigurationProducer> RUNTIME_CONFIGURATION_PRODUCER = ExtensionPointName.create("consulo.configurationProducer");
 
   public static final Comparator<RuntimeConfigurationProducer> COMPARATOR = new ProducerComparator();
   protected static final int PREFERED = -1;

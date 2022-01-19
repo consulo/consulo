@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 
 public abstract class InspectionExtensionsFactory {
 
-  public static final ExtensionPointName<InspectionExtensionsFactory> EP_NAME = ExtensionPointName.create("consulo.base.codeInspection.InspectionExtension");
+  public static final ExtensionPointName<InspectionExtensionsFactory> EP_NAME = ExtensionPointName.create("consulo.codeInspection.InspectionExtension");
 
   public abstract GlobalInspectionContextExtension createGlobalInspectionContextExtension();
   @Nullable

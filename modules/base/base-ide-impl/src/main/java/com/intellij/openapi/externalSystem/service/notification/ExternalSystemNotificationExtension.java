@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 public interface ExternalSystemNotificationExtension {
 
   ExtensionPointName<ExternalSystemNotificationExtension> EP_NAME
-          = ExtensionPointName.create("consulo.base.externalSystemNotificationExtension");
+          = ExtensionPointName.create("consulo.externalSystemNotificationExtension");
 
   @Nonnull
   ProjectSystemId getTargetExternalSystemId();

@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 
 @FunctionalInterface
 public interface CustomScopesFilter {
-  ExtensionPointName<CustomScopesFilter> EP_NAME = ExtensionPointName.create("consulo.base.customScopesFilter");
+  ExtensionPointName<CustomScopesFilter> EP_NAME = ExtensionPointName.create("consulo.customScopesFilter");
 
   boolean excludeScope(@Nonnull NamedScope scope);
 }

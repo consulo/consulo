@@ -26,7 +26,7 @@ import com.intellij.psi.PsiElement;
  * @see com.intellij.codeInspection.GlobalInspectionTool#getAnnotator
  */
 public abstract class RefGraphAnnotator {
-  public static final ExtensionPointName<RefGraphAnnotator> EP_NAME = ExtensionPointName.create("consulo.base.refGraphAnnotator");
+  public static final ExtensionPointName<RefGraphAnnotator> EP_NAME = ExtensionPointName.create("consulo.refGraphAnnotator");
   /**
    * Called before the references to the specified element have been collected.
    *

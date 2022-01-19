@@ -19,7 +19,7 @@ import consulo.component.extension.ExtensionPointName;
 
 
 public interface ApplicationLoadListener {
-  ExtensionPointName<ApplicationLoadListener> EP_NAME = ExtensionPointName.create("consulo.base.applicationLoadListener");
+  ExtensionPointName<ApplicationLoadListener> EP_NAME = ExtensionPointName.create("consulo.applicationLoadListener");
 
   void beforeApplicationLoaded();
 }

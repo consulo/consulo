@@ -23,7 +23,7 @@ import com.intellij.psi.PsiFile;
  * @author yole
  */
 public interface HighlightRangeExtension {
-  ExtensionPointName<HighlightRangeExtension> EP_NAME = ExtensionPointName.create("consulo.base.highlightRangeExtension");
+  ExtensionPointName<HighlightRangeExtension> EP_NAME = ExtensionPointName.create("consulo.highlightRangeExtension");
 
   boolean isForceHighlightParents(PsiFile file);
 }

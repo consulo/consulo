@@ -8,7 +8,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
  * @author Konstantin Bulenkov
  */
 public class DateTimeFormatterBean {
-  public static final ExtensionPointName<DateTimeFormatterBean> EP_NAME = ExtensionPointName.create("consulo.base.dateTimeFormatter");
+  public static final ExtensionPointName<DateTimeFormatterBean> EP_NAME = ExtensionPointName.create("consulo.dateTimeFormatter");
 
   @Attribute("id")
   //@RequiredElement

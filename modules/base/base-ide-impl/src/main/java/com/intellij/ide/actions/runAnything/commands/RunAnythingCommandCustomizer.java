@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  * E.g. it's possible to wrap command into a shell or/and patch environment variables.
  */
 public abstract class RunAnythingCommandCustomizer {
-  public static final ExtensionPointName<RunAnythingCommandCustomizer> EP_NAME = ExtensionPointName.create("consulo.base.runAnything.commandCustomizer");
+  public static final ExtensionPointName<RunAnythingCommandCustomizer> EP_NAME = ExtensionPointName.create("consulo.runAnything.commandCustomizer");
 
   /**
    * Customizes command line to be executed

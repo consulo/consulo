@@ -24,7 +24,7 @@ import com.intellij.psi.PsiErrorElement;
  * @author yole
  */
 public interface ErrorQuickFixProvider {
-  ExtensionPointName<ErrorQuickFixProvider> EP_NAME = ExtensionPointName.create("consulo.base.errorQuickFixProvider");
+  ExtensionPointName<ErrorQuickFixProvider> EP_NAME = ExtensionPointName.create("consulo.errorQuickFixProvider");
   
   void registerErrorQuickFix(PsiErrorElement errorElement, HighlightInfo highlightInfo);
 }

@@ -28,7 +28,7 @@ import java.util.List;
  */
 public abstract class ColorPickerListenerFactory {
   private static final ExtensionPointName<ColorPickerListenerFactory> EP_NAME =
-    ExtensionPointName.create("consulo.base.colorPickerListenerFactory");
+    ExtensionPointName.create("consulo.colorPickerListenerFactory");
 
   public static ColorPickerListener[] createListenersFor(@Nullable final PsiElement element) {
     final List<ColorPickerListener> listeners =

@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public abstract class MoveDirectoryWithClassesHelper {
   private static final ExtensionPointName<MoveDirectoryWithClassesHelper> EP_NAME =
-    ExtensionPointName.create("consulo.base.refactoring.moveDirectoryWithClassesHelper");
+    ExtensionPointName.create("consulo.refactoring.moveDirectoryWithClassesHelper");
 
   public abstract void findUsages(Collection<PsiFile> filesToMove, PsiDirectory[] directoriesToMove, Collection<UsageInfo> result,
                                   boolean searchInComments, boolean searchInNonJavaFiles, Project project);

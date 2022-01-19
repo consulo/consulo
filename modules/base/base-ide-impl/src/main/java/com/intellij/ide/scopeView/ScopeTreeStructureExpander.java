@@ -25,5 +25,5 @@ import consulo.component.extension.ExtensionPointName;
 import javax.swing.event.TreeWillExpandListener;
 
 public interface ScopeTreeStructureExpander extends TreeWillExpandListener {
-  ExtensionPointName<ScopeTreeStructureExpander> EP_NAME = ExtensionPointName.create("consulo.base.scopeTreeExpander");
+  ExtensionPointName<ScopeTreeStructureExpander> EP_NAME = ExtensionPointName.create("consulo.scopeTreeExpander");
 }

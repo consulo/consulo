@@ -20,7 +20,7 @@
     <extensionPoint name="webSocketAccepter" interface="consulo.builtInServer.websocket.WebSocketAccepter"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="consulo.base">
+  <extensions defaultExtensionNs="consulo">
     <applicationService serviceImplementation="consulo.builtInServer.impl.ide.BuiltInServerOptions"/>
     <applicationService serviceInterface="consulo.builtInServer.BuiltInServerManager" serviceImplementation="consulo.builtInServer.impl.BuiltInServerManagerImpl" lazy="false" />
     <applicationService serviceInterface="consulo.builtInServer.xml.XmlRpcServer" serviceImplementation="consulo.builtInServer.impl.net.xml.XmlRpcServerImpl"/>

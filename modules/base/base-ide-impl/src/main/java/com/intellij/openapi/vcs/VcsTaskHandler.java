@@ -95,7 +95,7 @@ public abstract class VcsTaskHandler {
     }
   }
 
-  private static final ExtensionPointName<VcsTaskHandler> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.vcs.taskHandler");
+  private static final ExtensionPointName<VcsTaskHandler> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.vcs.taskHandler");
 
   public abstract boolean isEnabled();
 

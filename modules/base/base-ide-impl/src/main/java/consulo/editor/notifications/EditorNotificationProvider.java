@@ -31,7 +31,7 @@ import javax.swing.*;
  * @since 12.11.2015
  */
 public interface EditorNotificationProvider<T extends JComponent> {
-  ExtensionPointName<EditorNotificationProvider<?>> EP_NAME = ExtensionPointName.create("consulo.base.editorNotificationProvider");
+  ExtensionPointName<EditorNotificationProvider<?>> EP_NAME = ExtensionPointName.create("consulo.editorNotificationProvider");
 
   @Nonnull
   @Deprecated

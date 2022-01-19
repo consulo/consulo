@@ -25,8 +25,8 @@ import java.io.File;
  * @since 7.0
  */
 public interface CheckoutListener {
-  ExtensionPointName<CheckoutListener> EP_NAME = ExtensionPointName.create("consulo.base.checkoutListener");
-  ExtensionPointName<CheckoutListener> COMPLETED_EP_NAME = ExtensionPointName.create("consulo.base.checkoutCompletedListener");
+  ExtensionPointName<CheckoutListener> EP_NAME = ExtensionPointName.create("consulo.checkoutListener");
+  ExtensionPointName<CheckoutListener> COMPLETED_EP_NAME = ExtensionPointName.create("consulo.checkoutCompletedListener");
   
   boolean processCheckedOutDirectory(Project project, File directory);
 

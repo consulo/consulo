@@ -29,7 +29,7 @@ import java.util.Map;
  * Interface for a custom page shown in the "Colors and Fonts" settings dialog.
  */
 public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
-  ExtensionPointName<ColorSettingsPage> EP_NAME = ExtensionPointName.create("consulo.base.colorSettingsPage");
+  ExtensionPointName<ColorSettingsPage> EP_NAME = ExtensionPointName.create("consulo.colorSettingsPage");
 
   /**
    * Returns the icon for the page, shown in the dialog tab.

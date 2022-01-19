@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight.lookup;
+package consulo.component.extension;
 
-import com.intellij.util.Consumer;
-import consulo.component.extension.ExtensionPointName;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * @author peter
+ * @author VISTALL
+ * @since 19/01/2022
  */
-public interface LookupActionProvider {
-  ExtensionPointName<LookupActionProvider> EP_NAME = ExtensionPointName.create("consulo.lookup.actionProvider");
-
-  void fillActions(LookupElement element, Lookup lookup, Consumer<LookupElementAction> consumer);
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface ExtensionTypeImpl {
+  Class<?>[] value();
 }

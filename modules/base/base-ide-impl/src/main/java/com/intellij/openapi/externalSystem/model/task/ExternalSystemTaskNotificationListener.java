@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 public interface ExternalSystemTaskNotificationListener {
 
   ExtensionPointName<ExternalSystemTaskNotificationListener> EP_NAME
-    = ExtensionPointName.create("consulo.base.externalSystemTaskNotificationListener");
+    = ExtensionPointName.create("consulo.externalSystemTaskNotificationListener");
 
   /**
    * Notifies that task with the given id is queued for the execution.

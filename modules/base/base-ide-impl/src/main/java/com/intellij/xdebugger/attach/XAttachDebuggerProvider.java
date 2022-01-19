@@ -15,7 +15,7 @@ import java.util.List;
  * This provider used to obtain debuggers, which can debug the process with specified {@link XAttachHost} and {@link ProcessInfo}
  */
 public interface XAttachDebuggerProvider {
-  ExtensionPointName<XAttachDebuggerProvider> EP = ExtensionPointName.create("consulo.base.xdebugger.attachDebuggerProvider");
+  ExtensionPointName<XAttachDebuggerProvider> EP = ExtensionPointName.create("consulo.xdebugger.attachDebuggerProvider");
 
   /**
    * will be removed in 2020.1, right after {@link XLocalAttachDebuggerProvider}

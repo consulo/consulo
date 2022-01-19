@@ -37,7 +37,7 @@ import java.util.concurrent.Future;
 public class VcsLogUiImpl implements VcsLogUi, Disposable {
   private static final Logger LOG = Logger.getInstance(VcsLogUiImpl.class);
   public static final ExtensionPointName<VcsLogHighlighterFactory> LOG_HIGHLIGHTER_FACTORY_EP =
-          ExtensionPointName.create("consulo.base.logHighlighterFactory");
+          ExtensionPointName.create("consulo.logHighlighterFactory");
 
   @Nonnull
   private final MainFrame myMainFrame;

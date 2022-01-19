@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 
 public interface ConsoleInputFilterProvider {
   ExtensionPointName<ConsoleInputFilterProvider> INPUT_FILTER_PROVIDERS =
-    ExtensionPointName.create("consulo.base.consoleInputFilterProvider");
+    ExtensionPointName.create("consulo.consoleInputFilterProvider");
 
   @Nonnull
   InputFilter[] getDefaultFilters(@Nonnull Project project);

@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @since 20:22/12.06.13
  */
 public interface AdditionalOutputDirectoriesProvider {
-  ExtensionPointName<AdditionalOutputDirectoriesProvider> EP_NAME = ExtensionPointName.create("consulo.base.compiler.additionalOutputDirectoriesProvider");
+  ExtensionPointName<AdditionalOutputDirectoriesProvider> EP_NAME = ExtensionPointName.create("consulo.compiler.additionalOutputDirectoriesProvider");
 
   @Nonnull
   String[] getOutputDirectories(@Nonnull Project project, @Nonnull Module modules);

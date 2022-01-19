@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author Dennis.Ushakov
  */
 public interface SmartPointerAnchorProvider {
-  ExtensionPointName<SmartPointerAnchorProvider> EP_NAME = ExtensionPointName.create("consulo.base.smartPointerAnchorProvider");
+  ExtensionPointName<SmartPointerAnchorProvider> EP_NAME = ExtensionPointName.create("consulo.smartPointerAnchorProvider");
 
   /**
    * Provides anchor used for restoring elements after stub-to-AST switch.

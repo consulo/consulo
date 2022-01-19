@@ -25,7 +25,7 @@ import com.intellij.util.ProcessingContext;
  * @author Gregory.Shrago
  */
 public interface RenameInputValidator {
-  ExtensionPointName<RenameInputValidator> EP_NAME = ExtensionPointName.create("consulo.base.renameInputValidator");
+  ExtensionPointName<RenameInputValidator> EP_NAME = ExtensionPointName.create("consulo.renameInputValidator");
 
   ElementPattern<? extends PsiElement> getPattern();
   boolean isInputValid(final String newName, final PsiElement element, final ProcessingContext context);

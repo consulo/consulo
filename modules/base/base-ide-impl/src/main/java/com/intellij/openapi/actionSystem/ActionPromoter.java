@@ -33,7 +33,7 @@ import java.util.List;
  * @since 13
  */
 public interface ActionPromoter {
-  ExtensionPointName<ActionPromoter> EP_NAME = ExtensionPointName.create("consulo.base.actionPromoter");
+  ExtensionPointName<ActionPromoter> EP_NAME = ExtensionPointName.create("consulo.actionPromoter");
 
   List<AnAction> promote(List<AnAction> actions, DataContext context);
 }

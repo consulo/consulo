@@ -23,7 +23,7 @@ import java.awt.datatransfer.Transferable;
 
 public abstract class CustomFileDropHandler {
   public static final ExtensionPointName<CustomFileDropHandler> CUSTOM_DROP_HANDLER_EP =
-          ExtensionPointName.create("consulo.base.customFileDropHandler");
+          ExtensionPointName.create("consulo.customFileDropHandler");
 
   public abstract boolean canHandle(@Nonnull Transferable t, Editor editor);
 

@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 public abstract class FileDocumentSynchronizationVetoer {
-  public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME = ExtensionPointName.create("consulo.base.fileDocumentSynchronizationVetoer");
+  public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME = ExtensionPointName.create("consulo.fileDocumentSynchronizationVetoer");
 
   public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
     return true;

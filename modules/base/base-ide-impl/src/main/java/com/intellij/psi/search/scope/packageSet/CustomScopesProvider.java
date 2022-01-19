@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface CustomScopesProvider {
-  ExtensionPointName<CustomScopesProvider> CUSTOM_SCOPES_PROVIDER = ExtensionPointName.create("consulo.base.customScopesProvider");
+  ExtensionPointName<CustomScopesProvider> CUSTOM_SCOPES_PROVIDER = ExtensionPointName.create("consulo.customScopesProvider");
 
   @Nonnull
   List<NamedScope> getCustomScopes();

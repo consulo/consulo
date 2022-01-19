@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 public interface FileStatusProvider {
 
-  ExtensionPointName<FileStatusProvider> EP_NAME = ExtensionPointName.create("consulo.base.vcs.fileStatusProvider");
+  ExtensionPointName<FileStatusProvider> EP_NAME = ExtensionPointName.create("consulo.vcs.fileStatusProvider");
 
   FileStatus getFileStatus(@Nonnull VirtualFile virtualFile);
   void refreshFileStatusFromDocument(@Nonnull VirtualFile virtualFile, @Nonnull Document doc);

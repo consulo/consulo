@@ -33,7 +33,7 @@ import com.intellij.util.containers.ContainerUtil;
 public abstract class TaskDialogPanelProvider
 {
 
-	private final static ExtensionPointName<TaskDialogPanelProvider> EP_NAME = ExtensionPointName.create("consulo.base.tasks.dialogPanelProvider");
+	private final static ExtensionPointName<TaskDialogPanelProvider> EP_NAME = ExtensionPointName.create("consulo.tasks.dialogPanelProvider");
 
 	public static List<TaskDialogPanel> getOpenTaskPanels(@Nonnull Project project, @Nonnull Task task)
 	{

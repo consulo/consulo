@@ -20,7 +20,7 @@ import consulo.component.extension.ExtensionPointName;
 public abstract class CredentialsLanguageContribution<T> {
 
   public static final ExtensionPointName<CredentialsLanguageContribution> EP_NAME
-    = ExtensionPointName.create("consulo.base.remote.credentialsLanguageContribution");
+    = ExtensionPointName.create("consulo.remote.credentialsLanguageContribution");
 
   public abstract CredentialsTypeEx getType();
 

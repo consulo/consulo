@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public interface SettingsEntryPointActionProvider {
-  ExtensionPointName<SettingsEntryPointActionProvider> EP_NAME = ExtensionPointName.create("consulo.base.settingsEntryPointActionProvider");
+  ExtensionPointName<SettingsEntryPointActionProvider> EP_NAME = ExtensionPointName.create("consulo.settingsEntryPointActionProvider");
 
   String ICON_KEY = "Update_Type_Icon_Key";
 

@@ -24,7 +24,7 @@ import com.intellij.refactoring.RefactoringActionHandler;
  * @author dsl
  */
 public interface RenameHandler extends RefactoringActionHandler {
-  ExtensionPointName<RenameHandler> EP_NAME = ExtensionPointName.create("consulo.base.renameHandler");
+  ExtensionPointName<RenameHandler> EP_NAME = ExtensionPointName.create("consulo.renameHandler");
   
   // called during rename action update. should not perform any user interactions
   boolean isAvailableOnDataContext(DataContext dataContext);

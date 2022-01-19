@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public interface ColorAndFontDescriptorsProvider {
 
-  ExtensionPointName<ColorAndFontDescriptorsProvider> EP_NAME = ExtensionPointName.create("consulo.base.colorAndFontDescriptorProvider");
+  ExtensionPointName<ColorAndFontDescriptorsProvider> EP_NAME = ExtensionPointName.create("consulo.colorAndFontDescriptorProvider");
   
   /**
    * Returns the list of descriptors specifying the {@link TextAttributesKey} instances

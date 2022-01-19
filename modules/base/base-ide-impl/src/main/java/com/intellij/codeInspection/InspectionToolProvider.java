@@ -21,7 +21,7 @@ import consulo.annotation.DeprecationInfo;
 @Deprecated
 @DeprecationInfo("Use globalInspection")
 public interface InspectionToolProvider {
-  ExtensionPointName<InspectionToolProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.inspectionToolProvider");
+  ExtensionPointName<InspectionToolProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.inspectionToolProvider");
 
   /**
    * Query method for inspection tools provided by a plugin.

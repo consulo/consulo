@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @see ConfigurationTypeBase
  */
 public interface ConfigurationType {
-  ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create("consulo.base.configurationType");
+  ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create("consulo.configurationType");
 
   @Deprecated
   @DeprecationInfo("Use #EP_NAME")

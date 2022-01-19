@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  *         Time: 3:49 PM
  */
 public abstract class VcsCheckinHandlerFactory implements BaseCheckinHandlerFactory {
-  public static final ExtensionPointName<VcsCheckinHandlerFactory> EP_NAME = ExtensionPointName.create("consulo.base.vcsCheckinHandlerFactory");
+  public static final ExtensionPointName<VcsCheckinHandlerFactory> EP_NAME = ExtensionPointName.create("consulo.vcsCheckinHandlerFactory");
 
   private VcsKey myKey;
 

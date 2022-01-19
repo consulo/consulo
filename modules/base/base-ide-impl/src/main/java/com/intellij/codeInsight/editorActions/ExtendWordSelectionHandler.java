@@ -24,7 +24,7 @@ import com.intellij.psi.PsiElement;
 import java.util.List;
 
 public interface ExtendWordSelectionHandler {
-  ExtensionPointName<ExtendWordSelectionHandler> EP_NAME = ExtensionPointName.create("consulo.base.extendWordSelectionHandler");
+  ExtensionPointName<ExtendWordSelectionHandler> EP_NAME = ExtensionPointName.create("consulo.extendWordSelectionHandler");
   
   boolean canSelect(PsiElement e);
 

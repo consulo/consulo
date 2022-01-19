@@ -47,7 +47,7 @@ import java.util.List;
  * </ul>
  */
 public interface RunAnythingProvider<V> {
-  ExtensionPointName<RunAnythingProvider> EP_NAME = ExtensionPointName.create("consulo.base.runAnything.executionProvider");
+  ExtensionPointName<RunAnythingProvider> EP_NAME = ExtensionPointName.create("consulo.runAnything.executionProvider");
   /**
    * Use it to retrieve command executing context, e.g. project base directory, module or custom working directory
    * that'd been chosen by the "Choose context" dropdown

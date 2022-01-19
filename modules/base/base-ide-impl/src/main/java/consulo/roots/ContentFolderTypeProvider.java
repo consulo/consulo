@@ -39,7 +39,7 @@ import java.util.Map;
  * @since 22:32/31.10.13
  */
 public abstract class ContentFolderTypeProvider {
-  public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME = ExtensionPointName.create("consulo.base.contentFolderTypeProvider");
+  public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME = ExtensionPointName.create("consulo.contentFolderTypeProvider");
 
   private final String myId;
 

@@ -25,7 +25,7 @@ import consulo.component.extension.ExtensionPointName;
  * @author yole
  */
 public interface ElementDescriptionProvider {
-  ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create("consulo.base.elementDescriptionProvider");
+  ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create("consulo.elementDescriptionProvider");
   
   @javax.annotation.Nullable
   String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location);

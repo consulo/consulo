@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class DuplicatesProfile {
-  public static final ExtensionPointName<DuplicatesProfile> EP_NAME = ExtensionPointName.create("consulo.base.duplicates.profile");
+  public static final ExtensionPointName<DuplicatesProfile> EP_NAME = ExtensionPointName.create("consulo.duplicates.profile");
 
   @Nonnull
   public abstract DuplocateVisitor createVisitor(@Nonnull FragmentsCollector collector);

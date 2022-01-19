@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface DataValidator<T> {
-  ExtensionPointName<DataValidator> EP_NAME = ExtensionPointName.create("consulo.base.dataValidator");
+  ExtensionPointName<DataValidator> EP_NAME = ExtensionPointName.create("consulo.dataValidator");
 
   @Nonnull
   Key<T> getKey();

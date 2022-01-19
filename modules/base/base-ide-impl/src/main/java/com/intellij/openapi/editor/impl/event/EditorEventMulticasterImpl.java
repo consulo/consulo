@@ -19,9 +19,9 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
-  private static final ExtensionPointName<EditorMouseListener> MOUSE_EP = ExtensionPointName.create("consulo.base.editorFactoryMouseListener");
-  private static final ExtensionPointName<EditorMouseMotionListener> MOUSE_MOTION_EP = ExtensionPointName.create("consulo.base.editorFactoryMouseMotionListener");
-  private static final ExtensionPointName<DocumentListener> DOCUMENT_EP = ExtensionPointName.create("consulo.base.editorFactoryDocumentListener");
+  private static final ExtensionPointName<EditorMouseListener> MOUSE_EP = ExtensionPointName.create("consulo.editorFactoryMouseListener");
+  private static final ExtensionPointName<EditorMouseMotionListener> MOUSE_MOTION_EP = ExtensionPointName.create("consulo.editorFactoryMouseMotionListener");
+  private static final ExtensionPointName<DocumentListener> DOCUMENT_EP = ExtensionPointName.create("consulo.editorFactoryDocumentListener");
 
   private final EventDispatcher<DocumentListener> myDocumentMulticaster = EventDispatcher.create(DocumentListener.class);
   private final EventDispatcher<PrioritizedInternalDocumentListener> myPrioritizedDocumentMulticaster =

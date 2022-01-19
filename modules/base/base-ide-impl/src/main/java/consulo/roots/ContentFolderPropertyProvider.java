@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @since 21:58/25.11.13
  */
 public abstract class ContentFolderPropertyProvider<T> {
-  public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME = ExtensionPointName.create("consulo.base.contentFolderPropertyProvider");
+  public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME = ExtensionPointName.create("consulo.contentFolderPropertyProvider");
 
   @Nonnull
   public abstract Key<T> getKey();

@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile;
  */
 public interface ExternalAnnotatorsFilter {
 
-  ExtensionPointName<ExternalAnnotatorsFilter> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.daemon.externalAnnotatorsFilter");
+  ExtensionPointName<ExternalAnnotatorsFilter> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.daemon.externalAnnotatorsFilter");
 
   boolean isProhibited(ExternalAnnotator annotator, PsiFile file);
 }

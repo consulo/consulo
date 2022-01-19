@@ -21,7 +21,7 @@ import consulo.localize.LocalizeValue;
 import javax.annotation.Nonnull;
 
 public abstract class CachesInvalidator {
-  public static final ExtensionPointName<CachesInvalidator> EP_NAME = ExtensionPointName.create("consulo.base.cachesInvalidator");
+  public static final ExtensionPointName<CachesInvalidator> EP_NAME = ExtensionPointName.create("consulo.cachesInvalidator");
 
   /**
    * @return description of the files to be cleared, shown in the warning dialog to the user.

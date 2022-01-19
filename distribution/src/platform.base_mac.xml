@@ -17,7 +17,7 @@
   <!--FIXME [VISTALL] this file is copy file without _mac prefix. It's need due mac distribution have own path-->
   <dependencySets>
     <dependencySet>
-      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.base/lib</outputDirectory>
+      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo/lib</outputDirectory>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <unpack>false</unpack>
       <includes>

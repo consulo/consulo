@@ -27,7 +27,7 @@ import consulo.disposer.Disposable;
 import javax.swing.*;
 
 public abstract class IdeRootPaneNorthExtension implements Disposable {
-  public static final ExtensionPointName<IdeRootPaneNorthExtension> EP_NAME = ExtensionPointName.create("consulo.base.ideRootPaneNorth");
+  public static final ExtensionPointName<IdeRootPaneNorthExtension> EP_NAME = ExtensionPointName.create("consulo.ideRootPaneNorth");
 
   public abstract String getKey();
 

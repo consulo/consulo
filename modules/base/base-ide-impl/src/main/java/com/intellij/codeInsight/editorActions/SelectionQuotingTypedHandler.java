@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  */
 public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
   public static final ExtensionPointName<DequotingFilter> EP_NAME =
-          ExtensionPointName.create("consulo.base.selectionDequotingFilter");
+          ExtensionPointName.create("consulo.selectionDequotingFilter");
   private TextRange myReplacedTextRange;
   private boolean myRestoreStickySelection;
   private boolean myLtrSelection;

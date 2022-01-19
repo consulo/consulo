@@ -26,7 +26,7 @@ import java.util.List;
 
 public interface StructureViewExtension {
 
-  ExtensionPointName<StructureViewExtension> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.lang.structureViewExtension");
+  ExtensionPointName<StructureViewExtension> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.lang.structureViewExtension");
 
   Class<? extends PsiElement> getType();
 

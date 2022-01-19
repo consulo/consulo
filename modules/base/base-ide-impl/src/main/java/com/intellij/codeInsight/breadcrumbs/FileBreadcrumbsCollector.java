@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
  */
 public abstract class FileBreadcrumbsCollector {
 
-  public static final ExtensionPointName<FileBreadcrumbsCollector> EP_NAME = ExtensionPointName.create("consulo.base.fileBreadcrumbsCollector");
+  public static final ExtensionPointName<FileBreadcrumbsCollector> EP_NAME = ExtensionPointName.create("consulo.fileBreadcrumbsCollector");
 
   /**
    * Checks if this collector handles the given file.

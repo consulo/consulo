@@ -41,7 +41,7 @@ import java.util.List;
 public class StubElementTypeHolderEP extends AbstractExtensionPointBean {
   private static final Logger LOG = Logger.getInstance(StubElementTypeHolderEP.class);
 
-  public static final ExtensionPointName<StubElementTypeHolderEP> EP_NAME = ExtensionPointName.create("consulo.base.stubElementTypeHolder");
+  public static final ExtensionPointName<StubElementTypeHolderEP> EP_NAME = ExtensionPointName.create("consulo.stubElementTypeHolder");
 
   @Attribute("class")
   public String holderClass;

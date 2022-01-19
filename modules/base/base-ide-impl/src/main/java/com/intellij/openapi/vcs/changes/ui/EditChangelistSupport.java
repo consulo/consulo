@@ -28,7 +28,7 @@ import javax.swing.*;
  */
 public interface EditChangelistSupport {
 
-  ExtensionPointName<EditChangelistSupport> EP_NAME = ExtensionPointName.create("consulo.base.editChangelistSupport");
+  ExtensionPointName<EditChangelistSupport> EP_NAME = ExtensionPointName.create("consulo.editChangelistSupport");
 
   void installSearch(EditorTextField name, EditorTextField comment);
 

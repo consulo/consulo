@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * @author nik
  */
 public interface HectorComponentPanelsProvider {
-  ExtensionPointName<HectorComponentPanelsProvider> EP_NAME = ExtensionPointName.create("consulo.base.hectorComponentProvider");
+  ExtensionPointName<HectorComponentPanelsProvider> EP_NAME = ExtensionPointName.create("consulo.hectorComponentProvider");
 
   @Nullable HectorComponentPanel createConfigurable(@Nonnull PsiFile file);
 }

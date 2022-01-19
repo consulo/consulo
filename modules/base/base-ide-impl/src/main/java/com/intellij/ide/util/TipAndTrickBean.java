@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author gregsh
  */
 public class TipAndTrickBean extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<TipAndTrickBean> EP_NAME = ExtensionPointName.create("consulo.base.tipAndTrick");
+  public static final ExtensionPointName<TipAndTrickBean> EP_NAME = ExtensionPointName.create("consulo.tipAndTrick");
 
   @Attribute("file")
   public String fileName;

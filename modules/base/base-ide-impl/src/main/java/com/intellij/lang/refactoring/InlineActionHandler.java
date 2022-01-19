@@ -26,7 +26,7 @@ import com.intellij.psi.PsiElement;
  * @author yole
  */
 public abstract class InlineActionHandler {
-  public static final ExtensionPointName<InlineActionHandler> EP_NAME = ExtensionPointName.create("consulo.base.inlineActionHandler");
+  public static final ExtensionPointName<InlineActionHandler> EP_NAME = ExtensionPointName.create("consulo.inlineActionHandler");
 
   /**
    * Fast check to see if the handler can possibly inline the element. Called from action update.

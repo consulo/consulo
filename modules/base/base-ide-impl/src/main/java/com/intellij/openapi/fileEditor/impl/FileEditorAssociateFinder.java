@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * Time: 1:37 PM
  */
 public interface FileEditorAssociateFinder {
-  ExtensionPointName<FileEditorAssociateFinder> EP_NAME = ExtensionPointName.create("consulo.base.editorFileAssociateFinder");
+  ExtensionPointName<FileEditorAssociateFinder> EP_NAME = ExtensionPointName.create("consulo.editorFileAssociateFinder");
 
   @Nullable
   VirtualFile getAssociatedFileToOpen(@Nonnull Project project, @Nonnull VirtualFile original);

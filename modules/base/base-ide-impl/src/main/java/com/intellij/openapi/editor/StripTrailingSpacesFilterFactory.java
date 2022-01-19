@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * An extension point to create filters which may put restrictions on how trailing spaces will be handled in a document.
  */
 public abstract class StripTrailingSpacesFilterFactory {
-  public static final ExtensionPointName<StripTrailingSpacesFilterFactory> EXTENSION_POINT = ExtensionPointName.create("consulo.base.stripTrailingSpacesFilterFactory");
+  public static final ExtensionPointName<StripTrailingSpacesFilterFactory> EXTENSION_POINT = ExtensionPointName.create("consulo.stripTrailingSpacesFilterFactory");
 
   /**
    * Creates a filter which may restrict trailing spaces removal.

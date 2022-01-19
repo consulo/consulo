@@ -23,7 +23,7 @@ import consulo.component.extension.ExtensionPointName;
  * @author peter
  */
 public abstract class CompletionPreselectSkipper {
-  public static final ExtensionPointName<CompletionPreselectSkipper> EP_NAME = ExtensionPointName.create("consulo.base.completion.skip");
+  public static final ExtensionPointName<CompletionPreselectSkipper> EP_NAME = ExtensionPointName.create("consulo.completion.skip");
 
   public abstract boolean skipElement(LookupElement element, CompletionLocation location);
 

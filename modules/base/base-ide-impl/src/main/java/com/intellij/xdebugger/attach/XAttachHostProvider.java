@@ -27,7 +27,7 @@ import java.util.List;
  * The examples are local machine environment (see {@link LocalAttachHost}) or SSH connection to a remote server.
  */
 public interface XAttachHostProvider<T extends XAttachHost> {
-  ExtensionPointName<XAttachHostProvider> EP = ExtensionPointName.create("consulo.base.xdebugger.attachHostProvider");
+  ExtensionPointName<XAttachHostProvider> EP = ExtensionPointName.create("consulo.xdebugger.attachHostProvider");
 
   /**
    * @return the group to which all connections provided by this provider belong

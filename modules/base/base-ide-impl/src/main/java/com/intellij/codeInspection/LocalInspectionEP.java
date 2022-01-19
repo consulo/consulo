@@ -24,7 +24,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
  */
 public class LocalInspectionEP extends InspectionEP implements LocalInspectionTool.LocalDefaultNameProvider {
 
-  public static final ExtensionPointName<LocalInspectionEP> LOCAL_INSPECTION = ExtensionPointName.create("consulo.base.localInspection");
+  public static final ExtensionPointName<LocalInspectionEP> LOCAL_INSPECTION = ExtensionPointName.create("consulo.localInspection");
 
   @Attribute("suppressId")
   public String id;

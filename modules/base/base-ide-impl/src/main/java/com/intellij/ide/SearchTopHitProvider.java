@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  * @author Konstantin Bulenkov
  */
 public interface SearchTopHitProvider {
-  ExtensionPointName<SearchTopHitProvider> EP_NAME = ExtensionPointName.create("consulo.base.search.topHitProvider");
+  ExtensionPointName<SearchTopHitProvider> EP_NAME = ExtensionPointName.create("consulo.search.topHitProvider");
 
   void consumeTopHits(@Nonnull String pattern, @Nonnull Consumer<Object> collector, @Nullable Project project);
 

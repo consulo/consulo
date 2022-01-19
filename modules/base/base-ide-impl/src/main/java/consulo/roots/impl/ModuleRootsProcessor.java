@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  * @since 08.12.14
  */
 public abstract class ModuleRootsProcessor {
-  public static final ExtensionPointName<ModuleRootsProcessor> EP_NAME = ExtensionPointName.create("consulo.base.moduleRootsProcessor");
+  public static final ExtensionPointName<ModuleRootsProcessor> EP_NAME = ExtensionPointName.create("consulo.moduleRootsProcessor");
 
   @Nullable
   public static ModuleRootsProcessor findRootsProcessor(@Nonnull ModuleRootModel moduleRootModel) {

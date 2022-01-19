@@ -25,7 +25,7 @@ import java.util.Collection;
  * @author nik
  */
 public abstract class PackagingSourceItemsProvider {
-  public static final ExtensionPointName<PackagingSourceItemsProvider> EP_NAME = ExtensionPointName.create("consulo.base.packaging.sourceItemProvider");
+  public static final ExtensionPointName<PackagingSourceItemsProvider> EP_NAME = ExtensionPointName.create("consulo.packaging.sourceItemProvider");
 
   @Nonnull
   public abstract Collection<? extends PackagingSourceItem> getSourceItems(@Nonnull ArtifactEditorContext editorContext, @Nonnull Artifact artifact,

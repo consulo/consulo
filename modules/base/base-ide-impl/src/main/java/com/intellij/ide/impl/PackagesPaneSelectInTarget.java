@@ -17,15 +17,18 @@ package com.intellij.ide.impl;
 
 import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInManager;
+import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.projectView.impl.PackageViewPane;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.util.PsiUtilBase;
+import consulo.component.extension.ExtensionTypeImpl;
+import consulo.virtualFileSystem.VirtualFile;
 
+@ExtensionTypeImpl(SelectInTarget.class)
 public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {
   public PackagesPaneSelectInTarget(Project project) {
     super(project);

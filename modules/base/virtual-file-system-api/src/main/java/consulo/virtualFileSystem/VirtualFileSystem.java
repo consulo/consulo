@@ -31,7 +31,7 @@ import java.io.IOException;
  * @see VirtualFileManager
  */
 public interface VirtualFileSystem {
-  ExtensionPointName<VirtualFileSystem> EP_NAME = ExtensionPointName.create("consulo.base.virtualFileSystem");
+  ExtensionPointName<VirtualFileSystem> EP_NAME = ExtensionPointName.create("consulo.virtualFileSystem");
 
   /**
    * Gets the protocol for this file system. Protocols should differ for all file systems.

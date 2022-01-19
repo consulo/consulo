@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class AdditionalCompileScopeProvider {
   public static final ExtensionPointName<AdditionalCompileScopeProvider> EXTENSION_POINT_NAME =
-          ExtensionPointName.create("consulo.base.compiler.additionalCompileScopeProvider");
+          ExtensionPointName.create("consulo.compiler.additionalCompileScopeProvider");
 
   @javax.annotation.Nullable
   public abstract CompileScope getAdditionalScope(@Nonnull CompileScope baseScope,

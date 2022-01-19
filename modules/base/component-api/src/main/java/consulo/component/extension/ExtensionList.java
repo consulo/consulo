@@ -22,12 +22,12 @@ public final class ExtensionList<E, C extends ComponentManager> {
   @Nonnull
   @SuppressWarnings("unchecked")
   public static <C1 extends ComponentManager, T1> ExtensionList<T1, C1> of(@Nonnull Class<T1> extensionClass) {
-    Extension annotation = extensionClass.getAnnotation(Extension.class);
+    ExtensionType annotation = extensionClass.getAnnotation(ExtensionType.class);
     if (annotation == null) {
-      throw new IllegalArgumentException(extensionClass + " is not annotated by @" + Extension.class.getSimpleName());
+      throw new IllegalArgumentException(extensionClass + " is not annotated by @" + ExtensionType.class.getSimpleName());
     }
 
-    return new ExtensionList<>((Class<C1>)annotation.component(), extensionClass, annotation.name());
+    return new ExtensionList<>((Class<C1>)annotation.component(), extensionClass, annotation.value());
   }
 
   @Nonnull

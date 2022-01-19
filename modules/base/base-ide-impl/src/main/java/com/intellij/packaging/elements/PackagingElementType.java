@@ -31,7 +31,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class PackagingElementType<E extends PackagingElement<?>> {
-  public static final ExtensionPointName<PackagingElementType> EP_NAME = ExtensionPointName.create("consulo.base.packaging.elementType");
+  public static final ExtensionPointName<PackagingElementType> EP_NAME = ExtensionPointName.create("consulo.packaging.elementType");
   private final String myId;
   private final String myPresentableName;
 

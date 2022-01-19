@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointName;
  * @author yole
  */
 public interface MetaDataContributor {
-  ExtensionPointName<MetaDataContributor> EP_NAME = ExtensionPointName.create("consulo.base.metaDataContributor");
+  ExtensionPointName<MetaDataContributor> EP_NAME = ExtensionPointName.create("consulo.metaDataContributor");
 
   void contributeMetaData(MetaDataRegistrar registrar);
 }

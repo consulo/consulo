@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public interface AnnotationGutterActionProvider {
 
-  ExtensionPointName<AnnotationGutterActionProvider> EP_NAME = ExtensionPointName.create("consulo.base.vcsAnnotationGutterActionProvider");
+  ExtensionPointName<AnnotationGutterActionProvider> EP_NAME = ExtensionPointName.create("consulo.vcsAnnotationGutterActionProvider");
 
   /**
    * Create an action that will be added to the annotation gutter popup.

@@ -30,7 +30,7 @@ import javax.swing.*;
  * @author yole
  */
 public interface PreviewHintProvider {
-  ExtensionPointName<PreviewHintProvider> EP_NAME = ExtensionPointName.create("consulo.base.previewHintProvider");
+  ExtensionPointName<PreviewHintProvider> EP_NAME = ExtensionPointName.create("consulo.previewHintProvider");
 
   /**
    * Returns true if Shift-hover preview is supported for the given file.

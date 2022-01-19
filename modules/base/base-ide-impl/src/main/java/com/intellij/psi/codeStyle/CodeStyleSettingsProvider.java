@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public abstract class CodeStyleSettingsProvider {
-  public static final ExtensionPointName<CodeStyleSettingsProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.codeStyleSettingsProvider");
+  public static final ExtensionPointName<CodeStyleSettingsProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.codeStyleSettingsProvider");
 
   @Nullable
   public CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {

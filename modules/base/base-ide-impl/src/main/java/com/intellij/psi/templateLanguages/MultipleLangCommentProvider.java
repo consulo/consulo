@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @author Roman.Chernyatchik
  */
 public interface MultipleLangCommentProvider {
-  ExtensionPointName<MultipleLangCommentProvider> EP_NAME = ExtensionPointName.create("consulo.base.multiLangCommenter");
+  ExtensionPointName<MultipleLangCommentProvider> EP_NAME = ExtensionPointName.create("consulo.multiLangCommenter");
 
   @Nullable
   Commenter getLineCommenter(PsiFile file, Editor editor,

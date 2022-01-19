@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 public interface HighlightInfoFilter {
   HighlightInfoFilter[] EMPTY_ARRAY = new HighlightInfoFilter[0];
-  ExtensionPointName<HighlightInfoFilter> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.daemon.highlightInfoFilter");
+  ExtensionPointName<HighlightInfoFilter> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.daemon.highlightInfoFilter");
 
   /**
    * @param file - might (and will be) null. Return true in this case if you'd like to switch this kind of highlighting in ANY file

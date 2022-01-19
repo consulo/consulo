@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface ElementSignatureProvider {
-  ExtensionPointName<ElementSignatureProvider> EP_NAME = ExtensionPointName.create("consulo.base.elementSignatureProvider");
+  ExtensionPointName<ElementSignatureProvider> EP_NAME = ExtensionPointName.create("consulo.elementSignatureProvider");
 
   @Nullable
   String getSignature(@Nonnull PsiElement element);

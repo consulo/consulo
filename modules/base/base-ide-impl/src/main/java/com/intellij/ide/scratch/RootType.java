@@ -39,7 +39,7 @@ import java.util.List;
  */
 public abstract class RootType {
 
-  public static final ExtensionPointName<RootType> ROOT_EP = ExtensionPointName.create("consulo.base.scratch.rootType");
+  public static final ExtensionPointName<RootType> ROOT_EP = ExtensionPointName.create("consulo.scratch.rootType");
 
   @Nonnull
   public static List<RootType> getAllRootTypes() {

@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * @see SyntaxHighlighterFactory#getSyntaxHighlighter(Language, Project, VirtualFile)
  */
 public interface SyntaxHighlighter {
-  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.base.syntaxHighlighter");
+  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.syntaxHighlighter");
 
   /**
    * Returns the lexer used for highlighting the file. The lexer is invoked incrementally when the file is changed, so it must be

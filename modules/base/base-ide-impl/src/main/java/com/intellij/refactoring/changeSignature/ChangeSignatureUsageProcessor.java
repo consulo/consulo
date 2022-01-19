@@ -29,7 +29,7 @@ import java.util.List;
  * @author Maxim.Medvedev
  */
 public interface ChangeSignatureUsageProcessor {
-  ExtensionPointName<ChangeSignatureUsageProcessor> EP_NAME = ExtensionPointName.create("consulo.base.refactoring.changeSignatureUsageProcessor");
+  ExtensionPointName<ChangeSignatureUsageProcessor> EP_NAME = ExtensionPointName.create("consulo.refactoring.changeSignatureUsageProcessor");
 
   @Nonnull
   UsageInfo[] findUsages(@Nonnull ChangeInfo info);

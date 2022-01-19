@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NonNls;
  * @see com.intellij.psi.codeStyle.CodeStyleSettings#getIndentOptions(FileType)
  */
 public interface FileTypeIndentOptionsProvider {
-  ExtensionPointName<FileTypeIndentOptionsProvider> EP_NAME = ExtensionPointName.create("consulo.base.fileTypeIndentOptionsProvider");
+  ExtensionPointName<FileTypeIndentOptionsProvider> EP_NAME = ExtensionPointName.create("consulo.fileTypeIndentOptionsProvider");
   
   CommonCodeStyleSettings.IndentOptions createIndentOptions();
 

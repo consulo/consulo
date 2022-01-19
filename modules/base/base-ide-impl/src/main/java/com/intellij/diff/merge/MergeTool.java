@@ -28,7 +28,7 @@ import javax.swing.*;
 import java.util.List;
 
 public interface MergeTool {
-  ExtensionPointName<MergeTool> EP_NAME = ExtensionPointName.create("consulo.base.diff.merge.MergeTool");
+  ExtensionPointName<MergeTool> EP_NAME = ExtensionPointName.create("consulo.diff.merge.MergeTool");
 
   /**
    * Creates viewer for the given request. Clients should call {@link #canShow(MergeContext, MergeRequest)} first.

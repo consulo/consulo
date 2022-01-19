@@ -20,7 +20,7 @@ import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public interface LanguageFormattingRestriction {
-  ExtensionPointName<LanguageFormattingRestriction> EXTENSION = ExtensionPointName.create("consulo.base.lang.formatter.restriction");
+  ExtensionPointName<LanguageFormattingRestriction> EXTENSION = ExtensionPointName.create("consulo.lang.formatter.restriction");
 
   boolean isFormatterAllowed(@Nonnull PsiElement context);
 }

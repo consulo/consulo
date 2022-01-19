@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author nik
  */
 public abstract class CustomizableActionGroupProvider {
-  public static final ExtensionPointName<CustomizableActionGroupProvider> EP_NAME = ExtensionPointName.create("consulo.base.customizableActionGroupProvider");
+  public static final ExtensionPointName<CustomizableActionGroupProvider> EP_NAME = ExtensionPointName.create("consulo.customizableActionGroupProvider");
 
   public abstract void registerGroups(CustomizableActionGroupRegistrar registrar);
 

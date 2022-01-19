@@ -19,8 +19,8 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 
 public interface UndoProvider {
-  ExtensionPointName<UndoProvider> EP_NAME = ExtensionPointName.create("consulo.base.undoProvider");
-  ExtensionPointName<UndoProvider> PROJECT_EP_NAME = ExtensionPointName.create("consulo.base.projectUndoProvider");
+  ExtensionPointName<UndoProvider> EP_NAME = ExtensionPointName.create("consulo.undoProvider");
+  ExtensionPointName<UndoProvider> PROJECT_EP_NAME = ExtensionPointName.create("consulo.projectUndoProvider");
 
   void commandStarted(Project project);
 

@@ -24,7 +24,7 @@ import java.util.List;
 
 /** @deprecated override SMTRunnerConsoleProperties.getTestLocator() instead (to be removed in IDEA 17) */
 public interface TestLocationProvider {
-  @SuppressWarnings("deprecation") ExtensionPointName<TestLocationProvider> EP_NAME = ExtensionPointName.create("consulo.base.testSrcLocator");
+  @SuppressWarnings("deprecation") ExtensionPointName<TestLocationProvider> EP_NAME = ExtensionPointName.create("consulo.testSrcLocator");
 
   @Nonnull
   List<Location> getLocation(@Nonnull String protocolId, @Nonnull String locationData, Project project);

@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author Eugene.Kudelevsky
  */
 public abstract class BreadcrumbsPresentationProvider {
-  public static final ExtensionPointName<BreadcrumbsPresentationProvider> EP_NAME = ExtensionPointName.create("consulo.base.breadcrumbsPresentationProvider");
+  public static final ExtensionPointName<BreadcrumbsPresentationProvider> EP_NAME = ExtensionPointName.create("consulo.breadcrumbsPresentationProvider");
 
   @Nullable
   public abstract CrumbPresentation[] getCrumbPresentations(@Nonnull PsiElement[] element);

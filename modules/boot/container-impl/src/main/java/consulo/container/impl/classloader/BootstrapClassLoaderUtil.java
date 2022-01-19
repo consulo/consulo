@@ -23,6 +23,7 @@ import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.impl.PluginDescriptorLoader;
 import consulo.container.impl.PluginHolderModificator;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.container.util.StatCollector;
 import consulo.util.nodep.SystemInfoRt;
 
@@ -34,7 +35,7 @@ import java.util.*;
  * @author max
  */
 public class BootstrapClassLoaderUtil {
-  private static final String CONSULO_BASE = "consulo.base";
+  private static final String CONSULO_BASE = PluginIds.CONSULO_BASE.toString();
 
   public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     StatCollector stat = (StatCollector)args.get(ContainerStartup.STAT_COLLECTOR);

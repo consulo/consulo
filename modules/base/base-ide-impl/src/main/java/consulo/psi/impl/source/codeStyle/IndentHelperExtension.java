@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @since 2018-09-26
  */
 public interface IndentHelperExtension {
-  ExtensionPointName<IndentHelperExtension> EP_NAME = ExtensionPointName.create("consulo.base.codeStyleIndentHelperExtension");
+  ExtensionPointName<IndentHelperExtension> EP_NAME = ExtensionPointName.create("consulo.codeStyleIndentHelperExtension");
 
   int TOO_BIG_WALK_THRESHOLD = 450;
 

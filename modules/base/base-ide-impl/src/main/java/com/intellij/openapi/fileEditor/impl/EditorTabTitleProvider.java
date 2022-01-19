@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface EditorTabTitleProvider {
-  ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create("consulo.base.editorTabTitleProvider");
+  ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create("consulo.editorTabTitleProvider");
 
   @Nullable
   String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file);

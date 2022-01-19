@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public abstract class ResolveScopeProvider {
-  public static final ExtensionPointName<ResolveScopeProvider> EP_NAME = ExtensionPointName.create("consulo.base.resolveScopeProvider");
+  public static final ExtensionPointName<ResolveScopeProvider> EP_NAME = ExtensionPointName.create("consulo.resolveScopeProvider");
 
   @Nullable
   public abstract GlobalSearchScope getResolveScope(@Nonnull VirtualFile file, Project project);

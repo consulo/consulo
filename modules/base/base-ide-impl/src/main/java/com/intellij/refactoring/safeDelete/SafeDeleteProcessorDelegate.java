@@ -30,7 +30,7 @@ import java.util.List;
  * @author yole
  */
 public interface SafeDeleteProcessorDelegate {
-  ExtensionPointName<SafeDeleteProcessorDelegate> EP_NAME = ExtensionPointName.create("consulo.base.refactoring.safeDeleteProcessor");
+  ExtensionPointName<SafeDeleteProcessorDelegate> EP_NAME = ExtensionPointName.create("consulo.refactoring.safeDeleteProcessor");
 
   boolean handlesElement(PsiElement element);
   @Nullable

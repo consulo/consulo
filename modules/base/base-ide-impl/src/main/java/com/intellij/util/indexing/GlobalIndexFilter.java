@@ -21,7 +21,7 @@ public interface GlobalIndexFilter {
 
   boolean affectsIndex(@Nonnull IndexId<?, ?> indexId);
 
-  ExtensionPointName<GlobalIndexFilter> EP_NAME = ExtensionPointName.create("consulo.base.globalIndexFilter");
+  ExtensionPointName<GlobalIndexFilter> EP_NAME = ExtensionPointName.create("consulo.globalIndexFilter");
 
   /**
    * Returns true if the given file should be excluded from indexing by any of the registered filters.

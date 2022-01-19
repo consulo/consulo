@@ -26,7 +26,7 @@ import consulo.ui.image.ImageKey;
  * @author yole
  */
 public class TypeIconEP extends AbstractExtensionPointBean {
-  public static ExtensionPointName<TypeIconEP> EP_NAME = ExtensionPointName.create("consulo.base.typeIcon");
+  public static ExtensionPointName<TypeIconEP> EP_NAME = ExtensionPointName.create("consulo.typeIcon");
 
   @Attribute("className")
   public String className;

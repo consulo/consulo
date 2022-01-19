@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @author peter
  */
 public abstract class PomDeclarationSearcher {
-  public static final ExtensionPointName<PomDeclarationSearcher> EP_NAME = ExtensionPointName.create("consulo.base.pom.declarationSearcher");
+  public static final ExtensionPointName<PomDeclarationSearcher> EP_NAME = ExtensionPointName.create("consulo.pom.declarationSearcher");
 
   public abstract void findDeclarationsAt(@Nonnull PsiElement element, int offsetInElement, Consumer<PomTarget> consumer);
 

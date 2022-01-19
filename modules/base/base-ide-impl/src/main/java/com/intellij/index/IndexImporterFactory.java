@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 
 //@ApiStatus.Experimental
 public interface IndexImporterFactory {
-  ExtensionPointName<IndexImporterFactory> EP_NAME = ExtensionPointName.create("consulo.base.indexImporterFactory");
+  ExtensionPointName<IndexImporterFactory> EP_NAME = ExtensionPointName.create("consulo.indexImporterFactory");
 
   @Nullable
   <Key, Value, Input> SnapshotInputMappingIndex<Key, Value, Input> createImporter(@Nonnull IndexExtension<Key, Value, Input> extension);

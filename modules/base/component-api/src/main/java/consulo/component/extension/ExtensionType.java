@@ -25,11 +25,17 @@ import java.lang.annotation.Target;
 /**
  * @author VISTALL
  * @since 16/01/2022
+ *
+ * @see ExtensionList
+ * @see ExtensionTypeImpl
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Extension {
-  String name();
+public @interface ExtensionType {
+  /**
+   * @return extension id
+   */
+  String value();
 
   Class<? extends ComponentManager> component();
 }

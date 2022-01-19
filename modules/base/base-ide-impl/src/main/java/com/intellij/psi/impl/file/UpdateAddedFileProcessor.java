@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  *         Time: 3:13:17 PM
  */
 public abstract class UpdateAddedFileProcessor {
-  private static final ExtensionPointName<UpdateAddedFileProcessor> EP_NAME = ExtensionPointName.create("consulo.base.updateAddedFileProcessor");
+  private static final ExtensionPointName<UpdateAddedFileProcessor> EP_NAME = ExtensionPointName.create("consulo.updateAddedFileProcessor");
 
   public abstract boolean canProcessElement(PsiFile element);
 

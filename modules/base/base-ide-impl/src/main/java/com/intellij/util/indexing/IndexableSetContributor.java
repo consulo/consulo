@@ -31,7 +31,7 @@ import java.util.Set;
  */
 public abstract class IndexableSetContributor {
 
-  public static final ExtensionPointName<IndexableSetContributor> EP_NAME = ExtensionPointName.create("consulo.base.indexedRootsContributor");
+  public static final ExtensionPointName<IndexableSetContributor> EP_NAME = ExtensionPointName.create("consulo.indexedRootsContributor");
   private static final Logger LOG = Logger.getInstance(IndexableSetContributor.class);
 
   @Nonnull

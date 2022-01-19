@@ -27,7 +27,7 @@ public interface DocumentationProvider {
   /**
    * Please use {@link com.intellij.lang.LanguageDocumentation} instead of this for language-specific documentation
    */
-  ExtensionPointName<DocumentationProvider> EP_NAME = ExtensionPointName.create("consulo.base.documentationProvider");
+  ExtensionPointName<DocumentationProvider> EP_NAME = ExtensionPointName.create("consulo.documentationProvider");
 
   /**
    * Returns the text to show in the Ctrl-hover popup for the specified element.

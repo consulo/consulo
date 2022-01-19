@@ -30,8 +30,8 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface HierarchyProvider {
-  ExtensionPointName<LanguageExtensionPoint> TYPE_EP_NAME = ExtensionPointName.create("consulo.base.typeHierarchyProvider");
-  ExtensionPointName<LanguageExtensionPoint> METHOD_EP_NAME = ExtensionPointName.create("consulo.base.methodHierarchyProvider");
+  ExtensionPointName<LanguageExtensionPoint> TYPE_EP_NAME = ExtensionPointName.create("consulo.typeHierarchyProvider");
+  ExtensionPointName<LanguageExtensionPoint> METHOD_EP_NAME = ExtensionPointName.create("consulo.methodHierarchyProvider");
 
   /**
    * Returns the element for which the hierarchy should be displayed.

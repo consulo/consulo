@@ -40,7 +40,7 @@
     <extensionPoint name="xdebugger.attachHostProvider" interface="com.intellij.xdebugger.attach.XAttachHostProvider" />
   </extensionPoints>
 
-  <extensions defaultExtensionNs="consulo.base">
+  <extensions defaultExtensionNs="consulo">
     <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
     <favoritesListProvider implementation="com.intellij.xdebugger.impl.breakpoints.BreakpointsFavoriteListProvider"/>
 

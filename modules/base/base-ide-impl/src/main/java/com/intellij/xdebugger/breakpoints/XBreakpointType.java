@@ -49,7 +49,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreakpointProperties> {
-  public static final ExtensionPointName<XBreakpointType> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.xdebugger.breakpointType");
+  public static final ExtensionPointName<XBreakpointType> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.xdebugger.breakpointType");
   @Nonnull
   private final String myId;
   @Nonnull

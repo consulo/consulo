@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @since 2020-06-14
  */
 public interface WebSocketAccepter {
-  ExtensionPointName<WebSocketAccepter> EP_NAME = ExtensionPointName.create("consulo.base.webSocketAccepter");
+  ExtensionPointName<WebSocketAccepter> EP_NAME = ExtensionPointName.create("consulo.webSocketAccepter");
 
   void accept(@Nonnull WebSocketConnection connection, @Nonnull byte[] array);
 

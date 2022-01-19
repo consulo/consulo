@@ -25,7 +25,7 @@ import jakarta.inject.Inject;
  * @author Dennis.Ushakov
  */
 public class GeneralCodeStyleOptionsProviderEP extends ApplicationConfigurableEP<GeneralCodeStyleOptionsProvider> {
-  public static final ExtensionPointName<GeneralCodeStyleOptionsProviderEP> EP_NAME = ExtensionPointName.create("consulo.base.generalCodeStyleOptionsProvider");
+  public static final ExtensionPointName<GeneralCodeStyleOptionsProviderEP> EP_NAME = ExtensionPointName.create("consulo.generalCodeStyleOptionsProvider");
 
   @Inject
   public GeneralCodeStyleOptionsProviderEP(Application application) {

@@ -131,7 +131,7 @@ public class CopyReferenceAction extends DumbAwareAction {
   }
 
   public interface VirtualFileQualifiedNameProvider {
-    ExtensionPointName<VirtualFileQualifiedNameProvider> EP_NAME = ExtensionPointName.create("consulo.base.virtualFileQualifiedNameProvider");
+    ExtensionPointName<VirtualFileQualifiedNameProvider> EP_NAME = ExtensionPointName.create("consulo.virtualFileQualifiedNameProvider");
 
     /**
      * @return {@code virtualFile} fqn (relative path for example) or null if not handled by this provider

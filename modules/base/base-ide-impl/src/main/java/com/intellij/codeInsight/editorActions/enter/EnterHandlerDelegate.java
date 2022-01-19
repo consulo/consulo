@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface EnterHandlerDelegate {
-  ExtensionPointName<EnterHandlerDelegate> EP_NAME = ExtensionPointName.create("consulo.base.enterHandlerDelegate");
+  ExtensionPointName<EnterHandlerDelegate> EP_NAME = ExtensionPointName.create("consulo.enterHandlerDelegate");
 
   enum Result {
     Default, Continue, DefaultForceIndent, DefaultSkipIndent, Stop

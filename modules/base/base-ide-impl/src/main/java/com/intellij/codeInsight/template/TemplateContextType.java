@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  * Contexts are available for the user in the Live Template management UI.
  */
 public abstract class TemplateContextType {
-  public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create("consulo.base.liveTemplateContext");
+  public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create("consulo.liveTemplateContext");
 
   @Nonnull
   private final String myContextId;

@@ -33,7 +33,7 @@ import java.util.*;
  * @see OrderEntry
  */
 public class OrderRootType {
-  private static final ExtensionPointName<OrderRootType> EP_NAME = ExtensionPointName.create("consulo.base.orderRootType");
+  private static final ExtensionPointName<OrderRootType> EP_NAME = ExtensionPointName.create("consulo.orderRootType");
 
   private static NotNullLazyValue<List<OrderRootType>> ourSortExtensions = NotNullLazyValue.createValue(() -> {
     List<OrderRootType> extensions = new ArrayList<>(EP_NAME.getExtensionList());

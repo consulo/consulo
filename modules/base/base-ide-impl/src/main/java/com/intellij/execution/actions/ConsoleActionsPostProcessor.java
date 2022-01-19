@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class ConsoleActionsPostProcessor {
 
-  public static final ExtensionPointName<ConsoleActionsPostProcessor> EP_NAME = ExtensionPointName.create("consulo.base.consoleActionsPostProcessor");
+  public static final ExtensionPointName<ConsoleActionsPostProcessor> EP_NAME = ExtensionPointName.create("consulo.consoleActionsPostProcessor");
 
   /**
    * Allows to adjust actions to use within the given console instance.

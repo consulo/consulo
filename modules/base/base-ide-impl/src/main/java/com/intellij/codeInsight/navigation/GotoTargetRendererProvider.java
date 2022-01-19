@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface GotoTargetRendererProvider {
-  ExtensionPointName<GotoTargetRendererProvider> EP_NAME = ExtensionPointName.create("consulo.base.gotoTargetRendererProvider");
+  ExtensionPointName<GotoTargetRendererProvider> EP_NAME = ExtensionPointName.create("consulo.gotoTargetRendererProvider");
 
   @Nullable
   PsiElementListCellRenderer getRenderer(PsiElement element, GotoTargetHandler.GotoData gotoData);

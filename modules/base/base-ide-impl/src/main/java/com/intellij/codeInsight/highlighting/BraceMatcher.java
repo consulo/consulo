@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface BraceMatcher {
-  ExtensionPointName<FileTypeExtensionPoint<BraceMatcher>> EP_NAME = ExtensionPointName.create("consulo.base.braceMatcher");
+  ExtensionPointName<FileTypeExtensionPoint<BraceMatcher>> EP_NAME = ExtensionPointName.create("consulo.braceMatcher");
 
   int getBraceTokenGroupId(IElementType tokenType);
   boolean isLBraceToken(HighlighterIterator iterator,CharSequence fileText, FileType fileType);

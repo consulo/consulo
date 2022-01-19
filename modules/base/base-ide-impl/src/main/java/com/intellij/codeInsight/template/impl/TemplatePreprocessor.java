@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile;
  * @author yole
  */
 public interface TemplatePreprocessor {
-  ExtensionPointName<TemplatePreprocessor> EP_NAME = ExtensionPointName.create("consulo.base.liveTemplatePreprocessor");
+  ExtensionPointName<TemplatePreprocessor> EP_NAME = ExtensionPointName.create("consulo.liveTemplatePreprocessor");
 
   void preprocessTemplate(final Editor editor, final PsiFile file, int caretOffset, final String textToInsert, final String templateText);
 }

@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author nik
  */
 public abstract class ArtifactPropertiesProvider {
-  public static final ExtensionPointName<ArtifactPropertiesProvider> EP_NAME = ExtensionPointName.create("consulo.base.packaging.artifactPropertiesProvider");
+  public static final ExtensionPointName<ArtifactPropertiesProvider> EP_NAME = ExtensionPointName.create("consulo.packaging.artifactPropertiesProvider");
   private final String myId;
 
   protected ArtifactPropertiesProvider(@Nonnull String id) {

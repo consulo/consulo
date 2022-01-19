@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @since 0:08/11.11.13
  */
 public interface PsiDirectoryMethodProxy {
-  ExtensionPointName<PsiDirectoryMethodProxy> EP_NAME = ExtensionPointName.create("consulo.base.psi.directoryMethodProxy");
+  ExtensionPointName<PsiDirectoryMethodProxy> EP_NAME = ExtensionPointName.create("consulo.psi.directoryMethodProxy");
 
   boolean checkAdd(@Nonnull PsiDirectory directory, @Nonnull PsiElement element) throws IncorrectOperationException;
 

@@ -62,7 +62,7 @@ import java.util.Map;
  */
 public class AnnotateToggleAction extends ToggleAction implements DumbAware {
   public static final ExtensionPointName<Provider> EP_NAME =
-          ExtensionPointName.create("consulo.base.openapi.vcs.actions.AnnotateToggleAction.Provider");
+          ExtensionPointName.create("consulo.openapi.vcs.actions.AnnotateToggleAction.Provider");
 
   @Override
   public void update(@Nonnull AnActionEvent e) {

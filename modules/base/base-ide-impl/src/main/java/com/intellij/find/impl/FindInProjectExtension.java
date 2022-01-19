@@ -18,14 +18,14 @@ package com.intellij.find.impl;
 import com.intellij.find.FindModel;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.application.Application;
-import consulo.component.extension.Extension;
+import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 
 /**
  * @author VISTALL
  * @since 12/12/2021
  */
-@Extension(name = "findInProjectExtension", component = Application.class)
+@ExtensionType(value = "findInProjectExtension", component = Application.class)
 public interface FindInProjectExtension {
   ExtensionList<FindInProjectExtension, Application> EP_NAME = ExtensionList.of(FindInProjectExtension.class);
 

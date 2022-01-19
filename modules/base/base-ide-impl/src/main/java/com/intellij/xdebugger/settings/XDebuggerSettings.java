@@ -36,7 +36,7 @@ import java.util.Collections;
  * @author nik
  */
 public abstract class XDebuggerSettings<T> implements PersistentStateComponent<T> {
-  public static final ExtensionPointName<XDebuggerSettings> EXTENSION_POINT = ExtensionPointName.create("consulo.base.xdebugger.settings");
+  public static final ExtensionPointName<XDebuggerSettings> EXTENSION_POINT = ExtensionPointName.create("consulo.xdebugger.settings");
 
   private final String myId;
 

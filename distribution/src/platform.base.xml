@@ -17,7 +17,7 @@
   <!--FIXME [VISTALL] if you update this file - update _mac file too-->
   <dependencySets>
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.base/lib</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo/lib</outputDirectory>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <unpack>false</unpack>
       <includes>

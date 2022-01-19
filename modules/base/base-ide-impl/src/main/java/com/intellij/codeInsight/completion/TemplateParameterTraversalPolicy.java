@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile;
  * @since 2/1/12
  */
 public interface TemplateParameterTraversalPolicy {
-  ExtensionPointName<TemplateParameterTraversalPolicy> EP_NAME = ExtensionPointName.create("consulo.base.templateParameterTraversalPolicy");
+  ExtensionPointName<TemplateParameterTraversalPolicy> EP_NAME = ExtensionPointName.create("consulo.templateParameterTraversalPolicy");
 
   boolean isValidForFile(Editor editor, PsiFile file);
   void invoke(Editor editor, PsiFile file, boolean next);

@@ -14,7 +14,7 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <extensions defaultExtensionNs="consulo.base">
+  <extensions defaultExtensionNs="consulo">
     <!--
     <tipAndTrick file="NotReadyYet.html"/>
     -->

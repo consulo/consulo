@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author nik
  */
 public abstract class LibraryDependencyScopeSuggester {
-  public static final ExtensionPointName<LibraryDependencyScopeSuggester> EP_NAME = ExtensionPointName.create("consulo.base.library.dependencyScopeSuggester");
+  public static final ExtensionPointName<LibraryDependencyScopeSuggester> EP_NAME = ExtensionPointName.create("consulo.library.dependencyScopeSuggester");
 
   @Nullable
   public abstract DependencyScope getDefaultDependencyScope(@Nonnull Library library);

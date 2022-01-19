@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import javax.swing.*;
 
 public interface UiDebuggerExtension {
-  ExtensionPointName<UiDebuggerExtension> EP_NAME = ExtensionPointName.create("consulo.base.uiDebuggerExtension");
+  ExtensionPointName<UiDebuggerExtension> EP_NAME = ExtensionPointName.create("consulo.uiDebuggerExtension");
 
   JComponent getComponent();
   String getName();

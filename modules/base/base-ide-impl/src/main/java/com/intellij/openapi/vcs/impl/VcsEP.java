@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 public class VcsEP extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<VcsEP> EP_NAME = ExtensionPointName.create("consulo.base.vcs");
+  public static final ExtensionPointName<VcsEP> EP_NAME = ExtensionPointName.create("consulo.vcs");
 
   // these must be public for scrambling compatibility
   @Attribute("name")

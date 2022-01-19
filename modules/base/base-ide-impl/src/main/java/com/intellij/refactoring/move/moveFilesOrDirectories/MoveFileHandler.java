@@ -35,7 +35,7 @@ import java.util.Map;
  *         Time: 3:40:48 PM
  */
 public abstract class MoveFileHandler {
-  private static final ExtensionPointName<MoveFileHandler> EP_NAME = ExtensionPointName.create("consulo.base.moveFileHandler");
+  private static final ExtensionPointName<MoveFileHandler> EP_NAME = ExtensionPointName.create("consulo.moveFileHandler");
 
   public abstract boolean canProcessElement(PsiFile element);
   public abstract void prepareMovedFile(PsiFile file, PsiDirectory moveDestination, Map<PsiElement, PsiElement> oldToNewMap);

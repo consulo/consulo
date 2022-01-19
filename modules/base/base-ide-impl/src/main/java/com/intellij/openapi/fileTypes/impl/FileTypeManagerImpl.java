@@ -84,7 +84,7 @@ import java.util.stream.StreamSupport;
 @Singleton
 @State(name = "FileTypeManager", storages = @Storage("filetypes.xml"), additionalExportFile = FileTypeManagerImpl.FILE_SPEC)
 public class FileTypeManagerImpl extends FileTypeManagerEx implements PersistentStateComponent<Element>, Disposable {
-  private static final ExtensionPointName<FileTypeBean> EP_NAME = ExtensionPointName.create("consulo.base.fileType");
+  private static final ExtensionPointName<FileTypeBean> EP_NAME = ExtensionPointName.create("consulo.fileType");
   private static final Logger LOG = Logger.getInstance(FileTypeManagerImpl.class);
 
   // You must update all existing default configurations accordingly

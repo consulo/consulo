@@ -28,7 +28,7 @@ import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nullable;
 
 public interface UsageTypeProvider {
-  ExtensionPointName<UsageTypeProvider> EP_NAME = ExtensionPointName.create("consulo.base.usageTypeProvider");
+  ExtensionPointName<UsageTypeProvider> EP_NAME = ExtensionPointName.create("consulo.usageTypeProvider");
 
   @Nullable
   UsageType getUsageType(PsiElement element);

@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public interface TestFinder {
-  ExtensionPointName<TestFinder> EP_NAME = ExtensionPointName.create("consulo.base.testFinder");
+  ExtensionPointName<TestFinder> EP_NAME = ExtensionPointName.create("consulo.testFinder");
 
   @javax.annotation.Nullable
   PsiElement findSourceElement(@Nonnull PsiElement from);

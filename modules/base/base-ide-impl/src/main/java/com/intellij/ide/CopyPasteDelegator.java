@@ -28,7 +28,7 @@ import java.io.File;
 import java.util.List;
 
 public class CopyPasteDelegator implements CopyPasteSupport {
-  private static final ExtensionPointName<PasteProvider> EP_NAME = ExtensionPointName.create("consulo.base.filePasteProvider");
+  private static final ExtensionPointName<PasteProvider> EP_NAME = ExtensionPointName.create("consulo.filePasteProvider");
   public static final Key<Boolean> SHOW_CHOOSER_KEY = Key.create("show.dirs.chooser");
 
   private final Project myProject;

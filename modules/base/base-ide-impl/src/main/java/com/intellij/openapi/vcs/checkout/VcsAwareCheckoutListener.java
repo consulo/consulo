@@ -28,6 +28,6 @@ import java.io.File;
  * Time: 1:48 PM
  */
 public interface VcsAwareCheckoutListener {
-  ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create("consulo.base.vcsAwareCheckoutListener");
+  ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create("consulo.vcsAwareCheckoutListener");
   boolean processCheckedOutDirectory(final Project project, final File directory, final VcsKey vcsKey);
 }

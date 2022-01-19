@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public abstract class ReadWriteAccessDetector {
-  public static final ExtensionPointName<ReadWriteAccessDetector> EP_NAME = ExtensionPointName.create("consulo.base.readWriteAccessDetector");
+  public static final ExtensionPointName<ReadWriteAccessDetector> EP_NAME = ExtensionPointName.create("consulo.readWriteAccessDetector");
 
   @Nullable
   public static ReadWriteAccessDetector findDetector(final PsiElement element) {

@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  * Allows to overwrite project level UTF-8 BOM option for a specific virtual file.
  */
 public interface Utf8BomOptionProvider {
-  ExtensionPointName<Utf8BomOptionProvider> EP_NAME = ExtensionPointName.create("consulo.base.utf8BomOptionProvider");
+  ExtensionPointName<Utf8BomOptionProvider> EP_NAME = ExtensionPointName.create("consulo.utf8BomOptionProvider");
 
   /**
    * @param file The file to check.

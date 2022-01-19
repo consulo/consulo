@@ -46,7 +46,7 @@ import java.util.Map;
  * @author yole
  */
 public abstract class RenamePsiElementProcessor {
-  protected static final ExtensionPointName<RenamePsiElementProcessor> EP_NAME = ExtensionPointName.create("consulo.base.renamePsiElementProcessor");
+  protected static final ExtensionPointName<RenamePsiElementProcessor> EP_NAME = ExtensionPointName.create("consulo.renamePsiElementProcessor");
 
   public abstract boolean canProcessElement(@Nonnull PsiElement element);
 

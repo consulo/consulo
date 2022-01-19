@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public abstract class UsageToPsiElementProvider {
-  public static final ExtensionPointName<UsageToPsiElementProvider> EP_NAME = ExtensionPointName.create("consulo.base.usageToPsiElementProvider");
+  public static final ExtensionPointName<UsageToPsiElementProvider> EP_NAME = ExtensionPointName.create("consulo.usageToPsiElementProvider");
 
   @Nullable
   public abstract PsiElement getAppropriateParentFrom(PsiElement element);

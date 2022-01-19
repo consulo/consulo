@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CollectHighlightsUtil {
-  public static final ExtensionPointName<Condition<PsiElement>> EP_NAME = ExtensionPointName.create("consulo.base.elementsToHighlightFilter");
+  public static final ExtensionPointName<Condition<PsiElement>> EP_NAME = ExtensionPointName.create("consulo.elementsToHighlightFilter");
 
   private static final Logger LOG = Logger.getInstance(CollectHighlightsUtil.class);
 

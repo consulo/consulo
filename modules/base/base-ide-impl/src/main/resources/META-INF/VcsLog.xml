@@ -19,7 +19,7 @@
     <extensionPoint name="logHighlighterFactory" interface="com.intellij.vcs.log.ui.VcsLogHighlighterFactory" area="PROJECT"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="consulo.base">
+  <extensions defaultExtensionNs="consulo">
     <changesViewContent tabName="Log" className="com.intellij.vcs.log.impl.VcsLogContentProvider"
                         predicateClassName="com.intellij.vcs.log.impl.VcsLogContentProvider$VcsLogVisibilityPredicate"/>
 

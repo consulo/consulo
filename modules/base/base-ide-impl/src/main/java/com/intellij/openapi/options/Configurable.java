@@ -57,9 +57,9 @@ public interface Configurable extends UnnamedConfigurable {
 
   ArrayFactory<Configurable> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Configurable[count];
 
-  ExtensionPointName<ApplicationConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("consulo.base.applicationConfigurable");
+  ExtensionPointName<ApplicationConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("consulo.applicationConfigurable");
 
-  ExtensionPointName<ProjectConfigurableEP<Configurable>> PROJECT_CONFIGURABLE = ExtensionPointName.create("consulo.base.projectConfigurable");
+  ExtensionPointName<ProjectConfigurableEP<Configurable>> PROJECT_CONFIGURABLE = ExtensionPointName.create("consulo.projectConfigurable");
 
   /**
    * can be used inside {@link #getHelpTopic()} for disable help

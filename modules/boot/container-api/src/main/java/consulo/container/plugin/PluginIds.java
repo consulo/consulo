@@ -24,7 +24,7 @@ import java.util.Set;
  * @since 2019-07-16
  */
 public final class PluginIds {
-  public static final PluginId CONSULO_BASE = PluginId.getId("consulo.base");
+  public static final PluginId CONSULO_BASE = PluginId.getId("consulo");
 
   public static final PluginId CONSULO_DESKTOP_AWT = PluginId.getId("consulo.desktop.awt");
 

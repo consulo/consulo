@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  */
 public abstract class EquivalenceDescriptorProvider {
   public static final ExtensionPointName<EquivalenceDescriptorProvider> EP_NAME =
-    ExtensionPointName.create("consulo.base.equivalenceDescriptorProvider");
+    ExtensionPointName.create("consulo.equivalenceDescriptorProvider");
 
   // for using in tests only !!!
   public static boolean ourUseDefaultEquivalence = false;

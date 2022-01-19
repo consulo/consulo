@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 public abstract class CustomPortServerManager {
-  public static final ExtensionPointName<CustomPortServerManager> EP_NAME = ExtensionPointName.create("consulo.base.customPortServerManager");
+  public static final ExtensionPointName<CustomPortServerManager> EP_NAME = ExtensionPointName.create("consulo.customPortServerManager");
 
   public abstract void cannotBind(Exception e, int port);
 

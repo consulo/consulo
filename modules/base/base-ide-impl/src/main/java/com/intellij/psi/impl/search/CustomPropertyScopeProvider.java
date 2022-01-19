@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.SearchScope;
 
 public interface CustomPropertyScopeProvider {
-  ExtensionPointName<CustomPropertyScopeProvider> EP_NAME = ExtensionPointName.create("consulo.base.customPropertyScopeProvider");
+  ExtensionPointName<CustomPropertyScopeProvider> EP_NAME = ExtensionPointName.create("consulo.customPropertyScopeProvider");
 
   SearchScope getScope(final Project project);
 }

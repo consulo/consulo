@@ -34,7 +34,7 @@ import com.intellij.openapi.vcs.changes.CommitContext;
  * @since 5.1
  */
 public abstract class CheckinHandlerFactory implements BaseCheckinHandlerFactory {
-  public static final ExtensionPointName<CheckinHandlerFactory> EP_NAME = ExtensionPointName.create("consulo.base.checkinHandlerFactory");
+  public static final ExtensionPointName<CheckinHandlerFactory> EP_NAME = ExtensionPointName.create("consulo.checkinHandlerFactory");
   
   /**
    * Creates a handler for a single Checkin Project or Checkin File operation.

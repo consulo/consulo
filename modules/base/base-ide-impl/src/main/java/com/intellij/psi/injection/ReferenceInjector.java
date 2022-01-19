@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class ReferenceInjector extends Injectable {
 
-  public final static ExtensionPointName<ReferenceInjector> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.referenceInjector");
+  public final static ExtensionPointName<ReferenceInjector> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.referenceInjector");
 
   @Override
   public final Language getLanguage() {

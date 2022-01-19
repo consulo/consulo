@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  */
 public abstract class FileIncludeProvider {
 
-  public static final ExtensionPointName<FileIncludeProvider> EP_NAME = ExtensionPointName.create("consulo.base.include.provider");
+  public static final ExtensionPointName<FileIncludeProvider> EP_NAME = ExtensionPointName.create("consulo.include.provider");
 
   @Nonnull
   public abstract String getId();

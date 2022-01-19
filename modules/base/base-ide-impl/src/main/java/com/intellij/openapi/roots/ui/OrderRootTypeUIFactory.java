@@ -32,7 +32,7 @@ import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 
 public interface OrderRootTypeUIFactory {
-  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.base.orderRootTypeEditor");
+  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.orderRootTypeEditor");
 
   KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType> FACTORY = new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, EP_NAME, Application.get()) {
     @Override

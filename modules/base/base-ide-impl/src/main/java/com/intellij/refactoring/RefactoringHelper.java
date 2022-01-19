@@ -24,7 +24,7 @@ import com.intellij.usageView.UsageInfo;
  * @author yole
  */
 public interface RefactoringHelper<T> {
-  ExtensionPointName<RefactoringHelper> EP_NAME = ExtensionPointName.create("consulo.base.refactoring.helper");
+  ExtensionPointName<RefactoringHelper> EP_NAME = ExtensionPointName.create("consulo.refactoring.helper");
 
   T prepareOperation(UsageInfo[] usages);
   void performOperation(final Project project, T operationData);

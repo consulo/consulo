@@ -48,7 +48,7 @@
               topic="com.intellij.openapi.project.ProjectManagerListener"/>
   </applicationListeners>
 
-  <extensions defaultExtensionNs="consulo.base">
+  <extensions defaultExtensionNs="consulo">
     <applicationService serviceInterface="consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor"
                         serviceImplementation="com.intellij.vfs.AsyncVfsEventsPostProcessorImpl"/>
     <vcsStartupActivity implementation="com.intellij.openapi.vcs.roots.VcsRootScanner$DetectRootsStartupActivity"/>

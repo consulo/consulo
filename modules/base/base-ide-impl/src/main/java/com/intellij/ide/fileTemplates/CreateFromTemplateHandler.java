@@ -30,7 +30,7 @@ import java.util.Map;
  * @author yole
  */
 public interface CreateFromTemplateHandler {
-  ExtensionPointName<CreateFromTemplateHandler> EP_NAME = ExtensionPointName.create("consulo.base.createFromTemplateHandler");
+  ExtensionPointName<CreateFromTemplateHandler> EP_NAME = ExtensionPointName.create("consulo.createFromTemplateHandler");
 
   boolean handlesTemplate(FileTemplate template);
 

@@ -30,7 +30,7 @@ import java.util.List;
  */
 public abstract class WritingAccessProvider {
 
-  private static final ExtensionPointName<WritingAccessProvider> EP_NAME = ExtensionPointName.create("consulo.base.writingAccessProvider");
+  private static final ExtensionPointName<WritingAccessProvider> EP_NAME = ExtensionPointName.create("consulo.writingAccessProvider");
 
   /**
    * @param files files to be checked

@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.FilePath;
 import javax.annotation.Nonnull;
 
 public interface IgnoredFileProvider {
-  ExtensionPointName<IgnoredFileProvider> IGNORE_FILE = ExtensionPointName.create("consulo.base.vcs.ignoredFileProvider");
+  ExtensionPointName<IgnoredFileProvider> IGNORE_FILE = ExtensionPointName.create("consulo.vcs.ignoredFileProvider");
 
   boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath);
 }

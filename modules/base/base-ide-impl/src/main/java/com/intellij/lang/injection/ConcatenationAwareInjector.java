@@ -28,7 +28,7 @@ import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public interface ConcatenationAwareInjector {
-  ExtensionPointName<ConcatenationAwareInjector> EP_NAME = ExtensionPointName.create("consulo.base.concatenationAwareInjector");
+  ExtensionPointName<ConcatenationAwareInjector> EP_NAME = ExtensionPointName.create("consulo.concatenationAwareInjector");
 
   void inject(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement... operands);
 }

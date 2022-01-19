@@ -61,7 +61,7 @@ public interface SearchEverywhereClassifier {
     }
   }
 
-  ExtensionPointName<SearchEverywhereClassifier> EP_NAME = ExtensionPointName.create("consulo.base.searchEverywhereClassifier");
+  ExtensionPointName<SearchEverywhereClassifier> EP_NAME = ExtensionPointName.create("consulo.searchEverywhereClassifier");
 
   boolean isClass(@Nullable Object o);
 

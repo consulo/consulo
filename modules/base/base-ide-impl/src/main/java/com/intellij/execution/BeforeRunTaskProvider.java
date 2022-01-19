@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
-  public static final ExtensionPointName<BeforeRunTaskProvider<BeforeRunTask>> EP_NAME = ExtensionPointName.create("consulo.base.stepsBeforeRunProvider");
+  public static final ExtensionPointName<BeforeRunTaskProvider<BeforeRunTask>> EP_NAME = ExtensionPointName.create("consulo.stepsBeforeRunProvider");
 
   @Nonnull
   public abstract Key<T> getId();

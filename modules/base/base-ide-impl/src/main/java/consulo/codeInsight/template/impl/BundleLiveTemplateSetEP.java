@@ -24,7 +24,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
  * @since 16.06.14
  */
 public class BundleLiveTemplateSetEP extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<BundleLiveTemplateSetEP> EP_NAME = ExtensionPointName.create("consulo.base.bundleLiveTemplateSet");
+  public static final ExtensionPointName<BundleLiveTemplateSetEP> EP_NAME = ExtensionPointName.create("consulo.bundleLiveTemplateSet");
 
   @Attribute("path")
   public String path;

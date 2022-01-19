@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @since 21.08.14
  */
 public interface OrderEntryType<T extends OrderEntry> {
-  ExtensionPointName<OrderEntryType> EP_NAME = ExtensionPointName.create("consulo.base.orderEntryType");
+  ExtensionPointName<OrderEntryType> EP_NAME = ExtensionPointName.create("consulo.orderEntryType");
 
   @Nonnull
   String getId();

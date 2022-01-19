@@ -33,7 +33,7 @@ import java.util.List;
  */
 public abstract class GotoRelatedProvider {
 
-  public static final ExtensionPointName<GotoRelatedProvider> EP_NAME = ExtensionPointName.create("consulo.base.gotoRelatedProvider");
+  public static final ExtensionPointName<GotoRelatedProvider> EP_NAME = ExtensionPointName.create("consulo.gotoRelatedProvider");
 
   @Nonnull
   public List<? extends GotoRelatedItem> getItems(@Nonnull PsiElement psiElement) {

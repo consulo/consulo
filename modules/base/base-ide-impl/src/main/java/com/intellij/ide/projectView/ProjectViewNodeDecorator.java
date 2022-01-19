@@ -24,7 +24,7 @@ import com.intellij.ui.ColoredTreeCellRenderer;
  * @author yole
  */
 public interface ProjectViewNodeDecorator {
-  ExtensionPointName<ProjectViewNodeDecorator> EP_NAME = ExtensionPointName.create("consulo.base.projectViewNodeDecorator");
+  ExtensionPointName<ProjectViewNodeDecorator> EP_NAME = ExtensionPointName.create("consulo.projectViewNodeDecorator");
 
   void decorate(ProjectViewNode node, PresentationData data);
 

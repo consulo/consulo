@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @author spleaner
  */
 public abstract class HighlightErrorFilter {
-  public static final ExtensionPointName<HighlightErrorFilter> EP_NAME = ExtensionPointName.create("consulo.base.highlightErrorFilter");
+  public static final ExtensionPointName<HighlightErrorFilter> EP_NAME = ExtensionPointName.create("consulo.highlightErrorFilter");
 
   public abstract boolean shouldHighlightErrorElement(@Nonnull final PsiErrorElement element);
 }

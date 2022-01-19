@@ -31,7 +31,7 @@ import java.util.List;
  * @author Rustam Vishnyakov
  */
 public class SchemeImporterEP <S extends Named> extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<SchemeImporterEP> EP_NAME = ExtensionPointName.create("consulo.base.schemeImporter");
+  public static final ExtensionPointName<SchemeImporterEP> EP_NAME = ExtensionPointName.create("consulo.schemeImporter");
 
   @Attribute("name")
   public String name;

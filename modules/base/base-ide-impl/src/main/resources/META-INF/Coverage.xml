@@ -20,7 +20,7 @@
     <extensionPoint name="coverageOptions" interface="com.intellij.coverage.CoverageOptions" area="PROJECT"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="consulo.base">
+  <extensions defaultExtensionNs="consulo">
     <testActionProvider implementation="com.intellij.coverage.actions.TrackCoverageActionProvider"/>
     <projectViewNodeDecorator implementation="com.intellij.coverage.CoverageProjectViewDirectoryNodeDecorator"/>
     <projectConfigurable parentId="execution"

@@ -12,7 +12,7 @@ import java.util.List;
  * @author peter
  */
 public abstract class ConsoleFolding {
-  public static final ExtensionPointName<ConsoleFolding> EP_NAME = ExtensionPointName.create("consulo.base.console.folding");
+  public static final ExtensionPointName<ConsoleFolding> EP_NAME = ExtensionPointName.create("consulo.console.folding");
 
   /**
    * @param project current project

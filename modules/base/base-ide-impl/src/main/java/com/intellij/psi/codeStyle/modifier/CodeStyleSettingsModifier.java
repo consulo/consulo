@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  * point.
  */
 public interface CodeStyleSettingsModifier {
-  ExtensionPointName<CodeStyleSettingsModifier> EP_NAME = ExtensionPointName.create("consulo.base.codeStyleSettingsModifier");
+  ExtensionPointName<CodeStyleSettingsModifier> EP_NAME = ExtensionPointName.create("consulo.codeStyleSettingsModifier");
 
   /**
    * Modifies given settings. The modifier may add dependencies to the transient code style settings to update them if the dependencies

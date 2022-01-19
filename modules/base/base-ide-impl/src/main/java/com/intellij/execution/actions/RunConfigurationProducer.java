@@ -39,7 +39,7 @@ import java.util.List;
  * @author yole
  */
 public abstract class RunConfigurationProducer<T extends RunConfiguration> {
-  public static final ExtensionPointName<RunConfigurationProducer> EP_NAME = ExtensionPointName.create("consulo.base.runConfigurationProducer");
+  public static final ExtensionPointName<RunConfigurationProducer> EP_NAME = ExtensionPointName.create("consulo.runConfigurationProducer");
   private static final Logger LOG = Logger.getInstance(RunConfigurationProducer.class);
 
   @Nonnull

@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author ignatov
  */
 public abstract class ActionFromOptionDescriptorProvider {
-  public static final ExtensionPointName<ActionFromOptionDescriptorProvider> EP = ExtensionPointName.create("consulo.base.actionFromOptionDescriptorProvider");
+  public static final ExtensionPointName<ActionFromOptionDescriptorProvider> EP = ExtensionPointName.create("consulo.actionFromOptionDescriptorProvider");
 
   @Nullable
   public abstract AnAction provide(@Nonnull OptionDescription description);

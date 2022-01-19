@@ -38,7 +38,7 @@ import java.util.List;
  * @author nik
  */
 public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponentDescriptor {
-  public static final ExtensionPointName<RootDetector> EP_NAME = ExtensionPointName.create("consulo.base.defaultLibraryRootDetector");
+  public static final ExtensionPointName<RootDetector> EP_NAME = ExtensionPointName.create("consulo.defaultLibraryRootDetector");
 
   @Override
   public OrderRootTypePresentation getRootTypePresentation(@Nonnull OrderRootType type) {

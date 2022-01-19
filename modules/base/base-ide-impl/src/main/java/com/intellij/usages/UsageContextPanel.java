@@ -40,7 +40,7 @@ public interface UsageContextPanel extends Disposable {
   JComponent createComponent();
 
   interface Provider {
-    ExtensionPointName<Provider> EP_NAME = ExtensionPointName.create("consulo.base.usageContextPanelProvider");
+    ExtensionPointName<Provider> EP_NAME = ExtensionPointName.create("consulo.usageContextPanelProvider");
 
     @Nonnull
     UsageContextPanel create(@Nonnull UsageView usageView);

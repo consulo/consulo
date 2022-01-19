@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 
 public abstract class CoverageRunner {
-  public static final ExtensionPointName<CoverageRunner> EP_NAME = ExtensionPointName.create("consulo.base.coverageRunner");
+  public static final ExtensionPointName<CoverageRunner> EP_NAME = ExtensionPointName.create("consulo.coverageRunner");
 
   public abstract ProjectData loadCoverageData(@Nonnull final File sessionDataFile, @Nullable final CoverageSuite baseCoverageSuite);
 

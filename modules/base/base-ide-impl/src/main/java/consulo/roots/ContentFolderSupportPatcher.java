@@ -26,7 +26,7 @@ import java.util.Set;
  * @since 31.03.14
  */
 public interface ContentFolderSupportPatcher {
-  ExtensionPointName<ContentFolderSupportPatcher> EP_NAME = ExtensionPointName.create("consulo.base.contentFolderSupportPatcher");
+  ExtensionPointName<ContentFolderSupportPatcher> EP_NAME = ExtensionPointName.create("consulo.contentFolderSupportPatcher");
 
   void patch(@Nonnull ModifiableRootModel model, @Nonnull Set<ContentFolderTypeProvider> set);
 }

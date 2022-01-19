@@ -27,7 +27,7 @@ import java.util.function.Consumer;
  * @since 2020-04-25
  */
 public interface ErrorPropertiesProvider {
-  ExtensionPointName<ErrorPropertiesProvider> EP_NAME = ExtensionPointName.create("consulo.base.errorPropertiesProvider");
+  ExtensionPointName<ErrorPropertiesProvider> EP_NAME = ExtensionPointName.create("consulo.errorPropertiesProvider");
 
   void fillProperties(@Nonnull Consumer<Component> componentConsumer, @Nonnull SimpleConfigurableByProperties.PropertyBuilder builder);
 }

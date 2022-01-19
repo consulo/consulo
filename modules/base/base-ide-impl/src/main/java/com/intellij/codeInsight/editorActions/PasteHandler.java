@@ -60,7 +60,7 @@ import java.util.*;
 
 public class PasteHandler extends EditorActionHandler implements EditorTextInsertHandler {
   private static final Logger LOG = Logger.getInstance(PasteHandler.class);
-  private static final ExtensionPointName<PasteProvider> EP_NAME = ExtensionPointName.create("consulo.base.customPasteProvider");
+  private static final ExtensionPointName<PasteProvider> EP_NAME = ExtensionPointName.create("consulo.customPasteProvider");
 
   private final EditorActionHandler myOriginalHandler;
 

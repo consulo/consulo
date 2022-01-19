@@ -23,7 +23,7 @@ import consulo.component.extension.ExtensionPointName;
  * @author peter
  */
 public abstract class SemContributor {
-  public static final ExtensionPointName<SemContributorEP> EP_NAME = ExtensionPointName.create("consulo.base.semContributor");
+  public static final ExtensionPointName<SemContributorEP> EP_NAME = ExtensionPointName.create("consulo.semContributor");
 
   public abstract void registerSemProviders(SemRegistrar registrar);
 

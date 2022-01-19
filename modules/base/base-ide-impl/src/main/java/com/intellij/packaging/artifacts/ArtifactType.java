@@ -43,7 +43,7 @@ public abstract class ArtifactType {
   }
 
 
-  public static final ExtensionPointName<ArtifactType> EP_NAME = ExtensionPointName.create("consulo.base.packaging.artifactType");
+  public static final ExtensionPointName<ArtifactType> EP_NAME = ExtensionPointName.create("consulo.packaging.artifactType");
   private final String myId;
   private final String myTitle;
 

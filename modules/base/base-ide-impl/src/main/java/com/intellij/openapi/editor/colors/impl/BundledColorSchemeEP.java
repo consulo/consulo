@@ -18,13 +18,13 @@ package com.intellij.openapi.editor.colors.impl;
 import consulo.application.Application;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.util.xmlb.annotations.Attribute;
-import consulo.component.extension.Extension;
+import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 
 /**
  * @author yole
  */
-@Extension(name = "bundledColorScheme", component = Application.class)
+@ExtensionType(value = "bundledColorScheme", component = Application.class)
 public class BundledColorSchemeEP extends AbstractExtensionPointBean {
   public static final ExtensionList<BundledColorSchemeEP, Application> EP = ExtensionList.of(BundledColorSchemeEP.class);
 

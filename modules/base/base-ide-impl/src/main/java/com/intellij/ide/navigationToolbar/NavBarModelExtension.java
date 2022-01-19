@@ -41,7 +41,7 @@ import java.util.Collection;
  * @author anna
  */
 public interface NavBarModelExtension {
-  ExtensionPointName<NavBarModelExtension> EP_NAME = ExtensionPointName.create("consulo.base.navbar");
+  ExtensionPointName<NavBarModelExtension> EP_NAME = ExtensionPointName.create("consulo.navbar");
 
   @Nullable
   String getPresentableText(Object object);

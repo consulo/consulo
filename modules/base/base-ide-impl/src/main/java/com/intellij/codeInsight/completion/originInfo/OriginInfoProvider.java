@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * @author Max Medvedev
  */
 public abstract class OriginInfoProvider {
-  private static final ExtensionPointName<OriginInfoProvider> EP_NAME = ExtensionPointName.create("consulo.base.originInfoProvider");
+  private static final ExtensionPointName<OriginInfoProvider> EP_NAME = ExtensionPointName.create("consulo.originInfoProvider");
 
   @Nullable
   public static String getOriginInfo(@Nullable PsiElement element) {

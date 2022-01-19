@@ -41,7 +41,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class LibraryType<P extends LibraryProperties> extends LibraryPresentationProvider<P> {
-  public static final ExtensionPointName<LibraryType<?>> EP_NAME = ExtensionPointName.create("consulo.base.library.type");
+  public static final ExtensionPointName<LibraryType<?>> EP_NAME = ExtensionPointName.create("consulo.library.type");
 
   @Nonnull
   public static OrderRootType[] getDefaultExternalRootTypes() {

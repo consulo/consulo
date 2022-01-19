@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @since 08.05.14
  */
 public interface CompilerSorter {
-  public static final ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create("consulo.base.compiler.sorter");
+  public static final ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create("consulo.compiler.sorter");
 
   void sort(Chunk<Module> moduleChunk, @Nonnull Compiler[] compilers, Class<? extends Compiler> clazz);
 }

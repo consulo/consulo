@@ -19,7 +19,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.component.extension.ExtensionPointName;
 
 public interface FileTypeRegistrator {
-  ExtensionPointName<FileTypeRegistrator> EP_NAME = ExtensionPointName.create("consulo.base.fileTypeRegistrator");
+  ExtensionPointName<FileTypeRegistrator> EP_NAME = ExtensionPointName.create("consulo.fileTypeRegistrator");
 
   void initFileType(FileType fileType);
 }

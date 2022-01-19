@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
  * @see GenericProgramRunner
  */
 public interface ProgramRunner<Settings extends RunnerSettings> {
-  ExtensionPointName<ProgramRunner> PROGRAM_RUNNER_EP = ExtensionPointName.create("consulo.base.programRunner");
+  ExtensionPointName<ProgramRunner> PROGRAM_RUNNER_EP = ExtensionPointName.create("consulo.programRunner");
 
   interface Callback {
     void processStarted(RunContentDescriptor descriptor);

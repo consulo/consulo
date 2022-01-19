@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 
 public abstract class Macro {
-  public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create("consulo.base.macro");
+  public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create("consulo.macro");
 
   public static final class ExecutionCancelledException extends Exception {
   }

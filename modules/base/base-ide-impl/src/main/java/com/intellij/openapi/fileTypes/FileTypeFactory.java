@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * @author peter
  */
 public abstract class FileTypeFactory {
-  public static final ExtensionPointName<FileTypeFactory> FILE_TYPE_FACTORY_EP = ExtensionPointName.create("consulo.base.fileTypeFactory");
+  public static final ExtensionPointName<FileTypeFactory> FILE_TYPE_FACTORY_EP = ExtensionPointName.create("consulo.fileTypeFactory");
 
   public abstract void createFileTypes(@Nonnull FileTypeConsumer consumer);
 

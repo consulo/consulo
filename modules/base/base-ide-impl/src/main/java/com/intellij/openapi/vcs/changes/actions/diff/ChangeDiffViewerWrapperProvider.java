@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 
 public interface ChangeDiffViewerWrapperProvider {
   ExtensionPointName<ChangeDiffViewerWrapperProvider> EP_NAME =
-          ExtensionPointName.create("consulo.base.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider");
+          ExtensionPointName.create("consulo.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider");
 
   @Nonnull
   ThreeState isEquals(@Nonnull Change change1, @Nonnull Change change2);

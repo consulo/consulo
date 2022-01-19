@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface SEResultsEqualityProvider {
 
-  ExtensionPointName<SEResultsEqualityProvider> EP_NAME = ExtensionPointName.create("consulo.base.searchEverywhereResultsEqualityProvider");
+  ExtensionPointName<SEResultsEqualityProvider> EP_NAME = ExtensionPointName.create("consulo.searchEverywhereResultsEqualityProvider");
 
   enum SEEqualElementsActionType {
     DO_NOTHING,

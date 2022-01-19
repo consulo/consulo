@@ -28,7 +28,7 @@ import java.util.List;
  * @since 2019-11-03
  */
 public class UIDecorators {
-  private static final ExtensionPointName<UIDecorator> EP_NAME = ExtensionPointName.create("consulo.base.uiDecorator");
+  private static final ExtensionPointName<UIDecorator> EP_NAME = ExtensionPointName.create("consulo.uiDecorator");
 
   @Nonnull
   public static List<UIDecorator> getDecorators() {

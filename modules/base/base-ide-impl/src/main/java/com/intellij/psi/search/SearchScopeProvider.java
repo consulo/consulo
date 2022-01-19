@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public interface SearchScopeProvider {
-  ExtensionPointName<SearchScopeProvider> EP_NAME = ExtensionPointName.create("consulo.base.searchScopesProvider");
+  ExtensionPointName<SearchScopeProvider> EP_NAME = ExtensionPointName.create("consulo.searchScopesProvider");
 
   @Nullable
   default String getDisplayName() {

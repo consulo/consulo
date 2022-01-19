@@ -14,7 +14,7 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <id>consulo.base</id>
+  <id>consulo</id>
   <name>Consulo</name>
   <localize>consulo.platform.base.ActionLocalize</localize>
 
@@ -1206,7 +1206,7 @@
     <extensionPoint name="settingsEntryPointActionProvider" interface="com.intellij.ide.actions.SettingsEntryPointActionProvider"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="consulo.base">
+  <extensions defaultExtensionNs="consulo">
     <applicationService serviceInterface="consulo.project.ProjectOpenProcessors"
                         serviceImplementation="consulo.project.ProjectOpenProcessorsImpl"/>
 

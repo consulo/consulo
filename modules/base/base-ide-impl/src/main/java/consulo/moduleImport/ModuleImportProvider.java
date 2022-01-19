@@ -36,7 +36,7 @@ import java.util.function.Consumer;
  * @since 30-Jan-17
  */
 public interface ModuleImportProvider<C extends ModuleImportContext> {
-  ExtensionPointName<ModuleImportProvider<?>> EP_NAME = ExtensionPointName.create("consulo.base.moduleImportProvider");
+  ExtensionPointName<ModuleImportProvider<?>> EP_NAME = ExtensionPointName.create("consulo.moduleImportProvider");
 
   @SuppressWarnings("unchecked")
   @Nonnull

@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
  */
 public interface ChangesViewRefresher {
 
-  ExtensionPointName<ChangesViewRefresher> EP_NAME = ExtensionPointName.create("consulo.base.vcsChangesViewRefresher");
+  ExtensionPointName<ChangesViewRefresher> EP_NAME = ExtensionPointName.create("consulo.vcsChangesViewRefresher");
 
   void refresh(Project project);
 }

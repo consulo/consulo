@@ -47,7 +47,7 @@ import java.util.List;
  * @author yole
  */
 public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedConfigurable> implements Configurable {
-  private static final ExtensionPointName<EditorAppearanceConfigurableEP> EP_NAME = ExtensionPointName.create("consulo.base.editorAppearanceConfigurable");
+  private static final ExtensionPointName<EditorAppearanceConfigurableEP> EP_NAME = ExtensionPointName.create("consulo.editorAppearanceConfigurable");
   private JPanel myRootPanel;
   private JCheckBox myCbBlinkCaret;
   private JCheckBox myCbBlockCursor;

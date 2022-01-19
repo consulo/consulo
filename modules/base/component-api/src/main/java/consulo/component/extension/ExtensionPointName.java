@@ -37,7 +37,7 @@ import java.util.function.Predicate;
  * <p>
  */
 @Deprecated
-@DeprecationInfo("Prefer StrictExtensionPointName")
+@DeprecationInfo("Prefer ExtensionList")
 public class ExtensionPointName<T> {
   private static final Logger LOG = Logger.getInstance(ExtensionPointName.class);
 

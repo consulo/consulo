@@ -41,7 +41,7 @@ import java.util.List;
  */
 @Deprecated
 public abstract class DebuggerSupport {
-  private static final ExtensionPointName<DebuggerSupport> EXTENSION_POINT = ExtensionPointName.create("consulo.base.xdebugger.debuggerSupport");
+  private static final ExtensionPointName<DebuggerSupport> EXTENSION_POINT = ExtensionPointName.create("consulo.xdebugger.debuggerSupport");
 
   protected static final class DisabledActionHandler extends DebuggerActionHandler {
     public static final DisabledActionHandler INSTANCE = new DisabledActionHandler();

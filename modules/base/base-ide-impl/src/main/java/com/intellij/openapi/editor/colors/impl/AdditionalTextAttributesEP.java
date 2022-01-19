@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.colors.impl;
 import consulo.application.Application;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.util.xmlb.annotations.Attribute;
-import consulo.component.extension.Extension;
+import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 
 /**
@@ -28,7 +28,7 @@ import consulo.component.extension.ExtensionList;
  * @author VISTALL
  * @since 12.1
  */
-@Extension(name = "additionalTextAttributes", component = Application.class)
+@ExtensionType(value = "additionalTextAttributes", component = Application.class)
 public class AdditionalTextAttributesEP extends AbstractExtensionPointBean {
   public static final ExtensionList<AdditionalTextAttributesEP, Application> EP = ExtensionList.of(AdditionalTextAttributesEP.class);
 

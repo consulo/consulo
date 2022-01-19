@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * @author Roman.Chernyatchik
  */
 public interface BundledQuickListsProvider {
-    ExtensionPointName<BundledQuickListsProvider> EP_NAME = ExtensionPointName.create("consulo.base.bundledQuickListsProvider");
+    ExtensionPointName<BundledQuickListsProvider> EP_NAME = ExtensionPointName.create("consulo.bundledQuickListsProvider");
 
   /**
    * Provides custom bundled actions quick lists.

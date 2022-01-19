@@ -24,7 +24,7 @@
     <extensionPoint name="diff.DiffExtension" interface="com.intellij.diff.DiffExtension"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="consulo.base">
+  <extensions defaultExtensionNs="consulo">
     <applicationService serviceInterface="com.intellij.diff.impl.DiffSettingsHolder"
                         serviceImplementation="com.intellij.diff.impl.DiffSettingsHolder"/>
     <applicationService serviceInterface="com.intellij.diff.tools.util.base.TextDiffSettingsHolder"
