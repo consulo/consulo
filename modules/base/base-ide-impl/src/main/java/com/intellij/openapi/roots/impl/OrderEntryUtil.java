@@ -19,12 +19,16 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
+import consulo.content.OrderRootType;
+import consulo.module.Module;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.Comparing;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.ModifiableRootModel;
+import consulo.module.layer.ModuleRootModel;
+import consulo.module.layer.orderEntry.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;

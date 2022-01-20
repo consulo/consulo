@@ -16,11 +16,16 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.ProjectTopics;
-import com.intellij.openapi.module.Module;
+import consulo.module.ProjectTopics;
+import consulo.module.Module;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ModifiableRootModel;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.Comparing;
@@ -33,9 +38,9 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.roots.ModifiableModuleRootLayer;
-import consulo.roots.ModuleRootLayer;
-import consulo.roots.ModuleRootLayerListener;
+import consulo.module.layer.ModifiableModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
+import consulo.module.layer.event.ModuleRootLayerListener;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 

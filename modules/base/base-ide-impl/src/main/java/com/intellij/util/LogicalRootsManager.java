@@ -18,7 +18,7 @@ package com.intellij.util;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.Topic;

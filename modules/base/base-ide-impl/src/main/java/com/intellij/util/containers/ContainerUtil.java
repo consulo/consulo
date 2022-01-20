@@ -1731,8 +1731,8 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> T[] toArray(@Nullable Collection<T> c, @Nonnull ArrayFactory<? extends T> factory) {
-    return c != null ? c.toArray(factory.create(c.size())) : factory.create(0);
+  public static <T> T[] toArray(@Nullable Collection<T> c, @Nonnull IntFunction<? extends T[]> factory) {
+    return c != null ? c.toArray(factory.apply(c.size())) : factory.apply(0);
   }
 
   @Nonnull

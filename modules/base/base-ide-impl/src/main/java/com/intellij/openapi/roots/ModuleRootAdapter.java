@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.roots;
 
+import consulo.module.layer.event.ModuleRootEvent;
+import consulo.module.layer.event.ModuleRootListener;
+
 /**
  * @author nik
  */

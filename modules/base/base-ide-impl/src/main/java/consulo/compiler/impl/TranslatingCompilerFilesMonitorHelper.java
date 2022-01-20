@@ -16,7 +16,7 @@
 package consulo.compiler.impl;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import javax.annotation.Nonnull;

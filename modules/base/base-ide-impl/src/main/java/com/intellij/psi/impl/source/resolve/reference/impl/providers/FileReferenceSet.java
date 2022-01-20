@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;

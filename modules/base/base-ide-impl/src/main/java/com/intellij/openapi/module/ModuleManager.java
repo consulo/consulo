@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.module;
 
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.util.graph.Graph;
 import consulo.annotation.access.RequiredReadAction;

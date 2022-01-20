@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 
 import java.util.Comparator;
 

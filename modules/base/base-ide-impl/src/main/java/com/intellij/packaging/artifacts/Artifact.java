@@ -18,7 +18,7 @@ package com.intellij.packaging.artifacts;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.elements.CompositePackagingElement;
-import consulo.util.pointers.Named;
+import consulo.component.util.pointer.Named;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

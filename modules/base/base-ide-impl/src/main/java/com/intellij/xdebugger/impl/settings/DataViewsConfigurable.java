@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.settings;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import org.jetbrains.annotations.Nls;

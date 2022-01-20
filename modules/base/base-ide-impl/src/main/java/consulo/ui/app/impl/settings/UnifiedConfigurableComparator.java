@@ -15,10 +15,10 @@
  */
 package consulo.ui.app.impl.settings;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
-import consulo.preferences.internal.ConfigurableWeight;
+import consulo.configurable.internal.ConfigurableWeight;
 import consulo.ui.TreeNode;
 
 import java.util.Comparator;

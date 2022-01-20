@@ -16,17 +16,16 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.options.CancelledConfigurationException;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.OptionsDialog;
-import javax.annotation.Nonnull;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -89,9 +88,6 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
     for (Configurable configurable : myEnvToConfMap.values()) {
       try {
         configurable.apply();
-      }
-      catch (CancelledConfigurationException e) {
-        return;
       }
       catch (ConfigurationException e) {
         Messages.showErrorDialog(myProject, VcsBundle.message("messge.text.cannot.save.settings", e.getLocalizedMessage()), getRealTitle());

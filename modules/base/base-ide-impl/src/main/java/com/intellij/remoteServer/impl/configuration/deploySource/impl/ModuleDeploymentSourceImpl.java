@@ -16,8 +16,8 @@
 package com.intellij.remoteServer.impl.configuration.deploySource.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.Module;
+import consulo.module.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
@@ -25,7 +25,7 @@ import com.intellij.remoteServer.configuration.deployment.ModuleDeploymentSource
 import com.intellij.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.image.Image;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

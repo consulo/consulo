@@ -48,7 +48,7 @@ import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
 import consulo.lang.LanguagePointerUtil;
 import consulo.logging.Logger;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 
 import java.util.*;
 

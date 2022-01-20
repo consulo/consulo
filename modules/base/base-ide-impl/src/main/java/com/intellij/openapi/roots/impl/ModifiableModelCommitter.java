@@ -17,12 +17,12 @@ package com.intellij.openapi.roots.impl;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleOrderEntry;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.RootPolicy;
+import consulo.module.layer.ModifiableRootModel;
+import consulo.module.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.orderEntry.RootPolicy;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.settings;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nullable;

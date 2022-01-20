@@ -17,10 +17,10 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import javax.annotation.Nonnull;
-import consulo.roots.orderEntry.OrderEntryType;
+import consulo.module.layer.orderEntry.OrderEntryType;
 
 public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
   public static final Logger LOGGER = Logger.getInstance(OrderEntryBaseImpl.class);

@@ -15,7 +15,7 @@
  */
 package consulo.roots.types;
 
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import javax.annotation.Nonnull;
 
 /**

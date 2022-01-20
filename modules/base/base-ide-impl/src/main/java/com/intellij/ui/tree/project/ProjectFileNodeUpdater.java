@@ -3,8 +3,8 @@ package com.intellij.ui.tree.project;
 
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
+import consulo.module.layer.event.ModuleRootEvent;
+import consulo.module.layer.event.ModuleRootListener;
 import com.intellij.openapi.util.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-import static com.intellij.ProjectTopics.PROJECT_ROOTS;
+import static consulo.module.ProjectTopics.PROJECT_ROOTS;
 import static consulo.virtualFileSystem.VirtualFileManager.VFS_CHANGES;
 import static com.intellij.psi.util.PsiUtilCore.getVirtualFile;
 

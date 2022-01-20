@@ -17,7 +17,7 @@
 package com.intellij.problems;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.virtualFileSystem.VirtualFile;

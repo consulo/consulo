@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries.ui;
 
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.UnnamedConfigurable;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

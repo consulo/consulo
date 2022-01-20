@@ -24,7 +24,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.TreeViewUtil;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;

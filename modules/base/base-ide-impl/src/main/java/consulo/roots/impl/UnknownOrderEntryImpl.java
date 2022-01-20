@@ -15,15 +15,15 @@
  */
 package consulo.roots.impl;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.RootPolicy;
+import consulo.module.Module;
+import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.content.OrderRootType;
+import consulo.module.layer.orderEntry.RootPolicy;
 import com.intellij.openapi.roots.impl.ClonableOrderEntry;
 import com.intellij.openapi.roots.impl.OrderEntryBaseImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import consulo.roots.orderEntry.OrderEntryType;
+import consulo.module.layer.orderEntry.OrderEntryType;
 import javax.annotation.Nonnull;
 
 /**

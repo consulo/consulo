@@ -15,13 +15,13 @@
  */
 package consulo.roots.ui.configuration.classpath;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.Module;
+import consulo.module.layer.ModifiableRootModel;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.roots.ModifiableModuleRootLayer;
+import consulo.module.layer.ModifiableModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 

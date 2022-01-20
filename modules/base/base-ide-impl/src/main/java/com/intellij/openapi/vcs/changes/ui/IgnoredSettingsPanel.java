@@ -22,8 +22,8 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.VcsBundle;

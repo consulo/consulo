@@ -16,17 +16,21 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.*;
+import consulo.content.OrderRootType;
+import consulo.content.RootProvider;
+import consulo.module.Module;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Comparing;
+import consulo.module.layer.orderEntry.DependencyScope;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
-import consulo.roots.OrderEntryWithTracking;
+import consulo.module.layer.orderEntry.OrderEntryWithTracking;
 import consulo.roots.impl.ModuleRootLayerImpl;
-import consulo.roots.orderEntry.OrderEntryType;
+import consulo.module.layer.orderEntry.OrderEntryType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

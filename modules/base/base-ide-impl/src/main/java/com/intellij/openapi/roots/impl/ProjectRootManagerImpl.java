@@ -17,8 +17,12 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
+import consulo.content.RootProvider;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.OrderEnumerator;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
@@ -33,7 +37,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.OrderEntryWithTracking;
+import consulo.module.layer.orderEntry.OrderEntryWithTracking;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;

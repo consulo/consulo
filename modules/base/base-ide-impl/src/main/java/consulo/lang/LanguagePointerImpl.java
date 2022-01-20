@@ -17,7 +17,7 @@ package consulo.lang;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.NullableLazyValue;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -17,9 +17,12 @@
 package com.intellij.ide.util;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.*;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

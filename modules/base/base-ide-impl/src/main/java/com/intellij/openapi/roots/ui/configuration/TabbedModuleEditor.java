@@ -1,6 +1,6 @@
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import consulo.project.Project;
 import com.intellij.ui.TabbedPaneWrapper;

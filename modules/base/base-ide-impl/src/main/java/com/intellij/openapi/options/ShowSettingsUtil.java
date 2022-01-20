@@ -16,6 +16,8 @@
 package com.intellij.openapi.options;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;
 import consulo.options.ProjectStructureSelector;

@@ -26,7 +26,7 @@ import com.intellij.execution.impl.RunManagerImpl;
 import com.intellij.ide.DataManager;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.actionSystem.ActionToolbarPosition;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

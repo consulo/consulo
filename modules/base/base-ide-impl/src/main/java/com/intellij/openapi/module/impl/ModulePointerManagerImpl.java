@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.module.impl;
 
-import com.intellij.ProjectTopics;
-import com.intellij.openapi.module.Module;
+import consulo.module.ProjectTopics;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.ModuleAdapter;

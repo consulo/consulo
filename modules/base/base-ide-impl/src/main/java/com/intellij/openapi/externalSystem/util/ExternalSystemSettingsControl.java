@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.util;
 
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 

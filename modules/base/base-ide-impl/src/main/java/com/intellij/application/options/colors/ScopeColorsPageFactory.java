@@ -21,11 +21,11 @@ import com.intellij.ide.util.scopeChooser.EditScopesDialog;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.preferences.internal.ConfigurableWeight;
+import consulo.configurable.internal.ConfigurableWeight;
 
 import javax.swing.*;
 import java.awt.*;

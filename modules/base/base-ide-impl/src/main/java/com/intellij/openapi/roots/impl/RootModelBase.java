@@ -16,8 +16,13 @@
 package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.*;
+import consulo.module.Module;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ContentFolder;
+import consulo.module.layer.ModuleRootModel;
+import consulo.module.layer.OrderEnumerator;
+import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.layer.orderEntry.RootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
 import consulo.module.extension.ModuleExtension;

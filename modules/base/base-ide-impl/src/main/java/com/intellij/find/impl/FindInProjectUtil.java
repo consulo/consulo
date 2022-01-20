@@ -14,7 +14,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -23,9 +23,8 @@ import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.project.DumbServiceImpl;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.roots.LibraryOrderEntry;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Condition;
@@ -48,6 +47,7 @@ import com.intellij.usages.UsageViewPresentation;
 import com.intellij.util.Function;
 import com.intellij.util.PatternUtil;
 import consulo.application.util.function.Processor;
+import consulo.roots.types.SourcesOrderRootType;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileProvider;
@@ -578,7 +578,7 @@ public class FindInProjectUtil {
         Library library = ((LibraryOrderEntry)entry).getLibrary();
         if (library == null) continue;
         // note: getUrls() returns jar directories too
-        String[] sourceUrls = library.getUrls(OrderRootType.SOURCES);
+        String[] sourceUrls = library.getUrls(SourcesOrderRootType.getInstance());
         for (String sourceUrl : sourceUrls) {
           if (VfsUtilCore.isEqualOrAncestor(sourceUrl, directory.getUrl())) {
             // already in this library sources, no need to look for another source root
@@ -589,7 +589,7 @@ public class FindInProjectUtil {
           // in which case we have no way to know whether this is a source jar or classes jar - so try to locate the source jar
         }
       }
-      for (VirtualFile sourceRoot : entry.getFiles(OrderRootType.SOURCES)) {
+      for (VirtualFile sourceRoot : entry.getFiles(SourcesOrderRootType.getInstance())) {
         VirtualFile sourceFile = sourceRoot.findFileByRelativePath(relativePath);
         if (sourceFile != null) {
           otherSourceRoots.add(sourceFile);

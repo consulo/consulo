@@ -17,13 +17,11 @@ package consulo.roots;
 
 import com.google.common.base.Predicate;
 import com.intellij.icons.AllIcons;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiDirectory;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.component.extension.ExtensionPointName;
 import consulo.ide.IconDescriptor;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
@@ -62,36 +60,13 @@ public abstract class ContentFolderTypeProvider {
    * @param psiDirectory child directory
    * @return icon of child directory
    */
-  @Nullable
+  @Nonnull
   @RequiredReadAction
-  public final Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
-    return getChildDirectoryIcon(psiDirectory, null);
+  public  Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
+    return getChildDirectoryIcon();
   }
 
-  @Nullable
-  @RequiredReadAction
-  public final Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory, @Nullable PsiPackageManager oldPsiPackageManager) {
-    Image packageIcon = getChildPackageIcon();
-    if (packageIcon == null) {
-      return getChildDirectoryIcon();
-    }
-
-    if (psiDirectory != null) {
-      PsiPackageManager psiPackageManager = oldPsiPackageManager == null ? PsiPackageManager.getInstance(psiDirectory.getProject()) : oldPsiPackageManager;
-      PsiPackage anyPackage = psiPackageManager.findAnyPackage(psiDirectory);
-      if (anyPackage != null) {
-        return packageIcon;
-      }
-      else {
-        return getChildDirectoryIcon();
-      }
-    }
-    else {
-      //
-      return packageIcon;
-    }
-  }
-
+  @Nonnull
   public Image getChildDirectoryIcon() {
     return AllIcons.Nodes.TreeOpen;
   }

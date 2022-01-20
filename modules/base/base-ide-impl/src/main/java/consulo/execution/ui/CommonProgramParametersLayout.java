@@ -22,7 +22,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.util.PathUtil;
 import com.intellij.util.execution.ParametersListUtil;

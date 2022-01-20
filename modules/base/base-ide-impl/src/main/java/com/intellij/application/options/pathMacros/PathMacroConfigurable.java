@@ -16,9 +16,9 @@
 package com.intellij.application.options.pathMacros;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;

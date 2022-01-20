@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.module;
 
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.pom.Navigatable;
+import consulo.module.Module;
 
 /**
  * @author nik

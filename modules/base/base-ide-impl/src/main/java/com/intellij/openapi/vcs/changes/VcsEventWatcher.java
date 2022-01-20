@@ -16,13 +16,13 @@
 
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.ProjectTopics;
+import consulo.module.ProjectTopics;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
-import com.intellij.openapi.roots.ModuleRootEvent;
+import consulo.module.layer.event.ModuleRootEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.ProblemListener;
 import consulo.component.messagebus.MessageBusConnection;

@@ -43,9 +43,9 @@ import com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystem
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.JdkUtil;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.SimpleJavaSdkType;
-import com.intellij.openapi.roots.DependencyScope;
+import consulo.module.layer.orderEntry.DependencyScope;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.psi.PsiBundle;
 import com.intellij.util.Alarm;

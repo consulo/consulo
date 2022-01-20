@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.module;
 
+import consulo.module.Module;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;

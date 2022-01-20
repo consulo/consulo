@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;

@@ -20,7 +20,7 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.TranslatingCompiler;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Chunk;
 import consulo.sandboxPlugin.lang.SandFileType;

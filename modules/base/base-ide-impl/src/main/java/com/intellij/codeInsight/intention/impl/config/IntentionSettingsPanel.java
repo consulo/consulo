@@ -18,7 +18,7 @@ package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.util.Alarm;

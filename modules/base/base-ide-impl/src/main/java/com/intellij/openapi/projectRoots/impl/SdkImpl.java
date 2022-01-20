@@ -1,14 +1,15 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.projectRoots.impl;
 
+import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.RootProvider;
+import consulo.content.RootProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import consulo.disposer.Disposer;

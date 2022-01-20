@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries.ui;
 
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.libraries.LibraryRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

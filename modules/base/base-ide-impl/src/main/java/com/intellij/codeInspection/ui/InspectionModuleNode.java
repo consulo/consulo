@@ -1,7 +1,7 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.ui.image.Image;
 
 /**

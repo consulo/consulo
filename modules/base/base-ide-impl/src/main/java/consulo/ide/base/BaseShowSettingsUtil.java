@@ -15,16 +15,19 @@
  */
 package consulo.ide.base;
 
-import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurableEP;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.component.extension.ExtensionPointName;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.options.ApplicationConfigurableEP;
+import consulo.options.ProjectConfigurableEP;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -37,6 +40,10 @@ import java.util.List;
  * @since 2019-01-06
  */
 public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
+  public static final ExtensionPointName<ApplicationConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("consulo.applicationConfigurable");
+
+  public static final ExtensionPointName<ProjectConfigurableEP<Configurable>> PROJECT_CONFIGURABLE = ExtensionPointName.create("consulo.projectConfigurable");
+
   public static Configurable SKIP_SELECTION_CONFIGURATION = new Configurable() {
     @RequiredUIAccess
     @Override
@@ -68,8 +75,8 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
     final Project tempProject = project;
 
     List<ConfigurableEP<Configurable>> configurableEPs = new ArrayList<>();
-    configurableEPs.addAll(Configurable.APPLICATION_CONFIGURABLE.getExtensionList());
-    configurableEPs.addAll(Configurable.PROJECT_CONFIGURABLE.getExtensionList(project));
+    configurableEPs.addAll(APPLICATION_CONFIGURABLE.getExtensionList());
+    configurableEPs.addAll(PROJECT_CONFIGURABLE.getExtensionList(project));
 
     List<Configurable> result =
             ConfigurableExtensionPointUtil.buildConfigurablesList(configurableEPs, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));

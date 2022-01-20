@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.lang.moduleImport;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;

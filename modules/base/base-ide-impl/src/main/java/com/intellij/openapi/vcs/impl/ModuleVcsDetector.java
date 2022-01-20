@@ -16,17 +16,17 @@
 
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.ProjectTopics;
+import consulo.module.ProjectTopics;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.ModuleAdapter;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.layer.event.ModuleRootEvent;
+import consulo.module.layer.event.ModuleRootListener;
+import consulo.module.ModuleRootManager;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;

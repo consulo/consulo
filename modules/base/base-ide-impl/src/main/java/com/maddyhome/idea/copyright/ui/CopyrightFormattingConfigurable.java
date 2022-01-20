@@ -22,9 +22,9 @@ package com.maddyhome.idea.copyright.ui;
 
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;

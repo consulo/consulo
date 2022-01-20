@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.roots.OrderEnumerator;
+import consulo.module.layer.OrderEnumerator;
 
 public final class ClasspathMacro extends Macro {
   public String getName() {

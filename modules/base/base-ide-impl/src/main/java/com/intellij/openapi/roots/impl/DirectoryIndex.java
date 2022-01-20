@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Query;
 import consulo.roots.ContentFolderTypeProvider;

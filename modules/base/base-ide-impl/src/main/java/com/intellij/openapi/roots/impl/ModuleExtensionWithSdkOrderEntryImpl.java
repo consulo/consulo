@@ -16,11 +16,11 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.RootPolicy;
-import com.intellij.openapi.roots.RootProvider;
+import consulo.content.bundle.Sdk;
+import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.layer.orderEntry.RootPolicy;
+import consulo.content.RootProvider;
 import com.intellij.openapi.util.Comparing;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;

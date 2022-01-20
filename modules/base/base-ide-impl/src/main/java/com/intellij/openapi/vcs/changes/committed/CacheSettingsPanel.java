@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 

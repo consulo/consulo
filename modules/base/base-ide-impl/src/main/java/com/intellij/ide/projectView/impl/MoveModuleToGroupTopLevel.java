@@ -23,7 +23,7 @@ import com.intellij.ide.projectView.actions.MoveModulesOutsideGroupAction;
 import com.intellij.ide.projectView.actions.MoveModulesToSubGroupAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

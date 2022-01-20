@@ -15,11 +15,11 @@
  */
 package consulo.module.extension.impl;
 
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.ModuleInheritableNamedPointer;
-import consulo.roots.ModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 

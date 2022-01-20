@@ -16,6 +16,8 @@
 package com.intellij.openapi.options;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
 
 import javax.swing.*;
 import java.util.ArrayList;

@@ -16,9 +16,11 @@
 
 package com.intellij.psi.search;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.UnloadedModuleDescription;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import com.intellij.openapi.roots.*;
 import consulo.virtualFileSystem.VirtualFile;

@@ -24,13 +24,14 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NotNullComputable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.options.SimpleConfigurable;
+import consulo.configurable.SimpleConfigurable;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
@@ -42,7 +43,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
- * To provide additional options in Editor | Smart Keys section register implementation of {@link com.intellij.openapi.options.UnnamedConfigurable} in the plugin.xml:
+ * To provide additional options in Editor | Smart Keys section register implementation of {@link UnnamedConfigurable} in the plugin.xml:
  * <p>
  * &lt;extensions defaultExtensionNs="com.intellij"&gt;<br>
  * &nbsp;&nbsp;&lt;editorSmartKeysConfigurable instance="class-name"/&gt;<br>

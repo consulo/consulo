@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 

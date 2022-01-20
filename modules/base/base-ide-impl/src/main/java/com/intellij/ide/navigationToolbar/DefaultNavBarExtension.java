@@ -17,8 +17,12 @@ package com.intellij.ide.navigationToolbar;
 
 import com.intellij.analysis.AnalysisScopeBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.layer.orderEntry.ModuleOrderEntry;
 import consulo.project.Project;
 import com.intellij.openapi.roots.*;
 import consulo.application.util.function.Computable;

@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.Module;
+import consulo.module.layer.ModuleRootModel;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.application.util.function.Processor;
-import consulo.roots.ModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;

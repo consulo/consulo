@@ -15,7 +15,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import consulo.document.Document;
 import com.intellij.openapi.editor.SelectionModel;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import consulo.progress.ProgressIndicatorProvider;

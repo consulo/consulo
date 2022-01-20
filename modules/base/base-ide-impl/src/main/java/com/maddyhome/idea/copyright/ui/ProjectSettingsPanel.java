@@ -19,7 +19,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.util.scopeChooser.PackageSetChooserCombo;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;

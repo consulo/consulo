@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.ArrayUtil;
 

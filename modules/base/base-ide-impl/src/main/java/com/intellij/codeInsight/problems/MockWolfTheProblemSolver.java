@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.problems;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.util.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.Problem;

@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.markup.*;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import consulo.progress.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;

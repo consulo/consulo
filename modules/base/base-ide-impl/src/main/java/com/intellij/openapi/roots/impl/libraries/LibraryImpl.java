@@ -3,16 +3,17 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ComponentSerializationUtil;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.RootProvider;
+import consulo.content.OrderRootType;
+import consulo.content.RootProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.roots.types.BinariesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.VirtualFilePointerContainerImpl;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
@@ -239,7 +240,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
 
   @NonNls
   public static final String ROOT_TYPE_ATTR = "type";
-  private static final OrderRootType DEFAULT_JAR_DIRECTORY_TYPE = OrderRootType.CLASSES;
+  private static final OrderRootType DEFAULT_JAR_DIRECTORY_TYPE = BinariesOrderRootType.getInstance();
 
   @Nonnull
   private VirtualFilePointerContainer getOrCreateContainer(@Nonnull OrderRootType rootType) {
@@ -473,12 +474,12 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
 
   @Override
   public void addJarDirectory(@Nonnull final String url, final boolean recursive) {
-    addJarDirectory(url, recursive, OrderRootType.CLASSES);
+    addJarDirectory(url, recursive, BinariesOrderRootType.getInstance());
   }
 
   @Override
   public void addJarDirectory(@Nonnull final VirtualFile file, final boolean recursive) {
-    addJarDirectory(file, recursive, OrderRootType.CLASSES);
+    addJarDirectory(file, recursive, BinariesOrderRootType.getInstance());
   }
 
   @Override
@@ -501,7 +502,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
 
   @Override
   public boolean isJarDirectory(@Nonnull final String url) {
-    return isJarDirectory(url, OrderRootType.CLASSES);
+    return isJarDirectory(url, BinariesOrderRootType.getInstance());
   }
 
   @Override

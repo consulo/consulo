@@ -1,6 +1,8 @@
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
+import consulo.module.layer.ModuleRootModel;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -19,8 +19,8 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.macro.Macro;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.Module;
+import consulo.module.ModuleRootManager;
 
 /**
  * @author VISTALL

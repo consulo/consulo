@@ -20,7 +20,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.openapi.projectRoots.JdkUtil;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import consulo.util.io.CharsetToolkit;
 import com.intellij.util.PathsList;
 import org.jetbrains.annotations.NonNls;

@@ -17,10 +17,10 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.ModuleRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;

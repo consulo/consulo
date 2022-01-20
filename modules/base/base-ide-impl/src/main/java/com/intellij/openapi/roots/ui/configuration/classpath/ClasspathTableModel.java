@@ -17,9 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.classpath;
 
 import consulo.logging.Logger;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.DependencyScope;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.orderEntry.DependencyScope;
+import consulo.module.layer.ModifiableRootModel;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.util.ui.ItemRemovable;
 import javax.annotation.Nonnull;

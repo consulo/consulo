@@ -16,6 +16,8 @@
 package com.intellij.openapi.module;
 
 import javax.annotation.Nullable;
+
+import consulo.module.Module;
 import org.jetbrains.annotations.SystemIndependent;
 
 public interface WorkingDirectoryProvider {

@@ -15,9 +15,9 @@
  */
 package com.intellij.remoteServer.configuration.deployment;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 import javax.annotation.Nonnull;
 
 /**

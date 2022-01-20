@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
+import consulo.module.layer.OrderEnumerator;
 import consulo.project.Project;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import consulo.virtualFileSystem.VirtualFile;

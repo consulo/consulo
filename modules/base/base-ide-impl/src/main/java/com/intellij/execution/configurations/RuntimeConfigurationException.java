@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import com.intellij.execution.ExecutionBundle;
 
 public class RuntimeConfigurationException extends ConfigurationException {

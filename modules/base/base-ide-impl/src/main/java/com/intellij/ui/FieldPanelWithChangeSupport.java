@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.options.BaseConfigurableWithChangeSupport;
+import consulo.configurable.BaseConfigurableWithChangeSupport;
 
 public class FieldPanelWithChangeSupport {
   public static AbstractFieldPanel createPanel(AbstractFieldPanel panel, final BaseConfigurableWithChangeSupport configurable) {

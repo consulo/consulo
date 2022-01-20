@@ -15,7 +15,7 @@
  */
 package com.intellij.profile.codeInspection.ui;
 
-import com.intellij.openapi.options.ConfigurableProvider;
+import consulo.configurable.ConfigurableProvider;
 
 /**
  * @author nik

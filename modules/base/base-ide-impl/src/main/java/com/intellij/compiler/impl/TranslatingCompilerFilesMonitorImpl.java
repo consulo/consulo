@@ -15,7 +15,8 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.ProjectTopics;
+import consulo.module.ModuleRootManager;
+import consulo.module.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;
 import com.intellij.ide.caches.CachesInvalidator;
 import consulo.application.ApplicationManager;
@@ -24,8 +25,10 @@ import consulo.application.ReadAction;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import consulo.module.layer.event.ModuleRootEvent;
+import consulo.module.layer.event.ModuleRootListener;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;

@@ -25,7 +25,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.preferences.MasterDetailsConfigurable;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

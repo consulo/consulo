@@ -20,7 +20,7 @@
 package com.intellij.ide.impl;
 
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

@@ -7,7 +7,7 @@ import com.intellij.ide.projectView.impl.nodes.DropTargetNode;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;

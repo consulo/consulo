@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.model.project;
 
-import com.intellij.openapi.roots.DependencyScope;
+import consulo.module.layer.orderEntry.DependencyScope;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

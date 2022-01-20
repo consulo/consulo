@@ -19,7 +19,7 @@ package com.intellij.application.options.colors;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;

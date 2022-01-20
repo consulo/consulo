@@ -15,12 +15,12 @@
  */
 package consulo.bundle.impl;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModificator;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.bundle.PredefinedBundlesProvider;
+import consulo.content.bundle.PredefinedBundlesProvider;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

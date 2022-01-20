@@ -16,10 +16,10 @@
 package com.intellij.compiler;
 
 import com.intellij.openapi.compiler.CompilerManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;

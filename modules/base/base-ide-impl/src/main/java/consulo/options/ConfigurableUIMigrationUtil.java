@@ -15,8 +15,8 @@
  */
 package consulo.options;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

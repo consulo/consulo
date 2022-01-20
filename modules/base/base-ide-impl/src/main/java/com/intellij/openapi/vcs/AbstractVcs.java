@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.diff.impl.patch.formove.FilePathComparator;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;

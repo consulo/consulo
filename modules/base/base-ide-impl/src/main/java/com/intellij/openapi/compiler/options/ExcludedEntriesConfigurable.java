@@ -18,7 +18,7 @@ package com.intellij.openapi.compiler.options;
 
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusManager;

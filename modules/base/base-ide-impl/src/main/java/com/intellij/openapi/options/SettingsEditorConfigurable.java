@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.options;
 
+import consulo.configurable.BaseConfigurable;
+import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 

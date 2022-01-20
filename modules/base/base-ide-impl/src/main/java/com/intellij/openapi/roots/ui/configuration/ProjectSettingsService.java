@@ -17,15 +17,15 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.packaging.artifacts.Artifact;
 import consulo.annotation.DeprecationInfo;
-import consulo.roots.orderEntry.OrderEntryType;
+import consulo.module.layer.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;

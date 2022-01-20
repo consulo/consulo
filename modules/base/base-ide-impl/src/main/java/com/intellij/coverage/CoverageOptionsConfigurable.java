@@ -1,13 +1,13 @@
 package com.intellij.coverage;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullComputable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.options.SimpleConfigurable;
+import consulo.configurable.SimpleConfigurable;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;

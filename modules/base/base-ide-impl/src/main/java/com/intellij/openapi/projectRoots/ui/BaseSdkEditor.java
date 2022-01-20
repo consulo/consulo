@@ -16,14 +16,18 @@
 package com.intellij.openapi.projectRoots.ui;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkAdditionalData;
+import consulo.content.bundle.SdkModel;
+import consulo.content.bundle.SdkModificator;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.UnknownSdkType;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;

@@ -16,15 +16,16 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.util.gotoByName.GotoFileModel;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
@@ -33,7 +34,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopesCore;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.roots.OrderEntryWithTracking;
+import consulo.module.layer.orderEntry.OrderEntryWithTracking;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -180,8 +181,8 @@ class DirectoryPathMatcher {
       Collections.addAll(roots, ModuleRootManager.getInstance(module).getContentRoots());
       for (OrderEntry entry : ModuleRootManager.getInstance(module).getOrderEntries()) {
         if (entry instanceof OrderEntryWithTracking) {
-          Collections.addAll(roots, entry.getFiles(OrderRootType.CLASSES));
-          Collections.addAll(roots, entry.getFiles(OrderRootType.SOURCES));
+          Collections.addAll(roots, entry.getFiles(BinariesOrderRootType.getInstance()));
+          Collections.addAll(roots, entry.getFiles(SourcesOrderRootType.getInstance()));
         }
       }
     }

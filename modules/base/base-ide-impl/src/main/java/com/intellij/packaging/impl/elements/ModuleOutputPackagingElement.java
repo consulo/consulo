@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import javax.annotation.Nonnull;

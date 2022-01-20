@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.model.project;
 
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 
 /**
  * Note that current enum duplicates {@link OrderRootType}. We can't use the later directly because it's not properly setup

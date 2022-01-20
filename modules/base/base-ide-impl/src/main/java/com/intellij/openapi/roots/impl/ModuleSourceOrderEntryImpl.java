@@ -16,9 +16,13 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.module.Module;
+import consulo.content.OrderRootType;
+import consulo.module.Module;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.layer.orderEntry.RootPolicy;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.*;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.types.SourcesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;

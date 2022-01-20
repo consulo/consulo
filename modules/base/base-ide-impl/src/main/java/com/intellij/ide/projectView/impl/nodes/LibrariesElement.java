@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 
 public class LibrariesElement {

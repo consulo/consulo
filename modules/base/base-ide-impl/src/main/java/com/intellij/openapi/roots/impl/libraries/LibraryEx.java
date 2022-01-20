@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.module.Module;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;

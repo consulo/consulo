@@ -17,9 +17,9 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ContentFolder;
+import consulo.module.layer.ModifiableRootModel;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;

@@ -16,11 +16,11 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import com.intellij.openapi.module.impl.scopes.SdkScope;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;

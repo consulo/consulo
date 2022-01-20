@@ -18,14 +18,14 @@ package com.intellij.packaging.impl.ui;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -18,7 +18,7 @@ package consulo.psi.injection;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Ref;

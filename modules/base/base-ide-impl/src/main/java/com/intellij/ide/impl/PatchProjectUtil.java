@@ -21,8 +21,11 @@ package com.intellij.ide.impl;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ModifiableRootModel;
 import consulo.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;

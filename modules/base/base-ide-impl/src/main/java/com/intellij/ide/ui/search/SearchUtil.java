@@ -17,9 +17,9 @@
 package com.intellij.ide.ui.search;
 
 import com.intellij.application.options.SkipSelfSearchComponent;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.openapi.options.MasterDetails;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.GlassPanel;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;

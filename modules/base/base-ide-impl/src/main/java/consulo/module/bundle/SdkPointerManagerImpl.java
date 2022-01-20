@@ -16,18 +16,17 @@
 package consulo.module.bundle;
 
 import consulo.application.Application;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTable;
-import consulo.bundle.SdkPointerManager;
-import consulo.bundle.SdkTableListener;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkPointerManager;
+import consulo.content.bundle.SdkTable;
+import consulo.content.bundle.event.SdkTableListener;
 import consulo.util.pointers.NamedPointerManagerImpl;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
-import jakarta.inject.Provider;
 import java.util.List;
 
 /**

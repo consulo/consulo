@@ -16,14 +16,14 @@
 package com.intellij.application.options.editor;
 
 import consulo.application.Application;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.options.ApplicationConfigurableEP;
 
 import jakarta.inject.Inject;
 
 /**
  * To provide additional options in Editor | Appearance section register implementation of
- * {@link com.intellij.openapi.options.UnnamedConfigurable} in the plugin.xml:
+ * {@link UnnamedConfigurable} in the plugin.xml:
  * <p/>
  * &lt;extensions defaultExtensionNs="com.intellij"&gt;<br>
  * &nbsp;&nbsp;&lt;editorAppearanceConfigurable instance="class-name"/&gt;<br>

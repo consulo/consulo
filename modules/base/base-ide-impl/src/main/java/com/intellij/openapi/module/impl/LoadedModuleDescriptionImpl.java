@@ -16,8 +16,8 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.openapi.module.LoadedModuleDescription;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.Module;
+import consulo.module.ModuleRootManager;
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;

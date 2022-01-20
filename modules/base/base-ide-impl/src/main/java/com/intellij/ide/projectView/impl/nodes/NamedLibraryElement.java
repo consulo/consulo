@@ -16,8 +16,8 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.Module;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 

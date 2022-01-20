@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.options;
 
+import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Factory;

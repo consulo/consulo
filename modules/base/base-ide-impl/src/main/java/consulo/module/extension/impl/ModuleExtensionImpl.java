@@ -15,15 +15,16 @@
  */
 package consulo.module.extension.impl;
 
-import com.intellij.openapi.module.Module;
-import consulo.project.Project;
-import consulo.roots.ModifiableModuleRootLayer;
-import consulo.roots.ModuleRootLayer;
-import consulo.module.extension.ModuleExtension;
-import org.jdom.Element;
-import javax.annotation.Nonnull;
-
 import consulo.annotation.access.RequiredReadAction;
+import consulo.module.Module;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.layer.ModifiableModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
+import consulo.project.Project;
+import org.jdom.Element;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -76,7 +77,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
     myIsEnabled = mutableModuleExtension.isEnabled();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public final Element getState() {
     if (!isEnabled()) {

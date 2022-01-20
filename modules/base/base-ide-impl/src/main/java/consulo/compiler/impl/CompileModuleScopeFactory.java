@@ -17,7 +17,7 @@ package consulo.compiler.impl;
 
 import com.intellij.compiler.impl.FileIndexCompileScope;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

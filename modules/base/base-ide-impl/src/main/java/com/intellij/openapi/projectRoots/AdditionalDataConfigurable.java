@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.projectRoots;
 
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.content.bundle.Sdk;
 
 public interface AdditionalDataConfigurable extends UnnamedConfigurable {
   void setSdk(Sdk sdk);

@@ -1,6 +1,6 @@
 package com.intellij.xdebugger.impl.settings;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;

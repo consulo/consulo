@@ -16,7 +16,7 @@
 package consulo.psi;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiManager;

@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.projectRoots;
 
+import consulo.content.bundle.*;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.ui.annotation.RequiredUIAccess;

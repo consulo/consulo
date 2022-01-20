@@ -20,7 +20,7 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

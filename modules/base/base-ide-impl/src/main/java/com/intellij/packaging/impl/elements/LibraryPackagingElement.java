@@ -15,9 +15,9 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.LibraryOrderEntry;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.Module;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import consulo.roots.types.BinariesOrderRootType;

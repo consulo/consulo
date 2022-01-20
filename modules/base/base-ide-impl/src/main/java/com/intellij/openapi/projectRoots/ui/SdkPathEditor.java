@@ -16,9 +16,9 @@
 package com.intellij.openapi.projectRoots.ui;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkModificator;
+import consulo.content.OrderRootType;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nullable;
 

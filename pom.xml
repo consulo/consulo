@@ -51,6 +51,8 @@
     <module>modules/base/base-ide-impl</module>
     <module>modules/base/component-api</module>
     <module>modules/base/application-api</module>
+    <module>modules/base/application-content-api</module>
+    <module>modules/base/configurable-api</module>
     <module>modules/base/disposer-api</module>
     <module>modules/base/disposer-impl</module>
     <module>modules/base/platform-api</module>
@@ -62,6 +64,7 @@
     <module>modules/base/virtual-file-system-api</module>
     <module>modules/base/document-api</module>
     <module>modules/base/project-api</module>
+    <module>modules/base/module-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

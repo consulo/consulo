@@ -16,7 +16,7 @@
 package consulo.codeInspection.ui;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.options.SimpleConfigurableByProperties;
+import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.ui.Component;
 
 import javax.annotation.Nonnull;

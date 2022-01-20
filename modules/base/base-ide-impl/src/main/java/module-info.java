@@ -31,9 +31,12 @@ open module consulo.ide.impl {
   requires transitive consulo.localize.api;
   requires transitive consulo.component.api;
   requires transitive consulo.application.api;
+  requires transitive consulo.application.content.api;
   requires transitive consulo.document.api;
   requires transitive consulo.virtual.file.system.api;
   requires transitive consulo.project.api;
+  requires transitive consulo.module.api;
+  requires transitive consulo.configurable.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -1117,7 +1120,6 @@ open module consulo.ide.impl {
   exports consulo.builtInServer.json;
   exports consulo.builtInServer.websocket;
   exports consulo.builtInServer.xml;
-  exports consulo.bundle;
   exports consulo.bundle.impl;
   exports consulo.bundle.ui;
   exports consulo.codeInsight;
@@ -1273,12 +1275,8 @@ open module consulo.ide.impl {
   exports consulo.lang.util;
   //exports consulo.language;
   exports consulo.language.editor;
-  exports consulo.module;
   exports consulo.module.bundle;
-  exports consulo.module.extension;
-  exports consulo.module.extension.condition;
   exports consulo.module.extension.impl;
-  exports consulo.module.extension.swing;
   exports consulo.moduleImport;
   exports consulo.moduleImport.ui;
   //exports consulo.net;
@@ -1297,8 +1295,6 @@ open module consulo.ide.impl {
   exports consulo.packaging.impl.util;
   //exports consulo.plugins;
   exports consulo.plugins.internal;
-  exports consulo.preferences;
-  exports consulo.preferences.internal;
   exports consulo.progress.util;
   exports consulo.progress.util.impl;
   exports consulo.project.impl;
@@ -1331,7 +1327,6 @@ open module consulo.ide.impl {
   //exports consulo.roots.ui.configuration.projectRoot;
   exports consulo.roots.ui.configuration.projectRoot.daemon;
   exports consulo.roots.ui.configuration.projectRoot.moduleLayerActions;
-  exports consulo.roots.ui.configuration.session;
   exports consulo.roots.ui.configuration.session.internal;
   //exports consulo.security;
   exports consulo.security.impl;

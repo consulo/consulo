@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import consulo.project.Project;
 import javax.annotation.Nullable;
 

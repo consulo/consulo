@@ -24,7 +24,7 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import consulo.project.Project;
 import consulo.codeStyle.ApplicationCodeStyleFacade;
 import consulo.codeStyle.ProjectCodeStyleFacade;

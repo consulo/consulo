@@ -15,11 +15,11 @@
  */
 package consulo.extension.ui;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.SdkTypeId;
+import consulo.content.bundle.SdkTypeId;
 import consulo.annotation.UsedInPlugin;
 import consulo.bundle.ui.BundleBox;
 import consulo.bundle.ui.BundleBoxBuilder;

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.projectView.impl;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;

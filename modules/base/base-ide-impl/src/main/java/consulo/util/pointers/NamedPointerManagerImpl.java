@@ -15,6 +15,10 @@
  */
 package consulo.util.pointers;
 
+import consulo.component.util.pointer.Named;
+import consulo.component.util.pointer.NamedPointer;
+import consulo.component.util.pointer.NamedPointerManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;

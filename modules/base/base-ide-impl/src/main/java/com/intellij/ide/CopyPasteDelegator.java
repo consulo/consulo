@@ -7,7 +7,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.TransactionGuard;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.Conditions;

@@ -16,7 +16,7 @@
 package consulo.roots.impl;
 
 import com.google.common.base.Predicate;
-import com.intellij.openapi.roots.ModuleRootModel;
+import consulo.module.layer.ModuleRootModel;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
 import consulo.roots.ContentFolderTypeProvider;

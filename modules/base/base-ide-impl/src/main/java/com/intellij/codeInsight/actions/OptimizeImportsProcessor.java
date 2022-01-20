@@ -19,7 +19,7 @@ package com.intellij.codeInsight.actions;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.lang.ImportOptimizer;
 import com.intellij.lang.LanguageImportStatements;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;

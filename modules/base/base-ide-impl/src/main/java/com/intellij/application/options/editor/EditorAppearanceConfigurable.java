@@ -22,9 +22,9 @@ import com.intellij.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.CompositeConfigurable;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ide.settings.impl.EditorGeneralConfigurable;
@@ -36,7 +36,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * To provide additional options in Editor | Appearance section register implementation of {@link com.intellij.openapi.options.UnnamedConfigurable} in the plugin.xml:
+ * To provide additional options in Editor | Appearance section register implementation of {@link UnnamedConfigurable} in the plugin.xml:
  * <p/>
  * &lt;extensions defaultExtensionNs="com.intellij"&gt;<br>
  * &nbsp;&nbsp;&lt;editorAppearanceConfigurable instance="class-name"/&gt;<br>

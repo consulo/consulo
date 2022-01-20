@@ -16,7 +16,7 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.RootsProvider;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.ui.Queryable;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;

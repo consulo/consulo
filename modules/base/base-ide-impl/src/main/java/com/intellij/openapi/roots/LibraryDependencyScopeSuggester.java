@@ -17,6 +17,8 @@ package com.intellij.openapi.roots;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.roots.libraries.Library;
+import consulo.module.layer.orderEntry.DependencyScope;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

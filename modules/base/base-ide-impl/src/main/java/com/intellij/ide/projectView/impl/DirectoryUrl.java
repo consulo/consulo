@@ -17,7 +17,7 @@
 package com.intellij.ide.projectView.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;

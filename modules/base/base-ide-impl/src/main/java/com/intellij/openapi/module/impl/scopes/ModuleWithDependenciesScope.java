@@ -15,9 +15,16 @@
  */
 package com.intellij.openapi.module.impl.scopes;
 
-import com.intellij.openapi.module.Module;
+import consulo.content.OrderRootType;
+import consulo.module.Module;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Comparing;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.OrderEnumerator;
+import consulo.module.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import com.intellij.psi.search.GlobalSearchScope;

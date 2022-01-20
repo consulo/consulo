@@ -18,6 +18,7 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.psi.search.GlobalSearchScope;
+import consulo.module.Module;
 
 import javax.annotation.Nonnull;
 

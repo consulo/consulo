@@ -52,7 +52,7 @@
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="contentFolderTypeProvider" interface="consulo.roots.ContentFolderTypeProvider"/>
     <extensionPoint name="contentFolderPropertyProvider" interface="consulo.roots.ContentFolderPropertyProvider"/>
-    <extensionPoint name="contentFolderSupportPatcher" interface="consulo.roots.ContentFolderSupportPatcher"/>
+    <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.layer.ContentFolderSupportPatcher"/>
     <extensionPoint name="createFromTemplateActionModuleResolver" interface="com.intellij.ide.actions.CreateFileFromTemplateAction$ModuleResolver"/>
 
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
@@ -82,12 +82,12 @@
     <extensionPoint name="projectConfigurable"
                     beanClass="consulo.options.ProjectConfigurableEP"
                     area="PROJECT">
-      <with attribute="instanceClass" implements="com.intellij.openapi.options.Configurable"/>
+      <with attribute="instanceClass" implements="consulo.configurable.Configurable"/>
     </extensionPoint>
 
     <extensionPoint name="applicationConfigurable"
                     beanClass="consulo.options.ApplicationConfigurableEP">
-      <with attribute="instanceClass" implements="com.intellij.openapi.options.Configurable"/>
+      <with attribute="instanceClass" implements="consulo.configurable.Configurable"/>
     </extensionPoint>
 
     <extensionPoint name="generalCodeStyleOptionsProvider" beanClass="com.intellij.application.options.GeneralCodeStyleOptionsProviderEP">
@@ -616,14 +616,14 @@
 
     <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="PROJECT"/>
 
-    <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.extension.ModuleExtensionProviderEP">
+    <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.extension.impl.ModuleExtensionProviderEP">
       <with attribute="immutableClass" implements="consulo.module.extension.ModuleExtension"/>
       <with attribute="mutableClass" implements="consulo.module.extension.MutableModuleExtension"/>
     </extensionPoint>
 
     <extensionPoint name="moduleRootsProcessor" interface="consulo.roots.impl.ModuleRootsProcessor"/>
-    <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
-    <extensionPoint name="orderEntryType" interface="consulo.roots.orderEntry.OrderEntryType"/>
+    <extensionPoint name="orderRootType" interface="consulo.content.OrderRootType"/>
+    <extensionPoint name="orderEntryType" interface="consulo.module.layer.orderEntry.OrderEntryType"/>
     <extensionPoint name="orderEntryTypeEditor" beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="consulo.roots.orderEntry.OrderEntryTypeEditor"/>
     </extensionPoint>
@@ -799,7 +799,7 @@
     <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="PROJECT"/>
 
     <extensionPoint name="schemeImporter" beanClass="com.intellij.openapi.options.SchemeImporterEP">
-      <with attribute="schemeClass" implements="consulo.util.pointers.Named"/>
+      <with attribute="schemeClass" implements="consulo.component.util.pointer.Named"/>
       <with attribute="implementationClass" implements="com.intellij.openapi.options.SchemeImporter"/>
     </extensionPoint>
 
@@ -848,7 +848,7 @@
     <extensionPoint name="elementsToHighlightFilter" interface="com.intellij.openapi.util.Condition"/>
 
     <extensionPoint name="sdkType" interface="com.intellij.openapi.projectRoots.SdkType"/>
-    <extensionPoint name="predefinedBundlesProvider" interface="consulo.bundle.PredefinedBundlesProvider"/>
+    <extensionPoint name="predefinedBundlesProvider" interface="consulo.content.bundle.PredefinedBundlesProvider"/>
 
     <extensionPoint name="library.presentationProvider" interface="com.intellij.openapi.roots.libraries.LibraryPresentationProvider"/>
     <extensionPoint name="library.type" interface="com.intellij.openapi.roots.libraries.LibraryType"/>
@@ -1479,7 +1479,7 @@
     <statistics.usagesCollector implementation="com.intellij.internal.statistic.UsageTrigger$MyCollector"/>
     <statistics.usagesCollector implementation="consulo.ide.updateSettings.impl.UpdateChannelUsagesCollector"/>
     <statistics.usagesCollector implementation="consulo.application.impl.SandboxUsagesCollector"/>
-    <statistics.usagesCollector implementation="consulo.bundle.BundleTypeUsagesCollector"/>
+    <statistics.usagesCollector implementation="consulo.bundle.impl.BundleTypeUsagesCollector"/>
 
     <statistics.usagesCollector implementation="com.intellij.internal.statistic.ideSettings.LaFUsagesCollector"/>
 
@@ -1852,7 +1852,7 @@
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.MemberOrderService"/>
 
-    <applicationService serviceInterface="consulo.bundle.SdkPointerManager"
+    <applicationService serviceInterface="consulo.content.bundle.SdkPointerManager"
                         serviceImplementation="consulo.module.bundle.SdkPointerManagerImpl"/>
     <rearranger.ui implementation="com.intellij.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
 
@@ -1965,7 +1965,7 @@
                     serviceImplementation="com.intellij.psi.impl.source.resolve.ResolveCache"/>
     <moduleService serviceInterface="com.intellij.openapi.roots.ModuleFileIndex"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
-    <moduleService serviceInterface="com.intellij.openapi.roots.ModuleRootManager"
+    <moduleService serviceInterface="consulo.module.ModuleRootManager"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>
     <moduleService serviceInterface="com.intellij.openapi.module.ModuleScopeProvider"
                    serviceImplementation="com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl"/>
@@ -2443,7 +2443,7 @@
     <!--Platform-->
     <applicationService serviceInterface="com.intellij.packageDependencies.DependenciesVisitorFactory"
                         serviceImplementation="com.intellij.packageDependencies.DependenciesVisitorFactory"/>
-    <applicationService serviceInterface="com.intellij.openapi.projectRoots.SdkTable"
+    <applicationService serviceInterface="consulo.content.bundle.SdkTable"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.SdkTableImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy"
@@ -2523,7 +2523,7 @@
     <pathMacroExpendableProtocol protocol="zip"/>
 
     <projectService serviceInterface="consulo.module.extension.ModuleExtensionHelper"
-                    serviceImplementation="consulo.module.extension.ModuleExtensionHelperImpl"/>
+                    serviceImplementation="consulo.module.extension.impl.ModuleExtensionHelperImpl"/>
 
     <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionContentFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionResourceContentFolderTypeProvider"/>
@@ -2809,6 +2809,6 @@
 
   <projectListeners>
     <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="com.intellij.psi.util.PsiModificationTracker$Listener"/>
-    <listener class="consulo.roots.ExtensionListenerByLayerListenerInvoker" topic="consulo.roots.ModuleRootLayerListener"/>
+    <listener class="consulo.roots.ExtensionListenerByLayerListenerInvoker" topic="consulo.module.layer.event.ModuleRootLayerListener"/>
   </projectListeners>
 </consulo-plugin>

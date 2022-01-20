@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
-import consulo.util.pointers.Named;
+import consulo.component.util.pointer.Named;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

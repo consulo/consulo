@@ -20,7 +20,7 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.libraries.Library;
@@ -41,7 +41,7 @@ import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.preferences.MasterDetailsConfigurable;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

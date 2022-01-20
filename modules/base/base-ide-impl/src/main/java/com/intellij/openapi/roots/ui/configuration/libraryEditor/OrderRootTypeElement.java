@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

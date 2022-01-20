@@ -17,7 +17,7 @@ package com.intellij.packaging.artifacts;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import consulo.util.pointers.NamedPointerManager;
+import consulo.component.util.pointer.NamedPointerManager;
 
 import javax.annotation.Nonnull;
 

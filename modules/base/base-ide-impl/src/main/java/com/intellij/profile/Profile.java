@@ -16,7 +16,7 @@
 package com.intellij.profile;
 
 import com.intellij.openapi.util.JDOMExternalizable;
-import consulo.util.pointers.Named;
+import consulo.component.util.pointer.Named;
 import javax.annotation.Nonnull;
 
 /**

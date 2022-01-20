@@ -15,19 +15,19 @@
  */
 package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 
-import com.intellij.ProjectTopics;
+import consulo.module.ProjectTopics;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.module.Module;
+import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.ModuleRootAdapter;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleSourceOrderEntry;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.event.ModuleRootEvent;
+import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.ui.MasterDetailsComponent;

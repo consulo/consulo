@@ -15,7 +15,7 @@
  */
 package com.intellij.remoteServer.impl.configuration.deployment;
 
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;

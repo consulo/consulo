@@ -20,7 +20,7 @@ import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.scopeView.nodes.BasePsiNode;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;

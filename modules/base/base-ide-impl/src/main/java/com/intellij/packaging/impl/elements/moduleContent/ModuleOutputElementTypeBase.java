@@ -16,11 +16,11 @@
 package com.intellij.packaging.impl.elements.moduleContent;
 
 import com.google.common.base.Predicates;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.ContentEntry;
+import consulo.module.layer.ContentEntry;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
@@ -29,7 +29,7 @@ import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.ui.image.Image;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.LibraryOrderEntry;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.Module;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;

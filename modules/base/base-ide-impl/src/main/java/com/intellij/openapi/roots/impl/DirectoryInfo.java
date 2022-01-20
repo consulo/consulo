@@ -16,9 +16,9 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolder;
+import consulo.module.Module;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ContentFolder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.roots.ContentFolderTypeProvider;
 

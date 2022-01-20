@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.projectRoots;
 
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
+import consulo.content.bundle.SdkAdditionalData;
+import consulo.content.bundle.SdkModel;
 
 /**
  * @author yole
@@ -26,7 +28,7 @@ public interface ValidatableSdkAdditionalData extends SdkAdditionalData {
    * if they are not.
    *
    * @param sdkModel the model containing all configured SDKs.
-   * @throws com.intellij.openapi.options.ConfigurationException if the SDK is not configured correctly.
+   * @throws ConfigurationException if the SDK is not configured correctly.
    * @since 5.0.1
    */
   void checkValid(SdkModel sdkModel) throws ConfigurationException;

@@ -15,17 +15,17 @@
  */
 package consulo.wm.impl.status;
 
-import com.intellij.ProjectTopics;
+import consulo.module.ProjectTopics;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.layer.ModifiableRootModel;
+import consulo.module.ModuleRootManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Comparing;
@@ -35,8 +35,8 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.EditorBasedStatusBarPopup;
 import com.intellij.util.ListWithSelection;
-import consulo.roots.ModuleRootLayer;
-import consulo.roots.ModuleRootLayerListener;
+import consulo.module.layer.ModuleRootLayer;
+import consulo.module.layer.event.ModuleRootLayerListener;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

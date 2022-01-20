@@ -17,9 +17,9 @@ package com.intellij.ide.browsers;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SearchableConfigurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.actions.webSearch.WebSearchOptions;

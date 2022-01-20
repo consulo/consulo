@@ -21,8 +21,8 @@ import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.application.options.OptionsContainingConfigurable;
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
 import consulo.logging.Logger;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

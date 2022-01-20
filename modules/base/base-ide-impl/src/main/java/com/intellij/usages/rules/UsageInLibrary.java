@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.rules;
 
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.usages.Usage;
 
 /**

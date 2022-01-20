@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.browsers;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;

@@ -16,14 +16,14 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.roots.libraries.Library;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.bundle.SdkPointerManager;
-import consulo.util.pointers.NamedPointer;
+import consulo.content.bundle.SdkPointerManager;
+import consulo.component.util.pointer.NamedPointer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

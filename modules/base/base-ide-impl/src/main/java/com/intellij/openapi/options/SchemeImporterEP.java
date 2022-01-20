@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.LazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
-import consulo.util.pointers.Named;
+import consulo.component.util.pointer.Named;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

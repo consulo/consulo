@@ -16,8 +16,13 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.roots.libraries.Library;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.ModifiableRootModel;
+import consulo.module.layer.orderEntry.DependencyScope;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.ModuleOrderEntry;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 

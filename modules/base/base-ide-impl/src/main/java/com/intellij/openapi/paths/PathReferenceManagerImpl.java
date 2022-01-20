@@ -18,7 +18,7 @@ package com.intellij.openapi.paths;
 
 import consulo.component.extension.Extensions;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;

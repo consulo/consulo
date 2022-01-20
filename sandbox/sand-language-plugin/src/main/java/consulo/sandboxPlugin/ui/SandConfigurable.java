@@ -15,8 +15,8 @@
  */
 package consulo.sandboxPlugin.ui;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.security.impl.PrivilegedAction;

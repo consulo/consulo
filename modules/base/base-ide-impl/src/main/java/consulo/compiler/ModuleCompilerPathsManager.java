@@ -16,7 +16,7 @@
 package consulo.compiler;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.roots.ContentFolderTypeProvider;

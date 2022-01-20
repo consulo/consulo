@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.editor;
 
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.UnnamedConfigurable;
 
 /**
  * @author nik

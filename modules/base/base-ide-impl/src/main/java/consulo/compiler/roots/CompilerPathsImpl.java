@@ -18,7 +18,7 @@ package consulo.compiler.roots;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.compiler.ex.CompilerPathsEx;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

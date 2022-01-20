@@ -17,7 +17,7 @@
   <extensions defaultExtensionNs="consulo">
     <applicationConfigurable id="execution"
                              displayName="Execution"
-                             instance="consulo.options.ConfigurableAdapter"/>
+                             instance="consulo.configurable.ConfigurableAdapter"/>
 
     <applicationConfigurable instance="com.intellij.tools.ToolConfigurable"
                              id="preferences.externalTools"
@@ -42,7 +42,7 @@
 
     <applicationConfigurable id="editor"
                              displayName="Editor"
-                             instance="consulo.options.ConfigurableAdapter"/>
+                             instance="consulo.configurable.ConfigurableAdapter"/>
 
 
     <applicationConfigurable parentId="editor" id="editor.breadcrumbs"
@@ -167,7 +167,7 @@
 
     <applicationConfigurable id="general"
                              displayName="General"
-                             instance="consulo.options.ConfigurableAdapter"/>
+                             instance="consulo.configurable.ConfigurableAdapter"/>
 
 
     <applicationConfigurable displayName="Notifications" id="notifications" parentId="general" instance="com.intellij.notification.impl.NotificationsConfigurable"/>

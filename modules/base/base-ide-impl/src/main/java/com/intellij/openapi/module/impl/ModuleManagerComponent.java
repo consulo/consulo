@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.module.impl;
 
-import com.intellij.ProjectTopics;
+import consulo.module.ProjectTopics;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;

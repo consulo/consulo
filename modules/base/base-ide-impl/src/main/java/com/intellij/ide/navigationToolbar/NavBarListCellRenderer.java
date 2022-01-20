@@ -17,7 +17,7 @@ package com.intellij.ide.navigationToolbar;
 
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.FileStatus;

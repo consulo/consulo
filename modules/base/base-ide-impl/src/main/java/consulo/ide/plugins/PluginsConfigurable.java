@@ -16,9 +16,9 @@
 package consulo.ide.plugins;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SearchableConfigurable;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

@@ -22,6 +22,9 @@ import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurableProvider;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.injecting.InjectingContainerOwner;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
@@ -68,7 +71,7 @@ public abstract class ConfigurableEP<T extends UnnamedConfigurable> extends Abst
 
   /**
    * Indicates that configurable has dynamically calculated children.
-   * {@link com.intellij.openapi.options.Configurable.Composite#getConfigurables()} will be called for such configurables.
+   * {@link Configurable.Composite#getConfigurables()} will be called for such configurables.
    */
   @Attribute("dynamic")
   public boolean dynamic;

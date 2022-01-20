@@ -15,10 +15,10 @@
  */
 package com.intellij.execution;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.module.Module;
+import consulo.content.bundle.Sdk;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.impl.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import javax.annotation.Nonnull;
 

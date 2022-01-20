@@ -15,19 +15,18 @@
  */
 package consulo.roots.ui.configuration.session.internal;
 
+import com.intellij.util.EventDispatcher;
 import consulo.component.ComponentManager;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.project.Project;
-import com.intellij.util.EventDispatcher;
+import consulo.configurable.ConfigurableSession;
+import consulo.configurable.internal.ConfigurableSessionHolder;
 import consulo.disposer.Disposable;
-import consulo.roots.ui.configuration.session.ConfigurableSession;
-import consulo.ui.UIAccess;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.EventListener;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -40,25 +39,16 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
   private final Map<Class, Object> myInstances = new ConcurrentHashMap<>();
   private final Map<Class, EventDispatcher> myListeners = new ConcurrentHashMap<>();
 
-  private static ConfigurableSessionImpl ourCurrentSession;
-
-  @Nonnull
-  @RequiredUIAccess
-  public static ConfigurableSessionImpl get() {
-    UIAccess.assertIsUIThread();
-    return Objects.requireNonNull(ourCurrentSession, "Session is not initialized");
-  }
-
   private final Project myProject;
 
   public ConfigurableSessionImpl(Project project) {
     myProject = project;
 
-    if (ourCurrentSession != null) {
+    if (ConfigurableSessionHolder.ourCurrentSession != null) {
       throw new IllegalArgumentException("already initialized");
     }
 
-    ourCurrentSession = this;
+    ConfigurableSessionHolder.ourCurrentSession = this;
   }
 
   @RequiredUIAccess
@@ -68,7 +58,7 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
 
   @RequiredUIAccess
   public void drop() {
-    ourCurrentSession = null;
+    ConfigurableSessionHolder.ourCurrentSession = null;
 
     disposeWithTree();
   }

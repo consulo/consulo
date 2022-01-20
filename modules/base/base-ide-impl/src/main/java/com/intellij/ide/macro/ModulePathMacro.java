@@ -19,8 +19,8 @@ package com.intellij.ide.macro;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.OrderEnumerator;
+import consulo.module.Module;
+import consulo.module.layer.OrderEnumerator;
 
 public final class ModulePathMacro extends Macro {
   @Override

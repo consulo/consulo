@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

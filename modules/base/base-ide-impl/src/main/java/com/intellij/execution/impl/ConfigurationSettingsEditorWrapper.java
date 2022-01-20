@@ -25,7 +25,7 @@ import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.ui.HideableDecorator;
 import com.intellij.ui.ScrollPaneFactory;

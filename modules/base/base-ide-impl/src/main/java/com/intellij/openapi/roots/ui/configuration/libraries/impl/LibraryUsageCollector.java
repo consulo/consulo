@@ -17,10 +17,10 @@ package com.intellij.openapi.roots.ui.configuration.libraries.impl;
 
 import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.ModuleRootManager;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryKind;
 import consulo.application.util.function.Processor;

@@ -15,8 +15,8 @@
  */
 package consulo.roots.ui.configuration;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.Module;
+import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.*;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
@@ -36,7 +36,7 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.swing.SwingMutableModuleExtension;
 import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
-import consulo.roots.ModifiableModuleRootLayer;
+import consulo.module.layer.ModifiableModuleRootLayer;
 import consulo.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import consulo.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import consulo.ui.Component;

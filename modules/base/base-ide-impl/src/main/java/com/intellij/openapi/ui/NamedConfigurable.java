@@ -16,13 +16,13 @@
 
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.preferences.MasterDetailsConfigurable;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

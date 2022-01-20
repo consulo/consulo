@@ -15,10 +15,10 @@
  */
 package consulo.sandboxPlugin.ide.module;
 
-import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.module.layer.ModifiableRootModel;
 import consulo.roots.impl.*;
 import javax.annotation.Nonnull;
-import consulo.roots.ContentFolderSupportPatcher;
+import consulo.module.layer.ContentFolderSupportPatcher;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 

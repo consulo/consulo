@@ -16,7 +16,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import consulo.virtualFileSystem.VirtualFile;

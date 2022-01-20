@@ -16,10 +16,10 @@
 package consulo.roots.ui.configuration.classpath;
 
 import consulo.project.Project;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
-import consulo.roots.ModifiableModuleRootLayer;
+import consulo.module.layer.ModifiableModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 

@@ -18,7 +18,7 @@ package consulo.diagram.builder.impl;
 import consulo.diagram.builder.GraphNode;
 import consulo.diagram.builder.GraphPositionStrategy;
 import consulo.ui.image.Image;
-import consulo.util.pointers.Named;
+import consulo.component.util.pointer.Named;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

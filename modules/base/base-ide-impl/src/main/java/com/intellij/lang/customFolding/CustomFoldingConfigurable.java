@@ -1,7 +1,7 @@
 package com.intellij.lang.customFolding;
 
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;

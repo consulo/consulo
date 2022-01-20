@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.ProjectTopics;
+import consulo.module.ProjectTopics;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
@@ -47,8 +47,8 @@ import com.intellij.openapi.keymap.KeymapManager;
 import consulo.component.util.ModificationTracker;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
+import consulo.module.layer.event.ModuleRootEvent;
+import consulo.module.layer.event.ModuleRootListener;
 import consulo.project.*;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.*;

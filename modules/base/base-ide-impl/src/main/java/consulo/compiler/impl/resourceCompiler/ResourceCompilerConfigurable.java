@@ -16,8 +16,8 @@
 package consulo.compiler.impl.resourceCompiler;
 
 import com.intellij.compiler.MalformedPatternException;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.Messages;

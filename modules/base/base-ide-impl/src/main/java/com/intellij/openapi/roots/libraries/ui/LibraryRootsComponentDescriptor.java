@@ -14,7 +14,7 @@ package com.intellij.openapi.roots.libraries.ui;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.impl.LibraryRootsDetectorImpl;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

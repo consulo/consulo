@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;

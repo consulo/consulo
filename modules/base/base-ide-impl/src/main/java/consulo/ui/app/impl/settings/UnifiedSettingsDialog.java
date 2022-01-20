@@ -15,7 +15,7 @@
  */
 package consulo.ui.app.impl.settings;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.openapi.util.Couple;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;

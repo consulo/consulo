@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.module.impl.scopes;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.DelegatingGlobalSearchScope;
 import javax.annotation.Nonnull;

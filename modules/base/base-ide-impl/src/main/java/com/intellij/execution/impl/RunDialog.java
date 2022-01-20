@@ -22,7 +22,7 @@ import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

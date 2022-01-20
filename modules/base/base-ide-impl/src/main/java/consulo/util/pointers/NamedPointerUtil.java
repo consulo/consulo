@@ -15,6 +15,9 @@
  */
 package consulo.util.pointers;
 
+import consulo.component.util.pointer.Named;
+import consulo.component.util.pointer.NamedPointer;
+
 import javax.annotation.Nullable;
 
 /**

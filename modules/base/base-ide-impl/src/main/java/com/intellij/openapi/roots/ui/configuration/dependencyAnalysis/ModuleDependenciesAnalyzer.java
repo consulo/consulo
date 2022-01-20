@@ -17,10 +17,15 @@ package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.*;
+import consulo.module.Module;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.OrderEnumerator;
+import consulo.module.layer.OrderRootsEnumerator;
+import consulo.module.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.util.PathUtil;

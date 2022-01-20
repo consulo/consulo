@@ -21,6 +21,7 @@ import com.intellij.execution.configurations.ConfigurationPerRunnerSettings;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.runners.ProgramRunner;
+import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.options.*;
 import consulo.disposer.Disposer;

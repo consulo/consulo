@@ -24,7 +24,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.UpdateInBackground;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.openapi.progress.*;
 import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;

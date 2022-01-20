@@ -15,16 +15,16 @@
  */
 package consulo.module.extension.impl;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import consulo.roots.ModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
-import consulo.util.pointers.Named;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.Named;
+import consulo.component.util.pointer.NamedPointer;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

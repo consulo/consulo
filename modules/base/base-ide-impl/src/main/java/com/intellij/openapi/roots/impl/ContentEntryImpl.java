@@ -17,8 +17,8 @@
 package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ContentFolder;
+import consulo.module.Module;
+import consulo.module.layer.ContentFolder;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;

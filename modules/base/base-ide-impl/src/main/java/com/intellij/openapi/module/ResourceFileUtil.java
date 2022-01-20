@@ -16,8 +16,9 @@
 
 package com.intellij.openapi.module;
 
+import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;

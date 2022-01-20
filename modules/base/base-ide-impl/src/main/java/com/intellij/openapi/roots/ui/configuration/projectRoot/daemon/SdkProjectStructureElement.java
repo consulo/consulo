@@ -1,7 +1,7 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

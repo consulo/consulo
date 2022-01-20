@@ -21,7 +21,7 @@
 package com.intellij.codeEditor.printing;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.UnnamedConfigurable;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import javax.annotation.Nonnull;

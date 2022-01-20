@@ -16,8 +16,8 @@
 package com.intellij.ide.actionMacro;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
 
 import javax.swing.*;

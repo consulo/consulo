@@ -16,14 +16,14 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.project.Project;
-import com.intellij.openapi.roots.ContentEntry;
+import consulo.module.layer.ContentEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.roots.ModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

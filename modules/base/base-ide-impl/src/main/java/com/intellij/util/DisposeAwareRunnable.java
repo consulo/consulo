@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import consulo.component.ComponentManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.DumbAware;
 import consulo.project.PossiblyDumbAware;
 import consulo.project.Project;

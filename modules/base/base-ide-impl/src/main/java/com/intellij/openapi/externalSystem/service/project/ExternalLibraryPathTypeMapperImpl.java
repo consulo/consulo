@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.service.project;
 
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;

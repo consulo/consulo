@@ -5,7 +5,7 @@ import com.intellij.lang.ASTNode;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.CachedValueProvider;

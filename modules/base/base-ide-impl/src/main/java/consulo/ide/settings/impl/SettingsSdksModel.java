@@ -16,10 +16,10 @@
 package consulo.ide.settings.impl;
 
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModel;
-import com.intellij.openapi.projectRoots.SdkTypeId;
+import consulo.configurable.ConfigurationException;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkModel;
+import consulo.content.bundle.SdkTypeId;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Consumer;

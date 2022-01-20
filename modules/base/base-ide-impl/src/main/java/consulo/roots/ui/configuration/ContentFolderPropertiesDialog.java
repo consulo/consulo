@@ -18,7 +18,7 @@ package consulo.roots.ui.configuration;
 import com.intellij.ide.util.ChooseElementsDialog;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.ContentFolder;
+import consulo.module.layer.ContentFolder;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.image.Image;

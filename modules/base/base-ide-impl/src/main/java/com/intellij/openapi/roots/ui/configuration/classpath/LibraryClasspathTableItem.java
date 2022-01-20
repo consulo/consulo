@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.classpath;
 
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;

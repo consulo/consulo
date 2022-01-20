@@ -51,7 +51,7 @@ import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.RepositoryTagLocalize;
-import consulo.roots.ui.configuration.session.ConfigurableSession;
+import consulo.configurable.ConfigurableSession;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
 

@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.elements;
 
 import com.intellij.icons.AllIcons;
 import consulo.logging.Logger;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModulePointerManager;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
@@ -41,7 +41,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.packaging.impl.elements.ZipArchivePackagingElement;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.ui.image.Image;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

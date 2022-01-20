@@ -15,11 +15,11 @@
  */
 package consulo.bundle.ui;
 
-import com.intellij.openapi.projectRoots.SdkModel;
+import consulo.content.bundle.SdkModel;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 import consulo.disposer.Disposable;

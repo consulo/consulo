@@ -49,7 +49,7 @@
                         serviceImplementation="consulo.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
-                        serviceImplementation="consulo.preferences.UnifiedShowSettingsUtil"/>
+                        serviceImplementation="consulo.options.impl.UnifiedShowSettingsUtil"/>
 
     <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory"
                         serviceImplementation="consulo.actionSystem.impl.UnifiedActionToolbarFactoryImpl"/>

@@ -15,8 +15,9 @@
  */
 package com.intellij.psi.impl.file.impl;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
+import consulo.module.layer.orderEntry.*;
 import consulo.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import com.intellij.openapi.roots.*;
@@ -32,7 +33,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.roots.OrderEntryWithTracking;
+
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

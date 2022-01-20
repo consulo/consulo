@@ -16,10 +16,10 @@
 package consulo.ide.settings.impl;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.options.SimpleConfigurableByProperties;
+import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;

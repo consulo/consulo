@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;

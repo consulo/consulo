@@ -27,7 +27,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;

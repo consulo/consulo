@@ -15,23 +15,23 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.ProjectTopics;
+import consulo.module.ProjectTopics;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleScopeProvider;
 import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;
 import consulo.project.DumbModeTask;
 import com.intellij.openapi.project.DumbServiceImpl;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.WatchedRootsProvider;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.Pair;
@@ -51,7 +51,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.components.impl.stores.BatchUpdateListener;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.OrderEntryWithTracking;
+import consulo.module.layer.orderEntry.OrderEntryWithTracking;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

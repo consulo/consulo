@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.options.ex;
 
+import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.openapi.options.ConfigurableEP;
-import com.intellij.openapi.options.ConfigurableProvider;
-import com.intellij.openapi.options.OptionalConfigurable;
+import consulo.configurable.ConfigurableProvider;
+import consulo.configurable.OptionalConfigurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
@@ -148,12 +149,12 @@ public class ConfigurableExtensionPointUtil {
    */
   @Nonnull
   public static <T extends Configurable> T findProjectConfigurable(@Nonnull Project project, @Nonnull Class<T> configurableClass) {
-    return findConfigurable(project.getExtensions(Configurable.PROJECT_CONFIGURABLE), configurableClass);
+    return findConfigurable(project.getExtensions(BaseShowSettingsUtil.PROJECT_CONFIGURABLE), configurableClass);
   }
 
   @Nonnull
   public static <T extends Configurable> T findApplicationConfigurable(@Nonnull Class<T> configurableClass) {
-    return findConfigurable(Configurable.APPLICATION_CONFIGURABLE.getExtensions(), configurableClass);
+    return findConfigurable(BaseShowSettingsUtil.APPLICATION_CONFIGURABLE.getExtensions(), configurableClass);
   }
 
   @Nonnull
@@ -171,12 +172,12 @@ public class ConfigurableExtensionPointUtil {
 
   @Nullable
   public static Configurable createProjectConfigurableForProvider(@Nonnull Project project, Class<? extends ConfigurableProvider> providerClass) {
-    return createConfigurableForProvider(project.getExtensions(Configurable.PROJECT_CONFIGURABLE), providerClass);
+    return createConfigurableForProvider(project.getExtensions(BaseShowSettingsUtil.PROJECT_CONFIGURABLE), providerClass);
   }
 
   @Nullable
   public static Configurable createApplicationConfigurableForProvider(Class<? extends ConfigurableProvider> providerClass) {
-    return createConfigurableForProvider(Configurable.APPLICATION_CONFIGURABLE.getExtensions(), providerClass);
+    return createConfigurableForProvider(BaseShowSettingsUtil.APPLICATION_CONFIGURABLE.getExtensions(), providerClass);
   }
 
   @Nullable

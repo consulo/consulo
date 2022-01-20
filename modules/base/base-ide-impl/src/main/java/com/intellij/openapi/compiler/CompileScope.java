@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

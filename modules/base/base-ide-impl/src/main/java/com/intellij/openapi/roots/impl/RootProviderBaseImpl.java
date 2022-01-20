@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.roots.RootProvider;
+import consulo.content.RootProvider;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.settings.impl;
 
+import consulo.content.bundle.SdkModel;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
@@ -27,7 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2020-01-20
  * <p>
- * Marker for {@link com.intellij.openapi.options.ShowSettingsUtil} with return current {@link com.intellij.openapi.projectRoots.SdkModel} for dialog, or for SdkTable
+ * Marker for {@link com.intellij.openapi.options.ShowSettingsUtil} with return current {@link SdkModel} for dialog, or for SdkTable
  */
 public interface ProjectStructureSettingsUtil {
   @Nonnull

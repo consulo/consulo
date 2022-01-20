@@ -19,7 +19,7 @@ package com.intellij.ide.macro;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 
 public final class ModuleDirMacro extends Macro {
   @Override

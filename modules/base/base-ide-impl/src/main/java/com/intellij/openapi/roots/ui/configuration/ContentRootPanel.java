@@ -18,8 +18,8 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.icons.AllIcons;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolder;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ContentFolder;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;

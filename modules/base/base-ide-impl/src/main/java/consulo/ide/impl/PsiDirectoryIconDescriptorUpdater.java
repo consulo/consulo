@@ -17,9 +17,10 @@ package consulo.ide.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.openapi.roots.ContentFolder;
+import consulo.module.layer.ContentFolder;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.roots.PackageBasedContentFolderTypeProvider;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
@@ -84,7 +85,15 @@ public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater 
           }
           else {
             ContentFolderTypeProvider contentFolderTypeForFile = myProjectFileIndex.getContentFolderTypeForFile(virtualFile);
-            symbolIcon = contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory, myPsiPackageManager) : AllIcons.Nodes.TreeClosed;
+            if (contentFolderTypeForFile != null) {
+              if (contentFolderTypeForFile instanceof PackageBasedContentFolderTypeProvider p) {
+                symbolIcon = p.getChildDirectoryIcon(psiDirectory, myPsiPackageManager);
+              } else {
+                symbolIcon = contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory);
+              }
+            } else {
+              symbolIcon = AllIcons.Nodes.TreeClosed;
+            }
           }
         }
       }

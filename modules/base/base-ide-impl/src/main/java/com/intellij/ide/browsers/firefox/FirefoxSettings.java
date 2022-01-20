@@ -16,7 +16,7 @@
 package com.intellij.ide.browsers.firefox;
 
 import com.intellij.ide.browsers.BrowserSpecificSettings;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

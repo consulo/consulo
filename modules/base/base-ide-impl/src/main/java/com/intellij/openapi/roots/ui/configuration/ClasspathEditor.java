@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.ProjectTopics;
+import consulo.module.ProjectTopics;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.event.ModuleRootEvent;
+import consulo.module.layer.event.ModuleRootListener;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

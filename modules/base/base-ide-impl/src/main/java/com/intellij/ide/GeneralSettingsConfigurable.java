@@ -15,15 +15,15 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.util.ObjectUtil;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileOperateDialogSettings;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import consulo.options.SimpleConfigurable;
+import consulo.configurable.SimpleConfigurable;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -16,16 +16,16 @@
 
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModel;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
-import consulo.bundle.SdkUtil;
+import consulo.content.bundle.SdkUtil;
 import consulo.bundle.ui.SdkEditor;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,12 +15,12 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ModuleRootModel;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ContentFolder;
+import consulo.module.layer.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import consulo.virtualFileSystem.VirtualFile;
@@ -40,7 +40,7 @@ import consulo.application.AccessRule;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 import consulo.util.pointers.NamedPointerUtil;
 import org.jetbrains.annotations.NonNls;
 

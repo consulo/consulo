@@ -23,9 +23,9 @@ package com.intellij.openapi.roots.ui;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.util.KeyedExtensionFactory;
 import consulo.ui.image.Image;
 

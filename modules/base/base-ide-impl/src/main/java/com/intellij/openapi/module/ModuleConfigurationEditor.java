@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.module;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 
 public interface ModuleConfigurationEditor extends Configurable {
   void saveData();

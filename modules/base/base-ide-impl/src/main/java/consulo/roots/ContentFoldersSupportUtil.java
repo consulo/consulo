@@ -15,7 +15,8 @@
  */
 package consulo.roots;
 
-import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.module.layer.ContentFolderSupportPatcher;
+import consulo.module.layer.ModifiableRootModel;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;

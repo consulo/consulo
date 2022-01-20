@@ -16,7 +16,7 @@
 package com.intellij.execution;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.psi.PsiElement;

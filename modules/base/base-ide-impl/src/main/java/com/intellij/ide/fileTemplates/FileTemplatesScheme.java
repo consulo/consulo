@@ -18,7 +18,7 @@ package com.intellij.ide.fileTemplates;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.container.boot.ContainerPathManager;
-import consulo.util.pointers.Named;
+import consulo.component.util.pointer.Named;
 
 import javax.annotation.Nonnull;
 import java.io.File;

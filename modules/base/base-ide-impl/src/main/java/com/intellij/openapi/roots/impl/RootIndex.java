@@ -15,11 +15,18 @@
  */
 package com.intellij.openapi.roots.impl;
 
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ContentFolder;
+import consulo.module.layer.OrderEnumerator;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Pair;
@@ -35,7 +42,7 @@ import com.intellij.util.containers.MultiMap;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.roots.OrderEntryWithTracking;
+import consulo.module.layer.orderEntry.OrderEntryWithTracking;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.reference;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import javax.annotation.Nonnull;
 
 /**

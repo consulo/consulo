@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.safeDelete;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.UsageView;

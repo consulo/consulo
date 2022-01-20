@@ -16,8 +16,15 @@
 package com.intellij.openapi.module;
 
 import com.google.common.base.Predicates;
+import consulo.module.Module;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.ContentFolder;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.roots.*;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -32,7 +39,7 @@ import consulo.application.AccessRule;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

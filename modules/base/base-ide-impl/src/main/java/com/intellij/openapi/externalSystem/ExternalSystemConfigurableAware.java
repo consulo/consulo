@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

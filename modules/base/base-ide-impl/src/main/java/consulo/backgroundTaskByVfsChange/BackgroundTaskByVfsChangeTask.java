@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.util.pointers.Named;
+import consulo.component.util.pointer.Named;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

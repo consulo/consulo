@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolder;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ContentFolder;
 
 /**
  *  @author dsl

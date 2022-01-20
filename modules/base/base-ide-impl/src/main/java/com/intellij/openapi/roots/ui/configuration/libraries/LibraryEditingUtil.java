@@ -17,13 +17,13 @@ package com.intellij.openapi.roots.ui.configuration.libraries;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.roots.LibraryOrderEntry;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.ModuleRootModel;
+import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.impl.ModuleLibraryTable;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;

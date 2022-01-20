@@ -16,11 +16,11 @@
 package consulo.roots.ui.configuration.classpath;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import consulo.localize.LocalizeValue;
-import consulo.roots.ModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;

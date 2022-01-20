@@ -16,7 +16,7 @@
 package consulo.compiler.impl;
 
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;

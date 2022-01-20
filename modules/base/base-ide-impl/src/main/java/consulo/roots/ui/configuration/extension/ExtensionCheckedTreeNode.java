@@ -15,14 +15,14 @@
  */
 package consulo.roots.ui.configuration.extension;
 
-import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.module.layer.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.CheckedTreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.impl.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.roots.ui.configuration.ExtensionEditor;

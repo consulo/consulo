@@ -17,20 +17,20 @@ package consulo.roots.impl;
 
 import consulo.application.ReadAction;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ModifiableRootModel;
+import consulo.module.ModuleRootManager;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.util.containers.SmartHashSet;
-import consulo.roots.ModifiableModuleRootLayer;
-import consulo.roots.ModuleRootLayer;
+import consulo.module.layer.ModifiableModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

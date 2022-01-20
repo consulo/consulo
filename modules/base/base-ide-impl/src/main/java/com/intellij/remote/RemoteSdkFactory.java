@@ -16,7 +16,7 @@
 package com.intellij.remote;
 
 import consulo.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

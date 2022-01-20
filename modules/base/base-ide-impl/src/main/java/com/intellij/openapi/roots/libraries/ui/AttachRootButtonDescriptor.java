@@ -12,8 +12,8 @@
  */
 package com.intellij.openapi.roots.libraries.ui;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.OrderRootType;
+import consulo.module.Module;
+import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
@@ -36,7 +36,7 @@ public abstract class AttachRootButtonDescriptor {
 
   /**
    * Creates a descriptor for 'attach' button shown in popup when user click on '+' button.
-   * Consider using {@link #AttachRootButtonDescriptor(com.intellij.openapi.roots.OrderRootType, Image, String)} instead.
+   * Consider using {@link #AttachRootButtonDescriptor(OrderRootType, Image, String)} instead.
    */
   protected AttachRootButtonDescriptor(@Nonnull OrderRootType orderRootType, @Nonnull String buttonText) {
     myOrderRootType = orderRootType;

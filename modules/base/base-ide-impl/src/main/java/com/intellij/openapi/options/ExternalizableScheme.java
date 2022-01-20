@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options;
 
-import consulo.util.pointers.Named;
+import consulo.component.util.pointer.Named;
 import javax.annotation.Nonnull;
 
 public interface ExternalizableScheme extends Named {

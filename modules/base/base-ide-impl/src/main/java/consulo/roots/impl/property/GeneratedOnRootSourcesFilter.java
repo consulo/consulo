@@ -17,7 +17,7 @@ package consulo.roots.impl.property;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ContentFolder;
+import consulo.module.layer.ContentFolder;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;

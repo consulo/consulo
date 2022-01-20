@@ -26,12 +26,12 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.options.OptionsBundle;
+import consulo.configurable.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.preferences.internal.ConfigurableWeight;
+import consulo.configurable.internal.ConfigurableWeight;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

@@ -15,6 +15,10 @@
  */
 package com.intellij.openapi.options;
 
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
+
 import java.util.List;
 
 public abstract class CompositeConfigurable<T extends UnnamedConfigurable> implements Configurable {

@@ -18,12 +18,12 @@ package com.intellij.compiler;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ModuleRootModel;
+import consulo.module.layer.ModifiableRootModel;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.ModuleRootModel;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Chunk;
 import com.intellij.util.containers.ContainerUtil;

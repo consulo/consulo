@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.util.Iconable;
 import consulo.virtualFileSystem.VirtualFile;

@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.options.ex;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.UnnamedConfigurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;

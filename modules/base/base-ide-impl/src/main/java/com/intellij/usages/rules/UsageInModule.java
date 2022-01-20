@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.rules;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.usages.Usage;
 
 /**

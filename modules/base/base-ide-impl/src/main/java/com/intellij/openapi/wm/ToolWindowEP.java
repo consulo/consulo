@@ -24,7 +24,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.localize.LocalizeValue;
 import consulo.extensions.LocalizeValueConverter;
 import consulo.logging.Logger;
-import consulo.module.extension.condition.ExtensionPointBeanWithModuleExtensionCondition;
+import consulo.module.extension.condition.impl.ExtensionPointBeanWithModuleExtensionCondition;
 
 import javax.annotation.Nullable;
 

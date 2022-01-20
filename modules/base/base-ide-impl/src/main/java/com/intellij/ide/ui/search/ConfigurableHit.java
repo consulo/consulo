@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.ui.search;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 
 import java.util.Set;
 import java.util.LinkedHashSet;

@@ -11,7 +11,7 @@ import com.mxgraph.model.*;
 import com.mxgraph.model.mxGraphModel.*;
 import com.mxgraph.util.*;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
-import consulo.util.pointers.Named;
+import consulo.component.util.pointer.Named;
 import org.w3c.dom.Element;
 
 import java.awt.*;

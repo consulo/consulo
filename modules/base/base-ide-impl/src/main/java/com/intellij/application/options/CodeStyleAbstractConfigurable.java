@@ -16,8 +16,8 @@
 package com.intellij.application.options;
 
 import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -16,7 +16,7 @@
 
 package com.maddyhome.idea.copyright.pattern;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 
 public class ModuleInfo {
   public ModuleInfo(Module module) {

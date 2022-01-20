@@ -3,7 +3,7 @@ package com.intellij.ui.tree.project;
 
 import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.LocalFileSystem;

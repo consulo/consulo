@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.ui.SimpleTextAttributes;
 
 /**

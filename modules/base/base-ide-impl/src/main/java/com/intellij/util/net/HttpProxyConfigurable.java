@@ -15,12 +15,12 @@
  */
 package com.intellij.util.net;
 
-import com.intellij.openapi.options.ConfigurableBase;
+import consulo.configurable.IdeaConfigurableBase;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-public class HttpProxyConfigurable extends ConfigurableBase<HttpProxySettingsUi, HttpConfigurable> {
+public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySettingsUi, HttpConfigurable> {
   private final HttpConfigurable settings;
 
   public HttpProxyConfigurable() {

@@ -17,7 +17,7 @@ package com.intellij.xdebugger.settings;
 
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.xdebugger.XDebuggerUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

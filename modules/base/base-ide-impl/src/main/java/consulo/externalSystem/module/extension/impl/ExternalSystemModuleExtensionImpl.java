@@ -18,7 +18,7 @@ package consulo.externalSystem.module.extension.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
 import consulo.module.extension.impl.ModuleExtensionImpl;
-import consulo.roots.ModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

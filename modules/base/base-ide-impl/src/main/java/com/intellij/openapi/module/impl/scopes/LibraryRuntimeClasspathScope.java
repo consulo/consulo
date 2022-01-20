@@ -16,9 +16,11 @@
 
 package com.intellij.openapi.module.impl.scopes;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.orderEntry.*;
 import consulo.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Comparing;
@@ -28,7 +30,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.impl.ModuleRootsProcessor;
 import consulo.roots.types.BinariesOrderRootType;
 import org.jetbrains.annotations.TestOnly;

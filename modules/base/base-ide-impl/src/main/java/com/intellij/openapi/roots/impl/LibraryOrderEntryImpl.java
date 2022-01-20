@@ -16,13 +16,17 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Comparing;
+import consulo.content.RootProvider;
 import consulo.logging.Logger;
+import consulo.module.layer.orderEntry.DependencyScope;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.layer.orderEntry.RootPolicy;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.LibraryOrderEntryType;
 

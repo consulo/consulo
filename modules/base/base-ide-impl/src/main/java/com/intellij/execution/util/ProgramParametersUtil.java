@@ -18,7 +18,7 @@ package com.intellij.execution.util;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.configurations.RuntimeConfigurationWarning;
 import com.intellij.execution.configurations.SimpleProgramParameters;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 
 import javax.annotation.Nullable;

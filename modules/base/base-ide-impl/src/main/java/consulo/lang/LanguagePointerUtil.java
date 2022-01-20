@@ -16,7 +16,7 @@
 package consulo.lang;
 
 import com.intellij.lang.Language;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
 import javax.annotation.Nonnull;
 
 import java.util.Map;

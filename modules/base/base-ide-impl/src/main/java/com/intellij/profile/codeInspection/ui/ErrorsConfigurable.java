@@ -17,7 +17,7 @@
 package com.intellij.profile.codeInspection.ui;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
 import consulo.project.Project;
 import com.intellij.profile.Profile;

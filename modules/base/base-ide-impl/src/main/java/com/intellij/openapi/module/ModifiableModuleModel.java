@@ -16,6 +16,7 @@
 package com.intellij.openapi.module;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.module.Module;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

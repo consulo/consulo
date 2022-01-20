@@ -19,7 +19,6 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.MutableModuleExtension;
 
 import javax.annotation.Nonnull;

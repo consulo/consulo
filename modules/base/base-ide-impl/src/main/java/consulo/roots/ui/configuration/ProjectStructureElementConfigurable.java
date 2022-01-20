@@ -16,7 +16,7 @@
 package consulo.roots.ui.configuration;
 
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.preferences.NamedConfigurable;
+import consulo.configurable.NamedConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

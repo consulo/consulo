@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

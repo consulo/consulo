@@ -20,7 +20,7 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;

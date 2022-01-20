@@ -1,6 +1,6 @@
 package com.intellij.coverage;
 
-import com.intellij.openapi.options.ConfigurableProvider;
+import consulo.configurable.ConfigurableProvider;
 import consulo.project.Project;
 import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;

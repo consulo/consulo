@@ -17,9 +17,9 @@
 package com.intellij.application.options.editor;
 
 import com.intellij.codeInsight.folding.CodeFoldingSettings;
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
-import consulo.options.SimpleConfigurableByProperties;
+import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;

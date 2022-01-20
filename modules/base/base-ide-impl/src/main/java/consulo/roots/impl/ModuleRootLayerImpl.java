@@ -16,10 +16,15 @@
 package consulo.roots.impl;
 
 import com.google.common.base.Predicate;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
+import consulo.module.extension.event.ModuleExtensionChangeListener;
+import consulo.module.extension.impl.ModuleExtensionProviderEP;
+import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ContentFolder;
+import consulo.module.layer.OrderEnumerator;
+import consulo.module.layer.orderEntry.*;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
@@ -42,7 +47,7 @@ import consulo.module.extension.impl.ModuleExtensionIndexCache;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.roots.ModifiableModuleRootLayer;
+import consulo.module.layer.ModifiableModuleRootLayer;
 import consulo.roots.orderEntry.OrderEntrySerializationUtil;
 import org.jdom.Element;
 

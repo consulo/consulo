@@ -16,7 +16,7 @@
 package com.intellij.execution.configurations;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.configurable.UnnamedConfigurable;
 import javax.annotation.Nonnull;
 
 public interface RunConfigurationsSettings {

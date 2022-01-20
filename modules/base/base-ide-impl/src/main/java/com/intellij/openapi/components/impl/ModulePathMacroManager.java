@@ -21,7 +21,7 @@ import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.components.PathMacroUtil;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

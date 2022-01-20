@@ -20,7 +20,7 @@ import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
-import consulo.preferences.internal.ConfigurableWeight;
+import consulo.configurable.internal.ConfigurableWeight;
 import consulo.roots.ui.configuration.ProjectConfigurableWeights;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -3,7 +3,7 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.MessageBus;

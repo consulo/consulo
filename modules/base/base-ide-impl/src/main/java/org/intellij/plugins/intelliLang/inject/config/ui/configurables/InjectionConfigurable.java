@@ -15,7 +15,7 @@
  */
 package org.intellij.plugins.intelliLang.inject.config.ui.configurables;
 
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.NamedConfigurable;
 import org.intellij.plugins.intelliLang.inject.config.Injection;

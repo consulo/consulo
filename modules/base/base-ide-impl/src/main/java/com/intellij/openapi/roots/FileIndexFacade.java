@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import consulo.component.util.ModificationTracker;
 import consulo.virtualFileSystem.VirtualFile;

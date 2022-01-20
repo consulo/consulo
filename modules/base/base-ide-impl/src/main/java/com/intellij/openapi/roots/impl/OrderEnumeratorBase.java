@@ -15,7 +15,13 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.module.Module;
+import consulo.content.OrderRootType;
+import consulo.module.Module;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.ModuleRootModel;
+import consulo.module.layer.OrderEnumerator;
+import consulo.module.layer.OrderRootsEnumerator;
+import consulo.module.layer.orderEntry.*;
 import consulo.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
@@ -27,7 +33,7 @@ import consulo.application.util.function.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import consulo.roots.ModuleRootLayer;
+import consulo.module.layer.ModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 

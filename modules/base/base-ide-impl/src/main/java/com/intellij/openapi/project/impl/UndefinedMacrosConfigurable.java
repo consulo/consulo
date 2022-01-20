@@ -16,8 +16,8 @@
 package com.intellij.openapi.project.impl;
 
 import com.intellij.application.options.pathMacros.PathMacroListEditor;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 import com.intellij.ui.IdeBorderFactory;

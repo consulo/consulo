@@ -19,8 +19,9 @@
  */
 package com.intellij.openapi.module;
 
-import com.intellij.openapi.roots.ModuleRootModel;
+import consulo.module.layer.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 import javax.annotation.Nonnull;
 

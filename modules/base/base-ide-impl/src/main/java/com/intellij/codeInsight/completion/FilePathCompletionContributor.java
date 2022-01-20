@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;

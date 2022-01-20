@@ -20,7 +20,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.util.dataholder.Key;

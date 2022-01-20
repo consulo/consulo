@@ -15,13 +15,13 @@
  */
 package consulo.extension.ui;
 
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModel;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.SdkTypeId;
+import consulo.content.bundle.SdkTypeId;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;

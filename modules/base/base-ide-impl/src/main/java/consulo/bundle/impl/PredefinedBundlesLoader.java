@@ -17,16 +17,16 @@ package consulo.bundle.impl;
 
 import com.intellij.openapi.application.PreloadingActivity;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTable;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
-import consulo.bundle.PredefinedBundlesProvider;
-import consulo.bundle.SdkPointerManager;
+import consulo.content.bundle.PredefinedBundlesProvider;
+import consulo.content.bundle.SdkPointerManager;
 import consulo.logging.Logger;
 import consulo.module.bundle.SdkPointerManagerImpl;
 

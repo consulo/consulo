@@ -16,11 +16,11 @@
 package com.intellij.openapi.roots.ui;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.content.bundle.Sdk;
+import consulo.module.layer.ContentFolder;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

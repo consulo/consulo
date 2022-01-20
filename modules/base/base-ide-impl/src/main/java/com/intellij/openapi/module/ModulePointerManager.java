@@ -16,10 +16,11 @@
 package com.intellij.openapi.module;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.module.Module;
 import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.util.pointers.NamedPointer;
-import consulo.util.pointers.NamedPointerManager;
+import consulo.component.util.pointer.NamedPointer;
+import consulo.component.util.pointer.NamedPointerManager;
 import javax.annotation.Nonnull;
 
 public interface ModulePointerManager extends NamedPointerManager<Module> {

@@ -17,7 +17,7 @@ package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import consulo.project.ProjectBundle;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.PackageBasedContentFolderTypeProvider;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.util.LightDarkColorValue;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22:44/31.10.13
  */
-public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
+public class TestContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider {
   private static final ColorValue TESTS_COLOR = new LightDarkColorValue(new RGBColor(0, 140, 46), new RGBColor(73, 140, 101));
 
   @Nonnull

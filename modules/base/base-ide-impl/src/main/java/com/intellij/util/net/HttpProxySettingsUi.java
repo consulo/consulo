@@ -19,7 +19,7 @@ import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.google.common.net.InternetDomainName;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.options.ConfigurableUi;
+import consulo.configurable.IdeaConfigurableUi;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -44,7 +44,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
-class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
+class HttpProxySettingsUi implements IdeaConfigurableUi<HttpConfigurable> {
   private JPanel myMainPanel;
 
   private JTextField myProxyLoginTextField;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.components;
 
 import consulo.application.Application;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
 import consulo.component.ComponentManager;

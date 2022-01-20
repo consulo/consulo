@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.RootProvider;
+import consulo.content.OrderRootType;
+import consulo.content.RootProvider;
 import com.intellij.openapi.util.JDOMExternalizable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;

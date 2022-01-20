@@ -19,11 +19,11 @@
  */
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.RootProvider;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkAdditionalData;
+import consulo.content.bundle.SdkModificator;
+import consulo.content.bundle.SdkTypeId;
+import consulo.content.RootProvider;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.roots;
 
+import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -34,7 +36,7 @@ public interface ModuleFileIndex extends FileIndex {
    * @return the order entry to which the file or directory belongs, or null if
    * it does not belong to any order entry.
    */
-  @javax.annotation.Nullable
+  @Nullable
   OrderEntry getOrderEntryForFile(@Nonnull VirtualFile fileOrDir);
 
   /**

@@ -17,10 +17,10 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.LibraryOrderEntry;
-import com.intellij.openapi.roots.OrderEntry;
+import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;

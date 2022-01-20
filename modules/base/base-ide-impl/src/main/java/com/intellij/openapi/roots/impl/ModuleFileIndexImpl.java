@@ -17,8 +17,11 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.module.Module;
+import consulo.content.OrderRootType;
+import consulo.module.Module;
 import com.intellij.openapi.roots.*;
+import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.layer.orderEntry.RootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.util.IncorrectOperationException;
@@ -26,7 +29,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.roots.orderEntry.OrderEntryType;
+import consulo.module.layer.orderEntry.OrderEntryType;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

@@ -3,8 +3,8 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.RootProvider;
+import consulo.content.OrderRootType;
+import consulo.content.RootProvider;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;

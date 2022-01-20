@@ -21,7 +21,7 @@ import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.module.Module;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.VerticalFlowLayout;
