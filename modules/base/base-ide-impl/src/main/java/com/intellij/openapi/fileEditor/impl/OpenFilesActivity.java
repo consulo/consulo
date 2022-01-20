@@ -18,8 +18,8 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @author Dmitry Avdeev
  * Date: 4/11/12
  */
-public class OpenFilesActivity implements StartupActivity.DumbAware {
+public class OpenFilesActivity implements IdeaStartupActivity.DumbAware {
   @Override
   public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
     final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);

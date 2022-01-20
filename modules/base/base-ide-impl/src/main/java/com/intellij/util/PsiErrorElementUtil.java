@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;

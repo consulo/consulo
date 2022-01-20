@@ -19,7 +19,7 @@ package com.intellij.refactoring.ui;
 import consulo.document.Document;
 import consulo.document.event.DocumentListener;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
 

@@ -19,7 +19,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleScopeProvider;
 import com.intellij.openapi.module.UnloadedModuleDescription;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;

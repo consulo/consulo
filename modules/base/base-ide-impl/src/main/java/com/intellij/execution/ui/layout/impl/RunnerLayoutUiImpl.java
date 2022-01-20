@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.ComponentWithActions;
 import consulo.util.concurrent.ActionCallback;
 import consulo.disposer.Disposable;

@@ -17,7 +17,7 @@ package consulo.ui.docking.impl;
 
 import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.docking.DockableContent;

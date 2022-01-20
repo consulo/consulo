@@ -19,7 +19,7 @@ import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtilRt;
 import javax.annotation.Nonnull;
 

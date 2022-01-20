@@ -17,7 +17,7 @@
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * @author ven

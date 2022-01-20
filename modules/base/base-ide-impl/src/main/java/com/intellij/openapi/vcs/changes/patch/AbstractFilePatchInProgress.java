@@ -19,7 +19,7 @@ import com.intellij.diff.chains.DiffRequestProducer;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchReader;
 import com.intellij.openapi.diff.impl.patch.formove.PathMerger;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.FilePath;

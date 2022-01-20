@@ -3,7 +3,7 @@ package consulo.tasks.impl;
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.ChangeListDecorator;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.tasks.LocalTask;

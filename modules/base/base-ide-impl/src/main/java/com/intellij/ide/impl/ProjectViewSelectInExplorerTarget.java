@@ -20,7 +20,7 @@ import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.actions.RevealFileAction;
 import com.intellij.ide.actions.ShowFilePathAction;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;

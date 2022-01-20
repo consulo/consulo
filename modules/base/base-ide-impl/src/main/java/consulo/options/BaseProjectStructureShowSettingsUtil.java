@@ -15,7 +15,7 @@
  */
 package consulo.options;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;

@@ -11,7 +11,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Contract;

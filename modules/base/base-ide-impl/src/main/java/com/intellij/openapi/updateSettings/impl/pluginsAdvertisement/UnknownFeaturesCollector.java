@@ -16,7 +16,7 @@
 package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.persist.PersistentStateComponent;
 import org.jdom.Element;
 

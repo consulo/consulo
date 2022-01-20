@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.service.notification;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

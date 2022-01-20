@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
 

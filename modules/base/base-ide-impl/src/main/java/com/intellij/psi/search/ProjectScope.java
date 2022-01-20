@@ -5,7 +5,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
 import javax.annotation.Nonnull;
 

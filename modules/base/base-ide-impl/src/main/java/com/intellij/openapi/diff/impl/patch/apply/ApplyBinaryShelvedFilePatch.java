@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.patch.apply;
 
 import com.intellij.openapi.diff.impl.patch.ApplyPatchStatus;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;

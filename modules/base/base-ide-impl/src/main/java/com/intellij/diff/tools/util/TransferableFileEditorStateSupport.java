@@ -27,7 +27,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.fileEditor.TransferableFileEditorState;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import com.intellij.openapi.util.Condition;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

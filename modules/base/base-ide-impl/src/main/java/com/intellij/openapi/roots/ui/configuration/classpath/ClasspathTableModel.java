@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.classpath;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;

@@ -16,12 +16,11 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
-import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

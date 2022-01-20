@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

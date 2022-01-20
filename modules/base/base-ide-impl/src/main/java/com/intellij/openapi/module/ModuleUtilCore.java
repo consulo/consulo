@@ -16,7 +16,7 @@
 package com.intellij.openapi.module;
 
 import com.google.common.base.Predicates;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import consulo.util.dataholder.Key;

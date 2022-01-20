@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.libraries.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;

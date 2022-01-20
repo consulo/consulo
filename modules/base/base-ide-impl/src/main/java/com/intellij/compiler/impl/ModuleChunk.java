@@ -19,7 +19,7 @@ import consulo.application.Application;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;

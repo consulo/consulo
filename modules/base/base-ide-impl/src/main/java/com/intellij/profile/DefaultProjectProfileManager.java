@@ -17,7 +17,7 @@ package com.intellij.profile;
 
 import com.intellij.openapi.components.MainConfigurationStateSplitter;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;

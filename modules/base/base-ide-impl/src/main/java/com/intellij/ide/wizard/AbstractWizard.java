@@ -5,7 +5,7 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;

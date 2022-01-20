@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import consulo.annotation.DeprecationInfo;

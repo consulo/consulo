@@ -16,7 +16,7 @@
 package consulo.project.startup;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * <p>Runs an activity on project open.</p>
  *
- * <p>If the activity implements {@link com.intellij.openapi.project.DumbAware} interface, e.g. {@link DumbAware}, it will be started in a pooled thread
+ * <p>If the activity implements {@link consulo.project.DumbAware} interface, e.g. {@link DumbAware}, it will be started in a pooled thread
  * under 'Loading Project' dialog, otherwise it will be started in the dispatch thread after the initialization.</p>
  *
  * @author Dmitry Avdeev
@@ -44,7 +44,7 @@ public interface StartupActivity {
    */
   ExtensionPointName<StartupActivity.Background> BACKGROUND_POST_STARTUP_ACTIVITY = ExtensionPointName.create("consulo.backgroundPostStartupActivity");
 
-  interface DumbAware extends StartupActivity, com.intellij.openapi.project.DumbAware {
+  interface DumbAware extends StartupActivity, consulo.project.DumbAware {
   }
 
   interface Background extends StartupActivity {

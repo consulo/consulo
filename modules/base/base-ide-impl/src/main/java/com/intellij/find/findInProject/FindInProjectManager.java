@@ -10,7 +10,7 @@ import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import consulo.application.util.function.Processor;

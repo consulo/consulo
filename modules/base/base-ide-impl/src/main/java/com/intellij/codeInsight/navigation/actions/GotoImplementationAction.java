@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.navigation.GotoImplementationHandler;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

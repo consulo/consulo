@@ -16,7 +16,7 @@
 
 package com.intellij.ide;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.ide.util.DeleteHandler;
 import javax.annotation.Nonnull;

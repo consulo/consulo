@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.ActionGroupUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 /**
  * This group hides itself when there's no enabled and visible child.

@@ -16,11 +16,11 @@ import consulo.component.util.ModificationTracker;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectLocator;
+import consulo.project.Project;
+import consulo.project.ProjectLocator;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -82,7 +82,7 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
     myIdeEncodingManager = (EncodingManagerImpl)EncodingManager.getInstance();
   }
 
-  static final class EncodingProjectManagerStartUpActivity implements StartupActivity.DumbAware {
+  static final class EncodingProjectManagerStartUpActivity implements IdeaStartupActivity.DumbAware {
     @Override
     public void runActivity(@Nonnull Project project) {
       GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)getInstance(project)).reloadAlreadyLoadedDocuments(), ModalityState.NON_MODAL, project.getDisposed());

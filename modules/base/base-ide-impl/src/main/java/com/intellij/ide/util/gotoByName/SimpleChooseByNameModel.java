@@ -16,7 +16,7 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

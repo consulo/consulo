@@ -11,7 +11,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;

@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.EditorTextField;
 import consulo.awt.TargetAWT;
 

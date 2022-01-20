@@ -4,7 +4,7 @@ import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.remoteServer.runtime.log.LoggingHandler;
 import javax.annotation.Nonnull;
 

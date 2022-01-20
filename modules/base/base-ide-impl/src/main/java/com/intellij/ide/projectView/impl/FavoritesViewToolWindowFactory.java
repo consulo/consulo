@@ -17,8 +17,8 @@ package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.favoritesTreeView.FavoritesPanel;
 import com.intellij.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;

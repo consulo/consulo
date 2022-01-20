@@ -33,6 +33,7 @@ open module consulo.ide.impl {
   requires transitive consulo.application.api;
   requires transitive consulo.document.api;
   requires transitive consulo.virtual.file.system.api;
+  requires transitive consulo.project.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -652,7 +653,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.roots.ui.configuration.projectRoot;
   exports com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
   exports com.intellij.openapi.roots.ui.util;
-  exports com.intellij.openapi.startup;
   exports com.intellij.openapi.ui;
   exports com.intellij.openapi.ui.ex;
   exports com.intellij.openapi.ui.impl;
@@ -767,7 +767,6 @@ open module consulo.ide.impl {
   exports com.intellij.profile.codeInspection.ui.header;
   exports com.intellij.profile.codeInspection.ui.inspectionsTree;
   exports com.intellij.profile.codeInspection.ui.table;
-  exports com.intellij.project;
   exports com.intellij.projectImport;
   exports com.intellij.psi;
   exports com.intellij.psi.codeStyle;
@@ -1300,13 +1299,9 @@ open module consulo.ide.impl {
   exports consulo.plugins.internal;
   exports consulo.preferences;
   exports consulo.preferences.internal;
-  //exports consulo.progress;
   exports consulo.progress.util;
   exports consulo.progress.util.impl;
-  exports consulo.project;
   exports consulo.project.impl;
-  exports consulo.project.startup;
-  //exports consulo.projectView;
   exports consulo.projectView.impl;
   exports consulo.psi;
   exports consulo.psi.impl;

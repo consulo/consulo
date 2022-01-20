@@ -27,7 +27,7 @@ import com.intellij.openapi.command.undo.UndoableAction;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;

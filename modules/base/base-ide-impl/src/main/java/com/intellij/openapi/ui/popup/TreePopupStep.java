@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui.popup;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 public interface TreePopupStep<T> extends PopupStep<T> {
 

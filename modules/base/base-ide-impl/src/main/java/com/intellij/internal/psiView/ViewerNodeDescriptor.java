@@ -22,7 +22,7 @@
 package com.intellij.internal.psiView;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class ViewerNodeDescriptor extends NodeDescriptor {

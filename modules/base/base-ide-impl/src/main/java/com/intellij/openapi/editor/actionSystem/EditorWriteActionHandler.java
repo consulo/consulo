@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.settings.impl;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;

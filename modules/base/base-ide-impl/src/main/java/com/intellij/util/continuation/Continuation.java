@@ -15,7 +15,7 @@
  */
 package com.intellij.util.continuation;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.Consumer;
 
 import java.util.List;

@@ -18,7 +18,7 @@ package consulo.ide.plugins.pluginsAdvertisement;
 import com.intellij.ide.plugins.InstallPluginAction;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.ide.plugins.PluginTable;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableUtil;

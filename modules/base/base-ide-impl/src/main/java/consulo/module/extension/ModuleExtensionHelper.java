@@ -16,7 +16,7 @@
 package consulo.module.extension;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

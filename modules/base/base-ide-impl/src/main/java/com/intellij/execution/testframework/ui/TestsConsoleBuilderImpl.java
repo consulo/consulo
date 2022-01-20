@@ -17,7 +17,7 @@ package com.intellij.execution.testframework.ui;
 
 import com.intellij.execution.filters.TextConsoleBuilderImpl;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 
 /**

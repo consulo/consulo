@@ -32,7 +32,7 @@ import consulo.document.FileDocumentManager;
 import consulo.application.util.function.Processor;
 import consulo.document.Document;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.ShutDownTracker;
 import consulo.document.util.TextRange;

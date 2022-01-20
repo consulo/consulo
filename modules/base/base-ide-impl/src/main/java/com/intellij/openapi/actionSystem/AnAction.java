@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.PossiblyDumbAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.PossiblyDumbAware;
+import consulo.project.Project;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;

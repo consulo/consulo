@@ -19,8 +19,8 @@ package com.intellij.ide.navigationToolbar;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 import com.intellij.util.ui.UIUtil;
 
 import java.awt.*;

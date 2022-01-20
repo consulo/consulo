@@ -17,7 +17,7 @@ package consulo.roots.ui.configuration.classpath;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.ChooseElementsDialog;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;

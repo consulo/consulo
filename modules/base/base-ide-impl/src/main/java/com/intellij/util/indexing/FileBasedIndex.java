@@ -2,10 +2,11 @@
 package com.intellij.util.indexing;
 
 import consulo.application.ReadAction;
+import consulo.project.IndexNotReadyException;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Condition;
@@ -136,7 +137,7 @@ public abstract class FileBasedIndex {
   /**
    * Executes command and allow its to have an index access in dumb mode.
    * Inside the command it's safe to call index related stuff and
-   * {@link com.intellij.openapi.project.IndexNotReadyException} are not expected to be happen here.
+   * {@link IndexNotReadyException} are not expected to be happen here.
    *
    * <p> In smart mode, the behavior is similar to direct command execution
    *

@@ -3,6 +3,7 @@ package com.intellij.openapi.application.impl;
 
 import com.intellij.openapi.application.*;
 import consulo.application.*;
+import consulo.application.event.ApplicationListener;
 import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 

@@ -17,7 +17,7 @@ package com.intellij.execution;
 
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.messagebus.Topic;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.annotation.RequiredUIAccess;

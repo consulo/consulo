@@ -17,7 +17,7 @@ package com.intellij.featureStatistics;
 
 import com.intellij.internal.statistic.UsagesCollector;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

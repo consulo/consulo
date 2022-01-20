@@ -17,7 +17,7 @@ package consulo.desktop.awt.fileChooser.impl.system;
 
 import com.intellij.openapi.fileChooser.FileSaverDescriptor;
 import com.intellij.openapi.fileChooser.FileSaverDialog;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.desktop.awt.uiOld.mac.MacFileSaverDialog;
 import consulo.platform.Platform;
 import consulo.ui.fileOperateDialog.FileSaveDialogProvider;

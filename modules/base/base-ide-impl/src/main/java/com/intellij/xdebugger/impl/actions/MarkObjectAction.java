@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import javax.annotation.Nonnull;
 

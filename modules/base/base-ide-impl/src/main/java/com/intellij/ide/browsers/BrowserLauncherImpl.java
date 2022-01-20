@@ -21,7 +21,7 @@ import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.AppUIUtil;
 import consulo.util.concurrent.AsyncResult;

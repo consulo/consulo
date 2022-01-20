@@ -16,7 +16,7 @@
 package consulo.externalSystem.service.module.wizard;
 
 import com.intellij.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.moduleImport.ModuleImportContext;
 
 import javax.annotation.Nonnull;

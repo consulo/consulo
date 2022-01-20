@@ -3,7 +3,7 @@ package com.intellij.vcs.log.ui.frame;
 import com.google.common.primitives.Ints;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.progress.util.ProgressWindow;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

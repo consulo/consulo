@@ -25,7 +25,7 @@ package com.intellij.openapi.vcs.changes.shelf;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.settings;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.util.containers.ContainerUtilRt;

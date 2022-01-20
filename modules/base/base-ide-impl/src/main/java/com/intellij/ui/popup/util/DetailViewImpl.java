@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.Document;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;

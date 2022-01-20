@@ -20,13 +20,16 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.ProjectLocator;
+import consulo.project.ProjectManager;
+import consulo.project.impl.SingleProjectHolder;
 import consulo.virtualFileSystem.VirtualFile;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,7 +48,7 @@ public class ProjectLocatorImpl extends ProjectLocator {
   @Nullable
   public Project guessProjectForFile(final VirtualFile file) {
     // StubUpdatingIndex calls this method very often, so, optimized implementation is required
-    Project project = ProjectCoreUtil.theOnlyOpenProject();
+    Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null && !project.isDisposed()) {
       return project;
     }

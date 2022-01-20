@@ -2,7 +2,7 @@
 package com.intellij.openapi.vcs.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 

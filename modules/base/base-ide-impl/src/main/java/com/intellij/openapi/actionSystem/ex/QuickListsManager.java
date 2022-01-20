@@ -24,7 +24,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.ThrowableConvertor;

@@ -2,7 +2,7 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.TabbedPaneWrapper;
 import consulo.disposer.Disposable;
 import consulo.options.ConfigurableUIMigrationUtil;

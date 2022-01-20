@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.libraries;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;

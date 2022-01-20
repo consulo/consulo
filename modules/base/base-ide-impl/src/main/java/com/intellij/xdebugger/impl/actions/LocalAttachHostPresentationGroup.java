@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.actions;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.xdebugger.attach.XAttachHost;
 import com.intellij.xdebugger.attach.XAttachPresentationGroup;

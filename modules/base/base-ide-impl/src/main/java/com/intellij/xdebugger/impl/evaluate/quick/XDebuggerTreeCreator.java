@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.evaluate.quick;
 
 import com.intellij.concurrency.ResultConsumer;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.xdebugger.XSourcePosition;

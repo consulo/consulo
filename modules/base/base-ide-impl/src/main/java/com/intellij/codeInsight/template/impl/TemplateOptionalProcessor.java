@@ -21,7 +21,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 
 /**

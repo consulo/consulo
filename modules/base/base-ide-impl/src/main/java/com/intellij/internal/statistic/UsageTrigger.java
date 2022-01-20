@@ -18,7 +18,7 @@ package com.intellij.internal.statistic;
 import com.intellij.internal.statistic.beans.ConvertUsagesUtil;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import com.intellij.util.xmlb.annotations.Tag;

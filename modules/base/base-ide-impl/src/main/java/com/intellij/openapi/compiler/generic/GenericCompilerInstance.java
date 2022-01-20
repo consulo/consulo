@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler.generic;
 
 import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 import java.io.File;

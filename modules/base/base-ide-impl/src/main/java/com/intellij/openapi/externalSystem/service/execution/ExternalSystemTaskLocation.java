@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.service.execution;
 
 import com.intellij.execution.PsiLocation;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 

@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;

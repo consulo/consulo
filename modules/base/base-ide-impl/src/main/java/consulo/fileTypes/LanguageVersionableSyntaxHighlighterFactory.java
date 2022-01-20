@@ -19,7 +19,7 @@ import com.intellij.lang.Language;
 import consulo.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.lang.util.LanguageVersionUtil;
 import javax.annotation.Nonnull;

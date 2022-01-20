@@ -18,8 +18,8 @@ package com.intellij.vcs.log.impl;
 import com.intellij.ide.caches.CachesInvalidator;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.CalledInAny;
 import com.intellij.openapi.vcs.CalledInAwt;
@@ -170,7 +170,7 @@ public class VcsProjectLog {
     }
   }
 
-  public static class InitLogStartupActivity implements StartupActivity {
+  public static class InitLogStartupActivity implements IdeaStartupActivity {
     @Override
     public void runActivity(@Nonnull Project project) {
       if (ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isHeadlessEnvironment()) return;

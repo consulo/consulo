@@ -16,7 +16,7 @@
 package consulo.progress.util.impl;
 
 import com.intellij.openapi.progress.util.ProgressWindow;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.localize.LocalizeValue;
 import consulo.progress.util.ProgressDialog;
 import consulo.ui.Label;

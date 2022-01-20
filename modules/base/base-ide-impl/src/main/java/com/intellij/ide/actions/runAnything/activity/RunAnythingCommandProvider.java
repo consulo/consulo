@@ -14,7 +14,7 @@ import com.intellij.ide.actions.runAnything.commands.RunAnythingCommandCustomize
 import com.intellij.ide.actions.runAnything.execution.RunAnythingRunProfile;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;

@@ -41,7 +41,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiElementFilter;

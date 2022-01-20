@@ -2,7 +2,7 @@
 package com.intellij.openapi.wm.impl.status.widget;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.*;

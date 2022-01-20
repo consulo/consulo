@@ -15,7 +15,7 @@
  */
 package consulo.packaging.artifacts;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.packaging.artifacts.ArtifactPointerManager;
 
 /**

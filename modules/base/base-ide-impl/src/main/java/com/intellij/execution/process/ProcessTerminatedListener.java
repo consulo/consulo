@@ -17,7 +17,7 @@ package com.intellij.execution.process;
 
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.StatusBar;
 import org.jetbrains.annotations.NonNls;

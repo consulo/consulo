@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 
@@ -29,7 +29,7 @@ public interface BatchQuickFix<D extends CommonProblemDescriptor> {
   /**
    * Called to apply the cumulative fix. Is invoked in WriteAction
    *
-   * @param project    {@link com.intellij.openapi.project.Project}
+   * @param project    {@link Project}
    * @param descriptors problem reported by the tool on which fix should work
    * @param psiElementsToIgnore elements to be excluded from view during post-refresh
    * @param refreshViews post-refresh inspection results view; would remove collected elements from the view

@@ -17,7 +17,7 @@
 package com.intellij.usages.impl;
 
 import consulo.application.AppUIExecutor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.components.JBPanelWithEmptyText;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.UsageContextPanel;

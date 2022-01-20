@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * @author Maxim.Mossienko

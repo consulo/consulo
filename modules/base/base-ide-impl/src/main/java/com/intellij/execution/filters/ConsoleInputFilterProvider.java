@@ -17,7 +17,7 @@
 package com.intellij.execution.filters;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 public interface ConsoleInputFilterProvider {

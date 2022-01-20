@@ -17,7 +17,7 @@
 package com.intellij.ide.util;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

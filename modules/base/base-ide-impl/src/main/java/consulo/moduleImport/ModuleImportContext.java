@@ -16,7 +16,7 @@
 package consulo.moduleImport;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 
 import javax.annotation.Nonnull;

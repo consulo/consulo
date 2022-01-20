@@ -20,7 +20,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;

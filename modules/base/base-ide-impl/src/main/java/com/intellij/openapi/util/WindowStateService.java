@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.ApplicationWindowStateService;
 import consulo.util.ProjectWindowStateService;
 import javax.annotation.Nonnull;

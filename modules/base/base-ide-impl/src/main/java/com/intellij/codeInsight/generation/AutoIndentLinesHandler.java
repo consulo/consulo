@@ -19,7 +19,7 @@ package com.intellij.codeInsight.generation;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;

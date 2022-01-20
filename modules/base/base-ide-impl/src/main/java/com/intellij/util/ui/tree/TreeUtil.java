@@ -6,7 +6,7 @@ import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.Comparing;

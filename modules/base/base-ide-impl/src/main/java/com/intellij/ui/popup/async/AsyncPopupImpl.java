@@ -3,7 +3,7 @@ package com.intellij.ui.popup.async;
 
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.popup.PopupStep;
 import consulo.disposer.Disposer;
 import com.intellij.ui.components.JBLabel;

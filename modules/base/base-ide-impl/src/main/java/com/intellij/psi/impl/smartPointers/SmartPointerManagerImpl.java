@@ -7,7 +7,7 @@ import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;

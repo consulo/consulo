@@ -9,7 +9,7 @@ import com.intellij.lang.LanguageExtension;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.text.StringUtil;

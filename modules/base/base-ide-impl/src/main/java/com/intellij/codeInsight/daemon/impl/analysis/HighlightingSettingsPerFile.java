@@ -18,9 +18,9 @@ package com.intellij.codeInsight.daemon.impl.analysis;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectCoreUtil;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ProjectCoreUtil;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;

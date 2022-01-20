@@ -18,7 +18,7 @@ package com.intellij.diff.actions.impl;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 public abstract class NextDifferenceAction extends AnAction implements DumbAware {
   public NextDifferenceAction() {

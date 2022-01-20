@@ -17,7 +17,7 @@ package com.intellij.psi.search.scope;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;

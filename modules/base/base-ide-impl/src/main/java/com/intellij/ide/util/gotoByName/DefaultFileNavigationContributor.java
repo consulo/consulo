@@ -17,8 +17,8 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.ProjectCoreUtil;
+import consulo.project.DumbAware;
+import consulo.project.ProjectCoreUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.search.FilenameIndex;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project;
+package consulo.project.impl;
+
+import consulo.project.Project;
+
+import javax.annotation.Nullable;
 
 /**
- * This interface allows to mark a distinct object as dumb-aware.
- *
- * @author yole
- * @see DumbAware
+ * @author VISTALL
+ * @since 19/01/2022
  */
-public interface PossiblyDumbAware {
-  default boolean isDumbAware() {
-    return this instanceof DumbAware;
+public class SingleProjectHolder {
+  /**
+   * @return the only open project if there is one, null if no or several projects are open
+   */
+  @Nullable
+  public static Project theOnlyOpenProject() {
+    return theProject;
   }
+
+  public static volatile Project theProject;
 }

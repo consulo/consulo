@@ -9,7 +9,7 @@ import com.intellij.coverage.CoverageDataManager;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 public class GenerateCoverageReportAction extends AnAction {
 

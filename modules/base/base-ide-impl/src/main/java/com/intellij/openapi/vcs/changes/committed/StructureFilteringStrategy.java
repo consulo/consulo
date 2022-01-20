@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.util.Comparing;

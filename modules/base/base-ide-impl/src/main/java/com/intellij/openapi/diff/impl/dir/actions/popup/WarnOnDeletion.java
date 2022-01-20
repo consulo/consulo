@@ -18,7 +18,7 @@ package com.intellij.openapi.diff.impl.dir.actions.popup;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 /**
  * @author Konstantin Bulenkov

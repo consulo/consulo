@@ -29,7 +29,7 @@ import com.intellij.icons.AllIcons;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.search.GlobalSearchScope;
 import consulo.ui.image.Image;

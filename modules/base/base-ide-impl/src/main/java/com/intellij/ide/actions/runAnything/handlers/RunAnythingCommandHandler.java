@@ -4,7 +4,7 @@ package com.intellij.ide.actions.runAnything.handlers;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.process.KillableProcessHandler;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

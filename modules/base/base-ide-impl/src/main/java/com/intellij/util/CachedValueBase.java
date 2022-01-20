@@ -3,7 +3,7 @@ package com.intellij.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.component.util.ModificationTracker;
 import consulo.virtualFileSystem.VirtualFile;

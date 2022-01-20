@@ -5,7 +5,7 @@ import com.intellij.build.BuildBundle;
 import com.intellij.build.events.BuildIssueEvent;
 import com.intellij.build.events.MessageEventResult;
 import com.intellij.build.issue.BuildIssue;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.pom.Navigatable;
 
 import javax.annotation.Nonnull;

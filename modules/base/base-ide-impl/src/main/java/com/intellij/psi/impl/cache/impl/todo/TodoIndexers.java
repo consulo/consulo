@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.cache.impl.todo;
 
 import com.intellij.openapi.fileTypes.FileTypeExtension;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.indexing.DataIndexer;

@@ -17,7 +17,7 @@ package com.intellij.openapi.projectRoots;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;

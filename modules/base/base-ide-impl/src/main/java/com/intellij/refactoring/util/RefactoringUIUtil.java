@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ElementDescriptionUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.IncorrectOperationException;

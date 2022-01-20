@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Pair;

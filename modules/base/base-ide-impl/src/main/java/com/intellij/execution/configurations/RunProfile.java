@@ -18,6 +18,7 @@ package com.intellij.execution.configurations;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -28,7 +29,7 @@ import javax.annotation.Nullable;
  * created from code).
  *
  * @see RunConfiguration
- * @see ConfigurationFactory#createTemplateConfiguration(com.intellij.openapi.project.Project)
+ * @see ConfigurationFactory#createTemplateConfiguration(Project)
  */
 public interface RunProfile {
   /**

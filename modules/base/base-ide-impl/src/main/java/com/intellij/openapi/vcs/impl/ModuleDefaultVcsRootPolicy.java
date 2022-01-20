@@ -21,7 +21,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -33,8 +33,8 @@ import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import com.intellij.openapi.vcs.impl.projectlevelman.NewMappings;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.project.ProjectCoreUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.project.ProjectKt;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import jakarta.inject.Inject;
@@ -77,8 +77,8 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
         result.add(myBaseDir);
       }
     }
-    if (ProjectKt.isDirectoryBased(myProject) && myBaseDir != null) {
-      final VirtualFile ideaDir = ProjectKt.getDirectoryStoreFile(myProject);
+    if (ProjectCoreUtil.isDirectoryBased(myProject) && myBaseDir != null) {
+      final VirtualFile ideaDir = ProjectCoreUtil.getDirectoryStoreFile(myProject);
       if (ideaDir != null) {
         final AbstractVcs vcsFor = vcsManager.getVcsFor(ideaDir);
         if (vcsFor != null && vcsName.equals(vcsFor.getName())) {
@@ -135,8 +135,8 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
       LOG.debug("Content root is not a directory, using its parent " + parent);
       return parent;
     }
-    if (ProjectKt.isDirectoryBased(myProject)) {
-      VirtualFile ideaDir = ProjectKt.getDirectoryStoreFile(myProject);
+    if (ProjectCoreUtil.isDirectoryBased(myProject)) {
+      VirtualFile ideaDir = ProjectCoreUtil.getDirectoryStoreFile(myProject);
       if (ideaDir != null && VfsUtilCore.isAncestor(ideaDir, file, false)) {
         LOG.debug("File " + file + " is under .idea");
         return ideaDir;
@@ -151,8 +151,8 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   public Collection<VirtualFile> getDirtyRoots() {
     Collection<VirtualFile> dirtyRoots = newHashSet();
 
-    if (ProjectKt.isDirectoryBased(myProject)) {
-      VirtualFile ideaDir = ProjectKt.getDirectoryStoreFile(myProject);
+    if (ProjectCoreUtil.isDirectoryBased(myProject)) {
+      VirtualFile ideaDir = ProjectCoreUtil.getDirectoryStoreFile(myProject);
       if (ideaDir != null) {
         dirtyRoots.add(ideaDir);
       }

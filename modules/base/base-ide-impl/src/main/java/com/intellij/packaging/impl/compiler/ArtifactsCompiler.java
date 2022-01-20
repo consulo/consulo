@@ -21,7 +21,7 @@ import com.intellij.openapi.compiler.generic.CompileItem;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
 import com.intellij.openapi.compiler.generic.GenericCompilerInstance;
 import com.intellij.openapi.compiler.generic.VirtualFilePersistentState;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.KeyDescriptor;

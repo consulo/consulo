@@ -15,7 +15,7 @@
  */
 package com.intellij.remoteServer.impl.runtime.log;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.remoteServer.runtime.deployment.DeploymentLogManager;
 import com.intellij.remoteServer.runtime.log.LoggingHandler;
 import javax.annotation.Nonnull;

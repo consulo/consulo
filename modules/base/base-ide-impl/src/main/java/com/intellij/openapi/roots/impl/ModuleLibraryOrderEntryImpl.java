@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;

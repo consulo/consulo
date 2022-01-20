@@ -16,7 +16,7 @@
 package com.intellij.refactoring.util;
 
 import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 import org.jetbrains.annotations.NonNls;

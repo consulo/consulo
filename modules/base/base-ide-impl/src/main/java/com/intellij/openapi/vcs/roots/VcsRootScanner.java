@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.registry.Registry;

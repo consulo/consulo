@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.Change;

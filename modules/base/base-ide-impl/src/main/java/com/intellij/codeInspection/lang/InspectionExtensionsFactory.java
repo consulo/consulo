@@ -23,7 +23,7 @@ package com.intellij.codeInspection.lang;
 import com.intellij.codeInspection.HTMLComposer;
 import com.intellij.codeInspection.reference.RefManager;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

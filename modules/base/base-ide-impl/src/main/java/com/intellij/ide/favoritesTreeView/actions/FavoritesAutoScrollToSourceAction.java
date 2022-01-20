@@ -17,7 +17,7 @@ package com.intellij.ide.favoritesTreeView.actions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.favoritesTreeView.FavoritesViewTreeBuilder;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.AutoScrollToSourceHandler;
 import com.intellij.ui.UIBundle;
 

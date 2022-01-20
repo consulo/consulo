@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.progress.util;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.swing.*;
 

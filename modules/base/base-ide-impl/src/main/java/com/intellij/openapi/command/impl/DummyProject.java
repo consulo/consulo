@@ -16,7 +16,7 @@
 package com.intellij.openapi.command.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.MessageBus;
 import consulo.annotation.access.RequiredWriteAction;

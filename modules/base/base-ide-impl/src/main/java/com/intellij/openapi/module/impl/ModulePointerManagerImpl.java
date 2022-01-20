@@ -20,7 +20,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.ModuleAdapter;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposer;
 import consulo.util.pointers.NamedPointerImpl;

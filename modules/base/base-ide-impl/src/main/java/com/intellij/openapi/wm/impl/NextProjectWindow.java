@@ -18,7 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 

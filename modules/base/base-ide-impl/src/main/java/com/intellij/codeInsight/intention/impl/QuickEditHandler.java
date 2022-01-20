@@ -45,7 +45,7 @@ import consulo.document.Document;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;

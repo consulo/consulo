@@ -17,7 +17,7 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import consulo.disposer.Disposable;
 

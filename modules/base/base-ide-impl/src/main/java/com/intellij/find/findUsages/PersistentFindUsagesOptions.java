@@ -2,7 +2,7 @@
 package com.intellij.find.findUsages;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.search.SearchScope;
 import consulo.annotation.access.RequiredReadAction;
 

@@ -16,7 +16,7 @@
 package com.intellij.ui.content.tabs;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import com.intellij.openapi.ui.ShadowAction;
 import consulo.disposer.Disposer;
 import com.intellij.ui.UIBundle;

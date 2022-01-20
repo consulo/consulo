@@ -20,7 +20,7 @@
  */
 package com.intellij.lang.documentation;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nullable;
 

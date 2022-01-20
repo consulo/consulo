@@ -17,7 +17,7 @@
 package com.maddyhome.idea.copyright.pattern;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import com.maddyhome.idea.copyright.CopyrightManager;

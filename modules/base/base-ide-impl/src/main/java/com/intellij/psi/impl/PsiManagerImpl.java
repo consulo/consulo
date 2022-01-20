@@ -10,7 +10,7 @@ import consulo.progress.ProgressIndicator;
 import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.progress.util.ProgressWrapper;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import consulo.disposer.Disposer;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;

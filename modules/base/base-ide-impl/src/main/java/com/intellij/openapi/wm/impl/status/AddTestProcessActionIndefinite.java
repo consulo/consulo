@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.Project;
+import consulo.project.DumbAware;
 import javax.annotation.Nonnull;
 
 @SuppressWarnings({"HardCodedStringLiteral"})

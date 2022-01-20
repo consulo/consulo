@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import consulo.awt.TargetAWT;
 import consulo.disposer.CompositeDisposable;

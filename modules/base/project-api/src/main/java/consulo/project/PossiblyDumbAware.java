@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs;
-
-import consulo.virtualFileSystem.VirtualFile;
+package consulo.project;
 
 /**
- * A marker interface for {@link VirtualFile#getOutputStream(Object)} to not assert file content size.
+ * This interface allows to mark a distinct object as dumb-aware.
  *
- * @see com.intellij.openapi.util.io.FileUtilRt#isTooLarge
+ * @author yole
+ * @see DumbAware
  */
-public interface LargeFileWriteRequestor {
+public interface PossiblyDumbAware {
+  default boolean isDumbAware() {
+    return this instanceof DumbAware;
+  }
 }

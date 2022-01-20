@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ide.highlighter.custom.CustomFileHighlighter;
 import javax.annotation.Nullable;

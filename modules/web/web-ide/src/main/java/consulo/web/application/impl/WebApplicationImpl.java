@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.impl.BaseApplication;
 import consulo.application.impl.UnifiedTransactionGuardImpl;

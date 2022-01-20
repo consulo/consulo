@@ -17,7 +17,7 @@
 package com.intellij.tasks.actions.context;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;

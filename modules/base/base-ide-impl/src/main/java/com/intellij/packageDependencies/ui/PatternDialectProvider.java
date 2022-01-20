@@ -23,7 +23,7 @@ package com.intellij.packageDependencies.ui;
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.PackageSet;

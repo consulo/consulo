@@ -18,7 +18,7 @@ package com.intellij.openapi.options.ex;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;

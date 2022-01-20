@@ -11,7 +11,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;

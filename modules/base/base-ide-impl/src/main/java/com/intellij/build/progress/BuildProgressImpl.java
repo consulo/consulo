@@ -10,7 +10,7 @@ import com.intellij.build.events.MessageEvent;
 import com.intellij.build.events.StartEvent;
 import com.intellij.build.events.impl.*;
 import com.intellij.build.issue.BuildIssue;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.pom.Navigatable;
 
 import javax.annotation.Nonnull;

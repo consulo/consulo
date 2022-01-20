@@ -16,7 +16,7 @@
 package com.intellij.dvcs.push.ui;
 
 import com.intellij.dvcs.DvcsUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import com.intellij.ui.ColoredTreeCellRenderer;

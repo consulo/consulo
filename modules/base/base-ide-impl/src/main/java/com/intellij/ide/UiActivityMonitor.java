@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.BusyObject;
 import javax.annotation.Nonnull;
 

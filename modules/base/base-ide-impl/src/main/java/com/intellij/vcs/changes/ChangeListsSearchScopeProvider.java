@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.changes;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.search.DefaultSearchScopeProviders;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.SearchScopeProvider;

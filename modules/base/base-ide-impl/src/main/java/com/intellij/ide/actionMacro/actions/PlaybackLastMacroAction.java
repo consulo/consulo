@@ -18,8 +18,7 @@ package com.intellij.ide.actionMacro.actions;
 import com.intellij.ide.actionMacro.ActionMacroManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 /**
  * @author max

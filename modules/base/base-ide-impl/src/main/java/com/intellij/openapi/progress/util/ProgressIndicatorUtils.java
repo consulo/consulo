@@ -3,7 +3,7 @@ package com.intellij.openapi.progress.util;
 
 import com.intellij.concurrency.SensitiveProgressWrapper;
 import consulo.application.Application;
-import consulo.application.ApplicationListener;
+import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;

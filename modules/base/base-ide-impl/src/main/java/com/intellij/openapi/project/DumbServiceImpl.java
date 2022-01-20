@@ -15,7 +15,7 @@ import com.intellij.openapi.progress.impl.ProgressSuspender;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressWindow;
-import com.intellij.openapi.startup.StartupManager;
+import consulo.project.startup.StartupManager;
 import com.intellij.openapi.ui.MessageType;
 import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.util.Pair;
@@ -42,6 +42,9 @@ import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
+import consulo.project.DumbModeTask;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -452,7 +455,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @Override
-  public void smartInvokeLater(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
+  public void smartInvokeLater(@Nonnull final Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
     ApplicationManager.getApplication().invokeLater(() -> {
       if (isDumb()) {
         runWhenSmart(() -> smartInvokeLater(runnable, modalityState));

@@ -18,7 +18,7 @@ package consulo.moduleImport;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;

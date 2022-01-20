@@ -18,7 +18,7 @@ package consulo.test.light.impl;
 import com.intellij.ide.UiActivity;
 import com.intellij.ide.UiActivityMonitor;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.BusyObject;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.project.ex;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.messagebus.Topic;
 import consulo.components.impl.stores.IProjectStore;
 

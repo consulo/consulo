@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.CommittedChangesProvider;
 import com.intellij.openapi.vcs.VcsKey;

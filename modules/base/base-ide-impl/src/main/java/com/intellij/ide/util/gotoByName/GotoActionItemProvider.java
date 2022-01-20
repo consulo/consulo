@@ -13,7 +13,7 @@ import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.module.impl.scopes;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;

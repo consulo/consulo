@@ -19,7 +19,7 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 public class SaveAllAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {

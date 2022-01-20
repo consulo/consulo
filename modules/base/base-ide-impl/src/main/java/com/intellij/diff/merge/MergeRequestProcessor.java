@@ -28,7 +28,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

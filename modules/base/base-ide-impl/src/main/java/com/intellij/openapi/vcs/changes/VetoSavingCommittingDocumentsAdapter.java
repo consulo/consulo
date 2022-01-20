@@ -27,7 +27,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.openapi.util.io.FileUtil;

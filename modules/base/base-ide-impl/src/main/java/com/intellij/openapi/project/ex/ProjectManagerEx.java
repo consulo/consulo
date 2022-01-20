@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.project.ex;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;

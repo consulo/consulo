@@ -22,7 +22,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.CommonProcessors;
 import consulo.application.util.function.Processor;

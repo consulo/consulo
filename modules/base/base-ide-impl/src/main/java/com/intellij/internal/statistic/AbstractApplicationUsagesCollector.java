@@ -18,7 +18,7 @@ package com.intellij.internal.statistic;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistence;
 import com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 

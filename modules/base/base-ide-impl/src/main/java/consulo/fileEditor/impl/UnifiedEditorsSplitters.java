@@ -17,7 +17,7 @@ package consulo.fileEditor.impl;
 
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.docking.DockManager;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

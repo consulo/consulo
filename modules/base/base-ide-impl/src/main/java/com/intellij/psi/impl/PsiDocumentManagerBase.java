@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.impl.FrozenDocument;
 import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.*;
 import consulo.document.util.TextRange;

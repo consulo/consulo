@@ -19,7 +19,7 @@ package com.intellij.codeInsight.template.macro;
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 public class CompleteSmartMacro extends BaseCompleteMacro {
   public CompleteSmartMacro() {

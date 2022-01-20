@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.project.impl;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import java.util.List;
 

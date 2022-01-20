@@ -19,7 +19,7 @@ import com.intellij.ide.IdeTooltipManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;

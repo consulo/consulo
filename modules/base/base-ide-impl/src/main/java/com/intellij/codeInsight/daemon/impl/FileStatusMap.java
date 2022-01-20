@@ -8,7 +8,7 @@ import com.intellij.codeInsight.daemon.ProblemHighlightFilter;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDocumentManager;

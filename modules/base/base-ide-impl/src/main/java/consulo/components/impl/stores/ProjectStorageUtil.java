@@ -19,7 +19,7 @@ import com.intellij.notification.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.impl.ProjectMacrosUtil;
 import com.intellij.util.containers.ContainerUtil;

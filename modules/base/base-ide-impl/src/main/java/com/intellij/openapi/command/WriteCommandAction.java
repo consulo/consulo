@@ -18,7 +18,7 @@ package com.intellij.openapi.command;
 import com.intellij.codeInsight.FileModificationService;
 import consulo.application.*;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;
 import consulo.application.util.function.ThrowableComputable;

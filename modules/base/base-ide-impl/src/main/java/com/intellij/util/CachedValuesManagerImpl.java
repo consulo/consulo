@@ -2,7 +2,7 @@
 package com.intellij.util;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Getter;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;

@@ -31,7 +31,7 @@ import com.intellij.openapi.keymap.KeymapManagerListener;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.Ref;

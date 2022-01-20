@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.ex;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import javax.annotation.Nonnull;
 

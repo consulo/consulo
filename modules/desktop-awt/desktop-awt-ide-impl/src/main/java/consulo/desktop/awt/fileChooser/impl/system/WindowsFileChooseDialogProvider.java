@@ -18,7 +18,7 @@ package consulo.desktop.awt.fileChooser.impl.system;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.desktop.awt.uiOld.win.WinPathChooserDialog;
 import consulo.desktop.awt.fileChooser.impl.system.windows2.IFileDialogEarlyAccessProgramDescriptor;
 import consulo.desktop.awt.fileChooser.impl.system.windows2.WinPathChooserDialog2;

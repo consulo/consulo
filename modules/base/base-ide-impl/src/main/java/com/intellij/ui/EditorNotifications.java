@@ -16,8 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;

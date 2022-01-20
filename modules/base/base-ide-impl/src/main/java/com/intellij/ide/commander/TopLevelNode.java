@@ -18,7 +18,7 @@ package com.intellij.ide.commander;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

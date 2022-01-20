@@ -16,7 +16,7 @@
 package consulo.compiler.impl.build;
 
 import com.intellij.compiler.progress.BuildViewService;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.compiler.impl.BuildViewServiceFactory;
 import jakarta.inject.Singleton;
 

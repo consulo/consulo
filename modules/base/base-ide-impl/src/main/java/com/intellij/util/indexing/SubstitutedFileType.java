@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 import com.intellij.lang.Language;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
 import consulo.localize.LocalizeValue;

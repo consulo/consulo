@@ -3,7 +3,7 @@ package com.intellij.notification.impl.widget;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.notification.impl.IdeNotificationArea;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.StatusBarWidgetFactory;

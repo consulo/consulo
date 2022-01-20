@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.evaluate.quick;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;

@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;
 
 /**

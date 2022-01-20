@@ -18,7 +18,7 @@ package consulo.desktop.awt.fileChooser.impl;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
 
 import javax.annotation.Nonnull;

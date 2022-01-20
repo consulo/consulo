@@ -16,7 +16,7 @@
 package com.intellij.usages;
 
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.text.StringUtil;

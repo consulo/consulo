@@ -18,7 +18,7 @@ package com.intellij.lang.impl;
 
 import com.intellij.lang.*;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.lang.LanguageVersion;
 import jakarta.inject.Singleton;
 

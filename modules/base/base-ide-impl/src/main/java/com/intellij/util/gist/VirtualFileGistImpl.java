@@ -18,7 +18,7 @@ package com.intellij.util.gist;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;

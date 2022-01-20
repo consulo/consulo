@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project;
+package consulo.project.impl;
 
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.moduleImport.ImportProjectOpenProcessor;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.remote;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import javax.annotation.Nonnull;

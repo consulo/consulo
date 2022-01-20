@@ -17,7 +17,7 @@ package com.intellij.featureStatistics;
 
 import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.component.persist.PersistentStateComponent;
 import org.jdom.Element;

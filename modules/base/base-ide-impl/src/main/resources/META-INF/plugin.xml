@@ -1207,8 +1207,8 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <applicationService serviceInterface="consulo.project.ProjectOpenProcessors"
-                        serviceImplementation="consulo.project.ProjectOpenProcessorsImpl"/>
+    <applicationService serviceInterface="consulo.project.impl.ProjectOpenProcessors"
+                        serviceImplementation="consulo.project.impl.ProjectOpenProcessorsImpl"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.editor.ex.EditorSettingsExternalizable"/>
     <applicationService serviceImplementation="com.intellij.codeInsight.hints.settings.ParameterNameHintsSettings"/>
@@ -1245,7 +1245,7 @@
 
     <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.project.DefaultProjectFactory"
+    <applicationService serviceInterface="consulo.project.internal.DefaultProjectFactory"
                         serviceImplementation="com.intellij.openapi.project.impl.DefaultProjectFactoryImpl" lazy="false"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.editor.richcopy.settings.RichCopySettings"/>
@@ -1380,7 +1380,7 @@
 
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
-    <projectService serviceInterface="com.intellij.openapi.startup.StartupManager"
+    <projectService serviceInterface="consulo.project.startup.StartupManager"
                     serviceImplementation="com.intellij.ide.startup.impl.StartupManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.ui.MasterDetailsStateService"
                     serviceImplementation="com.intellij.openapi.ui.MasterDetailsStateService"/>
@@ -1400,7 +1400,7 @@
     <projectService serviceInterface="com.intellij.ui.tabs.FileColorSharedConfigurationManager"
                     serviceImplementation="com.intellij.ui.tabs.FileColorSharedConfigurationManager"/>
 
-    <projectService serviceInterface="com.intellij.openapi.project.DumbService"
+    <projectService serviceInterface="consulo.project.DumbService"
                     serviceImplementation="com.intellij.openapi.project.DumbServiceImpl"/>
 
     <projectService serviceInterface="com.intellij.psi.util.CachedValuesManager"
@@ -1691,7 +1691,7 @@
     <applicationService serviceInterface="consulo.application.internal.concurrency.JobLauncher"
                         serviceImplementation="com.intellij.concurrency.JobLauncherImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.project.ProjectLocator"
+    <applicationService serviceInterface="consulo.project.ProjectLocator"
                         serviceImplementation="com.intellij.openapi.project.ProjectLocatorImpl"/>
 
     <applicationService serviceInterface="com.intellij.packageDependencies.DependencyUISettings"
@@ -2695,7 +2695,7 @@
 
     <cachesInvalidator implementation="consulo.vfs.newvfs.persistent.FSCachesInvalidator"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl"/>
+    <applicationService serviceInterface="consulo.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.module.ModuleManager" serviceImplementation="com.intellij.openapi.module.impl.ModuleManagerComponent"/>
     <applicationService serviceInterface="consulo.virtualFileSystem.pointer.VirtualFilePointerManager" serviceImplementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl"/>
 
@@ -2804,7 +2804,7 @@
 
   <applicationListeners>
     <listener class="com.intellij.util.gist.GistManagerImpl$MyBulkFileListener" topic="consulo.virtualFileSystem.event.BulkFileListener"/>
-    <listener class="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$ProjectListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    <listener class="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$ProjectListener" topic="consulo.project.event.ProjectManagerListener"/>
   </applicationListeners>
 
   <projectListeners>

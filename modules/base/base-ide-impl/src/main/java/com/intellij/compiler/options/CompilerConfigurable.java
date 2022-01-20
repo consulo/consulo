@@ -19,7 +19,7 @@ import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.NotNullComputable;
 import consulo.disposer.Disposable;
 import consulo.options.SimpleConfigurable;

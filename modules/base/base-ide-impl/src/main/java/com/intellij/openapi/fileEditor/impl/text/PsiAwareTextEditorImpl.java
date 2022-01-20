@@ -30,7 +30,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;

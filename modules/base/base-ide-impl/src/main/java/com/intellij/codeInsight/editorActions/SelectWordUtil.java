@@ -22,7 +22,7 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.DumbService;
+import consulo.project.DumbService;
 import consulo.document.util.TextRange;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;

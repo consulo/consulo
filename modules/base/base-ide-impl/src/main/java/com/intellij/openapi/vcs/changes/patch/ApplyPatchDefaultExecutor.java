@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.patch;
 import com.intellij.openapi.diff.impl.patch.*;
 import com.intellij.openapi.diff.impl.patch.formove.PatchApplier;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.CommitContext;

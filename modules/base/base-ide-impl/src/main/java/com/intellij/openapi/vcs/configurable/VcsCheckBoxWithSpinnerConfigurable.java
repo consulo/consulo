@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.configurable;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ArrayUtil;
 import consulo.util.dataholder.Key;
 

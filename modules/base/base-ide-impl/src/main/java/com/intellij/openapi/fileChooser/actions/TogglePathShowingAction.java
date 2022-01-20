@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileChooser.ex.PathField;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class TogglePathShowingAction extends AnAction implements DumbAware {

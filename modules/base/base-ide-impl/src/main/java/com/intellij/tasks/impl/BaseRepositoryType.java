@@ -17,7 +17,7 @@ package com.intellij.tasks.impl;
 
 import javax.annotation.Nonnull;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.tasks.TaskRepositoryType;
 import com.intellij.tasks.config.BaseRepositoryEditor;
 import com.intellij.tasks.config.TaskRepositoryEditor;

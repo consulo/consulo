@@ -18,7 +18,7 @@ package com.intellij.ide.browsers.impl;
 import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.browsers.UrlOpener;
 import com.intellij.ide.browsers.WebBrowser;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ArrayUtil;
 
 import javax.annotation.Nonnull;

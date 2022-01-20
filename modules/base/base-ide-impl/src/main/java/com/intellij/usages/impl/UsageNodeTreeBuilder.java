@@ -15,8 +15,8 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageTarget;

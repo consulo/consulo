@@ -16,7 +16,7 @@
 
 package com.intellij.diagnostic.logging;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.annotation.Nonnull;
@@ -38,7 +38,7 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
   private long myOldLength = 0;
 
   /**
-   * @deprecated use {@link #LogConsoleImpl(com.intellij.openapi.project.Project, java.io.File, java.nio.charset.Charset, long, String, boolean, com.intellij.psi.search.GlobalSearchScope)}
+   * @deprecated use {@link #LogConsoleImpl(Project, java.io.File, java.nio.charset.Charset, long, String, boolean, com.intellij.psi.search.GlobalSearchScope)}
    */
   public LogConsoleImpl(Project project,
                         @Nonnull File file,

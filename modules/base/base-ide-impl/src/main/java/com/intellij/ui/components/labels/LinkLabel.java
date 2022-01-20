@@ -3,8 +3,8 @@ package com.intellij.ui.components.labels;
 
 import com.intellij.icons.AllIcons;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.JBRectangle;

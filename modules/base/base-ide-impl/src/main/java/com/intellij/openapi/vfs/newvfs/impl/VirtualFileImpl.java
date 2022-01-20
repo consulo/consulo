@@ -29,7 +29,7 @@ import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.util.io.FileTooBigException;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LargeFileWriteRequestor;
+import consulo.virtualFileSystem.LargeFileWriteRequestor;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;

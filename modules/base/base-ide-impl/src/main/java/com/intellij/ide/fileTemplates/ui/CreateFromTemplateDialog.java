@@ -27,7 +27,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;

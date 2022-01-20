@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints;
 
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.ColoredListCellRenderer;

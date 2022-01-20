@@ -4,7 +4,7 @@ package com.intellij.openapi.wm.impl.status;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;

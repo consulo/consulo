@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.tasks.TaskManager;
 
 /**

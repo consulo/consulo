@@ -18,7 +18,7 @@ package com.intellij.history.integration.ui.models;
 
 import com.intellij.history.core.LocalHistoryFacade;
 import com.intellij.history.integration.IdeaGateway;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class EntireFileHistoryDialogModel extends FileHistoryDialogModel {

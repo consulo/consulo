@@ -25,7 +25,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.TooltipAction;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;

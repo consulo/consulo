@@ -17,7 +17,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.FileDocumentManager;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;

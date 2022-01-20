@@ -2,7 +2,7 @@
 package com.intellij.openapi.command;
 
 import consulo.document.Document;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -16,7 +16,7 @@
 package com.intellij.execution.filters;
 
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 
 import javax.annotation.Nonnull;

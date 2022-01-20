@@ -16,7 +16,7 @@
 package com.intellij.openapi.keymap.impl.ui;
 
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.swing.*;
 

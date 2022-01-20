@@ -18,7 +18,7 @@ package com.intellij.lang.folding;
 
 import com.intellij.lang.ASTNode;
 import consulo.document.Document;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;

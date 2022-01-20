@@ -20,7 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import consulo.document.Document;
-import com.intellij.openapi.project.DumbService;
+import consulo.project.DumbService;
 import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginIds;

@@ -18,7 +18,7 @@ package com.intellij.ui.debugger;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.JBColor;

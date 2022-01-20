@@ -15,12 +15,11 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import consulo.desktop.awt.welcomeScreen.FlatWelcomeFrame;
 import com.intellij.ui.BalloonLayout;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;

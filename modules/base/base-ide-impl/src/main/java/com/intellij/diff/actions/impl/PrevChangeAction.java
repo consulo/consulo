@@ -17,7 +17,7 @@ package com.intellij.diff.actions.impl;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 public abstract class PrevChangeAction extends AnAction implements DumbAware {
   public PrevChangeAction() {

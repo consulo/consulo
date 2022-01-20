@@ -17,7 +17,7 @@ package com.intellij.diff.editor;
 
 import com.intellij.diff.impl.DiffRequestProcessor;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vfs.VirtualFileWithoutContent;
 import com.intellij.testFramework.LightVirtualFile;
 

@@ -24,7 +24,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actions.TextComponentEditorAction;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 public class SelectAllAction extends TextComponentEditorAction implements DumbAware {
   public SelectAllAction() {

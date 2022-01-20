@@ -15,7 +15,7 @@
  */
 package consulo.psi.impl.source.codeStyle;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
 import consulo.codeStyle.ProjectCodeStyleFacade;
 

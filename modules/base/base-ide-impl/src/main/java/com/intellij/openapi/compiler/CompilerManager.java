@@ -21,7 +21,7 @@ import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;

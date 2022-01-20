@@ -22,7 +22,7 @@ import com.intellij.lang.LanguagePerFileMappings;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.impl.FilePropertyPusher;
 import com.intellij.openapi.util.Condition;
 import consulo.virtualFileSystem.VirtualFile;

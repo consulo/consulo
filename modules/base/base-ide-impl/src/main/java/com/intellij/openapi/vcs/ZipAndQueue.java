@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.progress.BackgroundTaskQueue;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.ZipperUpdater;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;

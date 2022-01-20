@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.impl.SettingsImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -18,7 +18,7 @@ package com.intellij.codeInspection.ui;
 
 import com.intellij.codeInspection.InspectionsBundle;
 import consulo.application.Application;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 
 /**

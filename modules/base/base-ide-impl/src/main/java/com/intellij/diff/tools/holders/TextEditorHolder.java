@@ -21,7 +21,7 @@ import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

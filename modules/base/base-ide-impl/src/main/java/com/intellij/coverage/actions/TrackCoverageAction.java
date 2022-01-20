@@ -20,7 +20,7 @@ import com.intellij.icons.AllIcons;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Alarm;
 import consulo.disposer.Disposer;

@@ -19,7 +19,7 @@ package com.intellij.history.integration.ui.actions;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NonEmptyInputValidator;
 import consulo.virtualFileSystem.VirtualFile;

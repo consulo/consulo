@@ -18,7 +18,7 @@ package com.intellij.find.impl;
 import com.intellij.find.FindInProjectSettings;
 import com.intellij.find.FindSettings;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ArrayUtil;
 import jakarta.inject.Singleton;
 

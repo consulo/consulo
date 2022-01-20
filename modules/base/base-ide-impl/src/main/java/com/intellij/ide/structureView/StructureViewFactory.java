@@ -17,7 +17,7 @@ package com.intellij.ide.structureView;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * Factory interface for creating instances of the standard structure view component.

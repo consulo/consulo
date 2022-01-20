@@ -20,7 +20,7 @@ import consulo.document.Document;
 import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;

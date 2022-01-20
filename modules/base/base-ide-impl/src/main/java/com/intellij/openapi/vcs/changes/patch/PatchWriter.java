@@ -20,7 +20,7 @@ import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchEP;
 import com.intellij.openapi.diff.impl.patch.UnifiedDiffWriter;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -19,7 +19,7 @@ package com.intellij.codeInsight.highlighting;
 import com.intellij.find.FindManager;
 import com.intellij.find.FindModel;
 import consulo.document.Document;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 
 /**

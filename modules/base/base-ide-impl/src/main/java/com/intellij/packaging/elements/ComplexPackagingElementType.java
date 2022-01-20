@@ -16,7 +16,7 @@
 
 package com.intellij.packaging.elements;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.util.ModificationTracker;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -18,7 +18,7 @@ package com.intellij.openapi.wm;
 
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.localize.LocalizeValue;

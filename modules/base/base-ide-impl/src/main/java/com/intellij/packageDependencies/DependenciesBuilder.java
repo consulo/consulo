@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies;
 
 import com.intellij.analysis.AnalysisScope;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiFileEx;

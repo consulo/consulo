@@ -15,7 +15,7 @@
  */
 package consulo.ide.tipOfDay;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;

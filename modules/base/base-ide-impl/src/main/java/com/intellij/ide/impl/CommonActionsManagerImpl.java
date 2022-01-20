@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.*;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.AutoScrollToSourceHandler;
 
 import jakarta.inject.Singleton;

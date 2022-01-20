@@ -20,7 +20,7 @@ import com.intellij.injected.editor.DocumentWindow;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;

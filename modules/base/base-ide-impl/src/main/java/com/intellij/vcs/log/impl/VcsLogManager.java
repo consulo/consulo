@@ -21,7 +21,7 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.logging.Logger;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.AbstractVcs;

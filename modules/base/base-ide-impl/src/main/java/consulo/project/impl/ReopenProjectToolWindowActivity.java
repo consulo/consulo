@@ -15,9 +15,9 @@
  */
 package consulo.project.impl;
 
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.DumbAware;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-10-22
  */
-public class ReopenProjectToolWindowActivity implements StartupActivity.Background, DumbAware {
+public class ReopenProjectToolWindowActivity implements IdeaStartupActivity.Background, DumbAware {
   @Override
   public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
     ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);

@@ -19,7 +19,7 @@ package com.intellij.ide.todo.nodes;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.TodoItem;
 import javax.annotation.Nonnull;

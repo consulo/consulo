@@ -21,7 +21,7 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.diff.impl.patch.PatchReader;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;

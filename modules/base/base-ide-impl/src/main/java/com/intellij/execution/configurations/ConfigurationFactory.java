@@ -17,7 +17,7 @@ package com.intellij.execution.configurations;
 
 import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.RunManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.ui.image.Image;
 

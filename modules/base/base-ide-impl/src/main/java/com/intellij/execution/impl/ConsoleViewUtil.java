@@ -24,7 +24,7 @@ import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.search.GlobalSearchScope;

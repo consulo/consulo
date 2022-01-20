@@ -16,11 +16,11 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

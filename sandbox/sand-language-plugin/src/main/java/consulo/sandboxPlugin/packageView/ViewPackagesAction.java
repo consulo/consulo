@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.packageView;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.webcore.packaging.ManagePackagesDialog;
 import consulo.ui.annotation.RequiredUIAccess;
 

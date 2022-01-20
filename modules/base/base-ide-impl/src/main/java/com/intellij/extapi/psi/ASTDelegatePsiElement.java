@@ -21,13 +21,7 @@ package com.intellij.extapi.psi;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import consulo.logging.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectCoreUtil;
-import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
-import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.impl.CheckUtil;
@@ -42,10 +36,16 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.document.util.TextRange;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.impl.SingleProjectHolder;
+import consulo.psi.PsiElementWithSubtreeChangeNotifier;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +57,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
   @Override
   public PsiManagerEx getManager() {
-    Project project = ProjectCoreUtil.theOnlyOpenProject();
+    Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null) {
       return PsiManagerEx.getInstanceEx(project);
     }

@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.ex;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 /**
  * @author irengrig

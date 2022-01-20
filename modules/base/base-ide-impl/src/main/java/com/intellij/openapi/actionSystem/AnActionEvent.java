@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.PlaceProvider;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;

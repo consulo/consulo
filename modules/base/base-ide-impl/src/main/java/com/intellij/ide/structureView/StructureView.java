@@ -17,6 +17,7 @@ package com.intellij.ide.structureView;
 
 import consulo.disposer.Disposable;
 import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -29,7 +30,7 @@ import java.awt.*;
  * The structure view is linked to a file editor and displays the structure of the file
  * contained in that editor.
  *
- * @see StructureViewBuilder#createStructureView(com.intellij.openapi.fileEditor.FileEditor, com.intellij.openapi.project.Project)
+ * @see StructureViewBuilder#createStructureView(com.intellij.openapi.fileEditor.FileEditor, Project)
  * @see TreeBasedStructureViewBuilder
  */
 

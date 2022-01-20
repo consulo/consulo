@@ -24,7 +24,7 @@ import com.intellij.execution.ui.layout.actions.RestoreViewAction;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.actions.CloseAction;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.AbstractPainter;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;

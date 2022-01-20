@@ -15,15 +15,15 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-public class TipOfTheDayStartupActivity implements StartupActivity.DumbAware {
+public class TipOfTheDayStartupActivity implements IdeaStartupActivity.DumbAware {
   private final TipOfDayManager myManager;
   private final GeneralSettings myGeneralSettings;
 

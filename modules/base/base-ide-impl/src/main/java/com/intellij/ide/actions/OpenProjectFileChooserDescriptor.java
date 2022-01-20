@@ -18,12 +18,12 @@ package com.intellij.ide.actions;
 import consulo.application.Application;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.project.ProjectOpenProcessors;
+import consulo.project.impl.ProjectOpenProcessors;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

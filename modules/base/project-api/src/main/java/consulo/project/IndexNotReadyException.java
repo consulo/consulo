@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project;
+package consulo.project;
 
 import consulo.application.util.function.Computable;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

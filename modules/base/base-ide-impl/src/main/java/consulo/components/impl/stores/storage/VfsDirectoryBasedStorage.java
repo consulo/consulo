@@ -17,7 +17,7 @@ package consulo.components.impl.stores.storage;
 
 import consulo.application.Application;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.project.ProjectBundle;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.WriteExternalException;

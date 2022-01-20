@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.actions.VcsContext;
 import com.intellij.openapi.vcs.changes.CommitExecutor;

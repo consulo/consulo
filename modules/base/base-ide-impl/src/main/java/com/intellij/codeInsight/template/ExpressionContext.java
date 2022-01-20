@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;

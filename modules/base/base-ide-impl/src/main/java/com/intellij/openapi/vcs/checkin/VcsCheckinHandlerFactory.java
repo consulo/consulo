@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.checkin;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vcs.changes.CommitContext;

@@ -17,14 +17,14 @@ package com.intellij.codeInsight.documentation;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 
 /**
  * @author Denis Zhdanov
  * @since 7/2/12 9:44 AM
  */
-public class QuickDocOnMouseOverStartupActivity implements StartupActivity {
+public class QuickDocOnMouseOverStartupActivity implements IdeaStartupActivity {
 
   @Override
   public void runActivity(Project project) {

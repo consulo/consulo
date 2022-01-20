@@ -18,9 +18,8 @@ package com.intellij.diff.actions.impl;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

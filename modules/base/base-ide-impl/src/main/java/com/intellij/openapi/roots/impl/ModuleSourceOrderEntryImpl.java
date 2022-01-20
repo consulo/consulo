@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.types.SourcesOrderRootType;

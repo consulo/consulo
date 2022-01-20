@@ -18,7 +18,7 @@ package com.intellij.codeInsight.quickfix;
 import com.intellij.codeInsight.daemon.QuickFixActionRegistrar;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.DumbService;
+import consulo.project.DumbService;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.ReflectionUtil;
 import javax.annotation.Nonnull;

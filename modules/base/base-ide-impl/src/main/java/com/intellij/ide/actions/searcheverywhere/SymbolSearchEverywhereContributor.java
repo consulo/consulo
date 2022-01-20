@@ -8,7 +8,7 @@ import com.intellij.ide.util.gotoByName.GotoSymbolModel2;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.IdeUICustomization;
 import javax.annotation.Nonnull;

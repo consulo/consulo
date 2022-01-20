@@ -20,10 +20,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.DumbModeTask;
+import consulo.project.DumbAware;
+import consulo.project.DumbModeTask;
 import com.intellij.openapi.project.DumbServiceImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.TimeoutUtil;
 import javax.annotation.Nonnull;
 

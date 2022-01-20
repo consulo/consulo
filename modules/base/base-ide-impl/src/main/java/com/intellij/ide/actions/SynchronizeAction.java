@@ -19,7 +19,7 @@ import com.intellij.ide.SaveAndSyncHandler;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 public class SynchronizeAction extends AnAction implements DumbAware {

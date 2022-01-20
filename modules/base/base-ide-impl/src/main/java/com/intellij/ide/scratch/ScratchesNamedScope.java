@@ -2,7 +2,7 @@
 package com.intellij.ide.scratch;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;

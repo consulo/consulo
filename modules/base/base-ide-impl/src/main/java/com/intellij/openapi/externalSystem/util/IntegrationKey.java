@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 /**

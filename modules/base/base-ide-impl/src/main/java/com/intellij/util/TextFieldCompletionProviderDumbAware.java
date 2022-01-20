@@ -1,6 +1,6 @@
 package com.intellij.util;
 
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 /**
  * @author sergey.evdokimov

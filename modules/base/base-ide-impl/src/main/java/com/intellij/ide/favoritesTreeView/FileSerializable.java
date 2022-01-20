@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import java.io.File;
 import java.io.IOException;

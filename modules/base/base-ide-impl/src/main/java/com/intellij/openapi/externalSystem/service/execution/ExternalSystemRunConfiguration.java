@@ -27,7 +27,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;

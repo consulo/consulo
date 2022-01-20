@@ -3,7 +3,7 @@ package com.intellij.openapi.command.undo;
 
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;

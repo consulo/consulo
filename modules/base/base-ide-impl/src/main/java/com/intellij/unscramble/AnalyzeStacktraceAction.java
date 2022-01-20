@@ -19,8 +19,8 @@ package com.intellij.unscramble;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 
 /**
  * Simple variant of Analyze Stacktrace that doesn't handle unscramblers or multiple-thread

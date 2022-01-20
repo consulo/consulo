@@ -2,7 +2,7 @@
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.util.Alarm;
 import javax.annotation.Nonnull;

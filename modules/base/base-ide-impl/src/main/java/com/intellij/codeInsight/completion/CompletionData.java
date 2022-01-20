@@ -25,7 +25,7 @@ import com.intellij.codeInsight.template.Template;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.paths.PsiDynaReference;
-import com.intellij.openapi.project.IndexNotReadyException;
+import consulo.project.IndexNotReadyException;
 import consulo.document.util.TextRange;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.ObjectPattern;

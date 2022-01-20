@@ -16,7 +16,7 @@
 package consulo.ide.actions;
 
 import com.intellij.ide.actions.QualifiedNameProvider;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import consulo.psi.PsiPackage;

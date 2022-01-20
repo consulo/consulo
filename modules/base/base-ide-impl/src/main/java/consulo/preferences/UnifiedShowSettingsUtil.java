@@ -17,8 +17,8 @@ package consulo.preferences;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.project.DefaultProjectFactory;
-import com.intellij.openapi.project.Project;
+import consulo.project.internal.DefaultProjectFactory;
+import consulo.project.Project;
 import consulo.options.BaseProjectStructureShowSettingsUtil;
 import consulo.options.ProjectStructureSelector;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -10,8 +10,8 @@ import com.intellij.openapi.fileTypes.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
-public class ApproveRemovedMappingsActivity implements StartupActivity {
+public class ApproveRemovedMappingsActivity implements IdeaStartupActivity {
   @Override
   public void runActivity(@Nonnull final Project project) {
     if (ApplicationManager.getApplication().isUnitTestMode() || !Registry.is("ide.restore.removed.mappings")) return;

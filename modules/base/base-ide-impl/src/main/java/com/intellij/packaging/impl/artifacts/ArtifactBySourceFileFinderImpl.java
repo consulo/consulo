@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.util.MultiValuesMap;
 import consulo.virtualFileSystem.VirtualFile;

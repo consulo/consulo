@@ -23,7 +23,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import consulo.logging.Logger;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import consulo.component.persist.InvalidDataException;
 import consulo.util.dataholder.Key;

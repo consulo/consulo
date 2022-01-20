@@ -12,7 +12,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationError;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationErrors;
 import com.intellij.openapi.util.MultiValuesMap;

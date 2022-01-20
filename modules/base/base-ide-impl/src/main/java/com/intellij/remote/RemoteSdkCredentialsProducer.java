@@ -16,7 +16,7 @@
 package com.intellij.remote;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.Consumer;
 import javax.annotation.Nullable;
 

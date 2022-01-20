@@ -1,6 +1,6 @@
 package com.intellij.openapi.diff.impl.dir;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FrameWrapper;
 import consulo.disposer.Disposable;

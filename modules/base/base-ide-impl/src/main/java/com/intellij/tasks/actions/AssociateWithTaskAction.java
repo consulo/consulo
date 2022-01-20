@@ -19,12 +19,11 @@ package com.intellij.tasks.actions;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.VcsDataKeys;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.Project;
+import consulo.project.DumbAware;
 import com.intellij.tasks.TaskManager;
 
 /**

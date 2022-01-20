@@ -4,7 +4,7 @@ package com.intellij.find.editorHeaderActions;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

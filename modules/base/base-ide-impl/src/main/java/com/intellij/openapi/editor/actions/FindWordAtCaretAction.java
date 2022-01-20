@@ -31,7 +31,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 public class FindWordAtCaretAction extends EditorAction {
   private static class Handler extends EditorActionHandler {

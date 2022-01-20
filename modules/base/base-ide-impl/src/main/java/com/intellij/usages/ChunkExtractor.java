@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

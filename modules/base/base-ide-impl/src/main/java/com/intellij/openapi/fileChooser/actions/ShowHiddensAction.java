@@ -18,7 +18,7 @@ package com.intellij.openapi.fileChooser.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.fileChooser.FileSystemTree;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 /**
  * @author Vladimir Kondratyev

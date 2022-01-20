@@ -15,7 +15,7 @@
  */
 package com.intellij.tasks;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.tasks.config.TaskRepositoryEditor;
 import com.intellij.util.Consumer;
 import consulo.component.extension.ExtensionPointName;

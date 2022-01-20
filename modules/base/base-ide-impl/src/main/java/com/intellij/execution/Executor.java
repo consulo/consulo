@@ -18,7 +18,7 @@ package com.intellij.execution;
 
 import consulo.component.util.localize.BundleBase;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;

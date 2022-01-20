@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.evaluate;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.JBSplitter;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XExpression;

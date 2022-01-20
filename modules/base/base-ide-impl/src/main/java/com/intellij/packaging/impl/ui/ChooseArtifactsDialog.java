@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.ui;
 
 import com.intellij.ide.util.ChooseElementsDialog;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import consulo.ui.image.Image;
 

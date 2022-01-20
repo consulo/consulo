@@ -26,7 +26,7 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;

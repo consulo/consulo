@@ -23,7 +23,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.intellij.ide.PowerSaveMode;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.project.IndexNotReadyException;
+import consulo.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.registry.Registry;

@@ -20,7 +20,7 @@ import com.intellij.execution.ExecutionTarget;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.persist.InvalidDataException;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.WriteExternalException;

@@ -23,7 +23,7 @@ import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.*;

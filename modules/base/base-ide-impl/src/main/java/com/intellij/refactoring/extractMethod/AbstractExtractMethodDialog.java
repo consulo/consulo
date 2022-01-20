@@ -18,7 +18,7 @@ package com.intellij.refactoring.extractMethod;
 import com.intellij.codeInsight.codeFragment.CodeFragment;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.refactoring.RefactoringBundle;

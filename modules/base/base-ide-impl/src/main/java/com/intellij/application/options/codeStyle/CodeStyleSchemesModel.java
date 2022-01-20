@@ -16,7 +16,7 @@
 package com.intellij.application.options.codeStyle;
 
 import com.intellij.openapi.options.SchemesManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
 import com.intellij.psi.codeStyle.CodeStyleSettings;

@@ -16,7 +16,7 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.LightStubBuilder;
 import com.intellij.psi.stubs.PsiFileStub;

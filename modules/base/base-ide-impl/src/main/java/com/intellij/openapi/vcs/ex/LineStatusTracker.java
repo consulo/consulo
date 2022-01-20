@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;

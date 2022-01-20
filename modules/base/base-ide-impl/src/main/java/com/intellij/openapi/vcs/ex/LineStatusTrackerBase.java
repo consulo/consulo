@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.ex;
 
 import com.intellij.diff.util.DiffUtil;
 import consulo.application.Application;
-import consulo.application.ApplicationAdapter;
+import consulo.application.event.ApplicationAdapter;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.UndoConstants;
 import consulo.logging.Logger;
@@ -27,7 +27,7 @@ import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.CalledInAwt;

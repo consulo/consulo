@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.PasteProvider;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 public class PasteAction extends AnAction implements DumbAware {
 

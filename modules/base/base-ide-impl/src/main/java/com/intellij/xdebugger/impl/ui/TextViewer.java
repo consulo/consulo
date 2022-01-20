@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.EditorTextField;
 import javax.annotation.Nonnull;
 

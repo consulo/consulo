@@ -32,7 +32,7 @@ import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 import java.util.List;
 

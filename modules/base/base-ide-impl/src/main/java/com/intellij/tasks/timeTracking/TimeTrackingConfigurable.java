@@ -2,7 +2,7 @@ package com.intellij.tasks.timeTracking;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.GuiUtils;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;

@@ -16,7 +16,7 @@
 
 package com.intellij.util;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import javax.annotation.Nonnull;

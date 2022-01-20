@@ -16,7 +16,7 @@
 package com.intellij.ide.fileTemplates;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.io.CharsetToolkit;
 import consulo.annotation.DeprecationInfo;
 import org.apache.velocity.runtime.parser.ParseException;

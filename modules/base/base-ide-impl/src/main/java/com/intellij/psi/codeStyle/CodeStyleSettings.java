@@ -9,7 +9,7 @@ import consulo.document.Document;
 import com.intellij.openapi.extensions.ExtensionException;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.component.persist.InvalidDataException;

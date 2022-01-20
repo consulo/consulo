@@ -23,7 +23,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import javax.annotation.Nonnull;
 
 /**

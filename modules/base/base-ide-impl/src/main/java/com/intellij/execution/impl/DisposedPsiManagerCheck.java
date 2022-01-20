@@ -17,7 +17,7 @@
 package com.intellij.execution.impl;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NonNls;

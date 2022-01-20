@@ -9,7 +9,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;

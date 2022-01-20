@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;
 

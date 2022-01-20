@@ -16,7 +16,7 @@
 package com.intellij.openapi.module;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.pointers.NamedPointer;
 import consulo.util.pointers.NamedPointerManager;

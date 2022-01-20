@@ -16,7 +16,7 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.*;
 import consulo.application.constraint.Expiration;
 import consulo.component.ComponentManager;

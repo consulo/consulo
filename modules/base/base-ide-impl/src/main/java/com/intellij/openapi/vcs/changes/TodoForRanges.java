@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Pair;

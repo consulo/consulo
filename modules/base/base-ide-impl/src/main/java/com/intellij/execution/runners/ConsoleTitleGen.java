@@ -19,7 +19,7 @@ package com.intellij.execution.runners;
 import com.intellij.execution.ExecutionHelper;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import java.util.List;
 import java.util.stream.Collectors;

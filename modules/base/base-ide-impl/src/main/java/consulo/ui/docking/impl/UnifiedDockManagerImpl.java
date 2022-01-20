@@ -18,7 +18,7 @@ package consulo.ui.docking.impl;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockableContent;

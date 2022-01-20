@@ -16,8 +16,8 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbService;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.checkout;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import java.io.File;
 

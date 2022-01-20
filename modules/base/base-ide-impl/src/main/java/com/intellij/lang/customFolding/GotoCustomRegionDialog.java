@@ -20,7 +20,7 @@ import com.intellij.lang.Language;
 import com.intellij.lang.folding.*;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiDocumentManager;

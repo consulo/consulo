@@ -27,7 +27,7 @@ import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

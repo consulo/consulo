@@ -19,9 +19,9 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
+import consulo.project.DumbAware;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class ShowStructureSettingsAction extends AnAction implements DumbAware {

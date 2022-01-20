@@ -28,7 +28,7 @@ import com.intellij.execution.ui.ExecutionConsole;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.io.FileUtil;

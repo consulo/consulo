@@ -19,7 +19,7 @@ package com.maddyhome.idea.copyright.actions;
 import com.intellij.openapi.module.Module;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;

@@ -17,7 +17,7 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.ide.actions.GotoActionBase;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.file;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.messagebus.Topic;
 import consulo.component.messagebus.MessageBus;
 

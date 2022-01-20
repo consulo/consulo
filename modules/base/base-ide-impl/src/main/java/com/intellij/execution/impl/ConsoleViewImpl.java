@@ -68,6 +68,10 @@ import com.intellij.util.DocumentUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.project.DumbAware;
+import consulo.project.DumbService;
+import consulo.project.IndexNotReadyException;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.*;
 

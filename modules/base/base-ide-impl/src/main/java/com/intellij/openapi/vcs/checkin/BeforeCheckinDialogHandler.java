@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.checkin;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.CommitExecutor;
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import java.util.List;
 public abstract class BeforeCheckinDialogHandler {
   @Deprecated
   /**
-   * @deprecated see {@link #beforeCommitDialogShown(com.intellij.openapi.project.Project, java.util.List, Iterable, boolean)}
+   * @deprecated see {@link #beforeCommitDialogShown(Project, java.util.List, Iterable, boolean)}
    * @return false to cancel commit
    */
   public boolean beforeCommitDialogShownCallback(Iterable<CommitExecutor> executors, boolean showVcsCommit) {

@@ -15,7 +15,7 @@
  */
 package com.intellij.conversion;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

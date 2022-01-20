@@ -22,7 +22,7 @@ import com.intellij.diff.contents.DocumentContent;
 import com.intellij.history.core.tree.Entry;
 import com.intellij.history.integration.IdeaGateway;
 import consulo.document.Document;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 public class EntireFileDifferenceModel extends FileDifferenceModel {
   private final Entry myLeft;

@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.FilePath;

@@ -5,6 +5,7 @@ import com.intellij.concurrency.SensitiveProgressWrapper;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
+import consulo.application.event.ApplicationListener;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.util.registry.Registry;

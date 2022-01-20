@@ -18,9 +18,7 @@ package com.intellij.openapi.module.impl;
 
 import com.intellij.openapi.module.ConfigurationErrorDescription;
 import com.intellij.openapi.module.ConfigurationErrorType;
-import com.intellij.openapi.project.ProjectBundle;
-
-import java.io.File;
+import consulo.project.ProjectBundle;
 
 /**
  * @author nik

@@ -22,8 +22,8 @@ package com.intellij.ide.bookmarks.actions;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 
 public abstract class GoToMnemonicBookmarkActionBase extends AnAction implements DumbAware {
   private final int myNumber;

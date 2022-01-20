@@ -61,6 +61,7 @@
     <module>modules/base/test-impl</module>
     <module>modules/base/virtual-file-system-api</module>
     <module>modules/base/document-api</module>
+    <module>modules/base/project-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

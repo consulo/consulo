@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.Document;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;

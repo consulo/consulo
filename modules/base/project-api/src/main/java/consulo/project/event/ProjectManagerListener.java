@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project;
+package consulo.project.event;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

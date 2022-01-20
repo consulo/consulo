@@ -3,7 +3,7 @@ package com.intellij.xdebugger.attach;
 
 import com.intellij.execution.process.ProcessInfo;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
 

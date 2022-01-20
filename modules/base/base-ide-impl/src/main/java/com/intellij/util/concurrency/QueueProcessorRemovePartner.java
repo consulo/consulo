@@ -15,7 +15,7 @@
  */
 package com.intellij.util.concurrency;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.Consumer;
 
 import java.util.HashMap;

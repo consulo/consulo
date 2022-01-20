@@ -27,7 +27,7 @@ import com.intellij.codeInspection.ex.InspectionManagerEx;
 import com.intellij.icons.AllIcons;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.profile.Profile;
 import com.intellij.profile.ProfileManager;
 import com.intellij.profile.codeInspection.InspectionProfileManager;

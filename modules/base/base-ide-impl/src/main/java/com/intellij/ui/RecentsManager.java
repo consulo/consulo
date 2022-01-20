@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import java.util.HashMap;
 
 import consulo.component.persist.PersistentStateComponent;

@@ -17,7 +17,8 @@
 package com.intellij.codeInsight.daemon.impl.analysis;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
  * Implementation can provide default level of highlighting (one of "none", "syntax checks", "inspections") for a file.
  * This level can be overridden by user for a file via Hector-the-inspector component.
  * If implementation returns <code>null</code>, next one is checked. If nobody returns anything, "Inspections" level will be used
- * Implement {@link com.intellij.openapi.project.DumbAware} interface to allow implementation to be called in dumb mode
+ * Implement {@link DumbAware} interface to allow implementation to be called in dumb mode
  */
 public abstract class DefaultHighlightingSettingProvider {
   public static final ExtensionPointName<DefaultHighlightingSettingProvider> EP_NAME = ExtensionPointName.create("consulo.defaultHighlightingSettingProvider");

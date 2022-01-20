@@ -4,7 +4,7 @@ package com.intellij.build.internal;
 import com.intellij.build.BuildContentManager;
 import com.intellij.build.SyncViewManager;
 import com.intellij.build.events.BuildEvent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

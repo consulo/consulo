@@ -4,7 +4,7 @@ package com.intellij.ide.actions.searcheverywhere;
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.PossiblyDumbAware;
+import consulo.project.PossiblyDumbAware;
 import consulo.util.dataholder.Key;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;

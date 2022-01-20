@@ -22,7 +22,7 @@ import com.intellij.history.integration.ui.views.DirectoryHistoryDialog;
 import com.intellij.history.integration.ui.views.FileHistoryDialog;
 import com.intellij.history.integration.ui.views.HistoryDialog;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class ShowHistoryAction extends LocalHistoryActionWithDialog {

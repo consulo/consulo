@@ -2,7 +2,7 @@
 package com.intellij.formatting;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

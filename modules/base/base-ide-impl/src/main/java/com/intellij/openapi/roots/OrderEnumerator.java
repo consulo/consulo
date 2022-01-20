@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Condition;
 import consulo.virtualFileSystem.VirtualFile;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * and source roots.<p>
  * <p/>
  * Use {@link #orderEntries(com.intellij.openapi.module.Module)} or {@link ModuleRootModel#orderEntries()} to process dependencies of a module
- * and use {@link #orderEntries(com.intellij.openapi.project.Project)} to process dependencies of all modules in a project.<p>
+ * and use {@link #orderEntries(Project)} to process dependencies of all modules in a project.<p>
  * <p/>
  * Note that all configuration methods modify {@link OrderEnumerator} instance instead of creating a new one.
  *

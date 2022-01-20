@@ -17,7 +17,7 @@ package com.intellij.compiler.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.compiler.CompilerManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

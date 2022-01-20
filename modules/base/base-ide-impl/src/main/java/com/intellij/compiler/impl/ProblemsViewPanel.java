@@ -19,7 +19,7 @@ import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.HelpID;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanel {
   public ProblemsViewPanel(Project project) {

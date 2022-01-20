@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.component.extension.Extensions;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;

@@ -19,7 +19,7 @@ import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 import javax.annotation.Nullable;
 

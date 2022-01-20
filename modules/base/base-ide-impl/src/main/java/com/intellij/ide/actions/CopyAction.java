@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.CopyProvider;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 public class CopyAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {

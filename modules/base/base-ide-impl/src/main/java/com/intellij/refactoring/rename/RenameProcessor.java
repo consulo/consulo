@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.logging.Logger;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;

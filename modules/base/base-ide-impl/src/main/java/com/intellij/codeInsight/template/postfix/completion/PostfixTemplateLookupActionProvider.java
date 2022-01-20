@@ -25,7 +25,7 @@ import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
 import com.intellij.icons.AllIcons;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.Consumer;
 import com.intellij.util.IconUtil;
 import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;

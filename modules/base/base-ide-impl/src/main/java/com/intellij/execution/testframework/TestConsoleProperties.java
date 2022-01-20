@@ -28,7 +28,7 @@ import com.intellij.execution.util.StoringPropertyContainer;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.config.*;
 import com.intellij.util.containers.ContainerUtil;

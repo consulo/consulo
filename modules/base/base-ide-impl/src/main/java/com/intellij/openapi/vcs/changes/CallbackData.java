@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

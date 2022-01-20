@@ -19,7 +19,7 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.vcs.changes.VcsAnnotationLocalChangesListener;
 import com.intellij.openapi.vcs.history.VcsHistoryCache;

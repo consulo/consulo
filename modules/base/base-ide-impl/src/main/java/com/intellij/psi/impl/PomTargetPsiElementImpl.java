@@ -17,7 +17,7 @@ package com.intellij.psi.impl;
 
 import com.intellij.ide.TypePresentationService;
 import com.intellij.lang.Language;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.pom.PomNamedTarget;
 import com.intellij.pom.PomRenameableTarget;
 import com.intellij.pom.PomTarget;

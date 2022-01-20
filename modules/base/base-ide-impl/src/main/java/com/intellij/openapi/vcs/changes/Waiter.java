@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.util.concurrency.Semaphore;
 import consulo.logging.Logger;

@@ -20,9 +20,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
-import consulo.logging.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
@@ -38,6 +35,10 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import consulo.lang.LanguageVersion;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.impl.SingleProjectHolder;
+
 import javax.annotation.Nonnull;
 
 public abstract class CompositePsiElement extends CompositeElement implements PsiElement, NavigationItem {
@@ -294,7 +295,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
   @Override
   @Nonnull
   public Project getProject() {
-    Project project = ProjectCoreUtil.theOnlyOpenProject();
+    Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null) {
       return project;
     }

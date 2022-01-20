@@ -20,7 +20,7 @@
 package com.intellij.lang;
 
 import com.intellij.lang.refactoring.NamesValidator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.container.plugin.PluginIds;
 
 public class LanguageNamesValidation extends LanguageExtension<NamesValidator> {

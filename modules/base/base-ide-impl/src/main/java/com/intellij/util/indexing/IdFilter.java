@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 import consulo.logging.Logger;
 import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectRootManager;
 import consulo.util.dataholder.Key;

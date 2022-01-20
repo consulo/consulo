@@ -2,7 +2,7 @@ package com.intellij.coverage.view;
 
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiNamedElement;
 import javax.annotation.Nonnull;
 

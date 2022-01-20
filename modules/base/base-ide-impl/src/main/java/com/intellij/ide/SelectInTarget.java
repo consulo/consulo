@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 

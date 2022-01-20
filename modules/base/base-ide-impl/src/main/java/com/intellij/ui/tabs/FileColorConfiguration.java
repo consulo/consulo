@@ -16,7 +16,7 @@
 
 package com.intellij.ui.tabs;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.ui.ColorUtil;
 import org.jdom.Element;

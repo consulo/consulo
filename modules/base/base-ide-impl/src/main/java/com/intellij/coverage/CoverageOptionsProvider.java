@@ -2,7 +2,7 @@ package com.intellij.coverage;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 

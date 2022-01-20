@@ -5,7 +5,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.impl.dataRules.GetDataRule;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ide.base.BaseDataManager;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;

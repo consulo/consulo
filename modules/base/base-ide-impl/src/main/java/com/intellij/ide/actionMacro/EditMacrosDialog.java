@@ -16,7 +16,7 @@
 package com.intellij.ide.actionMacro;
 
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nullable;
 
 /**

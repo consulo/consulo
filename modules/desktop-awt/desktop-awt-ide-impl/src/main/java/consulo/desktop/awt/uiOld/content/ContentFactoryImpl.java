@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.uiOld.content;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.content.*;
 import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.ui.content.impl.DesktopContentManagerImpl;

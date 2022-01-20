@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.io.FileUtil;

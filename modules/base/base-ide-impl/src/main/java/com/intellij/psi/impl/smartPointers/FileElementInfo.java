@@ -5,7 +5,7 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;

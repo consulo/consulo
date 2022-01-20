@@ -3,7 +3,7 @@ package com.intellij.coverage;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;

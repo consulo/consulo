@@ -3,7 +3,7 @@ package com.intellij.execution.configuration;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

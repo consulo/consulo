@@ -18,7 +18,6 @@ package com.intellij.openapi.util;
 import com.intellij.util.NotNullFunction;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
@@ -28,7 +27,7 @@ import javax.annotation.Nonnull;
 public class NotNullLazyKey<T, H extends UserDataHolder> extends Key<T> {
   private final NotNullFunction<H, T> myFunction;
 
-  private NotNullLazyKey(@Nonnull @NonNls String name, @Nonnull NotNullFunction<H, T> function) {
+  private NotNullLazyKey(@Nonnull String name, @Nonnull NotNullFunction<H, T> function) {
     super(name);
     myFunction = function;
   }
@@ -42,7 +41,7 @@ public class NotNullLazyKey<T, H extends UserDataHolder> extends Key<T> {
     return data;
   }
 
-  public static <T, H extends UserDataHolder> NotNullLazyKey<T, H> create(@NonNls @Nonnull String name, @Nonnull NotNullFunction<H, T> function) {
-    return new NotNullLazyKey<T, H>(name, function);
+  public static <T, H extends UserDataHolder> NotNullLazyKey<T, H> create(@Nonnull String name, @Nonnull NotNullFunction<H, T> function) {
+    return new NotNullLazyKey<>(name, function);
   }
 }

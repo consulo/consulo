@@ -9,7 +9,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.DumbService;
+import consulo.project.DumbService;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.StackOverflowPreventedException;

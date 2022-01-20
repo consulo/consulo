@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.tipOfDay;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.disposer.Disposer;
 import consulo.ide.tipOfDay.TipOfDayManager;

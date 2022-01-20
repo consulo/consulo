@@ -16,7 +16,7 @@
 package com.intellij.psi.impl;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

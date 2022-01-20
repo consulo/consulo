@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project;
+package consulo.project;
 
-import consulo.application.Application;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.component.messagebus.Topic;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.Application;
+import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
+import consulo.project.event.ProjectManagerListener;
+import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

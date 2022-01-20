@@ -16,8 +16,8 @@
 package com.intellij.openapi.application.impl;
 
 import consulo.application.constraint.ConstrainedExecution;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbService;
+import consulo.project.Project;
 
 /**
  * from kotlin

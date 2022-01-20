@@ -21,7 +21,7 @@ import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import javax.annotation.Nonnull;
 

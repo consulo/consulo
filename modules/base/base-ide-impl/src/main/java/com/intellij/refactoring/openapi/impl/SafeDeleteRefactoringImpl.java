@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.openapi.impl;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringImpl;

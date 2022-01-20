@@ -8,9 +8,9 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.event.ProjectManagerListener;
+import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.util.TimeoutUtil;
@@ -212,7 +212,7 @@ public final class VcsInitialization {
     return activity.getOrder() < VcsInitObject.AFTER_COMMON.getOrder();
   }
 
-  static final class StartUpActivity implements StartupActivity.DumbAware {
+  static final class StartUpActivity implements IdeaStartupActivity.DumbAware {
     @Override
     public void runActivity(@Nonnull Project project) {
       if (project.isDefault()) return;

@@ -23,7 +23,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 import com.intellij.lang.Language;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ResourceUtil;
 import consulo.logging.Logger;
 

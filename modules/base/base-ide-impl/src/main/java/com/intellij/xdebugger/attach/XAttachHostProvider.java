@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.attach;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

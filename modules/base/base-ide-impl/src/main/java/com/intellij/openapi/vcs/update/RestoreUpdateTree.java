@@ -16,9 +16,9 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.project.ProjectReloadState;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesCache;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
@@ -39,7 +39,7 @@ public class RestoreUpdateTree implements PersistentStateComponent<Element> {
     return ServiceManager.getService(project, RestoreUpdateTree.class);
   }
 
-  public static class MyStartUpActivity implements StartupActivity.DumbAware {
+  public static class MyStartUpActivity implements IdeaStartupActivity.DumbAware {
     @Override
     public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
       RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(project);

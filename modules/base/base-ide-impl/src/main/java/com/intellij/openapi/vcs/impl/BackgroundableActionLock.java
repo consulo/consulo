@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

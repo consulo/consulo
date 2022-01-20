@@ -17,7 +17,7 @@
 package com.intellij.usages.impl;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.usages.rules.UsageGroupingRule;
 
 import javax.annotation.Nullable;

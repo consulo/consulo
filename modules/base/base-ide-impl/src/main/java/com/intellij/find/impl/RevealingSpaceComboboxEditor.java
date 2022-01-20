@@ -24,7 +24,7 @@ package com.intellij.find.impl;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.StringComboboxEditor;
 

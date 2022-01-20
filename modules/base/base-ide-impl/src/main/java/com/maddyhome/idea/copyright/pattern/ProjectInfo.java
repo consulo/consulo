@@ -16,7 +16,7 @@
 
 package com.maddyhome.idea.copyright.pattern;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 public class ProjectInfo {
   public ProjectInfo(Project project) {

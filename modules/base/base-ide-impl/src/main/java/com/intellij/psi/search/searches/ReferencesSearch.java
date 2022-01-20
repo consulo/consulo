@@ -4,7 +4,7 @@ package com.intellij.psi.search.searches;
 import com.intellij.openapi.application.DumbAwareSearchParameters;
 import consulo.application.util.function.Processor;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.*;

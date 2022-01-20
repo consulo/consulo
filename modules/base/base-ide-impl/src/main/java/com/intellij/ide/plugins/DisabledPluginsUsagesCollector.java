@@ -17,7 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.intellij.internal.statistic.UsagesCollector;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginManager;
 

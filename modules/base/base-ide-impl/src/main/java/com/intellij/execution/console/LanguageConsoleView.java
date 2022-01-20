@@ -20,7 +20,7 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.lang.Language;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;
 import consulo.disposer.Disposable;

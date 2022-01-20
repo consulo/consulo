@@ -15,7 +15,7 @@
  */
 package consulo.module.extension.condition;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.module.extension.ModuleExtension;
 
 /**

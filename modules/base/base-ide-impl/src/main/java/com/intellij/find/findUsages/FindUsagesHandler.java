@@ -19,7 +19,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ReadActionProcessor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.NullableComputable;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;

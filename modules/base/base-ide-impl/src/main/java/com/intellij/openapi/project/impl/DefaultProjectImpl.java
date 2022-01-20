@@ -16,7 +16,7 @@
 package com.intellij.openapi.project.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.project.ProjectManager;
+import consulo.project.ProjectManager;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

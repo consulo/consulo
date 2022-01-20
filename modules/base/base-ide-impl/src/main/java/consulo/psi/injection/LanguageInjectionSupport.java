@@ -19,7 +19,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;

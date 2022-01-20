@@ -18,15 +18,10 @@ package com.intellij.extapi.psi;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
-import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.util.RecursionManager;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
@@ -47,9 +42,14 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
+import consulo.application.ApplicationManager;
+import consulo.progress.ProgressIndicatorProvider;
+import consulo.project.Project;
+import consulo.project.impl.SingleProjectHolder;
 import consulo.psi.impl.source.internal.SubstrateRefOwner;
 import consulo.security.impl.PrivilegedAction;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -277,7 +277,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
 
   @Override
   public PsiManagerEx getManager() {
-    Project project = ProjectCoreUtil.theOnlyOpenProject();
+    Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null) {
       return PsiManagerEx.getInstanceEx(project);
     }
@@ -287,7 +287,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
   @Override
   @Nonnull
   public Project getProject() {
-    Project project = ProjectCoreUtil.theOnlyOpenProject();
+    Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null) {
       return project;
     }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 public abstract class ThreadLocalDefendedInvoker<T> {
   protected final static ThreadLocal<Boolean> myThreadLocal = new ThreadLocal<Boolean>() {

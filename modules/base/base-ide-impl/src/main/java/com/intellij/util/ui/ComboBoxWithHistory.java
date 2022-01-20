@@ -1,7 +1,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ArrayUtil;
 import java.util.HashMap;
 import javax.annotation.Nonnull;

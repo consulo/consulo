@@ -17,7 +17,7 @@ package com.intellij.ide.passwordSafe.impl.providers.nil;
 
 import com.intellij.ide.passwordSafe.PasswordSafeException;
 import com.intellij.ide.passwordSafe.impl.PasswordSafeProvider;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nullable;
 
 /**

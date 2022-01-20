@@ -21,7 +21,7 @@ import com.intellij.analysis.BaseAnalysisAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.maddyhome.idea.copyright.CopyrightManager;

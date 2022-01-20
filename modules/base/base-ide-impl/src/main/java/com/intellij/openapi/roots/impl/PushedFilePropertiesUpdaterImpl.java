@@ -17,6 +17,7 @@ import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.project.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.file.impl.FileManagerImpl;

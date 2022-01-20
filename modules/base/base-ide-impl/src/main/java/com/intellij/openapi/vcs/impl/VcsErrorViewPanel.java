@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * @author yole

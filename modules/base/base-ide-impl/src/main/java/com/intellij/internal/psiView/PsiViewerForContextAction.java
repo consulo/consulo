@@ -3,8 +3,8 @@ package com.intellij.internal.psiView;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 import com.intellij.psi.PsiFile;
 
 /**

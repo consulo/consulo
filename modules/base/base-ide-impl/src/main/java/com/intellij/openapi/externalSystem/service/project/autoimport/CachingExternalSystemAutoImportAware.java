@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.service.project.autoimport;
 
 import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

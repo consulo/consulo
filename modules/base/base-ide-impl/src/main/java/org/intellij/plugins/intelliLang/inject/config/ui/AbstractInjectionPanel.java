@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ui.UIUtil;
 
 /**

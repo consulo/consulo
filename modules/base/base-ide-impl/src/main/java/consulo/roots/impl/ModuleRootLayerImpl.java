@@ -18,7 +18,7 @@ package consulo.roots.impl;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.*;
 import com.intellij.openapi.roots.libraries.Library;

@@ -19,7 +19,7 @@ import com.intellij.openapi.application.*;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import consulo.application.ApplicationListener;
+import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;

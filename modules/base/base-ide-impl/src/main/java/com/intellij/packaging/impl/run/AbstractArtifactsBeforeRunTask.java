@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.run;
 
 import com.intellij.execution.BeforeRunTask;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;

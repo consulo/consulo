@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.intention;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import javax.annotation.Nonnull;

@@ -25,7 +25,7 @@ import com.intellij.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;

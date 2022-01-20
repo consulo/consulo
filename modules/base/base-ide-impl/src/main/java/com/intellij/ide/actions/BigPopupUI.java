@@ -5,7 +5,7 @@ import com.intellij.codeInsight.hint.HintUtil;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.ScrollingUtil;

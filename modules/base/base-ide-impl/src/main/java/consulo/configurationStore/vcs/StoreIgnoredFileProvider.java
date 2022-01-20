@@ -16,7 +16,7 @@
 package consulo.configurationStore.vcs;
 
 import consulo.components.impl.stores.IProjectStore;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FilePath;

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**
@@ -22,7 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
  *
  * @see Messages#showInputDialog(String, String, javax.swing.Icon, String, InputValidator)
  * @see Messages#showInputDialog(java.awt.Component, String, String, javax.swing.Icon, String, InputValidator)
- * @see Messages#showInputDialog(com.intellij.openapi.project.Project, String, String, javax.swing.Icon, String, InputValidator)
+ * @see Messages#showInputDialog(Project, String, String, javax.swing.Icon, String, InputValidator)
  * @see Messages#showEditableChooseDialog(String, String, javax.swing.Icon, String[], String, InputValidator)
  */
 public interface InputValidator {

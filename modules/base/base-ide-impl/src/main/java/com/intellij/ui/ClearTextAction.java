@@ -19,7 +19,7 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;

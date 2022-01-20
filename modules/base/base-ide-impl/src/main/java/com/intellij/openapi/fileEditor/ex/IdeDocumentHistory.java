@@ -2,7 +2,7 @@
 package com.intellij.openapi.fileEditor.ex;
 
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.io.PersistentHashMap;
 import javax.annotation.Nonnull;

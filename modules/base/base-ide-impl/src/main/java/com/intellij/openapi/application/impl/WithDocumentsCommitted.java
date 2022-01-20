@@ -17,7 +17,7 @@ package com.intellij.openapi.application.impl;
 
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.constraint.ConstrainedExecution;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 
 /**

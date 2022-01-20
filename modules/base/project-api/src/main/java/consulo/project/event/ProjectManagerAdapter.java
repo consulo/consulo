@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project;
+package consulo.project.event;
 
+@Deprecated
 public abstract class ProjectManagerAdapter implements ProjectManagerListener {
 }

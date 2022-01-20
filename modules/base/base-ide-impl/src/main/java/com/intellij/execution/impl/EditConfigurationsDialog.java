@@ -19,7 +19,7 @@ package com.intellij.execution.impl;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.Executor;
 import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Couple;
 import consulo.ui.annotation.RequiredUIAccess;

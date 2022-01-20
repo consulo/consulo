@@ -30,7 +30,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FilePath;
 import consulo.virtualFileSystem.VirtualFile;

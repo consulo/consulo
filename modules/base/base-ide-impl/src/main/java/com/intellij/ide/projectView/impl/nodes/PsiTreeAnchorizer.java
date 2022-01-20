@@ -18,7 +18,7 @@ package com.intellij.ide.projectView.impl.nodes;
 import com.intellij.ide.util.treeView.TreeAnchorizer;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;

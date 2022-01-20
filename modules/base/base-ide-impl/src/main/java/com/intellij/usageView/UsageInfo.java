@@ -21,7 +21,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;

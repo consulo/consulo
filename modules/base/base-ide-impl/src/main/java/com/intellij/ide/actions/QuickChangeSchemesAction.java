@@ -17,8 +17,8 @@ package com.intellij.ide.actions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.Project;
+import consulo.project.DumbAware;
 import javax.annotation.Nonnull;
 
 /**

@@ -16,7 +16,7 @@
 
 package com.intellij.history;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

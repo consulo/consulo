@@ -18,7 +18,7 @@ package com.intellij.openapi.diff.impl.dir;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

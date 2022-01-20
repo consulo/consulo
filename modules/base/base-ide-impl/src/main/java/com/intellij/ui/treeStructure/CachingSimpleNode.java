@@ -16,7 +16,7 @@
 package com.intellij.ui.treeStructure;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nullable;
 
 public abstract class CachingSimpleNode extends SimpleNode {

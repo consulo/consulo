@@ -17,6 +17,7 @@ module consulo.application.api {
   requires java.desktop;
 
   exports consulo.application;
+  exports consulo.application.event;
   exports consulo.application.constraint;
   exports consulo.progress;
   // TODO [VISTALL] impl package

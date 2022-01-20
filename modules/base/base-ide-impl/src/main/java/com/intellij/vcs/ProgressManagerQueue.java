@@ -17,7 +17,7 @@ package com.intellij.vcs;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.logging.Logger;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;

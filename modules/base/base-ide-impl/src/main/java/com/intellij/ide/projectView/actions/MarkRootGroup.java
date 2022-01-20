@@ -17,7 +17,7 @@ package com.intellij.ide.projectView.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

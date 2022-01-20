@@ -6,8 +6,8 @@ import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 import javax.annotation.Nonnull;
 
 public class ModuleLinkFilter implements Filter {

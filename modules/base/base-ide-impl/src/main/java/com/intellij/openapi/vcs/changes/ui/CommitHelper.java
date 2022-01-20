@@ -27,7 +27,7 @@ import consulo.document.Document;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
@@ -588,7 +588,7 @@ public class CommitHelper {
   /**
    * Removes the "being committed marker" from the given {@link Document documents}.
    *
-   * @see #markCommittingDocuments(com.intellij.openapi.project.Project, java.util.List)
+   * @see #markCommittingDocuments(Project, java.util.List)
    * @see VetoSavingCommittingDocumentsAdapter
    */
   public static void unmarkCommittingDocuments(@Nonnull Collection<Document> committingDocs) {

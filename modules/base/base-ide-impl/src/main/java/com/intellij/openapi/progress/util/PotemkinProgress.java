@@ -6,7 +6,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.concurrency.Semaphore;
 import consulo.awt.hacking.SunToolkitHacking;
 import org.jetbrains.annotations.Nls;

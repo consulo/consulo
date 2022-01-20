@@ -17,7 +17,7 @@ package com.intellij.refactoring.util;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageNamesValidation;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.refactoring.extractMethod.AbstractVariableData;
 import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.ui.TableUtil;

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl.analysis;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

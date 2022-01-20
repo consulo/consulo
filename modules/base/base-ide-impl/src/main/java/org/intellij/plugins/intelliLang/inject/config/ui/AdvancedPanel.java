@@ -16,7 +16,7 @@
 package org.intellij.plugins.intelliLang.inject.config.ui;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.LanguageTextField;

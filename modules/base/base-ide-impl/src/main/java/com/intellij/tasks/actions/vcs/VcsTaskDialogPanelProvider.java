@@ -17,7 +17,7 @@ package com.intellij.tasks.actions.vcs;
 
 import javax.annotation.Nonnull;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;

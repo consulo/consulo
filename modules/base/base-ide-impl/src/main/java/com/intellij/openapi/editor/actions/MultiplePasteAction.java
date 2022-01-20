@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.Project;
+import consulo.project.DumbAware;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.UIBundle;
 

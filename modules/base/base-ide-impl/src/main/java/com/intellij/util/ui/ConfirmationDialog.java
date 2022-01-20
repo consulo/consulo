@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
 import consulo.ui.image.Image;
 

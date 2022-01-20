@@ -20,7 +20,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;

@@ -21,8 +21,8 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import javax.annotation.Nonnull;
 

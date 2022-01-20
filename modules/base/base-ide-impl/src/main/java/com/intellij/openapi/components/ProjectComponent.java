@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.components;
 
+import consulo.project.Project;
+
 /**
  * Project-level component's implementation class should implement the {@code ProjectComponent} interface.
- * It should have constructor with a single parameter of {@link com.intellij.openapi.project.Project}
+ * It should have constructor with a single parameter of {@link Project}
  * type or with no parameters.
  * <p>
  * <strong>Note that if you register a class as a project component it will be loaded, its instance will be created and

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.popup.util;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import javax.annotation.Nullable;

@@ -16,7 +16,7 @@
 package consulo.ide.wizard.newModule;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

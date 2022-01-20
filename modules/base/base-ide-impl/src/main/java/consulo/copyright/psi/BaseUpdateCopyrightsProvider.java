@@ -16,7 +16,7 @@
 package consulo.copyright.psi;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import com.maddyhome.idea.copyright.ui.TemplateCommentPanel;
 import javax.annotation.Nonnull;

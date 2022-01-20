@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.UpdateInBackground;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vcs.*;

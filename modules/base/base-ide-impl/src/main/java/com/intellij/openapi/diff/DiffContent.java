@@ -18,7 +18,7 @@ package com.intellij.openapi.diff;
 import consulo.document.Document;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;

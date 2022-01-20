@@ -20,7 +20,7 @@ import com.intellij.diff.contents.DiffContent;
 import com.intellij.icons.AllIcons;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

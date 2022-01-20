@@ -16,7 +16,7 @@
 package consulo.module.extension.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.ModuleRootLayer;
 import consulo.module.extension.ModuleExtension;

@@ -17,7 +17,7 @@
 package com.intellij.execution.ui.layout.impl;
 
 import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

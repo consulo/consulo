@@ -20,8 +20,8 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.Project;
+import consulo.project.DumbAware;
 import com.intellij.openapi.wm.ToolWindowManager;
 
 public class NextSplitAction extends AnAction implements DumbAware {

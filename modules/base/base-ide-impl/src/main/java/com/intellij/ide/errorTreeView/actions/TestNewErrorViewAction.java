@@ -16,7 +16,7 @@
 package com.intellij.ide.errorTreeView.actions;
 
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ui.ErrorTreeView;
 import org.jetbrains.annotations.NonNls;
 

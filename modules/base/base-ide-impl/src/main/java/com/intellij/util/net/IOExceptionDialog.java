@@ -17,7 +17,7 @@ package com.intellij.util.net;
 
 import com.intellij.CommonBundle;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.GuiUtils;

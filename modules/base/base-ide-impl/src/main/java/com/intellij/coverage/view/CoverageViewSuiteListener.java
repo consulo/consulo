@@ -1,7 +1,7 @@
 package com.intellij.coverage.view;
 
 import com.intellij.coverage.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
 * User: anna

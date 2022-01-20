@@ -17,7 +17,7 @@ package consulo.moduleImport.ui;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.JBCardLayout;

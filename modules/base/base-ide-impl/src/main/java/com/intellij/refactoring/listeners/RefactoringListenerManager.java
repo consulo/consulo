@@ -16,7 +16,7 @@
 package com.intellij.refactoring.listeners;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * This class managers <i>refactoring listeners</i> - a way for plugin/client code to get

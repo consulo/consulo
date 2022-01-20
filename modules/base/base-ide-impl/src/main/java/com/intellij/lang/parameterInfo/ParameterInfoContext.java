@@ -17,7 +17,7 @@
 package com.intellij.lang.parameterInfo;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 

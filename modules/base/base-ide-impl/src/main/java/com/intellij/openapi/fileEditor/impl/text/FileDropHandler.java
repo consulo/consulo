@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.EditorDropHandler;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;

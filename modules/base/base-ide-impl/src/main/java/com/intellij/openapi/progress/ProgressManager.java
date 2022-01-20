@@ -16,7 +16,7 @@
 package com.intellij.openapi.progress;
 
 import consulo.application.Application;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.progress.ProcessCanceledException;

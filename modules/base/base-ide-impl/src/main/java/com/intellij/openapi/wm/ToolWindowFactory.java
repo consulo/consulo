@@ -16,14 +16,15 @@
 
 package com.intellij.openapi.wm;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
 /**
  * Performs lazy initialization of a toolwindow registered in plugin.xml.
- * Please implement {@link com.intellij.openapi.project.DumbAware} marker interface to indicate that the toolwindow content should be
+ * Please implement {@link DumbAware} marker interface to indicate that the toolwindow content should be
  * available during indexing process.
  *
  * @author yole

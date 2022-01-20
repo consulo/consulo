@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
-import consulo.application.ApplicationListener;
+import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
@@ -26,14 +26,14 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleScopeProvider;
 import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;
-import com.intellij.openapi.project.DumbModeTask;
+import consulo.project.DumbModeTask;
 import com.intellij.openapi.project.DumbServiceImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.WatchedRootsProvider;
-import com.intellij.openapi.startup.StartupManager;
+import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;

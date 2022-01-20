@@ -18,7 +18,7 @@ package com.intellij.unscramble;
 
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * @author spleaner

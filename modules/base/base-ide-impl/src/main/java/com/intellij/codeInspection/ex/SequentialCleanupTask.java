@@ -18,7 +18,7 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;

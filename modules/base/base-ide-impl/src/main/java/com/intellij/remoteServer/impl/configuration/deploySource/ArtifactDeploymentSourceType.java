@@ -16,7 +16,7 @@
 package com.intellij.remoteServer.impl.configuration.deploySource;
 
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 import consulo.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider;

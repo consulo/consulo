@@ -18,7 +18,7 @@ package com.intellij.ide.util.treeView.smartTree;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import java.util.Collection;
 

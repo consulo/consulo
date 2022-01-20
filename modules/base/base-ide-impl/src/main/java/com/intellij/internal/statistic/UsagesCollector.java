@@ -17,7 +17,7 @@ package com.intellij.internal.statistic;
 
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

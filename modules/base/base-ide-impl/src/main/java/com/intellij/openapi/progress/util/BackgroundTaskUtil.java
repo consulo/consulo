@@ -24,7 +24,7 @@ import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;

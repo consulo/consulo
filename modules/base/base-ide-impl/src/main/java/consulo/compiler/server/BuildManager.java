@@ -15,7 +15,7 @@
  */
 package consulo.compiler.server;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import java.io.File;
 import java.util.Collection;

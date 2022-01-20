@@ -17,7 +17,7 @@ package com.intellij.notification;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.Alarm;
 import consulo.component.messagebus.Topic;
 import com.intellij.util.ui.UIUtil;

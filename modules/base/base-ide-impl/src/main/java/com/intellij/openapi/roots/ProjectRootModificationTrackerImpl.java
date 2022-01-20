@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 
 import jakarta.inject.Singleton;

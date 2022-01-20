@@ -16,9 +16,9 @@
 package com.intellij.usages;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.IndexNotReadyException;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbService;
+import consulo.project.IndexNotReadyException;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.usageView.UsageInfo;

@@ -17,9 +17,9 @@ package com.intellij.util;
 
 import consulo.component.ComponentManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.PossiblyDumbAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.PossiblyDumbAware;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,7 +16,7 @@
 package com.intellij.featureStatistics;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 
 /**

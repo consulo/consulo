@@ -2,7 +2,7 @@
 package com.intellij.psi.util;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.component.messagebus.MessageBus;
 import consulo.util.dataholder.Key;
 import consulo.component.util.ModificationTracker;

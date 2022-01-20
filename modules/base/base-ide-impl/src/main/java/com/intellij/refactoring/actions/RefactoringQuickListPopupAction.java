@@ -18,7 +18,7 @@ package com.intellij.refactoring.actions;
 import com.intellij.ide.actions.QuickSwitchSchemeAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -3,7 +3,7 @@ package com.intellij.application.options.codeStyle.excludedFiles;
 
 import com.intellij.formatting.fileSet.FileSetDescriptor;
 import com.intellij.formatting.fileSet.NamedScopeDescriptor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import javax.annotation.Nonnull;
 

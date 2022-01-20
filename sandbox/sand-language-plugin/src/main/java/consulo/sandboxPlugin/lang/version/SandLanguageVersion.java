@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.lang.version;
 
 import com.intellij.lexer.Lexer;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;

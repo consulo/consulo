@@ -3,7 +3,7 @@ package com.intellij.ui.popup;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.PopupBorder;

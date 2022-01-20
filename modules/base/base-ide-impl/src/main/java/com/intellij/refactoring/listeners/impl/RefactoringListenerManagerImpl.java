@@ -17,7 +17,7 @@
 package com.intellij.refactoring.listeners.impl;
 
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.refactoring.listeners.RefactoringElementListenerProvider;
 import com.intellij.refactoring.listeners.RefactoringListenerManager;
 import com.intellij.refactoring.listeners.impl.impl.RefactoringTransactionImpl;

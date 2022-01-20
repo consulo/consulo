@@ -19,7 +19,7 @@ import com.intellij.execution.dashboard.DashboardGroup;
 import com.intellij.execution.dashboard.DashboardNode;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;
 

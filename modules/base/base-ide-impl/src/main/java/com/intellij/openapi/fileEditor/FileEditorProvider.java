@@ -16,8 +16,8 @@
 package com.intellij.openapi.fileEditor;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;

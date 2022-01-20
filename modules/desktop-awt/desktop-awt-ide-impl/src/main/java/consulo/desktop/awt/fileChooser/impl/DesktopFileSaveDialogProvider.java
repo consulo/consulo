@@ -17,8 +17,7 @@ package consulo.desktop.awt.fileChooser.impl;
 
 import com.intellij.openapi.fileChooser.FileSaverDescriptor;
 import com.intellij.openapi.fileChooser.FileSaverDialog;
-import consulo.desktop.awt.fileChooser.impl.FileSaverDialogImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
 
 import javax.annotation.Nonnull;

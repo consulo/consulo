@@ -17,7 +17,8 @@ package com.intellij.codeInsight.intention;
 
 import consulo.application.Application;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
@@ -35,7 +36,7 @@ import javax.annotation.Nonnull;
  * Implement {@link HighPriorityAction HighPriorityAction} or
  * {@link LowPriorityAction LowPriorityAction} to change ordering.
  * <p/>
- * Can be {@link com.intellij.openapi.project.DumbAware}.
+ * Can be {@link DumbAware}.
  */
 public interface IntentionAction extends FileModifier {
   IntentionAction[] EMPTY_ARRAY = new IntentionAction[0];

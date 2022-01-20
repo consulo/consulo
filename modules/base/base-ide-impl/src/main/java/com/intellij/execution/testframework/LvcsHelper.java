@@ -22,7 +22,7 @@ package com.intellij.execution.testframework;
 
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.history.LocalHistory;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;

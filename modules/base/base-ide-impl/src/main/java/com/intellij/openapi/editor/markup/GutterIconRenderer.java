@@ -18,14 +18,12 @@ package com.intellij.openapi.editor.markup;
 import com.intellij.codeInsight.daemon.GutterMark;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.PossiblyDumbAware;
+import consulo.project.DumbAware;
+import consulo.project.PossiblyDumbAware;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * Interface which should be implemented in order to draw icons in the gutter area and handle events
@@ -35,7 +33,7 @@ import javax.swing.*;
  * Daemon code analyzer checks newly arrived gutter icon renderer against the old one and if they are equal, does not redraw the icon.
  * So it is highly advisable to override hashCode()/equals() methods to avoid icon flickering when old gutter renderer gets replaced with the new.<p/>
  *
- * During indexing, methods are only invoked for renderers implementing {@link com.intellij.openapi.project.DumbAware}.
+ * During indexing, methods are only invoked for renderers implementing {@link DumbAware}.
  *
  * @author max
  * @see RangeHighlighter#setGutterIconRenderer(GutterIconRenderer)

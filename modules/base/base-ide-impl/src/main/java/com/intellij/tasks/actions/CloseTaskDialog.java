@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.tasks.CustomTaskState;
 import com.intellij.tasks.LocalTask;

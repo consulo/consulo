@@ -18,7 +18,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.ScrollingUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

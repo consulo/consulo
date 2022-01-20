@@ -17,7 +17,7 @@
 package com.intellij.ui;
 
 import com.intellij.find.FindManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.awt.TargetAWT;

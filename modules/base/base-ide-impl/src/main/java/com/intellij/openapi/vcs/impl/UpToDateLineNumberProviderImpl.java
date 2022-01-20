@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.impl;
 
 import consulo.document.Document;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.ex.LineStatusTracker;
 import javax.annotation.Nullable;
 

@@ -19,7 +19,7 @@ package com.intellij.find.actions;
 
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 public class ReplaceInPathAction extends AnAction {

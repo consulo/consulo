@@ -19,7 +19,7 @@ import com.intellij.CommonBundle;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
@@ -426,7 +426,7 @@ public class Messages {
    * Use this method only if you do not know project or component
    *
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No" button.
-   * @see #showYesNoDialog(com.intellij.openapi.project.Project, String, String, javax.swing.Image)
+   * @see #showYesNoDialog(Project, String, String, javax.swing.Image)
    * @see #showYesNoCancelDialog(java.awt.Component, String, String, javax.swing.Image)
    */
   @YesNoResult

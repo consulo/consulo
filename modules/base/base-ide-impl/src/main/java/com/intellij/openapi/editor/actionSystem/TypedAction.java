@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.reporting.FreezeLogger;
 import consulo.document.Document;
 

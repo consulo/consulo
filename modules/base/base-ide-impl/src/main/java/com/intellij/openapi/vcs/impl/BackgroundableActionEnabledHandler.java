@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 @Deprecated
 public class BackgroundableActionEnabledHandler {

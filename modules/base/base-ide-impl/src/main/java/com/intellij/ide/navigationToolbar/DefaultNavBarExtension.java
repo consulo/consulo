@@ -19,7 +19,7 @@ import com.intellij.analysis.AnalysisScopeBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.*;
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;

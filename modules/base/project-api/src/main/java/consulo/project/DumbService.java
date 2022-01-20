@@ -1,25 +1,23 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.project;
+package consulo.project;
 
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import consulo.application.ReadAction;
 import consulo.application.NonBlockingReadAction;
+import consulo.application.ReadAction;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.component.ComponentManager;
-import com.intellij.openapi.components.ServiceManager;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.util.ModificationTracker;
-import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.*;
 import consulo.application.util.function.ThrowableRunnable;
-import consulo.component.messagebus.Topic;
-import consulo.disposer.Disposable;
+import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionList;
+import consulo.component.extension.ExtensionPointName;
+import consulo.component.messagebus.Topic;
+import consulo.component.util.ComponentUtil;
+import consulo.component.util.ModificationTracker;
+import consulo.disposer.Disposable;
+import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
+import consulo.ui.ModalityState;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -29,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * A service managing the IDE's 'dumb' mode: when indexes are updated in the background, and the functionality is very much limited.
@@ -199,10 +198,10 @@ public abstract class DumbService {
    */
   public abstract void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState);
 
-  private static final NotNullLazyKey<DumbService, Project> INSTANCE_KEY = ServiceManager.createLazyKey(DumbService.class);
+  private static final Function<Project, DumbService> INSTANCE_KEY = ComponentUtil.createLazyInject(DumbService.class);
 
   public static DumbService getInstance(@Nonnull Project project) {
-    return INSTANCE_KEY.getValue(project);
+    return INSTANCE_KEY.apply(project);
   }
 
   /**

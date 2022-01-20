@@ -16,7 +16,7 @@
 package consulo.compiler.impl;
 
 import com.intellij.compiler.progress.BuildViewService;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;

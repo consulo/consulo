@@ -17,7 +17,7 @@ package com.intellij.psi;
 
 import consulo.document.Document;
 import com.intellij.openapi.editor.DocumentRunnable;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nullable;
 
 public interface ExternalChangeAction extends Runnable, IgnorePsiEventsMarker {

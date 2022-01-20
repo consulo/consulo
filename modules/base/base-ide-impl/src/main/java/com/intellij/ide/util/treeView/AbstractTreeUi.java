@@ -11,7 +11,7 @@ import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.IndexNotReadyException;
+import consulo.project.IndexNotReadyException;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.registry.RegistryValue;

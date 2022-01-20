@@ -3,7 +3,7 @@ package com.intellij.xdebugger.attach;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.ProcessInfo;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 public interface XLocalAttachDebugger extends XAttachDebugger {

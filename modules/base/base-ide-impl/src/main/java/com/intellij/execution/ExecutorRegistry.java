@@ -18,7 +18,7 @@ package com.intellij.execution;
 
 import com.intellij.execution.runners.ExecutionEnvironment;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 

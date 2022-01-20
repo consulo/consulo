@@ -19,7 +19,7 @@ package com.intellij.profile.codeInspection.ui;
 import com.intellij.lang.Language;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.profile.Profile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

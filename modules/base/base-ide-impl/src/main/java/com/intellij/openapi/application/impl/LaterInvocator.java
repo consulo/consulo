@@ -4,7 +4,7 @@ package com.intellij.openapi.application.impl;
 import com.intellij.idea.ApplicationStarterCore;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;

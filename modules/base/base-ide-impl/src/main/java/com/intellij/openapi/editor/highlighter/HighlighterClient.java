@@ -17,7 +17,7 @@
 package com.intellij.openapi.editor.highlighter;
 
 import consulo.document.Document;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * @author max

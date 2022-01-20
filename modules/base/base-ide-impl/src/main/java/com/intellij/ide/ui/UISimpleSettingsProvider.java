@@ -17,7 +17,7 @@ package com.intellij.ide.ui;
 
 import com.intellij.ide.SearchTopHitProvider;
 import com.intellij.ide.ui.search.OptionDescription;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 
 import java.util.function.Consumer;

@@ -5,7 +5,7 @@ import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.IndexNotReadyException;
+import consulo.project.IndexNotReadyException;
 import javax.annotation.Nonnull;
 
 import java.util.List;

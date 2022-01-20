@@ -17,7 +17,7 @@
 package com.intellij.util.indexing;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;

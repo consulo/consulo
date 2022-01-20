@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.inline;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 

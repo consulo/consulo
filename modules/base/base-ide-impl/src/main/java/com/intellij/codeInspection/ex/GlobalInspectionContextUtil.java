@@ -21,7 +21,7 @@ import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefElementImpl;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.profile.ProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

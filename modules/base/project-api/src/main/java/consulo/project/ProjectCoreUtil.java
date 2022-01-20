@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project;
+package consulo.project;
 
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,13 +40,19 @@ public class ProjectCoreUtil {
     return false;
   }
 
-  /**
-   * @return the only open project if there is one, null if no or several projects are open
-   */
-  @Nullable
-  public static Project theOnlyOpenProject() {
-    return theProject;
+  public static boolean isDirectoryBased(@Nonnull Project project) {
+    if (project.isDefault()) {
+      return false;
+    }
+    return true;
   }
 
-  public static volatile Project theProject;
+  @Nullable
+  public static VirtualFile getDirectoryStoreFile(Project project) {
+    VirtualFile baseDir = project.getBaseDir();
+    if (baseDir == null) {
+      return null;
+    }
+    return baseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
+  }
 }

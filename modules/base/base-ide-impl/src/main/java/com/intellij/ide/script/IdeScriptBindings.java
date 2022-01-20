@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.script;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

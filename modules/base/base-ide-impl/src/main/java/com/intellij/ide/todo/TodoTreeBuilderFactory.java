@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.todo;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.swing.*;
 

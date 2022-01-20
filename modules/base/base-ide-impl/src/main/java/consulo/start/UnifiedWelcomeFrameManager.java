@@ -21,7 +21,7 @@ import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.ProjectManager;
+import consulo.project.ProjectManager;
 import com.intellij.openapi.wm.IdeFrame;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.ui.*;

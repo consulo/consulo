@@ -19,6 +19,8 @@ import com.intellij.usages.Usage;
 import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageTarget;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.project.DumbAware;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,7 +29,7 @@ import java.util.List;
 /**
  * A rule specifying how specific Usage View elements should be grouped.
  *
- * During indexing, only instances that implement {@link com.intellij.openapi.project.DumbAware} are executed.
+ * During indexing, only instances that implement {@link DumbAware} are executed.
  */
 public interface UsageGroupingRule {
   UsageGroupingRule[] EMPTY_ARRAY = new UsageGroupingRule[0];

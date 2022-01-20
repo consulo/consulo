@@ -20,7 +20,7 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 import java.awt.datatransfer.StringSelection;
 

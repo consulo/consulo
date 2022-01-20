@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.errorTreeView;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nullable;
 
 public class NewEditableErrorTreeViewPanel extends NewErrorTreeViewPanel {

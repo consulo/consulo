@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.actions.handlers;
 import com.intellij.xdebugger.impl.actions.DebuggerToggleActionHandler;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XDebugSession;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import javax.annotation.Nonnull;
 

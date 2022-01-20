@@ -45,7 +45,7 @@
 
   <applicationListeners>
     <listener class="com.intellij.openapi.vcs.impl.VcsInitialization$ShutDownProjectListener"
-              topic="com.intellij.openapi.project.ProjectManagerListener"/>
+              topic="consulo.project.event.ProjectManagerListener"/>
   </applicationListeners>
 
   <extensions defaultExtensionNs="consulo">

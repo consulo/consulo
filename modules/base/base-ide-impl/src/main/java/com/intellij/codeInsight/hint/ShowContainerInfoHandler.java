@@ -23,7 +23,7 @@ import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;

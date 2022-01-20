@@ -18,7 +18,7 @@ package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;

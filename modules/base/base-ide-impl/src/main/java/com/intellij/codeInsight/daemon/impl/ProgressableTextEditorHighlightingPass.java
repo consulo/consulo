@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;

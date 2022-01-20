@@ -1,7 +1,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import consulo.application.ReadAction;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

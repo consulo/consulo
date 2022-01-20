@@ -16,7 +16,7 @@
 package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.packageDependencies.DefaultScopesProvider;

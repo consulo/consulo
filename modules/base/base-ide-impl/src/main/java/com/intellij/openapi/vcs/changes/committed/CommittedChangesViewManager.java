@@ -23,7 +23,7 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.*;

@@ -5,7 +5,7 @@ import com.intellij.find.SearchSession;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 

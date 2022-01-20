@@ -20,7 +20,7 @@ import com.intellij.codeInspection.ex.JobDescriptor;
 import com.intellij.codeInspection.ex.StdJobDescriptors;
 import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.codeInspection.reference.RefManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.psi.PsiElement;

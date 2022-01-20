@@ -18,7 +18,7 @@ package com.intellij.ide.passwordSafe.impl.providers.memory;
 import com.intellij.ide.passwordSafe.impl.providers.BasePasswordSafeProvider;
 import com.intellij.ide.passwordSafe.impl.providers.ByteArrayWrapper;
 import com.intellij.ide.passwordSafe.impl.providers.EncryptionUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import java.util.HashMap;
 
 import java.security.SecureRandom;

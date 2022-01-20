@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.filters;
 
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -26,7 +26,7 @@ import com.intellij.openapi.diff.impl.patch.TextFilePatch;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Getter;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.vcs.FilePath;

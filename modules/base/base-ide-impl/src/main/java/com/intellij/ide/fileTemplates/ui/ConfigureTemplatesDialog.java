@@ -18,7 +18,7 @@ package com.intellij.ide.fileTemplates.ui;
 
 import com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.DimensionService;
 
 import java.awt.*;

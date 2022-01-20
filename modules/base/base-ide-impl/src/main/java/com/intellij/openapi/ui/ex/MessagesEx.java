@@ -17,7 +17,7 @@ package com.intellij.openapi.ui.ex;
 
 import com.intellij.CommonBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

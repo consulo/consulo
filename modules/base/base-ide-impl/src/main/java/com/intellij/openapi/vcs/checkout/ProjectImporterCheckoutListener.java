@@ -16,13 +16,13 @@
 package com.intellij.openapi.vcs.checkout;
 
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import consulo.project.ProjectOpenProcessors;
+import consulo.project.impl.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
 
 import java.io.File;

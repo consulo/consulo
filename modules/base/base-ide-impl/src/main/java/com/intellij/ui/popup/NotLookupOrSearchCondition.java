@@ -16,7 +16,7 @@
 
 package com.intellij.ui.popup;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ide.util.gotoByName.ChooseByNameBase;

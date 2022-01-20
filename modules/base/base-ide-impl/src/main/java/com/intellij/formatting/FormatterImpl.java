@@ -9,7 +9,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Couple;
 import consulo.document.util.TextRange;

@@ -18,7 +18,7 @@ package com.intellij.openapi.command.undo;
 import consulo.application.Application;
 import consulo.document.Document;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.command.undo.ApplicationUndoManager;

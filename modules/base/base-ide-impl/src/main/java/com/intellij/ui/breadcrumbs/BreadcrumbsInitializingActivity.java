@@ -13,8 +13,8 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 import consulo.disposer.Disposer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileListener;
@@ -25,7 +25,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 
-final class BreadcrumbsInitializingActivity implements StartupActivity.DumbAware {
+final class BreadcrumbsInitializingActivity implements IdeaStartupActivity.DumbAware {
   @Override
   public void runActivity(@Nonnull Project project) {
     if (project.isDefault() || ApplicationManager.getApplication().isUnitTestMode() || project.isDisposed()) {

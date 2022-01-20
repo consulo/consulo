@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.impl.runtime.ui;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.remoteServer.runtime.ServerConnection;

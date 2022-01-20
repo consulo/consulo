@@ -16,7 +16,7 @@
 
 package com.intellij.execution.configuration;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.ui.TextAccessor;
 

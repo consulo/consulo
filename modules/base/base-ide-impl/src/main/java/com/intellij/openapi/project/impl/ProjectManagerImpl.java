@@ -22,27 +22,26 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.notification.NotificationsManager;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import consulo.document.FileDocumentManager;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.impl.ModuleManagerComponent;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
-import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.*;
+import com.intellij.openapi.progress.NonCancelableSection;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.ProjectReloadState;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.impl.ZipHandler;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -51,13 +50,13 @@ import com.intellij.ui.GuiUtils;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import consulo.application.Application;
-import consulo.application.TransactionGuard;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
+import consulo.application.TransactionGuard;
 import consulo.awt.TargetAWT;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.components.impl.stores.ProjectStorageUtil;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.storage.StateStorageBase;
@@ -65,16 +64,25 @@ import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.VfsFileBasedStorage;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.FileDocumentManager;
 import consulo.logging.Logger;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import consulo.progress.ProgressIndicatorProvider;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.project.event.ProjectManagerListener;
+import consulo.project.impl.SingleProjectHolder;
+import consulo.project.startup.StartupManager;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -395,7 +403,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         return false;
       }
       myOpenProjects = ArrayUtil.append(myOpenProjects, project);
-      ProjectCoreUtil.theProject = myOpenProjects.length == 1 ? project : null;
+      SingleProjectHolder.theProject = myOpenProjects.length == 1 ? project : null;
     }
     return true;
   }
@@ -404,7 +412,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private Collection<Project> removeFromOpened(@Nonnull Project project) {
     synchronized (lock) {
       myOpenProjects = ArrayUtil.remove(myOpenProjects, project);
-      ProjectCoreUtil.theProject = myOpenProjects.length == 1 ? myOpenProjects[0] : null;
+      SingleProjectHolder.theProject = myOpenProjects.length == 1 ? myOpenProjects[0] : null;
       return Arrays.asList(myOpenProjects);
     }
   }

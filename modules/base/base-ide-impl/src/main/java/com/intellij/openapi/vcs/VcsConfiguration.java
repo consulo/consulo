@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs;
 import com.intellij.ide.todo.TodoPanelSettings;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;

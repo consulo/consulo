@@ -36,7 +36,7 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.ThrowableComputable;

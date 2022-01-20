@@ -17,7 +17,7 @@ package com.intellij.openapi.progress.util;
 
 import com.intellij.ide.IdeEventQueue;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

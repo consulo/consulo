@@ -19,7 +19,7 @@ package com.intellij.ide.util;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeView;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.psi.PsiDirectory;

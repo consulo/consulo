@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.patch;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.patch.TextFilePatch;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
 

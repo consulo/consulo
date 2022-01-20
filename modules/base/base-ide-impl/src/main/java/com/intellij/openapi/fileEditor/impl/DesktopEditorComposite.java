@@ -31,7 +31,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.project.DumbService;
+import consulo.project.DumbService;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NullUtils;
 import com.intellij.openapi.util.Weighted;

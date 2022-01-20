@@ -18,7 +18,7 @@ package com.intellij.openapi.editor;
 import com.intellij.lang.ASTNode;
 import consulo.document.Document;
 import consulo.logging.Logger;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;

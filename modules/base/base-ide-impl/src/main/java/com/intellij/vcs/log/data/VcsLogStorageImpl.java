@@ -18,7 +18,7 @@ package com.intellij.vcs.log.data;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Ref;

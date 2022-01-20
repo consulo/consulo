@@ -24,7 +24,7 @@ import com.intellij.formatting.FormattingModelWithShiftIndentInsideDocumentRange
 import com.intellij.lang.ASTNode;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDocumentManager;

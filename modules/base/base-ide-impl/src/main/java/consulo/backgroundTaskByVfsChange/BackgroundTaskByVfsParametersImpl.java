@@ -15,7 +15,7 @@
  */
 package consulo.backgroundTaskByVfsChange;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.conflicts;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.ChangeListManager;

@@ -17,7 +17,7 @@ package com.intellij.errorreport;
 
 import com.google.common.reflect.TypeToken;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.external.api.ErrorReportBean;
 import consulo.externalService.AuthorizationFailedException;

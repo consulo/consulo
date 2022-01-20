@@ -16,7 +16,7 @@
 package com.intellij.util.indexing;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;

@@ -17,28 +17,28 @@
 /*
  * @author max
  */
-package com.intellij.openapi.project;
+package consulo.project;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class ProjectLocator {
-  
   public static ProjectLocator getInstance() {
-    return ServiceManager.getService(ProjectLocator.class);
+    return Application.get().getInstance(ProjectLocator.class);
   }
 
   /**
    * Returns an open project which contains the given file.
    * This is a guess-method, so if several projects contain the file, only one will be returned.
    * Also a project may be returned though it doesn't contain the file for sure (see implementations).
+   *
    * @param file file to be located in projects.
    * @return project which probably contains the file, or null if couldn't guess (for example, there are no open projects).
    */
@@ -46,11 +46,12 @@ public abstract class ProjectLocator {
   public abstract Project guessProjectForFile(@Nullable VirtualFile file);
 
   /**
-  * Gets all open projects containing the given file.
-  * If none does, an empty list is returned.
-  * @param file file to be located in projects.
-  * @return list of open projects containing this file.
-  */
+   * Gets all open projects containing the given file.
+   * If none does, an empty list is returned.
+   *
+   * @param file file to be located in projects.
+   * @return list of open projects containing this file.
+   */
   @Nonnull
   public abstract Collection<Project> getProjectsForFile(VirtualFile file);
 
@@ -66,7 +67,7 @@ public abstract class ProjectLocator {
   }
 
   @Nullable
-  static Project getPreferredProject(@Nonnull VirtualFile file) {
+  public static Project getPreferredProject(@Nonnull VirtualFile file) {
     return ourPreferredProjects.get().get(file);
   }
 

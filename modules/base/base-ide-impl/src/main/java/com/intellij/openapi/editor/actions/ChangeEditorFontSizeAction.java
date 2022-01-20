@@ -21,8 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorBundle;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import consulo.editor.internal.EditorInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -1,7 +1,7 @@
 package com.intellij.tasks.actions;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;

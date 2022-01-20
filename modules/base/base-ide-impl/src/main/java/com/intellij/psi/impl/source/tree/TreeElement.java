@@ -3,11 +3,6 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.lang.ASTNode;
-import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectCoreUtil;
-import consulo.document.util.TextRange;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -18,7 +13,13 @@ import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.ReadOnlyLightVirtualFile;
 import com.intellij.util.CharTable;
+import consulo.application.ApplicationManager;
+import consulo.document.util.TextRange;
+import consulo.project.Project;
+import consulo.project.impl.SingleProjectHolder;
+import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -58,7 +59,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   }
 
   public PsiManagerEx getManager() {
-    Project project = ProjectCoreUtil.theOnlyOpenProject();
+    Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null) {
       return PsiManagerEx.getInstanceEx(project);
     }

@@ -16,7 +16,7 @@
 package com.intellij.ui.content;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
 import javax.annotation.Nonnull;

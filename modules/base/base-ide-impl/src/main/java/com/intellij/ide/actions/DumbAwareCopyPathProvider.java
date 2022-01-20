@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 
 // from kotlin
 public class DumbAwareCopyPathProvider extends CopyPathProvider implements DumbAware {

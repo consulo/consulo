@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.ide.action;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DefaultProjectFactory;
+import consulo.project.internal.DefaultProjectFactory;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.preferences.UnifiedShowSettingsUtil;
 import consulo.ui.annotation.RequiredUIAccess;

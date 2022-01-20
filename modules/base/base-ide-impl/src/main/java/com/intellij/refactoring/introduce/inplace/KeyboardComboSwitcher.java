@@ -1,7 +1,7 @@
 package com.intellij.refactoring.introduce.inplace;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ui.UIUtil;

@@ -1,8 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
+import consulo.project.DumbService;
+import consulo.project.DumbAware;
+import consulo.project.Project;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * An adapter for {@link QueryExecutor} interface which makes it easier to write implementations. It provides a possibility to
- * automatically wrap the implementation code into a read action. During indexing, query executors that don't implement {@link com.intellij.openapi.project.DumbAware}
+ * automatically wrap the implementation code into a read action. During indexing, query executors that don't implement {@link DumbAware}
  * (but need to be run in a read action), are delayed until indexing is complete, given that search parameters implement {@link DumbAwareSearchParameters}.
  * <p/>
  * Besides, {@link #processQuery(Object, Processor)} doesn't require to return a boolean value and thus it's harder to stop the whole search

@@ -17,7 +17,7 @@
 package com.intellij.codeEditor.printing;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import org.jetbrains.annotations.NonNls;

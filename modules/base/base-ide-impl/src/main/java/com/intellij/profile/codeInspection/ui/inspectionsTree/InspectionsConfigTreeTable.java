@@ -21,7 +21,7 @@ import com.intellij.codeInspection.ex.ScopeToolState;
 import com.intellij.codeInspection.ex.ToolsImpl;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

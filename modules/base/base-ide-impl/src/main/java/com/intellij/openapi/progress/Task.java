@@ -19,7 +19,7 @@ import com.intellij.CommonBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.EdtReplacementThread;
 import com.intellij.openapi.project.DumbModeAction;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;

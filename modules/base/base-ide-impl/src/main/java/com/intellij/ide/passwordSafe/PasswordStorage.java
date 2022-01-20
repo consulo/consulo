@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.passwordSafe;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import javax.annotation.Nullable;
 
 /**

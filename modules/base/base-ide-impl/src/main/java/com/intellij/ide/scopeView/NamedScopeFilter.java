@@ -3,7 +3,7 @@ package com.intellij.ide.scopeView;
 
 import com.intellij.ide.scratch.ScratchesNamedScope;
 import consulo.logging.Logger;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.psi.PsiFile;

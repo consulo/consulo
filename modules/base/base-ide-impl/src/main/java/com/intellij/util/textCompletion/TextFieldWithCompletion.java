@@ -19,7 +19,7 @@ import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.openapi.editor.SpellCheckingEditorCustomizationProvider;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.EditorCustomization;
 import com.intellij.ui.LanguageTextField;
 import javax.annotation.Nonnull;

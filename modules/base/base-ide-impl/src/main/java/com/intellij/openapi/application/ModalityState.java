@@ -17,6 +17,7 @@ package com.intellij.openapi.application;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.project.DumbService;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -34,7 +35,7 @@ import java.awt.*;
  * invalidates PSI</li>
  * <li>The user closes the dialog</li>
  * <li>The code that invoked that dialog now has to deal with the completely
- * changed world, where PSI that it worked with might be already invalid, dumb mode (see {@link com.intellij.openapi.project.DumbService})
+ * changed world, where PSI that it worked with might be already invalid, dumb mode (see {@link DumbService})
  * might have unexpectedly begun, etc.</li>
  * </ul>
  * <p>

@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.impl;
 import com.intellij.ide.scratch.ScratchUtil;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;

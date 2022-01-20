@@ -16,10 +16,10 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.impl.projectlevelman.NewMappings;
+import consulo.project.ProjectCoreUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.project.ProjectKt;
 import com.intellij.util.PathUtilRt;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,7 +49,7 @@ public abstract class DefaultVcsRootPolicy {
   public abstract Collection<VirtualFile> getDirtyRoots();
 
   public String getProjectConfigurationMessage(@Nonnull Project project) {
-    boolean isDirectoryBased = ProjectKt.isDirectoryBased(project);
+    boolean isDirectoryBased = ProjectCoreUtil.isDirectoryBased(project);
     final StringBuilder sb = new StringBuilder("Content roots of all modules");
     if (isDirectoryBased) {
       sb.append(", ");
@@ -60,7 +60,7 @@ public abstract class DefaultVcsRootPolicy {
     sb.append("all immediate descendants of project base directory");
     if (isDirectoryBased) {
       sb.append(", and ");
-      sb.append(PathUtilRt.getFileName(ProjectKt.getDirectoryStoreFile(project).getPresentableUrl())).append(" directory contents");
+      sb.append(PathUtilRt.getFileName(ProjectCoreUtil.getDirectoryStoreFile(project).getPresentableUrl())).append(" directory contents");
     }
     return sb.toString();
   }

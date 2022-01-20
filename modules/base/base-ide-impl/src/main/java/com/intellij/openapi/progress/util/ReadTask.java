@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.project.DumbService;
 
 /**
  * A computation that needs to be run in background and inside a read action, and canceled whenever a write action is about to occur.
@@ -64,7 +65,7 @@ public abstract class ReadTask {
   /**
    * Is invoked on a background thread. The responsibility of this method is to start a read action and
    * call {@link #computeInReadAction(ProgressIndicator)}. Overriders might also do something else.
-   * For example, use {@link com.intellij.openapi.project.DumbService#runReadActionInSmartMode(Runnable)}.
+   * For example, use {@link DumbService#runReadActionInSmartMode(Runnable)}.
    * @param indicator the progress indicator of the background thread
    */
   public Continuation runBackgroundProcess(@Nonnull final ProgressIndicator indicator) throws ProcessCanceledException {

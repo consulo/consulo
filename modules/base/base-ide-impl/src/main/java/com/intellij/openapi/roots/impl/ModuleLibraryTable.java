@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import consulo.disposer.Disposable;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;

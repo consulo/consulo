@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.NotNullLazyKey;
 import com.intellij.openapi.util.io.FileUtil;

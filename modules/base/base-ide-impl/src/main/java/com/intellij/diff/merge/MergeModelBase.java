@@ -24,7 +24,7 @@ import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import consulo.document.Document;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;

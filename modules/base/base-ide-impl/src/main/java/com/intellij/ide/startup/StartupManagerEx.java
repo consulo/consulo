@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.startup;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupManager;
+import consulo.project.Project;
+import consulo.project.startup.StartupManager;
 
 /**
  * @author mike

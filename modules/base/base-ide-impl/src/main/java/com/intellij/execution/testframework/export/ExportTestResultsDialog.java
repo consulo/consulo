@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.export;
 
 import com.intellij.execution.ExecutionBundle;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

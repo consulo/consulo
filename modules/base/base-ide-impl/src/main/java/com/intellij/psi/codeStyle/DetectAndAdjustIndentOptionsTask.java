@@ -25,7 +25,7 @@ import com.intellij.openapi.progress.DumbProgressIndicator;
 import consulo.progress.ProgressIndicator;
 import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;

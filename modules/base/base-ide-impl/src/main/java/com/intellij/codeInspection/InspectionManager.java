@@ -16,7 +16,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;

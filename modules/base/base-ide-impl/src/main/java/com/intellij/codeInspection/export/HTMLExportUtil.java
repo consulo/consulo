@@ -19,7 +19,7 @@ import com.intellij.codeInspection.InspectionsBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.ThrowableRunnable;
 import org.jetbrains.annotations.NonNls;

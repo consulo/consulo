@@ -18,7 +18,7 @@ package com.intellij.history.integration.ui.actions;
 
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 public abstract class LocalHistoryActionWithDialog extends LocalHistoryAction {

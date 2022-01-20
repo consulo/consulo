@@ -16,7 +16,7 @@
 package consulo.lang;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;

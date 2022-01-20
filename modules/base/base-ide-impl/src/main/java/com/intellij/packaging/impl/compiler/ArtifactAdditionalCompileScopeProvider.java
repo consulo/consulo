@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.compiler;
 import com.intellij.compiler.impl.AdditionalCompileScopeProvider;
 import com.intellij.compiler.impl.ModuleCompileScope;
 import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.packaging.artifacts.Artifact;

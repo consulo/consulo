@@ -19,7 +19,7 @@ package com.intellij.lang.refactoring;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiElement;
 
 /**

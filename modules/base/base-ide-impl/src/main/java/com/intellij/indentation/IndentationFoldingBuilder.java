@@ -4,7 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import consulo.document.Document;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import com.intellij.psi.tree.TokenSet;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;

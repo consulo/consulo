@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.fileTemplates;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.util.pointers.Named;
 

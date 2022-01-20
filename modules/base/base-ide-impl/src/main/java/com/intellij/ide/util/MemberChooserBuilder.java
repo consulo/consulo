@@ -20,7 +20,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.codeInsight.generation.ClassMember;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 import javax.swing.*;
 

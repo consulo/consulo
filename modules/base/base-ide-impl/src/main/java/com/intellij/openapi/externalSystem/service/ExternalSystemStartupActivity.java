@@ -25,8 +25,8 @@ import com.intellij.openapi.externalSystem.service.ui.ExternalToolWindowManager;
 import com.intellij.openapi.externalSystem.service.vcs.ExternalSystemVcsRegistrar;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 5/2/13 9:23 PM
  */
-public class ExternalSystemStartupActivity implements StartupActivity.Background {
+public class ExternalSystemStartupActivity implements IdeaStartupActivity.Background {
 
   @Override
   public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull final Project project) {
@@ -45,8 +45,8 @@ public class ExternalSystemStartupActivity implements StartupActivity.Background
 
     Application.get().invokeLater(() -> {
       for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-        if (manager instanceof StartupActivity) {
-          ((StartupActivity)manager).runActivity(uiAccess, project);
+        if (manager instanceof IdeaStartupActivity) {
+          ((IdeaStartupActivity)manager).runActivity(uiAccess, project);
         }
       }
       if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) != Boolean.TRUE) {

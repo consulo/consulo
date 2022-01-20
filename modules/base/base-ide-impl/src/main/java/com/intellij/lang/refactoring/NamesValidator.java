@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.refactoring;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * Instances of NamesValidator are obtained from {@link com.intellij.lang.Language} instance.

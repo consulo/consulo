@@ -18,8 +18,8 @@ package com.intellij.openapi.wm;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupManager;
+import consulo.project.Project;
+import consulo.project.startup.StartupManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
 

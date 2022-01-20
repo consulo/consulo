@@ -16,7 +16,7 @@
 package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.project.ProjectBundle;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;

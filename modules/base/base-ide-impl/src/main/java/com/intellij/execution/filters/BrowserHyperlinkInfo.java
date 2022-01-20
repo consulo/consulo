@@ -16,7 +16,7 @@
 package com.intellij.execution.filters;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * @author Kir

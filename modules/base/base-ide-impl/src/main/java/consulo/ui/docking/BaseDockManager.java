@@ -19,7 +19,7 @@ import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.MutualMap;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;

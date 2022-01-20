@@ -26,7 +26,7 @@ import com.intellij.openapi.compiler.generic.GenericCompilerInstance;
 import com.intellij.openapi.compiler.generic.GenericCompilerProcessingItem;
 import com.intellij.openapi.compiler.generic.VirtualFilePersistentState;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.project.DumbService;
+import consulo.project.DumbService;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import consulo.application.util.function.ThrowableComputable;

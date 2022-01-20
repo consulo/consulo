@@ -20,7 +20,7 @@ import com.intellij.compiler.make.CacheCorruptedException;
 import consulo.compiler.make.DependencyCache;
 import consulo.compiler.make.DependencyCacheEP;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.Trinity;

@@ -17,7 +17,7 @@
 package com.intellij.openapi.projectRoots;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.Application;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.vcs.AbstractVcs;

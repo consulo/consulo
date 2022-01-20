@@ -16,7 +16,7 @@
 package consulo.xdebugger.breakpoints;
 
 import com.intellij.openapi.fileTypes.FileTypeExtension;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import consulo.container.plugin.PluginIds;

@@ -18,7 +18,7 @@ package consulo.application.impl;
 import com.intellij.internal.statistic.CollectUsagesException;
 import com.intellij.internal.statistic.UsagesCollector;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.application.ApplicationProperties;
 
 import javax.annotation.Nonnull;

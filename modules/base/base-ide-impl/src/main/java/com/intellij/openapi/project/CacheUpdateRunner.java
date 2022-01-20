@@ -3,7 +3,7 @@ package com.intellij.openapi.project;
 
 import com.intellij.ide.caches.FileContent;
 import consulo.application.Application;
-import consulo.application.ApplicationListener;
+import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
@@ -15,6 +15,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.util.registry.Registry;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;

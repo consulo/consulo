@@ -18,7 +18,7 @@ package com.intellij.tools;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.wm.StatusBar;

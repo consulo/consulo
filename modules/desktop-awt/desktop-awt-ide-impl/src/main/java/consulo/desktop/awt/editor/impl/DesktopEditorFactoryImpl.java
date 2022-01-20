@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorKind;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.editor.internal.EditorInternal;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -16,9 +16,9 @@
 package com.intellij.internal;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
+import consulo.project.DumbAware;
 import com.intellij.openapi.project.DumbServiceImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.util.Alarm;
 
 /**

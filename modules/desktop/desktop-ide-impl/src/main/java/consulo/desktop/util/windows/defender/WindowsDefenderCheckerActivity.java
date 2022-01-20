@@ -19,8 +19,8 @@ import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.notification.Notification;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 /**
  * from kotlin
  */
-public class WindowsDefenderCheckerActivity implements StartupActivity.Background {
+public class WindowsDefenderCheckerActivity implements IdeaStartupActivity.Background {
   private final Application myApplication;
   private final Provider<WindowsDefenderChecker> myWindowsDefenderChecker;
 

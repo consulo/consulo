@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.EditorFactory;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;

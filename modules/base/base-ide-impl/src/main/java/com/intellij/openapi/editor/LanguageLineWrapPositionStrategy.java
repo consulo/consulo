@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.lang.LanguageExtension;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import consulo.container.plugin.PluginIds;

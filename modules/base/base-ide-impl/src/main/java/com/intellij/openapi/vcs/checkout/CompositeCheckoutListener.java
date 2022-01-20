@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.checkout;
 
 import consulo.application.ApplicationManager;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.CheckoutProvider;

@@ -22,7 +22,7 @@ import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.revertion.DifferenceReverter;
 import com.intellij.history.integration.revertion.Reverter;
 import com.intellij.history.integration.ui.views.DirectoryChange;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.List;

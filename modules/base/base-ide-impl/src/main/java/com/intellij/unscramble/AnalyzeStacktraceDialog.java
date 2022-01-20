@@ -17,7 +17,7 @@
 package com.intellij.unscramble;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 
 import javax.swing.*;

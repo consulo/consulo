@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Clock;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;

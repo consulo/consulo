@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 
 import java.util.function.Consumer;

@@ -2,7 +2,7 @@
 package com.intellij.usageView;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.content.Content;
 import javax.annotation.Nonnull;
 

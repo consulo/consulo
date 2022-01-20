@@ -7,7 +7,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
-import com.intellij.openapi.project.IndexNotReadyException;
+import consulo.project.IndexNotReadyException;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

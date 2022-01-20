@@ -16,7 +16,7 @@
 package com.intellij.psi.search;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.IdFilter;

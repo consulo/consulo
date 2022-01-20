@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import consulo.document.Document;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.checkin;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
 

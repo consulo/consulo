@@ -16,7 +16,7 @@
 package com.intellij.ide.favoritesTreeView;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
 import javax.annotation.Nonnull;

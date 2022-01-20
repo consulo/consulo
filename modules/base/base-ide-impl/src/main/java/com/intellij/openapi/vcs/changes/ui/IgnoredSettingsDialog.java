@@ -23,7 +23,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vcs.VcsBundle;
 import org.jetbrains.annotations.NonNls;

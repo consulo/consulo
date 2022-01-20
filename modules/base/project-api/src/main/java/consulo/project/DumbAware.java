@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project;
+package consulo.project;
 
 /**
  * A marker interface for the things that are allowed to run in dumb mode (when indices are in background update).

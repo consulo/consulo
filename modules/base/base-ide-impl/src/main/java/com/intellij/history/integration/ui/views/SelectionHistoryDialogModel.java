@@ -22,7 +22,7 @@ import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.revertion.Reverter;
 import com.intellij.history.integration.revertion.SelectionReverter;
 import com.intellij.history.integration.ui.models.*;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
