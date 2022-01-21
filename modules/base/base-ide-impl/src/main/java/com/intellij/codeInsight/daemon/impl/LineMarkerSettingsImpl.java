@@ -18,8 +18,8 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeInsight.daemon.GutterIconDescriptor;
 import com.intellij.codeInsight.daemon.LineMarkerSettings;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import jakarta.inject.Singleton;
 

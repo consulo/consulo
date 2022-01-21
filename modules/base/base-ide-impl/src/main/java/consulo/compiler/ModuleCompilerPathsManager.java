@@ -19,7 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

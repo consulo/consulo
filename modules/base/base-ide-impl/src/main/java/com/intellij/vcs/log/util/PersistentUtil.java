@@ -19,7 +19,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.PathUtilRt;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.*;
 import com.intellij.vcs.log.VcsLogProvider;
@@ -52,7 +52,7 @@ public class PersistentUtil {
   @Nonnull
   public static File getStorageFile(@Nonnull String storageKind, @Nonnull String logId, int version) {
     File subdir = new File(LOG_CACHE, storageKind);
-    String safeLogId = PathUtilRt.suggestFileName(logId, true, true);
+    String safeLogId = PathUtil.suggestFileName(logId, true, true);
     final File mapFile = new File(subdir, safeLogId + "." + version);
     if (!mapFile.exists()) {
       IOUtil.deleteAllFilesStartingWith(new File(subdir, safeLogId));
@@ -62,7 +62,7 @@ public class PersistentUtil {
 
   public static void cleanupOldStorageFile(@Nonnull String storageKind, @Nonnull String logId) {
     File subdir = new File(LOG_CACHE, storageKind);
-    String safeLogId = PathUtilRt.suggestFileName(logId, true, true);
+    String safeLogId = PathUtil.suggestFileName(logId, true, true);
     IOUtil.deleteAllFilesStartingWith(new File(subdir, safeLogId));
 
     File[] files = subdir.listFiles();
@@ -103,7 +103,7 @@ public class PersistentUtil {
   // so these two methods should be changed in sync
   public static boolean cleanupStorageFiles(@Nonnull String subdirName, @Nonnull String id) {
     File subdir = new File(LOG_CACHE, subdirName);
-    String safeLogId = PathUtilRt.suggestFileName(id, true, true);
+    String safeLogId = PathUtil.suggestFileName(id, true, true);
     return deleteWithRenamingAllFilesStartingWith(new File(subdir, safeLogId + "."));
   }
 
@@ -115,7 +115,7 @@ public class PersistentUtil {
                                     int version,
                                     boolean cleanupOldVersions) {
     File subdir = new File(LOG_CACHE, subdirName);
-    String safeLogId = PathUtilRt.suggestFileName(id, true, true);
+    String safeLogId = PathUtil.suggestFileName(id, true, true);
     File file = new File(subdir, safeLogId + "." + kind + "." + version);
     if (cleanupOldVersions && !file.exists()) {
       IOUtil.deleteAllFilesStartingWith(new File(subdir, safeLogId + "." + kind));

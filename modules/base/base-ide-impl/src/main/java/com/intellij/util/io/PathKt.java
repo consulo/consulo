@@ -18,6 +18,7 @@ package com.intellij.util.io;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +37,7 @@ public class PathKt {
     return Files.newInputStream(path);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static InputStream inputStreamIfExists(@Nonnull Path path) throws IOException {
     try {
       return inputStream(path);
@@ -124,7 +125,7 @@ public class PathKt {
     });
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static BasicFileAttributes basicAttributesIfExists(Path path) throws IOException {
     try {
       return Files.readAttributes(path, BasicFileAttributes.class);

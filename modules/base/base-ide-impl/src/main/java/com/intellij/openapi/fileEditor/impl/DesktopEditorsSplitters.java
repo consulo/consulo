@@ -47,7 +47,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
@@ -564,7 +564,7 @@ public class DesktopEditorsSplitters extends EditorsSplittersBase<DesktopEditorW
         final Element file = fileElements.get(i);
         Element historyElement = file.getChild(HistoryEntry.TAG);
         String fileName = historyElement.getAttributeValue(HistoryEntry.FILE_ATTR);
-        Activity activity = StartUpMeasurer.startActivity(PathUtil.getFileName(fileName), ActivityCategory.REOPENING_EDITOR);
+        Activity activity = StartUpMeasurer.startActivity(VirtualFilePathUtil.getFileName(fileName), ActivityCategory.REOPENING_EDITOR);
         VirtualFile virtualFile = null;
         try {
           final FileEditorManagerImpl fileEditorManager = getManager();

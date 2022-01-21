@@ -18,7 +18,7 @@ package com.intellij.ide.util.projectWizard;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;

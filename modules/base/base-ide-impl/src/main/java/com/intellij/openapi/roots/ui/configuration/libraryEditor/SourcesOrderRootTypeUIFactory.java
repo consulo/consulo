@@ -21,7 +21,7 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;

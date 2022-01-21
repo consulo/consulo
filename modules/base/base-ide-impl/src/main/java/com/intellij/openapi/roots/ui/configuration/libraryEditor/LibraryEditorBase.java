@@ -16,9 +16,11 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.libraries.LibraryProperties;
-import com.intellij.openapi.roots.libraries.LibraryType;
-import com.intellij.openapi.roots.libraries.ui.OrderRoot;
+import consulo.content.library.LibraryProperties;
+import consulo.content.library.LibraryType;
+import consulo.content.library.OrderRoot;
+import consulo.content.library.ui.LibraryEditor;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

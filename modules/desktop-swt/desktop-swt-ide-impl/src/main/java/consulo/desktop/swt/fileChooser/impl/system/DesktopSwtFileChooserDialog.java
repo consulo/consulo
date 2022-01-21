@@ -15,17 +15,17 @@
  */
 package consulo.desktop.swt.fileChooser.impl.system;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
-import consulo.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.component.ComponentManager;
 import consulo.desktop.swt.ui.impl.TargetSWT;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.PathChooserDialog;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 import javax.annotation.Nonnull;
@@ -52,7 +52,7 @@ public class DesktopSwtFileChooserDialog implements FileChooserDialog, PathChoos
   @RequiredUIAccess
   @Nonnull
   @Override
-  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelect) {
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelect) {
     Window focusedWindow = Window.getActiveWindow();
 
     AsyncResult<VirtualFile[]> result = AsyncResult.undefined();

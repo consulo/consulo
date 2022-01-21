@@ -15,11 +15,8 @@
  */
 package consulo.content.bundle;
 
-import com.intellij.openapi.projectRoots.SdkType;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.pointer.NamedPointer;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkPointerManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -33,13 +30,13 @@ import javax.annotation.Nullable;
  */
 public class SdkUtil {
   @Nonnull
-  @DeprecationInfo(value = "Use SdkPointerManager.getInstance()", until = "2.0")
+  @DeprecationInfo(value = "Use SdkPointerManager.getInstance()")
   public static NamedPointer<Sdk> createPointer(@Nonnull Sdk sdk) {
     return SdkPointerManager.getInstance().create(sdk);
   }
 
   @Nonnull
-  @DeprecationInfo(value = "Use SdkPointerManager.getInstance()", until = "2.0")
+  @DeprecationInfo(value = "Use SdkPointerManager.getInstance()")
   public static NamedPointer<Sdk> createPointer(@Nonnull String name) {
     return SdkPointerManager.getInstance().create(name);
   }
@@ -51,7 +48,7 @@ public class SdkUtil {
     }
     SdkType sdkType = (SdkType)sdk.getSdkType();
     Image icon = sdkType.getIcon();
-    if(sdk.isPredefined()) {
+    if (sdk.isPredefined()) {
       return ImageEffects.layered(icon, PlatformIconGroup.nodesLocked());
     }
     else {

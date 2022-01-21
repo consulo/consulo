@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.content.bundle.Sdk;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +46,7 @@ public abstract class ModuleSdkPathMacro extends Macro {
     if (anySdk == null) {
       return null;
     }
-    String jdkHomePath = PathUtil.getLocalPath(anySdk.getHomeDirectory());
+    String jdkHomePath = VirtualFilePathUtil.getLocalPath(anySdk.getHomeDirectory());
     if (jdkHomePath != null) {
       jdkHomePath = jdkHomePath.replace('/', File.separatorChar);
     }

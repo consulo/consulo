@@ -15,8 +15,8 @@
  */
 package consulo.ui.docking.impl;
 
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import consulo.project.Project;
 import com.intellij.openapi.wm.IdeFrame;

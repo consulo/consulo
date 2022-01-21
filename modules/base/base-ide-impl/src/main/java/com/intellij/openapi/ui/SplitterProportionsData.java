@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.util.JDOMExternalizable;
+import consulo.component.persist.JDOMExternalizable;
 import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;

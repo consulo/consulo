@@ -34,4 +34,60 @@ public class FileUtil {
   public static String getNameWithoutExtension(@Nonnull String name) {
     return getNameWithoutExtension((CharSequence)name).toString();
   }
+
+
+  @Nonnull
+  public static String sanitizeFileName(@Nonnull String name) {
+    return sanitizeFileName(name, true);
+  }
+
+  /**
+   * @deprecated use {@link #sanitizeFileName(String, boolean)} (to be removed in IDEA 17)
+   */
+  @SuppressWarnings("unused")
+  public static String sanitizeName(@Nonnull String name) {
+    return sanitizeFileName(name, false);
+  }
+
+  @Nonnull
+  public static String sanitizeFileName(@Nonnull String name, boolean strict) {
+    StringBuilder result = null;
+
+    int last = 0;
+    int length = name.length();
+    for (int i = 0; i < length; i++) {
+      char c = name.charAt(i);
+      boolean appendReplacement = true;
+      if (c > 0 && c < 255) {
+        if (strict ? Character.isLetterOrDigit(c) || c == '_' : Character.isJavaIdentifierPart(c) || c == ' ' || c == '@' || c == '-') {
+          continue;
+        }
+      }
+      else {
+        appendReplacement = false;
+      }
+
+      if (result == null) {
+        result = new StringBuilder();
+      }
+      if (last < i) {
+        result.append(name, last, i);
+      }
+      if (appendReplacement) {
+        result.append('_');
+      }
+      last = i + 1;
+    }
+
+    if (result == null) {
+      return name;
+    }
+
+    if (last < length) {
+      result.append(name, last, length);
+    }
+
+    return result.toString();
+  }
+
 }

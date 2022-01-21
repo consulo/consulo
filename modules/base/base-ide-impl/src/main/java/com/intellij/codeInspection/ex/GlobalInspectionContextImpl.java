@@ -52,7 +52,7 @@ import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import com.intellij.openapi.project.ProjectUtilCore;
-import com.intellij.openapi.roots.FileIndex;
+import consulo.content.FileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.*;

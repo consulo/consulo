@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 
 import java.util.Collection;
 import java.util.Set;

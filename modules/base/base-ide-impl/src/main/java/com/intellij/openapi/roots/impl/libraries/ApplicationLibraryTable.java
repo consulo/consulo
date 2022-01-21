@@ -17,8 +17,11 @@
 package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.components.*;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
+import consulo.content.library.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 
 import jakarta.inject.Singleton;

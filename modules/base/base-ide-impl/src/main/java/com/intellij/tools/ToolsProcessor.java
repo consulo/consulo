@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

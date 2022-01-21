@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.google.common.base.Predicate;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.module.Module;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.util.Comparing;
@@ -30,7 +30,7 @@ import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ProjectLocalize;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;

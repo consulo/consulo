@@ -21,8 +21,8 @@ import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
 import consulo.module.ModuleRootManager;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryKind;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryKind;
 import consulo.application.util.function.Processor;
 
 import javax.annotation.Nonnull;

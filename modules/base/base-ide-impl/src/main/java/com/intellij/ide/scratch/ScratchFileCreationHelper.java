@@ -16,7 +16,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
@@ -59,7 +59,7 @@ public abstract class ScratchFileCreationHelper {
     LanguageFileType fileType = language.getAssociatedFileType();
     CharSequence fileSnippet = StringUtil.first(text, 10 * 1024, false);
     PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
-    return fileFactory.createFileFromText(PathUtil.makeFileName("a", fileType == null ? "" : fileType.getDefaultExtension()), language, fileSnippet);
+    return fileFactory.createFileFromText(VirtualFilePathUtil.makeFileName("a", fileType == null ? "" : fileType.getDefaultExtension()), language, fileSnippet);
   }
 
   @Nonnull

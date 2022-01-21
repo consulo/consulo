@@ -32,7 +32,7 @@ import com.intellij.packaging.elements.CompositePackagingElementType;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 
@@ -105,7 +105,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
 
     final Project project = myArtifactEditor.getContext().getProject();
     final String elementName = ContainerUtil.getFirstItem(selected, null).createPresentation(myArtifactEditor.getContext()).getPresentableName();
-    final String baseName = PathUtil.suggestFileName(elementName);
+    final String baseName = VirtualFilePathUtil.suggestFileName(elementName);
     final CompositePackagingElement<?> newParent = type.createComposite(parent, baseName, myArtifactEditor.getContext());
     if (newParent != null) {
       treeComponent.editLayout(new Runnable() {

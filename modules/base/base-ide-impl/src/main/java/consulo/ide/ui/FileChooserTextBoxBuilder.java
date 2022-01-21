@@ -16,8 +16,8 @@
 package consulo.ide.ui;
 
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserFactory;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -34,7 +34,7 @@ import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ClickListener;
-import consulo.ui.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooser;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;

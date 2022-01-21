@@ -3,7 +3,7 @@ package com.intellij.psi.search.scope.packageSet;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileFilter;
+import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

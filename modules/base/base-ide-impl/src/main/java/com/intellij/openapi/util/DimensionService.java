@@ -2,6 +2,9 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.components.*;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.wm.IdeFocusManager;

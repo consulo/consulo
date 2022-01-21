@@ -15,12 +15,12 @@
  */
 package consulo.fileChooser.impl;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileElement;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
+import consulo.component.ComponentManager;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.PathChooserDialog;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.Component;
 import consulo.ui.Size;
 import consulo.ui.Tree;
@@ -29,6 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -114,9 +115,9 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
   @RequiredUIAccess
   @Nonnull
   @Override
-  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelect) {
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelect) {
     AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
-    DialogImpl dialog = new DialogImpl(project, myDescriptor, result);
+    DialogImpl dialog = new DialogImpl((Project)project, myDescriptor, result);
     dialog.showAsync();
     return result;
   }

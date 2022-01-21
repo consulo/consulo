@@ -18,6 +18,8 @@ package com.intellij.codeInsight.daemon.impl.analysis;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.*;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;

@@ -26,7 +26,7 @@ import com.intellij.codeInspection.InspectionProfile;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.profile.ProfileEx;
 import com.intellij.profile.ProfileManager;

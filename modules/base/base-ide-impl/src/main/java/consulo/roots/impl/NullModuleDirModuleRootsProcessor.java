@@ -19,7 +19,7 @@ import com.google.common.base.Predicate;
 import consulo.module.layer.ModuleRootModel;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 
 import javax.annotation.Nonnull;

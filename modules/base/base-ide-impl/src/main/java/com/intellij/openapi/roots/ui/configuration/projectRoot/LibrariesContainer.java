@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.project.Project;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.ui.OrderRoot;
+import consulo.content.library.Library;
+import consulo.content.library.OrderRoot;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.NewLibraryEditor;
 import com.intellij.openapi.util.text.StringUtil;

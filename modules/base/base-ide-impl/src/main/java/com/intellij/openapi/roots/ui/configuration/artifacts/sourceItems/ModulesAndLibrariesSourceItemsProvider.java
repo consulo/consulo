@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import consulo.module.layer.ContentEntry;

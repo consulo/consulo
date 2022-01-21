@@ -17,7 +17,7 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.icons.AllIcons;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.SdkType;
+import consulo.content.bundle.SdkType;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

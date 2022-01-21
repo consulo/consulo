@@ -32,7 +32,7 @@ import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileFilter;
+import consulo.virtualFileSystem.VirtualFileFilter;
 import com.intellij.psi.PsiBundle;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDocumentManager;

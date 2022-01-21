@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.EventDispatcher;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.ui.configuration.ContentFolderPropertiesDialog;
 import consulo.util.concurrent.AsyncResult;
 

@@ -22,6 +22,8 @@ import com.intellij.util.containers.ContainerUtil;
 import java.util.HashMap;
 
 import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;

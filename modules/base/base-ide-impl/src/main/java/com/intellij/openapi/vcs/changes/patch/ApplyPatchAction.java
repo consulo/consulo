@@ -31,7 +31,7 @@ import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatch;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.document.Document;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
@@ -57,7 +57,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
 import java.io.File;

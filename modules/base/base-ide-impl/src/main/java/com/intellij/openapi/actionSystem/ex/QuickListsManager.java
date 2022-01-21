@@ -19,14 +19,14 @@ import com.intellij.ide.actions.QuickSwitchSchemeAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.BundledQuickListsProvider;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.RoamingType;
+import consulo.component.persist.RoamingType;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
 import consulo.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.util.PathUtilRt;
+import com.intellij.util.PathUtil;
 import com.intellij.util.ThrowableConvertor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -82,7 +82,7 @@ public class QuickListsManager {
             QuickList item = createItem(element);
             item.getExternalInfo().setHash(JDOMUtil.getTreeHash(element, true));
             item.getExternalInfo().setPreviouslySavedName(item.getName());
-            item.getExternalInfo().setCurrentFileName(PathUtilRt.getFileName(path));
+            item.getExternalInfo().setCurrentFileName(PathUtil.getFileName(path));
             return item;
           }
         });

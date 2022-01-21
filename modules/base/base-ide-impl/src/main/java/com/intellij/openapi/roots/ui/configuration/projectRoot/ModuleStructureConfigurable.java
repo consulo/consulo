@@ -32,7 +32,7 @@ import consulo.project.ProjectBundle;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.ModifiableRootModel;
 import consulo.module.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;

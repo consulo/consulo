@@ -14,7 +14,7 @@ import com.intellij.remoteServer.ServerType;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.util.IconUtil;
-import com.intellij.util.text.UniqueNameGenerator;
+import consulo.component.util.text.UniqueNameGenerator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.ui.image.Image;

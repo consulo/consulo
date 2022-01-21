@@ -36,7 +36,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -34,7 +34,7 @@ import com.intellij.openapi.vcs.changes.shelf.ShelvedChangesViewManager;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcsUtil.VcsCatchingRunnable;
@@ -83,9 +83,9 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
             public TextFilePatch fun(TextFilePatchInProgress patchInProgress) {
               final TextFilePatch was = patchInProgress.getPatch();
               was.setBeforeName(
-                      PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getBeforeName()))));
+                      VirtualFilePathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getBeforeName()))));
               was.setAfterName(
-                      PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getAfterName()))));
+                      VirtualFilePathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getAfterName()))));
               return was;
             }
           }));

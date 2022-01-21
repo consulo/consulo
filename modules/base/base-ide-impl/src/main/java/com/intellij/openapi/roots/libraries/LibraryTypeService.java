@@ -16,8 +16,10 @@
 package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.content.library.LibraryType;
+import consulo.content.library.NewLibraryConfiguration;
 import consulo.project.Project;
-import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
+import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

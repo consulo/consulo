@@ -22,6 +22,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.WriteExternalException;
 import consulo.logging.Logger;
 import org.jdom.Content;
 import org.jdom.Element;

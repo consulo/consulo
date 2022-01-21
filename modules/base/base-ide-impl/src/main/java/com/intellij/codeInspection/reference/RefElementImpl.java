@@ -19,7 +19,7 @@ package com.intellij.codeInspection.reference;
 import com.intellij.codeInspection.SuppressionUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

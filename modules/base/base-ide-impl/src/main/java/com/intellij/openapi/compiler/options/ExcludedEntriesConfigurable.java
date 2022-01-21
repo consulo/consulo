@@ -17,7 +17,7 @@
 package com.intellij.openapi.compiler.options;
 
 import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -27,7 +27,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import consulo.disposer.Disposer;
-import consulo.ui.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooser;
 
 import javax.swing.*;
 import javax.swing.table.*;

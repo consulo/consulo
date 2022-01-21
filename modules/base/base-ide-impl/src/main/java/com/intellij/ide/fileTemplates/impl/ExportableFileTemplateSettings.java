@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 

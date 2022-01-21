@@ -15,13 +15,13 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
-import com.intellij.openapi.fileChooser.FileSaverDescriptor;
-import com.intellij.openapi.fileChooser.FileSaverDialog;
+import consulo.fileChooser.FileSaverDescriptor;
+import consulo.fileChooser.FileSaverDialog;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWrapper;
+import consulo.virtualFileSystem.VirtualFileWrapper;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.UIBundle;
 import javax.annotation.Nonnull;

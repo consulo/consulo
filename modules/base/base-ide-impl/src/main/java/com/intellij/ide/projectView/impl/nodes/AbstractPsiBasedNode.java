@@ -18,7 +18,7 @@ import com.intellij.openapi.editor.colors.CodeInsightColors;
 import consulo.module.Module;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VFileProperty;

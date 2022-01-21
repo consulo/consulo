@@ -16,7 +16,7 @@
 package com.intellij.ide.browsers.firefox;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
@@ -27,7 +27,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nullable;
@@ -83,7 +83,7 @@ public class FirefoxSettingsConfigurable implements Configurable {
 
   @Nullable
   private String getConfiguredProfileIniPath() {
-    String path = PathUtil.toSystemIndependentName(StringUtil.nullize(myProfilesIniPathField.getText()));
+    String path = VirtualFilePathUtil.toSystemIndependentName(StringUtil.nullize(myProfilesIniPathField.getText()));
     return myDefaultProfilesIniPath.equals(path) ? null : path;
   }
 

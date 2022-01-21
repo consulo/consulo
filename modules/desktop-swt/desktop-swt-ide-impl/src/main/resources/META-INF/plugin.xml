@@ -56,7 +56,7 @@
 
     <applicationService serviceInterface="com.intellij.ui.IconDeferrer" serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory" serviceImplementation="consulo.fileChooser.impl.FileChooserFactoryImpl"/>
+    <applicationService serviceInterface="consulo.fileChooser.FileChooserFactory" serviceImplementation="consulo.fileChooser.impl.FileChooserFactoryImpl"/>
 
     <applicationService serviceInterface="consulo.progress.util.ProgressDialogFactory" serviceImplementation="consulo.progress.util.impl.UnifiedProgressDialogFactory"/>
 

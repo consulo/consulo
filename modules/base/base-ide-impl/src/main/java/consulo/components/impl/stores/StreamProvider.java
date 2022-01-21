@@ -1,6 +1,6 @@
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.components.RoamingType;
+import consulo.component.persist.RoamingType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

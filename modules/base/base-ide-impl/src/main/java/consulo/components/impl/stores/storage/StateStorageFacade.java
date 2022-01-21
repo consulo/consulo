@@ -16,8 +16,8 @@
 package consulo.components.impl.stores.storage;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.StateSplitterEx;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.StateSplitterEx;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import consulo.components.impl.stores.StreamProvider;

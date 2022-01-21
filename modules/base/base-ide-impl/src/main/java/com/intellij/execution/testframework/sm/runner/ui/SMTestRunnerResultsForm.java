@@ -52,7 +52,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Alarm;
 import com.intellij.util.OpenSourceUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.update.Update;
@@ -839,7 +839,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
         handler.getTransformer().setOutputProperty(OutputKeys.INDENT, "yes");
         handler.getTransformer().setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
-        final String configurationNameIncludedDate = PathUtil.suggestFileName(myConfiguration.getName()) + " - " +
+        final String configurationNameIncludedDate = VirtualFilePathUtil.suggestFileName(myConfiguration.getName()) + " - " +
                                                      new SimpleDateFormat(HISTORY_DATE_FORMAT).format(new Date());
 
         myOutputFile = new File(TestStateStorage.getTestHistoryRoot(myProject), configurationNameIncludedDate + ".xml");

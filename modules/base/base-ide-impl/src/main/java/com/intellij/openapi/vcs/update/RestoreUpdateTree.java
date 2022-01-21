@@ -16,6 +16,9 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.openapi.components.*;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.Project;
 import com.intellij.openapi.project.ProjectReloadState;
 import consulo.project.startup.IdeaStartupActivity;

@@ -20,7 +20,7 @@ import consulo.configurable.Configurable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.xmlb.annotations.Tag;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,7 +49,7 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
   }
 
   public void setProfilesIniPath(@Nullable String value) {
-    myProfilesIniPath = PathUtil.toSystemIndependentName(StringUtil.nullize(value));
+    myProfilesIniPath = VirtualFilePathUtil.toSystemIndependentName(StringUtil.nullize(value));
   }
 
   @Nullable

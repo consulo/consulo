@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
 import jakarta.inject.Singleton;
 

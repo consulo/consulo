@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vfs.newvfs;
 
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;

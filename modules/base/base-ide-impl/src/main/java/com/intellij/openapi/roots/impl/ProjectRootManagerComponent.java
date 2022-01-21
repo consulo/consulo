@@ -39,6 +39,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import com.intellij.util.containers.ContainerUtil;
@@ -238,7 +239,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       }
     }
 
-    for (WatchedRootsProvider extension : WatchedRootsProvider.EP_NAME.getExtensionList(myProject)) {
+    for (WatchedRootsProvider extension : WatchedRootsProvider.EP.getExtensionList(myProject)) {
       recursive.addAll(extension.getRootsToWatch());
     }
 

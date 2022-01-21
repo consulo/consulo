@@ -17,8 +17,8 @@
 package com.intellij.execution.configurations;
 
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

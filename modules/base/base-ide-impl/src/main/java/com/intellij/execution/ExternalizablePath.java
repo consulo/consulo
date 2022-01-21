@@ -16,8 +16,8 @@
 package com.intellij.execution;
 
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jdom.Element;

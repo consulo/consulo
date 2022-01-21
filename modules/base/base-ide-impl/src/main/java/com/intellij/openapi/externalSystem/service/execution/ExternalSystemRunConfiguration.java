@@ -29,7 +29,7 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import consulo.project.Project;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtilRt;

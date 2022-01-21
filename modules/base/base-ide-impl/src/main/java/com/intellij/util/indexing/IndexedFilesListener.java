@@ -2,7 +2,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.roots.ContentIterator;
+import consulo.content.ContentIterator;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;

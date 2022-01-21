@@ -22,8 +22,8 @@ import com.intellij.openapi.module.ModulePointerManager;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -35,7 +35,7 @@ import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
 import com.intellij.packaging.impl.elements.moduleContent.TestModuleOutputElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.packaging.impl.elements.ZipArchivePackagingElement;
@@ -162,7 +162,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
   @Override
   public void addFileCopy(@Nonnull CompositePackagingElement<?> root, @Nonnull String outputDirectoryPath, @Nonnull String sourceFilePath, @Nullable String outputFileName) {
-    final String fileName = PathUtil.getFileName(sourceFilePath);
+    final String fileName = VirtualFilePathUtil.getFileName(sourceFilePath);
     if (outputFileName != null && outputFileName.equals(fileName)) {
       outputFileName = null;
     }
@@ -224,7 +224,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     }
     final List<PackagingElement<?>> elements = new ArrayList<>();
     for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
-      final String path = FileUtil.toSystemIndependentName(PathUtil.getLocalPath(file));
+      final String path = FileUtil.toSystemIndependentName(VirtualFilePathUtil.getLocalPath(file));
       elements.add(file.isDirectory() && file.isInLocalFileSystem() ? new DirectoryCopyPackagingElement(path) : new FileCopyPackagingElement(path));
     }
     return elements;

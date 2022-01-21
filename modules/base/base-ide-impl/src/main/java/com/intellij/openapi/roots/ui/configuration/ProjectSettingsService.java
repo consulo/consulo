@@ -22,7 +22,7 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.packaging.artifacts.Artifact;
 import consulo.annotation.DeprecationInfo;
 import consulo.module.layer.orderEntry.OrderEntryType;

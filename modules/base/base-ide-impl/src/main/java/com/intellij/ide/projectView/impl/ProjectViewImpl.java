@@ -16,6 +16,7 @@
 
 package com.intellij.ide.projectView.impl;
 
+import consulo.component.persist.WriteExternalException;
 import consulo.module.ModuleRootManager;
 import consulo.module.ProjectTopics;
 import com.intellij.history.LocalHistory;
@@ -40,8 +41,8 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.Extensions;
@@ -51,6 +52,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.module.content.ModuleFileIndex;
 import consulo.module.layer.ModifiableRootModel;
 import consulo.module.layer.event.ModuleRootEvent;
 import consulo.module.layer.event.ModuleRootListener;

@@ -23,7 +23,7 @@ import com.intellij.packaging.impl.elements.ExtractedDirectoryPackagingElement;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import javax.annotation.Nonnull;
 
 /**
@@ -41,12 +41,12 @@ public class ExtractedDirectoryPresentation extends PackagingElementPresentation
   }
 
   public String getPresentableName() {
-    return PathUtil.getFileName(myJarPath) + myPathInJar;
+    return VirtualFilePathUtil.getFileName(myJarPath) + myPathInJar;
   }
 
   public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     presentationData.setIcon(AllIcons.Nodes.ExtractedFolder);
-    final String parentPath = PathUtil.getParentPath(myJarPath);
+    final String parentPath = VirtualFilePathUtil.getParentPath(myJarPath);
     if (myFile == null || !myFile.isDirectory()) {
       mainAttributes = SimpleTextAttributes.ERROR_ATTRIBUTES;
       final VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(parentPath);
@@ -54,7 +54,7 @@ public class ExtractedDirectoryPresentation extends PackagingElementPresentation
         commentAttributes = SimpleTextAttributes.ERROR_ATTRIBUTES;
       }
     }
-    presentationData.addText("Extracted '" + PathUtil.getFileName(myJarPath) + myPathInJar + "'", mainAttributes);
+    presentationData.addText("Extracted '" + VirtualFilePathUtil.getFileName(myJarPath) + myPathInJar + "'", mainAttributes);
     presentationData.addText(" (" + parentPath + ")", commentAttributes);
   }
 

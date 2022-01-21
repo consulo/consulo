@@ -22,6 +22,8 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.awt.TargetAWT;
 import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

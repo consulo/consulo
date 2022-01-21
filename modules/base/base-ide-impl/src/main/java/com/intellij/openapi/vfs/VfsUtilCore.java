@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.roots.ContentIterator;
+import consulo.content.ContentIterator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
@@ -23,7 +23,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
@@ -377,7 +377,7 @@ public class VfsUtilCore {
 
   @Nonnull
   public static File virtualToIoFile(@Nonnull VirtualFile file) {
-    return new File(PathUtil.toPresentableUrl(file.getUrl()));
+    return new File(VirtualFilePathUtil.toPresentableUrl(file.getUrl()));
   }
 
   @Nonnull

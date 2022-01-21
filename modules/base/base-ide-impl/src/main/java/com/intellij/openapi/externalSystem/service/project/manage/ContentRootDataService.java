@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.impl.*;
 import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
 

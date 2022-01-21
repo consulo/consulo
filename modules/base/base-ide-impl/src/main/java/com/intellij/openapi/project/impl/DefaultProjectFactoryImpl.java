@@ -17,8 +17,8 @@ package com.intellij.openapi.project.impl;
 
 import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

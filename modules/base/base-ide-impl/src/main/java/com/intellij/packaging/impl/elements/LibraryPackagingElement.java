@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.elements;
 import consulo.module.Module;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
@@ -33,7 +33,7 @@ import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.ui.LibraryElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -70,7 +70,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
       final VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
       final List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
       for (VirtualFile file : files) {
-        final String path = FileUtil.toSystemIndependentName(PathUtil.getLocalPath(file));
+        final String path = FileUtil.toSystemIndependentName(VirtualFilePathUtil.getLocalPath(file));
         elements.add(file.isDirectory() && file.isInLocalFileSystem() ? new DirectoryCopyPackagingElement(path) : new FileCopyPackagingElement(path));
       }
       return elements;

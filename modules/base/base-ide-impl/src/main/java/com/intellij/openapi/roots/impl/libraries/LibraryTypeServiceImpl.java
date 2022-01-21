@@ -15,17 +15,20 @@
  */
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.content.library.LibraryProperties;
+import consulo.content.library.LibraryType;
+import consulo.content.library.NewLibraryConfiguration;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.roots.libraries.*;
-import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
-import com.intellij.openapi.roots.libraries.ui.OrderRoot;
+import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.content.library.OrderRoot;
 import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
-import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
+import consulo.content.library.ui.LibraryEditor;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -49,7 +52,7 @@ public class LibraryTypeServiceImpl extends LibraryTypeService {
                                                         final Project project) {
     final FileChooserDescriptor chooserDescriptor = descriptor.createAttachFilesChooserDescriptor(null);
     chooserDescriptor.setTitle("Select Library Files");
-    final VirtualFile[] rootCandidates = FileChooser.chooseFiles(chooserDescriptor, parentComponent, project, contextDirectory);
+    final VirtualFile[] rootCandidates = IdeaFileChooser.chooseFiles(chooserDescriptor, parentComponent, project, contextDirectory);
     if (rootCandidates.length == 0) {
       return null;
     }
@@ -71,14 +74,14 @@ public class LibraryTypeServiceImpl extends LibraryTypeService {
 
   public static String suggestLibraryName(@Nonnull VirtualFile[] classesRoots) {
     if (classesRoots.length >= 1) {
-      return FileUtil.getNameWithoutExtension(PathUtil.getFileName(classesRoots[0].getPath()));
+      return FileUtil.getNameWithoutExtension(VirtualFilePathUtil.getFileName(classesRoots[0].getPath()));
     }
     return DEFAULT_LIBRARY_NAME;
   }
 
   public static String suggestLibraryName(@Nonnull List<OrderRoot> roots) {
     if (roots.size() >= 1) {
-      return FileUtil.getNameWithoutExtension(PathUtil.getFileName(roots.get(0).getFile().getPath()));
+      return FileUtil.getNameWithoutExtension(VirtualFilePathUtil.getFileName(roots.get(0).getFile().getPath()));
     }
     return DEFAULT_LIBRARY_NAME;
   }

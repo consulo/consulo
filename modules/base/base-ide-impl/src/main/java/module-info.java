@@ -37,6 +37,7 @@ open module consulo.ide.impl {
   requires transitive consulo.project.api;
   requires transitive consulo.module.api;
   requires transitive consulo.configurable.api;
+  requires transitive consulo.file.chooser.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -1224,7 +1225,6 @@ open module consulo.ide.impl {
   //exports consulo.externalSystem.service;
   //exports consulo.externalSystem.service.module;
   exports consulo.externalSystem.service.module.wizard;
-  exports consulo.fileChooser;
   exports consulo.fileChooser.impl;
   //exports consulo.fileEditor;
   exports consulo.fileEditor.impl;
@@ -1351,8 +1351,6 @@ open module consulo.ide.impl {
   exports consulo.ui.ex;
   exports consulo.ui.ex.impl;
   exports consulo.ui.ex.util;
-  exports consulo.ui.fileChooser;
-  exports consulo.ui.fileOperateDialog;
   exports consulo.ui.plaf;
   exports consulo.ui.popup;
   //exports consulo.ui.tree;

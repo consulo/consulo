@@ -34,11 +34,11 @@ import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.module.layer.orderEntry.OrderEntryWithTracking;
 import consulo.roots.types.BinariesOrderRootType;
@@ -133,7 +133,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
 
   private static boolean hasExternalEntries(ProjectFileIndex index, LibraryOrderEntry orderEntry) {
     for (VirtualFile file : LibraryGroupNode.getLibraryRoots(orderEntry)) {
-      if (!index.isInContent(PathUtil.getLocalFile(file))) return true;
+      if (!index.isInContent(VirtualFilePathUtil.getLocalFile(file))) return true;
     }
     return false;
   }

@@ -20,6 +20,7 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
 import consulo.content.bundle.SdkTable;
+import consulo.content.bundle.SdkType;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
 import consulo.ui.image.Image;

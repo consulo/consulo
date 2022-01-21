@@ -17,9 +17,9 @@
 package com.intellij.codeEditor.printing;
 
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
-import com.intellij.openapi.fileChooser.FileTextField;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.fileChooser.FileTextField;
 import com.intellij.openapi.help.HelpManager;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;

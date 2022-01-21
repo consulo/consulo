@@ -23,8 +23,8 @@ import consulo.project.ProjectBundle;
 import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
@@ -33,7 +33,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiab
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibraryConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.roots.types.BinariesOrderRootType;
@@ -109,7 +109,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     buffer.append("Library '").append(StringUtil.escapeXml(libraryName)).append("' has broken ").append(rootName).append(" ").append(StringUtil.pluralize("path", invalidClasses.size())).append(":");
     for (String url : invalidClasses) {
       buffer.append("<br>&nbsp;&nbsp;");
-      buffer.append(PathUtil.toPresentableUrl(url));
+      buffer.append(VirtualFilePathUtil.toPresentableUrl(url));
     }
     return XmlStringUtil.wrapInHtml(buffer);
   }

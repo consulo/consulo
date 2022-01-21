@@ -17,8 +17,8 @@
 package com.intellij.ui.tabs;
 
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.Project;
 import com.intellij.ui.FileColorManager;
 import jakarta.inject.Inject;

@@ -41,8 +41,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.DumbAware;
@@ -97,7 +97,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     };
     descriptor.setTitle("Select Path");
     descriptor.setDescription("Select directory which contains exported inspections results");
-    final VirtualFile virtualFile = FileChooser.chooseFile(descriptor, project, null);
+    final VirtualFile virtualFile = IdeaFileChooser.chooseFile(descriptor, project, null);
     if (virtualFile == null || !virtualFile.isDirectory()) return;
 
     final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap =

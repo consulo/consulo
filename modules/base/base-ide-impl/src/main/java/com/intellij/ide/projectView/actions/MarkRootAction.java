@@ -30,7 +30,7 @@ import consulo.module.layer.ModifiableRootModel;
 import consulo.module.layer.ModuleRootModel;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

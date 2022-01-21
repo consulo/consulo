@@ -17,9 +17,8 @@ package com.intellij.application.options;
 
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.*;
-import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.*;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 import org.jdom.Element;

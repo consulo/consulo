@@ -18,6 +18,8 @@ package com.intellij.openapi.vcs;
 import com.intellij.ide.todo.TodoPanelSettings;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;

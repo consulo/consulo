@@ -25,7 +25,7 @@ import java.util.function.Predicate;
  */
 public interface Processor<T> extends Predicate<T> {
   @Deprecated
-  @DeprecationInfo(value = "Use CommonProcessors#alwaysTrue()", until = "2.0")
+  @DeprecationInfo(value = "Use CommonProcessors#alwaysTrue()")
   Processor TRUE = new Processor() {
     @Override
     public boolean process(Object o) {

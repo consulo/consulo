@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;

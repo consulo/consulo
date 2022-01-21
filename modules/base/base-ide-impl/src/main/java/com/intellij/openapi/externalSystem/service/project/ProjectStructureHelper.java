@@ -14,8 +14,8 @@ import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.module.layer.orderEntry.RootPolicy;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

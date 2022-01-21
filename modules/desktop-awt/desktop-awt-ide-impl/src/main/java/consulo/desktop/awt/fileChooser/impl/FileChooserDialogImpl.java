@@ -15,47 +15,53 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
-import com.intellij.openapi.fileChooser.ex.*;
-import consulo.desktop.awt.application.DesktopSaveAndSyncHandlerImpl;
 import com.intellij.ide.SaveAndSyncHandler;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationActivationListener;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.fileChooser.*;
+import com.intellij.openapi.fileChooser.FileSystemTree;
+import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
+import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl;
+import com.intellij.openapi.fileChooser.ex.PathField;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
-import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.*;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
+import consulo.application.ApplicationManager;
+import consulo.component.ComponentManager;
+import consulo.desktop.awt.application.DesktopSaveAndSyncHandlerImpl;
 import consulo.disposer.Disposer;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.impl.FileChooserFactoryImpl;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,6 +76,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class FileChooserDialogImpl extends DialogWrapper implements FileChooserDialog, PathChooserDialog, FileLookup {
   public static final String FILE_CHOOSER_SHOW_PATH_PROPERTY = "FileChooser.ShowPath";
@@ -113,10 +120,10 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
   @Override
   @Nonnull
-  public VirtualFile[] choose(@Nullable final Project project, @Nonnull final VirtualFile... toSelect) {
+  public VirtualFile[] choose(@Nullable final ComponentManager project, @Nonnull final VirtualFile... toSelect) {
     init();
     if ((myProject == null) && (project != null)) {
-      myProject = project;
+      myProject = (Project)project;
     }
     if (toSelect.length == 1) {
       restoreSelection(toSelect[0]);
@@ -139,20 +146,20 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     restoreSelection(toSelect);
     show();
     if (myChosenFiles.length > 0) {
-      callback.consume(Arrays.asList(myChosenFiles));
+      callback.accept(Arrays.asList(myChosenFiles));
     }
-    else if (callback instanceof FileChooser.FileChooserConsumer) {
-      ((FileChooser.FileChooserConsumer)callback).cancelled();
+    else if (callback instanceof IdeaFileChooser.FileChooserConsumer) {
+      ((IdeaFileChooser.FileChooserConsumer)callback).cancelled();
     }
   }
 
   @Nonnull
   @RequiredUIAccess
   @Override
-  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelect) {
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelect) {
     init();
     if ((myProject == null) && (project != null)) {
-      myProject = project;
+      myProject = (Project)project;
     }
     if (toSelect.length == 1) {
       restoreSelection(toSelect[0]);

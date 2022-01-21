@@ -3,12 +3,12 @@ package consulo.content.bundle;
 
 import consulo.content.OrderRootType;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 /**
  * The way to modify the {@link Sdk} roots, home path etc.<br>
@@ -39,8 +39,8 @@ public interface SdkModificator {
   VirtualFile[] getRoots(@Nonnull OrderRootType rootType);
 
   @Nonnull
-  default String[] getUrls(@Nonnull OrderRootType rootType) {
-    return ContainerUtil.map(getRoots(rootType), file -> file.getUrl(), ArrayUtil.EMPTY_STRING_ARRAY);
+  default Object[] getUrls(@Nonnull OrderRootType rootType) {
+    return Arrays.stream(getRoots(rootType)).map(VirtualFile::getUrl).toArray(ArrayUtil.STRING_ARRAY_FACTORY);
   }
 
   void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType);

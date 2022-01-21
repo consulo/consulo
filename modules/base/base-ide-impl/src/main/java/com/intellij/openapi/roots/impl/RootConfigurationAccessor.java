@@ -20,7 +20,7 @@ import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.content.bundle.SdkPointerManager;
 import consulo.component.util.pointer.NamedPointer;

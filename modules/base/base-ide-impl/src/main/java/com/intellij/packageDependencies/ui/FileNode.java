@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import consulo.project.Project;
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;

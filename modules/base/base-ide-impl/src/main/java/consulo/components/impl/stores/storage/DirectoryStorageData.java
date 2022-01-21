@@ -15,7 +15,7 @@
  */
 package consulo.components.impl.stores.storage;
 
-import com.intellij.openapi.components.StateSplitterEx;
+import consulo.component.persist.StateSplitterEx;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.logging.Logger;
 import org.jdom.Element;

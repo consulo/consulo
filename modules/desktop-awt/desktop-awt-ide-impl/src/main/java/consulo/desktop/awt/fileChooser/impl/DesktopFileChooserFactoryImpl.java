@@ -16,8 +16,8 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileTextField;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileTextField;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.impl.FileChooserFactoryImpl;
 import consulo.ui.TextBox;

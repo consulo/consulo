@@ -24,7 +24,7 @@ import consulo.annotation.DeprecationInfo;
  * @author yole
  */
 @Deprecated
-@DeprecationInfo(value = "Use ep 'com.intellij.bundleLiveTemplateSet' for register", until = "2.0")
+@DeprecationInfo(value = "Use ep 'com.intellij.bundleLiveTemplateSet' for register")
 public interface DefaultLiveTemplatesProvider {
   ExtensionPointName<DefaultLiveTemplatesProvider> EP_NAME = ExtensionPointName.create("consulo.defaultLiveTemplatesProvider");
 

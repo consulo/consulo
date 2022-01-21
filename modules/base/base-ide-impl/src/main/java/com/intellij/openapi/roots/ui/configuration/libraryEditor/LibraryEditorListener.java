@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 
 import javax.annotation.Nonnull;
 import java.util.EventListener;

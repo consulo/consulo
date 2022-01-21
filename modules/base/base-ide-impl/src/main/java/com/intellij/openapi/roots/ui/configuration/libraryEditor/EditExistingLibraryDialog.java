@@ -16,9 +16,9 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.project.Project;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.content.library.LibraryTablePresentation;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import com.intellij.openapi.util.Comparing;

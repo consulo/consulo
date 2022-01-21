@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.util.text.UniqueNameGenerator;
+import consulo.component.util.text.UniqueNameGenerator;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

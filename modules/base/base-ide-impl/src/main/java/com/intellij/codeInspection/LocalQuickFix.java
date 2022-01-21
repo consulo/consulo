@@ -16,6 +16,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.codeInsight.intention.FileModifier;
+import consulo.component.util.Iconable;
 import consulo.project.Project;
 
 /**
@@ -27,7 +28,7 @@ import consulo.project.Project;
  * to retrieve the PSI context the fix will work on.
  * See also {@link LocalQuickFixOnPsiElement} which uses {@link com.intellij.psi.SmartPsiElementPointer} instead of storing PSI elements.
  * <p/>
- * Implement {@link com.intellij.openapi.util.Iconable Iconable} interface to
+ * Implement {@link Iconable Iconable} interface to
  * change icon in quick fix popup menu.
  * <p/>
  * Implement {@link com.intellij.codeInsight.intention.HighPriorityAction HighPriorityAction} or
@@ -36,7 +37,7 @@ import consulo.project.Project;
  * @author max
  * @see LocalQuickFixBase
  * @see ProblemDescriptor
- * @see com.intellij.openapi.util.Iconable
+ * @see Iconable
  */
 public interface LocalQuickFix extends QuickFix<ProblemDescriptor>, FileModifier {
   LocalQuickFix[] EMPTY_ARRAY = new LocalQuickFix[0];

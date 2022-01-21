@@ -28,7 +28,7 @@ import com.intellij.packaging.impl.elements.FileOrDirectoryCopyPackagingElement;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
@@ -60,7 +60,7 @@ public class ArtifactVirtualFileListener extends VirtualFileAdapter {
           String path = element.getFilePath();
           while (path.length() > 0) {
             result.put(path, artifact);
-            path = PathUtil.getParentPath(path);
+            path = VirtualFilePathUtil.getParentPath(path);
           }
           return true;
         }

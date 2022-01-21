@@ -16,11 +16,13 @@
 package consulo.externalService.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.components.*;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.ExternalServiceConfigurationListener;

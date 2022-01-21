@@ -15,31 +15,29 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import consulo.content.OrderRootType;
-import consulo.module.Module;
-import consulo.module.ModuleRootManager;
-import consulo.module.layer.ModuleRootModel;
-import consulo.module.layer.OrderEnumerator;
-import consulo.module.layer.OrderRootsEnumerator;
-import consulo.module.layer.orderEntry.*;
-import consulo.project.Project;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.util.Condition;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.util.NotNullFunction;
-import consulo.application.util.function.Processor;
+import com.intellij.openapi.roots.OrderEnumerationHandler;
+import com.intellij.openapi.roots.OrderEnumeratorSettings;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.function.Processor;
+import consulo.content.OrderRootType;
+import consulo.content.library.Library;
 import consulo.logging.Logger;
-import consulo.module.layer.ModuleRootLayer;
+import consulo.module.Module;
+import consulo.module.ModuleRootManager;
+import consulo.module.layer.*;
+import consulo.module.layer.orderEntry.*;
+import consulo.project.Project;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author nik
@@ -56,7 +54,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
   protected boolean myRecursively;
   protected boolean myRecursivelyExportedOnly;
   private boolean myExportedOnly;
-  private Condition<OrderEntry> myCondition;
+  private Predicate<OrderEntry> myCondition;
   private final List<OrderEnumerationHandler> myCustomHandlers;
   protected RootModelProvider myModulesProvider;
   private final OrderRootsCache myCache;
@@ -135,7 +133,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
   }
 
   @Override
-  public OrderEnumerator satisfying(Condition<OrderEntry> condition) {
+  public OrderEnumerator satisfying(Predicate<OrderEntry> condition) {
     myCondition = condition;
     return this;
   }
@@ -162,7 +160,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
   }
 
   @Override
-  public OrderRootsEnumerator roots(@Nonnull NotNullFunction<OrderEntry, OrderRootType> rootTypeProvider) {
+  public OrderRootsEnumerator roots(@Nonnull Function<OrderEntry, OrderRootType> rootTypeProvider) {
     return new OrderRootsEnumeratorImpl(this, rootTypeProvider);
   }
 
@@ -210,7 +208,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
     if (processed != null && !processed.add(rootModel.getModule())) return;
 
     for (OrderEntry entry : rootModel.getOrderEntries()) {
-      if (myCondition != null && !myCondition.value(entry)) continue;
+      if (myCondition != null && !myCondition.test(entry)) continue;
 
       if (myWithoutJdk && entry instanceof ModuleExtensionWithSdkOrderEntry) continue;
       if (myWithoutLibraries && entry instanceof LibraryOrderEntry) continue;

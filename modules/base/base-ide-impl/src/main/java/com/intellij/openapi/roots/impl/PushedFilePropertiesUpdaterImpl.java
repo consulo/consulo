@@ -8,6 +8,7 @@ import com.intellij.openapi.extensions.ExtensionException;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.application.ReadAction;
+import consulo.module.content.ModuleFileIndex;
 import consulo.module.layer.event.ModuleRootEvent;
 import consulo.module.layer.event.ModuleRootListener;
 import consulo.progress.ProcessCanceledException;

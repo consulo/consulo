@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -305,7 +305,7 @@ class FilePointerPartNode {
       String url = fileAndUrl.second;
       String path = VfsUtilCore.urlToPath(url);
       path = StringUtil.trimEnd(path, consulo.virtualFileSystem.archive.ArchiveFileSystem.ARCHIVE_SEPARATOR);
-      String nameFromPath = PathUtil.getFileName(path);
+      String nameFromPath = VirtualFilePathUtil.getFileName(path);
       if (!path.isEmpty() && nameFromPath.isEmpty() && SystemInfo.isUnix) {
         nameFromPath = "/";
       }

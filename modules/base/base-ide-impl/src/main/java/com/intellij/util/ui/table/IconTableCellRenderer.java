@@ -1,6 +1,6 @@
 package com.intellij.util.ui.table;
 
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 

@@ -20,7 +20,7 @@ import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.module.Module;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.util.Comparing;
 import consulo.module.layer.orderEntry.DependencyScope;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;

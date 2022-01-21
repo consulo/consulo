@@ -16,7 +16,7 @@
 package com.intellij.psi.search;
 
 import consulo.project.Project;
-import com.intellij.openapi.vfs.VirtualFileFilter;
+import consulo.virtualFileSystem.VirtualFileFilter;
 
 import javax.annotation.Nullable;
 

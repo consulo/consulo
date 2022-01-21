@@ -42,7 +42,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.testFramework.BinaryLightVirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.LineSeparator;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.application.AccessRule;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.logging.Logger;
@@ -384,8 +384,8 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
                                                 @Nonnull String prefix,
                                                 @Nonnull String suffix,
                                                 @Nonnull byte[] content) throws IOException {
-    File tempFile = FileUtil.createTempFile(PathUtil.suggestFileName(prefix + "_", true, false),
-                                            PathUtil.suggestFileName("_" + suffix, true, false), true);
+    File tempFile = FileUtil.createTempFile(VirtualFilePathUtil.suggestFileName(prefix + "_", true, false),
+                                            VirtualFilePathUtil.suggestFileName("_" + suffix, true, false), true);
     if (content.length != 0) {
       FileUtil.writeToFile(tempFile, content);
     }

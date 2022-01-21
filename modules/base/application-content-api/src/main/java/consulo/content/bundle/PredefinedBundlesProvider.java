@@ -16,7 +16,6 @@
 package consulo.content.bundle;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.projectRoots.SdkType;
 
 import javax.annotation.Nonnull;
 

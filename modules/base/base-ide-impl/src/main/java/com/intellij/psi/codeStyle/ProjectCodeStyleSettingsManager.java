@@ -17,8 +17,8 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 

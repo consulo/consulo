@@ -16,7 +16,7 @@
 package consulo.compiler.impl;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.roots.ContentIterator;
+import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;

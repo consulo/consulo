@@ -19,6 +19,8 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import jakarta.inject.Singleton;
 
 @Singleton

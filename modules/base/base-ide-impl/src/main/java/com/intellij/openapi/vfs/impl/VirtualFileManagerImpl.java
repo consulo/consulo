@@ -15,21 +15,24 @@
  */
 package com.intellij.openapi.vfs.impl;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.vfs.*;
+import consulo.virtualFileSystem.StandardFileSystems;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;
-import consulo.virtualFileSystem.event.*;
 import com.intellij.openapi.vfs.newvfs.CachingVirtualFileSystem;
-import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.component.ComponentManager;
+import consulo.component.util.Iconable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.logging.Logger;
-import consulo.virtualFileSystem.RefreshableFileSystem;
+import consulo.project.Project;
+import consulo.ui.image.Image;
 import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.*;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -361,5 +364,10 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
     if (fileSystem == null) return null;
     String path = nioPath.toString();
     return refresh ? fileSystem.refreshAndFindFileByPath(path) : fileSystem.findFileByPath(path);
+  }
+
+  @Override
+  public Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+    return VfsIconUtil.getIcon(file, flags, (Project)project);
   }
 }

@@ -16,15 +16,17 @@
 package consulo.fileChooser.impl;
 
 import com.intellij.openapi.application.PathMacros;
+import com.intellij.openapi.wm.WindowManager;
+import consulo.awt.TargetAWT;
+import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.fileChooser.*;
-import consulo.project.Project;
 import consulo.disposer.Disposable;
-import consulo.fileChooser.FileOperateDialogSettings;
+import consulo.fileChooser.*;
+import consulo.fileChooser.provider.FileChooseDialogProvider;
+import consulo.fileChooser.provider.FileOperateDialogProvider;
+import consulo.fileChooser.provider.FileSaveDialogProvider;
+import consulo.project.Project;
 import consulo.ui.TextBox;
-import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
-import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
-import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 
@@ -44,19 +46,20 @@ import java.util.function.Function;
 public class FileChooserFactoryImpl extends FileChooserFactory {
   @Nonnull
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.EP_NAME).createFileChooser(descriptor, project, parent);
   }
 
   @Nonnull
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.EP_NAME).createPathChooser(descriptor, project, parent);
+  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+    Component parentComponent = parent == null ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow((Project)project)) : parent;
+    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.EP_NAME).createPathChooser(descriptor, project, parentComponent);
   }
 
   @Nonnull
   @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project) {
+  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project) {
     return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.EP_NAME).createSaveFileDialog(descriptor, project, null);
   }
 

@@ -36,6 +36,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
+import consulo.roots.ContentFoldersSupportUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -350,7 +351,7 @@ public class DirectoryChooser extends DialogWrapper {
             continue;
           }
           if(VfsUtil.isAncestor(file, virtualFile, false)) {
-            return contentFolder.getType().getIcon(contentFolder.getProperties());
+            return ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
           }
         }
       }

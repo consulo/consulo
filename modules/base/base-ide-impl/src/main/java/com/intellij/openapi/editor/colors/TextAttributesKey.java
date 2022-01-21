@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.VolatileNullableLazyValue;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.util.ConcurrencyUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

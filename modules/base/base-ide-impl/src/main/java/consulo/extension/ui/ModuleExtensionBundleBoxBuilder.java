@@ -18,7 +18,7 @@ package consulo.extension.ui;
 import consulo.module.Module;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
+import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkTypeId;
 import consulo.annotation.UsedInPlugin;
 import consulo.bundle.ui.BundleBox;

@@ -24,9 +24,9 @@ import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.FixedSizeButton;
@@ -88,7 +88,7 @@ public class FindPopupDirectoryChooser extends JPanel {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setUseApplicationDialog();
         myFindPopupPanel.getCanClose().set(false);
-        FileChooser.chooseFiles(descriptor, myProject, null, VfsUtil.findFileByIoFile(new File(getDirectory()), true), new FileChooser.FileChooserConsumer() {
+        IdeaFileChooser.chooseFiles(descriptor, myProject, null, VfsUtil.findFileByIoFile(new File(getDirectory()), true), new IdeaFileChooser.FileChooserConsumer() {
           @Override
           public void consume(List<VirtualFile> files) {
             ApplicationManager.getApplication().invokeLater(() -> {

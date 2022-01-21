@@ -22,7 +22,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
-import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
@@ -171,12 +170,5 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
   @Nonnull
   public String getKey() {
     return key;
-  }
-
-  @Nullable
-  @Deprecated
-  @DeprecationInfo(value = "Use ModuleExtensionProviders#findProvider(String)", until = "2.0")
-  public static ModuleExtensionProviderEP findProviderEP(@Nonnull String id) {
-    return ModuleExtensionProviders.findProvider(id);
   }
 }

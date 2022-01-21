@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.template.impl;
 
+import consulo.component.persist.*;
 import consulo.component.util.localize.AbstractBundle;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
@@ -24,16 +25,13 @@ import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Comparing;
-import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.xmlb.Converter;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.codeInsight.template.impl.BundleLiveTemplateSetEP;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;

@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import consulo.application.Application;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;

@@ -22,7 +22,7 @@ import consulo.module.Module;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.compiler.ModuleCompilerPathsManager;
 import javax.annotation.Nonnull;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL

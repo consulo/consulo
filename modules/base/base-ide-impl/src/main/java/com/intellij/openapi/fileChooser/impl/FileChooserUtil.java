@@ -16,9 +16,9 @@
 package com.intellij.openapi.fileChooser.impl;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileSaverDescriptor;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileSaverDescriptor;
+import consulo.fileChooser.PathChooserDialog;
 import consulo.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;

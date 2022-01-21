@@ -18,7 +18,7 @@ package com.intellij.openapi.compiler;
 import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
@@ -120,7 +120,7 @@ public class CompilerPaths {
   public static File getCompilerSystemDirectory() {
     //noinspection HardCodedStringLiteral
     final String systemPath =
-      ourSystemPath != null ? ourSystemPath : (ourSystemPath = PathUtil.getCanonicalPath(ContainerPathManager.get().getSystemPath()));
+      ourSystemPath != null ? ourSystemPath : (ourSystemPath = VirtualFilePathUtil.getCanonicalPath(ContainerPathManager.get().getSystemPath()));
     return new File(systemPath, "compiler");
   }
 

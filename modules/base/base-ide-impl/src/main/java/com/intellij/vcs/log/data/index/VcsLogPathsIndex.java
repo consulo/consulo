@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.Change;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.DataIndexer;
 import com.intellij.util.indexing.StorageException;
@@ -202,7 +202,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
           result.add(path);
           if (myRoots.contains(path)) break;
 
-          path = PathUtil.getParentPath(path);
+          path = VirtualFilePathUtil.getParentPath(path);
         }
       }
       return result;

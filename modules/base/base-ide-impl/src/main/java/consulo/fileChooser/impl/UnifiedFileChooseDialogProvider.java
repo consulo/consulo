@@ -15,11 +15,11 @@
  */
 package consulo.fileChooser.impl;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.PathChooserDialog;
 import consulo.project.Project;
-import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
+import consulo.fileChooser.provider.FileChooseDialogProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -28,9 +28,9 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diff.impl.patch.*;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
@@ -757,7 +757,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
                                                ? FileChooserDescriptorFactory.createSingleFolderDescriptor()
                                                : FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
       descriptor.setTitle(String.format("Select %s Base", myDirectorySelector ? "Directory" : "File"));
-      VirtualFile selectedFile = FileChooser.chooseFile(descriptor, myProject, null);
+      VirtualFile selectedFile = IdeaFileChooser.chooseFile(descriptor, myProject, null);
       if (selectedFile == null) {
         return;
       }

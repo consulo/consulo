@@ -2,7 +2,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.ui.TextBrowseFolderListener;

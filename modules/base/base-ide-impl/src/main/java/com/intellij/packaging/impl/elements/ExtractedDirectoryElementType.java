@@ -16,8 +16,8 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
@@ -60,7 +60,7 @@ public class ExtractedDirectoryElementType extends PackagingElementType<Extracte
         return super.isFileSelectable(file);
       }
     };
-    final VirtualFile[] files = FileChooser.chooseFiles(descriptor, context.getProject(), null);
+    final VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
     final List<PackagingElement<?>> list = new ArrayList<PackagingElement<?>>();
     final PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
     for (VirtualFile file : files) {

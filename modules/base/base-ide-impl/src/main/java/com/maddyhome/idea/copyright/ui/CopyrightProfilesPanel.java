@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
-import com.intellij.openapi.fileChooser.FileChooser;
+import consulo.fileChooser.IdeaFileChooser;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
@@ -203,7 +203,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
           }
         };
         descriptor.setTitle("Choose file containing copyright notice");
-        final VirtualFile file = FileChooser.chooseFile(descriptor, myProject, null);
+        final VirtualFile file = IdeaFileChooser.chooseFile(descriptor, myProject, null);
         if (file == null) return;
 
         final List<CopyrightProfile> copyrightProfiles = ExternalOptionHelper.loadOptions(VfsUtil.virtualToIoFile(file));

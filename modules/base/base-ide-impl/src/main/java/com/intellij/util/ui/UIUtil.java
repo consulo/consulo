@@ -1458,21 +1458,21 @@ public class UIUtil {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
+  @DeprecationInfo(value = "Look & Feel is not supported")
   public static boolean isUnderWindowsLookAndFeel() {
     return UIManager.getLookAndFeel().getName().equals("Windows");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
+  @DeprecationInfo(value = "Look & Feel is not supported")
   public static boolean isUnderWindowsClassicLookAndFeel() {
     return UIManager.getLookAndFeel().getName().equals("Windows Classic");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
+  @DeprecationInfo(value = "Look & Feel is not supported")
   public static boolean isUnderNimbusLookAndFeel() {
     return false;
   }
@@ -1501,7 +1501,7 @@ public class UIUtil {
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use #isUnderDarkTheme()", until = "2.0")
+  @DeprecationInfo(value = "Use #isUnderDarkTheme()")
   public static boolean isUnderDarcula() {
     return isUnderDarkTheme();
   }
@@ -1515,7 +1515,7 @@ public class UIUtil {
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use #isUnderDarkTheme()", until = "2.0")
+  @DeprecationInfo(value = "Use #isUnderDarkTheme()")
   public static boolean isUnderDarkBuildInLaf() {
     return isUnderDarkTheme();
   }

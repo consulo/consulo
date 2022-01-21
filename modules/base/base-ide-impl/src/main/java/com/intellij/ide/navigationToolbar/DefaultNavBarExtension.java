@@ -20,6 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleFileIndex;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.layer.orderEntry.ModuleOrderEntry;
@@ -31,7 +32,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiFileSystemItemProcessor;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -195,7 +196,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
       PsiDirectory parentDirectory = psiDirectory.getParentDirectory();
 
       if (parentDirectory == null) {
-        VirtualFile jar = PathUtil.getLocalFile(psiDirectory.getVirtualFile());
+        VirtualFile jar = VirtualFilePathUtil.getLocalFile(psiDirectory.getVirtualFile());
         if (ProjectRootManager.getInstance(project).getFileIndex().isInContent(jar)) {
           parentDirectory = PsiManager.getInstance(project).findDirectory(jar.getParent());
         }

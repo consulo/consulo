@@ -20,7 +20,7 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
-import com.intellij.openapi.projectRoots.SdkType;
+import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkTypeId;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Condition;

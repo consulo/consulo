@@ -31,7 +31,7 @@ import com.intellij.packaging.artifacts.ArtifactProperties;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.elements.*;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
@@ -636,7 +636,7 @@ public class ArtifactUtil {
   }
 
   public static String suggestArtifactFileName(String artifactName) {
-    return PathUtil.suggestFileName(artifactName, true, true);
+    return VirtualFilePathUtil.suggestFileName(artifactName, true, true);
   }
 }
 

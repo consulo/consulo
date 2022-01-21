@@ -16,7 +16,7 @@
 package consulo.backgroundTaskByVfsChange.ui;
 
 import com.intellij.execution.ui.CommonProgramParametersPanel;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;

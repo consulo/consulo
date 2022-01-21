@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.ui;
 
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import javax.annotation.Nonnull;
 
 /**

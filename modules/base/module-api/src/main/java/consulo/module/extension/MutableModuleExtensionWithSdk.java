@@ -15,7 +15,8 @@
  */
 package consulo.module.extension;
 
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
+
 import javax.annotation.Nonnull;
 
 /**

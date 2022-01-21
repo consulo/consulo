@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.impl.ContentEntryImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
 

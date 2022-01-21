@@ -15,7 +15,7 @@
  */
 package consulo.module.layer;
 
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 

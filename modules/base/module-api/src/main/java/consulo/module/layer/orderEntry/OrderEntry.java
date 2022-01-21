@@ -15,9 +15,9 @@
  */
 package consulo.module.layer.orderEntry;
 
+import consulo.content.OrderRootType;
 import consulo.module.Module;
 import consulo.module.layer.Synthetic;
-import consulo.roots.orderEntry.OrderEntryType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 

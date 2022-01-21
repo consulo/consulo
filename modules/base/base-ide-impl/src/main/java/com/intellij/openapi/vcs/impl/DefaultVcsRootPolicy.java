@@ -20,7 +20,7 @@ import consulo.project.Project;
 import com.intellij.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.project.ProjectCoreUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.PathUtilRt;
+import com.intellij.util.PathUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -60,7 +60,7 @@ public abstract class DefaultVcsRootPolicy {
     sb.append("all immediate descendants of project base directory");
     if (isDirectoryBased) {
       sb.append(", and ");
-      sb.append(PathUtilRt.getFileName(ProjectCoreUtil.getDirectoryStoreFile(project).getPresentableUrl())).append(" directory contents");
+      sb.append(PathUtil.getFileName(ProjectCoreUtil.getDirectoryStoreFile(project).getPresentableUrl())).append(" directory contents");
     }
     return sb.toString();
   }

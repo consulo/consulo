@@ -19,7 +19,7 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.roots.ContentIterator;
+import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

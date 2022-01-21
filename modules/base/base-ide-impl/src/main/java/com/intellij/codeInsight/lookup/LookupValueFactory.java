@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

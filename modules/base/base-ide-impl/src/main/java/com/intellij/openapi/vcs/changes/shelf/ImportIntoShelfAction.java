@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
@@ -29,7 +29,7 @@ import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

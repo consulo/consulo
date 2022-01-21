@@ -21,10 +21,10 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
+import consulo.content.bundle.SdkType;
 import consulo.module.layer.ContentFolder;
 import consulo.module.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
@@ -36,7 +36,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.impl.LightFilePointer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.content.bundle.SdkUtil;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
@@ -88,7 +88,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     }
 
     final String url = StringUtil.trimEnd(files[0], URLUtil.ARCHIVE_SEPARATOR);
-    return SimpleTextCellAppearance.regular(PathUtil.getFileName(url),  AllIcons.Nodes.PpLib);
+    return SimpleTextCellAppearance.regular(VirtualFilePathUtil.getFileName(url), AllIcons.Nodes.PpLib);
   }
 
   @Nonnull

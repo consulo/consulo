@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.CurrentContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 
@@ -79,8 +79,8 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
   }
 
   private FilePatchStatus getStatus(final T patch) {
-    final String beforeName = PathUtil.toSystemIndependentName(patch.getBeforeName());
-    final String afterName = PathUtil.toSystemIndependentName(patch.getAfterName());
+    final String beforeName = VirtualFilePathUtil.toSystemIndependentName(patch.getBeforeName());
+    final String afterName = VirtualFilePathUtil.toSystemIndependentName(patch.getAfterName());
 
     if (patch.isNewFile() || (beforeName == null)) {
       return FilePatchStatus.ADDED;
@@ -268,7 +268,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     private final int[] myParts;
 
     private StripCapablePath(final String path) {
-      final String corrected = PathUtil.toSystemIndependentName(path.trim());
+      final String corrected = VirtualFilePathUtil.toSystemIndependentName(path.trim());
       mySourcePath = new StringBuilder(corrected);
       final String[] steps = corrected.split("/");
       myStripMax = steps.length - 1;

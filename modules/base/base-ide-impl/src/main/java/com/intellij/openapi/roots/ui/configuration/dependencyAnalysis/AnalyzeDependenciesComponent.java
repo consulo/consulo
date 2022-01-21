@@ -40,7 +40,7 @@ import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -529,10 +529,10 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
           else {
             component.setFont(font.deriveFont(Font.PLAIN));
           }
-          final String p = PathUtil.toPresentableUrl(getEditableObject().url());
-          component.append(PathUtil.getFileName(p),
+          final String p = VirtualFilePathUtil.toPresentableUrl(getEditableObject().url());
+          component.append(VirtualFilePathUtil.getFileName(p),
                            isBold ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
-          component.append(" (" + PathUtil.getParentPath(p) + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
+          component.append(" (" + VirtualFilePathUtil.getParentPath(p) + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
         }
 
         @Nonnull

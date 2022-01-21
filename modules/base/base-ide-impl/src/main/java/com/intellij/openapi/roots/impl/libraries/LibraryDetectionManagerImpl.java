@@ -17,6 +17,10 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.util.Pair;
+import consulo.content.library.LibraryKind;
+import consulo.content.library.LibraryPresentationProvider;
+import consulo.content.library.LibraryProperties;
+import consulo.content.library.LibraryType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;

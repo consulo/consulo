@@ -61,7 +61,7 @@ public class Attachment implements consulo.logging.attachment.Attachment {
 
   @Override
   public String getName() {
-    return PathUtilRt.getFileName(myPath);
+    return PathUtil.getFileName(myPath);
   }
 
   @Override

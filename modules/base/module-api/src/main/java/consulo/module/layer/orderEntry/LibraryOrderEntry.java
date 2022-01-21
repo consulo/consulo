@@ -15,7 +15,8 @@
  */
 package consulo.module.layer.orderEntry;
 
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
+
 import javax.annotation.Nullable;
 
 /**

@@ -26,7 +26,7 @@ import com.intellij.pom.Navigatable;
 import consulo.compiler.ModuleCompilerPathsManager;
 import javax.annotation.Nonnull;
 
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 public class DummyCompileContext implements CompileContext {

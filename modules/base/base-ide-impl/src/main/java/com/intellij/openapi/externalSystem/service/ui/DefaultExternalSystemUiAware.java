@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.service.ui;
 
 import consulo.application.Application;
 import com.intellij.openapi.externalSystem.ExternalSystemUiAware;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ui.image.Image;
 import icons.ExternalSystemIcons;
 

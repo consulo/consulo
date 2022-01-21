@@ -15,12 +15,13 @@
  */
 package consulo.desktop.awt.fileChooser.impl.system;
 
-import com.intellij.openapi.fileChooser.FileSaverDescriptor;
-import com.intellij.openapi.fileChooser.FileSaverDialog;
-import consulo.project.Project;
+import consulo.component.ComponentManager;
 import consulo.desktop.awt.uiOld.mac.MacFileSaverDialog;
+import consulo.fileChooser.FileSaverDescriptor;
+import consulo.fileChooser.FileSaverDialog;
+import consulo.fileChooser.provider.FileSaveDialogProvider;
 import consulo.platform.Platform;
-import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,10 +51,10 @@ public class MacFileSaveDialogProvider implements FileSaveDialogProvider {
 
   @Nonnull
   @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     if(parent != null) {
       return new MacFileSaverDialog(descriptor, parent);
     }
-    return new MacFileSaverDialog(descriptor, project);
+    return new MacFileSaverDialog(descriptor, (Project)project);
   }
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.openapi.roots.libraries.LibraryType;
+import consulo.content.library.LibraryType;
 import jakarta.inject.Singleton;
 
 /**

@@ -15,6 +15,7 @@
  */
 package com.intellij.compiler.impl;
 
+import consulo.content.ContentIterator;
 import consulo.module.ModuleRootManager;
 import consulo.module.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;

@@ -21,8 +21,8 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.WriteAction;
 import consulo.document.Document;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -133,7 +133,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   public Callable<DiffElement<VirtualFile>> getElementChooser(final Project project) {
     return () -> {
       final FileChooserDescriptor descriptor = getChooserDescriptor();
-      final VirtualFile[] result = FileChooser.chooseFiles(descriptor, project, getValue());
+      final VirtualFile[] result = IdeaFileChooser.chooseFiles(descriptor, project, getValue());
       return result.length == 1 ? createElement(result[0]) : null;
     };
   }

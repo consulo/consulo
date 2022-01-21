@@ -16,29 +16,30 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.google.common.base.Predicate;
-import consulo.module.Module;
-import consulo.module.layer.ContentFolder;
-import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.component.persist.InvalidDataException;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.module.Module;
+import consulo.module.layer.ContentFolder;
+import consulo.module.layer.DirectoryIndexExcludePolicy;
 import consulo.roots.impl.ContentEntryEx;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 import consulo.roots.impl.LightContentFolderImpl;
 import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author dsl
@@ -124,7 +125,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   private List<ContentFolder> getFolders0(Predicate<ContentFolderTypeProvider> predicate) {
     List<ContentFolder> list = new ArrayList<>(myContentFolders.size());
     for (ContentFolder contentFolder : myContentFolders) {
-      if (predicate.apply(contentFolder.getType())) {
+      if (predicate.test(contentFolder.getType())) {
         list.add(contentFolder);
       }
     }
@@ -134,7 +135,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
       return list;
     }
 
-    if (predicate.apply(ExcludedContentFolderTypeProvider.getInstance())) {
+    if (predicate.test(ExcludedContentFolderTypeProvider.getInstance())) {
       for (DirectoryIndexExcludePolicy excludePolicy : DirectoryIndexExcludePolicy.EP_NAME.getExtensionList(getRootModel().getProject())) {
         final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(myModuleRootLayer);
         for (VirtualFilePointer file : files) {

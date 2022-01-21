@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.google.common.base.Predicate;
+import consulo.application.util.function.Processor;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
+import consulo.module.extension.ModuleExtension;
 import consulo.module.layer.ContentEntry;
 import consulo.module.layer.ContentFolder;
 import consulo.module.layer.ModuleRootModel;
@@ -24,13 +26,11 @@ import consulo.module.layer.OrderEnumerator;
 import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.module.layer.orderEntry.RootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.function.Processor;
-import consulo.module.extension.ModuleExtension;
-import consulo.roots.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author nik

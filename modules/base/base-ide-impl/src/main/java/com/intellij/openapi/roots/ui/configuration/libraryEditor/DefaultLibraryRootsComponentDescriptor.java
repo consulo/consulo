@@ -16,14 +16,15 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.content.library.ui.LibraryEditor;
 import consulo.module.Module;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.ui.Util;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.libraries.ui.AttachRootButtonDescriptor;
-import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
-import com.intellij.openapi.roots.libraries.ui.OrderRootTypePresentation;
-import com.intellij.openapi.roots.libraries.ui.RootDetector;
+import consulo.content.library.ui.AttachRootButtonDescriptor;
+import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.content.library.ui.OrderRootTypePresentation;
+import consulo.content.library.ui.RootDetector;
 import consulo.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import consulo.virtualFileSystem.VirtualFile;

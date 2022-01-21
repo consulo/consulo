@@ -21,6 +21,7 @@ package com.intellij.ide.impl;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
+import consulo.content.ContentIterator;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.module.ModuleRootManager;

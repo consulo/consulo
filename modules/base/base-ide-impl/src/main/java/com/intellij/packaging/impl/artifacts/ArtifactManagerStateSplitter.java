@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.openapi.components.StateSplitterEx;
+import consulo.component.persist.StateSplitterEx;
 import com.intellij.packaging.impl.artifacts.state.ArtifactState;
 import consulo.util.lang.Pair;
 import org.jdom.Element;

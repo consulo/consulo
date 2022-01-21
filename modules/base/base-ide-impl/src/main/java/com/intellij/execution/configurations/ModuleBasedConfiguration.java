@@ -21,7 +21,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.component.persist.InvalidDataException;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
 import org.jdom.Element;

@@ -15,7 +15,10 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.components.*;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.StateSplitterEx;
+import consulo.component.persist.Storage;
 
 import java.lang.annotation.Annotation;
 

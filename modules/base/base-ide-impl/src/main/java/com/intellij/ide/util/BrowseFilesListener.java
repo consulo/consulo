@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -74,7 +74,7 @@ public class BrowseFilesListener implements ActionListener {
     final VirtualFile fileToSelect = getFileToSelect();
     myChooserDescriptor.setTitle(myTitle); // important to set title and description here because a shared descriptor instance can be used
     myChooserDescriptor.setDescription(myDescription);
-    FileChooser.chooseFiles(myChooserDescriptor, null, fileToSelect, new Consumer<List<VirtualFile>>() {
+    IdeaFileChooser.chooseFiles(myChooserDescriptor, null, fileToSelect, new Consumer<List<VirtualFile>>() {
       @Override
       public void consume(final List<VirtualFile> files) {
         doSetText(FileUtil.toSystemDependentName(files.get(0).getPath()));

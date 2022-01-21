@@ -31,7 +31,7 @@ import java.util.Map;
 
 @Deprecated
 @DeprecationInfo(value = "Please avoid using this class. Sometimes if u trying load from plugins, 'componentResourcePath' can be duplicated. But files are " +
-                         "different, and it provide bug. Use 'ep.getClass().getClassLoader().getResourceAsStream()'", until = "3.0")
+                         "different, and it provide bug. Use 'ep.getClass().getClassLoader().getResourceAsStream()'")
 public class DecodeDefaultsUtil {
   private static final Logger LOG = Logger.getInstance(DecodeDefaultsUtil.class);
   private static final Map<String, URL> myResourceCache = Collections.synchronizedMap(new HashMap<String, URL>());

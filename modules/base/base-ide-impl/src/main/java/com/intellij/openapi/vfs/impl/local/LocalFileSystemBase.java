@@ -13,7 +13,7 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.PathUtilRt;
+import com.intellij.util.PathUtil;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.SafeFileOutputStream;
@@ -380,7 +380,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Override
   public boolean isValidName(@Nonnull String name) {
-    return PathUtilRt.isValidFileName(name, false);
+    return PathUtil.isValidFileName(name, false);
   }
 
   @Override

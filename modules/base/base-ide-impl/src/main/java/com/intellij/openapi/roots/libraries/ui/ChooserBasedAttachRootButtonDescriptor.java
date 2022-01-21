@@ -16,12 +16,13 @@
 package com.intellij.openapi.roots.libraries.ui;
 
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.content.library.ui.AttachRootButtonDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.module.Module;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
+import consulo.content.library.ui.LibraryEditor;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
@@ -52,6 +53,6 @@ public abstract class ChooserBasedAttachRootButtonDescriptor extends AttachRootB
     if (contextModule != null) {
       chooserDescriptor.putUserData(LangDataKeys.MODULE_CONTEXT, contextModule);
     }
-    return FileChooser.chooseFiles(chooserDescriptor, parent, contextModule != null ? contextModule.getProject() : null, initialSelection);
+    return IdeaFileChooser.chooseFiles(chooserDescriptor, parent, contextModule != null ? contextModule.getProject() : null, initialSelection);
   }
 }

@@ -24,7 +24,7 @@ import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.ClasspathEditor;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ProjectConfigurable;

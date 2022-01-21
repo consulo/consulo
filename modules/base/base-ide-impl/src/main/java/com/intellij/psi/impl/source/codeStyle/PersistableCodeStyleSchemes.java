@@ -16,8 +16,8 @@
 package com.intellij.psi.impl.source.codeStyle;
 
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.util.xmlb.Accessor;

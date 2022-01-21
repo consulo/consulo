@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.content.FileIndex;
 import consulo.module.Module;
 import consulo.module.layer.ContentFolder;
 import consulo.module.layer.orderEntry.OrderEntry;

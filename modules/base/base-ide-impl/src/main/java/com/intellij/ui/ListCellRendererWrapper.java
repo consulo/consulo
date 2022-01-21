@@ -39,7 +39,7 @@ import static com.intellij.openapi.util.Pair.pair;
  * @since 30.09.2010
  */
 @Deprecated
-@DeprecationInfo(value = "Use com.intellij.ui.ColoredListCellRenderer", until = "3.0")
+@DeprecationInfo(value = "Use com.intellij.ui.ColoredListCellRenderer")
 public abstract class ListCellRendererWrapper<T> implements ListCellRenderer<T> {
   private final ListCellRenderer myDefaultRenderer;
 

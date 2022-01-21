@@ -32,7 +32,7 @@ import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.ReflectionUtil;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
@@ -207,15 +207,15 @@ public class JdkUtil {
               writer.close();
             }
 
-            String classpath = PathUtil.getJarPathForClass(commandLineWrapper);
-            final String utilRtPath = PathUtil.getJarPathForClass(StringUtilRt.class);
+            String classpath = VirtualFilePathUtil.getJarPathForClass(commandLineWrapper);
+            final String utilRtPath = VirtualFilePathUtil.getJarPathForClass(StringUtilRt.class);
             if (!classpath.equals(utilRtPath)) {
               classpath += File.pathSeparator + utilRtPath;
             }
             Class urlClassLoader = ReflectionUtil.findClassOrNull("consulo.util.nodep.classloader.UrlClassLoader", JdkUtil.class.getClassLoader());
             assert urlClassLoader != null;
             if (urlClassLoader.getName().equals(vmParametersList.getPropertyValue("java.system.class.loader"))) {
-              classpath += File.pathSeparator + PathUtil.getJarPathForClass(urlClassLoader);
+              classpath += File.pathSeparator + VirtualFilePathUtil.getJarPathForClass(urlClassLoader);
               //classpath += File.pathSeparator + PathUtil.getJarPathForClass(THashMap.class);
             }
 

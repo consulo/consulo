@@ -2,7 +2,7 @@ package com.intellij.coverage;
 
 import com.intellij.execution.configurations.RunnerSettings;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import org.jdom.Element;
 
 /**

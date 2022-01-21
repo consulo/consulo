@@ -25,7 +25,7 @@ import consulo.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.project.Project;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.psi.PsiElement;
 import org.jdom.Element;
 

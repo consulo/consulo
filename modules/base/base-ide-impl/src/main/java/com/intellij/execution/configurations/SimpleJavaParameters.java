@@ -22,7 +22,7 @@ import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.openapi.projectRoots.JdkUtil;
 import consulo.content.bundle.Sdk;
 import consulo.util.io.CharsetToolkit;
-import com.intellij.util.PathsList;
+import consulo.virtualFileSystem.util.PathsList;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 

@@ -20,9 +20,9 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
@@ -187,7 +187,7 @@ public class PathEditor {
     if (baseDir == null && project != null) {
       baseDir = project.getBaseDir();
     }
-    VirtualFile[] files = FileChooser.chooseFiles(myDescriptor, myComponent, project, baseDir);
+    VirtualFile[] files = IdeaFileChooser.chooseFiles(myDescriptor, myComponent, project, baseDir);
     files = adjustAddedFileSet(myComponent, files);
     List<VirtualFile> added = new ArrayList<>(files.length);
     for (VirtualFile vFile : files) {

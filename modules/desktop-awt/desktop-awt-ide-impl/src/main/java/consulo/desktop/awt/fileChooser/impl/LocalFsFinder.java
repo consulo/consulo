@@ -17,7 +17,7 @@ package consulo.desktop.awt.fileChooser.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.io.FileUtil;

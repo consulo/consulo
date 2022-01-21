@@ -18,7 +18,7 @@
 package com.intellij.tools;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.components.RoamingType;
+import consulo.component.persist.RoamingType;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;

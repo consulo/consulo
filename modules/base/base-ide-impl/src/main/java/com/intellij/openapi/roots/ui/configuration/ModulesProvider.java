@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration;
 import consulo.module.Module;
 import consulo.module.ModuleRootManager;
 import consulo.module.layer.ModuleRootModel;
-import com.intellij.openapi.roots.RootModelProvider;
+import consulo.module.layer.RootModelProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

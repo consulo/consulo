@@ -22,14 +22,14 @@ public class ProjectBundle extends AbstractBundle {
   private static final ProjectBundle ourInstance = new ProjectBundle();
 
   private ProjectBundle() {
-    super("messages.ProjectBundle");
+    super("consulo.project.ProjectBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.ProjectBundle") String key) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.project.ProjectBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.ProjectBundle") String key, Object... params) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.project.ProjectBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }

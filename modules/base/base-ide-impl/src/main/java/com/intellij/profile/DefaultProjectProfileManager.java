@@ -20,7 +20,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.ArrayUtil;

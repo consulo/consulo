@@ -21,17 +21,23 @@ import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.content.library.OrderRoot;
+import consulo.content.library.ui.AttachRootButtonDescriptor;
+import consulo.content.library.ui.LibraryEditor;
+import consulo.content.library.ui.LibraryPropertiesEditor;
+import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.module.Module;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.libraries.LibraryKind;
-import com.intellij.openapi.roots.libraries.LibraryProperties;
-import com.intellij.openapi.roots.libraries.LibraryType;
+import consulo.content.library.LibraryKind;
+import consulo.content.library.LibraryProperties;
+import consulo.content.library.LibraryType;
 import com.intellij.openapi.roots.libraries.ui.*;
 import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
@@ -48,7 +54,7 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IconUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.ui.JBUI;
@@ -412,7 +418,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
       if (myContextModule != null) {
         chooserDescriptor.putUserData(LangDataKeys.MODULE_CONTEXT, myContextModule);
       }
-      final VirtualFile[] files = FileChooser.chooseFiles(chooserDescriptor, myPanel, myProject, initialSelection);
+      final VirtualFile[] files = IdeaFileChooser.chooseFiles(chooserDescriptor, myPanel, myProject, initialSelection);
       if (files.length == 0) return Collections.emptyList();
 
       return RootDetectionUtil.detectRoots(Arrays.asList(files), myPanel, myProject, myDescriptor);
@@ -522,7 +528,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
       VirtualFile[] files = getLibraryEditor().getFiles(type);
       for (VirtualFile file : files) {
         if (!VfsUtilCore.isUnder(file, excludedRoots)) {
-          roots.add(PathUtil.getLocalFile(file));
+          roots.add(VirtualFilePathUtil.getLocalFile(file));
         }
       }
     }
@@ -554,7 +560,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         }
       }
       
-      consulo.ui.fileChooser.FileChooser.chooseFiles(descriptor, myPanel, myProject, toSelect).doWhenDone(files -> {
+      FileChooser.chooseFiles(descriptor, myPanel, myProject, toSelect).doWhenDone(files -> {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
           public void run() {

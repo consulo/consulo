@@ -80,6 +80,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.PropertyKey;
@@ -718,7 +719,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       myUsagePreviewPanel.updateLayout(selection);
       myUsagePreviewTitle.clear();
       if (myUsagePreviewPanel.getCannotPreviewMessage(selection) == null && file != null) {
-        myUsagePreviewTitle.append(PathUtil.getFileName(file), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        myUsagePreviewTitle.append(VirtualFilePathUtil.getFileName(file), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         VirtualFile virtualFile = VfsUtil.findFileByIoFile(new File(file), true);
         String locationPath = virtualFile == null ? null : getPresentablePath(myProject, virtualFile.getParent(), 120);
         if (locationPath != null) {
@@ -1216,7 +1217,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
           }
 
           String file = lastUsageFileRef.get();
-          String usageFile = PathUtil.toSystemIndependentName(usage.getPath());
+          String usageFile = VirtualFilePathUtil.toSystemIndependentName(usage.getPath());
           if (file == null || !file.equals(usageFile)) {
             resultsFilesCount.incrementAndGet();
             lastUsageFileRef.set(usageFile);

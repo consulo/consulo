@@ -18,8 +18,8 @@ package com.intellij.diagnostic.logging;
 
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 

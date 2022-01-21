@@ -27,7 +27,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
+import consulo.content.ContentIterator;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;

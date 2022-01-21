@@ -16,8 +16,8 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
@@ -52,7 +52,7 @@ public class FileCopyElementType extends PackagingElementType<FileCopyPackagingE
   public List<? extends FileCopyPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
                                                                   @Nonnull CompositePackagingElement<?> parent) {
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, true);
-    final VirtualFile[] files = FileChooser.chooseFiles(descriptor, context.getProject(), null);
+    final VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
     final List<FileCopyPackagingElement> list = new ArrayList<FileCopyPackagingElement>();
     for (VirtualFile file : files) {
       list.add(new FileCopyPackagingElement(file.getPath()));

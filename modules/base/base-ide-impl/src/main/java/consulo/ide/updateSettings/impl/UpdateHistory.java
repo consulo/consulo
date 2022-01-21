@@ -16,9 +16,9 @@
 package consulo.ide.updateSettings.impl;
 
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.container.plugin.PluginId;
 import jakarta.inject.Singleton;
 

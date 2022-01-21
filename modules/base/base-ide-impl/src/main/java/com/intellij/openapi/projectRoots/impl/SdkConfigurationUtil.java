@@ -17,12 +17,12 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkAdditionalData;
 import consulo.content.bundle.SdkTable;
-import com.intellij.openapi.projectRoots.SdkType;
+import consulo.content.bundle.SdkType;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.io.FileUtil;
@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

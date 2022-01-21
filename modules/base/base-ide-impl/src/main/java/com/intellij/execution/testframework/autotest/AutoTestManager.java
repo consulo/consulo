@@ -19,6 +19,8 @@ import com.intellij.execution.*;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 

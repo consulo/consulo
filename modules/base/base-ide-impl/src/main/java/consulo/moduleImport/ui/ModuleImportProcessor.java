@@ -17,7 +17,7 @@ package consulo.moduleImport.ui;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,7 +35,7 @@ import consulo.moduleImport.ModuleImportProviders;
 import consulo.ui.Alerts;
 import consulo.ui.ComboBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooser;
 import consulo.ui.image.Image;
 import consulo.ui.layout.LabeledLayout;
 import consulo.util.concurrent.AsyncResult;

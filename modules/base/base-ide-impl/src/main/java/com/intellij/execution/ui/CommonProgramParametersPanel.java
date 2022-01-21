@@ -20,7 +20,7 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.RawCommandLineEditor;
 import com.intellij.ui.TextAccessor;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
@@ -192,7 +192,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
 
   public void reset(CommonProgramRunConfigurationParameters configuration) {
     setProgramParameters(configuration.getProgramParameters());
-    setWorkingDirectory(PathUtil.toSystemDependentName(configuration.getWorkingDirectory()));
+    setWorkingDirectory(VirtualFilePathUtil.toSystemDependentName(configuration.getWorkingDirectory()));
 
     myEnvVariablesComponent.setEnvs(configuration.getEnvs());
     myEnvVariablesComponent.setPassParentEnvs(configuration.isPassParentEnvs());

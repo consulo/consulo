@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.compiler.CompilerBundle;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.ComplexPackagingElementType;

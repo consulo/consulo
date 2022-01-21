@@ -17,10 +17,13 @@ package consulo.virtualFileSystem;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
+import consulo.component.ComponentManager;
 import consulo.component.extension.internal.RootComponentHolder;
 import consulo.component.messagebus.Topic;
+import consulo.component.util.Iconable;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
+import consulo.ui.image.Image;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.BulkFileListener;
@@ -250,4 +253,6 @@ public abstract class VirtualFileManager implements ModificationTracker {
   //@ApiStatus.Internal
   @Nonnull
   public abstract CharSequence getVFileName(int nameId);
+
+  public abstract Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
 }

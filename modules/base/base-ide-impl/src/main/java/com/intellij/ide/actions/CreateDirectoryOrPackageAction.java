@@ -39,7 +39,7 @@ import consulo.awt.TargetAWT;
 import consulo.ide.actions.CreateDirectoryOrPackageType;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.ui.TextBox;
 import consulo.ui.ValidableComponent;
 import consulo.ui.annotation.RequiredUIAccess;

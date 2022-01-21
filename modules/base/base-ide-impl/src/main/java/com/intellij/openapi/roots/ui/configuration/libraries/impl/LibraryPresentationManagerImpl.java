@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.libraries.impl;
 
 import com.intellij.icons.AllIcons;
+import consulo.content.library.*;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.*;

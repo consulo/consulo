@@ -15,10 +15,11 @@
  */
 package consulo.module.layer;
 
-import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.PathsList;
 import consulo.application.util.function.Processor;
+import consulo.content.OrderRootType;
+import consulo.content.library.Library;
 import consulo.module.Module;
 import consulo.module.ModuleRootManager;
 import consulo.module.layer.orderEntry.OrderEntry;
@@ -27,6 +28,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Interface for convenient processing dependencies of a module or a project. Allows to process {@link OrderEntry}s and collect classes
@@ -110,7 +113,7 @@ public abstract class OrderEnumerator {
    * @param condition filtering condition
    * @return this instance
    */
-  public abstract OrderEnumerator satisfying(Condition<OrderEntry> condition);
+  public abstract OrderEnumerator satisfying(Predicate<OrderEntry> condition);
 
   /**
    * Use <code>provider.getRootModel()</code> to process module dependencies
@@ -140,7 +143,7 @@ public abstract class OrderEnumerator {
    * @param rootTypeProvider custom root type provider
    * @return {@link OrderRootsEnumerator} instance for processing roots of the provided type
    */
-  public abstract OrderRootsEnumerator roots(@Nonnull NotNullFunction<OrderEntry, OrderRootType> rootTypeProvider);
+  public abstract OrderRootsEnumerator roots(@Nonnull Function<OrderEntry, OrderRootType> rootTypeProvider);
 
   /**
    * @return classes roots for all entries processed by this enumerator

@@ -18,7 +18,8 @@ package com.intellij.tasks.context;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
+import consulo.component.persist.JDOMExternalizable;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 
@@ -49,7 +50,7 @@ public abstract class WorkingContextProvider {
 
   /**
    * Saves a component's state.
-   * May delegate to {@link com.intellij.openapi.util.JDOMExternalizable#writeExternal(org.jdom.Element)}
+   * May delegate to {@link JDOMExternalizable#writeExternal(org.jdom.Element)}
    * @param toElement
    */
   public abstract void saveContext(Element toElement) throws WriteExternalException;

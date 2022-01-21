@@ -49,7 +49,7 @@ import consulo.module.layer.orderEntry.DependencyScope;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.psi.PsiBundle;
 import com.intellij.util.Alarm;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
@@ -132,17 +132,17 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
 
         // IDE jars.
         classPath.addAll(PathManager.getUtilClassPath());
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(ProjectBundle.class), classPath);
+        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(ProjectBundle.class), classPath);
         ExternalSystemApiUtil.addBundle(params.getClassPath(), "messages.ProjectBundle", ProjectBundle.class);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(PsiBundle.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(Alarm.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(DependencyScope.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(ExtensionPointName.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(OpenProjectFileChooserDescriptor.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(ExternalSystemTaskNotificationListener.class), classPath);
+        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(PsiBundle.class), classPath);
+        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(Alarm.class), classPath);
+        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(DependencyScope.class), classPath);
+        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(ExtensionPointName.class), classPath);
+        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(OpenProjectFileChooserDescriptor.class), classPath);
+        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(ExternalSystemTaskNotificationListener.class), classPath);
 
         // External system module jars
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(getClass()), classPath);
+        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(getClass()), classPath);
         ExternalSystemApiUtil.addBundle(params.getClassPath(), "messages.CommonBundle", CommonBundle.class);
         params.getClassPath().addAll(classPath);
 
@@ -161,7 +161,7 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
         if (externalSystemId != null) {
           ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
           if (manager != null) {
-            params.getClassPath().add(PathUtil.getJarPathForClass(manager.getProjectResolverClass().getClass()));
+            params.getClassPath().add(VirtualFilePathUtil.getJarPathForClass(manager.getProjectResolverClass().getClass()));
             params.getProgramParametersList().add(manager.getProjectResolverClass().getName());
             params.getProgramParametersList().add(manager.getTaskManagerClass().getName());
             manager.enhanceRemoteProcessing(params);

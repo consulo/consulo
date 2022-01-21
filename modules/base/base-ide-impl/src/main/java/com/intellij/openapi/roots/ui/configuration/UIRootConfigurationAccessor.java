@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import com.intellij.openapi.roots.impl.RootConfigurationAccessor;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.roots.ui.configuration.LibrariesConfigurator;

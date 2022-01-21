@@ -17,6 +17,8 @@ package com.intellij.execution.testframework.export;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.Project;
 import com.intellij.util.xmlb.annotations.Attribute;
 

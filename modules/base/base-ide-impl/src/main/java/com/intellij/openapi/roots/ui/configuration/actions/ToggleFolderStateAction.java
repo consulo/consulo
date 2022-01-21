@@ -20,7 +20,7 @@ import consulo.module.layer.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryTreeEditor;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 
 import javax.swing.*;
 

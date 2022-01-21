@@ -17,10 +17,10 @@ package consulo.module;
 
 import consulo.application.Application;
 import consulo.component.ComponentManager;
+import consulo.component.util.pointer.Named;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
-import consulo.util.pointers.Named;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

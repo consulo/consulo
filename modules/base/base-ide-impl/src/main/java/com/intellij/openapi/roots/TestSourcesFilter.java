@@ -2,6 +2,7 @@
 package com.intellij.openapi.roots;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.content.FileIndex;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 

@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiManager;
 import consulo.module.extension.ModuleExtension;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import javax.annotation.Nonnull;

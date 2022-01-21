@@ -16,7 +16,7 @@
 package com.intellij.packaging.elements;
 
 import consulo.project.Project;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ArtifactModel;
 import javax.annotation.Nonnull;

@@ -15,8 +15,8 @@
  */
 package consulo.module.layer;
 
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;

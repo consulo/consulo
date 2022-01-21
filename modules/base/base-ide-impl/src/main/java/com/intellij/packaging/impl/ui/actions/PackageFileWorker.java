@@ -38,7 +38,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.PackagingElementPath;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.io.zip.JBZipEntry;
 import com.intellij.util.io.zip.JBZipFile;
 import consulo.application.AccessRule;
@@ -178,7 +178,7 @@ public class PackageFileWorker {
         final JBZipEntry entry = zipFile.getOrCreateEntry(nextPathInArchive);
         LOG.debug("  extracting to temp file: " + nextPathInArchive + " from " + archivePath);
         final File tempFile = FileUtil.createTempFile("packageFile" + FileUtil.sanitizeFileName(nextPathInArchive),
-                                                      FileUtilRt.getExtension(PathUtil.getFileName(nextPathInArchive)));
+                                                      FileUtilRt.getExtension(VirtualFilePathUtil.getFileName(nextPathInArchive)));
         if (entry.getSize() != -1) {
           FileUtil.writeToFile(tempFile, entry.getData());
         }

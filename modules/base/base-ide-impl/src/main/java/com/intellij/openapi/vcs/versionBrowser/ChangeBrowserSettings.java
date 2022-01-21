@@ -18,6 +18,8 @@ package com.intellij.openapi.vcs.versionBrowser;
 import com.intellij.openapi.util.*;
 import com.intellij.util.text.SyncDateFormat;
 import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

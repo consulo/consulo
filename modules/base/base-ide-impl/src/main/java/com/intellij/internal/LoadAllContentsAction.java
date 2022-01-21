@@ -27,7 +27,7 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
+import consulo.content.ContentIterator;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

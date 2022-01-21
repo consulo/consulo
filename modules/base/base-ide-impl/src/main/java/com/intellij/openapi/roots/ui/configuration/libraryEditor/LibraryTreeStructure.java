@@ -17,10 +17,11 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.content.library.ui.LibraryEditor;
 import consulo.project.ProjectBundle;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
-import com.intellij.openapi.roots.libraries.ui.OrderRootTypePresentation;
+import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.content.library.ui.OrderRootTypePresentation;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;

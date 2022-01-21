@@ -18,7 +18,7 @@ package com.intellij.psi.impl;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileFilter;
+import consulo.virtualFileSystem.VirtualFileFilter;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.impl.FileManager;
 import javax.annotation.Nonnull;

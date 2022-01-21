@@ -182,7 +182,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use #setSetupButton() without 'moduleJdkSetup' parameter", until = "1.0")
+  @DeprecationInfo(value = "Use #setSetupButton() without 'moduleJdkSetup' parameter")
   public void setSetupButton(final JButton setUpButton,
                              @Nullable final Project project,
                              final SdkModel sdksModel,
@@ -193,7 +193,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use #setSetupButton() without 'actionGroupTitle' parameter", until = "1.0")
+  @DeprecationInfo(value = "Use #setSetupButton() without 'actionGroupTitle' parameter")
   public void setSetupButton(final JButton setUpButton,
                              @Nullable final Project project,
                              final SdkModel sdksModel,

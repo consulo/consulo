@@ -53,7 +53,7 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use ToolWindowId#VCS", until = "2.0")
+  @DeprecationInfo(value = "Use ToolWindowId#VCS")
   public static final String TOOLWINDOW_ID = ToolWindowId.VCS;
 
   private static final Key<ChangesViewContentEP> ourEpKey = Key.create("ChangesViewContentEP");

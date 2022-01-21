@@ -18,7 +18,7 @@ package consulo.components.impl.stores;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.NotificationsManager;
 import consulo.application.Application;
-import com.intellij.openapi.components.RoamingType;
+import consulo.component.persist.RoamingType;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
@@ -304,7 +304,7 @@ public class StorageUtil {
   }
 
   /**
-   * You must call {@link StreamProvider#isApplicable(String, com.intellij.openapi.components.RoamingType)} before
+   * You must call {@link StreamProvider#isApplicable(String, RoamingType)} before
    */
   public static void doSendContent(@Nonnull StreamProvider provider, @Nonnull String fileSpec, @Nonnull Parent element, @Nonnull RoamingType type) throws IOException {
     // we should use standard line-separator (\n) - stream provider can share file content on any OS

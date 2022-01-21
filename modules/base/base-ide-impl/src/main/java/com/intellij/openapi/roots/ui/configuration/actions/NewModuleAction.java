@@ -19,7 +19,7 @@ import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.DumbAware;
@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.newProject.ui.NewProjectDialog;
 import consulo.ide.newProject.ui.NewProjectPanel;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooser;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

@@ -23,7 +23,7 @@ import com.intellij.CommonBundle;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.util.text.UniqueNameGenerator;
+import consulo.component.util.text.UniqueNameGenerator;
 import com.intellij.util.ui.JBUI;
 import javax.annotation.Nonnull;
 

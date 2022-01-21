@@ -28,7 +28,7 @@ import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;

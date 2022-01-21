@@ -17,9 +17,13 @@ package consulo.roots;
 
 import com.intellij.psi.PsiDirectory;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.component.ComponentManager;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.project.Project;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,21 +47,29 @@ public abstract class PackageBasedContentFolderTypeProvider extends ContentFolde
   @Override
   @Nonnull
   @RequiredReadAction
-  public final Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
-    return getChildDirectoryIcon(psiDirectory, null);
+  public final Image getChildDirectoryIcon(@Nullable VirtualFile file, @Nullable ComponentManager project) {
+    return getChildDirectoryIcon(file, project, null);
   }
 
   @Nonnull
   @RequiredReadAction
   public final Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory, @Nullable PsiPackageManager oldPsiPackageManager) {
+    Project project = psiDirectory == null ? null : psiDirectory.getProject();
+    VirtualFile virtualFile = psiDirectory == null ? null : psiDirectory.getVirtualFile();
+    return getChildDirectoryIcon(virtualFile, project, oldPsiPackageManager);
+  }
+
+  @Nonnull
+  @RequiredReadAction
+  public final Image getChildDirectoryIcon(@Nullable VirtualFile file, @Nullable ComponentManager project, @Nullable PsiPackageManager oldPsiPackageManager) {
     Image packageIcon = getChildPackageIcon();
     if (packageIcon == null) {
       return getChildDirectoryIcon();
     }
 
-    if (psiDirectory != null) {
-      PsiPackageManager psiPackageManager = oldPsiPackageManager == null ? PsiPackageManager.getInstance(psiDirectory.getProject()) : oldPsiPackageManager;
-      PsiPackage anyPackage = psiPackageManager.findAnyPackage(psiDirectory);
+    if (file != null && project != null) {
+      PsiPackageManager psiPackageManager = oldPsiPackageManager == null ? PsiPackageManager.getInstance((Project)project) : oldPsiPackageManager;
+      PsiPackage anyPackage = psiPackageManager.findAnyPackage(file);
       if (anyPackage != null) {
         return packageIcon;
       }

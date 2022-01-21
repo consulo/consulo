@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.openapi.roots.libraries.LibraryTable;
+import consulo.content.library.LibraryTable;
 
 import javax.annotation.Nonnull;
 

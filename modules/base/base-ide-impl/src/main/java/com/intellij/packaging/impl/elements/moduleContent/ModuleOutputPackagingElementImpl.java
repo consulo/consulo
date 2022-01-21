@@ -39,7 +39,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.application.AccessRule;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.util.pointers.NamedPointerUtil;
 import org.jetbrains.annotations.NonNls;

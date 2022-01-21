@@ -50,8 +50,8 @@
     <extensionPoint name="search.optionContributor" interface="com.intellij.ide.ui.search.SearchableOptionContributor"/>
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
-    <extensionPoint name="contentFolderTypeProvider" interface="consulo.roots.ContentFolderTypeProvider"/>
-    <extensionPoint name="contentFolderPropertyProvider" interface="consulo.roots.ContentFolderPropertyProvider"/>
+    <extensionPoint name="contentFolderTypeProvider" interface="consulo.content.ContentFolderTypeProvider"/>
+    <extensionPoint name="contentFolderPropertyProvider" interface="consulo.module.layer.ContentFolderPropertyProvider"/>
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.layer.ContentFolderSupportPatcher"/>
     <extensionPoint name="createFromTemplateActionModuleResolver" interface="com.intellij.ide.actions.CreateFileFromTemplateAction$ModuleResolver"/>
 
@@ -74,7 +74,7 @@
 
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
     <extensionPoint name="testSourcesFilter" interface="com.intellij.openapi.roots.TestSourcesFilter"/>
-    <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
+    <extensionPoint name="defaultLibraryRootDetector" interface="consulo.content.library.ui.RootDetector"/>
 
     <extensionPoint name="postStartupActivity" interface="consulo.project.startup.StartupActivity"/>
     <extensionPoint name="backgroundPostStartupActivity" interface="consulo.project.startup.StartupActivity$Background"/>
@@ -628,7 +628,7 @@
       <with attribute="implementationClass" implements="consulo.roots.orderEntry.OrderEntryTypeEditor"/>
     </extensionPoint>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
-    <extensionPoint name="directoryIndexExcludePolicy" interface="com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy"
+    <extensionPoint name="directoryIndexExcludePolicy" interface="consulo.module.layer.DirectoryIndexExcludePolicy"
                     area="PROJECT"/>
 
     <extensionPoint name="smartPointerAnchorProvider" interface="com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider"/>
@@ -847,11 +847,11 @@
 
     <extensionPoint name="elementsToHighlightFilter" interface="com.intellij.openapi.util.Condition"/>
 
-    <extensionPoint name="sdkType" interface="com.intellij.openapi.projectRoots.SdkType"/>
+    <extensionPoint name="sdkType" interface="consulo.content.bundle.SdkType"/>
     <extensionPoint name="predefinedBundlesProvider" interface="consulo.content.bundle.PredefinedBundlesProvider"/>
 
-    <extensionPoint name="library.presentationProvider" interface="com.intellij.openapi.roots.libraries.LibraryPresentationProvider"/>
-    <extensionPoint name="library.type" interface="com.intellij.openapi.roots.libraries.LibraryType"/>
+    <extensionPoint name="library.presentationProvider" interface="consulo.content.library.LibraryPresentationProvider"/>
+    <extensionPoint name="library.type" interface="consulo.content.library.LibraryType"/>
 
     <extensionPoint name="lang.implementationTextSelectioner"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -1182,8 +1182,8 @@
     <extensionPoint name="remote.credentialsLanguageContribution"
                     interface="com.intellij.remote.ext.CredentialsLanguageContribution"/>
 
-    <extensionPoint name="fileChooseDialogProvider" interface="consulo.ui.fileOperateDialog.FileChooseDialogProvider"/>
-    <extensionPoint name="fileSaveDialogProvider" interface="consulo.ui.fileOperateDialog.FileSaveDialogProvider"/>
+    <extensionPoint name="fileChooseDialogProvider" interface="consulo.fileChooser.provider.FileChooseDialogProvider"/>
+    <extensionPoint name="fileSaveDialogProvider" interface="consulo.fileChooser.provider.FileSaveDialogProvider"/>
 
     <extensionPoint name="textEditorHighlightingPassFactory" area="PROJECT" interface="com.intellij.codeHighlighting.TextEditorHighlightingPassFactory"/>
 
@@ -1369,7 +1369,7 @@
 
     <applicationService serviceInterface="com.intellij.ide.RecentProjectsManager" serviceImplementation="com.intellij.ide.RecentDirectoryProjectsManager"/>
 
-    <applicationService serviceImplementation="consulo.fileChooser.FileOperateDialogSettings"/>
+    <applicationService serviceImplementation="consulo.fileChooser.impl.FileOperateDialogSettings"/>
     <applicationService serviceImplementation="com.intellij.ide.MacOSApplicationProvider"/>
     <applicationService serviceImplementation="consulo.ide.actions.webSearch.WebSearchOptions"/>
 
@@ -1963,7 +1963,7 @@
                     serviceImplementation="com.intellij.openapi.roots.impl.ProjectFileIndexImpl"/>
     <projectService serviceInterface="com.intellij.psi.impl.source.resolve.ResolveCache"
                     serviceImplementation="com.intellij.psi.impl.source.resolve.ResolveCache"/>
-    <moduleService serviceInterface="com.intellij.openapi.roots.ModuleFileIndex"
+    <moduleService serviceInterface="consulo.module.content.ModuleFileIndex"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
     <moduleService serviceInterface="consulo.module.ModuleRootManager"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>

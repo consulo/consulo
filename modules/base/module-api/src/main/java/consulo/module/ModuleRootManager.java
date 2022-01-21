@@ -16,6 +16,7 @@
 package consulo.module;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.module.content.ModuleFileIndex;
 import consulo.module.layer.ModifiableRootModel;
 import consulo.module.layer.ModuleRootModel;
 

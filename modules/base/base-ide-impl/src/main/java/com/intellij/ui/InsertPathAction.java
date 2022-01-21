@@ -16,9 +16,9 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -63,7 +63,7 @@ public class InsertPathAction extends AnAction {
     }
     //TODO use from openapi
     //FeatureUsageTracker.getInstance().triggerFeatureUsed("ui.commandLine.insertPath");
-    VirtualFile[] files = FileChooser.chooseFiles(myDescriptor, myTextField, getEventProject(e), virtualFile);
+    VirtualFile[] files = IdeaFileChooser.chooseFiles(myDescriptor, myTextField, getEventProject(e), virtualFile);
     if (files.length != 0) {
       myTextField.replaceSelection(files[0].getPresentableUrl());
     }

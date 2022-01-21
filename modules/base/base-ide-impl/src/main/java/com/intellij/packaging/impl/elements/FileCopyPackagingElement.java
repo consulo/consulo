@@ -26,7 +26,7 @@ import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.FileCopyPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -61,7 +61,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   }
 
   public String getOutputFileName() {
-    return myRenamedOutputFileName != null ? myRenamedOutputFileName : PathUtil.getFileName(myFilePath);
+    return myRenamedOutputFileName != null ? myRenamedOutputFileName : VirtualFilePathUtil.getFileName(myFilePath);
   }
 
   @Override
@@ -123,7 +123,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
 
   @Override
   public void rename(@Nonnull String newName) {
-    myRenamedOutputFileName = newName.equals(PathUtil.getFileName(myFilePath)) ? null : newName;
+    myRenamedOutputFileName = newName.equals(VirtualFilePathUtil.getFileName(myFilePath)) ? null : newName;
   }
 
   @Nullable

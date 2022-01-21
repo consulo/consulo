@@ -47,7 +47,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -104,7 +104,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
     List<String> extensions = IdeScriptEngineManager.getInstance().getFileExtensions(language);
     try {
-      String pathName = PathUtil.makeFileName(DEFAULT_FILE_NAME, ContainerUtil.getFirstItem(extensions));
+      String pathName = VirtualFilePathUtil.makeFileName(DEFAULT_FILE_NAME, ContainerUtil.getFirstItem(extensions));
       VirtualFile virtualFile = IdeConsoleRootType.getInstance().findFile(project, pathName, ScratchFileService.Option.create_if_missing);
       if (virtualFile != null) {
         FileEditorManager.getInstance(project).openFile(virtualFile, true);

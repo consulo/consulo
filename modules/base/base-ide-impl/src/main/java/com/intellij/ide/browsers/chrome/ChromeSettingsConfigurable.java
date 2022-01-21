@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.browsers.chrome;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;

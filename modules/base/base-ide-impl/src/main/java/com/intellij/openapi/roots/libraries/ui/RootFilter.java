@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries.ui;
 
+import consulo.content.library.ui.RootDetector;
 import consulo.progress.ProgressIndicator;
 import consulo.content.OrderRootType;
 import consulo.virtualFileSystem.VirtualFile;

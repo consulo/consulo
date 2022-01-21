@@ -17,6 +17,8 @@
 package com.maddyhome.idea.copyright;
 
 import com.intellij.openapi.components.*;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;

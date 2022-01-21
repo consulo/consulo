@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import consulo.document.util.TextRange;

@@ -24,7 +24,7 @@ import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.project.Project;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Attribute;
 import org.jdom.Element;

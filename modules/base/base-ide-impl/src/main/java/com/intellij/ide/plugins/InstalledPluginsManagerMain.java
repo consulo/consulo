@@ -22,7 +22,7 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
@@ -40,7 +40,7 @@ import consulo.ide.plugins.PluginsPanel;
 import consulo.localize.LocalizeValue;
 import consulo.plugins.internal.PluginsLoader;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooser;
 import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;

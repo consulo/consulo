@@ -3,13 +3,13 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ComponentSerializationUtil;
+import consulo.content.library.*;
 import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
-import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.vfs.VfsUtilCore;

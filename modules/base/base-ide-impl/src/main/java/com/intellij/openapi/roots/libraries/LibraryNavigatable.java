@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries;
 
+import consulo.content.library.Library;
 import consulo.module.Module;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.ModuleRootManager;

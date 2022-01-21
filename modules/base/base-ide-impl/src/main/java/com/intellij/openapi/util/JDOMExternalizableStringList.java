@@ -16,6 +16,7 @@
 package com.intellij.openapi.util;
 
 import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.JDOMExternalizable;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.jdom.Element;
 import org.slf4j.Logger;

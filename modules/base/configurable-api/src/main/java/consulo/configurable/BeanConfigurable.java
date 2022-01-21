@@ -15,12 +15,17 @@
  */
 package consulo.configurable;
 
-import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -35,7 +40,7 @@ import java.util.Objects;
 public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
   private final T myInstance;
 
-  private static abstract class BeanField<T extends JComponent> {
+  private static abstract class BeanField<T extends Component> {
     String myFieldName;
     T myComponent;
 
@@ -67,6 +72,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     }
 
     abstract Object getComponentValue();
+
     abstract void setComponentValue(Object instance);
 
     Object getBeanValue(Object instance) {
@@ -115,7 +121,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     protected abstract Class getValueClass();
   }
 
-  private static class CheckboxField extends BeanField<JCheckBox> {
+  private static class CheckboxField extends BeanField<CheckBox> {
     private final String myTitle;
 
     private CheckboxField(final String fieldName, final String title) {
@@ -124,18 +130,18 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     }
 
     @Override
-    JCheckBox createComponent() {
-      return new JCheckBox(myTitle);
+    CheckBox createComponent() {
+      return CheckBox.create(LocalizeValue.of(myTitle));
     }
 
     @Override
     Object getComponentValue() {
-      return getComponent().isSelected();
+      return getComponent().getValueOrError();
     }
 
     @Override
     void setComponentValue(final Object instance) {
-      getComponent().setSelected(((Boolean) instance).booleanValue());
+      getComponent().setValue(((Boolean)instance).booleanValue());
     }
 
     @Override
@@ -149,25 +155,27 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     }
   }
 
-  private final List<BeanField> myFields = new ArrayList<BeanField>();
+  private final List<BeanField> myFields = new ArrayList<>();
 
   protected BeanConfigurable(T beanInstance) {
     myInstance = beanInstance;
   }
 
-  protected void checkBox(@NonNls String fieldName, String title) {
+  protected void checkBox(String fieldName, String title) {
     myFields.add(new CheckboxField(fieldName, title));
   }
 
+  @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
-    final JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP));
-    for (BeanField field: myFields) {
+  public Component createUIComponent(@Nonnull Disposable uiDisposable) {
+    final VerticalLayout panel = VerticalLayout.create();
+    for (BeanField field : myFields) {
       panel.add(field.getComponent());
     }
     return panel;
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     for (BeanField field : myFields) {
@@ -176,6 +184,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     return false;
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     for (BeanField field : myFields) {
@@ -183,6 +192,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     for (BeanField field : myFields) {
@@ -190,6 +200,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
   }

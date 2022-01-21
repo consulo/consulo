@@ -20,7 +20,7 @@ import consulo.module.layer.ModuleRootModel;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 
 import javax.annotation.Nonnull;

@@ -42,7 +42,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.SmartList;
 import consulo.disposer.Disposer;
 import consulo.lang.LanguageVersion;
@@ -261,7 +261,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
       info.newInjectionHostRange = shred.getSmartPointer().getRange();
     }
     DocumentWindowImpl documentWindow = new DocumentWindowImpl(myHostDocument, place);
-    String fileName = PathUtil.makeFileName(myHostVirtualFile.getName(), fileExtension);
+    String fileName = VirtualFilePathUtil.makeFileName(myHostVirtualFile.getName(), fileExtension);
 
     ASTNode[] parsedNodes =
             parseFile(myLanguageVersion, forcedLanguageVersion, documentWindow, myHostVirtualFile, myHostDocument, myHostPsiFile, myProject, documentWindow.getText(), placeInfos, decodedChars, fileName,

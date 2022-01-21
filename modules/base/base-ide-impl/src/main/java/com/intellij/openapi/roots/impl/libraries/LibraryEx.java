@@ -18,9 +18,9 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import consulo.module.Module;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryProperties;
-import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryProperties;
+import consulo.content.library.PersistentLibraryKind;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

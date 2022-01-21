@@ -16,7 +16,7 @@
 package consulo.roots.ui.configuration.classpath;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
@@ -24,7 +24,7 @@ import consulo.module.layer.ModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooser;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 

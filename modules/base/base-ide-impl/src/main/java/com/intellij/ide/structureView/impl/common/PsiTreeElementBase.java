@@ -9,7 +9,7 @@ import com.intellij.ide.util.treeView.AbstractTreeUi;
 import com.intellij.ide.util.treeView.NodeDescriptorProvidingKey;
 import com.intellij.ide.util.treeView.TreeAnchorizer;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

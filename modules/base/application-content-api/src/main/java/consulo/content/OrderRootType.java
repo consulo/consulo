@@ -52,7 +52,7 @@ public class OrderRootType {
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use getName()", until = "3.0")
+  @DeprecationInfo(value = "Use getName()")
   public String name() {
     return getName();
   }

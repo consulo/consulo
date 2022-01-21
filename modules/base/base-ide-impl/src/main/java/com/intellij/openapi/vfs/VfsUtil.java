@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.application.WriteAction;
-import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
@@ -34,9 +34,8 @@ import consulo.application.util.function.Processor;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -393,7 +392,7 @@ public class VfsUtil extends VfsUtilCore {
   }
 
   public static VirtualFile createChildSequent(Object requestor, @Nonnull VirtualFile dir, @Nonnull String prefix, @Nonnull String extension) throws IOException {
-    String dotExt = PathUtil.makeFileName("", extension);
+    String dotExt = VirtualFilePathUtil.makeFileName("", extension);
     String fileName = prefix + dotExt;
     int i = 1;
     while (dir.findChild(fileName) != null) {

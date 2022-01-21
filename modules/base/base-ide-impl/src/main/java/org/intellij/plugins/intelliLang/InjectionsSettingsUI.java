@@ -21,10 +21,10 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
-import com.intellij.openapi.fileChooser.FileSaverDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.fileChooser.FileSaverDescriptor;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.configurable.Configurable;
@@ -36,7 +36,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWrapper;
+import consulo.virtualFileSystem.VirtualFileWrapper;
 import com.intellij.ui.*;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.*;
@@ -856,7 +856,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     final SplitterProportionsData splitterData = new SplitterProportionsDataImpl();
     splitterData.externalizeFromDimensionService("IntelliLang.ImportSettingsKey.SplitterProportions");
 
-    final VirtualFile file = FileChooser.chooseFile(descriptor, myProject, null);
+    final VirtualFile file = IdeaFileChooser.chooseFile(descriptor, myProject, null);
     if (file == null) {
       return;
     }

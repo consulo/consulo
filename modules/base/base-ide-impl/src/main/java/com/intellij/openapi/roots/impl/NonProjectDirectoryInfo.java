@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 import consulo.module.Module;
 import consulo.module.layer.ContentFolder;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

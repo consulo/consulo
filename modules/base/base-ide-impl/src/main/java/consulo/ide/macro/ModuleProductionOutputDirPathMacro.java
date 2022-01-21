@@ -16,7 +16,7 @@
 package consulo.ide.macro;
 
 import com.intellij.ide.IdeBundle;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import javax.annotation.Nonnull;
 

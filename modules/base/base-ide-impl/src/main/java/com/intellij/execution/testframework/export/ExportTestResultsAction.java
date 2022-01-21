@@ -43,7 +43,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.io.URLUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -110,7 +110,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
     LOG.assertTrue(project != null);
     final ExportTestResultsConfiguration config = ExportTestResultsConfiguration.getInstance(project);
 
-    final String name = ExecutionBundle.message("export.test.results.filename", PathUtil.suggestFileName(myRunConfiguration.getName()));
+    final String name = ExecutionBundle.message("export.test.results.filename", VirtualFilePathUtil.suggestFileName(myRunConfiguration.getName()));
     String filename = name + "." + config.getExportFormat().getDefaultExtension();
     boolean showDialog = true;
     while (showDialog) {

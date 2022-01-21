@@ -64,6 +64,17 @@ public class StringUtil {
     return true;
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String capitalize(@Nonnull String s) {
+    if (s.isEmpty()) return s;
+    if (s.length() == 1) return toUpperCase(s).toString();
+
+    // Optimization
+    if (Character.isUpperCase(s.charAt(0))) return s;
+    return toUpperCase(s.charAt(0)) + s.substring(1);
+  }
+
   @Contract(value = "null -> null", pure = true)
   public static String decapitalize(@Nullable String name) {
     if (isEmpty(name)) {

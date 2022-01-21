@@ -16,93 +16,93 @@
 package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
-import consulo.content.OrderRootType;
-import consulo.module.Module;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.CommonProcessors;
+import consulo.virtualFileSystem.util.PathsList;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.content.OrderRootType;
+import consulo.logging.Logger;
+import consulo.module.Module;
 import consulo.module.layer.ContentEntry;
 import consulo.module.layer.ModuleRootModel;
 import consulo.module.layer.OrderRootsEnumerator;
 import consulo.module.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.CommonProcessors;
-import com.intellij.util.NotNullFunction;
-import com.intellij.util.PathsList;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ModuleRootsProcessor;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import consulo.util.NotNullPairFunction;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author nik
  */
 public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
   private static final NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, VirtualFile[]> ourSourcesToFileFunc =
-    new NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, VirtualFile[]>() {
-      @Nonnull
-      @Override
-      public VirtualFile[] fun(ContentEntry t, Predicate<ContentFolderTypeProvider> v) {
-        return t.getFolderFiles(v);
-      }
-    };
+          new NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, VirtualFile[]>() {
+            @Nonnull
+            @Override
+            public VirtualFile[] fun(ContentEntry t, Predicate<ContentFolderTypeProvider> v) {
+              return t.getFolderFiles(v);
+            }
+          };
 
   private static final NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]> ourSourcesToUrlFunc =
-    new NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]>() {
-      @Nonnull
-      @Override
-      public String[] fun(ContentEntry t, Predicate<ContentFolderTypeProvider> v) {
-        return t.getFolderUrls(v);
-      }
-    };
+          new NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]>() {
+            @Nonnull
+            @Override
+            public String[] fun(ContentEntry t, Predicate<ContentFolderTypeProvider> v) {
+              return t.getFolderUrls(v);
+            }
+          };
 
   private static final NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]> ourRuntimeToFileFunc =
-    new NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]>() {
-      @Nonnull
-      @Override
-      public VirtualFile[] fun(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
-        List<VirtualFile> files = new ArrayList<>(5);
-        ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(t.getModule());
-        for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensionList()) {
-          if(v.apply(contentFolderTypeProvider)) {
-            ContainerUtil.addIfNotNull(files, compilerPathsManager.getCompilerOutput(contentFolderTypeProvider));
-          }
-        }
-        return VfsUtilCore.toVirtualFileArray(files);
-      }
-    };
+          new NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]>() {
+            @Nonnull
+            @Override
+            public VirtualFile[] fun(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
+              List<VirtualFile> files = new ArrayList<>(5);
+              ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(t.getModule());
+              for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensionList()) {
+                if (v.apply(contentFolderTypeProvider)) {
+                  ContainerUtil.addIfNotNull(files, compilerPathsManager.getCompilerOutput(contentFolderTypeProvider));
+                }
+              }
+              return VfsUtilCore.toVirtualFileArray(files);
+            }
+          };
 
   private static final NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]> ourRuntimeToUrlFunc =
-    new NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]>() {
-      @Nonnull
-      @Override
-      public String[] fun(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
-        List<String> urls = new ArrayList<>(5);
-        ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(t.getModule());
-        for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensionList()) {
-          if(v.apply(contentFolderTypeProvider)) {
-            ContainerUtil.addIfNotNull(urls, compilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider));
-          }
-        }
-        return ArrayUtil.toStringArray(urls);
-      }
-    };
+          new NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]>() {
+            @Nonnull
+            @Override
+            public String[] fun(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
+              List<String> urls = new ArrayList<>(5);
+              ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(t.getModule());
+              for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensionList()) {
+                if (v.apply(contentFolderTypeProvider)) {
+                  ContainerUtil.addIfNotNull(urls, compilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider));
+                }
+              }
+              return ArrayUtil.toStringArray(urls);
+            }
+          };
 
   private static final Logger LOG = Logger.getInstance(OrderRootsEnumeratorImpl.class);
   private final OrderEnumeratorBase myOrderEnumerator;
   private final OrderRootType myRootType;
-  private final NotNullFunction<OrderEntry, OrderRootType> myRootTypeProvider;
+  private final Function<OrderEntry, OrderRootType> myRootTypeProvider;
   private boolean myUsingCache;
-  private NotNullFunction<OrderEntry, VirtualFile[]> myCustomRootProvider;
+  private Function<OrderEntry, VirtualFile[]> myCustomRootProvider;
   private boolean myWithoutSelfModuleOutput;
 
   public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, @Nonnull OrderRootType rootType) {
@@ -111,8 +111,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     myRootTypeProvider = null;
   }
 
-  public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator,
-                                  @Nonnull NotNullFunction<OrderEntry, OrderRootType> rootTypeProvider) {
+  public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, @Nonnull Function<OrderEntry, OrderRootType> rootTypeProvider) {
     myOrderEnumerator = orderEnumerator;
     myRootTypeProvider = rootTypeProvider;
     myRootType = null;
@@ -170,25 +169,21 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       OrderRootType type = getRootType(orderEntry);
 
       if (orderEntry instanceof ModuleSourceOrderEntry) {
-        collectRoots(type, ((ModuleSourceOrderEntry)orderEntry).getRootModel(), result, true, !myOrderEnumerator.isProductionOnly(),
-                     ourSourcesToFileFunc, ourRuntimeToFileFunc);
+        collectRoots(type, ((ModuleSourceOrderEntry)orderEntry).getRootModel(), result, true, !myOrderEnumerator.isProductionOnly(), ourSourcesToFileFunc, ourRuntimeToFileFunc);
       }
       else if (orderEntry instanceof ModuleOrderEntry) {
         ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)orderEntry;
         final Module module = moduleOrderEntry.getModule();
         if (module != null) {
           ModuleRootModel rootModel = myOrderEnumerator.getRootModel(module);
-          boolean productionOnTests =
-            orderEntry instanceof ModuleOrderEntryImpl && ((ModuleOrderEntryImpl)orderEntry).isProductionOnTestDependency();
-          boolean includeTests =
-            !myOrderEnumerator.isProductionOnly() && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath() ||
-            productionOnTests;
+          boolean productionOnTests = orderEntry instanceof ModuleOrderEntryImpl && ((ModuleOrderEntryImpl)orderEntry).isProductionOnTestDependency();
+          boolean includeTests = !myOrderEnumerator.isProductionOnly() && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath() || productionOnTests;
           collectRoots(type, rootModel, result, !productionOnTests, includeTests, ourSourcesToFileFunc, ourRuntimeToFileFunc);
         }
       }
       else {
         if (myCustomRootProvider != null) {
-          Collections.addAll(result, myCustomRootProvider.fun(orderEntry));
+          Collections.addAll(result, myCustomRootProvider.apply(orderEntry));
           return true;
         }
         if (myOrderEnumerator.addCustomRootsForLibrary(orderEntry, type, result)) {
@@ -208,19 +203,15 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       OrderRootType type = getRootType(orderEntry);
 
       if (orderEntry instanceof ModuleSourceOrderEntry) {
-        collectRootUrls(type, ((ModuleSourceOrderEntry)orderEntry).getRootModel(), result, true, !myOrderEnumerator.isProductionOnly(), ourSourcesToUrlFunc,
-                        ourRuntimeToUrlFunc);
+        collectRootUrls(type, ((ModuleSourceOrderEntry)orderEntry).getRootModel(), result, true, !myOrderEnumerator.isProductionOnly(), ourSourcesToUrlFunc, ourRuntimeToUrlFunc);
       }
       else if (orderEntry instanceof ModuleOrderEntry) {
         ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)orderEntry;
         final Module module = moduleOrderEntry.getModule();
         if (module != null) {
           ModuleRootModel rootModel = myOrderEnumerator.getRootModel(module);
-          boolean productionOnTests =
-            orderEntry instanceof ModuleOrderEntryImpl && ((ModuleOrderEntryImpl)orderEntry).isProductionOnTestDependency();
-          boolean includeTests =
-            !myOrderEnumerator.isProductionOnly() && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath() ||
-            productionOnTests;
+          boolean productionOnTests = orderEntry instanceof ModuleOrderEntryImpl && ((ModuleOrderEntryImpl)orderEntry).isProductionOnTestDependency();
+          boolean includeTests = !myOrderEnumerator.isProductionOnly() && myOrderEnumerator.shouldIncludeTestsFromDependentModulesToTestClasspath() || productionOnTests;
           collectRootUrls(type, rootModel, result, !productionOnTests, includeTests, ourSourcesToUrlFunc, ourRuntimeToUrlFunc);
         }
       }
@@ -264,24 +255,24 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
 
   @Nonnull
   @Override
-  public OrderRootsEnumerator usingCustomRootProvider(@Nonnull NotNullFunction<OrderEntry, VirtualFile[]> provider) {
+  public OrderRootsEnumerator usingCustomRootProvider(@Nonnull Function<OrderEntry, VirtualFile[]> provider) {
     myCustomRootProvider = provider;
     return this;
   }
 
   private void collectRoots(OrderRootType type,
-                                ModuleRootModel rootModel,
-                                Collection<VirtualFile> result,
-                                final boolean includeProduction,
-                                final boolean includeTests,
-                                NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, VirtualFile[]> funForSources,
-                                NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]> funForRuntime) {
+                            ModuleRootModel rootModel,
+                            Collection<VirtualFile> result,
+                            final boolean includeProduction,
+                            final boolean includeTests,
+                            NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, VirtualFile[]> funForSources,
+                            NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]> funForRuntime) {
 
     ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(rootModel);
     if (type.equals(SourcesOrderRootType.getInstance())) {
       if (includeProduction) {
         Predicate<ContentFolderTypeProvider> predicate = includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production();
-        if(rootsProcessor != null) {
+        if (rootsProcessor != null) {
           rootsProcessor.processFiles(rootModel, predicate, new CommonProcessors.CollectProcessor<>(result));
         }
         else {
@@ -291,7 +282,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         }
       }
       else {
-        if(rootsProcessor != null) {
+        if (rootsProcessor != null) {
           rootsProcessor.processFiles(rootModel, ContentFolderScopes.test(), new CommonProcessors.CollectProcessor<>(result));
         }
         else {
@@ -308,25 +299,24 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         }
       }
       else {
-        Collections.addAll(result, funForRuntime
-          .fun(rootModel, includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production()));
+        Collections.addAll(result, funForRuntime.fun(rootModel, includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production()));
       }
     }
   }
 
   private void collectRootUrls(OrderRootType type,
-                                ModuleRootModel rootModel,
-                                Collection<String> result,
-                                final boolean includeProduction,
-                                final boolean includeTests,
-                                NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]> funForSources,
-                                NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]> funForRuntime) {
+                               ModuleRootModel rootModel,
+                               Collection<String> result,
+                               final boolean includeProduction,
+                               final boolean includeTests,
+                               NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]> funForSources,
+                               NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]> funForRuntime) {
 
     ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(rootModel);
     if (type.equals(SourcesOrderRootType.getInstance())) {
       if (includeProduction) {
         Predicate<ContentFolderTypeProvider> predicate = includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production();
-        if(rootsProcessor != null) {
+        if (rootsProcessor != null) {
           rootsProcessor.processFileUrls(rootModel, predicate, new CommonProcessors.CollectProcessor<>(result));
         }
         else {
@@ -336,7 +326,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         }
       }
       else {
-        if(rootsProcessor != null) {
+        if (rootsProcessor != null) {
           rootsProcessor.processFileUrls(rootModel, ContentFolderScopes.test(), new CommonProcessors.CollectProcessor<>(result));
         }
         else {
@@ -353,13 +343,12 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         }
       }
       else {
-        Collections.addAll(result, funForRuntime
-                .fun(rootModel, includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production()));
+        Collections.addAll(result, funForRuntime.fun(rootModel, includeTests ? ContentFolderScopes.productionAndTest() : ContentFolderScopes.production()));
       }
     }
   }
 
   private OrderRootType getRootType(OrderEntry e) {
-    return myRootType != null ? myRootType : myRootTypeProvider.fun(e);
+    return myRootType != null ? myRootType : myRootTypeProvider.apply(e);
   }
 }

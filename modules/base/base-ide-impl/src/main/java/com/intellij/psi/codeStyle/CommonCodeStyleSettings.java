@@ -16,6 +16,8 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.lang.Language;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import consulo.document.Document;
 import consulo.component.persist.InvalidDataException;
 import consulo.virtualFileSystem.fileType.FileType;

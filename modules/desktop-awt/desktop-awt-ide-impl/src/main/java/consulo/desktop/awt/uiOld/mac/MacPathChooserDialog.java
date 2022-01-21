@@ -19,10 +19,10 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.PathChooserDialog;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -97,7 +97,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
   }
 
   @Override
-  public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+  public void choose(@Nullable VirtualFile toSelect, @Nonnull java.util.function.Consumer<List<VirtualFile>> callback) {
     if (toSelect != null && toSelect.getParent() != null) {
 
       String directoryName;
@@ -169,12 +169,12 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
       }
 
       if (!ArrayUtil.isEmpty(files)) {
-        callback.consume(virtualFileList);
+        callback.accept(virtualFileList);
         return;
       }
     }
-    if (callback instanceof FileChooser.FileChooserConsumer) {
-      ((FileChooser.FileChooserConsumer)callback).cancelled();
+    if (callback instanceof IdeaFileChooser.FileChooserConsumer) {
+      ((IdeaFileChooser.FileChooserConsumer)callback).cancelled();
     }
   }
 

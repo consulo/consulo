@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui.table;
 
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import com.intellij.ui.*;
 import com.intellij.util.ListWithSelection;
 
@@ -27,7 +27,7 @@ import java.util.Collections;
 
 /**
  * Supported value type: {@link ListWithSelection} and {@link java.lang.Enum}.
- * Value type can implement {@link com.intellij.openapi.util.Iconable} to display icon.
+ * Value type can implement {@link Iconable} to display icon.
  */
 public class ComboBoxTableCellEditor extends DefaultCellEditor {
   public static final ComboBoxTableCellEditor INSTANCE = new ComboBoxTableCellEditor();

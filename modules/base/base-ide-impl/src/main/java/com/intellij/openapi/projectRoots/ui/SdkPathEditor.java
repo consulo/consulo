@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.projectRoots.ui;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
 import consulo.content.OrderRootType;

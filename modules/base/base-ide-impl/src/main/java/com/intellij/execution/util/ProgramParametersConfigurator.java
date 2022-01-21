@@ -30,7 +30,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.EnvironmentUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.SystemIndependent;
 
 import javax.annotation.Nonnull;
@@ -95,7 +95,7 @@ public class ProgramParametersConfigurator {
 
   @Nullable
   protected String getDefaultWorkingDir(@Nonnull Project project) {
-    return PathUtil.getLocalPath(project.getBaseDir());
+    return VirtualFilePathUtil.getLocalPath(project.getBaseDir());
   }
 
   @Nullable
@@ -106,7 +106,7 @@ public class ProgramParametersConfigurator {
     }
     VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
     if (roots.length > 0) {
-      return PathUtil.getLocalPath(roots[0]);
+      return VirtualFilePathUtil.getLocalPath(roots[0]);
     }
     return null;
   }

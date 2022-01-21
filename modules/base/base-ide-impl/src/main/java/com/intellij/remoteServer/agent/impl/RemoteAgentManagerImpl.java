@@ -4,7 +4,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import consulo.remoteServer.agent.RemoteAgent;
 import com.intellij.remoteServer.agent.RemoteAgentManager;
 import com.intellij.remoteServer.agent.RemoteAgentProxyFactory;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
 import jakarta.inject.Singleton;
 import java.io.File;
@@ -38,10 +38,10 @@ public class RemoteAgentManagerImpl extends RemoteAgentManager {
     libraries.addAll(instanceLibraries);
 
     for (Class<?> clazz : allCommonJarClasses) {
-      libraries.add(new File(PathUtil.getJarPathForClass(clazz)));
+      libraries.add(new File(VirtualFilePathUtil.getJarPathForClass(clazz)));
     }
 
-    File plugin = new File(PathUtil.getJarPathForClass(pluginClass));
+    File plugin = new File(VirtualFilePathUtil.getJarPathForClass(pluginClass));
     String allPluginsDir = plugin.getParent();
     if (plugin.isDirectory()) {
       // runtime behavior

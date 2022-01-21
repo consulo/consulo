@@ -22,7 +22,7 @@ import consulo.module.layer.orderEntry.*;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import consulo.virtualFileSystem.VirtualFile;

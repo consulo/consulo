@@ -165,14 +165,14 @@ public class GeneralCommandLine implements UserDataHolder {
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use #getParentEnvironmentType()", until = "3.0")
+  @DeprecationInfo(value = "Use #getParentEnvironmentType()")
   public boolean isPassParentEnvironment() {
     return myParentEnvironmentType != ParentEnvironmentType.NONE;
   }
 
   @Nonnull
   @Deprecated
-  @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)", until = "3.0")
+  @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)")
   public GeneralCommandLine withPassParentEnvironment(boolean passParentEnvironment) {
     withParentEnvironmentType(passParentEnvironment ? ParentEnvironmentType.CONSOLE : ParentEnvironmentType.NONE);
     return this;
@@ -180,7 +180,7 @@ public class GeneralCommandLine implements UserDataHolder {
 
   @Nonnull
   @Deprecated
-  @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)", until = "3.0")
+  @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)")
   public void setPassParentEnvironment(boolean passParentEnvironment) {
     withPassParentEnvironment(passParentEnvironment);
   }

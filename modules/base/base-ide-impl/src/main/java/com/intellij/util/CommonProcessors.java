@@ -57,7 +57,7 @@ public class CommonProcessors {
 
     @Nonnull
     @Deprecated
-    @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)", until = "2.0")
+    @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)")
     public T[] toArray(@Nonnull T[] a) {
       return myCollection.toArray(a);
     }
@@ -99,7 +99,7 @@ public class CommonProcessors {
 
     @Nonnull
     @Deprecated
-    @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)", until = "2.0")
+    @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)")
     public T[] toArray(@Nonnull T[] a) {
       return myCollection.toArray(a);
     }

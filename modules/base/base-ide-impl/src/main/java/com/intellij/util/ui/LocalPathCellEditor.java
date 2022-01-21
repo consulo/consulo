@@ -15,9 +15,9 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.SystemInfo;
@@ -25,7 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -72,7 +72,7 @@ public class LocalPathCellEditor extends AbstractTableCellEditor {
   @Override
   public Object getCellEditorValue() {
     String value = myComponent.getChildComponent().getText();
-    return myNormalizePath ? PathUtil.toSystemDependentName(StringUtil.nullize(value)) : value;
+    return myNormalizePath ? VirtualFilePathUtil.toSystemDependentName(StringUtil.nullize(value)) : value;
   }
 
   @Override
@@ -88,7 +88,7 @@ public class LocalPathCellEditor extends AbstractTableCellEditor {
       public void actionPerformed(ActionEvent e) {
         String initial = (String)getCellEditorValue();
         VirtualFile initialFile = StringUtil.isNotEmpty(initial) ? LocalFileSystem.getInstance().findFileByPath(initial) : null;
-        FileChooser.chooseFile(getFileChooserDescriptor(), myProject, table, initialFile, new Consumer<VirtualFile>() {
+        IdeaFileChooser.chooseFile(getFileChooserDescriptor(), myProject, table, initialFile, new Consumer<VirtualFile>() {
           @Override
           public void consume(VirtualFile file) {
             String path = file.getPresentableUrl();

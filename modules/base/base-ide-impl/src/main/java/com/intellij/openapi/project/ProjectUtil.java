@@ -34,7 +34,7 @@ import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.PathUtilRt;
+import com.intellij.util.PathUtil;
 import com.intellij.util.io.PathKt;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
@@ -69,7 +69,7 @@ public class ProjectUtil {
 
   private static String getProjectCacheFileName(Project project, boolean forceNameUse, String hashSeparator) {
     String presentableUrl = project.getPresentableUrl();
-    String name = forceNameUse || presentableUrl == null ? project.getName() : PathUtilRt.getFileName(presentableUrl).toLowerCase(Locale.US);
+    String name = forceNameUse || presentableUrl == null ? project.getName() : PathUtil.getFileName(presentableUrl).toLowerCase(Locale.US);
 
     name = PathKt.sanitizeFileName(name, false);
 

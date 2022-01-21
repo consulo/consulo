@@ -15,12 +15,12 @@
  */
 package consulo.components.impl.stores.storage;
 
-import com.intellij.openapi.components.StateSplitterEx;
+import consulo.component.persist.StateSplitterEx;
 import com.intellij.openapi.components.StateStorageException;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.Storage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.util.containers.Interner;

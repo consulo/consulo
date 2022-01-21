@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;

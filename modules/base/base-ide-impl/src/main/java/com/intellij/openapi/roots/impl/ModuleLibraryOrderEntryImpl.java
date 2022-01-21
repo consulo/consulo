@@ -26,10 +26,10 @@ import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
+import consulo.content.library.Library;
+import consulo.content.library.PersistentLibraryKind;
 import consulo.disposer.Disposer;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.ModuleLibraryOrderEntryType;
 import consulo.roots.types.BinariesOrderRootType;
@@ -104,7 +104,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
       final String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
       if (urls.length > 0) {
         String url = urls[0];
-        return PathUtil.toPresentableUrl(url);
+        return VirtualFilePathUtil.toPresentableUrl(url);
       }
       else {
         return ProjectBundle.message("library.empty.library.item");

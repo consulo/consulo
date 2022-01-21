@@ -24,9 +24,9 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
@@ -54,7 +54,7 @@ import com.intellij.psi.search.UseScopeEnlarger;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usages.impl.rules.UsageType;
 import com.intellij.usages.impl.rules.UsageTypeProvider;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IndexableSetContributor;
@@ -324,12 +324,12 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       if (file != null && !file.isDirectory()) return file;
       if (option == Option.existing_only) return null;
     }
-    String ext = PathUtil.getFileExtension(pathName);
-    String fileNameExt = PathUtil.getFileName(pathName);
+    String ext = VirtualFilePathUtil.getFileExtension(pathName);
+    String fileNameExt = VirtualFilePathUtil.getFileName(pathName);
     String fileName = StringUtil.trimEnd(fileNameExt, ext == null ? "" : "." + ext);
     AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(getClass());
     try {
-      VirtualFile dir = VfsUtil.createDirectories(PathUtil.getParentPath(fullPath));
+      VirtualFile dir = VfsUtil.createDirectories(VirtualFilePathUtil.getParentPath(fullPath));
       if (option == Option.create_new_always) {
         return VfsUtil.createChildSequent(LocalFileSystem.getInstance(), dir, fileName, StringUtil.notNullize(ext));
       }

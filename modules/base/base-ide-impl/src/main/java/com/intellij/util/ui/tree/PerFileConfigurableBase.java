@@ -12,9 +12,10 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.component.util.Iconable;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
@@ -242,7 +243,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     Object selectedTarget = row >= 0 ? myModel.data.get(myTable.convertRowIndexToModel(row)).first : null;
     VirtualFile toSelect = myFileToSelect != null ? myFileToSelect : ObjectUtils.tryCast(selectedTarget, VirtualFile.class);
     FileChooserDescriptor descriptor = new FileChooserDescriptor(!param(ONLY_DIRECTORIES), true, true, true, true, true);
-    FileChooser.chooseFiles(descriptor, myProject, myTable, toSelect, this::doAddFiles);
+    IdeaFileChooser.chooseFiles(descriptor, myProject, myTable, toSelect, this::doAddFiles);
   }
 
   private void doAddFiles(@Nonnull List<? extends VirtualFile> files) {

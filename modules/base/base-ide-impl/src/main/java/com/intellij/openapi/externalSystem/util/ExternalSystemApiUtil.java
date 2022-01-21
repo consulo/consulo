@@ -33,7 +33,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
@@ -44,8 +44,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.NullableFunction;
-import com.intellij.util.PathUtil;
-import com.intellij.util.PathsList;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import consulo.virtualFileSystem.util.PathsList;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
@@ -208,7 +208,7 @@ public class ExternalSystemApiUtil {
   public static String toCanonicalPath(@Nonnull String path) {
     String p = normalizePath(new File(path).getAbsolutePath());
     assert p != null;
-    return PathUtil.getCanonicalPath(p);
+    return VirtualFilePathUtil.getCanonicalPath(p);
   }
 
   @Nonnull

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.components;
 
+import consulo.component.persist.Storage;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;

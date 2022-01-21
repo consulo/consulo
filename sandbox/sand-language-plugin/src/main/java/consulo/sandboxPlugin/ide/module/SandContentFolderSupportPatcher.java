@@ -19,7 +19,7 @@ import consulo.module.layer.ModifiableRootModel;
 import consulo.roots.impl.*;
 import javax.annotation.Nonnull;
 import consulo.module.layer.ContentFolderSupportPatcher;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 
 import java.util.Set;

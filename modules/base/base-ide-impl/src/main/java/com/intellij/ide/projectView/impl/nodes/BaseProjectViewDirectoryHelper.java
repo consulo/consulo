@@ -28,7 +28,7 @@ import com.intellij.ide.util.treeView.TreeViewUtil;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleFileIndex;
+import consulo.module.content.ModuleFileIndex;
 import consulo.module.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -39,7 +39,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
 import consulo.ide.projectView.impl.nodes.PackageElement;
@@ -67,7 +67,7 @@ public class BaseProjectViewDirectoryHelper {
     final VirtualFile directory = psiDirectory.getVirtualFile();
     final VirtualFile contentRootForFile = ProjectRootManager.getInstance(psiDirectory.getProject()).getFileIndex().getContentRootForFile(directory);
     if (Comparing.equal(contentRootForFile, psiDirectory)) {
-      return PathUtil.toPresentableUrl(directory.getUrl());
+      return VirtualFilePathUtil.toPresentableUrl(directory.getUrl());
     }
     return null;
   }

@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
+import consulo.content.library.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import consulo.configurable.internal.ConfigurableWeight;

@@ -17,6 +17,8 @@ package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Couple;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.Storage;
 import consulo.components.impl.stores.StreamProvider;
 
 import javax.annotation.Nonnull;

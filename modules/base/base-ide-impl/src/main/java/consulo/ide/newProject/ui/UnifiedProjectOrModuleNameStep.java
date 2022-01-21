@@ -15,7 +15,7 @@
  */
 package consulo.ide.newProject.ui;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.disposer.Disposable;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.ide.ui.TextComponentAccessor;

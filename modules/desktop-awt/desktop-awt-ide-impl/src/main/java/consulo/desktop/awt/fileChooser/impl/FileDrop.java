@@ -16,7 +16,7 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import com.intellij.ide.dnd.FileCopyPasteUtil;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 

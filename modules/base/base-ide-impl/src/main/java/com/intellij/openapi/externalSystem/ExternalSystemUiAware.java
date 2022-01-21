@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

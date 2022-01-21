@@ -13,11 +13,11 @@ import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.StandardFileSystems;
+import consulo.virtualFileSystem.StandardFileSystems;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.boot.ContainerPathManager;
@@ -78,7 +78,7 @@ public class VfsRootAccess {
             break;
           }
           if (root.startsWith(StandardFileSystems.JAR_PROTOCOL_PREFIX)) {
-            String rootLocalPath = FileUtil.toSystemIndependentName(PathUtil.toPresentableUrl(root));
+            String rootLocalPath = FileUtil.toSystemIndependentName(VirtualFilePathUtil.toPresentableUrl(root));
             isUnder = FileUtil.startsWith(childPath, rootLocalPath);
             if (isUnder) break;
           }

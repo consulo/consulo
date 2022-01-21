@@ -18,7 +18,7 @@ package com.intellij.openapi.paths;
 
 import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;

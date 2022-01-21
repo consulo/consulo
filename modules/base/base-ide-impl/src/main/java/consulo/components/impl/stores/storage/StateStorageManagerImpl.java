@@ -22,10 +22,13 @@ import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PathUtilRt;
+import com.intellij.util.PathUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBus;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.StateSplitterEx;
+import consulo.component.persist.Storage;
 import consulo.components.impl.stores.StreamProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -224,7 +227,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private StateStorage createFileStateStorage(@Nonnull String fileSpec, @Nullable RoamingType roamingType) {
     String filePath = FileUtil.toSystemIndependentName(expandMacros(fileSpec));
 
-    if (!ourHeadlessEnvironment && PathUtilRt.getFileName(filePath).lastIndexOf('.') < 0) {
+    if (!ourHeadlessEnvironment && PathUtil.getFileName(filePath).lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("Extension is missing for storage file: " + filePath);
     }
 

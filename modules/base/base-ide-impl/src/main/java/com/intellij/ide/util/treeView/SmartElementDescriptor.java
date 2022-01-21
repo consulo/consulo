@@ -21,7 +21,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;

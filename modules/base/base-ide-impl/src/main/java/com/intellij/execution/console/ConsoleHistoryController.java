@@ -53,7 +53,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
 import consulo.container.boot.ContainerPathManager;
@@ -466,7 +466,7 @@ public class ConsoleHistoryController {
     }
 
     public boolean loadHistoryOld(String id) {
-      File file = new File(PathUtil.toSystemDependentName(getOldHistoryFilePath(id)));
+      File file = new File(VirtualFilePathUtil.toSystemDependentName(getOldHistoryFilePath(id)));
       if (!file.exists()) return false;
       try {
         Element rootElement = JDOMUtil.load(file);
@@ -491,7 +491,7 @@ public class ConsoleHistoryController {
     }
 
     private void saveHistoryOld() {
-      File file = new File(PathUtil.toSystemDependentName(getOldHistoryFilePath(myId)));
+      File file = new File(VirtualFilePathUtil.toSystemDependentName(getOldHistoryFilePath(myId)));
       final File dir = file.getParentFile();
       if (!dir.exists() && !dir.mkdirs() || !dir.isDirectory()) {
         LOG.error("failed to create folder: " + dir.getAbsolutePath());
@@ -568,12 +568,12 @@ public class ConsoleHistoryController {
 
   @Nonnull
   private static String getHistoryName(@Nonnull ConsoleRootType rootType, @Nonnull String id) {
-    return rootType.getConsoleTypeId() + "/" + PathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());
+    return rootType.getConsoleTypeId() + "/" + VirtualFilePathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());
   }
 
   @Nullable
   public static VirtualFile getContentFile(@Nonnull final ConsoleRootType rootType, @Nonnull String id, ScratchFileService.Option option) {
-    final String pathName = PathUtil.makeFileName(rootType.getContentPathName(id), rootType.getDefaultFileExtension());
+    final String pathName = VirtualFilePathUtil.makeFileName(rootType.getContentPathName(id), rootType.getDefaultFileExtension());
     try {
       return rootType.findFile(null, pathName, option);
     }

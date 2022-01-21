@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import javax.annotation.Nonnull;
 
 /**
@@ -36,7 +36,7 @@ public class DirectoryCopyPresentation extends PackagingElementPresentation {
   private final VirtualFile myFile;
 
   public DirectoryCopyPresentation(String filePath) {
-    mySourceFileName = PathUtil.getFileName(filePath);
+    mySourceFileName = VirtualFilePathUtil.getFileName(filePath);
 
     String parentPath;
     myFile = LocalFileSystem.getInstance().findFileByPath(filePath);
@@ -45,7 +45,7 @@ public class DirectoryCopyPresentation extends PackagingElementPresentation {
       parentPath = parent != null ? FileUtil.toSystemDependentName(parent.getPath()) : "";
     }
     else {
-      parentPath = FileUtil.toSystemDependentName(PathUtil.getParentPath(filePath));
+      parentPath = FileUtil.toSystemDependentName(VirtualFilePathUtil.getParentPath(filePath));
     }
 
     mySourcePath = parentPath;

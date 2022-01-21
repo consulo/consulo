@@ -16,32 +16,32 @@
 
 package com.intellij.openapi.roots.impl;
 
-import consulo.module.ProjectTopics;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.module.ProjectTopics;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.layer.ContentEntry;
+import consulo.module.layer.ModifiableModuleRootLayer;
 import consulo.module.layer.ModifiableRootModel;
+import consulo.module.layer.ModuleRootLayer;
+import consulo.module.layer.event.ModuleRootLayerListener;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.logging.Logger;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.module.layer.ModifiableModuleRootLayer;
-import consulo.module.layer.ModuleRootLayer;
-import consulo.module.layer.event.ModuleRootLayerListener;
 import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -282,7 +282,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       if (toCommit == null) {
         toCommit = new ModuleRootLayerImpl(null, sourceModel);
         ModuleRootLayerImpl layer = sourceModel.myLayers.put(entry.getKey(), toCommit);
-        if(layer != null) {
+        if (layer != null) {
           Disposer.dispose(layer);
         }
       }

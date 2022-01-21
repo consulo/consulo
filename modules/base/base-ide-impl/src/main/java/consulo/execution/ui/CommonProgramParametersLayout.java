@@ -21,10 +21,10 @@ import com.intellij.execution.configuration.EnvironmentVariablesTextFieldWithBro
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.execution.ParametersListUtil;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
@@ -154,7 +154,7 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
 
   public void reset(P configuration) {
     setProgramParameters(configuration.getProgramParameters());
-    setWorkingDirectory(PathUtil.toSystemDependentName(configuration.getWorkingDirectory()));
+    setWorkingDirectory(VirtualFilePathUtil.toSystemDependentName(configuration.getWorkingDirectory()));
 
     myEnvVariablesComponent.setEnvs(configuration.getEnvs());
     myEnvVariablesComponent.setPassParentEnvs(configuration.isPassParentEnvs());

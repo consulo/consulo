@@ -41,7 +41,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithoutContent;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.LineSeparator;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.execution.ParametersListUtil;
@@ -513,7 +513,7 @@ public class ExternalDiffToolUtil {
       }
       if (name.length() > 50) name = name.substring(0, 50);
 
-      return PathUtil.suggestFileName(name + "." + ext, true, false);
+      return VirtualFilePathUtil.suggestFileName(name + "." + ext, true, false);
     }
   }
 }

@@ -8,6 +8,8 @@ import com.intellij.find.findInProject.FindInProjectManager;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.application.ReadAction;
+import consulo.content.ContentIterator;
+import consulo.content.FileIndex;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.module.Module;
@@ -46,6 +48,7 @@ import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileFilter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

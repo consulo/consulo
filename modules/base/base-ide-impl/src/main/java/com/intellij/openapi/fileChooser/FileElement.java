@@ -15,15 +15,14 @@
  */
 package com.intellij.openapi.fileChooser;
 
-import consulo.virtualFileSystem.archive.ArchiveFileType;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.SystemInfo;
-import consulo.virtualFileSystem.VFileProperty;
+import consulo.fileChooser.util.FileChooserUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 
 public class FileElement {
@@ -99,21 +98,10 @@ public class FileElement {
   }
 
   public static boolean isFileHidden(@Nullable VirtualFile file) {
-    return file != null &&
-           file.isValid() &&
-           file.isInLocalFileSystem() &&
-           (file.is(VFileProperty.HIDDEN) || SystemInfo.isUnix && file.getName().startsWith("."));
+    return FileChooserUtil.isFileHidden(file);
   }
 
   public static boolean isArchive(@Nullable VirtualFile file) {
-    if (file == null) return false;
-    if (isArchiveFileSystem(file) && file.getParent() == null) return true;
-    return !file.isDirectory() &&
-           file.getFileType() instanceof ArchiveFileType &&
-           !isArchiveFileSystem(file.getParent());
-  }
-
-  private static boolean isArchiveFileSystem(VirtualFile file) {
-    return file.getFileSystem() instanceof ArchiveFileSystem;
+    return FileChooserUtil.isArchive(file);
   }
 }

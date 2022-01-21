@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import consulo.module.layer.ContentFolder;
 import consulo.module.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.annotation.DeprecationInfo;

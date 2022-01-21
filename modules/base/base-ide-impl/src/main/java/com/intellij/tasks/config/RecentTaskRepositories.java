@@ -24,6 +24,8 @@ import com.intellij.tasks.impl.TaskManagerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import org.jdom.Element;

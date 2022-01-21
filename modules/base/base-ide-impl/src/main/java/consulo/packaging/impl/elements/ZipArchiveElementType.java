@@ -27,7 +27,7 @@ import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.impl.elements.FilePathValidator;
 import com.intellij.packaging.impl.elements.PackagingElementFactoryImpl;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -69,8 +69,8 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
       return null;
     }
     path = FileUtil.toSystemIndependentName(path);
-    final String parentPath = PathUtil.getParentPath(path);
-    final String fileName = PathUtil.getFileName(path);
+    final String parentPath = VirtualFilePathUtil.getParentPath(path);
+    final String fileName = VirtualFilePathUtil.getFileName(path);
     final PackagingElement<?> element = new ZipArchivePackagingElement(fileName);
     return (CompositePackagingElement<?>)PackagingElementFactory.getInstance(context.getProject()).createParentDirectories(parentPath, element);
   }

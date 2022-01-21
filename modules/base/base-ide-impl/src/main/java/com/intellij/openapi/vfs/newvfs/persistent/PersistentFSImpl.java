@@ -1168,7 +1168,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     }
 
     // avoid creating zillion of roots which are not actual roots
-    String parentPath = fs instanceof LocalFileSystem ? PathUtilRt.getParentPath(rootPath) : "";
+    String parentPath = fs instanceof LocalFileSystem ? PathUtil.getParentPath(rootPath) : "";
     if (!parentPath.isEmpty()) {
       FileAttributes parentAttributes = fs.getAttributes(new StubVirtualFile() {
         @Nonnull

@@ -30,7 +30,7 @@ import com.intellij.ui.table.TableView;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ComboBoxCellEditor;
 import com.intellij.util.ui.ListTableModel;
-import consulo.roots.ContentFolderPropertyProvider;
+import consulo.module.layer.ContentFolderPropertyProvider;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

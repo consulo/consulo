@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
+import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

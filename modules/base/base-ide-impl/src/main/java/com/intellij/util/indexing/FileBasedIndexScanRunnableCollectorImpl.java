@@ -17,6 +17,7 @@ package com.intellij.util.indexing;
 
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.content.ContentIterator;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.module.ModuleRootManager;

@@ -26,7 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -65,9 +65,9 @@ public class ScratchUtil {
     String ext = actual.getDefaultExtension();
     if (StringUtil.isEmpty(ext)) return;
 
-    String newName = PathUtil.makeFileName(file.getNameWithoutExtension(), ext);
+    String newName = VirtualFilePathUtil.makeFileName(file.getNameWithoutExtension(), ext);
     VirtualFile parent = file.getParent();
-    newName = parent != null && parent.findChild(newName) != null ? PathUtil.makeFileName(file.getName(), ext) : newName;
+    newName = parent != null && parent.findChild(newName) != null ? VirtualFilePathUtil.makeFileName(file.getName(), ext) : newName;
     file.rename(ScratchUtil.class, newName);
   }
 

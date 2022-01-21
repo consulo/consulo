@@ -34,7 +34,7 @@ import javax.swing.*;
  */
 public abstract class EditorNotifications  {
   @Deprecated
-  @DeprecationInfo(value = "Use consulo.editor.notifications.EditorNotificationProvider", until = "2.0")
+  @DeprecationInfo(value = "Use consulo.editor.notifications.EditorNotificationProvider")
   public abstract static class Provider<T extends JComponent> implements EditorNotificationProvider<T> {
     @Override
     @Nonnull

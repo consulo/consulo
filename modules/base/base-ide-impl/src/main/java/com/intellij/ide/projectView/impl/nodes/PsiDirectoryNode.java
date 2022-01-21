@@ -40,7 +40,7 @@ import com.intellij.pom.NavigatableWithText;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -147,7 +147,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
     VirtualFile directory = value.getVirtualFile();
     if (directory.getFileSystem() instanceof LocalFileSystem) {
-      file = PathUtil.getLocalFile(file);
+      file = VirtualFilePathUtil.getLocalFile(file);
     }
 
     if (!VfsUtilCore.isAncestor(directory, file, false)) {

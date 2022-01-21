@@ -7,6 +7,7 @@ module consulo.module.api {
   requires java.desktop;
 
   requires transitive consulo.project.api;
+  requires transitive consulo.application.content.api;
   requires transitive org.jdom;
 
   exports consulo.module;
@@ -18,4 +19,5 @@ module consulo.module.api {
   exports consulo.module.layer;
   exports consulo.module.layer.event;
   exports consulo.module.layer.orderEntry;
+  exports consulo.module.content;
 }

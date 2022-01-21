@@ -35,12 +35,12 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.StandardFileSystems;
+import consulo.virtualFileSystem.StandardFileSystems;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.ZipUtil;
@@ -398,7 +398,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
                                  @Nonnull final String[] additionalParameters) {
     Runnable launchTask = null;
     if (browserPath == null && browser != null) {
-      browserPath = PathUtil.toSystemDependentName(browser.getPath());
+      browserPath = VirtualFilePathUtil.toSystemDependentName(browser.getPath());
       launchTask = new Runnable() {
         @Override
         public void run() {

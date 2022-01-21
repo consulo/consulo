@@ -208,7 +208,7 @@
     <fileSaveDialogProvider implementation="consulo.desktop.awt.fileChooser.impl.system.MacFileSaveDialogProvider"/>
     <fileSaveDialogProvider implementation="consulo.desktop.awt.fileChooser.impl.DesktopFileSaveDialogProvider" order="last"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
+    <applicationService serviceInterface="consulo.fileChooser.FileChooserFactory"
                         serviceImplementation="consulo.desktop.awt.fileChooser.impl.DesktopFileChooserFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.desktop.awt.wm.impl.dock.DesktopSystemDockImpl"/>

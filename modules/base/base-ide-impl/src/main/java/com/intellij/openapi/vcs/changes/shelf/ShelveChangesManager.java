@@ -18,12 +18,14 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.concurrency.JobScheduler;
 import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.components.RoamingType;
+import consulo.component.persist.RoamingType;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.diff.impl.patch.*;
@@ -50,14 +52,14 @@ import com.intellij.openapi.vcs.changes.ui.RollbackWorker;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
 import com.intellij.util.text.CharArrayCharSequence;
-import com.intellij.util.text.UniqueNameGenerator;
+import consulo.component.util.text.UniqueNameGenerator;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.FilesProgress;
 import consulo.disposer.Disposer;
@@ -270,7 +272,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
       if (file.SHELVED_PATH != null) {
         File shelvedFile = new File(file.SHELVED_PATH);
         if (!StringUtil.isEmptyOrSpaces(file.AFTER_PATH) && shelvedFile.exists()) {
-          File newShelvedFile = new File(targetDirectory, PathUtil.getFileName(file.AFTER_PATH));
+          File newShelvedFile = new File(targetDirectory, VirtualFilePathUtil.getFileName(file.AFTER_PATH));
           try {
             FileUtil.copy(shelvedFile, newShelvedFile);
             file.SHELVED_PATH = FileUtil.toSystemIndependentName(newShelvedFile.getPath());

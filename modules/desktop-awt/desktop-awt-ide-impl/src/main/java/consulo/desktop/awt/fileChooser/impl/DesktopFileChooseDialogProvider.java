@@ -15,11 +15,12 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
+import consulo.component.ComponentManager;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.PathChooserDialog;
+import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.project.Project;
-import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,23 +45,23 @@ public class DesktopFileChooseDialogProvider implements FileChooseDialogProvider
 
   @Nonnull
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     if (parent != null) {
-      return new FileChooserDialogImpl(descriptor, parent, project);
+      return new FileChooserDialogImpl(descriptor, parent, (Project)project);
     }
     else {
-      return new FileChooserDialogImpl(descriptor, project);
+      return new FileChooserDialogImpl(descriptor, (Project)project);
     }
   }
 
   @Nonnull
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     if (parent != null) {
-      return new FileChooserDialogImpl(descriptor, parent, project);
+      return new FileChooserDialogImpl(descriptor, parent, (Project)project);
     }
     else {
-      return new FileChooserDialogImpl(descriptor, project);
+      return new FileChooserDialogImpl(descriptor, (Project)project);
     }
   }
 }

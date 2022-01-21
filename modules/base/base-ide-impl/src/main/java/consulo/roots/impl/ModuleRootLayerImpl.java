@@ -15,45 +15,47 @@
  */
 package consulo.roots.impl;
 
-import com.google.common.base.Predicate;
+import com.intellij.openapi.roots.impl.*;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.function.Processor;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
+import consulo.module.extension.impl.ModuleExtensionImpl;
+import consulo.module.extension.impl.ModuleExtensionIndexCache;
 import consulo.module.extension.impl.ModuleExtensionProviderEP;
+import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.module.layer.ContentEntry;
 import consulo.module.layer.ContentFolder;
+import consulo.module.layer.ModifiableModuleRootLayer;
 import consulo.module.layer.OrderEnumerator;
 import consulo.module.layer.orderEntry.*;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.roots.impl.*;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.roots.ContentFolderScopes;
+import consulo.roots.orderEntry.OrderEntrySerializationUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
-import com.intellij.util.ArrayUtil;
-import consulo.application.util.function.Processor;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.module.extension.*;
-import consulo.module.extension.impl.ModuleExtensionImpl;
-import consulo.module.extension.impl.ModuleExtensionIndexCache;
-import consulo.module.extension.impl.ModuleExtensionProviders;
-import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
-import consulo.module.layer.ModifiableModuleRootLayer;
-import consulo.roots.orderEntry.OrderEntrySerializationUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL

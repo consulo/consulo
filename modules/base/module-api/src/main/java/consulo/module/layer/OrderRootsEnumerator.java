@@ -22,6 +22,7 @@ import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * Interface for processing roots of OrderEntry's from {@link OrderEnumerator}.
@@ -83,5 +84,5 @@ public interface OrderRootsEnumerator {
    * @return this instance
    */
   @Nonnull
-  OrderRootsEnumerator usingCustomRootProvider(@Nonnull NotNullFunction<OrderEntry, VirtualFile[]> provider);
+  OrderRootsEnumerator usingCustomRootProvider(@Nonnull Function<OrderEntry, VirtualFile[]> provider);
 }

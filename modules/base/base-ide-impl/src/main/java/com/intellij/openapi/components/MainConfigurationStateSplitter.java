@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.components;
 
-import com.intellij.util.text.UniqueNameGenerator;
+import consulo.component.util.text.UniqueNameGenerator;
+import consulo.component.persist.StateSplitterEx;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Pair;
 import org.jdom.Element;

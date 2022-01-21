@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
 
@@ -85,7 +85,7 @@ class VirtualFilePointerImpl implements VirtualFilePointer {
     FilePointerPartNode node = checkDisposed(myNode);
     if (node == null) return "";
     Pair<VirtualFile, String> result = node.update();
-    return result == null ? "" : PathUtil.toPresentableUrl(result.second);
+    return result == null ? "" : VirtualFilePathUtil.toPresentableUrl(result.second);
   }
 
   private FilePointerPartNode checkDisposed(FilePointerPartNode node) {

@@ -17,12 +17,14 @@
 package com.intellij.openapi.roots.impl.libraries;
 
 import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.content.library.PersistentLibraryKind;
 import com.intellij.openapi.util.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;

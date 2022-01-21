@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.ui.configuration.libraries;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryKind;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryKind;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.roots.ui.configuration.LibrariesConfigurator;

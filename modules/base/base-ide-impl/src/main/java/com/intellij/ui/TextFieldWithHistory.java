@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.fileChooser.FileTextField;
+import consulo.fileChooser.FileTextField;
 import com.intellij.openapi.ui.ComboBox;
 
 import javax.swing.*;

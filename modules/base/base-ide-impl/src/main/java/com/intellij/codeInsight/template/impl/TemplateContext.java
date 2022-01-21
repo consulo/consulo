@@ -20,7 +20,7 @@ package com.intellij.codeInsight.template.impl;
 import com.intellij.codeInsight.template.EverywhereContextType;
 import com.intellij.codeInsight.template.TemplateContextType;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

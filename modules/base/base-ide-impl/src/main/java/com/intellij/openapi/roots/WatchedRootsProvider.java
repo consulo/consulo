@@ -15,17 +15,20 @@
  */
 package com.intellij.openapi.roots;
 
-import consulo.component.extension.ExtensionPointName;
-import javax.annotation.Nonnull;
+import consulo.component.extension.ExtensionList;
+import consulo.component.extension.ExtensionType;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
  * @author anna
  * @since 27-Dec-2007
  */
+@ExtensionType(value = "roots.watchedRootsProvider", component = Project.class)
 public interface WatchedRootsProvider {
-  ExtensionPointName<WatchedRootsProvider> EP_NAME = ExtensionPointName.create("consulo.roots.watchedRootsProvider");
+  ExtensionList<WatchedRootsProvider, Project> EP = ExtensionList.of(WatchedRootsProvider.class);
 
   @Nonnull
   Set<String> getRootsToWatch();

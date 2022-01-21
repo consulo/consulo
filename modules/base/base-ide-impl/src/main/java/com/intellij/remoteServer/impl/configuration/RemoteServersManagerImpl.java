@@ -11,6 +11,8 @@ import consulo.component.messagebus.MessageBus;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

@@ -23,7 +23,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
 import consulo.util.collection.HashingStrategy;
 
@@ -66,7 +66,7 @@ public class RemoteFilePath implements FilePath {
   @Nonnull
   @Override
   public String getName() {
-    return PathUtil.getFileName(myPath);
+    return VirtualFilePathUtil.getFileName(myPath);
   }
 
   @Nonnull
@@ -127,7 +127,7 @@ public class RemoteFilePath implements FilePath {
   @Nullable
   @Override
   public FilePath getParentPath() {
-    String parent = PathUtil.getParentPath(myPath);
+    String parent = VirtualFilePathUtil.getParentPath(myPath);
     return parent.isEmpty() ? null : new RemoteFilePath(parent, true);
   }
 

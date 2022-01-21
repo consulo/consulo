@@ -15,27 +15,28 @@
  */
 package consulo.desktop.awt.uiOld.win;
 
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
-import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.OwnerOptional;
+import consulo.application.ApplicationManager;
+import consulo.component.ComponentManager;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.PathChooserDialog;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -97,7 +98,7 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
   }
 
   @Override
-  public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+  public void choose(@Nullable VirtualFile toSelect, @Nonnull java.util.function.Consumer<List<VirtualFile>> callback) {
     if (toSelect != null && toSelect.getParent() != null) {
 
       String directoryName;
@@ -165,10 +166,10 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
       }
 
       if (!ArrayUtil.isEmpty(files)) {
-        callback.consume(virtualFileList);
+        callback.accept(virtualFileList);
       }
-      else if (callback instanceof FileChooser.FileChooserConsumer) {
-        ((FileChooser.FileChooserConsumer)callback).cancelled();
+      else if (callback instanceof IdeaFileChooser.FileChooserConsumer) {
+        ((IdeaFileChooser.FileChooserConsumer)callback).cancelled();
       }
     }
   }
@@ -259,14 +260,14 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
   @Nonnull
   @RequiredUIAccess
   @Override
-  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelectFiles) {
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelectFiles) {
     VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
     return chooseAsync(toSelect);
   }
 
   @Nonnull
   @Override
-  public VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelectFiles) {
+  public VirtualFile[] choose(@Nullable ComponentManager project, @Nonnull VirtualFile... toSelectFiles) {
     VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
     choose(toSelect, files -> {
     });

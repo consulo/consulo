@@ -16,9 +16,9 @@
 package consulo.module.layer;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.content.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
-
 import java.util.Set;
 
 /**

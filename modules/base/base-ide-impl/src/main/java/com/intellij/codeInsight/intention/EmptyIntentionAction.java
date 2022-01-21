@@ -20,7 +20,7 @@ import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.openapi.util.Iconable;
+import consulo.component.util.Iconable;
 import com.intellij.psi.PsiFile;
 import consulo.ui.image.Image;
 

@@ -18,6 +18,8 @@ package consulo.copyright.config;
 
 import com.intellij.openapi.util.*;
 import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import org.jdom.Element;
 
 public class CopyrightFileConfig implements JDOMExternalizable, Cloneable {

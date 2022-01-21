@@ -15,8 +15,9 @@
  */
 package consulo.module.extension;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTypeId;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -35,5 +36,5 @@ public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> ext
   String getSdkName();
 
   @Nonnull
-  Class<? extends SdkTypeId> getSdkTypeClass();
+  Class<? extends SdkType> getSdkTypeClass();
 }

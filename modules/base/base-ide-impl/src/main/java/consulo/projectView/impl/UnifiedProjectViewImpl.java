@@ -30,6 +30,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleFileIndex;
 import consulo.module.layer.ModifiableRootModel;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;

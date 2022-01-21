@@ -28,7 +28,7 @@ import com.intellij.util.containers.OrderedSet;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 

@@ -28,7 +28,7 @@ import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.application.util.function.Processor;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
@@ -489,7 +489,7 @@ public class ModuleDependenciesAnalyzer {
     public VirtualFile getLocalFile() {
       VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(myUrl);
       if (file != null) {
-        file = PathUtil.getLocalFile(file);
+        file = VirtualFilePathUtil.getLocalFile(file);
       }
       return file;
     }

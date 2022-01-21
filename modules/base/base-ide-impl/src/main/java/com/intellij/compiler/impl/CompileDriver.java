@@ -90,7 +90,7 @@ import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.util.collection.Maps;
 import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntSet;

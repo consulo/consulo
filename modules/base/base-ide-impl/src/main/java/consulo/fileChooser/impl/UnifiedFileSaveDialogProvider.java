@@ -15,10 +15,10 @@
  */
 package consulo.fileChooser.impl;
 
-import com.intellij.openapi.fileChooser.FileSaverDescriptor;
-import com.intellij.openapi.fileChooser.FileSaverDialog;
-import consulo.project.Project;
-import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
+import consulo.component.ComponentManager;
+import consulo.fileChooser.FileSaverDescriptor;
+import consulo.fileChooser.FileSaverDialog;
+import consulo.fileChooser.provider.FileSaveDialogProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ import java.awt.*;
 public class UnifiedFileSaveDialogProvider implements FileSaveDialogProvider {
   @Nonnull
   @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     throw new UnsupportedOperationException();
   }
 

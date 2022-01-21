@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.roots.libraries.ui.impl;
 
-import com.intellij.openapi.roots.libraries.LibraryRootType;
-import com.intellij.openapi.roots.libraries.ui.DetectedLibraryRoot;
+import consulo.content.library.LibraryRootType;
+import consulo.content.library.ui.DetectedLibraryRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 

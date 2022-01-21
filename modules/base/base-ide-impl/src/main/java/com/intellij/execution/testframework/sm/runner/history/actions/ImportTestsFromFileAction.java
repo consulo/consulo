@@ -16,9 +16,9 @@
 package com.intellij.execution.testframework.sm.runner.history.actions;
 
 import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
@@ -34,6 +34,6 @@ public class ImportTestsFromFileAction extends AbstractImportTestsAction {
   public VirtualFile getFile(@Nonnull Project project) {
     final FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
     xmlDescriptor.setTitle("Choose a File with Tests Result");
-    return FileChooser.chooseFile(xmlDescriptor, project, null);
+    return IdeaFileChooser.chooseFile(xmlDescriptor, project, null);
   }
 }

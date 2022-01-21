@@ -24,7 +24,7 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import org.jdom.Element;

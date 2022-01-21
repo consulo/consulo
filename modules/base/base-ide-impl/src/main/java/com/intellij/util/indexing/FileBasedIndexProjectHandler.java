@@ -27,7 +27,7 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.project.*;
-import com.intellij.openapi.roots.ContentIterator;
+import consulo.content.ContentIterator;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.io.FileUtil;

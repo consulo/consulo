@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.util.ApplicationWindowStateService;
 import jakarta.inject.Singleton;
 

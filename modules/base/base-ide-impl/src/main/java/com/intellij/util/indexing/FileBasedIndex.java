@@ -7,7 +7,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
+import consulo.content.ContentIterator;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Condition;
 import consulo.application.util.function.ThrowableComputable;

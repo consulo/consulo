@@ -5,6 +5,8 @@ import com.intellij.configurationStore.UnknownElementCollector;
 import com.intellij.configurationStore.UnknownElementWriter;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.WriteExternalException;
 import consulo.document.Document;
 import com.intellij.openapi.extensions.ExtensionException;
 import consulo.document.FileDocumentManager;

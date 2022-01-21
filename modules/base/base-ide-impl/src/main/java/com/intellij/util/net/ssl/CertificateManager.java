@@ -5,6 +5,8 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.ui.DialogWrapper;

@@ -17,7 +17,7 @@ package consulo.diff.preferences.impl;
 
 import com.intellij.diff.tools.external.ExternalDiffSettings;
 import com.intellij.openapi.diff.DiffBundle;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 import consulo.ide.ui.FileChooserTextBoxBuilder;

@@ -20,7 +20,7 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.layer.ModifiableRootModel;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;

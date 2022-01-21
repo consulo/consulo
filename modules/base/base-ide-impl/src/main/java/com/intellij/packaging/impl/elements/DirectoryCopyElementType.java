@@ -16,9 +16,9 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
@@ -53,7 +53,7 @@ public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopy
   public List<? extends DirectoryCopyPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
                                                                        @Nonnull CompositePackagingElement<?> parent) {
     final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor();
-    final VirtualFile[] files = FileChooser.chooseFiles(descriptor, context.getProject(), null);
+    final VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
     final List<DirectoryCopyPackagingElement> list = new ArrayList<DirectoryCopyPackagingElement>();
     for (VirtualFile file : files) {
       list.add(new DirectoryCopyPackagingElement(file.getPath()));

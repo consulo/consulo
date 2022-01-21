@@ -20,6 +20,8 @@ import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import consulo.module.layer.ContentFolder;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.Project;
+import consulo.roots.ContentFoldersSupportUtil;
 import consulo.roots.PackageBasedContentFolderTypeProvider;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
@@ -30,7 +32,7 @@ import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import jakarta.inject.Inject;
@@ -45,9 +47,11 @@ public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater 
   private final ProjectFileIndex myProjectFileIndex;
   private final ProjectRootManager myProjectRootManager;
   private final PsiPackageManager myPsiPackageManager;
+  private final Project myProject;
 
   @Inject
-  public PsiDirectoryIconDescriptorUpdater(ProjectFileIndex projectFileIndex, ProjectRootManager projectRootManager, PsiPackageManager psiPackageManager) {
+  public PsiDirectoryIconDescriptorUpdater(Project project, ProjectFileIndex projectFileIndex, ProjectRootManager projectRootManager, PsiPackageManager psiPackageManager) {
+    myProject = project;
     myProjectFileIndex = projectFileIndex;
     myProjectRootManager = projectRootManager;
     myPsiPackageManager = psiPackageManager;
@@ -81,7 +85,7 @@ public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater 
         else {
           ContentFolder contentFolder = ProjectRootsUtil.findContentFolderForDirectory(myProjectFileIndex, virtualFile);
           if (contentFolder != null) {
-            symbolIcon = contentFolder.getType().getIcon(contentFolder.getProperties());
+            symbolIcon = ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
           }
           else {
             ContentFolderTypeProvider contentFolderTypeForFile = myProjectFileIndex.getContentFolderTypeForFile(virtualFile);
@@ -89,7 +93,7 @@ public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater 
               if (contentFolderTypeForFile instanceof PackageBasedContentFolderTypeProvider p) {
                 symbolIcon = p.getChildDirectoryIcon(psiDirectory, myPsiPackageManager);
               } else {
-                symbolIcon = contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory);
+                symbolIcon = contentFolderTypeForFile.getChildDirectoryIcon(virtualFile, myProject);
               }
             } else {
               symbolIcon = AllIcons.Nodes.TreeClosed;

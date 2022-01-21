@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.roots.libraries;
 
+import consulo.content.library.LibraryProperties;
+
 /**
 * @author nik
 */

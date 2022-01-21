@@ -27,7 +27,7 @@ import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.TreeBackedLighterAST;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndex;
+import consulo.content.FileIndex;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.TestSourcesFilter;

@@ -4,7 +4,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -90,7 +90,7 @@ final class ConfigurableWebBrowser extends WebBrowser {
   }
 
   public void setPath(@Nullable String value) {
-    path = PathUtil.toSystemIndependentName(StringUtil.nullize(value));
+    path = VirtualFilePathUtil.toSystemIndependentName(StringUtil.nullize(value));
   }
 
   @Override

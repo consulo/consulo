@@ -27,7 +27,6 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.ui.MasterDetailsComponent;
@@ -296,8 +295,8 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
   @RequiredUIAccess
   public void doAdd(JComponent parent, final SdkType type, final Consumer<Sdk> callback) {
     myModified = true;
-    if (type.supportsCustomCreateUI()) {
-      type.showCustomCreateUI(this, parent, sdk -> setupSdk(sdk, callback));
+    if (type instanceof SdkTypeWithCustomCreateUI customCreateUI) {
+      customCreateUI.showCustomCreateUI(this, parent, sdk -> setupSdk(sdk, callback));
     }
     else {
       SdkConfigurationUtil.selectSdkHome(type, home -> {

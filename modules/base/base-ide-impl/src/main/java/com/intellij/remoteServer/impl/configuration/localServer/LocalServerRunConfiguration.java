@@ -26,7 +26,7 @@ import com.intellij.openapi.components.ComponentSerializationUtil;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.project.Project;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import com.intellij.remoteServer.ServerType;
 import com.intellij.remoteServer.configuration.ServerConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguration;

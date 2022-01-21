@@ -23,7 +23,7 @@ import com.intellij.openapi.options.SettingsEditor;
 import consulo.project.Project;
 import consulo.component.persist.InvalidDataException;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.openapi.util.WriteExternalException;
+import consulo.component.persist.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

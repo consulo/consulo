@@ -28,6 +28,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.WriteExternalException;
 import consulo.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;

@@ -18,7 +18,7 @@ package com.intellij.packaging.elements;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;

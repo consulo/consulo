@@ -19,7 +19,7 @@ import com.intellij.openapi.application.PreloadingActivity;
 import consulo.progress.ProgressIndicator;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkTable;
-import com.intellij.openapi.projectRoots.SdkType;
+import consulo.content.bundle.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkTableImpl;

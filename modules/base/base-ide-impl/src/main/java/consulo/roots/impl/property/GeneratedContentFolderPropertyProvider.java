@@ -18,7 +18,7 @@ package consulo.roots.impl.property;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
-import consulo.roots.ContentFolderPropertyProvider;
+import consulo.module.layer.ContentFolderPropertyProvider;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

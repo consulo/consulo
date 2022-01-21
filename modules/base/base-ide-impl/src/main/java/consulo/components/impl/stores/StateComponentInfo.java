@@ -17,12 +17,12 @@ package consulo.components.impl.stores;
 
 import com.intellij.ide.plugins.PluginManagerCore;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.State;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import consulo.project.Project;
-import com.intellij.openapi.util.JDOMExternalizable;
+import consulo.component.persist.JDOMExternalizable;
 import com.intellij.openapi.util.RoamingTypeDisabled;
 import consulo.container.PluginException;
 import consulo.container.plugin.ComponentConfig;

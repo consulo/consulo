@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleFileIndex;
+import consulo.module.content.ModuleFileIndex;
 import consulo.module.ModuleRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;

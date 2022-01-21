@@ -18,7 +18,7 @@ package com.intellij.openapi.application;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
@@ -50,7 +50,7 @@ public class ApplicationInfo {
   private Calendar myBuildDate;
 
   private ApplicationInfo() {
-    String jarPathForClass = PathUtil.getJarPathForClass(Application.class);
+    String jarPathForClass = VirtualFilePathUtil.getJarPathForClass(Application.class);
 
     try (JarFile jarFile = new JarFile(jarPathForClass)) {
       Manifest manifest = jarFile.getManifest();

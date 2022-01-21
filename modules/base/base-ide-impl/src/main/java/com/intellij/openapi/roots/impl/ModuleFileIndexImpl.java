@@ -17,18 +17,19 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.content.ContentIterator;
 import consulo.content.OrderRootType;
 import consulo.module.Module;
-import com.intellij.openapi.roots.*;
+import consulo.module.content.ModuleFileIndex;
 import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.module.layer.orderEntry.RootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileFilter;
+import consulo.virtualFileSystem.VirtualFileFilter;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.module.layer.orderEntry.OrderEntryType;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

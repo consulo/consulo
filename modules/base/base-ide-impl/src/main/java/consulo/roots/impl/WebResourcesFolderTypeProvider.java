@@ -18,7 +18,7 @@ package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import consulo.project.ProjectBundle;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

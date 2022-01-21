@@ -20,9 +20,11 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.fileChooser.FileElement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.layer.ContentEntry;
 import consulo.module.layer.ContentFolder;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.roots.ContentFoldersSupportUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
@@ -63,13 +65,14 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
   }
 
 
+  @RequiredReadAction
   protected Image updateIcon(final ContentEntry entry, final VirtualFile file, Image originalIcon) {
     Image icon = originalIcon;
     VirtualFile currentRoot = null;
     for (ContentFolder contentFolder : entry.getFolders(ContentFolderScopes.all())) {
       final VirtualFile contentPath = contentFolder.getFile();
       if (file.equals(contentPath)) {
-        icon = contentFolder.getType().getIcon(contentFolder.getProperties());
+        icon = ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
       }
       else if (contentPath != null && VfsUtilCore.isAncestor(contentPath, file, true)) {
         if (currentRoot != null && VfsUtilCore.isAncestor(contentPath, currentRoot, false)) {
@@ -85,7 +88,7 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
             }
           }
         }
-        icon = hasSupport ? contentFolder.getType().getChildDirectoryIcon(null) : AllIcons.Nodes.TreeOpen;
+        icon = hasSupport ? contentFolder.getType().getChildDirectoryIcon(null, null) : AllIcons.Nodes.TreeOpen;
         currentRoot = contentPath;
       }
     }

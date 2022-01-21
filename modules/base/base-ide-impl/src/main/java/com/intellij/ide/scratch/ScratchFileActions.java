@@ -29,6 +29,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.JBIterable;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -162,7 +163,7 @@ public class ScratchFileActions {
     String relativePath = rootType != ScratchRootType.getInstance() ? "" : FileUtil.getRelativePath(ScratchFileService.getInstance().getRootPath(rootType), dir.getPath(), '/');
 
     String fileName = (StringUtil.isEmpty(relativePath) ? "" : relativePath + "/") +
-                      PathUtil.makeFileName(ObjectUtils.notNull(context.filePrefix, "scratch") + (context.fileCounter != null ? context.fileCounter.create() : ""), context.fileExtension);
+                      VirtualFilePathUtil.makeFileName(ObjectUtils.notNull(context.filePrefix, "scratch") + (context.fileCounter != null ? context.fileCounter.create() : ""), context.fileExtension);
     VirtualFile file = ScratchRootType.getInstance().createScratchFile(project, fileName, language, context.text, context.createOption);
     if (file == null) return null;
 

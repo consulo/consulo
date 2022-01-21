@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.*;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;

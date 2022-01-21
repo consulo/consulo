@@ -18,7 +18,9 @@ package com.intellij.ide.macro;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.fileChooser.*;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -41,7 +43,7 @@ public class FilePromptMacro extends PromptingMacro implements SecondQueueExpand
   protected String promptUser(DataContext dataContext) {
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
     final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
-    final VirtualFile[] result = FileChooser.chooseFiles(descriptor, project, null);
+    final VirtualFile[] result = IdeaFileChooser.chooseFiles(descriptor, project, null);
     return result.length == 1? FileUtil.toSystemDependentName(result[0].getPath()) : null;
   }
 

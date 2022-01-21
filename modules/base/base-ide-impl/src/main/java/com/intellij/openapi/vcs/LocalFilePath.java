@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -91,7 +91,7 @@ public class LocalFilePath implements FilePath {
   @Override
   @Nullable
   public FilePath getParentPath() {
-    String parent = PathUtil.getParentPath(myPath);
+    String parent = VirtualFilePathUtil.getParentPath(myPath);
     return parent.isEmpty() ? null : new LocalFilePath(parent, true);
   }
 
@@ -117,7 +117,7 @@ public class LocalFilePath implements FilePath {
   @Nonnull
   @Override
   public String getName() {
-    return PathUtil.getFileName(myPath);
+    return VirtualFilePathUtil.getFileName(myPath);
   }
 
   @Nonnull
@@ -148,7 +148,7 @@ public class LocalFilePath implements FilePath {
     VirtualFile file = getVirtualFile();
     String path = myPath;
     while ((file == null || !file.isValid()) && !path.isEmpty()) {
-      path = PathUtil.getParentPath(path);
+      path = VirtualFilePathUtil.getParentPath(path);
       file = LocalFileSystem.getInstance().findFileByPath(path);
     }
     if (file != null) {

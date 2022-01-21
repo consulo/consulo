@@ -18,6 +18,8 @@ package consulo.components.impl.stores;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.Storage;
 import consulo.project.Project;
 import com.intellij.openapi.project.impl.DefaultProjectImpl;
 import com.intellij.openapi.util.Couple;

@@ -18,7 +18,7 @@ package com.intellij.packaging.ui;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.layer.ModifiableRootModel;
-import com.intellij.openapi.roots.libraries.Library;
+import consulo.content.library.Library;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;

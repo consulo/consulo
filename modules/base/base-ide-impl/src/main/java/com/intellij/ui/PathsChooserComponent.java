@@ -15,9 +15,9 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.components.JBList;
@@ -66,7 +66,7 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
         dirChooser.setShowFileSystemRoots(true);
         dirChooser.setHideIgnored(true);
         dirChooser.setTitle(UIBundle.message("file.chooser.default.title"));
-        FileChooser.chooseFiles(dirChooser, myProject, null, new Consumer<List<VirtualFile>>() {
+        IdeaFileChooser.chooseFiles(dirChooser, myProject, null, new Consumer<List<VirtualFile>>() {
           @Override
           public void consume(List<VirtualFile> files) {
             for (VirtualFile file : files) {

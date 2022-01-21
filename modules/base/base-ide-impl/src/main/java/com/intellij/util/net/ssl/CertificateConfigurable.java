@@ -1,7 +1,7 @@
 package com.intellij.util.net.ssl;
 
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileTypeDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileTypeDescriptor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
@@ -78,7 +78,7 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
       @Override
       public void run(AnActionButton button) {
         // show choose file dialog, add certificate
-        FileChooser.chooseFile(CERTIFICATE_DESCRIPTOR, null, null, new Consumer<VirtualFile>() {
+        IdeaFileChooser.chooseFile(CERTIFICATE_DESCRIPTOR, null, null, new Consumer<VirtualFile>() {
           @Override
           public void consume(VirtualFile file) {
             String path = file.getPath();

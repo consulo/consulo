@@ -15,10 +15,9 @@
  */
 package consulo.module.layer.orderEntry;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import consulo.module.layer.orderEntry.OrderEntry;
-import consulo.module.layer.orderEntry.OrderEntryWithTracking;
+import consulo.content.bundle.Sdk;
 import consulo.module.extension.ModuleExtensionWithSdk;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

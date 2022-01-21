@@ -19,7 +19,7 @@ import com.intellij.ide.browsers.BrowserSpecificSettings;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.execution.ParametersListUtil;
 import com.intellij.util.xmlb.annotations.Tag;
 import javax.annotation.Nonnull;
@@ -61,7 +61,7 @@ public final class ChromeSettings extends BrowserSpecificSettings {
   }
 
   public void setUserDataDirectoryPath(@Nullable String value) {
-    myUserDataDirectoryPath = PathUtil.toSystemIndependentName(StringUtil.nullize(value));
+    myUserDataDirectoryPath = VirtualFilePathUtil.toSystemIndependentName(StringUtil.nullize(value));
   }
 
   public void setUseCustomProfile(boolean useCustomProfile) {

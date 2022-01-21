@@ -21,6 +21,8 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;

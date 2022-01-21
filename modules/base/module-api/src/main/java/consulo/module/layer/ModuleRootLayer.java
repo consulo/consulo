@@ -17,6 +17,7 @@ package consulo.module.layer;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.Processor;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.layer.orderEntry.OrderEntry;
@@ -27,6 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -103,7 +105,7 @@ public interface ModuleRootLayer {
    */
   @Nonnull
   @Deprecated
-  @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.excluded())", until = "2.0")
+  @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.excluded())")
   VirtualFile[] getExcludeRoots();
 
   /**
@@ -114,7 +116,7 @@ public interface ModuleRootLayer {
    */
   @Deprecated
   @Nonnull
-  @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.excluded())", until = "2.0")
+  @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.excluded())")
   String[] getExcludeRootUrls();
 
   /**
@@ -126,7 +128,7 @@ public interface ModuleRootLayer {
    */
   @Nonnull
   @Deprecated
-  @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.productionAndTest())", until = "2.0")
+  @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.productionAndTest())")
   VirtualFile[] getSourceRoots();
 
   /**
@@ -139,8 +141,7 @@ public interface ModuleRootLayer {
    */
   @Nonnull
   @Deprecated
-  @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()",
-                   until = "2.0")
+  @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()")
   VirtualFile[] getSourceRoots(boolean includingTests);
 
   /**
@@ -152,7 +153,7 @@ public interface ModuleRootLayer {
    */
   @Deprecated
   @Nonnull
-  @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.productionAndTest())", until = "2.0")
+  @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.productionAndTest())")
   String[] getSourceRootUrls();
 
   /**

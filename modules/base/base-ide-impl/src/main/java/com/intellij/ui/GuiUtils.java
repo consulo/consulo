@@ -18,9 +18,9 @@ package com.intellij.ui;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
@@ -87,7 +87,7 @@ public class GuiUtils {
       @Override
       public void actionPerformed(ActionEvent e) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor().withTitle("Select " + objectName);
-        VirtualFile file = FileChooser.chooseFile(descriptor, field, null, null);
+        VirtualFile file = IdeaFileChooser.chooseFile(descriptor, field, null, null);
         if (file != null) {
           field.setText(FileUtil.toSystemDependentName(file.getPath()));
           field.postActionEvent();
@@ -102,7 +102,7 @@ public class GuiUtils {
       public void actionPerformed(ActionEvent e) {
         FileChooserDescriptor descriptor =
                 FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withTitle("Select " + objectName);
-        VirtualFile file = FileChooser.chooseFile(descriptor, field, null, null);
+        VirtualFile file = IdeaFileChooser.chooseFile(descriptor, field, null, null);
         if (file != null) {
           try {
             field.setText(VfsUtilCore.virtualToIoFile(file).toURI().toURL().toString());

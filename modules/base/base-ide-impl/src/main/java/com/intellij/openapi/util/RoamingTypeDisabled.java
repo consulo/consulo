@@ -15,10 +15,12 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.component.persist.RoamingType;
+
 /**
  * Label for JDOMExternalizable. If component implements this interface it will
  * not be passed to external StreamProvider components (for example, it will not be stored on IDEAServer)
- * @deprecated use {@link com.intellij.openapi.components.RoamingType#DISABLED}
+ * @deprecated use {@link RoamingType#DISABLED}
  */
 @Deprecated
 public interface RoamingTypeDisabled {

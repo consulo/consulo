@@ -38,7 +38,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.component.util.pointer.NamedPointer;
 
 import javax.annotation.Nonnull;

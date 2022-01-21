@@ -22,10 +22,10 @@
  */
 package com.intellij.openapi.vcs.changes.patch;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
-import com.intellij.openapi.fileChooser.FileSaverDescriptor;
-import com.intellij.openapi.fileChooser.FileSaverDialog;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.fileChooser.FileSaverDescriptor;
+import consulo.fileChooser.FileSaverDialog;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
@@ -37,7 +37,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import consulo.util.io.CharsetToolkit;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWrapper;
+import consulo.virtualFileSystem.VirtualFileWrapper;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ObjectUtils;

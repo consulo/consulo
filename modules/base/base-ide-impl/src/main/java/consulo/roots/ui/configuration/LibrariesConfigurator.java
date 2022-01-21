@@ -16,8 +16,8 @@
 package consulo.roots.ui.configuration;
 
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorListener;
 import consulo.virtualFileSystem.VirtualFile;

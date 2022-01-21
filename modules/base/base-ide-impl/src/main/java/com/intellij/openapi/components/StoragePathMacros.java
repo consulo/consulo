@@ -16,6 +16,8 @@
 package com.intellij.openapi.components;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 
 import javax.annotation.Nonnull;
 

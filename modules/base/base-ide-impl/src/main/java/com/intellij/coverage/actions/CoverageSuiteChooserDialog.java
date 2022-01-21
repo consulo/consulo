@@ -4,8 +4,8 @@ import com.intellij.coverage.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
@@ -275,7 +275,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
     @Override
     public void actionPerformed(AnActionEvent e) {
       final VirtualFile file =
-        FileChooser.chooseFile(new FileChooserDescriptor(true, false, false, false, false, false) {
+        IdeaFileChooser.chooseFile(new FileChooserDescriptor(true, false, false, false, false, false) {
           @Override
           public boolean isFileSelectable(VirtualFile file) {
             return getCoverageRunner(file) != null;

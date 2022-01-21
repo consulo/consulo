@@ -15,12 +15,18 @@
  */
 package consulo.roots;
 
+import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.IconDescriptor;
+import consulo.module.layer.ContentFolderPropertyProvider;
 import consulo.module.layer.ContentFolderSupportPatcher;
 import consulo.module.layer.ModifiableRootModel;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,5 +42,28 @@ public class ContentFoldersSupportUtil {
     }
     providers.add(ExcludedContentFolderTypeProvider.getInstance());
     return providers;
+  }
+
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  public static Image getContentFolderIcon(@Nonnull ContentFolderTypeProvider typeProvider, @Nonnull Map<Key, Object> params) {
+    if (params.isEmpty()) {
+      return typeProvider.getIcon();
+    }
+
+    IconDescriptor iconDescriptor = new IconDescriptor(typeProvider.getIcon());
+    for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensionList()) {
+      Object value = propertyProvider.getKey().get(params);
+      if (value == null) {
+        continue;
+      }
+
+      Image layerIcon = propertyProvider.getLayerIcon(value);
+      if (layerIcon == null) {
+        continue;
+      }
+      iconDescriptor.addLayerIcon(layerIcon);
+    }
+    return iconDescriptor.toIcon();
   }
 }
