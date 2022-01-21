@@ -8,7 +8,7 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import com.intellij.openapi.util.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;

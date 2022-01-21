@@ -17,7 +17,7 @@
 package com.intellij.refactoring.safeDelete;
 
 import consulo.project.Project;
-import com.intellij.openapi.roots.GeneratedSourcesFilter;
+import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;

@@ -17,9 +17,9 @@ package com.intellij.openapi.vcs.checkin;
 
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.roots.GeneratedSourcesFilter;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.GeneratedSourcesFilter;
+import consulo.project.content.ProjectFileIndex;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;

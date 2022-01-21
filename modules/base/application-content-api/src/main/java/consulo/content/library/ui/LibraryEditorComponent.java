@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots.libraries.ui;
+package consulo.content.library.ui;
 
-import consulo.project.Project;
 import consulo.content.library.LibraryProperties;
-import consulo.content.library.ui.LibraryEditor;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

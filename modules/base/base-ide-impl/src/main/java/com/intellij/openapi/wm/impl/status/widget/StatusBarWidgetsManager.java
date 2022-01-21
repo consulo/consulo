@@ -5,7 +5,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import com.intellij.openapi.util.SimpleModificationTracker;
+import consulo.component.util.SimpleModificationTracker;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.StatusBarWidgetFactory;

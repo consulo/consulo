@@ -33,7 +33,7 @@ import consulo.project.Project;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

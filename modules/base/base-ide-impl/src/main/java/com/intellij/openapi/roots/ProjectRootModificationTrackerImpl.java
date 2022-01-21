@@ -16,6 +16,8 @@
 package com.intellij.openapi.roots;
 
 import consulo.project.Project;
+import consulo.project.content.ProjectRootManager;
+import consulo.project.content.ProjectRootModificationTracker;
 import jakarta.inject.Inject;
 
 import jakarta.inject.Singleton;

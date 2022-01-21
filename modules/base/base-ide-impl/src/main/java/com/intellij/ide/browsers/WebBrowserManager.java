@@ -11,6 +11,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.component.util.SimpleModificationTracker;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 import org.jdom.Element;

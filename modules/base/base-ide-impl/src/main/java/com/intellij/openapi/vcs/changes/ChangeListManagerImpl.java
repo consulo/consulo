@@ -27,7 +27,7 @@ import com.intellij.openapi.progress.*;
 import consulo.project.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.module.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import consulo.module.layer.DirectoryIndexExcludePolicy;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;

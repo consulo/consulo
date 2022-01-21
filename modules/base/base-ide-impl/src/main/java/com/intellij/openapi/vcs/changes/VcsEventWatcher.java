@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootAdapter;
+import consulo.module.layer.event.ModuleRootAdapter;
 import consulo.module.layer.event.ModuleRootEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.ProblemListener;

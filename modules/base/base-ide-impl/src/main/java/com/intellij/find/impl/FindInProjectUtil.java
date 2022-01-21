@@ -25,7 +25,7 @@ import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.module.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import consulo.content.library.Library;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;

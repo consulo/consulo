@@ -24,7 +24,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import consulo.module.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.AbstractVcs;

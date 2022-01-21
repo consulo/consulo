@@ -4,7 +4,7 @@ import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ProjectRootModificationTracker;
+import consulo.project.content.ProjectRootModificationTracker;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.GlobalSearchScope;

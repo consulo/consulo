@@ -24,7 +24,7 @@ import consulo.module.Module;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.roots.ModuleRootAdapter;
+import consulo.module.layer.event.ModuleRootAdapter;
 import consulo.module.layer.event.ModuleRootEvent;
 import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.layer.orderEntry.OrderEntry;

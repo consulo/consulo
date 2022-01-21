@@ -29,7 +29,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.layer.ModifiableRootModel;
 import consulo.module.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;

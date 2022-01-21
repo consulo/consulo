@@ -32,7 +32,7 @@ import consulo.project.Project;
 import consulo.module.ModuleRootManager;
 import consulo.module.layer.orderEntry.OrderEntry;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.WatchedRootsProvider;
+import consulo.project.content.WatchedRootsProvider;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;

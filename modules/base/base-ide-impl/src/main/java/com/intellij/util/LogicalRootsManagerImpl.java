@@ -22,7 +22,7 @@ import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootAdapter;
+import consulo.module.layer.event.ModuleRootAdapter;
 import consulo.module.layer.event.ModuleRootEvent;
 import consulo.module.ModuleRootManager;
 import com.intellij.openapi.util.MultiValuesMap;

@@ -18,8 +18,8 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.editor.HectorComponentPanel;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectFileIndex;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiFile;

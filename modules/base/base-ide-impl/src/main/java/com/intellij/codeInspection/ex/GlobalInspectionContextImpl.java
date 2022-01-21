@@ -53,7 +53,7 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import com.intellij.openapi.project.ProjectUtilCore;
 import consulo.content.FileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;

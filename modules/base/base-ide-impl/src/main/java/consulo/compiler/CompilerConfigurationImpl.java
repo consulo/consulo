@@ -18,7 +18,7 @@ package consulo.compiler;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.WatchedRootsProvider;
+import consulo.project.content.WatchedRootsProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;

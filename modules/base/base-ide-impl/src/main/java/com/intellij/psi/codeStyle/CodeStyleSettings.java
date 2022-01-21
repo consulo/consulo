@@ -7,6 +7,7 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import consulo.component.persist.JDOMExternalizable;
 import consulo.component.persist.WriteExternalException;
+import consulo.component.util.SimpleModificationTracker;
 import consulo.document.Document;
 import com.intellij.openapi.extensions.ExtensionException;
 import consulo.document.FileDocumentManager;

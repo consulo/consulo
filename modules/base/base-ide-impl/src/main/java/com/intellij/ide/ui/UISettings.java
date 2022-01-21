@@ -22,7 +22,7 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SimpleModificationTracker;
+import consulo.component.util.SimpleModificationTracker;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ComponentTreeEventDispatcher;

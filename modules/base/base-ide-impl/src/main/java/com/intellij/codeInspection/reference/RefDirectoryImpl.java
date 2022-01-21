@@ -19,7 +19,7 @@ package com.intellij.codeInspection.reference;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;

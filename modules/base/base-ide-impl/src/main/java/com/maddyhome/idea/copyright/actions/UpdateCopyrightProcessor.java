@@ -20,7 +20,7 @@ import consulo.module.Module;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.util.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;

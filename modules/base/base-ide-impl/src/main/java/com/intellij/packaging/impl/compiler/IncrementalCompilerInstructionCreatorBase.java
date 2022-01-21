@@ -16,8 +16,8 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectFileIndex;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

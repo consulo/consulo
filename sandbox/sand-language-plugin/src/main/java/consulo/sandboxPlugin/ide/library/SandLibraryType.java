@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.libraries.DummyLibraryProperties;
 import consulo.content.library.LibraryType;
 import consulo.content.library.NewLibraryConfiguration;
 import consulo.content.library.PersistentLibraryKind;
-import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
+import consulo.content.library.ui.LibraryEditorComponent;
 import consulo.content.library.ui.LibraryPropertiesEditor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;

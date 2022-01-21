@@ -8,7 +8,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.component.util.ModificationTracker;
-import com.intellij.openapi.util.SimpleModificationTracker;
+import consulo.component.util.SimpleModificationTracker;
 import com.intellij.psi.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiModificationTracker;

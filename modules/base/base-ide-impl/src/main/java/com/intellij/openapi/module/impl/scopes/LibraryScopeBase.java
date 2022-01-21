@@ -17,8 +17,8 @@ package com.intellij.openapi.module.impl.scopes;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectFileIndex;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;

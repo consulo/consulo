@@ -16,7 +16,7 @@
 package com.intellij.usages.impl.rules;
 
 import consulo.project.Project;
-import com.intellij.openapi.roots.GeneratedSourcesFilter;
+import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewBundle;

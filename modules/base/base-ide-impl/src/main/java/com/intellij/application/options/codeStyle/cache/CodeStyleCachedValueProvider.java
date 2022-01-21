@@ -7,7 +7,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.openapi.util.SimpleModificationTracker;
+import consulo.component.util.SimpleModificationTracker;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;

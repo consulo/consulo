@@ -19,7 +19,7 @@ import consulo.project.ProjectManager;
 import consulo.module.layer.event.ModuleRootEvent;
 import consulo.module.layer.event.ModuleRootListener;
 import consulo.module.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
 import com.intellij.openapi.util.io.FileUtilRt;

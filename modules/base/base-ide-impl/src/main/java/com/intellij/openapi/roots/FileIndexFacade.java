@@ -16,11 +16,12 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.psi.search.GlobalSearchScope;
+import consulo.component.util.ModificationTracker;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.component.util.ModificationTracker;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -42,13 +43,17 @@ public abstract class FileIndexFacade {
   public abstract ModificationTracker getRootModificationTracker();
 
   public abstract boolean isInContent(@Nonnull VirtualFile file);
+
   public abstract boolean isInSource(@Nonnull VirtualFile file);
+
   public abstract boolean isInSourceContent(@Nonnull VirtualFile file);
+
   public abstract boolean isInLibraryClasses(@Nonnull VirtualFile file);
 
   public abstract boolean isInLibrarySource(@Nonnull VirtualFile file);
 
   public abstract boolean isExcludedFile(@Nonnull VirtualFile file);
+
   public abstract boolean isUnderIgnored(@Nonnull VirtualFile file);
 
   @Nullable
@@ -59,7 +64,7 @@ public abstract class FileIndexFacade {
    * between them are excluded from the project.
    *
    * @param baseDir the parent directory to check for ancestry.
-   * @param child the child directory or file to check for ancestry.
+   * @param child   the child directory or file to check for ancestry.
    * @return true if it's a valid ancestor, false otherwise.
    */
   public abstract boolean isValidAncestor(@Nonnull VirtualFile baseDir, @Nonnull VirtualFile child);

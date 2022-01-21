@@ -8,7 +8,7 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.module.layer.OrderEnumerator;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

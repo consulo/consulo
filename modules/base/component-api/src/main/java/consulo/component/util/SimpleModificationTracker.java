@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.component.util;
 
 import com.intellij.util.xmlb.annotations.Transient;
-import consulo.component.util.ModificationTracker;
 
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 

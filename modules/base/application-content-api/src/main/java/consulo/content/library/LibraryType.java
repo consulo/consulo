@@ -17,6 +17,7 @@ package consulo.content.library;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.OrderRootType;
+import consulo.content.library.ui.LibraryEditorComponent;
 import consulo.content.library.ui.LibraryPropertiesEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.module.layer.ModuleRootModel;

@@ -18,7 +18,7 @@ package com.intellij.psi.impl;
 
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ProjectRootModificationTracker;
+import consulo.project.content.ProjectRootModificationTracker;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;

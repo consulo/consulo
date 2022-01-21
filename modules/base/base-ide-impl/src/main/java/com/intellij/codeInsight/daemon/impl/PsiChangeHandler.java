@@ -16,7 +16,7 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;

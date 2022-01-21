@@ -10,7 +10,7 @@ import com.intellij.openapi.command.undo.UndoManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import com.intellij.openapi.roots.impl.FilePropertyPusher;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.util.Comparing;

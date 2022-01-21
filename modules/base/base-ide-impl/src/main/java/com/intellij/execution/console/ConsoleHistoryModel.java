@@ -16,7 +16,7 @@
 package com.intellij.execution.console;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.util.SimpleModificationTracker;
+import consulo.component.util.SimpleModificationTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

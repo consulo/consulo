@@ -16,7 +16,7 @@ import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;

@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.ex;
 
 import consulo.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import javax.annotation.Nonnull;
 
 public abstract class ProjectRootManagerEx extends ProjectRootManager {

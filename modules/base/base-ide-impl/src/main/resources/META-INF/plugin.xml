@@ -72,8 +72,8 @@
 
     <extensionPoint name="vfs.asyncListener" interface="consulo.virtualFileSystem.event.AsyncFileListener"/>
 
-    <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
-    <extensionPoint name="testSourcesFilter" interface="com.intellij.openapi.roots.TestSourcesFilter"/>
+    <extensionPoint name="generatedSourcesFilter" interface="consulo.project.content.GeneratedSourcesFilter"/>
+    <extensionPoint name="testSourcesFilter" interface="consulo.project.content.TestSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="consulo.content.library.ui.RootDetector"/>
 
     <extensionPoint name="postStartupActivity" interface="consulo.project.startup.StartupActivity"/>
@@ -614,7 +614,7 @@
 
     <extensionPoint name="gotoRelatedProvider" interface="com.intellij.navigation.GotoRelatedProvider"/>
 
-    <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="PROJECT"/>
+    <extensionPoint name="roots.watchedRootsProvider" interface="consulo.project.content.WatchedRootsProvider" area="PROJECT"/>
 
     <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.extension.impl.ModuleExtensionProviderEP">
       <with attribute="immutableClass" implements="consulo.module.extension.ModuleExtension"/>
@@ -1959,7 +1959,7 @@
                     serviceImplementation="com.intellij.psi.impl.cache.impl.IndexTodoCacheManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.impl.ResolveScopeManager"
                     serviceImplementation="com.intellij.psi.impl.file.impl.ResolveScopeManagerImpl"/>
-    <projectService serviceInterface="com.intellij.openapi.roots.ProjectFileIndex"
+    <projectService serviceInterface="consulo.project.content.ProjectFileIndex"
                     serviceImplementation="com.intellij.openapi.roots.impl.ProjectFileIndexImpl"/>
     <projectService serviceInterface="com.intellij.psi.impl.source.resolve.ResolveCache"
                     serviceImplementation="com.intellij.psi.impl.source.resolve.ResolveCache"/>
@@ -1969,7 +1969,7 @@
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>
     <moduleService serviceInterface="com.intellij.openapi.module.ModuleScopeProvider"
                    serviceImplementation="com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl"/>
-    <projectService serviceInterface="com.intellij.openapi.roots.ProjectRootModificationTracker"
+    <projectService serviceInterface="consulo.project.content.ProjectRootModificationTracker"
                     serviceImplementation="com.intellij.openapi.roots.ProjectRootModificationTrackerImpl"/>
 
     <projectService serviceInterface="com.intellij.ui.FileColorManager"

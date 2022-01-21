@@ -22,7 +22,7 @@ import consulo.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import consulo.project.Project;
 import consulo.module.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;

@@ -6,7 +6,7 @@ import consulo.module.Module;
 import com.intellij.openapi.module.UnloadedModuleDescription;
 import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.impl.ProjectFileIndexImpl;
 import consulo.virtualFileSystem.VirtualFile;

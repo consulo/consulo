@@ -16,6 +16,8 @@
 package com.intellij.openapi.roots;
 
 import consulo.project.Project;
+import consulo.project.content.ProjectFileIndex;
+import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

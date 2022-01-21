@@ -16,7 +16,7 @@
 package consulo.backgroundTaskByVfsChange;
 
 import consulo.project.Project;
-import com.intellij.openapi.roots.GeneratedSourcesFilter;
+import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;

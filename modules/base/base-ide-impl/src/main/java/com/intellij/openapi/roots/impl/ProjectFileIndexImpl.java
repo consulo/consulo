@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.module.layer.ContentFolder;
 import consulo.content.ContentIterator;
 import consulo.module.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.application.AccessRule;

@@ -8,7 +8,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.content.ContentIterator;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import com.intellij.openapi.util.Condition;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.registry.Registry;

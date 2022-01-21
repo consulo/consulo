@@ -16,6 +16,7 @@
 package com.intellij.openapi.util;
 
 import consulo.component.util.ModificationTracker;
+import consulo.component.util.SimpleModificationTracker;
 
 import javax.annotation.Nonnull;
 

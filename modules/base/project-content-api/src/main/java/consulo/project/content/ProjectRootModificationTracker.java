@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots;
+package consulo.project.content;
 
-import com.intellij.openapi.components.ServiceManager;
-import consulo.project.Project;
 import consulo.component.util.ModificationTracker;
+import consulo.project.Project;
 
 /**
  * @author yole
  */
 public abstract class ProjectRootModificationTracker implements ModificationTracker {
   public static ProjectRootModificationTracker getInstance(Project project) {
-    return ServiceManager.getService(project, ProjectRootModificationTracker.class);
+    return project.getInstance(ProjectRootModificationTracker.class);
   }
 }

@@ -23,7 +23,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.content.ContentIterator;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import consulo.virtualFileSystem.VirtualFile;

@@ -7,7 +7,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtil;

@@ -18,7 +18,7 @@ package consulo.ide.actions;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.DirectoryUtil;
 import consulo.module.layer.ContentFolder;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import consulo.project.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;

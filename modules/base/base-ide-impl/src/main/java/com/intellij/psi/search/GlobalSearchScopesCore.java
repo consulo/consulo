@@ -17,9 +17,9 @@ package com.intellij.psi.search;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.TestSourcesFilter;
+import consulo.project.content.ProjectFileIndex;
+import consulo.project.content.ProjectRootManager;
+import consulo.project.content.TestSourcesFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

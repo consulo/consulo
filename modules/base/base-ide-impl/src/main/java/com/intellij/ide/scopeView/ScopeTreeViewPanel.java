@@ -45,7 +45,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.module.Module;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ModuleRootAdapter;
+import consulo.module.layer.event.ModuleRootAdapter;
 import consulo.module.layer.event.ModuleRootEvent;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.vcs.FileStatusListener;

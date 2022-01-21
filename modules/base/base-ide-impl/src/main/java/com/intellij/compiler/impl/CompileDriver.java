@@ -46,7 +46,7 @@ import consulo.project.Project;
 import consulo.module.layer.ContentEntry;
 import consulo.module.layer.ContentFolder;
 import consulo.module.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
+import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
