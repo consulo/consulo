@@ -16,10 +16,10 @@
 package com.intellij.openapi.project;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
-import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.project.Project;

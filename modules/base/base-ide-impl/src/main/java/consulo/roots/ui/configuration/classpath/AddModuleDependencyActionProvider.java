@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 import consulo.localize.LocalizeValue;
-import consulo.module.layer.ModuleRootLayer;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;

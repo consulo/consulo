@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;

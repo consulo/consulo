@@ -21,7 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import consulo.module.layer.ModuleRootLayer;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.component.util.pointer.Named;
 import consulo.component.util.pointer.NamedPointer;

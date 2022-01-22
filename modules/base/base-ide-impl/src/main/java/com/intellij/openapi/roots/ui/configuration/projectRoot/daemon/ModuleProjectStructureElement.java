@@ -1,13 +1,13 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.openapi.module.ModifiableModuleModel;
+import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import consulo.module.layer.ModuleRootModel;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.layer.orderEntry.ModuleOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;

@@ -18,7 +18,7 @@ package consulo.roots.ui.configuration;
 import com.intellij.ide.util.ChooseElementsDialog;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.module.layer.ContentFolder;
+import consulo.module.content.layer.ContentFolder;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.image.Image;
@@ -30,7 +30,7 @@ import com.intellij.ui.table.TableView;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ComboBoxCellEditor;
 import com.intellij.util.ui.ListTableModel;
-import consulo.module.layer.ContentFolderPropertyProvider;
+import consulo.module.content.layer.ContentFolderPropertyProvider;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

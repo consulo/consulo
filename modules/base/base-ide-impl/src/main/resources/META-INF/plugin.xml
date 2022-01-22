@@ -51,8 +51,8 @@
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="contentFolderTypeProvider" interface="consulo.content.ContentFolderTypeProvider"/>
-    <extensionPoint name="contentFolderPropertyProvider" interface="consulo.module.layer.ContentFolderPropertyProvider"/>
-    <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.layer.ContentFolderSupportPatcher"/>
+    <extensionPoint name="contentFolderPropertyProvider" interface="consulo.module.content.layer.ContentFolderPropertyProvider"/>
+    <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.content.layer.ContentFolderSupportPatcher"/>
     <extensionPoint name="createFromTemplateActionModuleResolver" interface="com.intellij.ide.actions.CreateFileFromTemplateAction$ModuleResolver"/>
 
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
@@ -623,12 +623,12 @@
 
     <extensionPoint name="moduleRootsProcessor" interface="consulo.roots.impl.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="consulo.content.OrderRootType"/>
-    <extensionPoint name="orderEntryType" interface="consulo.module.layer.orderEntry.OrderEntryType"/>
+    <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType"/>
     <extensionPoint name="orderEntryTypeEditor" beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="consulo.roots.orderEntry.OrderEntryTypeEditor"/>
     </extensionPoint>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
-    <extensionPoint name="directoryIndexExcludePolicy" interface="consulo.module.layer.DirectoryIndexExcludePolicy"
+    <extensionPoint name="directoryIndexExcludePolicy" interface="consulo.module.content.layer.DirectoryIndexExcludePolicy"
                     area="PROJECT"/>
 
     <extensionPoint name="smartPointerAnchorProvider" interface="com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider"/>
@@ -1638,15 +1638,15 @@
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
     <vcsAwareCheckoutListener implementation="com.intellij.openapi.vcs.checkout.RegisterMappingCheckoutListener"/>
 
-    <orderRootType implementation="consulo.roots.types.BinariesOrderRootType"/>
+    <orderRootType implementation="consulo.content.base.BinariesOrderRootType"/>
     <orderRootTypeEditor key="binaries"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.BinariesOrderRootTypeUIFactory"/>
 
-    <orderRootType implementation="consulo.roots.types.SourcesOrderRootType"/>
+    <orderRootType implementation="consulo.content.base.SourcesOrderRootType"/>
     <orderRootTypeEditor key="sources"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
-    <orderRootType implementation="consulo.roots.types.DocumentationOrderRootType"/>
+    <orderRootType implementation="consulo.content.base.DocumentationOrderRootType"/>
     <orderRootTypeEditor key="documentation"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
 
@@ -1965,7 +1965,7 @@
                     serviceImplementation="com.intellij.psi.impl.source.resolve.ResolveCache"/>
     <moduleService serviceInterface="consulo.module.content.ModuleFileIndex"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
-    <moduleService serviceInterface="consulo.module.ModuleRootManager"
+    <moduleService serviceInterface="consulo.module.content.ModuleRootManager"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>
     <moduleService serviceInterface="com.intellij.openapi.module.ModuleScopeProvider"
                    serviceImplementation="com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl"/>
@@ -2411,7 +2411,7 @@
     <itemPresentationProvider forClass="com.intellij.psi.PsiDirectory"
                               implementationClass="com.intellij.navigation.DirectoryPresentationProvider"/>
 
-    <projectService serviceInterface="com.intellij.openapi.module.ModulePointerManager"
+    <projectService serviceInterface="consulo.module.ModulePointerManager"
                     serviceImplementation="com.intellij.openapi.module.impl.ModulePointerManagerImpl"/>
 
     <customFoldingProvider implementation="com.intellij.lang.customFolding.NetBeansCustomFoldingProvider"/>
@@ -2696,7 +2696,7 @@
     <cachesInvalidator implementation="consulo.vfs.newvfs.persistent.FSCachesInvalidator"/>
 
     <applicationService serviceInterface="consulo.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl"/>
-    <projectService serviceInterface="com.intellij.openapi.module.ModuleManager" serviceImplementation="com.intellij.openapi.module.impl.ModuleManagerComponent"/>
+    <projectService serviceInterface="consulo.module.ModuleManager" serviceImplementation="com.intellij.openapi.module.impl.ModuleManagerComponent"/>
     <applicationService serviceInterface="consulo.virtualFileSystem.pointer.VirtualFilePointerManager" serviceImplementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.TypedAction" serviceImplementation="com.intellij.openapi.editor.impl.TypedActionImpl"/>
@@ -2809,6 +2809,6 @@
 
   <projectListeners>
     <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="com.intellij.psi.util.PsiModificationTracker$Listener"/>
-    <listener class="consulo.roots.ExtensionListenerByLayerListenerInvoker" topic="consulo.module.layer.event.ModuleRootLayerListener"/>
+    <listener class="consulo.roots.ExtensionListenerByLayerListenerInvoker" topic="consulo.module.content.layer.event.ModuleRootLayerListener"/>
   </projectListeners>
 </consulo-plugin>

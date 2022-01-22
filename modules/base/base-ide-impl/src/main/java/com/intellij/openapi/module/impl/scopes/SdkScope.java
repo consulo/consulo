@@ -17,9 +17,9 @@
 package com.intellij.openapi.module.impl.scopes;
 
 import consulo.project.Project;
-import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 
 /**
  * @author max

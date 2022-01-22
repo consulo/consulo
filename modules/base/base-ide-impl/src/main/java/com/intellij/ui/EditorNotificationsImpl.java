@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.module.ProjectTopics;
+import consulo.module.content.ProjectTopics;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -30,8 +30,8 @@ import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ReadTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.concurrency.SequentialTaskExecutor;

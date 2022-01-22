@@ -26,7 +26,7 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.ListSeparator;

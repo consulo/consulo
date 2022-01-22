@@ -17,11 +17,11 @@ package consulo.sandboxPlugin.lang.moduleImport;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.ModifiableModuleModel;
+import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.module.layer.ModifiableRootModel;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.moduleImport.ModuleImportContext;

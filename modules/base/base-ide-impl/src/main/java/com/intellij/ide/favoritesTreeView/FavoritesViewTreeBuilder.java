@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.favoritesTreeView;
 
-import consulo.module.ProjectTopics;
+import consulo.module.content.ProjectTopics;
 import com.intellij.ide.CopyPasteUtil;
 import com.intellij.ide.projectView.BaseProjectTreeBuilder;
 import com.intellij.ide.projectView.ProjectViewPsiTreeChangeListener;
@@ -12,8 +12,8 @@ import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.project.Project;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusListener;

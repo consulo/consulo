@@ -18,7 +18,7 @@ package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 

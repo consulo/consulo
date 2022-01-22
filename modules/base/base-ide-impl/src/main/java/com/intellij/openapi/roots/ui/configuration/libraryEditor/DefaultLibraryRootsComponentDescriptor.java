@@ -25,7 +25,7 @@ import consulo.content.library.ui.AttachRootButtonDescriptor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.ui.OrderRootTypePresentation;
 import consulo.content.library.ui.RootDetector;
-import consulo.roots.types.DocumentationOrderRootType;
+import consulo.content.base.DocumentationOrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

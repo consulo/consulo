@@ -19,7 +19,7 @@ import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.content.bundle.Sdk;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.module.layer.ModuleRootLayer;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.component.util.pointer.NamedPointer;
 import javax.annotation.Nonnull;

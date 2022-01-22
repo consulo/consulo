@@ -25,7 +25,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
-import consulo.module.layer.ModuleRootLayer;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

@@ -66,7 +66,9 @@
     <module>modules/base/project-api</module>
     <module>modules/base/project-content-api</module>
     <module>modules/base/module-api</module>
+    <module>modules/base/module-content-api</module>
     <module>modules/base/file-chooser-api</module>
+    <module>modules/base/language-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

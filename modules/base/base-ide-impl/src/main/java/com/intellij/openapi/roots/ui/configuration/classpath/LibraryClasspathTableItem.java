@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.classpath;
 
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import consulo.content.library.Library;
@@ -29,7 +29,7 @@ import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentation
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.EditExistingLibraryDialog;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 

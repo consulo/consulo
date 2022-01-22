@@ -17,8 +17,8 @@ package com.intellij.openapi.module.impl.scopes;
 
 import consulo.project.Project;
 import consulo.content.library.Library;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 

@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.roots.libraries.LibraryUtil;

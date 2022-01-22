@@ -16,15 +16,15 @@
 
 package com.intellij.util;
 
-import consulo.module.ProjectTopics;
+import consulo.module.content.ProjectTopics;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;
-import consulo.module.layer.event.ModuleRootAdapter;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.layer.event.ModuleRootAdapter;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;

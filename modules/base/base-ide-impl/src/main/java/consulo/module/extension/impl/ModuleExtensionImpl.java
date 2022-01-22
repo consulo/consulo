@@ -18,8 +18,8 @@ package consulo.module.extension.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.layer.ModifiableModuleRootLayer;
-import consulo.module.layer.ModuleRootLayer;
+import consulo.module.content.layer.ModifiableModuleRootLayer;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.project.Project;
 import org.jdom.Element;
 

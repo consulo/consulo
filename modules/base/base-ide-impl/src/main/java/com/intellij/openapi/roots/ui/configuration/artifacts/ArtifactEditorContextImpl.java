@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import com.intellij.openapi.module.ModifiableModuleModel;
+import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
-import consulo.module.layer.ModifiableRootModel;
-import consulo.module.layer.ModuleRootModel;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import consulo.content.library.Library;

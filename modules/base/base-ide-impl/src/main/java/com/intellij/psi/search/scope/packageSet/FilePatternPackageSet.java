@@ -21,7 +21,7 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;

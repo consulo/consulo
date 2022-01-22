@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;

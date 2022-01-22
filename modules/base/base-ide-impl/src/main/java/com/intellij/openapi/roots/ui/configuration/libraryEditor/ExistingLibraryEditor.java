@@ -23,7 +23,7 @@ import consulo.content.library.LibraryKind;
 import consulo.content.library.LibraryProperties;
 import consulo.content.library.LibraryType;
 import consulo.disposer.Disposable;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;

@@ -17,10 +17,10 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.content.OrderRootType;
 import consulo.module.Module;
-import consulo.module.ModuleRootManager;
-import consulo.module.layer.ModifiableRootModel;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
@@ -40,8 +40,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.logging.Logger;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import org.jetbrains.annotations.NonNls;
 

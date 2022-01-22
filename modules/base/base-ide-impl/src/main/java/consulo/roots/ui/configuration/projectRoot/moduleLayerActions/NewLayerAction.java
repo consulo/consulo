@@ -18,7 +18,7 @@ package consulo.roots.ui.configuration.projectRoot.moduleLayerActions;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.module.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;

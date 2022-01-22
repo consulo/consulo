@@ -16,7 +16,7 @@
 package com.intellij.application.options;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesAlphaComparator;
 import com.intellij.openapi.ui.ComboBox;

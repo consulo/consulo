@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.project.Project;
-import consulo.module.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootEvent;
 
 /**
  *  @author dsl

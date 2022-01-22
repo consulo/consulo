@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.ide.module.extension;
 
 import consulo.content.bundle.SdkType;
 import consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
-import consulo.module.layer.ModuleRootLayer;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.sandboxPlugin.ide.bundle.SandBundleType;
 import javax.annotation.Nonnull;
 

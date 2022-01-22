@@ -20,7 +20,7 @@ import com.intellij.ide.macro.Macro;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.module.Module;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 
 /**
  * @author VISTALL

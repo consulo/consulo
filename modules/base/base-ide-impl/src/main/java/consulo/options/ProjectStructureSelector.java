@@ -17,8 +17,8 @@ package consulo.options;
 
 import consulo.module.Module;
 import consulo.content.bundle.Sdk;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;
 import com.intellij.packaging.artifacts.Artifact;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -19,7 +19,7 @@ import com.intellij.compiler.impl.ModuleCompileScope;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;

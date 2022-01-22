@@ -22,7 +22,7 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.ide.IdeView;
 import com.intellij.lang.Language;
-import com.intellij.openapi.module.ModifiableModuleModel;
+import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.content.library.Library;
 import com.intellij.openapi.ui.popup.JBPopup;

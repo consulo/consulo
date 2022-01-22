@@ -20,7 +20,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.projectView.impl.ModuleGroupUtil;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;

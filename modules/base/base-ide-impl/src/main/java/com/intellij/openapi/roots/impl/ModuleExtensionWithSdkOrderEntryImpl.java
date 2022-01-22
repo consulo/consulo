@@ -17,9 +17,9 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.content.bundle.Sdk;
-import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
-import consulo.module.layer.orderEntry.RootPolicy;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.content.RootProvider;
 import com.intellij.openapi.util.Comparing;
 import consulo.module.extension.ModuleExtension;

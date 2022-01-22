@@ -17,9 +17,9 @@ package com.intellij.compiler;
 
 import com.intellij.openapi.compiler.CompilerManager;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;

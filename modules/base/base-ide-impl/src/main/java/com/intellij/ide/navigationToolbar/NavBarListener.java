@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.navigationToolbar;
 
-import consulo.module.ProjectTopics;
+import consulo.module.content.ProjectTopics;
 import com.intellij.ide.actions.CopyAction;
 import com.intellij.ide.actions.CutAction;
 import consulo.disposer.Disposable;
@@ -26,8 +26,8 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import consulo.project.Project;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.util.concurrent.AsyncResult;

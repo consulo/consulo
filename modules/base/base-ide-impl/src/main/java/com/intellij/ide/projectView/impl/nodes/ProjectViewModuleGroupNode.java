@@ -21,7 +21,7 @@ import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;

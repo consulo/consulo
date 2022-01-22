@@ -16,7 +16,7 @@
 package com.intellij.usages.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.UnloadedModuleDescription;
+import consulo.module.UnloadedModuleDescription;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.usages.TextChunk;
 import com.intellij.usages.Usage;

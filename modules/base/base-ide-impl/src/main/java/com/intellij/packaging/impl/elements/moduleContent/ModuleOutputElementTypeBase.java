@@ -20,7 +20,7 @@ import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.module.layer.ContentEntry;
+import consulo.module.content.layer.ContentEntry;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;

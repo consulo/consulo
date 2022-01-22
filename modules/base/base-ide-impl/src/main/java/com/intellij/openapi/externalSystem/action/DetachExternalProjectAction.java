@@ -26,7 +26,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.DumbAware;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;

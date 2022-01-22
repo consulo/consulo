@@ -30,7 +30,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

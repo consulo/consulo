@@ -23,8 +23,8 @@ import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.module.extension.impl.ModuleExtensionProviderEP;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.impl.ModuleExtensionProviders;
-import consulo.module.layer.ModuleRootLayer;
-import consulo.module.layer.event.ModuleRootLayerListener;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.event.ModuleRootLayerListener;
 import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;

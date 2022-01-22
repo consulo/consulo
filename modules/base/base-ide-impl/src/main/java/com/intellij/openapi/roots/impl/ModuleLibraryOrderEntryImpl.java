@@ -18,10 +18,10 @@ package com.intellij.openapi.roots.impl;
 
 import consulo.content.RootProvider;
 import consulo.logging.Logger;
-import consulo.module.layer.orderEntry.DependencyScope;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
-import consulo.module.layer.orderEntry.RootPolicy;
+import consulo.module.content.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
@@ -32,7 +32,7 @@ import consulo.disposer.Disposer;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.ModuleLibraryOrderEntryType;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import javax.annotation.Nonnull;
 
 /**

@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.application.TransactionGuard;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;

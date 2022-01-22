@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.module.impl;
 
-import consulo.module.ProjectTopics;
-import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.ModuleAdapter;
-import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposer;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.ModulePointerManager;
+import consulo.module.event.ModuleListener;
+import consulo.project.Project;
 import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
 import jakarta.inject.Inject;
@@ -42,7 +42,7 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
   @Inject
   public ModulePointerManagerImpl(Project project) {
     myProject = project;
-    project.getMessageBus().connect().subscribe(ProjectTopics.MODULES, new ModuleAdapter() {
+    project.getMessageBus().connect().subscribe(ModuleListener.TOPIC, new ModuleAdapter() {
       @Override
       public void beforeModuleRemoved(Project project, Module module) {
         unregisterPointer(module);

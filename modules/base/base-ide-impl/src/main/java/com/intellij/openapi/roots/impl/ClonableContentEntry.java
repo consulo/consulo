@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
-import consulo.module.layer.ContentEntry;
+import consulo.module.content.layer.ContentEntry;
 import consulo.roots.impl.ModuleRootLayerImpl;
 
 /**

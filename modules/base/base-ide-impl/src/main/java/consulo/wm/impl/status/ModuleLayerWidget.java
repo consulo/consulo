@@ -15,29 +15,28 @@
  */
 package consulo.wm.impl.status;
 
-import consulo.module.ProjectTopics;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.WriteAction;
-import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import consulo.project.Project;
-import consulo.module.layer.ModifiableRootModel;
-import consulo.module.ModuleRootManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.EditorBasedStatusBarPopup;
 import com.intellij.util.ListWithSelection;
-import consulo.module.layer.ModuleRootLayer;
-import consulo.module.layer.event.ModuleRootLayerListener;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.event.ModuleRootLayerListener;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -83,7 +82,7 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
   public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
 
-    myProject.getMessageBus().connect().subscribe(ProjectTopics.MODULE_LAYERS, new ModuleRootLayerListener.Adapter() {
+    myProject.getMessageBus().connect().subscribe(ModuleRootLayerListener.TOPIC, new ModuleRootLayerListener.Adapter() {
       @Override
       public void layerRemove(@Nonnull Module module, @Nonnull ModuleRootLayer removed) {
         update();

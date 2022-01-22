@@ -26,7 +26,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;

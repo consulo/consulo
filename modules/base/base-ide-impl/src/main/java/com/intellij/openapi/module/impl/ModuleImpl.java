@@ -21,7 +21,7 @@ import com.intellij.openapi.components.impl.ModulePathMacroManager;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

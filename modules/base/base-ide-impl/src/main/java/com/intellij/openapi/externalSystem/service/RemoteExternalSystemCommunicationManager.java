@@ -45,7 +45,7 @@ import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.JdkUtil;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.SimpleJavaSdkType;
-import consulo.module.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.DependencyScope;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.psi.PsiBundle;
 import com.intellij.util.Alarm;

@@ -39,7 +39,7 @@ import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.openapi.actionSystem.*;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;

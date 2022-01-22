@@ -17,9 +17,9 @@ package com.intellij.openapi.roots.libraries;
 
 import consulo.content.library.Library;
 import consulo.module.Module;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.ModuleRootManager;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.pom.Navigatable;
 import javax.annotation.Nonnull;

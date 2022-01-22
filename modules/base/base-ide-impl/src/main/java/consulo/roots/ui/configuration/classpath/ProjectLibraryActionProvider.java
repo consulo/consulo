@@ -22,7 +22,7 @@ import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.localize.LocalizeValue;
-import consulo.module.layer.ModuleRootLayer;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;

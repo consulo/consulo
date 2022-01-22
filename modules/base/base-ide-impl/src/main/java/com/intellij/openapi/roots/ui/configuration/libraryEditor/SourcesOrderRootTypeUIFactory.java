@@ -26,7 +26,7 @@ import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
-import consulo.roots.types.SourcesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

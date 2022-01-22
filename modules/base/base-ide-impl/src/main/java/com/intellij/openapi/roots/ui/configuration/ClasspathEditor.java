@@ -15,13 +15,12 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import consulo.module.ProjectTopics;
-import consulo.project.ProjectBundle;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
-import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import consulo.disposer.Disposable;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -40,7 +39,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
 
     final Disposable disposable = Disposable.newDisposable();
 
-    state.getProject().getMessageBus().connect(disposable).subscribe(ProjectTopics.PROJECT_ROOTS, this);
+    state.getProject().getMessageBus().connect(disposable).subscribe(ModuleRootListener.TOPIC, this);
     registerDisposable(disposable);
   }
 

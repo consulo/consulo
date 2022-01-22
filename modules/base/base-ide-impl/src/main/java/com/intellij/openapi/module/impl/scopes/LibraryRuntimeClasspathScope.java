@@ -17,8 +17,8 @@
 package com.intellij.openapi.module.impl.scopes;
 
 import consulo.module.Module;
-import consulo.module.ModuleRootManager;
-import consulo.module.layer.orderEntry.*;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.orderEntry.*;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
@@ -32,7 +32,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.impl.ModuleRootsProcessor;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

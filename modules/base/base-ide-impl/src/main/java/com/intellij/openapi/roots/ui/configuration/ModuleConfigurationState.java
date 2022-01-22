@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.project.Project;
-import consulo.module.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModifiableRootModel;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.util.dataholder.UserDataHolder;

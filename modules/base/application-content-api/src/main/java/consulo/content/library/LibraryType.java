@@ -17,12 +17,12 @@ package consulo.content.library;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.content.library.ui.LibraryEditorComponent;
 import consulo.content.library.ui.LibraryPropertiesEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.module.layer.ModuleRootModel;
 import consulo.project.Project;
-import consulo.roots.types.BinariesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

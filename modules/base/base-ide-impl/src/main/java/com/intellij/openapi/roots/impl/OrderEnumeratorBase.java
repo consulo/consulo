@@ -24,12 +24,12 @@ import consulo.content.OrderRootType;
 import consulo.content.library.Library;
 import consulo.logging.Logger;
 import consulo.module.Module;
-import consulo.module.ModuleRootManager;
-import consulo.module.layer.*;
-import consulo.module.layer.orderEntry.*;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.*;
+import consulo.module.content.layer.orderEntry.*;
 import consulo.project.Project;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 

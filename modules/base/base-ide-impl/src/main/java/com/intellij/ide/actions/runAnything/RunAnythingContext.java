@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

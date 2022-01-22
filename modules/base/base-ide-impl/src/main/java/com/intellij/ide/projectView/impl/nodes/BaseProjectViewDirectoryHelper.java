@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ModuleFileIndex;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;

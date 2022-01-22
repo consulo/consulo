@@ -20,7 +20,7 @@ import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import consulo.content.library.Library;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;

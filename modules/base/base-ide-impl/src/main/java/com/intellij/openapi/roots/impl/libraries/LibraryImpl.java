@@ -13,7 +13,7 @@ import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.VirtualFilePointerContainerImpl;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;

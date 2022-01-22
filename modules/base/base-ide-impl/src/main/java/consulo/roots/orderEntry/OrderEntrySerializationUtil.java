@@ -15,12 +15,12 @@
  */
 package consulo.roots.orderEntry;
 
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.module.layer.ModuleRootLayer;
-import consulo.module.layer.orderEntry.OrderEntryType;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.impl.UnknownOrderEntryImpl;
 import org.jdom.Element;

@@ -15,14 +15,14 @@
  */
 package consulo.psi.impl;
 
-import consulo.module.ModuleRootManager;
-import consulo.module.ProjectTopics;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectTopics;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.util.LowMemoryWatcher;

@@ -57,7 +57,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;

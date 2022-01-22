@@ -16,9 +16,9 @@
 package consulo.psi;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;

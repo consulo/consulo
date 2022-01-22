@@ -15,8 +15,8 @@
  */
 package consulo.roots.orderEntry;
 
-import consulo.module.layer.ModuleRootLayer;
-import consulo.module.layer.orderEntry.OrderEntryType;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.roots.impl.UnknownOrderEntryImpl;
 import consulo.component.persist.InvalidDataException;
 import org.jdom.Attribute;

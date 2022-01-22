@@ -18,13 +18,13 @@ package com.intellij.openapi.roots.impl;
 
 import consulo.content.OrderRootType;
 import consulo.module.Module;
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
-import consulo.module.layer.orderEntry.RootPolicy;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.project.ProjectBundle;
 import consulo.roots.impl.ModuleRootLayerImpl;
-import consulo.roots.types.SourcesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;

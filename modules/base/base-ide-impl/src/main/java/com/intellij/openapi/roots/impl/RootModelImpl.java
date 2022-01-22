@@ -26,18 +26,17 @@ import consulo.content.library.LibraryTable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.Module;
-import consulo.module.ProjectTopics;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.ModifiableModuleRootLayer;
-import consulo.module.layer.ModifiableRootModel;
-import consulo.module.layer.ModuleRootLayer;
-import consulo.module.layer.event.ModuleRootLayerListener;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.layer.orderEntry.ModuleOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ModifiableModuleRootLayer;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.event.ModuleRootLayerListener;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.roots.impl.ModuleRootLayerImpl;
@@ -258,7 +257,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     RootModelImpl sourceModel = getSourceModel();
 
-    ModuleRootLayerListener layerListener = getModule().getProject().getMessageBus().syncPublisher(ProjectTopics.MODULE_LAYERS);
+    ModuleRootLayerListener layerListener = getModule().getProject().getMessageBus().syncPublisher(ModuleRootLayerListener.TOPIC);
 
     boolean extensionListenerAlreadyCalled = false;
     if (!Comparing.equal(sourceModel.myCurrentLayerName, myCurrentLayerName)) {

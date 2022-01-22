@@ -19,12 +19,12 @@ import consulo.application.util.function.Processor;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.ContentFolder;
-import consulo.module.layer.ModuleRootModel;
-import consulo.module.layer.OrderEnumerator;
-import consulo.module.layer.orderEntry.OrderEntry;
-import consulo.module.layer.orderEntry.RootPolicy;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ContentFolder;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.OrderEnumerator;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

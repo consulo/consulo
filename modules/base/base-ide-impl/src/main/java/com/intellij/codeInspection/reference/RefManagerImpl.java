@@ -16,7 +16,7 @@ import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import consulo.document.Document;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.IndexNotReadyException;

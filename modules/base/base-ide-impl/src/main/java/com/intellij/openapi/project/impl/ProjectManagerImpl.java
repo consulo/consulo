@@ -28,7 +28,7 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import com.intellij.openapi.module.impl.ModuleManagerComponent;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.progress.NonCancelableSection;

@@ -18,7 +18,7 @@ package consulo.sandboxPlugin.ide.bundle;
 import com.intellij.icons.AllIcons;
 import consulo.content.bundle.SdkType;
 import consulo.content.OrderRootType;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

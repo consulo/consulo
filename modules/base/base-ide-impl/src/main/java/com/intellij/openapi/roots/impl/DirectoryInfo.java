@@ -17,8 +17,9 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.module.Module;
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.ContentFolder;
+import consulo.module.UnloadedModuleDescription;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ContentFolder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.ContentFolderTypeProvider;
 
@@ -105,7 +106,7 @@ public abstract class DirectoryInfo {
    * Return name of an unloaded module to which content this file or directory belongs
    * or {@code null} if it doesn't belong to an unloaded module.
    *
-   * @see com.intellij.openapi.module.UnloadedModuleDescription
+   * @see UnloadedModuleDescription
    */
   @Nullable
   public abstract String getUnloadedModuleName();

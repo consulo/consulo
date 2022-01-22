@@ -15,8 +15,8 @@
  */
 package consulo.roots.impl;
 
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.ContentFolder;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ContentFolder;
 import com.intellij.openapi.roots.impl.ClonableContentEntry;
 
 import javax.annotation.Nonnull;

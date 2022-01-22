@@ -36,7 +36,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.util.IconUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.roots.types.DocumentationOrderRootType;
+import consulo.content.base.DocumentationOrderRootType;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

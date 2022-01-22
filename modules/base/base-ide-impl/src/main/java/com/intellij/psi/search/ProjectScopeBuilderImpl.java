@@ -3,7 +3,7 @@ package com.intellij.psi.search;
 
 import com.intellij.ide.scratch.RootType;
 import consulo.module.Module;
-import com.intellij.openapi.module.UnloadedModuleDescription;
+import consulo.module.UnloadedModuleDescription;
 import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import consulo.project.content.ProjectRootManager;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.module.impl;
 
-import consulo.module.ProjectTopics;
+import consulo.module.content.ProjectTopics;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;

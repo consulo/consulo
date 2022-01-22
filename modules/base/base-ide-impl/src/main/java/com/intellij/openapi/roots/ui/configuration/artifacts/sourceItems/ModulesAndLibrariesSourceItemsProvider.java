@@ -16,15 +16,15 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.content.library.Library;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.ModuleRootModel;
-import consulo.module.layer.orderEntry.DependencyScope;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.PackagingElementFactory;
@@ -40,7 +40,7 @@ import com.intellij.packaging.ui.PackagingSourceItemsProvider;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;
 import consulo.roots.ContentFolderScopes;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 
 import javax.annotation.Nonnull;
 import java.util.*;

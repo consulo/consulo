@@ -1,16 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.roots.impl;
 
-import consulo.module.ModuleRootManager;
-import consulo.module.ProjectTopics;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectTopics;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.extensions.ExtensionException;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.application.ReadAction;
 import consulo.module.content.ModuleFileIndex;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;

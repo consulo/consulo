@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.extension;
 
-import consulo.module.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;

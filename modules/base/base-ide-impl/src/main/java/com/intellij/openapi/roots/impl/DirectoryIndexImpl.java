@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import consulo.module.ProjectTopics;
+import consulo.module.content.ProjectTopics;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContaine
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;

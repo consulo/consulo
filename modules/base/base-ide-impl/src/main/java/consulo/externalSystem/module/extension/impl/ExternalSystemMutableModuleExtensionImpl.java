@@ -17,7 +17,7 @@ package consulo.externalSystem.module.extension.impl;
 
 import consulo.disposer.Disposable;
 import consulo.externalSystem.module.extension.ExternalSystemMutableModuleExtension;
-import consulo.module.layer.ModuleRootLayer;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 

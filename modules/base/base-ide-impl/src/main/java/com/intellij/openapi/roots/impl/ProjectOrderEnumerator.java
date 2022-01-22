@@ -16,10 +16,10 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.module.layer.ModuleRootModel;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.application.util.function.Processor;
 
 import javax.annotation.Nonnull;

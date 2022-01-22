@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.ui;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.module.ModifiableModuleModel;
+import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packaging.ui.ArtifactEditorContext;

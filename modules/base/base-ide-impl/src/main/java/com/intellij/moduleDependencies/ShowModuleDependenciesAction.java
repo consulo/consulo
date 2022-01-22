@@ -20,7 +20,7 @@ import com.intellij.analysis.AnalysisScope;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

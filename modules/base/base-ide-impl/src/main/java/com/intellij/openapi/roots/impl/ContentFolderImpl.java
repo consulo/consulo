@@ -16,15 +16,15 @@
 
 package com.intellij.openapi.roots.impl;
 
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.ContentFolder;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ContentFolder;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import consulo.module.layer.ContentFolderPropertyProvider;
+import consulo.module.content.layer.ContentFolderPropertyProvider;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.impl.UnknownContentFolderTypeProvider;
 import org.jdom.Element;

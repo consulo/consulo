@@ -20,7 +20,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.module.Module;
 import consulo.content.ContentIterator;
 import consulo.content.FileIndex;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;

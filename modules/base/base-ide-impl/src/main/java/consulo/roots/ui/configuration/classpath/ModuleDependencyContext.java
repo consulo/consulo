@@ -16,12 +16,12 @@
 package consulo.roots.ui.configuration.classpath;
 
 import consulo.module.Module;
-import consulo.module.layer.ModifiableRootModel;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.module.layer.ModifiableModuleRootLayer;
+import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 

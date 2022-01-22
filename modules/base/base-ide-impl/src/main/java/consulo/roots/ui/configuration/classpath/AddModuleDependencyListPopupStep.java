@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.classpath;
 
-import consulo.module.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModifiableRootModel;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import consulo.ui.annotation.RequiredUIAccess;

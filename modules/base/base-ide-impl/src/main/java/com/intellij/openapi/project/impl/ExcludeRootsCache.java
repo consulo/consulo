@@ -3,11 +3,11 @@ package com.intellij.openapi.project.impl;
 
 import consulo.application.ReadAction;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.ContainerUtil;

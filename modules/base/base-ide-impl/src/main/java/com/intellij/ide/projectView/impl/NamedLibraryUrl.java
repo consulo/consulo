@@ -18,11 +18,11 @@ package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import consulo.module.ModuleRootManager;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 

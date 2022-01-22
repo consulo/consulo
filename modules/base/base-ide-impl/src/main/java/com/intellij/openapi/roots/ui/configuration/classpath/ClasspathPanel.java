@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.ui.configuration.classpath;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.project.Project;
-import consulo.module.layer.ModifiableRootModel;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import javax.annotation.Nonnull;

@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.ApplicationManager;
 import consulo.component.extension.Extensions;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.configurable.ConfigurationException;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;

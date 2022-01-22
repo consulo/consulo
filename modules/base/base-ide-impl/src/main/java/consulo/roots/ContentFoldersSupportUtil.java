@@ -17,9 +17,9 @@ package consulo.roots;
 
 import consulo.content.ContentFolderTypeProvider;
 import consulo.ide.IconDescriptor;
-import consulo.module.layer.ContentFolderPropertyProvider;
-import consulo.module.layer.ContentFolderSupportPatcher;
-import consulo.module.layer.ModifiableRootModel;
+import consulo.module.content.layer.ContentFolderPropertyProvider;
+import consulo.module.content.layer.ContentFolderSupportPatcher;
+import consulo.module.content.layer.ModifiableRootModel;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;

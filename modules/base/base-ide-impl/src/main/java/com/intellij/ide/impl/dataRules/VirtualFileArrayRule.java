@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectRootManager;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VfsUtil;

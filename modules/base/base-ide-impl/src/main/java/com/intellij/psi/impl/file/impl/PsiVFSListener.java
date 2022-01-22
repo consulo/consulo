@@ -2,7 +2,7 @@
 package com.intellij.psi.impl.file.impl;
 
 import com.intellij.AppTopics;
-import consulo.module.ProjectTopics;
+import consulo.module.content.ProjectTopics;
 import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -16,9 +16,9 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectFileIndex;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;

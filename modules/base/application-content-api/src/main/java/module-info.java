@@ -15,6 +15,7 @@ module consulo.application.content.api {
   requires org.jdom;
 
   exports consulo.content;
+  exports consulo.content.base;
   exports consulo.content.bundle;
   exports consulo.content.bundle.event;
   exports consulo.content.library;

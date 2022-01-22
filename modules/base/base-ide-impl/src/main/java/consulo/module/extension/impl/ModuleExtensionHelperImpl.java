@@ -16,11 +16,11 @@
 package consulo.module.extension.impl;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 

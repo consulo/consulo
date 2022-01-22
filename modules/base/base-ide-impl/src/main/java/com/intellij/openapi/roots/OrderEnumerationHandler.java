@@ -18,7 +18,7 @@ package com.intellij.openapi.roots;
 import consulo.content.OrderRootType;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

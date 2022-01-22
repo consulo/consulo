@@ -23,10 +23,10 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Comparing;
 import consulo.content.RootProvider;
 import consulo.logging.Logger;
-import consulo.module.layer.orderEntry.DependencyScope;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
-import consulo.module.layer.orderEntry.RootPolicy;
+import consulo.module.content.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.LibraryOrderEntryType;
 

@@ -23,10 +23,10 @@ package com.intellij.compiler.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.content.FileIndex;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import consulo.application.util.function.Computable;

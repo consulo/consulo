@@ -32,7 +32,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.vcs.FileStatusListener;

@@ -19,7 +19,7 @@ import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.module.layer.ModuleRootModel;
+import consulo.module.content.layer.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Chunk;

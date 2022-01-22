@@ -16,8 +16,8 @@
 package com.intellij.psi.util.proximity;
 
 import consulo.project.Project;
-import consulo.module.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiElement;

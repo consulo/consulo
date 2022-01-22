@@ -15,15 +15,15 @@
  */
 package consulo.roots.orderEntry;
 
-import consulo.module.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.DependencyScope;
 import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import consulo.content.library.Library;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.WriteExternalException;
 import consulo.logging.Logger;
-import consulo.module.layer.ModuleRootLayer;
-import consulo.module.layer.orderEntry.OrderEntryType;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

@@ -16,10 +16,10 @@
 package consulo.roots.ui.configuration.classpath;
 
 import consulo.project.ProjectBundle;
-import consulo.module.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.DependencyScope;
 import com.intellij.openapi.roots.LibraryDependencyScopeSuggester;
-import consulo.module.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.module.layer.ModifiableModuleRootLayer;
+import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 

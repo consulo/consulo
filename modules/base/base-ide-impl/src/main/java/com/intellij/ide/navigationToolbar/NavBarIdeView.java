@@ -4,7 +4,7 @@ package com.intellij.ide.navigationToolbar;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.DirectoryChooserUtil;
 import consulo.module.Module;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.util.containers.JBIterable;

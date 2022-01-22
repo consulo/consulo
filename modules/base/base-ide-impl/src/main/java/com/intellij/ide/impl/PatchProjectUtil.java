@@ -20,13 +20,13 @@
 package com.intellij.ide.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.module.ModifiableModuleModel;
+import consulo.module.ModifiableModuleModel;
 import consulo.content.ContentIterator;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import consulo.module.ModuleRootManager;
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.ModifiableRootModel;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.util.Comparing;

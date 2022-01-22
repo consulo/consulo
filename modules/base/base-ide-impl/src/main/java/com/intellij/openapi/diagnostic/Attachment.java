@@ -5,6 +5,7 @@ import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 
 @Deprecated
 @DeprecationInfo("Use consulo.logging.attachment.Attachment")
@@ -66,7 +67,7 @@ public class Attachment implements consulo.logging.attachment.Attachment {
 
   @Override
   public String getEncodedBytes() {
-    return Base64Converter.encode(myBytes);
+    return Base64.getEncoder().encodeToString(myBytes);
   }
 
   @Override

@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.roots.impl.ModuleRootLayerImpl;
 
 /**

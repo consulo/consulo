@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.module.layer.ContentFolder;
+import consulo.module.content.layer.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryTreeEditor;
 import consulo.virtualFileSystem.VirtualFile;

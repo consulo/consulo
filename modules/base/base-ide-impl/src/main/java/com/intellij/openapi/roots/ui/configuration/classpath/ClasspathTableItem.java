@@ -16,10 +16,10 @@
 package com.intellij.openapi.roots.ui.configuration.classpath;
 
 import consulo.project.Project;
-import consulo.module.layer.orderEntry.DependencyScope;
-import consulo.module.layer.orderEntry.ExportableOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
-import consulo.module.layer.orderEntry.OrderEntryType;
+import consulo.module.content.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.ExportableOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;

@@ -19,7 +19,7 @@ package com.intellij.analysis;
 import com.intellij.find.FindSettings;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;

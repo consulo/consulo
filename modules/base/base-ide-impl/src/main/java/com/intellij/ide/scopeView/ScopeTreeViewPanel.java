@@ -16,7 +16,7 @@
 
 package com.intellij.ide.scopeView;
 
-import consulo.module.ProjectTopics;
+import consulo.module.content.ProjectTopics;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.*;
@@ -45,8 +45,8 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.module.Module;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import consulo.module.layer.event.ModuleRootAdapter;
-import consulo.module.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootAdapter;
+import consulo.module.content.layer.event.ModuleRootEvent;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;

@@ -25,7 +25,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
-import consulo.module.layer.ContentFolder;
+import consulo.module.content.layer.ContentFolder;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.ui.DialogWrapper;

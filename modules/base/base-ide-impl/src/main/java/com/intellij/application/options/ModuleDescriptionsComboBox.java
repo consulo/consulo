@@ -16,9 +16,9 @@
 package com.intellij.application.options;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.*;
-import consulo.module.Module;
+import consulo.module.*;
 import com.intellij.openapi.module.impl.LoadedModuleDescriptionImpl;
+import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.*;

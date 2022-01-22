@@ -16,7 +16,7 @@
 
 package com.intellij.ide.projectView.impl;
 
-import consulo.module.ProjectTopics;
+import consulo.module.content.ProjectTopics;
 import com.intellij.ide.CopyPasteUtil;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarksListener;
@@ -29,8 +29,8 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;

@@ -23,7 +23,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.PropertyName;
 import com.intellij.openapi.actionSystem.*;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

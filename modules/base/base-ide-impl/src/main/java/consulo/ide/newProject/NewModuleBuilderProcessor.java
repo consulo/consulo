@@ -15,8 +15,8 @@
  */
 package consulo.ide.newProject;
 
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.ModifiableRootModel;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ModifiableRootModel;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;

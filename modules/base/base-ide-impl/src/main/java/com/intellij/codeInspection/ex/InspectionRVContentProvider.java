@@ -26,7 +26,7 @@ import com.intellij.codeInspection.ui.*;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.Function;

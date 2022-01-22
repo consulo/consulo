@@ -16,10 +16,10 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.ModifiableModuleModel;
+import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.module.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModifiableRootModel;
 import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;

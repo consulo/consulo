@@ -34,7 +34,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;

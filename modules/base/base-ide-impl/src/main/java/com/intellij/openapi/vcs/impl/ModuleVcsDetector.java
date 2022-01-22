@@ -16,18 +16,9 @@
 
 package com.intellij.openapi.vcs.impl;
 
-import consulo.module.ProjectTopics;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
-import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.ModuleAdapter;
-import consulo.project.Project;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.event.ModuleRootListener;
-import consulo.module.ModuleRootManager;
-import consulo.project.startup.StartupManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,13 +26,23 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDirectoryMapping;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ProjectTopics;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.event.ModuleListener;
+import consulo.project.Project;
+import consulo.project.startup.StartupManager;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
-
 import jakarta.inject.Singleton;
+
 import java.util.*;
 
 /**
@@ -80,7 +81,7 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
       public void run() {
         myConnection = myMessageBus.connect();
         final MyModulesListener listener = new MyModulesListener();
-        myConnection.subscribe(ProjectTopics.MODULES, listener);
+        myConnection.subscribe(ModuleListener.TOPIC, listener);
         myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, listener);
       }
     });

@@ -28,7 +28,7 @@ import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectFileIndex;
 import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.popup.JBPopup;

@@ -17,10 +17,10 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
-import consulo.module.layer.ModuleRootModel;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ModuleRootModel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -64,7 +64,7 @@ import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettin
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.externalSystem.task.TaskCallback;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;

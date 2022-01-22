@@ -2,7 +2,7 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.icons.AllIcons;
 import consulo.module.Module;
-import consulo.module.layer.orderEntry.DependencyScope;
+import consulo.module.content.layer.orderEntry.DependencyScope;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.image.Image;

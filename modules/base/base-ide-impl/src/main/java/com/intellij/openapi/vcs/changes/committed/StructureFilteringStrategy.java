@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.committed;
 import com.intellij.ide.util.treeView.TreeState;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FilePath;

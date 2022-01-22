@@ -20,7 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.project.Project;
-import consulo.module.layer.OrderEnumerator;
+import consulo.module.content.layer.OrderEnumerator;
 
 public final class ProjectPathMacro extends Macro {
   @Override

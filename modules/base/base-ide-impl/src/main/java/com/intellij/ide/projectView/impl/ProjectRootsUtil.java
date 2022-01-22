@@ -17,7 +17,7 @@ package com.intellij.ide.projectView.impl;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.module.layer.ContentFolder;
+import consulo.module.content.layer.ContentFolder;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import consulo.project.content.TestSourcesFilter;

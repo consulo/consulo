@@ -16,10 +16,10 @@
 package consulo.module.extension.condition.impl;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.module.extension.condition.ModuleExtensionCondition;
 import consulo.project.Project;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.util.ArrayUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.extensions.ListOfElementsEP;

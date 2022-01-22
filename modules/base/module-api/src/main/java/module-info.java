@@ -16,8 +16,4 @@ module consulo.module.api {
   exports consulo.module.extension.swing;
   exports consulo.module.extension.condition;
   exports consulo.module.extension.event;
-  exports consulo.module.layer;
-  exports consulo.module.layer.event;
-  exports consulo.module.layer.orderEntry;
-  exports consulo.module.content;
 }

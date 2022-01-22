@@ -16,14 +16,14 @@
 package com.intellij.ide.impl.util;
 
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.ModifiableModuleModel;
+import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
-import consulo.module.layer.ContentEntry;
-import consulo.module.layer.ModifiableRootModel;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;

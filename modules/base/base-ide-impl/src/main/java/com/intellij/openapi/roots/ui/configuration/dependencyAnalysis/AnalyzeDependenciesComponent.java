@@ -15,37 +15,37 @@
  */
 package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 
-import consulo.module.ProjectTopics;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.module.Module;
-import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.module.layer.event.ModuleRootAdapter;
-import consulo.module.layer.event.ModuleRootEvent;
-import consulo.module.layer.orderEntry.ModuleSourceOrderEntry;
-import consulo.module.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.Pair;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.configurable.ConfigurationException;
+import consulo.module.Module;
+import consulo.module.content.layer.event.ModuleRootAdapter;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -98,7 +98,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     init();
     getSplitter().setProportion(0.3f);
     myMessageBusConnection = myModule.getProject().getMessageBus().connect();
-    myMessageBusConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    myMessageBusConnection.subscribe(ModuleRootListener.TOPIC, new ModuleRootAdapter() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         myClasspaths.clear();

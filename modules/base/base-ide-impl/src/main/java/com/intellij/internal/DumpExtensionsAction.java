@@ -22,7 +22,7 @@ import consulo.component.ComponentManager;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import consulo.component.extension.ExtensionPoint;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleManager;
+import consulo.module.ModuleManager;
 import consulo.configurable.Configurable;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;

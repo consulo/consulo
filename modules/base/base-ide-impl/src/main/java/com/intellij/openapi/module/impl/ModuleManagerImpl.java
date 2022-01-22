@@ -16,22 +16,23 @@
 
 package com.intellij.openapi.module.impl;
 
-import consulo.module.ProjectTopics;
+import consulo.module.*;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PathMacroManager;
 import consulo.component.persist.PersistentStateComponentWithModificationTracker;
 import com.intellij.openapi.components.StateStorageException;
-import consulo.module.Module;
 import com.intellij.openapi.module.*;
+import consulo.module.Module;
+import consulo.module.event.ModuleListener;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import consulo.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.module.layer.ModifiableRootModel;
-import consulo.module.ModuleRootManager;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
@@ -54,7 +55,6 @@ import consulo.application.AccessRule;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.module.ModuleDirIsNotExistsException;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
@@ -348,20 +348,20 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
   }
 
   protected void fireModuleAdded(Module module) {
-    myMessageBus.syncPublisher(ProjectTopics.MODULES).moduleAdded(myProject, module);
+    myMessageBus.syncPublisher(ModuleListener.TOPIC).moduleAdded(myProject, module);
   }
 
   protected void fireModuleRemoved(Module module) {
-    myMessageBus.syncPublisher(ProjectTopics.MODULES).moduleRemoved(myProject, module);
+    myMessageBus.syncPublisher(ModuleListener.TOPIC).moduleRemoved(myProject, module);
   }
 
   protected void fireBeforeModuleRemoved(Module module) {
-    myMessageBus.syncPublisher(ProjectTopics.MODULES).beforeModuleRemoved(myProject, module);
+    myMessageBus.syncPublisher(ModuleListener.TOPIC).beforeModuleRemoved(myProject, module);
   }
 
   protected void fireModulesRenamed(List<Module> modules) {
     if (!modules.isEmpty()) {
-      myMessageBus.syncPublisher(ProjectTopics.MODULES).modulesRenamed(myProject, modules);
+      myMessageBus.syncPublisher(ModuleListener.TOPIC).modulesRenamed(myProject, modules);
     }
   }
 
