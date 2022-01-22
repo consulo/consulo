@@ -7,11 +7,11 @@ import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.generation.surroundWith.SurroundWithHandler;
 import com.intellij.codeInsight.template.TemplateActionContext;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageSurrounders;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
 

@@ -6,7 +6,7 @@
 package com.intellij.psi.stubs;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.io.KeyDescriptor;
 import javax.annotation.Nonnull;
 

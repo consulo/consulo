@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public class PrintAction extends AnAction implements DumbAware {
   public PrintAction() {

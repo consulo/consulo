@@ -25,7 +25,7 @@ import consulo.project.Project;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.profile.DefaultProjectProfileManager;
 import com.intellij.profile.Profile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

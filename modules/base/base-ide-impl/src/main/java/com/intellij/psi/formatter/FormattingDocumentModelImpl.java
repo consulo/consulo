@@ -17,16 +17,16 @@
 package com.intellij.psi.formatter;
 
 import com.intellij.formatting.FormattingDocumentModel;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;

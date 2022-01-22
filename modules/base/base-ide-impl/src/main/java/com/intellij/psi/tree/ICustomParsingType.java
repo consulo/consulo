@@ -15,8 +15,14 @@
  */
 package com.intellij.psi.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.util.CharTable;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.ILazyParseableElementTypeBase;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.util.CharTable;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ILazyParseableElementType;
+import consulo.language.parser.PsiBuilder;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -24,13 +30,13 @@ import javax.annotation.Nonnull;
  * Parsing is done when leaf elements are created.<p/>
  *
  * Use this for cases similar to {@link ILazyParseableElementType}, but when its default implementation isn't sufficient.
- * For example, default lazy-parseable elements can't be stub-based (see {@link com.intellij.psi.stubs.IStubElementType}),
+ * For example, default lazy-parseable elements can't be stub-based (see {@link IStubElementType}),
  * while {@link ICustomParsingType} gives you flexibility to achieve that in conjunction with {@link ILazyParseableElementTypeBase}.
  */
 public interface ICustomParsingType {
 
   /**
-   * Invoked by {@link com.intellij.lang.PsiBuilder} when it finds a token of this type,
+   * Invoked by {@link PsiBuilder} when it finds a token of this type,
    * instead of creating the leaf element for it in a default way.
    * @param text token text
    * @param table {@link CharTable} object used for interning string in the file

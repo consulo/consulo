@@ -31,6 +31,7 @@ import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import consulo.document.FileDocumentManager;
 import consulo.application.util.function.Processor;
 import consulo.document.Document;
+import consulo.language.util.IncorrectOperationException;
 import consulo.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.util.ProperTextRange;

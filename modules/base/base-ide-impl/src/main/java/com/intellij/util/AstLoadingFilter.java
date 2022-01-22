@@ -5,7 +5,7 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.exception.FrequentErrorLogger;
 import consulo.application.util.function.ThrowableRunnable;
 import consulo.logging.Logger;

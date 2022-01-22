@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.Extensions;
@@ -34,7 +35,6 @@ import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 
 import javax.annotation.Nonnull;

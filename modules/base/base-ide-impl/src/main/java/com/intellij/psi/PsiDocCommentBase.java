@@ -15,6 +15,9 @@
  */
 package com.intellij.psi;
 
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nullable;
 
 /**

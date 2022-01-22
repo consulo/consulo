@@ -16,11 +16,13 @@
 
 package com.intellij.lang.folding;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.Language;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,7 +33,7 @@ import java.util.Objects;
  * by the plugin.
  *
  * @author max
- * @see com.intellij.lang.folding.LanguageFolding#forLanguage(com.intellij.lang.Language)
+ * @see com.intellij.lang.folding.LanguageFolding#forLanguage(Language)
  */
 
 public abstract class FoldingBuilderEx implements FoldingBuilder {

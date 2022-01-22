@@ -16,8 +16,9 @@
 
 package com.intellij.lang;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.Language;
 
 import java.util.ArrayList;
 import java.util.List;

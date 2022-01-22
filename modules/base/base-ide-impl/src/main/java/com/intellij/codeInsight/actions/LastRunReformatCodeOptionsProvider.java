@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.actions;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiFile;
+import consulo.language.Language;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 public class LastRunReformatCodeOptionsProvider {

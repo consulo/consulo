@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.impl.nodes.PsiFileNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;

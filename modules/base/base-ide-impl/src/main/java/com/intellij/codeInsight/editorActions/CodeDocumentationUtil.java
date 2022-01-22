@@ -21,7 +21,7 @@ import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
 import consulo.document.Document;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.DocCommentSettings;
 import com.intellij.psi.util.PsiUtilCore;

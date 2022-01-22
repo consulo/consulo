@@ -22,8 +22,8 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
 public interface CommonDataKeys {
   Key<Project> PROJECT = Key.create("project");

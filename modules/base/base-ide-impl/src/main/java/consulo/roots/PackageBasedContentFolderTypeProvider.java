@@ -15,13 +15,13 @@
  */
 package consulo.roots;
 
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ComponentManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.project.Project;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
+import consulo.language.psi.PsiPackage;
+import consulo.language.psi.PsiPackageManager;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 

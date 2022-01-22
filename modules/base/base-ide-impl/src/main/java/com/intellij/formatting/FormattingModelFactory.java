@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 

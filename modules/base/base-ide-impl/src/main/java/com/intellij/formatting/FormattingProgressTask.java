@@ -24,7 +24,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
 import com.intellij.util.containers.ContainerUtil;

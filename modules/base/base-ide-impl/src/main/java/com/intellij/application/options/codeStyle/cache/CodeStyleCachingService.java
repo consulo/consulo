@@ -4,7 +4,7 @@ package com.intellij.application.options.codeStyle.cache;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;

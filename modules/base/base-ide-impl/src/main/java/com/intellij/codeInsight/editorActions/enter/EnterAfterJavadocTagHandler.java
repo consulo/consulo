@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

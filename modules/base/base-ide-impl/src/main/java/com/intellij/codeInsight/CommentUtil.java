@@ -19,7 +19,7 @@ package com.intellij.codeInsight;
 import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.IndentData;
 import consulo.document.Document;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.codeInsight.CommentUtilCore;
 import com.intellij.util.text.CharArrayUtil;
 

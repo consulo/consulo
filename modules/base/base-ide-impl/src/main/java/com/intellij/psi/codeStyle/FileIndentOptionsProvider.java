@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

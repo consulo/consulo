@@ -19,8 +19,9 @@
  */
 package com.intellij.lang;
 
-import com.intellij.psi.tree.IElementType;
-import consulo.lang.LanguageVersion;
+import consulo.language.ast.IElementType;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.version.LanguageVersion;
 
 public class DefaultWordCompletionFilter implements WordCompletionElementFilter {
   @Override

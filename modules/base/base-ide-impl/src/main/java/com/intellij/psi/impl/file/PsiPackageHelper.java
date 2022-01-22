@@ -18,8 +18,8 @@ package com.intellij.psi.impl.file;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiDirectoryContainer;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectoryContainer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

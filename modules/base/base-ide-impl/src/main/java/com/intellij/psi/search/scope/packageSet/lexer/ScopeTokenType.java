@@ -19,8 +19,8 @@
  */
 package com.intellij.psi.search.scope.packageSet.lexer;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

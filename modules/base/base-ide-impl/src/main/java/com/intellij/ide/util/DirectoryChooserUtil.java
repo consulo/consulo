@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import com.intellij.refactoring.RefactoringBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

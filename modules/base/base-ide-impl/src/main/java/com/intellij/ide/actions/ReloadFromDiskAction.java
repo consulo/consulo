@@ -25,9 +25,9 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 
 public class ReloadFromDiskAction extends AnAction implements DumbAware {
   @Override

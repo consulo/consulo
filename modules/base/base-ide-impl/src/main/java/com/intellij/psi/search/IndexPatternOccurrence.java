@@ -2,7 +2,7 @@
 package com.intellij.psi.search;
 
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;

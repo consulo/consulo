@@ -16,8 +16,8 @@
 
 package com.intellij.lang;
 
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiComment;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nullable;
 
 /**

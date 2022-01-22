@@ -1,6 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.tree.project;
 
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;

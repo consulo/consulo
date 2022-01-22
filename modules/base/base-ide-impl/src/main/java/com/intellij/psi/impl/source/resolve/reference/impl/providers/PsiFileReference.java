@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.psi.PsiPolyVariantReference;
+import consulo.language.psi.PsiPolyVariantReference;
 
 /**
  * A reference that is known to resolve to a PsiFile.

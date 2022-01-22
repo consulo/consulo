@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.lang.Language;
-import com.intellij.lexer.Lexer;
+import consulo.language.Language;
+import consulo.language.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 /**

@@ -15,7 +15,7 @@
  */
 package org.intellij.plugins.intelliLang.inject;
 
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 /**

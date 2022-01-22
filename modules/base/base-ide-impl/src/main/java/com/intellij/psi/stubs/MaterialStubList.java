@@ -2,6 +2,8 @@
 
 package com.intellij.psi.stubs;
 
+import consulo.language.psi.stub.IStubElementType;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

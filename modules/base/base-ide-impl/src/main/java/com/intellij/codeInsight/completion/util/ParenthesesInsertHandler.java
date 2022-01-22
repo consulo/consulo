@@ -21,9 +21,9 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

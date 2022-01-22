@@ -16,6 +16,7 @@
 package com.intellij.refactoring.listeners;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
 /**
@@ -29,7 +30,7 @@ import consulo.project.Project;
  *  with this class.
  * <li> before some <code>PsiElement</code> is subjected to a refactoring, all registered providers
  *  are asked to provide a {@link RefactoringElementListener} for that element
- * ({@link RefactoringElementListenerProvider#getListener(com.intellij.psi.PsiElement)} is invoked)
+ * ({@link RefactoringElementListenerProvider#getListener(PsiElement)} is invoked)
  * <li>When refactoring is completed, listeners for all refactoring subjects are notified,
  * </ul>
  */

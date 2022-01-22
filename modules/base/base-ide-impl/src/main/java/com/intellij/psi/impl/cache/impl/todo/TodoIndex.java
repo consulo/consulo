@@ -16,24 +16,24 @@
 
 package com.intellij.psi.impl.cache.impl.todo;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
+import consulo.language.parser.ParserDefinition;
 import consulo.application.Application;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import com.intellij.psi.search.IndexPatternProvider;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.IntInlineKeyDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import consulo.lang.util.LanguageVersionUtil;
+import consulo.language.version.LanguageVersionUtil;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 

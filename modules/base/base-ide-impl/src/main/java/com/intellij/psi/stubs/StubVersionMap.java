@@ -1,12 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.stubs;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
+import consulo.language.parser.ParserDefinition;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
@@ -15,7 +15,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.psi.templateLanguages.TemplateLanguage;
-import com.intellij.psi.tree.IFileElementType;
+import consulo.language.ast.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IndexInfrastructure;

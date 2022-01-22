@@ -16,8 +16,8 @@
 package com.intellij.refactoring;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import com.intellij.psi.*;
 
 /**
  * @author dsl

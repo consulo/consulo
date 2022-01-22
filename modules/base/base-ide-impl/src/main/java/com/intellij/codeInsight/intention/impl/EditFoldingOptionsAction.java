@@ -22,8 +22,8 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 
 /**

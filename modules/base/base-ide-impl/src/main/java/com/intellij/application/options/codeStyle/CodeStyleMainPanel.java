@@ -19,7 +19,7 @@ package com.intellij.application.options.codeStyle;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.psi.codeStyle.CodeStyleScheme;

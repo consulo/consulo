@@ -21,8 +21,8 @@ package com.intellij.psi.impl.source.tree;
 
 import com.intellij.lang.ForeignLeafType;
 import com.intellij.lang.TokenWrapper;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 public class ForeignLeafPsiElement extends LeafPsiElement {

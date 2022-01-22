@@ -16,16 +16,16 @@
 package com.intellij.psi.formatter.common;
 
 import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import com.intellij.lang.LanguageFormatting;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import javax.annotation.Nonnull;

@@ -24,8 +24,8 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.awt.TargetAWT;
 
 import javax.swing.*;

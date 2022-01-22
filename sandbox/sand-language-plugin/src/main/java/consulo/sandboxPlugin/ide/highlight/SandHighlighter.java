@@ -15,10 +15,10 @@
  */
 package consulo.sandboxPlugin.ide.highlight;
 
-import consulo.lang.LanguageVersion;
-import com.intellij.lexer.Lexer;
+import consulo.language.version.LanguageVersion;
+import consulo.language.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import consulo.fileTypes.LanguageVersionableSyntaxHighlighter;
 import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;

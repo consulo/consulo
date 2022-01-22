@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.template.Expression;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;

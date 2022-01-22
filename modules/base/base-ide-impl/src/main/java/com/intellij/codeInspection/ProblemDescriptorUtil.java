@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Couple;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 

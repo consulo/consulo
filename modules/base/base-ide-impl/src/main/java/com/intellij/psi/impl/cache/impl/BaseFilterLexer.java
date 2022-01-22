@@ -16,8 +16,8 @@
 
 package com.intellij.psi.impl.cache.impl;
 
-import com.intellij.lexer.DelegateLexer;
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.DelegateLexer;
+import consulo.language.lexer.Lexer;
 import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.UsageSearchContext;

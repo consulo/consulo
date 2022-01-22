@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.component.extension.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;

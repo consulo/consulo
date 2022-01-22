@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.highlighting;
 
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 import java.util.List;

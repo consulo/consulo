@@ -16,12 +16,14 @@
 
 package com.intellij.psi.impl;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;

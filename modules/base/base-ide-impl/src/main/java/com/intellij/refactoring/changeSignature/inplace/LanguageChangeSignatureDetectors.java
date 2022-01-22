@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature.inplace;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
 import consulo.container.plugin.PluginIds;
 

@@ -16,6 +16,9 @@
 package com.intellij.psi;
 
 import com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

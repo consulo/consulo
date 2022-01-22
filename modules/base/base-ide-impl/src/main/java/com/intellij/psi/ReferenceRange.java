@@ -20,6 +20,9 @@
 package com.intellij.psi;
 
 import consulo.document.util.TextRange;
+import consulo.language.psi.MultiRangeReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 
 import java.util.ArrayList;
 import java.util.Collections;

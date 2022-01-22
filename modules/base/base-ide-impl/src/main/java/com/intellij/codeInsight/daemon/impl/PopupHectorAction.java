@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public class PopupHectorAction extends AnAction {
 

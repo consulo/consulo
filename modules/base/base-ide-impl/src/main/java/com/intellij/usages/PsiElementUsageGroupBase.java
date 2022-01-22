@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.usageView.UsageInfo;

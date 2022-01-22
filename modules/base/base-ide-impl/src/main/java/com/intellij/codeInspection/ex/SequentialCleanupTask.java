@@ -21,7 +21,7 @@ import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
 import consulo.logging.Logger;

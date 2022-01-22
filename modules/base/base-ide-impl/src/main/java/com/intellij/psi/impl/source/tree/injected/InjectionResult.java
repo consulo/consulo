@@ -3,7 +3,7 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.injection.ReferenceInjector;
 import javax.annotation.Nonnull;
 

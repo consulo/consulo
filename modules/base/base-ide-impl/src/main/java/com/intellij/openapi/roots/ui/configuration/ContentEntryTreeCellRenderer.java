@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.roots.ContentFoldersSupportUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.module.extension.ModuleExtension;
-import consulo.psi.PsiPackageSupportProvider;
+import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.roots.ContentFolderScopes;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

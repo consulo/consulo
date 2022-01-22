@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.document.Document;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 /**
  * A delegate which is called when "Join lines" is selected.

@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 
 /**
  * @author zolotov

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.navigation;
 
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nullable;
 
 /**

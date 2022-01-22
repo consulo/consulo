@@ -15,11 +15,11 @@
  */
 package com.intellij.psi.codeStyle.arrangement;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.document.Document;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;

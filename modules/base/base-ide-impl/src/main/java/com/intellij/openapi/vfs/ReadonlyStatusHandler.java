@@ -18,8 +18,8 @@ package com.intellij.openapi.vfs;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

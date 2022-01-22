@@ -15,10 +15,14 @@
  */
 package com.intellij.lang.impl;
 
-import com.intellij.lang.*;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.LighterASTNode;
+import consulo.language.parser.ITokenTypeRemapper;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.WhitespaceSkippedCallback;
 import consulo.project.Project;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;

@@ -15,28 +15,28 @@
  */
 package com.intellij.psi.impl.file;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
 import consulo.application.ApplicationManager;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.ui.Queryable;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiElementBase;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.module.extension.ModuleExtension;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
+import consulo.language.psi.PsiPackage;
+import consulo.language.psi.PsiPackageManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;

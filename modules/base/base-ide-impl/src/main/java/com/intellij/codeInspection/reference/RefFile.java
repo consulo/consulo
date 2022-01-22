@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.reference;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 /**
  * A node in the reference graph corresponding to a file.

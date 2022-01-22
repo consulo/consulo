@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 public class SyntaxHighlighterLanguageFactory extends LanguageExtension<SyntaxHighlighterFactory> {

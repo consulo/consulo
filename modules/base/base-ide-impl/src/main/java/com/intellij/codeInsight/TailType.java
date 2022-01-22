@@ -16,14 +16,14 @@
 package com.intellij.codeInsight;
 
 import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.editor.CaretModel;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.util.PsiUtilCore;

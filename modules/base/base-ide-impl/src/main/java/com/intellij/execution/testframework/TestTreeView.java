@@ -30,7 +30,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.GraphicsConfig;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;

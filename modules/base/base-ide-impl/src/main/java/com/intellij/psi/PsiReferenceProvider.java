@@ -17,6 +17,9 @@
 package com.intellij.psi;
 
 import com.intellij.util.ProcessingContext;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceService;
 
 import javax.annotation.Nonnull;
 

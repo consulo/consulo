@@ -19,7 +19,7 @@ import com.intellij.codeInsight.template.postfix.settings.PostfixTemplateMetaDat
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

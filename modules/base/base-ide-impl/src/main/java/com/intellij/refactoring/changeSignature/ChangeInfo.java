@@ -16,8 +16,8 @@
 
 package com.intellij.refactoring.changeSignature;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiElement;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 /**

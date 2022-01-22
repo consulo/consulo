@@ -16,10 +16,10 @@
 
 package com.intellij.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiTreeChangeEvent;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.event.PsiTreeChangeEvent;
 
 public class PsiTreeChangeEventImpl extends PsiTreeChangeEvent{
   private boolean isGenericChange;

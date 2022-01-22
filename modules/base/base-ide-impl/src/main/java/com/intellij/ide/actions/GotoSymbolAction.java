@@ -4,7 +4,7 @@ package com.intellij.ide.actions;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.actions.searcheverywhere.SymbolSearchEverywhereContributor;
 import com.intellij.ide.util.gotoByName.*;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -12,7 +12,7 @@ import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import javax.annotation.Nonnull;
 
 public class GotoSymbolAction extends GotoActionBase implements DumbAware {

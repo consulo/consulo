@@ -17,7 +17,7 @@
 package com.intellij.patterns.compiler;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 

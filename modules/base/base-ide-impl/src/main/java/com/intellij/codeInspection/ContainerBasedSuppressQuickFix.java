@@ -1,6 +1,6 @@
 package com.intellij.codeInspection;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * This kind of suppression fix is able to provide suppression container.

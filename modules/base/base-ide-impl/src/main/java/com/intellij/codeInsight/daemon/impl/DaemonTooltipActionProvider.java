@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.ex.TooltipAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
 

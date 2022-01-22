@@ -25,7 +25,7 @@
 package com.intellij.refactoring.rename;
 
 import com.intellij.refactoring.util.MoveRenameUsageInfo;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 public class CollisionUsageInfo extends MoveRenameUsageInfo {
   public CollisionUsageInfo(PsiElement element, PsiElement referencedElement) {

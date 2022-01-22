@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import consulo.application.util.function.Computable;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;

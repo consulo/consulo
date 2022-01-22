@@ -1,6 +1,6 @@
 package com.intellij.dupLocator.treeView;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 public interface NodeMatcher {
   boolean match(PsiElement node);

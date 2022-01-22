@@ -20,7 +20,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.impl.DebugUtil;
 import consulo.application.util.function.ThrowableRunnable;

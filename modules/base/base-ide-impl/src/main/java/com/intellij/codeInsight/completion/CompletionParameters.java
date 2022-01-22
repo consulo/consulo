@@ -2,9 +2,11 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -64,7 +66,7 @@ public final class CompletionParameters {
    * Why? This way there'll always be some non-empty element there, which usually reduces the number of
    * possible cases to be considered inside a {@link CompletionContributor}.
    * Also, even if completion was invoked in the middle of a white space, a reference might appear there after dummy identifier is inserted,
-   * and its {@link com.intellij.psi.PsiReference#getVariants()} can then be suggested.<p></p>
+   * and its {@link PsiReference#getVariants()} can then be suggested.<p></p>
    * <p>
    * If the dummy identifier is empty, then the file isn't copied and this method returns whatever is at caret in the original file.
    */

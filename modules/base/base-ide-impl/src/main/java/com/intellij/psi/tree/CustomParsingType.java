@@ -19,9 +19,10 @@
  */
 package com.intellij.psi.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.util.CharTable;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.language.util.CharTable;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

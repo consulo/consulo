@@ -15,9 +15,9 @@
  */
 package com.intellij.psi.templateLanguages;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.Language;
+import consulo.language.file.FileViewProvider;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 /**

@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.reference.SoftReference;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;

@@ -19,8 +19,8 @@ package com.intellij.codeInsight.editorActions.moveUpDown;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import javax.annotation.Nonnull;
 

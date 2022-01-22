@@ -19,11 +19,11 @@ package com.intellij.codeInsight.editorActions.moveUpDown;
 import com.intellij.openapi.editor.*;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 
@@ -54,7 +54,7 @@ public abstract class StatementUpDownMover {
     public boolean indentTarget = true;
 
     /**
-     * Use this method in {@link StatementUpDownMover#checkAvailable(com.intellij.openapi.editor.Editor, com.intellij.psi.PsiFile, com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover.MoveInfo, boolean)}
+     * Use this method in {@link StatementUpDownMover#checkAvailable(com.intellij.openapi.editor.Editor, PsiFile, com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover.MoveInfo, boolean)}
      * @return true to suppress further movers processing
      */
     public final boolean prohibitMove() {

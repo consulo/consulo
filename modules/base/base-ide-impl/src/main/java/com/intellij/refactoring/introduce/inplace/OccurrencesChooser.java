@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.Pass;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
 

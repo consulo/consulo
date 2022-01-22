@@ -40,6 +40,7 @@ open module consulo.ide.impl {
   requires transitive consulo.file.chooser.api;
   requires transitive consulo.project.content.api;
   requires transitive consulo.module.content.api;
+  requires transitive consulo.language.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -497,7 +498,6 @@ open module consulo.ide.impl {
   exports com.intellij.lang.pratt;
   exports com.intellij.lang.refactoring;
   exports com.intellij.lang.surroundWith;
-  exports com.intellij.lexer;
   exports com.intellij.model.search;
   exports com.intellij.model.search.impl;
   exports com.intellij.moduleDependencies;
@@ -1272,9 +1272,7 @@ open module consulo.ide.impl {
   //exports consulo.internal;
   exports consulo.internal.actions;
   exports consulo.internal.statistic;
-  exports consulo.lang;
   exports consulo.lang.injection;
-  exports consulo.lang.util;
   //exports consulo.language;
   exports consulo.language.editor;
   exports consulo.module.bundle;
@@ -1320,7 +1318,6 @@ open module consulo.ide.impl {
   exports consulo.roots.impl;
   exports consulo.roots.impl.property;
   exports consulo.roots.orderEntry;
-  exports consulo.roots.types;
   exports consulo.roots.ui;
   exports consulo.roots.ui.configuration;
   exports consulo.roots.ui.configuration.classpath;

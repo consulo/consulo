@@ -26,7 +26,7 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.openapi.editor.EditorKind;
 import com.intellij.openapi.editor.EditorSettings;
@@ -36,8 +36,8 @@ import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import javax.annotation.Nonnull;
 

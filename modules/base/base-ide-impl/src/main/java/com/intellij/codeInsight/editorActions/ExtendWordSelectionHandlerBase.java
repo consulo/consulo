@@ -20,7 +20,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

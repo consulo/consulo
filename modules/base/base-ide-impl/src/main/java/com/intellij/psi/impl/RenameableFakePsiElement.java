@@ -15,12 +15,12 @@
  */
 package com.intellij.psi.impl;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.meta.PsiMetaOwner;
 import com.intellij.psi.meta.PsiPresentableMetaData;

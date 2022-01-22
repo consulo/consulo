@@ -15,13 +15,15 @@
  */
 package com.intellij.psi;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -46,7 +48,7 @@ public abstract class PsiFileFactory {
    * @param name the name of the file to create (the extension of the name determines the file type).
    * @param text the text of the file to create.
    * @return the created file.
-   * @throws com.intellij.util.IncorrectOperationException if the file type with specified extension is binary.
+   * @throws IncorrectOperationException if the file type with specified extension is binary.
    */
   @Deprecated
   @Nonnull

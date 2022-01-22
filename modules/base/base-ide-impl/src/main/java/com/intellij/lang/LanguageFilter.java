@@ -16,7 +16,8 @@
 
 package com.intellij.lang;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.Language;
 
 public interface LanguageFilter {
   boolean isRelevantForFile(final PsiFile psi);

@@ -2,12 +2,12 @@
 package com.intellij.application.options;
 
 import com.intellij.application.options.codeStyle.cache.CodeStyleCachingService;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.*;
 import org.jetbrains.annotations.TestOnly;

@@ -15,11 +15,11 @@
  */
 package com.intellij.psi.injection;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
@@ -40,7 +40,7 @@ public abstract class ReferenceInjector extends Injectable {
   }
 
   /**
-   * Generated references should be soft ({@link com.intellij.psi.PsiReference#isSoft()})
+   * Generated references should be soft ({@link PsiReference#isSoft()})
    */
   @Nonnull
   public abstract PsiReference[] getReferences(@Nonnull PsiElement element, @Nonnull final ProcessingContext context, @Nonnull TextRange range);

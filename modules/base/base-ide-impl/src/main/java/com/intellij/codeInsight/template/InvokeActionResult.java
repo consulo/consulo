@@ -17,8 +17,8 @@
 
 package com.intellij.codeInsight.template;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.document.Document;
 
 public class InvokeActionResult implements Result{

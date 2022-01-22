@@ -22,10 +22,10 @@ import com.intellij.openapi.editor.*;
 import consulo.project.Project;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.DocumentUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 
 public class AutoIndentLinesHandler implements CodeInsightActionHandler {

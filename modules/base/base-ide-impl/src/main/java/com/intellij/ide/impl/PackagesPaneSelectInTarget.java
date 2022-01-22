@@ -23,7 +23,7 @@ import com.intellij.ide.projectView.impl.PackageViewPane;
 import consulo.project.Project;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFileSystemItem;
 import com.intellij.psi.util.PsiUtilBase;
 import consulo.component.extension.ExtensionTypeImpl;
 import consulo.virtualFileSystem.VirtualFile;

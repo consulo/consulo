@@ -18,7 +18,7 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfoProcessor;
 import consulo.document.Document;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

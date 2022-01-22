@@ -17,7 +17,7 @@
 package com.intellij.ide.fileTemplates;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import consulo.annotation.DeprecationInfo;
 
 import java.util.Enumeration;

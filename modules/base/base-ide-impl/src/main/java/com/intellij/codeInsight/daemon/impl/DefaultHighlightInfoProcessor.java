@@ -16,8 +16,8 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Alarm;
 

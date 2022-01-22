@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.rename.naming;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.usageView.UsageInfo;
 

@@ -2,18 +2,18 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.formatting.FormattingMode;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.ThrowableRunnable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

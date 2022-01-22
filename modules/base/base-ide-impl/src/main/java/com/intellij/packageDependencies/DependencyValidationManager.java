@@ -17,7 +17,7 @@ package com.intellij.packageDependencies;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import javax.annotation.Nonnull;

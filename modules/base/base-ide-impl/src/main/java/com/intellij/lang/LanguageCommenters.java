@@ -17,6 +17,7 @@
 package com.intellij.lang;
 
 import consulo.container.plugin.PluginIds;
+import consulo.language.LanguageExtension;
 
 /**
  * @author yole

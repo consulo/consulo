@@ -16,7 +16,7 @@
 package com.intellij.ide.scratch;
 
 import com.intellij.ide.navigationToolbar.AbstractNavBarModelExtension;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.PerFileMappings;
 import com.intellij.lang.PerFileMappingsBase;
@@ -44,10 +44,10 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.LanguageSubstitutor;
+import consulo.language.psi.LanguageSubstitutor;
 import com.intellij.psi.LanguageSubstitutors;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.UseScopeEnlarger;

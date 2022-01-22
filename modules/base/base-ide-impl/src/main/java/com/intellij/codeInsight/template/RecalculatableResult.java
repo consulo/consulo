@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template;
 
 import consulo.document.Document;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author yole

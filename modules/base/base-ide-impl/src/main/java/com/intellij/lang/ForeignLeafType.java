@@ -20,8 +20,10 @@
 package com.intellij.lang;
 
 import com.intellij.psi.impl.source.tree.ForeignLeafPsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.psi.tree.ILeafElementType;
+import consulo.language.ast.ASTNode;
+
 import javax.annotation.Nonnull;
 
 public class ForeignLeafType extends TokenWrapper implements ILeafElementType {

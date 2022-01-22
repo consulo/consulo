@@ -22,7 +22,7 @@ import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ui.image.Image;
 

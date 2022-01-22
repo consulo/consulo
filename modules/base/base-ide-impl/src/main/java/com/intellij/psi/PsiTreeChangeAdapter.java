@@ -15,6 +15,9 @@
  */
 package com.intellij.psi;
 
+import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.language.psi.event.PsiTreeChangeListener;
+
 import javax.annotation.Nonnull;
 
 /**

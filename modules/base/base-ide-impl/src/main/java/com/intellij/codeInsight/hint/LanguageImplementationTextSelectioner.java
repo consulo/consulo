@@ -20,7 +20,7 @@
  */
 package com.intellij.codeInsight.hint;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 public class LanguageImplementationTextSelectioner extends LanguageExtension<ImplementationTextSelectioner>{

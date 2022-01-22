@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 public class SingletonIterator<T> extends SingletonIteratorBase<T> {
   private final T myElement;

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.formatter;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**

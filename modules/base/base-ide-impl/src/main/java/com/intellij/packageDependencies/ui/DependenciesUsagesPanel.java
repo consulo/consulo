@@ -24,8 +24,8 @@ import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.FindDependencyUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usageView.UsageInfo;
 

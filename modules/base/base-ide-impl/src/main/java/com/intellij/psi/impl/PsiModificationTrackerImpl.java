@@ -1,17 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
+import consulo.language.psi.*;
+import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.component.util.ModificationTracker;
 import consulo.component.util.SimpleModificationTracker;
-import com.intellij.psi.*;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.language.ast.IElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import consulo.component.messagebus.MessageBus;

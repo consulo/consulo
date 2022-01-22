@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import consulo.content.ContentFolderTypeProvider;
 
 public class DirectoryPresentationProvider implements ItemPresentationProvider<PsiDirectory> {

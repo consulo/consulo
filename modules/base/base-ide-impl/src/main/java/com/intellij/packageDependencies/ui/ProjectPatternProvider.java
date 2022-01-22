@@ -30,7 +30,7 @@ import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyUISettings;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import consulo.logging.Logger;

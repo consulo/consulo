@@ -16,6 +16,7 @@
 package com.intellij.psi.scope;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

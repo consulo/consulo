@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageExtension;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;

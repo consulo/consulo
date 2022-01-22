@@ -15,11 +15,11 @@
  */
 package consulo.sandboxPlugin.lang.version;
 
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import consulo.sandboxPlugin.lang.Sand2FileType;
 import consulo.sandboxPlugin.lang.lexer.Sand2Lexer;
 import consulo.sandboxPlugin.lang.psi.Sand2Tokens;

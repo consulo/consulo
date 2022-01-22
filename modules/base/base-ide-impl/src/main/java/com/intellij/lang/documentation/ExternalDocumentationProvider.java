@@ -21,7 +21,7 @@
 package com.intellij.lang.documentation;
 
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nullable;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public interface ExternalDocumentationProvider {
 
   /**
    * Quick check for existence of external documentation for specified element. Called from action update, so must be fast.
-   * If not implemented, update check is performed by calling {@link DocumentationProvider#getUrlFor(com.intellij.psi.PsiElement, com.intellij.psi.PsiElement)}.
+   * If not implemented, update check is performed by calling {@link DocumentationProvider#getUrlFor(PsiElement, PsiElement)}.
    *
    * @param element the element to check for existence of documentation
    * @param originalElement the element at caret (on which the action was invoked)

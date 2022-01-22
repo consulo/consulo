@@ -17,16 +17,16 @@
 package com.intellij.psi.impl.cache.impl.id;
 
 import com.intellij.ide.highlighter.custom.CustomFileTypeLexer;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.cacheBuilder.*;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.lang.findUsages.LanguageFindUsages;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.psi.CustomHighlighterTokenType;
 import com.intellij.psi.search.UsageSearchContext;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.IdDataConsumer;

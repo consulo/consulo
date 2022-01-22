@@ -17,6 +17,7 @@ package com.intellij.ide.navigationToolbar;
 
 import com.intellij.analysis.AnalysisScopeBundle;
 import consulo.application.ApplicationManager;
+import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
@@ -28,7 +29,6 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiFileSystemItemProcessor;
 import com.intellij.psi.util.PsiUtilCore;

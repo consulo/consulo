@@ -15,6 +15,9 @@
  */
 package com.intellij.psi;
 
+import consulo.language.psi.PsiCompiledElement;
+import consulo.language.psi.PsiFile;
+
 /**
  * @author Evgeny Gerashchenko
  * @since 3/1/12

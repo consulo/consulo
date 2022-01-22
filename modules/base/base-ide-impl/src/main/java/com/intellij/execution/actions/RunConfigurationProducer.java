@@ -26,7 +26,7 @@ import consulo.logging.Logger;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
 import java.util.List;

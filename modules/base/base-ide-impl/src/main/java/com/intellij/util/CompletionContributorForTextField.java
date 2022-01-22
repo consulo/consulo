@@ -5,8 +5,8 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import consulo.project.DumbAware;
 import consulo.project.DumbService;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPlainTextFile;import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiPlainTextFile;import consulo.annotation.access.RequiredReadAction;
 
 /**
  * @author sergey.evdokimov

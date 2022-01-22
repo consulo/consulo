@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 

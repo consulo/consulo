@@ -16,7 +16,7 @@
 package com.intellij.codeHighlighting;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 /**

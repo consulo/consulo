@@ -20,7 +20,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import javax.annotation.Nonnull;
 
 public class SmartTreeStructure extends AbstractTreeStructure {

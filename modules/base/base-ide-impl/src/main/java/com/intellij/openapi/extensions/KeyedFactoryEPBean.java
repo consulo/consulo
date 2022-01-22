@@ -17,6 +17,7 @@
 package com.intellij.openapi.extensions;
 
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.component.extension.AbstractExtensionPointBean;
 
 /**
  * @author yole

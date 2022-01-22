@@ -25,8 +25,8 @@ import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.psi.PsiDirectoryContainer;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiDirectoryContainer;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public class FindInPathAction extends AnAction implements DumbAware {

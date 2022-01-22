@@ -3,9 +3,9 @@ package com.intellij.formatting;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.lang.LanguageFormattingRestriction;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiInvalidElementAccessException;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 

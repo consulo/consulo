@@ -15,8 +15,10 @@
  */
 package com.intellij.psi;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageUtil;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import consulo.progress.ProcessCanceledException;

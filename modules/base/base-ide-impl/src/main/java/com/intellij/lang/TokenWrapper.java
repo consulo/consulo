@@ -19,7 +19,7 @@
  */
 package com.intellij.lang;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 public class TokenWrapper extends IElementType {
   private final IElementType myDelegate;

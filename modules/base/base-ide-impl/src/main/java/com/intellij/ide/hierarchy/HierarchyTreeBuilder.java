@@ -26,9 +26,9 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.PsiTreeChangeAdapter;
-import com.intellij.psi.PsiTreeChangeEvent;
+import consulo.language.psi.event.PsiTreeChangeEvent;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

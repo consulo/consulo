@@ -15,8 +15,10 @@
  */
 package com.intellij.semantic;
 
+import consulo.language.psi.PsiElement;
+
 /**
- * Represents a computed and cached value attached to {@link com.intellij.psi.PsiElement} using {@link SemKey}.
+ * Represents a computed and cached value attached to {@link PsiElement} using {@link SemKey}.
  * <p/>
  * Cached value will be dropped automatically on any change of PSI.
  *

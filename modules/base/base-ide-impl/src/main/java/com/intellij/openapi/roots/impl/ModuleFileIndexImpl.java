@@ -25,7 +25,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.roots.ContentFolderScopes;

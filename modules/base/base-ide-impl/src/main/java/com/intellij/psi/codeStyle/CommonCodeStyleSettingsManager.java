@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;

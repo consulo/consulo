@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import consulo.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.Function;

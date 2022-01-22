@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;

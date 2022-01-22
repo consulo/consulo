@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.reference;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.SmartPsiElementPointer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

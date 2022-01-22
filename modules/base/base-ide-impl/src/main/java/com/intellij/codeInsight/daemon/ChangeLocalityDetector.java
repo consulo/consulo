@@ -19,7 +19,7 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public interface ChangeLocalityDetector {

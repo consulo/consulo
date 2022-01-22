@@ -19,7 +19,7 @@ package org.intellij.plugins.intelliLang.inject.config;
 import javax.annotation.Nonnull;
 
 import com.intellij.patterns.ElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.ArrayFactory;
 
 /**

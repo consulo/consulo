@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

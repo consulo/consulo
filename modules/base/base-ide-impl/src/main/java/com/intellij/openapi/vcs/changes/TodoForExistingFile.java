@@ -21,8 +21,8 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.search.PsiTodoSearchHelper;
 
 import java.util.List;

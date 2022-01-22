@@ -14,7 +14,7 @@ import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.Processors;

@@ -30,7 +30,7 @@ import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.ReflectionUtil;
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;

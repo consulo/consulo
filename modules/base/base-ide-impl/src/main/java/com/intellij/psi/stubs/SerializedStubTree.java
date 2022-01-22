@@ -25,6 +25,7 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.DigestUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.language.psi.stub.Stub;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 

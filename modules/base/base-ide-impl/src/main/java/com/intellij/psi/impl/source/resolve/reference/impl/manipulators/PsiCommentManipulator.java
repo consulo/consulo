@@ -19,11 +19,11 @@ package com.intellij.psi.impl.source.resolve.reference.impl.manipulators;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
 import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 
 /**

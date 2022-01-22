@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.application.extension.KeyedExtensionCollector;
 import consulo.container.plugin.PluginIds;
 import consulo.logging.Logger;
 

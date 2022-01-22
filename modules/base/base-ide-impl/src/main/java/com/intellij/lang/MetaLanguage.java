@@ -3,6 +3,7 @@ package com.intellij.lang;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.Language;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

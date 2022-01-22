@@ -15,18 +15,22 @@
  */
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTFactory;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import com.intellij.lang.LanguageTokenSeparatorGenerators;
 import consulo.document.Document;
+import consulo.language.ast.TokenType;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.Factory;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
+import consulo.language.psi.OuterLanguageElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.codeInsight.CommentUtilCore;

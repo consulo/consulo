@@ -8,8 +8,8 @@ import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiModificationTracker;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

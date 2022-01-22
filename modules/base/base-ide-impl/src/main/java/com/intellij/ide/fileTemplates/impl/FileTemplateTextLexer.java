@@ -3,8 +3,8 @@
 /* It's an automatically generated code. Do not modify it. */
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.lexer.LexerBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.lexer.LexerBase;
+import consulo.language.ast.IElementType;
 
 
 /**

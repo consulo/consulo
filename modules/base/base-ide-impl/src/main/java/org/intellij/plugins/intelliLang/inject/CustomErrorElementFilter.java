@@ -20,8 +20,8 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfoFilter;
 import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

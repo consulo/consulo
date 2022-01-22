@@ -24,6 +24,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.Result;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -42,7 +43,7 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesUtil;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;

@@ -36,6 +36,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.Extensions;
+import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;

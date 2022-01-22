@@ -36,7 +36,7 @@ import com.intellij.openapi.util.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.LineTokenizer;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineCoverage;

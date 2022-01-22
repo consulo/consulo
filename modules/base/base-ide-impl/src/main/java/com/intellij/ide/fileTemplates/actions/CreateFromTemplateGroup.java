@@ -27,7 +27,7 @@ import com.intellij.ide.fileTemplates.ui.SelectTemplateDialog;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

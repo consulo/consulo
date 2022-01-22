@@ -16,8 +16,8 @@
 package consulo.psi.tree;
 
 import com.intellij.psi.impl.source.tree.LazyParseableElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ILazyParseableElementType;
 import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;

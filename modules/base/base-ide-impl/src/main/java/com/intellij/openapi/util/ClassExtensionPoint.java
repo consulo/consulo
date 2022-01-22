@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
 

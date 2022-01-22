@@ -2,6 +2,7 @@
 package com.intellij.util.io;
 
 import consulo.application.util.function.Processor;
+import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.ThreadLocalCachedValue;

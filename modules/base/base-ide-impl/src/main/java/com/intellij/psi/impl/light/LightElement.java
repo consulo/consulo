@@ -16,14 +16,16 @@
 
 package com.intellij.psi.impl.light;
 
-import com.intellij.lang.*;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.PsiElementBase;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.Language;
+
 import javax.annotation.Nonnull;
 
 public abstract class LightElement extends PsiElementBase {

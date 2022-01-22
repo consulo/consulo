@@ -17,7 +17,7 @@ package com.intellij.openapi.paths;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.lang.documentation.AbstractDocumentationProvider;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author Eugene.Kudelevsky

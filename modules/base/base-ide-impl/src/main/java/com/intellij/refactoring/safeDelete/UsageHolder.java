@@ -19,7 +19,7 @@ package com.intellij.refactoring.safeDelete;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.refactoring.RefactoringBundle;

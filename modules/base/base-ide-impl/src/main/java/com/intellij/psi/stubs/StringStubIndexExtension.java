@@ -19,7 +19,7 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import javax.annotation.Nonnull;

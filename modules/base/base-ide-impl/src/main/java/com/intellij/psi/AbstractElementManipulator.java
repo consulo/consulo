@@ -17,7 +17,9 @@
 package com.intellij.psi;
 
 import consulo.document.util.TextRange;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 /**

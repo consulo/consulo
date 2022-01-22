@@ -15,16 +15,16 @@
  */
 package consulo.psi.tree.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.TokenType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenType;
 import com.intellij.psi.impl.source.CodeFragmentElement;
 import com.intellij.psi.impl.source.DummyHolderElement;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.LazyParseableElement;
 import com.intellij.psi.impl.source.tree.LazyParseablePsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IFileElementType;
+import consulo.language.ast.ILazyParseableElementType;
 import consulo.psi.tree.ASTLazyFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

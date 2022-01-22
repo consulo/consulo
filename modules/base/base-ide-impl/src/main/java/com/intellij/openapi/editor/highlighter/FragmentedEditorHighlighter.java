@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.document.util.TextRange;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 import java.util.List;
 import java.util.Map;

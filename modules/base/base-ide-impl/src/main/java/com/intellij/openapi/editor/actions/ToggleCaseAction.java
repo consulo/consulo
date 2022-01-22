@@ -41,7 +41,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-import static com.intellij.psi.StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN;
+import static consulo.language.ast.StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN;
 
 public class ToggleCaseAction extends TextComponentEditorAction {
   public ToggleCaseAction() {

@@ -16,7 +16,7 @@
 package com.intellij.refactoring.memberPullUp;
 
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.classMembers.AbstractMemberInfoStorage;
 import com.intellij.refactoring.classMembers.MemberInfoBase;

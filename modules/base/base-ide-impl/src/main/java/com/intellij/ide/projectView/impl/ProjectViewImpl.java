@@ -17,6 +17,7 @@
 package com.intellij.ide.projectView.impl;
 
 import consulo.component.persist.WriteExternalException;
+import consulo.language.psi.*;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectTopics;
 import com.intellij.history.LocalHistory;

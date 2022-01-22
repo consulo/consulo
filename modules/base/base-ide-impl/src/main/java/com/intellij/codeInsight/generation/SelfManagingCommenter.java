@@ -17,7 +17,7 @@ package com.intellij.codeInsight.generation;
 
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

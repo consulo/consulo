@@ -16,8 +16,8 @@
 
 package com.intellij.refactoring.changeSignature;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 
 /**
  * A reference which can be affected by a "Change Signature" refactoring.

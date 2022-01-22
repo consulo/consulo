@@ -3,9 +3,9 @@ package com.intellij.dupLocator.treeHash;
 import com.intellij.dupLocator.*;
 import com.intellij.dupLocator.util.DuplocatorUtil;
 import com.intellij.dupLocator.util.PsiFragment;
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.TokenSet;
 import javax.annotation.Nonnull;
 
 /**

@@ -21,7 +21,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.FileColorManager;

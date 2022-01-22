@@ -2,6 +2,7 @@
 package com.intellij.psi.stubs;
 
 import consulo.application.util.function.Computable;
+import consulo.language.psi.stub.ObjectStubSerializer;
 
 import java.lang.reflect.Field;
 

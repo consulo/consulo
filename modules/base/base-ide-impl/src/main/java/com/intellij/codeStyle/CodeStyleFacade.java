@@ -19,10 +19,11 @@
  */
 package com.intellij.codeStyle;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
+import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
@@ -78,7 +79,7 @@ public interface CodeStyleFacade {
   }
 
   /**
-   * @deprecated Use {@link com.intellij.application.options.CodeStyle#getIndentSize(com.intellij.psi.PsiFile)} instead.
+   * @deprecated Use {@link com.intellij.application.options.CodeStyle#getIndentSize(PsiFile)} instead.
    */
   @Deprecated
   public abstract int getIndentSize(FileType fileType);

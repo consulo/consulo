@@ -1,7 +1,7 @@
 package com.intellij.dupLocator;
 
 import com.intellij.dupLocator.treeHash.FragmentsCollector;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 

@@ -15,15 +15,15 @@
  */
 package com.intellij.lang.surroundWith;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 /**
  * Defines a code fragment type on which the Surround With action can be used for files
  * in a custom language. All surround descriptors registered for a language are queried
  * sequentially, and as soon as one is found that returns a non-empty list of elements
- * from {@link #getElementsToSurround(com.intellij.psi.PsiFile, int, int)}, the user
+ * from {@link #getElementsToSurround(PsiFile, int, int)}, the user
  * is prompted to choose a specific surrounder for that surround descriptor.
  *
  * @author ven

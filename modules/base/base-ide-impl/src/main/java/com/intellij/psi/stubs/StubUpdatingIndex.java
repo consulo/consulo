@@ -15,19 +15,20 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
+import consulo.language.parser.ParserDefinition;
 import consulo.application.ReadAction;
+import consulo.language.psi.stub.Stub;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import consulo.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.psi.tree.IFileElementType;
+import consulo.language.ast.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.BitUtil;
 import com.intellij.util.indexing.*;

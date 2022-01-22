@@ -16,7 +16,7 @@
 package com.intellij.usages;
 
 import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiNamedElement;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

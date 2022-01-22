@@ -1,26 +1,26 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing;
 
-import com.intellij.lang.FileASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.LighterAST;
+import consulo.language.ast.FileASTNode;
+import consulo.language.Language;
+import consulo.language.ast.LighterAST;
 import com.intellij.lang.TreeBackedLighterAST;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.lang.LanguageVersion;
-import consulo.lang.LanguageVersionResolvers;
+import consulo.language.version.LanguageVersion;
+import consulo.language.version.LanguageVersionResolvers;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 

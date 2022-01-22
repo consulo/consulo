@@ -38,9 +38,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.problems.ProblemListener;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiTreeChangeEvent;
-import com.intellij.psi.PsiTreeChangeListener;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.language.psi.event.PsiTreeChangeListener;
 import com.intellij.ui.ScrollingUtil;
 import consulo.component.messagebus.MessageBusConnection;
 

@@ -26,7 +26,7 @@ import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.TreeSpeedSearch;

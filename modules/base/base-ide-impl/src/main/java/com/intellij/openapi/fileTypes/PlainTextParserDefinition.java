@@ -19,19 +19,18 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.lang.*;
-import com.intellij.lexer.EmptyLexer;
-import com.intellij.lexer.Lexer;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PlainTextTokenTypes;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.ast.*;
+import consulo.language.lexer.EmptyLexer;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiParser;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import javax.annotation.Nonnull;
 
 public class PlainTextParserDefinition implements ParserDefinition {

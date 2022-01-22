@@ -19,8 +19,8 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

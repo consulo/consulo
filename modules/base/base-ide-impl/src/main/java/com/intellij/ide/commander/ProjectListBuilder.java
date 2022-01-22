@@ -23,13 +23,14 @@ import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.language.psi.*;
+import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Alarm;
 import javax.annotation.Nonnull;
 

@@ -19,9 +19,9 @@ package com.intellij.codeEditor.printing;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

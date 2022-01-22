@@ -16,10 +16,10 @@
 package com.intellij.psi.impl.source.resolve.reference;
 
 import com.intellij.patterns.*;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.PsiReferenceRegistrar;
-import com.intellij.psi.PsiReferenceService;
+import consulo.language.psi.PsiReferenceService;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.filters.position.FilterPattern;
 import com.intellij.util.ArrayUtil;

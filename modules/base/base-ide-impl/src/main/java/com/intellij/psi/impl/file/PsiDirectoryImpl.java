@@ -17,13 +17,14 @@
 package com.intellij.psi.impl.file;
 
 import com.intellij.ide.util.PsiNavigationSupport;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.psi.*;
 import consulo.progress.ProgressIndicatorProvider;
 import consulo.project.DumbService;
 import com.intellij.openapi.ui.Queryable;
@@ -35,7 +36,6 @@ import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VfsBundle;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
 import com.intellij.psi.impl.PsiElementBase;
 import com.intellij.psi.impl.PsiManagerImpl;
@@ -48,11 +48,11 @@ import com.intellij.psi.search.PsiFileSystemItemProcessor;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
-import consulo.psi.PsiDirectoryMethodProxy;
+import consulo.language.psi.PsiDirectoryMethodProxy;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

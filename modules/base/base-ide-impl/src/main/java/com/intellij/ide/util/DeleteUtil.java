@@ -18,8 +18,8 @@ package com.intellij.ide.util;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.psi.ElementDescriptionUtil;
-import com.intellij.psi.PsiDirectoryContainer;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiDirectoryContainer;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.FactoryMap;
 
 import java.text.MessageFormat;

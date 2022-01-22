@@ -17,9 +17,15 @@
 package com.intellij.lang.impl;
 
 import com.intellij.lang.*;
-import com.intellij.lexer.Lexer;
+import consulo.language.ast.LighterLazyParseableNode;
+import consulo.language.lexer.Lexer;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiBuilderFactory;
 import consulo.project.Project;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

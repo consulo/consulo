@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import consulo.project.Project;
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import javax.annotation.Nullable;
 
 public class CreateFromTemplateAction extends CreateFromTemplateActionBase {

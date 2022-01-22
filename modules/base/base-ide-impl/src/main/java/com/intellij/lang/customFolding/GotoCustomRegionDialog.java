@@ -16,16 +16,16 @@
 package com.intellij.lang.customFolding;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.folding.*;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import consulo.ui.annotation.RequiredUIAccess;

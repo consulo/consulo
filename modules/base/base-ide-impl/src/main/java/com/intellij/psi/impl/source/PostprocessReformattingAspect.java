@@ -3,7 +3,7 @@ package com.intellij.psi.impl.source;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.FormatTextRanges;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.util.function.Computable;
 import consulo.disposer.Disposable;
@@ -14,6 +14,9 @@ import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.progress.ProgressManager;
+import consulo.language.ast.TokenType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.document.util.Segment;

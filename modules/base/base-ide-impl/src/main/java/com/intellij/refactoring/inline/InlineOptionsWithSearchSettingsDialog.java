@@ -17,7 +17,7 @@
 package com.intellij.refactoring.inline;
 
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 
 import javax.swing.*;

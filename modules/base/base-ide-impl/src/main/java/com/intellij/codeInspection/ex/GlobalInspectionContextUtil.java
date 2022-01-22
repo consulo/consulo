@@ -23,8 +23,8 @@ import com.intellij.codeInspection.reference.RefElementImpl;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.project.Project;
 import com.intellij.profile.ProfileManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 
 import javax.annotation.Nonnull;

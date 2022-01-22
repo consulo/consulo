@@ -16,7 +16,7 @@
 
 package com.intellij.dupLocator;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 public interface TreeHasher {
   void hash(PsiElement root, NodeSpecificHasher hasher);

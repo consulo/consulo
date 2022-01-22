@@ -17,7 +17,7 @@
 package com.intellij.refactoring.inline;
 
 import consulo.codeInsight.TargetElementUtil;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.refactoring.InlineHandler;
 import com.intellij.lang.refactoring.InlineHandlers;
 import consulo.application.ApplicationManager;
@@ -28,9 +28,9 @@ import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.PsiReference;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.RefactoringBundle;

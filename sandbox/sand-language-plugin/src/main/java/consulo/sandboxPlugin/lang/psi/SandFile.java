@@ -16,9 +16,9 @@
 package consulo.sandboxPlugin.lang.psi;
 
 import com.intellij.extapi.psi.PsiFileBase;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.psi.FileViewProvider;
+import consulo.language.file.FileViewProvider;
 import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.sandboxPlugin.lang.SandLanguage;

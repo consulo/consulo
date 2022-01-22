@@ -18,17 +18,19 @@ package com.intellij.lang.refactoring;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.containers.MultiMap;
+import consulo.language.Language;
+
 import javax.annotation.Nonnull;
 
 /**
  * Interface that should be implemented by the language in order to provide inline functionality and possibly
  * participate in inline of elements in other languages this language may reference.
  * @author ven
- * @see InlineHandlers#getInlineHandlers(com.intellij.lang.Language)
+ * @see InlineHandlers#getInlineHandlers(Language)
  */
 public interface InlineHandler {
 

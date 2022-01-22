@@ -23,11 +23,15 @@ package com.intellij.internal.psiView;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
+import consulo.language.ast.TokenType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiWhiteSpace;
 import consulo.project.Project;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;

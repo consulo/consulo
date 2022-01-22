@@ -16,10 +16,10 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.LighterAST;
-import com.intellij.lang.LighterASTNode;
+import consulo.language.ast.LighterAST;
+import consulo.language.ast.LighterASTNode;
 import com.intellij.lang.LighterASTTokenNode;
-import com.intellij.lang.LighterLazyParseableNode;
+import consulo.language.ast.LighterLazyParseableNode;
 import com.intellij.util.WalkingState;
 import com.intellij.util.containers.Stack;
 import javax.annotation.Nonnull;

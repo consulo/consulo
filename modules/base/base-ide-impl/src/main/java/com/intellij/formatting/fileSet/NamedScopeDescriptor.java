@@ -5,7 +5,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -31,7 +31,7 @@ import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import consulo.project.Project;
 import consulo.component.persist.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

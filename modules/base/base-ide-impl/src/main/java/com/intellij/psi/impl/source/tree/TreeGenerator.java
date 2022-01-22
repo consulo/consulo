@@ -20,9 +20,9 @@
 package com.intellij.psi.impl.source.tree;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.CharTable;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.util.CharTable;
 
 import javax.annotation.Nullable;
 

@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.application.extension.KeyedExtensionCollector;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginIds;
 import consulo.util.dataholder.Key;

@@ -2,7 +2,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.application.ReadActionProcessor;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiReference;
 import com.intellij.util.PairProcessor;
 import consulo.application.util.function.Processor;
 import com.intellij.util.Query;

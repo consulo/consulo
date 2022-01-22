@@ -18,8 +18,8 @@ package org.intellij.plugins.intelliLang.inject;
 
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
 import com.intellij.util.ArrayUtil;
 import consulo.psi.injection.LanguageInjectionSupport;
 import consulo.psi.injection.impl.ProjectInjectionConfiguration;

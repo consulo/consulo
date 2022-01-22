@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import java.util.Collection;
 import java.util.Set;
@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * @author dsl
  *
- * @see com.intellij.refactoring.RefactoringFactory#createRename(com.intellij.psi.PsiElement, String)
+ * @see com.intellij.refactoring.RefactoringFactory#createRename(PsiElement, String)
  */
 public interface RenameRefactoring extends Refactoring {
 

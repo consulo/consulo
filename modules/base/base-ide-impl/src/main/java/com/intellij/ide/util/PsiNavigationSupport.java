@@ -5,8 +5,8 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

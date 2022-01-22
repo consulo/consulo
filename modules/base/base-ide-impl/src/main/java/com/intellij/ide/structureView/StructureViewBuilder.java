@@ -19,6 +19,7 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileTypes.FileTypeExtensionFactory;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
  * the standard implementation of this interface - {@link TreeBasedStructureViewBuilder} -
  * should be used.
  *
- * @see com.intellij.lang.LanguageStructureViewBuilder#getStructureViewBuilder(com.intellij.psi.PsiFile)
+ * @see com.intellij.lang.LanguageStructureViewBuilder#getStructureViewBuilder(PsiFile)
  */
 
 public interface StructureViewBuilder {

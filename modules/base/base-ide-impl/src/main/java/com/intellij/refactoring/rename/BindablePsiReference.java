@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.rename;
 
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiReference;
 
 /**
  * Hacky marker interface to fix refactoring.

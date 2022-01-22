@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.ResourceUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.SerializationFilter;

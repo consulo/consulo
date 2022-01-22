@@ -15,15 +15,15 @@
  */
 package consulo.psi.injection;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.util.Consumer;
 import consulo.util.dataholder.Key;

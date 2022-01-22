@@ -15,14 +15,14 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.reference.SoftReference;
 import consulo.application.util.function.Processor;

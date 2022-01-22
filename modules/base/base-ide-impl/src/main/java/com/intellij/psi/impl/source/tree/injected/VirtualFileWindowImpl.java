@@ -3,7 +3,7 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

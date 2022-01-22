@@ -20,7 +20,7 @@ import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.Comparing;

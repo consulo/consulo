@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * Defines whether or not some elements can be indented when a user selects a fragment of text and invokes "indent" action (normally by

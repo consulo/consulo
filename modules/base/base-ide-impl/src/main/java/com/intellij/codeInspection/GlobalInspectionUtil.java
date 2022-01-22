@@ -23,7 +23,7 @@ import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

@@ -16,13 +16,13 @@
 
 package com.intellij.psi.impl.source.parsing;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.LexerUtil;
+import consulo.language.ast.ASTFactory;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.LexerUtil;
 import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
-import com.intellij.util.CharTable;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ILazyParseableElementType;
+import consulo.language.util.CharTable;
 
 import javax.annotation.Nullable;
 

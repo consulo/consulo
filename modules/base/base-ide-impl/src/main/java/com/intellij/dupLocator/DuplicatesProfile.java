@@ -18,9 +18,9 @@ package com.intellij.dupLocator;
 
 import com.intellij.dupLocator.treeHash.FragmentsCollector;
 import com.intellij.dupLocator.util.PsiFragment;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.indexing.FileContent;
 import javax.annotation.Nonnull;
 

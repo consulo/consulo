@@ -20,8 +20,8 @@ import consulo.module.Module;
 import com.intellij.openapi.ui.Queryable;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import consulo.psi.PsiPackage;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiPackage;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

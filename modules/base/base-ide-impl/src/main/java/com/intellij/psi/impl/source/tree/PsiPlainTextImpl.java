@@ -16,9 +16,9 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.psi.PlainTextTokenTypes;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiPlainText;
+import consulo.language.ast.PlainTextTokenTypes;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiPlainText;
 import javax.annotation.Nonnull;
 
 public class PsiPlainTextImpl extends OwnBufferLeafPsiElement implements PsiPlainText {

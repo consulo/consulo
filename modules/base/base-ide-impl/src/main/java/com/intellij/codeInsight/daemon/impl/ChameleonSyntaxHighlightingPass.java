@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.*;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.HighlighterColors;
@@ -17,12 +17,12 @@ import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.SyntaxTraverser;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IFileElementType;
+import consulo.language.ast.ILazyParseableElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.TreeTraversal;

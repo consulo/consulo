@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.rename;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * User: Maxim.Mossienko

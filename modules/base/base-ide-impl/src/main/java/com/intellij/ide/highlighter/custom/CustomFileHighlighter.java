@@ -15,14 +15,14 @@
  */
 package com.intellij.ide.highlighter.custom;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.LayeredLexer;
-import com.intellij.lexer.StringLiteralLexer;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.LayeredLexer;
+import consulo.language.lexer.StringLiteralLexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.CustomHighlighterTokenType;
-import com.intellij.psi.StringEscapesTokenTypes;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.StringEscapesTokenTypes;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 import java.util.HashMap;

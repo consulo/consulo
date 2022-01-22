@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.completion.originInfo;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * Provides info for magic method or properties about their origin:
  * original class, rule according to which the element was added, etc
  *
- * @see OriginInfoProvider#provideOriginInfo(com.intellij.psi.PsiElement)
+ * @see OriginInfoProvider#provideOriginInfo(PsiElement)
  * @see com.intellij.codeInsight.completion.originInfo.OriginInfoAwareElement
  *
  *

@@ -2,7 +2,7 @@ package com.intellij.dupLocator.treeHash;
 
 import com.intellij.dupLocator.NodeSpecificHasher;
 import com.intellij.dupLocator.util.PsiFragment;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import java.util.List;
 

@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.formatter;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import javax.annotation.Nonnull;
@@ -86,7 +86,7 @@ public interface WhiteSpaceFormattingStrategy {
 
 
   /**
-   * PSI-based version of {@link #adjustWhiteSpaceIfNecessary(CharSequence, CharSequence, int, int, com.intellij.psi.codeStyle.CodeStyleSettings, com.intellij.lang.ASTNode)}.
+   * PSI-based version of {@link #adjustWhiteSpaceIfNecessary(CharSequence, CharSequence, int, int, com.intellij.psi.codeStyle.CodeStyleSettings, ASTNode)}.
    * <p/>
    * There is a possible case that particular changes are performed to PSI tree and it's not yet synchronized with the underlying
    * document. Hence, we can't directly work with document char sequence but need to traverse PSI tree instead. I.e. we start with

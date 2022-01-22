@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.search;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.text.StringSearcher;
 import javax.annotation.Nonnull;
 

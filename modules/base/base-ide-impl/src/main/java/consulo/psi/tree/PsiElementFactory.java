@@ -15,9 +15,9 @@
  */
 package consulo.psi.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginIds;
 

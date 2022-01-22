@@ -16,12 +16,12 @@
 package com.intellij.psi.impl.source.codeStyle.lineIndent;
 
 import com.intellij.formatting.FormattingMode;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
 import javax.annotation.Nonnull;

@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.paths;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.OuterLanguageElement;
 
 /**
  * @author Dmitry Avdeev

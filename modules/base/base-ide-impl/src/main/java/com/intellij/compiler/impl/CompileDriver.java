@@ -66,7 +66,7 @@ import com.intellij.packaging.impl.artifacts.ArtifactImpl;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactCompilerUtil;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.util.Chunk;
 import com.intellij.util.Function;
 import com.intellij.util.StringBuilderSpinAllocator;

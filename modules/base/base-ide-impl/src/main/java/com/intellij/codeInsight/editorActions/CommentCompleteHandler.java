@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 import com.intellij.lang.CodeDocumentationAwareCommenter;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiComment;
+import consulo.language.psi.PsiComment;
 
 /**
  * @author Alexander Podkhalyuzin

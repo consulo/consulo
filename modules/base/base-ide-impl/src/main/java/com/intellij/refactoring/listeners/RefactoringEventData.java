@@ -17,7 +17,7 @@ package com.intellij.refactoring.listeners;
 
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.Function;
 

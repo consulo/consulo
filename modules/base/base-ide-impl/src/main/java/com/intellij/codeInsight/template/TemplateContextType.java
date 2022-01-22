@@ -7,7 +7,7 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import consulo.project.Project;
 import com.intellij.openapi.util.VolatileNullableLazyValue;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

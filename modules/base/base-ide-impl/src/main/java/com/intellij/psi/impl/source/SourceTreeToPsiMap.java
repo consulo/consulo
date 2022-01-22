@@ -16,8 +16,8 @@
 package com.intellij.psi.impl.source;
 
 import com.intellij.extapi.psi.ASTDelegatePsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

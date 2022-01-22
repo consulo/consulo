@@ -19,6 +19,8 @@
  */
 package com.intellij.psi.stubs;
 
+import consulo.language.psi.stub.StubSerializer;
+
 import java.lang.annotation.*;
 
 @Inherited

@@ -16,7 +16,7 @@
 package com.intellij.patterns;
 
 import com.intellij.patterns.compiler.PatternCompilerFactory;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Text;

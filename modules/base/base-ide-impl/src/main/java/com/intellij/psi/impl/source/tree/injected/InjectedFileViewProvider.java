@@ -3,7 +3,7 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.document.Document;
 import com.intellij.openapi.util.Ref;
@@ -14,6 +14,12 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;

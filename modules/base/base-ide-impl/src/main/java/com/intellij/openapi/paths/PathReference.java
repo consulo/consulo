@@ -20,7 +20,7 @@ import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.util.NullableLazyValue;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.Function;
 import com.intellij.util.NullableConstantFunction;
 import com.intellij.util.NullableFunction;

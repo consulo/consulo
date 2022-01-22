@@ -15,6 +15,10 @@
  */
 package com.intellij.psi;
 
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
 import consulo.progress.ProgressIndicatorProvider;
 
 import javax.annotation.Nonnull;

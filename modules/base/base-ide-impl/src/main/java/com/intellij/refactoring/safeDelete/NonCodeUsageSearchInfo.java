@@ -17,7 +17,7 @@
 package com.intellij.refactoring.safeDelete;
 
 import com.intellij.openapi.util.Condition;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import java.util.Collection;
 import java.util.Collections;

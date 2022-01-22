@@ -18,8 +18,8 @@ package com.intellij.find.actions;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.ui.FileColorManager;
 import com.intellij.ui.SimpleColoredComponent;

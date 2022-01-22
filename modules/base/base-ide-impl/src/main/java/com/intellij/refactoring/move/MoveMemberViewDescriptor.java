@@ -20,7 +20,7 @@
  */
 package com.intellij.refactoring.move;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.refactoring.RefactoringBundle;

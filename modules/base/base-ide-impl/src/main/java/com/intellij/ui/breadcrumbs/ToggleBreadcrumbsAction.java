@@ -2,15 +2,15 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import consulo.project.DumbAware;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

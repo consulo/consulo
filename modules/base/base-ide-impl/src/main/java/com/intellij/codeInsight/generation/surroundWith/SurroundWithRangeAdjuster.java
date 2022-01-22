@@ -18,7 +18,7 @@ package com.intellij.codeInsight.generation.surroundWith;
 
 import consulo.document.util.TextRange;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;
 
 /**

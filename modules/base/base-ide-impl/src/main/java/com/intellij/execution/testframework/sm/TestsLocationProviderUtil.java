@@ -24,7 +24,7 @@ import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.text.StringTokenizer;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -16,21 +16,22 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.language.psi.*;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
 import com.intellij.psi.impl.ResolveScopeManager;
 import com.intellij.psi.impl.SharedPsiElementImplUtil;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

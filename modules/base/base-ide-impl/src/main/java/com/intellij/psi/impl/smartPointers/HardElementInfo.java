@@ -17,8 +17,8 @@ package com.intellij.psi.impl.smartPointers;
 
 import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
 

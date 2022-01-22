@@ -16,9 +16,9 @@
 package consulo.codeInsight;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
 import consulo.container.plugin.PluginIds;
 import consulo.extensions.CompositeExtensionPointName;
 import org.jetbrains.annotations.NonNls;

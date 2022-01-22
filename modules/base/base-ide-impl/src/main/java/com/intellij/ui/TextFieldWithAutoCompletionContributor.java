@@ -25,8 +25,8 @@ import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nullable;

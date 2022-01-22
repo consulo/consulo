@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.editorActions.emacs;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**

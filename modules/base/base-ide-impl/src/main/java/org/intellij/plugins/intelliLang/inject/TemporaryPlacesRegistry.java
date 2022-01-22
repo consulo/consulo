@@ -17,12 +17,15 @@
 package org.intellij.plugins.intelliLang.inject;
 
 import com.intellij.codeInsight.completion.CompletionUtilCoreImpl;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.*;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.language.psi.PsiModificationTracker;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;

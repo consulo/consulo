@@ -2,8 +2,8 @@
 package com.intellij.ide.structureView.customRegions;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import com.intellij.lang.folding.CustomFoldingBuilder;
 import com.intellij.lang.folding.CustomFoldingProvider;
 import com.intellij.lang.folding.FoldingBuilder;
@@ -15,6 +15,8 @@ import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.*;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

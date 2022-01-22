@@ -21,7 +21,7 @@ import com.intellij.analysis.AnalysisScopeBundle;
 import consulo.project.Project;
 import com.intellij.packageDependencies.BackwardDependenciesBuilder;
 import com.intellij.packageDependencies.DependenciesBuilder;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

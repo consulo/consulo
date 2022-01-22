@@ -20,6 +20,7 @@
 package com.intellij.lang;
 
 import consulo.container.plugin.PluginIds;
+import consulo.language.LanguageExtension;
 
 public class LanguageExpressionTypes extends LanguageExtension<ExpressionTypeProvider> {
   public static final LanguageExpressionTypes INSTANCE = new LanguageExpressionTypes();

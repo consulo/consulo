@@ -1,12 +1,12 @@
 package com.intellij.psi.templateLanguages;
 
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
-import static com.intellij.psi.TokenType.BAD_CHARACTER;
+import static consulo.language.ast.TokenType.BAD_CHARACTER;
 
 /**
 * @author peter

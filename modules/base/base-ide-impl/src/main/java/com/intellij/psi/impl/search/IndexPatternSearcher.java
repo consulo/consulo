@@ -2,11 +2,16 @@
 
 package com.intellij.psi.impl.search;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lexer.Lexer;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.lexer.Lexer;
 import com.intellij.openapi.application.QueryExecutorBase;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiBinaryFile;
+import consulo.language.psi.PsiCompiledElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiPlainTextFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
@@ -22,13 +27,13 @@ import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.IndexPatternProvider;
 import com.intellij.psi.search.searches.IndexPatternSearch;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceSubSequence;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 

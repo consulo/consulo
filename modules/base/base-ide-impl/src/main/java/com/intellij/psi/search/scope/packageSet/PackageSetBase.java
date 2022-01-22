@@ -18,8 +18,8 @@ package com.intellij.psi.search.scope.packageSet;
 import com.intellij.diagnostic.PluginException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

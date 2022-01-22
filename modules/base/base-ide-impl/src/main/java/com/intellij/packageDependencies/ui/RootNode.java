@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 import java.util.Set;
 

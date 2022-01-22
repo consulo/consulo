@@ -16,12 +16,12 @@
 
 package com.intellij.lang.folding;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.project.DumbAware;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 

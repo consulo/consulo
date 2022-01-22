@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import consulo.component.util.localize.AbstractBundle;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;

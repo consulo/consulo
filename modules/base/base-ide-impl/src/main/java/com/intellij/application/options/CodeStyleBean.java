@@ -2,7 +2,7 @@
 package com.intellij.application.options;
 
 import com.intellij.formatting.WrapType;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;

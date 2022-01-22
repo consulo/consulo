@@ -20,7 +20,7 @@ import com.intellij.navigation.NavigationItem;
 import consulo.project.DumbAware;
 import consulo.project.ProjectCoreUtil;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFileSystemItem;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import consulo.application.util.function.Processor;

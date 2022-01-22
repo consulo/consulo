@@ -17,7 +17,11 @@
 package com.intellij.psi;
 
 import consulo.document.util.TextRange;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiPolyVariantReference;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ResolveResult;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

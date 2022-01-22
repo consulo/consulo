@@ -22,8 +22,8 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiManager;
 
 public class GoToLinkTargetAction extends DumbAwareAction {
   @Override

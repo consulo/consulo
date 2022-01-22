@@ -25,10 +25,10 @@ import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.util.IncorrectOperationException;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -78,7 +78,7 @@ public abstract class SuppressIntentionAction implements Iconable, IntentionActi
    * @param project the project in which the file is opened.
    * @param editor  the editor for the file.
    * @param element the element under cursor.
-   * @throws com.intellij.util.IncorrectOperationException
+   * @throws IncorrectOperationException
    *
    */
   public abstract void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException;

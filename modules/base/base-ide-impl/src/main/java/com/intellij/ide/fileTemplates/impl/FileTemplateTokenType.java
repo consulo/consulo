@@ -16,8 +16,8 @@
 
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
 
 interface FileTemplateTokenType {
   IElementType TEXT = new IElementType("TEXT", Language.ANY);

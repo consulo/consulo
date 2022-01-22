@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * Shows dialog with two tabs: Project View-like tree and Goto symbol-like list with quick search capability
  * Allows to quickly locate and choose PsiFile among all files inside project
  * (optionally filtered based on file type or general file filter(see PsiFileFilter))
- * @see TreeFileChooserFactory#createFileChooser(String, com.intellij.psi.PsiFile, FileType, com.intellij.ide.util.TreeFileChooser.PsiFileFilter)
+ * @see TreeFileChooserFactory#createFileChooser(String, PsiFile, FileType, com.intellij.ide.util.TreeFileChooser.PsiFileFilter)
  * @see PsiFileFilter
  */
 public interface TreeFileChooser {

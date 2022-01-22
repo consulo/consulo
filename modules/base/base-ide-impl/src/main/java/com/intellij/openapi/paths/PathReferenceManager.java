@@ -20,8 +20,8 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -42,11 +42,11 @@ public abstract class PathReferenceManager {
 
   /**
    * Create web path references for given PsiElement.
-   * The same as {@link #createReferences(com.intellij.psi.PsiElement, boolean, boolean, boolean, PathReferenceProvider[])} with
+   * The same as {@link #createReferences(PsiElement, boolean, boolean, boolean, PathReferenceProvider[])} with
    * endingSlashNotAllowed = true and relativePathsAllowed = true.
    *
    * @param psiElement the underlying PSI element.
-   * @param soft set this to true to create soft references (see {@link com.intellij.psi.PsiReference#isSoft()}).
+   * @param soft set this to true to create soft references (see {@link PsiReference#isSoft()}).
    * @param additionalProviders additional providers to process.
    * @return created references or an empty array.
    */
@@ -59,7 +59,7 @@ public abstract class PathReferenceManager {
    * Create web path references for given PsiElement.
    *
    * @param psiElement the underlying PSI element.
-   * @param soft set this to true to create soft references (see {@link com.intellij.psi.PsiReference#isSoft()}).
+   * @param soft set this to true to create soft references (see {@link PsiReference#isSoft()}).
    * @param endingSlashNotAllowed true if paths like "/foo/" should not be resolved.
    * @param relativePathsAllowed true if the folder of the file containing the PsiElement should be used as "root".
    *        Otherwise, web application root will be used.

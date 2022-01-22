@@ -21,7 +21,7 @@ import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import consulo.project.Project;
 import com.intellij.profile.Profile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,7 +67,7 @@ public interface ModifiableModel extends Profile {
 
   /**
    * @return {@link com.intellij.codeInspection.ex.InspectionToolWrapper}
-   * @see #getUnwrappedTool(String, com.intellij.psi.PsiElement)
+   * @see #getUnwrappedTool(String, PsiElement)
    */
   InspectionToolWrapper getInspectionTool(String shortName, PsiElement element);
 

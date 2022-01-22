@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon.impl.actions;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -25,7 +25,7 @@ package com.intellij.psi.codeStyle;
 import com.intellij.application.options.IndentOptionsEditor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 
 /**

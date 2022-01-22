@@ -3,7 +3,7 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFileSystemItem;
 import javax.annotation.Nonnull;
 
 import javax.swing.tree.TreeNode;

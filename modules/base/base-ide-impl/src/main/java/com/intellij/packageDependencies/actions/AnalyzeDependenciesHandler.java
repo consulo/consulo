@@ -21,7 +21,7 @@ import com.intellij.analysis.AnalysisScopeBundle;
 import consulo.project.Project;
 import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.ForwardDependenciesBuilder;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 import java.util.Collections;
 import java.util.HashSet;

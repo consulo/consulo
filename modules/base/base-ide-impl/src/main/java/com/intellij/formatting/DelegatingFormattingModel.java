@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 

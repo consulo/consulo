@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 
 /**
  * @author Maxim.Mossienko

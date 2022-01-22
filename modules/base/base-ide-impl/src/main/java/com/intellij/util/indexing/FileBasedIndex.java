@@ -15,7 +15,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Consumer;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 import com.intellij.util.SystemProperties;
 import consulo.application.internal.PerApplicationInstance;

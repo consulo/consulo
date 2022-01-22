@@ -15,6 +15,8 @@
  */
 package com.intellij.lang;
 
+import consulo.language.ast.ASTNode;
+
 import javax.annotation.Nullable;
 
 /**

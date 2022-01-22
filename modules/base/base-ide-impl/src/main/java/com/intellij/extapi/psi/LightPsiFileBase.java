@@ -16,9 +16,9 @@
 
 package com.intellij.extapi.psi;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElementVisitor;
+import consulo.language.Language;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.LightPsiFileImpl;
 import javax.annotation.Nonnull;
 

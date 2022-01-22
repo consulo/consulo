@@ -19,11 +19,11 @@ package com.intellij.codeInsight.hint.actions;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.hint.ShowParameterInfoHandler;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
 

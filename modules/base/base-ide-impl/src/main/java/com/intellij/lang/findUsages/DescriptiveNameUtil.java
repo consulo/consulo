@@ -15,10 +15,10 @@
  */
 package com.intellij.lang.findUsages;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.meta.PsiMetaOwner;
 import javax.annotation.Nonnull;

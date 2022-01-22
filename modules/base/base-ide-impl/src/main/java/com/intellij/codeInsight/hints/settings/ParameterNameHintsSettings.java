@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.hints.settings;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.containers.ContainerUtil;

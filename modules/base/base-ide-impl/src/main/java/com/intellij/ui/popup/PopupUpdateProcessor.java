@@ -23,7 +23,7 @@ import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import javax.swing.*;
 import java.awt.*;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options.colors;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import javax.annotation.Nullable;
 

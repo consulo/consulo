@@ -23,7 +23,7 @@ import com.intellij.ide.util.treeView.IndexComparator;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 

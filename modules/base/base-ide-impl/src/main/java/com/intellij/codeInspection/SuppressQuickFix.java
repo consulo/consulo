@@ -16,7 +16,7 @@
 package com.intellij.codeInspection;
 
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public interface SuppressQuickFix extends LocalQuickFix {

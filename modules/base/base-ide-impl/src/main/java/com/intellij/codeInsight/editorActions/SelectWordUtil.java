@@ -16,18 +16,18 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.FileASTNode;
-import com.intellij.lexer.Lexer;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.FileASTNode;
+import consulo.language.lexer.Lexer;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
 import consulo.component.extension.Extensions;
 import consulo.project.DumbService;
 import consulo.document.util.TextRange;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.StringEscapesTokenTypes;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.StringEscapesTokenTypes;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;

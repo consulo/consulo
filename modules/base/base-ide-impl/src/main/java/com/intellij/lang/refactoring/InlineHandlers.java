@@ -16,8 +16,8 @@
 
 package com.intellij.lang.refactoring;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageExtension;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 import java.util.List;

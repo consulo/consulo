@@ -16,10 +16,11 @@
 
 package com.intellij.psi;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.application.Application;
+import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.ElementPatternBean;

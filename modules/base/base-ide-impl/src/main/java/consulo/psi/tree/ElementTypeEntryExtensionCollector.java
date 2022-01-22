@@ -16,7 +16,7 @@
 package consulo.psi.tree;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 
 import javax.annotation.Nonnull;

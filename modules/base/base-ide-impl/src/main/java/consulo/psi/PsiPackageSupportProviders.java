@@ -15,6 +15,7 @@
  */
 package consulo.psi;
 
+import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;

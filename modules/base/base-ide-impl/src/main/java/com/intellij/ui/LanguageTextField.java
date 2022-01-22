@@ -16,15 +16,15 @@
 package com.intellij.ui;
 
 import com.intellij.ide.highlighter.HighlighterFactory;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import consulo.util.lang.LocalTimeCounter;
 import javax.annotation.Nonnull;

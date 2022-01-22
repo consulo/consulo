@@ -3,7 +3,7 @@ package com.intellij.coverage.view;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiNamedElement;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

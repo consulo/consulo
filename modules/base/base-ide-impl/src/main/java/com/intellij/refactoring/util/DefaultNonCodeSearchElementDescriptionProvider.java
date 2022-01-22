@@ -16,6 +16,9 @@
 
 package com.intellij.refactoring.util;
 
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
 import consulo.logging.Logger;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;

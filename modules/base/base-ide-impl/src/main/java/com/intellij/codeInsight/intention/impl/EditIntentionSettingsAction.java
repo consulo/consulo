@@ -7,8 +7,8 @@ import com.intellij.codeInsight.intention.impl.config.IntentionSettingsConfigura
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

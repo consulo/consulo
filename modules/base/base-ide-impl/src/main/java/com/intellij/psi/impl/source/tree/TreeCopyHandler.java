@@ -19,7 +19,7 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.component.extension.ExtensionPointName;
 
 import java.util.Map;

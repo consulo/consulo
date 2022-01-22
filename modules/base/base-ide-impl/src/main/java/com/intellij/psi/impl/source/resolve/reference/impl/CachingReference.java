@@ -17,10 +17,10 @@ package com.intellij.psi.impl.source.resolve.reference.impl;
 
 import com.intellij.psi.ElementManipulator;
 import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

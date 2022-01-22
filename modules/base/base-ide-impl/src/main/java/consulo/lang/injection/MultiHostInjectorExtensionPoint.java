@@ -17,9 +17,9 @@ package consulo.lang.injection;
 
 import com.intellij.lang.injection.MultiHostInjector;
 import consulo.component.ComponentManager;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.xmlb.annotations.Attribute;
 import javax.annotation.Nonnull;
 

@@ -34,7 +34,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

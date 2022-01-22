@@ -22,7 +22,7 @@ import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.DifferenceFilter;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.WriteExternalException;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import org.jdom.Element;

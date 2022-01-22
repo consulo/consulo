@@ -14,6 +14,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.progress.ProgressIndicator;

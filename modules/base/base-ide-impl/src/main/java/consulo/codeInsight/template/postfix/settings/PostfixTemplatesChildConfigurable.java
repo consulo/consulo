@@ -20,7 +20,7 @@ import com.intellij.codeInsight.template.postfix.settings.PostfixTemplateMetaDat
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageExtensionPoint;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

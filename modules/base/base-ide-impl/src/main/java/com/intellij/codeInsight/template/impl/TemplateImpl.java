@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.TemplateContextType;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.options.SchemeElement;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

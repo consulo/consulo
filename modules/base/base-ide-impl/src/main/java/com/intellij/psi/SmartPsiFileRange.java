@@ -16,6 +16,7 @@
 package com.intellij.psi;
 
 import consulo.document.util.Segment;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nullable;
 

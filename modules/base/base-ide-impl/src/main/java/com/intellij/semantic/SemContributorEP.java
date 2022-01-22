@@ -1,7 +1,7 @@
 package com.intellij.semantic;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.injecting.InjectingContainer;
 

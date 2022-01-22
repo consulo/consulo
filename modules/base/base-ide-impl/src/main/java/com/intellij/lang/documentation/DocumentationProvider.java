@@ -5,8 +5,8 @@ import com.intellij.codeInsight.documentation.DocumentationManagerProtocol;
 import com.intellij.codeInsight.documentation.DocumentationManagerUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

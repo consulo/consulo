@@ -20,13 +20,13 @@ import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
 import com.intellij.lang.ExternalLanguageAnnotators;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.annotation.ExternalAnnotator;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 

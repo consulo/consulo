@@ -20,8 +20,8 @@
 package com.intellij.usages;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;
 
 public interface UsageTargetProvider {

@@ -16,8 +16,8 @@
 package com.intellij.psi.impl.source.resolve;
 
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.SmartPsiElementPointer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

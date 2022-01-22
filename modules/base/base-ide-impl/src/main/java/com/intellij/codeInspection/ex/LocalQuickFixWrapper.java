@@ -24,9 +24,9 @@ import com.intellij.codeInspection.reference.RefManager;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiModificationTracker;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

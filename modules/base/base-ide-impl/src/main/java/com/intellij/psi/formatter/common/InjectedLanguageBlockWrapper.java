@@ -16,7 +16,7 @@
 package com.intellij.psi.formatter.common;
 
 import com.intellij.formatting.*;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

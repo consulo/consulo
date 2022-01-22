@@ -17,8 +17,8 @@
 package com.intellij.lang.documentation;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

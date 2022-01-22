@@ -15,7 +15,7 @@
  */
 package com.intellij.usages;
 
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 /**
  * @author peter

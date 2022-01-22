@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.copy;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * User: anna

@@ -23,7 +23,7 @@ import com.intellij.codeInspection.ex.Tools;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.profile.Profile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

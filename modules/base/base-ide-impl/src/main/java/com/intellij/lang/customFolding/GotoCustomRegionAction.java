@@ -16,7 +16,7 @@
 package com.intellij.lang.customFolding;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.folding.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
@@ -29,9 +29,9 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import java.util.HashSet;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredReadAction;

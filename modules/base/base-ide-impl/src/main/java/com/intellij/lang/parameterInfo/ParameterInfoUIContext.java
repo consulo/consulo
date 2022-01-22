@@ -16,7 +16,7 @@
 
 package com.intellij.lang.parameterInfo;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import java.awt.*;
 

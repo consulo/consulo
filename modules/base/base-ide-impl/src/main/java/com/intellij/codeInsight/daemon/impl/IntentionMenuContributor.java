@@ -3,7 +3,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 /**

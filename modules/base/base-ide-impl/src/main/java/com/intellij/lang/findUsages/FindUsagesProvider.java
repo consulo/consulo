@@ -16,14 +16,17 @@
 package com.intellij.lang.findUsages;
 
 import com.intellij.lang.cacheBuilder.WordsScanner;
-import com.intellij.psi.PsiElement;
+import consulo.language.LanguageExtension;
+import consulo.language.psi.PsiElement;
+import consulo.language.Language;
+
 import javax.annotation.Nonnull;
 
 /**
  * Defines the support for the "Find Usages" feature in a custom language.
  *
  * @author max
- * @see com.intellij.lang.LanguageExtension#forLanguage(com.intellij.lang.Language)
+ * @see LanguageExtension#forLanguage(Language)
  */
 public interface FindUsagesProvider {
 
@@ -42,7 +45,7 @@ public interface FindUsagesProvider {
    *
    * @param psiElement the element for which usages are searched.
    * @return true if the search is allowed, false otherwise.
-   * @see com.intellij.find.FindManager#canFindUsages(com.intellij.psi.PsiElement)
+   * @see com.intellij.find.FindManager#canFindUsages(PsiElement)
    */
   boolean canFindUsagesFor(@Nonnull PsiElement psiElement);
 

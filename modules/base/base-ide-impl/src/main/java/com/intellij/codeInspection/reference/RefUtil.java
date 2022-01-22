@@ -17,7 +17,7 @@ package com.intellij.codeInspection.reference;
 
 import com.intellij.codeInsight.daemon.ImplicitUsageProvider;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

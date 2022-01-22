@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 

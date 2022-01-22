@@ -19,15 +19,16 @@
  */
 package com.intellij.psi;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.language.psi.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.psi.impl.SharedPsiElementImplUtil;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
+import consulo.language.psi.OuterLanguageElement;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;

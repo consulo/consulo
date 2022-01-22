@@ -5,7 +5,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.psi.search.scope.TestsScope;
 import com.intellij.psi.search.scope.impl.CustomScopesAggregator;

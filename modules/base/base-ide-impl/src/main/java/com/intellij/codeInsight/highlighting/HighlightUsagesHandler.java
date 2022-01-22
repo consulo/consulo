@@ -36,6 +36,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.language.psi.*;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.document.util.TextRange;

@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.util.NullableComputable;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.proximity.PsiProximityComparator;
 import javax.annotation.Nonnull;
 

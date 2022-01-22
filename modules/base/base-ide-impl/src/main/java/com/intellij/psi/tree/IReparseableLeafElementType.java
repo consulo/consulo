@@ -15,7 +15,9 @@
  */
 package com.intellij.psi.tree;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,19 +15,19 @@
  */
 package com.intellij.psi.impl.source;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.FileASTNode;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.FileASTNode;
 import consulo.application.ApplicationManager;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiInvalidElementAccessException;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiInvalidElementAccessException;
+import consulo.language.psi.StubBasedPsiElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.PsiFileStubImpl;
-import com.intellij.psi.stubs.Stub;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.Stub;
+import consulo.language.psi.stub.StubElement;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

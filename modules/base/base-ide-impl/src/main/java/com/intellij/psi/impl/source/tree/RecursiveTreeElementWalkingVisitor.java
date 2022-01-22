@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.psi.PsiRecursiveVisitor;
 import com.intellij.util.WalkingState;
 import javax.annotation.Nonnull;

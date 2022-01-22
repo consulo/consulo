@@ -22,6 +22,8 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.document.util.Segment;

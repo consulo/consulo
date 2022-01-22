@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.editorActions.SmartBackspaceMode;
 import com.intellij.lang.CodeDocumentationAwareCommenter;
 import com.intellij.lang.Commenter;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;

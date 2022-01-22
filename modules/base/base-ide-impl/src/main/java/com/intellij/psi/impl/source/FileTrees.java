@@ -15,9 +15,10 @@
  */
 package com.intellij.psi.impl.source;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.StubElement;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.FileElement;

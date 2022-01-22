@@ -19,7 +19,7 @@ package com.intellij.ide.util.treeView;
 import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.tree.LeafState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

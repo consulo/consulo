@@ -3,7 +3,7 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.formatting.fileSet.FileSetDescriptor;
 import com.intellij.formatting.fileSet.FileSetDescriptorFactory;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.OptionTag;

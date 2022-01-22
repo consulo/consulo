@@ -16,9 +16,9 @@
 
 package com.intellij.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.PsiErrorElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiErrorElement;
 import com.intellij.openapi.util.text.StringUtil;
 
 

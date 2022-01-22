@@ -20,7 +20,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.application.ReadActionProcessor;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
 import consulo.annotation.access.RequiredReadAction;
 

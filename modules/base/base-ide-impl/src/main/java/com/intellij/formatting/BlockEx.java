@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import javax.annotation.Nullable;
 
 /**

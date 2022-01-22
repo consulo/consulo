@@ -16,10 +16,10 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.psi.LiteralTextEscaper;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.LiteralTextEscaper;
+import consulo.language.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.tree.injected.CommentLiteralEscaper;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 public class PsiCommentImpl extends PsiCoreCommentImpl implements PsiLanguageInjectionHost {

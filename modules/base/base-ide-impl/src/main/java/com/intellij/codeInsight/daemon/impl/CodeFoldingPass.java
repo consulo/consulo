@@ -25,7 +25,7 @@ import consulo.progress.ProgressIndicator;
 import consulo.project.IndexNotReadyException;
 import consulo.project.PossiblyDumbAware;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 

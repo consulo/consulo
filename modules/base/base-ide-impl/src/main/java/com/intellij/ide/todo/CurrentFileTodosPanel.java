@@ -21,8 +21,8 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.intellij.ui.content.Content;
 import javax.annotation.Nonnull;
 

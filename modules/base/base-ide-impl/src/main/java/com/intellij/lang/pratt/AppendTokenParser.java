@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.pratt;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 import javax.annotation.Nullable;
 

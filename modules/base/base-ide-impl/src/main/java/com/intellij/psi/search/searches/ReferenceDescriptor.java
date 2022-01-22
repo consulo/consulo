@@ -1,8 +1,8 @@
 package com.intellij.psi.search.searches;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
 import com.intellij.util.Function;
 
 /**

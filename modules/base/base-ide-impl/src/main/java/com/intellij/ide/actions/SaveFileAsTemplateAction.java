@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

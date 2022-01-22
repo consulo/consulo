@@ -20,8 +20,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import javax.annotation.Nullable;
 
 import java.util.Set;

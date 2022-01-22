@@ -15,10 +15,11 @@
  */
 package com.intellij.psi.tree;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.psi.stubs.PsiFileStub;
-import com.intellij.psi.stubs.StubSerializer;
-import org.jetbrains.annotations.NonNls;
+import consulo.language.psi.stub.StubSerializer;
+import consulo.language.ast.IFileElementType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

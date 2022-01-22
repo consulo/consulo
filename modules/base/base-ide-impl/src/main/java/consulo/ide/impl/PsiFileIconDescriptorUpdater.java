@@ -19,12 +19,12 @@ import com.intellij.icons.AllIcons;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
-import consulo.lang.LanguageElementIcons;
+import consulo.language.LanguageElementIcons;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

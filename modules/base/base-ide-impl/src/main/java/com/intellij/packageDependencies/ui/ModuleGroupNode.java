@@ -21,7 +21,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.ui.image.Image;
 
 import java.util.Set;

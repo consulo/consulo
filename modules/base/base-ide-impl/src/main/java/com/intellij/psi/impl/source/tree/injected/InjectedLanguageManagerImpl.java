@@ -9,6 +9,8 @@ import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.document.util.Segment;

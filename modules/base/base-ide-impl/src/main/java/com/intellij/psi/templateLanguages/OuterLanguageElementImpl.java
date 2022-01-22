@@ -15,9 +15,10 @@
  */
 package com.intellij.psi.templateLanguages;
 
-import com.intellij.psi.PsiElementVisitor;
+import consulo.language.psi.OuterLanguageElement;
+import consulo.language.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 /**

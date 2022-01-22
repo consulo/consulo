@@ -18,8 +18,8 @@ package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 import com.intellij.codeInsight.lookup.CharFilter;
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiReference;
 
 /**
  * @author peter

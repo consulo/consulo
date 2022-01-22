@@ -1,10 +1,11 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.formatting;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,7 +16,7 @@ import javax.annotation.Nullable;
  * A formatting model defines how a file is broken into non-whitespace blocks and different
  * types of whitespace (alignment, indents and wraps) between them.
  * <p>For certain aspects of the custom formatting to work properly, it is recommended to use TokenType.WHITE_SPACE
- * as the language's whitespace tokens. See {@link com.intellij.lang.ParserDefinition}
+ * as the language's whitespace tokens. See {@link ParserDefinition}
  *
  * @apiNote in case you getting a {@link StackOverflowError}, with your builder, most likely you haven't implemented any model building
  * methods. Please, implement {@link #createModel(FormattingContext)}

@@ -17,7 +17,7 @@
 package com.intellij.pom.wrappers;
 
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,8 +27,8 @@ import com.intellij.pom.event.PomModelEvent;
 import com.intellij.pom.tree.TreeAspect;
 import com.intellij.pom.tree.events.TreeChangeEvent;
 import com.intellij.pom.tree.events.impl.TreeChangeEventImpl;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.impl.PsiToDocumentSynchronizer;

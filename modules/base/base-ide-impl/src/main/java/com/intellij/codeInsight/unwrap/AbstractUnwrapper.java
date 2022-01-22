@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.unwrap;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
 
 import java.util.ArrayList;
 import java.util.List;

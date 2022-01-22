@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.LazyInstance;
 import consulo.component.extension.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;

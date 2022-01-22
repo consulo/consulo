@@ -19,7 +19,9 @@ package com.intellij.codeInsight.editorActions.wordSelection;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.util.Condition;
-import com.intellij.psi.*;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
 
 public class WordSelectioner extends AbstractWordSelectioner {
   private static final ExtensionPointName<Condition<PsiElement>> EP_NAME = ExtensionPointName.create("consulo.basicWordSelectionFilter");

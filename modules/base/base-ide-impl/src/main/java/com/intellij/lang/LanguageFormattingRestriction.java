@@ -16,7 +16,7 @@
 package com.intellij.lang;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public interface LanguageFormattingRestriction {

@@ -29,12 +29,12 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
+import consulo.language.psi.PsiPackage;
+import consulo.language.psi.PsiPackageManager;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

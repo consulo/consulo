@@ -29,7 +29,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -21,8 +21,10 @@ package com.intellij.lang;
 
 import com.intellij.formatting.CustomFormattingModelBuilder;
 import com.intellij.formatting.FormattingModelBuilder;
-import com.intellij.psi.PsiElement;
+import consulo.language.LanguageExtension;
+import consulo.language.psi.PsiElement;
 import consulo.container.plugin.PluginIds;
+import consulo.language.Language;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -11,7 +11,7 @@ import com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.patterns.StandardPatterns;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
 import consulo.codeInsight.completion.CompletionProvider;
 import javax.annotation.Nonnull;

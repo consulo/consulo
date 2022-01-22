@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiReference;
 
 import java.util.ArrayList;
 import java.util.Collection;

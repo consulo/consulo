@@ -16,14 +16,17 @@
 package com.intellij.util.codeInsight;
 
 import com.intellij.lang.*;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import consulo.lang.LanguageVersion;
+import consulo.language.psi.PsiComment;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.version.LanguageVersion;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.Language;
 
 public class CommentUtilCore {
   @RequiredReadAction

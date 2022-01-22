@@ -7,7 +7,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 abstract class AbstractEditIntentionSettingsAction implements IntentionAction {

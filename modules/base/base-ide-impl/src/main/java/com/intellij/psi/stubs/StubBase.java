@@ -7,10 +7,12 @@
  */
 package com.intellij.psi.stubs;
 
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AtomicFieldUpdater;

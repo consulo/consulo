@@ -38,7 +38,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;

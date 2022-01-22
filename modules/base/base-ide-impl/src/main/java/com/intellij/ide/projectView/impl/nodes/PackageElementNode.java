@@ -29,9 +29,9 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import consulo.ide.projectView.impl.nodes.PackageElement;
-import consulo.psi.PsiPackage;
+import consulo.language.psi.PsiPackage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

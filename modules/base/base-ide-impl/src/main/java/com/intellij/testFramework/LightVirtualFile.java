@@ -15,7 +15,7 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.fileTypes.CharsetUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;

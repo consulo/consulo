@@ -17,8 +17,8 @@
 package com.intellij.psi.util;
 
 import com.intellij.ide.DataManager;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -28,13 +28,14 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.util.concurrent.AsyncResult;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 

@@ -29,11 +29,11 @@ import com.intellij.openapi.editor.ScrollType;
 import consulo.document.FileDocumentManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 

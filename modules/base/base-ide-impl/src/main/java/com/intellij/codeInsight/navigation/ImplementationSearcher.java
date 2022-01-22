@@ -23,7 +23,7 @@ import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.search.PsiElementProcessorAdapter;
 import com.intellij.psi.search.SearchScope;

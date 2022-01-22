@@ -22,7 +22,7 @@ import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.ChangedPsiRangeUtil;
 import com.intellij.psi.impl.DiffLog;
 import com.intellij.psi.impl.source.tree.FileElement;

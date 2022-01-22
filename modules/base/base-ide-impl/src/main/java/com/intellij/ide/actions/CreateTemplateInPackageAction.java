@@ -27,11 +27,11 @@ import consulo.project.Project;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import consulo.psi.PsiPackageSupportProvider;
+import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

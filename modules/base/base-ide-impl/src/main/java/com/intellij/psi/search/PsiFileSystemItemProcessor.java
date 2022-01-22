@@ -16,7 +16,7 @@
 
 package com.intellij.psi.search;
 
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFileSystemItem;
 
 /**
  * @author Dmitry Avdeev

@@ -13,8 +13,8 @@ import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 

@@ -20,7 +20,7 @@ import com.intellij.codeInspection.CleanupLocalInspectionTool;
 import com.intellij.codeInspection.GlobalInspectionContext;
 import com.intellij.codeInspection.InspectionEP;
 import com.intellij.codeInspection.InspectionProfileEntry;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
@@ -88,7 +88,7 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
   }
 
   /**
-   * @see #isApplicable(com.intellij.lang.Language)
+   * @see #isApplicable(Language)
    */
   @javax.annotation.Nullable
   public String getLanguage() {

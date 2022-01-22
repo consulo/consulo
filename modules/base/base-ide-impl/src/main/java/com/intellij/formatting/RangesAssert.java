@@ -2,9 +2,9 @@
 package com.intellij.formatting;
 
 import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.formatter.FormattingDocumentModelImpl;
 import com.intellij.psi.impl.DebugUtil;
 import consulo.logging.Logger;

@@ -27,7 +27,7 @@ import consulo.util.io.CharsetToolkit;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.io.HttpRequests;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

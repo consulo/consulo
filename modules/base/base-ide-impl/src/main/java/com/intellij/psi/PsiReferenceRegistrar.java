@@ -16,6 +16,9 @@
 package com.intellij.psi;
 
 import com.intellij.patterns.ElementPattern;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nonnull;
 
 /**

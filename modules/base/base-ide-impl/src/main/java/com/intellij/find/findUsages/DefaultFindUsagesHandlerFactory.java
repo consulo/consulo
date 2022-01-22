@@ -15,9 +15,9 @@
  */
 package com.intellij.find.findUsages;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.lang.findUsages.LanguageFindUsages;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFileSystemItem;
 import javax.annotation.Nonnull;
 
 /**

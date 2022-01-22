@@ -15,12 +15,12 @@
  */
 package com.intellij.usageView;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public interface UsageViewDescriptor {
   /**
-   * @return an array of elements whose usages were searched or {@link com.intellij.psi.PsiElement#EMPTY_ARRAY} if not available
+   * @return an array of elements whose usages were searched or {@link PsiElement#EMPTY_ARRAY} if not available
    */
   @Nonnull
   PsiElement[] getElements();

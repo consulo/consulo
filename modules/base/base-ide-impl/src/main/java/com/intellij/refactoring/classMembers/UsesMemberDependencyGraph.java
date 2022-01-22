@@ -28,7 +28,7 @@ import com.intellij.lang.LanguageDependentMembersRefactoringSupport;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 
 import javax.annotation.Nullable;

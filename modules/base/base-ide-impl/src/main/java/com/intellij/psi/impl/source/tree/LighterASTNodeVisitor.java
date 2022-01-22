@@ -15,9 +15,9 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.LighterASTNode;
+import consulo.language.ast.LighterASTNode;
 import com.intellij.lang.LighterASTTokenNode;
-import com.intellij.lang.LighterLazyParseableNode;
+import consulo.language.ast.LighterLazyParseableNode;
 import javax.annotation.Nonnull;
 
 public abstract class LighterASTNodeVisitor {

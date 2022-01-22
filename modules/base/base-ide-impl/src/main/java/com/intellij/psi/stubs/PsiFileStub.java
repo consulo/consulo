@@ -19,8 +19,9 @@
  */
 package com.intellij.psi.stubs;
 
+import consulo.language.psi.stub.StubElement;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.tree.StubFileElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

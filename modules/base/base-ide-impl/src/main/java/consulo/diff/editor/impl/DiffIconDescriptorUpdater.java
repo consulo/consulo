@@ -16,8 +16,8 @@
 package consulo.diff.editor.impl;
 
 import com.intellij.diff.editor.DiffVirtualFile;
-import com.intellij.psi.PsiBinaryFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiBinaryFile;
+import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;

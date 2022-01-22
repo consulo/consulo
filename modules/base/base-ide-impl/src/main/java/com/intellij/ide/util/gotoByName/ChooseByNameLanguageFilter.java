@@ -16,9 +16,9 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.lang.DependentLanguage;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageUtil;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 

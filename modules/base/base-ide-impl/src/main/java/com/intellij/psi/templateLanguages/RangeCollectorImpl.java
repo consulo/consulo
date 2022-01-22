@@ -1,9 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.templateLanguages;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTFactory;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.document.util.TextRange;
@@ -11,7 +11,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.*;
 import com.intellij.psi.templateLanguages.TemplateDataElementType.OuterLanguageRangePatcher;
-import com.intellij.util.CharTable;
+import consulo.language.util.CharTable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;

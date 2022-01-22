@@ -3,7 +3,7 @@ package com.intellij.ui.breadcrumbs;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.options.CompositeConfigurable;

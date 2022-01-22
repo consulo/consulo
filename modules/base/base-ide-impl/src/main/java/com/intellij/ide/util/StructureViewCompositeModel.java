@@ -26,7 +26,7 @@ import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.JBIterable;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

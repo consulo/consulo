@@ -19,6 +19,8 @@
  */
 package com.intellij.psi;
 
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;

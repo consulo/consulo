@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.highlighting;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 
 import javax.annotation.Nullable;
 

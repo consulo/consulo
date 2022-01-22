@@ -15,7 +15,7 @@
  */
 package org.intellij.plugins.intelliLang.inject;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.util.ArrayUtil;
 

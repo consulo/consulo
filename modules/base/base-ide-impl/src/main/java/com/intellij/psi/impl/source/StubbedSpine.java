@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.impl.source;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nullable;
 
 /**

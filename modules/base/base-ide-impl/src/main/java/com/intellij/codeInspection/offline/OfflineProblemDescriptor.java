@@ -23,8 +23,8 @@ package com.intellij.codeInspection.offline;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefManager;
 import com.intellij.codeInspection.reference.RefEntity;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nullable;
 

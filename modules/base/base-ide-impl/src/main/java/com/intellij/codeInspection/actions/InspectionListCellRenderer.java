@@ -16,8 +16,8 @@
 package com.intellij.codeInspection.actions;
 
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
-import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.Language;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleColoredComponent;

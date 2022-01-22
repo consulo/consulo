@@ -14,14 +14,14 @@
 
 package com.intellij.lang.parameterInfo;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.openapi.util.Conditions;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
 import com.intellij.psi.SyntaxTraverser;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

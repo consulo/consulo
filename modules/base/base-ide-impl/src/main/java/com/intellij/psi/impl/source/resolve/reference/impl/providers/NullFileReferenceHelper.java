@@ -21,8 +21,8 @@ import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

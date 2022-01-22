@@ -15,9 +15,10 @@
  */
 package com.intellij.psi;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.StubElement;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 

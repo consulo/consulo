@@ -15,7 +15,7 @@
  */
 package com.intellij.util.gist;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 /**

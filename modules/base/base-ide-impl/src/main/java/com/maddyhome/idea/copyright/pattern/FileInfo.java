@@ -17,7 +17,7 @@
 package com.maddyhome.idea.copyright.pattern;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public class FileInfo {
   public FileInfo(PsiFile file) {

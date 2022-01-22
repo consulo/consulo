@@ -27,8 +27,8 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 
 import javax.swing.*;

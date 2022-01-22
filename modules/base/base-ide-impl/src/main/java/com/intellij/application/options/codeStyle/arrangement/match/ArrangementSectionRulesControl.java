@@ -18,7 +18,7 @@ package com.intellij.application.options.codeStyle.arrangement.match;
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.match.tokens.ArrangementRuleAliasDialog;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;

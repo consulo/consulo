@@ -19,11 +19,11 @@
  */
 package com.intellij.psi.impl.source;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.util.CharTable;
+import consulo.language.util.CharTable;
 import javax.annotation.Nonnull;
 
 public class DummyHolderFactory  {

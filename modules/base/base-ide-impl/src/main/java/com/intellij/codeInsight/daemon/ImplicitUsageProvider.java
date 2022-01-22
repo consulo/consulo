@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 /**

@@ -19,9 +19,9 @@ package com.intellij.ide.fileTemplates;
 import com.intellij.ide.IdeBundle;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 
 import java.util.Map;

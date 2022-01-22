@@ -17,10 +17,12 @@ package com.intellij.ide.impl;
 
 import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInTarget;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

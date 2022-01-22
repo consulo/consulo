@@ -23,7 +23,7 @@ import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.UnsyncByteArrayInputStream;

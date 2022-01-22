@@ -19,8 +19,8 @@
  */
 package com.intellij.psi.impl.source;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.stubs.StubTree;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon.impl.analysis;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiErrorElement;
+import consulo.language.psi.PsiErrorElement;
 
 /**
  * @author yole

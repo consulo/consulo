@@ -16,7 +16,7 @@
 package com.intellij.lang;
 
 import consulo.application.Application;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.component.extension.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;

@@ -15,18 +15,20 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.TreeBackedLighterAST;
+import consulo.language.psi.stub.Stub;
+import consulo.language.psi.stub.StubElement;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;

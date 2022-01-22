@@ -15,15 +15,16 @@
  */
 package com.intellij.formatting;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
 
 /**
  * Allows plugins to create an instance of the standard {@link FormattingModel} implementation.
  *
- * @see FormattingModelBuilder#createModel(com.intellij.psi.PsiElement, com.intellij.psi.codeStyle.CodeStyleSettings)
+ * @see FormattingModelBuilder#createModel(PsiElement, com.intellij.psi.codeStyle.CodeStyleSettings)
  */
 
 public final class FormattingModelProvider {

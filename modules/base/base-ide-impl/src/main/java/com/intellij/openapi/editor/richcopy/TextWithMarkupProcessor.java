@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.richcopy.view.RtfTransferableData;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

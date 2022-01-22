@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.psi.TokenType;
+import consulo.language.ast.TokenType;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.ui.color.ColorValue;
 

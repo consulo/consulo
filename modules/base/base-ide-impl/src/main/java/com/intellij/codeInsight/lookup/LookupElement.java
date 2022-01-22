@@ -4,8 +4,8 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.navigation.PsiElementNavigationItem;
 import com.intellij.openapi.util.ClassConditionKey;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveResult;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.ResolveResult;
 import com.intellij.psi.SmartPsiElementPointer;
 import consulo.util.dataholder.UserDataHolderBase;
 

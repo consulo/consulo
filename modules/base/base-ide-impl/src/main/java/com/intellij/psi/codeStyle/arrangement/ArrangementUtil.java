@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.openapi.util.Ref;
 import consulo.document.util.TextRange;

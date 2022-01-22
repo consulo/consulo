@@ -15,10 +15,10 @@
  */
 package com.intellij.patterns;
 
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.pom.PomTarget;
 import com.intellij.util.ProcessingContext;

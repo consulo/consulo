@@ -15,11 +15,11 @@
  */
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.HighlighterIteratorWrapper;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

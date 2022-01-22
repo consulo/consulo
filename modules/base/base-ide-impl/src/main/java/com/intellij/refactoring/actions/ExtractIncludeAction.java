@@ -17,11 +17,11 @@
 package com.intellij.refactoring.actions;
 
 import com.intellij.ide.TitledHandler;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.lang.LanguageExtractInclude;
 import javax.annotation.Nonnull;

@@ -7,10 +7,10 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.intellij.util.ui.ColumnInfo;
 
 import java.util.ArrayList;

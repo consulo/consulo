@@ -16,8 +16,8 @@
 
 package com.intellij.extapi.psi;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import javax.annotation.Nonnull;
 

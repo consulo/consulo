@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.generation;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

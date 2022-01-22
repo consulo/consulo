@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ShortcutSet;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

@@ -3,7 +3,7 @@ package com.intellij.util.concurrency;
 
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.openapi.util.LowMemoryWatcherManager;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;

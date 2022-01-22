@@ -23,7 +23,7 @@ import com.intellij.codeInspection.LocalInspectionTool;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

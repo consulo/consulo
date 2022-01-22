@@ -7,7 +7,7 @@ import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiLanguageInjectionHost;
 import javax.annotation.Nonnull;
 
 class RangeMarkerWindow implements RangeMarkerEx {

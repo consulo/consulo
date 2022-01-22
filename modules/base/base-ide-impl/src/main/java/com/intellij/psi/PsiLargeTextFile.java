@@ -15,5 +15,8 @@
  */
 package com.intellij.psi;
 
+import consulo.language.psi.PsiLargeFile;
+import consulo.language.psi.PsiPlainTextFile;
+
 public interface PsiLargeTextFile extends PsiPlainTextFile, PsiLargeFile {
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
 import javax.annotation.Nonnull;
 

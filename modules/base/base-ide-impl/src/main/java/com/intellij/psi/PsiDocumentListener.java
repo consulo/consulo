@@ -2,6 +2,8 @@
 package com.intellij.psi;
 
 import consulo.document.Document;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;

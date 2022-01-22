@@ -16,8 +16,11 @@
 
 package com.intellij.psi.impl.source.resolve.reference;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceService;
 import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.psi.*;
 import com.intellij.util.ProcessingContext;
@@ -46,7 +49,7 @@ public abstract class ReferenceProvidersRegistry {
   public abstract PsiReferenceRegistrar getRegistrar(Language language);
 
   /**
-   * @see #getReferencesFromProviders(com.intellij.psi.PsiElement)
+   * @see #getReferencesFromProviders(PsiElement)
    */
   @Deprecated
   public static PsiReference[] getReferencesFromProviders(PsiElement context, @Nonnull Class clazz) {

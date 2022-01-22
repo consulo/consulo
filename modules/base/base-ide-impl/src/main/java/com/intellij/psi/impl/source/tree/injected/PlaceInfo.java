@@ -7,13 +7,15 @@ import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import com.intellij.psi.LiteralTextEscaper;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.LiteralTextEscaper;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.Language;
+
 import javax.annotation.Nonnull;
 
 /**
  * stores injection registration info temporarily
- * from the {@link MultiHostRegistrar#startInjecting(com.intellij.lang.Language)} call
+ * from the {@link MultiHostRegistrar#startInjecting(Language)} call
  * to the moment of {@link MultiHostRegistrar#doneInjecting()}
  */
 class PlaceInfo {

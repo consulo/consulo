@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.unwrap;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 public class LanguageUnwrappers extends LanguageExtension<UnwrapDescriptor>{

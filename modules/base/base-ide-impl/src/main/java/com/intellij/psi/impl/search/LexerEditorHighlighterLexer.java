@@ -15,10 +15,10 @@
  */
 package com.intellij.psi.impl.search;
 
-import com.intellij.lexer.LexerBase;
+import consulo.language.lexer.LexerBase;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.util.text.CharSequenceSubSequence;
 import javax.annotation.Nonnull;
 

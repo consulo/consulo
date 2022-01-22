@@ -8,10 +8,11 @@ import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.codeStyle.CodeFormatterFacade;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

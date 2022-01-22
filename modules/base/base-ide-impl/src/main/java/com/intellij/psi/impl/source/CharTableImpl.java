@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.CharTable;
+import consulo.language.util.CharTable;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
 import consulo.util.collection.primitive.ints.IntMaps;

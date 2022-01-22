@@ -17,7 +17,7 @@ import consulo.project.PossiblyDumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.PomTargetPsiElement;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;

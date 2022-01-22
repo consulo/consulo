@@ -5,7 +5,7 @@ import consulo.application.Application;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

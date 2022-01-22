@@ -19,8 +19,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.intellij.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 

@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.editorActions.moveLeftRight;
 
-import com.intellij.lang.LanguageExtension;
-import com.intellij.psi.PsiElement;
+import consulo.language.LanguageExtension;
+import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginIds;
 

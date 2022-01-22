@@ -19,8 +19,8 @@
  */
 package com.intellij.lang;
 
-import com.intellij.psi.tree.IElementType;
-import consulo.lang.LanguageVersion;
+import consulo.language.ast.IElementType;
+import consulo.language.version.LanguageVersion;
 
 public interface WordCompletionElementFilter {
   boolean isWordCompletionEnabledIn(IElementType element, LanguageVersion languageVersion);

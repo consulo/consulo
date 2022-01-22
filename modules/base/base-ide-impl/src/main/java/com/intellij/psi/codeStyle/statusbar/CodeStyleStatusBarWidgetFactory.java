@@ -3,7 +3,7 @@ package com.intellij.psi.codeStyle.statusbar;
 
 import com.intellij.application.options.CodeStyleSchemesConfigurable;
 import com.intellij.application.options.codeStyle.OtherFileTypesCodeStyleConfigurable;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
@@ -12,7 +12,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.intellij.ui.UIBundle;
 import consulo.disposer.Disposer;

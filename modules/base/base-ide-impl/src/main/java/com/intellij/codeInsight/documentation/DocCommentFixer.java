@@ -15,10 +15,10 @@
  */
 package com.intellij.codeInsight.documentation;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.psi.PsiComment;
+import consulo.language.psi.PsiComment;
 import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;

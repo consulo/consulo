@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nullable;
 

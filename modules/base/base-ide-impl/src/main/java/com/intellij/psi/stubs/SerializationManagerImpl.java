@@ -7,6 +7,8 @@ import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
 import consulo.container.boot.ContainerPathManager;
+import consulo.language.psi.stub.ObjectStubSerializer;
+import consulo.language.psi.stub.Stub;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -5,7 +5,7 @@ import com.intellij.application.options.CodeStyle;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.util.text.HtmlBuilder;
 import com.intellij.openapi.util.text.HtmlChunk;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
 import com.intellij.psi.codeStyle.modifier.CodeStyleStatusBarUIContributor;
 import com.intellij.ui.ColorUtil;

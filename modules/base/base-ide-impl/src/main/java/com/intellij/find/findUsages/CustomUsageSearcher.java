@@ -17,7 +17,7 @@
 package com.intellij.find.findUsages;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.usages.Usage;
 import consulo.application.util.function.Processor;
 

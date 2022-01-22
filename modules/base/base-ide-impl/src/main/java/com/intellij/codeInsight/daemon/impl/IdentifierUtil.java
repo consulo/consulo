@@ -16,9 +16,9 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiNamedElement;
 import javax.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;

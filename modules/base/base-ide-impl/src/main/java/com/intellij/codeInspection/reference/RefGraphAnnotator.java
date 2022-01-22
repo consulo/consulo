@@ -16,7 +16,7 @@
 package com.intellij.codeInspection.reference;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * Callback which gets called while a reference graph is being built during a global

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.injection;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ui.image.Image;
 

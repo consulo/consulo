@@ -16,9 +16,9 @@
 
 package com.intellij.refactoring.actions;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.move.MoveHandler;
 import javax.annotation.Nonnull;

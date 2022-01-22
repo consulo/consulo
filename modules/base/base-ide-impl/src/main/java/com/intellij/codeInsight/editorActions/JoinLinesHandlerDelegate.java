@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.document.Document;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author yole

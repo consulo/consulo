@@ -15,9 +15,9 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.lang.LighterAST;
+import consulo.language.ast.LighterAST;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;
 
 /**

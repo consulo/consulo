@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public class NavigatableRule implements GetDataRule<Navigatable> {

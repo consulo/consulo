@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;

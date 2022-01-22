@@ -3,9 +3,9 @@
 /* It's an automatically generated code. Do not modify it. */
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.lexer.LexerBase;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.LexerBase;
 
 
 /**

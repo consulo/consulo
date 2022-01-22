@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XExpression;

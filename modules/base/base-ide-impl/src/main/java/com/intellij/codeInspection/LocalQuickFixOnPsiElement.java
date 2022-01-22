@@ -17,8 +17,8 @@ package com.intellij.codeInspection;
 
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import javax.annotation.Nonnull;

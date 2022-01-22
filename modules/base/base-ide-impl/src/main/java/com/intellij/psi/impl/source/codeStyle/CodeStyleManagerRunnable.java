@@ -21,7 +21,7 @@ import com.intellij.formatting.FormattingMode;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.LanguageFormatting;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.document.Document;
@@ -34,6 +34,8 @@ import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.language.psi.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

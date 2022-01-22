@@ -19,10 +19,12 @@
  */
 package com.intellij.lang;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.LanguageExtension;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import consulo.container.plugin.PluginIds;
-import consulo.lang.util.LanguageVersionUtil;
+import consulo.language.version.LanguageVersionUtil;
 
 import javax.annotation.Nonnull;
 

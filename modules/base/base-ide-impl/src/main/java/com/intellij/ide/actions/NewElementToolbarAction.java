@@ -25,8 +25,8 @@ import consulo.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileSystemItem;
 
 /**
  * @author yole

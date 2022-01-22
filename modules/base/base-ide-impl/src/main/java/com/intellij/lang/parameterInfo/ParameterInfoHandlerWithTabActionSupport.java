@@ -2,9 +2,9 @@
 
 package com.intellij.lang.parameterInfo;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 import java.util.Set;

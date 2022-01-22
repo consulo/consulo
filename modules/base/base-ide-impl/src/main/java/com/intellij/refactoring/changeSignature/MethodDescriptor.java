@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import java.util.List;
 

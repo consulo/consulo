@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 import com.intellij.ui.docking.DockManager;
 import consulo.ui.Component;
 import jakarta.inject.Inject;

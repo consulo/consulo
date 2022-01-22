@@ -15,8 +15,11 @@
  */
 package com.intellij.formatting;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -26,18 +29,18 @@ import javax.annotation.Nonnull;
  * <p>
  * Typically, a plugin does not need to provide a complete FormattingModel implementation -
  * it can either use a complete implementation provided by
- * {@link FormattingModelProvider#createFormattingModelForPsiFile(com.intellij.psi.PsiFile, Block, com.intellij.psi.codeStyle.CodeStyleSettings)}
+ * {@link FormattingModelProvider#createFormattingModelForPsiFile(PsiFile, Block, com.intellij.psi.codeStyle.CodeStyleSettings)}
  * or implement the necessary extra features and delegate the rest to the factory implementation.
  *
- * @see FormattingModelBuilder#createModel(com.intellij.psi.PsiElement, com.intellij.psi.codeStyle.CodeStyleSettings)
- * @see FormattingModelProvider#createFormattingModelForPsiFile(com.intellij.psi.PsiFile, Block, com.intellij.psi.codeStyle.CodeStyleSettings)
+ * @see FormattingModelBuilder#createModel(PsiElement, com.intellij.psi.codeStyle.CodeStyleSettings)
+ * @see FormattingModelProvider#createFormattingModelForPsiFile(PsiFile, Block, com.intellij.psi.codeStyle.CodeStyleSettings)
  */
 
 public interface FormattingModel {
   /**
    * Returns the root block of the formatting model. The root block corresponds to the
    * top-level element passed to
-   * {@link FormattingModelBuilder#createModel(com.intellij.psi.PsiElement, com.intellij.psi.codeStyle.CodeStyleSettings)}.
+   * {@link FormattingModelBuilder#createModel(PsiElement, com.intellij.psi.codeStyle.CodeStyleSettings)}.
    *
    * @return the root block of the model.
    */

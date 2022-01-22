@@ -15,7 +15,7 @@
  */
 package com.intellij.pom;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.Consumer;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;

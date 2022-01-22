@@ -16,8 +16,8 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.tree.IFileElementType;
+import consulo.language.Language;
+import consulo.language.ast.IFileElementType;
 import org.jetbrains.annotations.NonNls;
 
 /**

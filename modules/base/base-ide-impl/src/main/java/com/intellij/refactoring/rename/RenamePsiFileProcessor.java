@@ -17,10 +17,10 @@ package com.intellij.refactoring.rename;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiReference;
 import com.intellij.refactoring.RefactoringSettings;
 import javax.annotation.Nonnull;
 

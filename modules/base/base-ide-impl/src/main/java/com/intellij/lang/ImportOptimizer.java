@@ -17,7 +17,7 @@
 package com.intellij.lang;
 
 import com.intellij.idea.ActionsBundle;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;

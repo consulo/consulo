@@ -18,8 +18,8 @@ package com.intellij.psi.impl.search;
 
 import com.intellij.ide.todo.TodoIndexPatternProvider;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.cache.TodoCacheManager;
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.PsiTodoSearchHelper;

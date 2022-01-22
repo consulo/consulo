@@ -15,9 +15,9 @@
  */
 package com.intellij.lang.pratt;
 
-import com.intellij.lang.ITokenTypeRemapper;
-import com.intellij.lexer.Lexer;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.parser.ITokenTypeRemapper;
+import consulo.language.lexer.Lexer;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

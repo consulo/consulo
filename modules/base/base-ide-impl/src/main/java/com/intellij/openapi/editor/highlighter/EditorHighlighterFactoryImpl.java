@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.editor.highlighter;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
+import consulo.language.file.LanguageFileType;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;

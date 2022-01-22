@@ -18,11 +18,11 @@ package com.intellij.refactoring.move.moveFilesOrDirectories;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

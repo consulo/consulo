@@ -16,11 +16,11 @@
 
 package com.intellij.lang.refactoring;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author yole

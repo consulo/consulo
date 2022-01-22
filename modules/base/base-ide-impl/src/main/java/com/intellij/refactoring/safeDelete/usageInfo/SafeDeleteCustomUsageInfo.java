@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.safeDelete.usageInfo;
 
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 /**
  * @author yole

@@ -19,7 +19,9 @@
  */
 package com.intellij.lang;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.LighterASTNode;
 
 public interface NodeStructure<T> {
   NodeStructure<LighterASTNode> LIGHTER_NODE_STRUCTURE = new NodeStructure<LighterASTNode>() {

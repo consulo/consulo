@@ -16,8 +16,8 @@
 package com.intellij.psi.util.proximity;
 
 import com.intellij.openapi.util.NullableLazyKey;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.ProximityLocation;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.NullableFunction;

@@ -19,7 +19,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

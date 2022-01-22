@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

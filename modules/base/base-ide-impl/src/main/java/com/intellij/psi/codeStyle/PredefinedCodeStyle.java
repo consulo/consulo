@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle;
 
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 

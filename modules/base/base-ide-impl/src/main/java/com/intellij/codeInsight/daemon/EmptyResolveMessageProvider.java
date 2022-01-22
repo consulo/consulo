@@ -16,10 +16,12 @@
 
 package com.intellij.codeInsight.daemon;
 
+import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nonnull;
 
 /**
- * Implement this in your {@link com.intellij.psi.PsiReference} to provide custom error message.
+ * Implement this in your {@link PsiReference} to provide custom error message.
  */
 public interface EmptyResolveMessageProvider {
 

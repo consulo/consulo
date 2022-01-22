@@ -2,7 +2,7 @@
 
 package com.intellij.lang.parameterInfo;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.UserDataHolderEx;
 
 public interface UpdateParameterInfoContext extends ParameterInfoContext {

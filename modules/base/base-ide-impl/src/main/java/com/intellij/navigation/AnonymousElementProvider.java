@@ -16,7 +16,7 @@
 package com.intellij.navigation;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author Konstantin Bulenkov

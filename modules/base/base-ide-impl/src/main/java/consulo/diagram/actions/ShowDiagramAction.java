@@ -18,7 +18,7 @@ package consulo.diagram.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.diagram.provider.GraphProvider;
 import consulo.ide.eap.EarlyAccessProgramDescriptor;

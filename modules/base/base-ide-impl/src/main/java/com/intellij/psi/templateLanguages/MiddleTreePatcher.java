@@ -3,6 +3,8 @@ package com.intellij.psi.templateLanguages;
 
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
+import consulo.language.psi.OuterLanguageElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

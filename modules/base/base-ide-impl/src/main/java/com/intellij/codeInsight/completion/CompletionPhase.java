@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.disposer.Disposable;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
@@ -17,9 +17,9 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListenerImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.AppUIUtil;

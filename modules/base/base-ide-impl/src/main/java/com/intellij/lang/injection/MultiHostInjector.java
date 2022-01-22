@@ -23,12 +23,14 @@
 package com.intellij.lang.injection;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.lang.injection.MultiHostInjectorExtensionPoint;
+import consulo.language.psi.PsiLanguageInjectionHost;
+
 import javax.annotation.Nonnull;
 
 /**
- * @see com.intellij.psi.PsiLanguageInjectionHost
+ * @see PsiLanguageInjectionHost
  */
 public interface MultiHostInjector {
   ExtensionPointName<MultiHostInjectorExtensionPoint> EP_NAME = ExtensionPointName.create("consulo.multiHostInjector");

@@ -31,11 +31,11 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.util.IncorrectOperationException;
 import consulo.ide.actions.CreateDirectoryOrPackageType;
-import consulo.psi.PsiPackageManager;
+import consulo.language.psi.PsiPackageManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

@@ -16,7 +16,7 @@
 
 package com.intellij.find.findUsages;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public class FindUsagesUtil {

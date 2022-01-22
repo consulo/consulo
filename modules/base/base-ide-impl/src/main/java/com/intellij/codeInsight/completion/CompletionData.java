@@ -22,6 +22,7 @@ import com.intellij.codeInsight.lookup.LookupItem;
 import com.intellij.codeInsight.lookup.LookupValueWithUIHint;
 import com.intellij.codeInsight.lookup.PresentableLookupValue;
 import com.intellij.codeInsight.template.Template;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.paths.PsiDynaReference;

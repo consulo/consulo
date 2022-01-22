@@ -21,7 +21,7 @@ import com.intellij.pom.PomDescriptionProvider;
 import com.intellij.pom.PomNamedTarget;
 import com.intellij.pom.PomTarget;
 import com.intellij.psi.ElementDescriptionLocation;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.usageView.UsageViewNodeTextLocation;
 import com.intellij.usageView.UsageViewTypeLocation;
 import com.intellij.codeInsight.highlighting.HighlightUsagesDescriptionLocation;

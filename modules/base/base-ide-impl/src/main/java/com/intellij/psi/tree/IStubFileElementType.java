@@ -16,7 +16,11 @@
 
 package com.intellij.psi.tree;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.IndexSink;
+import consulo.language.psi.stub.StubElement;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.stubs.*;

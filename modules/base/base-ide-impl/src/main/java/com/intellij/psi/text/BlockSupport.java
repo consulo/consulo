@@ -16,17 +16,17 @@
 
 package com.intellij.psi.text;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.FileASTNode;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.FileASTNode;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.DiffLog;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ControlFlowException;

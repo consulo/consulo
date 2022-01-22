@@ -15,8 +15,8 @@
  */
 package consulo.sandboxPlugin.lang.psi;
 
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 import consulo.sandboxPlugin.lang.SandLanguage;
 
 /**

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.StorageException;

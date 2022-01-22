@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.breadcrumbs;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import javax.annotation.Nonnull;
 import java.util.List;
 

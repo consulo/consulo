@@ -21,7 +21,7 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Factory;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.usages.rules.PsiElementUsage;
 import javax.annotation.Nonnull;
 

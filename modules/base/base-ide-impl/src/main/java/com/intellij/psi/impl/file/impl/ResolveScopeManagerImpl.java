@@ -15,6 +15,10 @@
  */
 package com.intellij.psi.impl.file.impl;
 
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.module.Module;
 import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import consulo.module.content.layer.orderEntry.*;

@@ -17,7 +17,7 @@ package com.intellij.codeInsight.template.postfix.templates;
 
 import consulo.document.Document;
 import com.intellij.openapi.util.Condition;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public abstract class TypedPostfixTemplate extends PostfixTemplate {

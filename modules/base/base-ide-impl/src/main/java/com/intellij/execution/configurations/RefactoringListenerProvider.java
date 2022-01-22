@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 
 /**

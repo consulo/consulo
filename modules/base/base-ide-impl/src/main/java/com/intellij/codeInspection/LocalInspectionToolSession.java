@@ -21,7 +21,7 @@
 package com.intellij.codeInspection;
 
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 public class LocalInspectionToolSession extends UserDataHolderBase {

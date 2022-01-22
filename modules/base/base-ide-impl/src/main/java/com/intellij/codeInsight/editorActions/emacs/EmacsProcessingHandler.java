@@ -17,7 +17,7 @@ package com.intellij.codeInsight.editorActions.emacs;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 /**

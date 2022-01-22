@@ -27,6 +27,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.pom.Navigatable;

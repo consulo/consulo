@@ -1,8 +1,8 @@
 package com.intellij.dupLocator.equivalence;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.TokenSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

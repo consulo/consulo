@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 // List of nonnegative ints, monotonically increasing, optimized for one int case (90% of our lists one element)
 public final class StubIdList {

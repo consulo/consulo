@@ -19,7 +19,7 @@ package com.intellij.psi.search.searches;
 import consulo.application.ApplicationManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.application.util.function.Computable;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.Query;

@@ -15,7 +15,7 @@
  */
 package consulo.module.extension.condition.impl;
 
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.module.extension.condition.ModuleExtensionCondition;

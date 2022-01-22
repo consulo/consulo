@@ -15,6 +15,9 @@
  */
 package com.intellij.psi.stubs;
 
+import consulo.language.psi.stub.ObjectStubSerializer;
+import consulo.language.psi.stub.Stub;
+
 /**
  * Author: dmitrylomov
  */

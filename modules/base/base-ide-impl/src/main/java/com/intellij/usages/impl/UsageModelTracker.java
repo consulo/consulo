@@ -15,6 +15,9 @@
  */
 package com.intellij.usages.impl;
 
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.language.psi.event.PsiTreeChangeListener;
 import consulo.project.Project;
 import com.intellij.psi.*;
 import com.intellij.util.containers.ContainerUtil;

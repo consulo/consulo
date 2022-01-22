@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public interface PsiNonJavaFileReferenceProcessor {
   boolean process(PsiFile file, int startOffset, int endOffset);

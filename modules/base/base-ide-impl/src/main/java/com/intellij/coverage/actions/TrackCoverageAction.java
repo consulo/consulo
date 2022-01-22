@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.Alarm;
 import consulo.disposer.Disposer;
 

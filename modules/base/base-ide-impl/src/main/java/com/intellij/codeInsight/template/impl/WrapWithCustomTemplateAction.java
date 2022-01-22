@@ -10,8 +10,8 @@ import com.intellij.openapi.editor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

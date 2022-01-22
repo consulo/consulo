@@ -1,6 +1,6 @@
 package com.intellij.codeInsight.editorActions.fillParagraph;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**

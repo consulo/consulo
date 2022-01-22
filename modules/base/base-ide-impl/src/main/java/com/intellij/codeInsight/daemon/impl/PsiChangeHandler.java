@@ -14,6 +14,8 @@ import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.language.psi.*;
+import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.content.ProjectRootManager;

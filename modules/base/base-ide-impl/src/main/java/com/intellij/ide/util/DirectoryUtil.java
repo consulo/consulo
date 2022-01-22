@@ -20,9 +20,9 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiManager;
+import consulo.language.util.IncorrectOperationException;
 
 import java.io.File;
 import java.util.StringTokenizer;

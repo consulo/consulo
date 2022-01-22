@@ -3,16 +3,16 @@
  */
 package com.intellij.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.search.PsiFileSystemItemProcessor;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;

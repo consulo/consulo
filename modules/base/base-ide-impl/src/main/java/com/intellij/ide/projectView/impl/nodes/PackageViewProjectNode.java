@@ -24,11 +24,11 @@ import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
+import consulo.language.psi.PsiPackage;
+import consulo.language.psi.PsiPackageManager;
 import consulo.roots.ContentFolderScopes;
 
 import javax.annotation.Nonnull;

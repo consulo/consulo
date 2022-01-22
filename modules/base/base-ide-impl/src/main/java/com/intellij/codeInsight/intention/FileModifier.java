@@ -17,8 +17,8 @@ package com.intellij.codeInsight.intention;
 
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.openapi.application.WriteActionAware;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.ReflectionUtil;
 import javax.annotation.Nonnull;
 

@@ -19,7 +19,7 @@ package com.intellij.ide.hierarchy;
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -54,7 +54,7 @@ public interface HierarchyProvider {
   /**
    * Notifies that the toolwindow has been shown and the specified browser is currently being displayed.
    *
-   * @param hierarchyBrowser the browser instance created by {@link #createHierarchyBrowser(com.intellij.psi.PsiElement)}.
+   * @param hierarchyBrowser the browser instance created by {@link #createHierarchyBrowser(PsiElement)}.
    */
   void browserActivated(@Nonnull HierarchyBrowser hierarchyBrowser);
 }

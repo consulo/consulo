@@ -17,10 +17,10 @@ package consulo.ide.actions;
 
 import com.intellij.ide.actions.QualifiedNameProvider;
 import consulo.project.Project;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiPackage;
+import consulo.language.psi.PsiPackageManager;
 import javax.annotation.Nullable;
 
 /**

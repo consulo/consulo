@@ -2,17 +2,17 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.TokenType;
+import consulo.language.ast.ASTNode;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.TokenType;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.testFramework.ReadOnlyLightVirtualFile;
-import com.intellij.util.CharTable;
+import consulo.language.util.CharTable;
 import consulo.application.ApplicationManager;
 import consulo.document.util.TextRange;
 import consulo.project.Project;

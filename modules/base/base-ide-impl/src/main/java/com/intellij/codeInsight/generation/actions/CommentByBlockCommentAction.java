@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 public class CommentByBlockCommentAction extends MultiCaretCodeInsightAction implements DumbAware {

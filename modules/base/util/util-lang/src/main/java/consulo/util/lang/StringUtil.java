@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -62,6 +61,11 @@ public class StringUtil {
       offset += prefixLen;
     }
     return true;
+  }
+
+  @Contract(pure = true)
+  public static boolean isHexDigit(char c) {
+    return '0' <= c && c <= '9' || 'a' <= c && c <= 'f' || 'A' <= c && c <= 'F';
   }
 
   @Nonnull

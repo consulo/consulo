@@ -16,7 +16,7 @@
 
 package com.intellij.psi.tree;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

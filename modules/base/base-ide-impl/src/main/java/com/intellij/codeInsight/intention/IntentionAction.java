@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

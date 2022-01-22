@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.project.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;

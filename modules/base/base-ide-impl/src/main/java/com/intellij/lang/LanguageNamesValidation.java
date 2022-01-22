@@ -20,6 +20,7 @@
 package com.intellij.lang;
 
 import com.intellij.lang.refactoring.NamesValidator;
+import consulo.language.LanguageExtension;
 import consulo.project.Project;
 import consulo.container.plugin.PluginIds;
 

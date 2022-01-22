@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

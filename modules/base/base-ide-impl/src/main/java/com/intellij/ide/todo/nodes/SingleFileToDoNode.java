@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.TodoItem;
 import javax.annotation.Nonnull;
 

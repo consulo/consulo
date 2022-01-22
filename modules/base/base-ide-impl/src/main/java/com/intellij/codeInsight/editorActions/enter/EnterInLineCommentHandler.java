@@ -23,9 +23,12 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.language.Language;
+
 import javax.annotation.Nonnull;
 
 public class EnterInLineCommentHandler extends EnterHandlerDelegateAdapter {

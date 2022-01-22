@@ -17,12 +17,12 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.SingleRootFileViewProvider;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

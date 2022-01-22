@@ -3,7 +3,7 @@ package com.intellij.application.options.codeStyle.cache;
 
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;

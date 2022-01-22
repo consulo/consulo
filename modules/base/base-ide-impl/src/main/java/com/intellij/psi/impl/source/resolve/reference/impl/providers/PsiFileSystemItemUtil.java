@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.text.StringFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

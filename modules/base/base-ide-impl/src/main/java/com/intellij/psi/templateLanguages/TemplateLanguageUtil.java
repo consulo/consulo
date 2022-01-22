@@ -2,10 +2,11 @@
 
 package com.intellij.psi.templateLanguages;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.ast.ASTNode;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.OuterLanguageElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.navigation;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;
 
 /**

@@ -17,13 +17,13 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.GotoClassContributor;
 import com.intellij.navigation.NavigationItem;
 import consulo.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.JDOMExternalizerUtil;

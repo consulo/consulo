@@ -15,17 +15,17 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public interface InspectionSuppressor {
   /**
-   * @see com.intellij.codeInspection.CustomSuppressableInspectionTool#isSuppressedFor(com.intellij.psi.PsiElement)
+   * @see com.intellij.codeInspection.CustomSuppressableInspectionTool#isSuppressedFor(PsiElement)
    */
   boolean isSuppressedFor(@Nonnull PsiElement element, String toolId);
 
   /**
-   * @see com.intellij.codeInspection.BatchSuppressableTool#getBatchSuppressActions(com.intellij.psi.PsiElement)
+   * @see com.intellij.codeInspection.BatchSuppressableTool#getBatchSuppressActions(PsiElement)
    */
   SuppressQuickFix[] getSuppressActions(@Nonnull PsiElement element, String toolShortName);
 }

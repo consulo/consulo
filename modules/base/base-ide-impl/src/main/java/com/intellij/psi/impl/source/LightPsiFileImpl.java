@@ -17,20 +17,21 @@
 package com.intellij.psi.impl.source;
 
 import com.intellij.ide.util.PsiNavigationSupport;
-import com.intellij.lang.FileASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.FileASTNode;
+import consulo.language.Language;
 import consulo.application.ApplicationManager;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.file.PsiFileImplUtil;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.search.SearchScope;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import javax.annotation.Nonnull;

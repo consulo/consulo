@@ -16,14 +16,14 @@
 
 package com.intellij.extapi.psi;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
+import consulo.language.parser.ParserDefinition;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElementVisitor;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.tree.IFileElementType;
+import consulo.language.ast.IFileElementType;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

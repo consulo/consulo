@@ -20,9 +20,9 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 
@@ -111,7 +111,7 @@ public interface PsiSearchHelper {
 
   /**
    * Returns the scope in which references to the specified element are searched. This scope includes the result of
-   * {@link com.intellij.psi.PsiElement#getUseScope()} and also the results returned from the registered
+   * {@link PsiElement#getUseScope()} and also the results returned from the registered
    * com.intellij.psi.search.UseScopeEnlarger instances.
    *
    * @param element the element to return the use scope form.

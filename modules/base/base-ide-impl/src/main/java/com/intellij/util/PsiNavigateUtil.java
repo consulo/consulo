@@ -18,8 +18,8 @@ package com.intellij.util;
 
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;
 
 public class PsiNavigateUtil {

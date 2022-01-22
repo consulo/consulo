@@ -18,9 +18,9 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.ide.DataManager;
-import com.intellij.lexer.CompositeLexer;
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.MergingLexerAdapter;
+import consulo.language.lexer.CompositeLexer;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.MergingLexerAdapter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
@@ -40,8 +40,8 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

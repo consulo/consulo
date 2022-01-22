@@ -1,10 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.ex.util;
 
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.RestartableLexer;
-import com.intellij.lexer.TokenIterator;
+import consulo.language.lexer.FlexAdapter;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.RestartableLexer;
+import consulo.language.lexer.TokenIterator;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -23,7 +23,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import com.intellij.util.text.SingleCharSequence;

@@ -15,13 +15,13 @@
  */
 package com.intellij.codeInsight.template.postfix.templates;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.lang.surroundWith.Surrounder;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import javax.annotation.Nonnull;
 

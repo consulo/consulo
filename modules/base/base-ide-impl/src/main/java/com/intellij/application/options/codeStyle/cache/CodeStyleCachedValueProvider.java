@@ -8,7 +8,7 @@ import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.component.util.SimpleModificationTracker;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.modifier.CodeStyleSettingsModifier;

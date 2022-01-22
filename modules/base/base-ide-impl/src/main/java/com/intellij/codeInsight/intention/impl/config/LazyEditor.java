@@ -26,7 +26,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.document.Document;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

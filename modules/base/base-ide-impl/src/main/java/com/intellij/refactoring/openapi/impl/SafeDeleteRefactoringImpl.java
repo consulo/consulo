@@ -17,7 +17,7 @@ package com.intellij.refactoring.openapi.impl;
 
 import consulo.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringImpl;
 import com.intellij.refactoring.SafeDeleteRefactoring;
 import com.intellij.refactoring.safeDelete.SafeDeleteProcessor;

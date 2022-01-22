@@ -21,6 +21,7 @@ package com.intellij.lang;
 
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import consulo.container.plugin.PluginIds;
+import consulo.language.LanguageExtension;
 
 public class LanguageRefactoringSupport extends LanguageExtension<RefactoringSupportProvider> {
   public static final LanguageRefactoringSupport INSTANCE = new LanguageRefactoringSupport();

@@ -23,8 +23,8 @@ import com.intellij.ide.impl.ProjectViewSelectInTarget;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileSystemItem;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.util.ArrayUtil;
 

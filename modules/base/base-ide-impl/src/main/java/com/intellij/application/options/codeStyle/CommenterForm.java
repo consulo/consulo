@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.codeStyle;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;

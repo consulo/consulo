@@ -3,10 +3,10 @@ package com.intellij.dupLocator.treeHash;
 import com.intellij.dupLocator.NodeSpecificHasher;
 import com.intellij.dupLocator.TreeHasher;
 import com.intellij.dupLocator.util.PsiFragment;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiAnchor;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import javax.annotation.Nonnull;
 

@@ -3,7 +3,7 @@ package com.intellij.ide.util.gotoByName;
 
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

@@ -1,6 +1,6 @@
 package com.intellij.codeInspection;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.ThreeState;
 import javax.annotation.Nonnull;
 

@@ -18,9 +18,9 @@ package com.intellij.refactoring.safeDelete;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

@@ -17,7 +17,7 @@ package com.intellij.refactoring.rename;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.NonFocusableCheckBox;
 import javax.annotation.Nonnull;

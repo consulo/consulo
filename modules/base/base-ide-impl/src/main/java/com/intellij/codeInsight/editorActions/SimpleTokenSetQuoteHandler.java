@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.IElementType;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.Document;

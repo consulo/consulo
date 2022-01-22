@@ -15,13 +15,13 @@
  */
 package consulo.fileTypes;
 
-import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
+import consulo.language.Language;
+import consulo.language.version.LanguageVersion;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.lang.util.LanguageVersionUtil;
+import consulo.language.version.LanguageVersionUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

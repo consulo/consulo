@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 
 public interface TreeChooser<T> {
   T getSelected();

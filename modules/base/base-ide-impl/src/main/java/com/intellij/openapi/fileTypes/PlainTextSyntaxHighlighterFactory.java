@@ -21,14 +21,14 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.ide.highlighter.custom.AbstractCustomLexer;
 import com.intellij.ide.highlighter.custom.tokens.*;
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.MergingLexerAdapter;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.MergingLexerAdapter;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.CustomHighlighterTokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

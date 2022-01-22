@@ -20,6 +20,11 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.lang.findUsages.LanguageFindUsages;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilBase;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileSystemItem;
+
 import javax.annotation.Nonnull;
 
 /**

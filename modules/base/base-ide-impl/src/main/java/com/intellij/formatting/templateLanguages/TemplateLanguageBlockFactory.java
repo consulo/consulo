@@ -17,7 +17,7 @@ package com.intellij.formatting.templateLanguages;
 
 import com.intellij.formatting.Alignment;
 import com.intellij.formatting.Wrap;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

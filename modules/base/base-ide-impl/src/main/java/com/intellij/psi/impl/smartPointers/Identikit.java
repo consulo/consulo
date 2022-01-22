@@ -2,15 +2,15 @@
 package com.intellij.psi.impl.smartPointers;
 
 import com.google.common.base.MoreObjects;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.psi.AbstractFileViewProvider;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IFileElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.Interner;

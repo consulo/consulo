@@ -15,9 +15,12 @@
  */
 package com.intellij.lang;
 
+import consulo.language.psi.LanguageInjector;
+import consulo.language.psi.PsiLanguageInjectionHost;
+
 /**
  * A language whose main purpose is to be injected
- * (see {@link com.intellij.psi.PsiLanguageInjectionHost}, {@link com.intellij.psi.LanguageInjector})
+ * (see {@link PsiLanguageInjectionHost}, {@link LanguageInjector})
  *
  * @see com.intellij.psi.templateLanguages.TemplateLanguage
  * @see com.intellij.lang.DependentLanguage

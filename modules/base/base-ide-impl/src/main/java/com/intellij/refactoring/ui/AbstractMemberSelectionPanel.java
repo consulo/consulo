@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.ui;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.classMembers.MemberInfoBase;
 
 import javax.swing.*;

@@ -15,7 +15,8 @@
  */
 package com.intellij.lang;
 
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
+import consulo.language.parser.WhitespacesAndCommentsBinder;
 
 import javax.annotation.Nonnull;
 

@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import consulo.project.Project;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import consulo.document.Document;
 
 import javax.annotation.Nonnull;

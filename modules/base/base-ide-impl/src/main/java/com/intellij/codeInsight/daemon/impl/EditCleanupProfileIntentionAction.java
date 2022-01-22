@@ -24,8 +24,8 @@ import consulo.project.Project;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.ProjectInspectionToolsConfigurable;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 
 /**

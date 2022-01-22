@@ -17,7 +17,7 @@ package com.intellij.psi.impl.source.codeStyle.lineIndent;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.Indent;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
@@ -27,7 +27,7 @@ import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
 import com.intellij.psi.impl.source.codeStyle.SemanticEditorPosition;
 import com.intellij.psi.impl.source.codeStyle.SemanticEditorPosition.SyntaxElement;
 import com.intellij.psi.impl.source.codeStyle.lineIndent.IndentCalculator.BaseLineOffsetCalculator;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.lang.psi;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import javax.annotation.Nonnull;
 
 /**

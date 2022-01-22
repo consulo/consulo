@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import consulo.project.Project;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

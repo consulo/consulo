@@ -20,7 +20,7 @@ import consulo.component.util.localize.AbstractBundle;
 import com.intellij.CommonBundle;
 import consulo.application.Application;
 import consulo.logging.Logger;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Tag;

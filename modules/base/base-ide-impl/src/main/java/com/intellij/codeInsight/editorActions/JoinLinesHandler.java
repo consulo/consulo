@@ -20,16 +20,16 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.language.psi.*;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.DocumentUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.logging.Logger;
 

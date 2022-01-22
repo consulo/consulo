@@ -22,6 +22,8 @@ package com.intellij.lang;
 import com.intellij.lang.documentation.CompositeDocumentationProvider;
 import com.intellij.lang.documentation.DocumentationProvider;
 import consulo.container.plugin.PluginIds;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
 
 import javax.annotation.Nonnull;
 import java.util.List;

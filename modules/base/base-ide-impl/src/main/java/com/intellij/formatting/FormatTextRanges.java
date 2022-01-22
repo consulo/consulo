@@ -17,7 +17,7 @@ package com.intellij.formatting;
 
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.ChangedRangesInfo;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.document.util.TextRangeUtil;

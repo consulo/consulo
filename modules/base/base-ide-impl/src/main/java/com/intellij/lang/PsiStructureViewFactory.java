@@ -20,7 +20,7 @@
 package com.intellij.lang;
 
 import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nullable;
 

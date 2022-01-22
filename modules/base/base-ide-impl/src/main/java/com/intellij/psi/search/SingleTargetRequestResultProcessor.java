@@ -2,9 +2,9 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceService;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceService;
 import com.intellij.psi.ReferenceRange;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;

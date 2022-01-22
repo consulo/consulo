@@ -16,9 +16,9 @@
 package com.intellij.usages.impl.rules;
 
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.usages.*;
 import com.intellij.usages.rules.PsiElementUsage;

@@ -15,8 +15,8 @@
  */
 package com.intellij.patterns;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

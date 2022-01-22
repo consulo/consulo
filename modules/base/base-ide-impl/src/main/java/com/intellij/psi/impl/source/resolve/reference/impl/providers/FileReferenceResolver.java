@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFileSystemItem;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

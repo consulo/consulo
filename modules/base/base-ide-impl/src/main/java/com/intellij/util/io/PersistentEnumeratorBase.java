@@ -18,7 +18,7 @@ package com.intellij.util.io;
 import com.intellij.openapi.Forceable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.CommonProcessors;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.SLRUMap;
 import com.intellij.util.containers.ShareableKey;

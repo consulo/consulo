@@ -22,8 +22,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.FileViewProvider;
+import consulo.language.psi.PsiManager;
+import consulo.language.file.FileViewProvider;
 import com.intellij.lang.LangBundle;
 
 /**

@@ -18,7 +18,7 @@ package com.intellij.psi.impl;
 import consulo.application.TransactionId;
 import consulo.document.Document;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

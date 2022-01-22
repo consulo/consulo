@@ -23,7 +23,7 @@ import consulo.document.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.LineTokenizer;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.util.Producer;
 import consulo.document.Document;
 

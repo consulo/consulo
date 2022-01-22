@@ -18,9 +18,9 @@ package com.intellij.psi.impl.file.impl;
 
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;

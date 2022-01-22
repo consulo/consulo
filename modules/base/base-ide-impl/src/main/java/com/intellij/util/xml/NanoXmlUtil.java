@@ -5,7 +5,7 @@ package com.intellij.util.xml;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.text.CharSequenceReader;
 import com.intellij.util.text.StringFactory;

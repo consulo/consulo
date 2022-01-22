@@ -15,9 +15,9 @@
  */
 package com.intellij.lang.pratt;
 
-import com.intellij.lang.LighterASTNode;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.LighterASTNode;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.ast.IElementType;
 
 import java.util.LinkedList;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.templateLanguages;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;

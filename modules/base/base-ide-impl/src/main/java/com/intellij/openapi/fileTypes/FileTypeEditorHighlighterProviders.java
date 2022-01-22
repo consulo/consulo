@@ -22,6 +22,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.container.plugin.PluginIds;
+import consulo.virtualFileSystem.fileType.FileTypeExtension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

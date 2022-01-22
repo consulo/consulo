@@ -16,6 +16,8 @@
 
 package com.intellij.ide.scopeView;
 
+import consulo.language.psi.*;
+import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.module.content.ProjectTopics;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;

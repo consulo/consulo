@@ -16,7 +16,7 @@
 package consulo.psi.tree;
 
 import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;

@@ -12,7 +12,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
 import com.intellij.patterns.ElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.Weigher;
 import com.intellij.psi.WeighingService;
 import com.intellij.psi.impl.DebugUtil;

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.cache.impl;
 
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.psi.impl.cache.impl.id.IdIndexEntry;
 import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;

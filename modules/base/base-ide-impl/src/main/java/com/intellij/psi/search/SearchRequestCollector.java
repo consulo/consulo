@@ -5,10 +5,10 @@ import com.intellij.codeInsight.ContainerProvider;
 import consulo.application.ReadAction;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.PsiReference;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

@@ -38,7 +38,7 @@ import com.intellij.openapi.util.registry.Registry;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.application.util.function.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;

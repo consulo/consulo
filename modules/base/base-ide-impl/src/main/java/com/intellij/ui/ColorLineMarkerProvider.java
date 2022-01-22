@@ -22,7 +22,7 @@ import consulo.application.Application;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;

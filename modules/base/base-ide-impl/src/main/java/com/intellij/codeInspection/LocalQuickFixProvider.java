@@ -15,10 +15,12 @@
  */
 package com.intellij.codeInspection;
 
+import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nullable;
 
 /**
- * This can be implemented by a {@link com.intellij.psi.PsiReference} to provide quick fixes for unresolved references.
+ * This can be implemented by a {@link PsiReference} to provide quick fixes for unresolved references.
  *
  * User: anna
  * Date: 30-Nov-2006

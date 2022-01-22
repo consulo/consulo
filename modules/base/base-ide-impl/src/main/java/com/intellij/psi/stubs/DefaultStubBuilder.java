@@ -15,16 +15,18 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.StubBasedPsiElement;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.util.containers.BooleanStack;
 import com.intellij.util.containers.Stack;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

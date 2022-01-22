@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author yole

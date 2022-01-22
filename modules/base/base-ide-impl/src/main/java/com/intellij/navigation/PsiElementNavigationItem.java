@@ -15,7 +15,7 @@
  */
 package com.intellij.navigation;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author yole

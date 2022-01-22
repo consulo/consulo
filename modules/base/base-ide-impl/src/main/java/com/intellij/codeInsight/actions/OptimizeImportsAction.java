@@ -26,13 +26,13 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
 

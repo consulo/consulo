@@ -2,6 +2,8 @@
 
 package com.intellij.lang;
 
+import consulo.language.Language;
+
 import javax.annotation.Nonnull;
 
 final class MetaLanguageMatcher extends LanguageMatcher {

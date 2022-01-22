@@ -16,8 +16,11 @@
 
 package com.intellij.psi.stubs;
 
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiNamedElement;
 import com.intellij.util.io.StringRef;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
+
 import javax.annotation.Nullable;
 
 /**

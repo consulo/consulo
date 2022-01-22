@@ -16,9 +16,9 @@
 package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNamedElement;
 import com.intellij.util.ReflectionUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

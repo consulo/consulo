@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.meta;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 
 /**

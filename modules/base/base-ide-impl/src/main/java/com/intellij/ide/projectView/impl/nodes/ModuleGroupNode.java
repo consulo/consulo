@@ -30,7 +30,7 @@ import consulo.module.Module;
 import consulo.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFileSystemItem;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 

@@ -1,6 +1,6 @@
 package com.intellij.codeInspection;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 public class LanguageInspectionSuppressors extends LanguageExtension<InspectionSuppressor> {

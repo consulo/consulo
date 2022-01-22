@@ -18,7 +18,7 @@ package com.intellij.codeInsight.navigation;
 import com.intellij.codeInsight.documentation.DocumentationManagerProtocol;
 import com.intellij.lang.documentation.DocumentationProvider;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtilRt;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;

@@ -2,11 +2,11 @@
 package com.intellij.codeInsight.editorActions.enter;
 
 import com.intellij.codeInsight.editorActions.EnterHandler;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBracesDelegate {

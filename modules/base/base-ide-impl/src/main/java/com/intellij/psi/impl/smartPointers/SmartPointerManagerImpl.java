@@ -2,6 +2,10 @@
 package com.intellij.psi.impl.smartPointers;
 
 import consulo.application.ApplicationManager;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;

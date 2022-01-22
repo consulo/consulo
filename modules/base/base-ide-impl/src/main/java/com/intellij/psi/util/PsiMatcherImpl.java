@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.util;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 public class PsiMatcherImpl implements PsiMatcher {
   private PsiElement myElement;

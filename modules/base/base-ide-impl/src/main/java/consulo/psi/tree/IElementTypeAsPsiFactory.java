@@ -15,8 +15,8 @@
  */
 package consulo.psi.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 /**

@@ -17,7 +17,7 @@
 package com.intellij.psi.impl;
 
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public interface PsiFileEx extends PsiFile{
   Key<Boolean> BATCH_REFERENCE_PROCESSING = Key.create("BATCH_REFERENCE_PROCESSING");

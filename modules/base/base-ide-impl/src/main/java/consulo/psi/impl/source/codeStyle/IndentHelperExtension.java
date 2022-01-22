@@ -15,9 +15,9 @@
  */
 package consulo.psi.impl.source.codeStyle;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.codeStyle.IndentHelper;
 import consulo.annotation.access.RequiredReadAction;
 

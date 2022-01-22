@@ -15,7 +15,7 @@
  */
 package org.intellij.plugins.intelliLang.inject.config;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
@@ -25,9 +25,9 @@ import com.intellij.patterns.StringPattern;
 import com.intellij.patterns.compiler.PatternCompiler;
 import com.intellij.patterns.compiler.PatternCompilerFactory;
 import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.LiteralTextEscaper;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.LiteralTextEscaper;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.SmartList;

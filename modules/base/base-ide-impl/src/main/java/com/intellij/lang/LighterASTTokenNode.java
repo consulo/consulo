@@ -16,10 +16,13 @@
 package com.intellij.lang;
 
 
+import consulo.language.ast.LighterASTNode;
+import consulo.language.util.CharTable;
+
 public interface LighterASTTokenNode extends LighterASTNode {
   /**
    * <b>Note</b>: a text returned may be linked back to file content text and therefore should be internalized
-   * through {@linkplain com.intellij.util.CharTable} if referenced as is.
+   * through {@linkplain CharTable} if referenced as is.
    *
    * @return text of a token
    */

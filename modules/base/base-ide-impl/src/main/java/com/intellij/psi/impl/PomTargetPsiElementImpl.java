@@ -16,16 +16,16 @@
 package com.intellij.psi.impl;
 
 import com.intellij.ide.TypePresentationService;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.project.Project;
 import com.intellij.pom.PomNamedTarget;
 import com.intellij.pom.PomRenameableTarget;
 import com.intellij.pom.PomTarget;
 import com.intellij.pom.PomTargetPsiElement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiTarget;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ide.IconDescriptorUpdaters;

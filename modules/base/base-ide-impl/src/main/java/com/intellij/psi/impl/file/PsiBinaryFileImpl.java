@@ -2,8 +2,10 @@
 
 package com.intellij.psi.impl.file;
 
-import com.intellij.lang.FileASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.FileASTNode;
+import consulo.language.Language;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.ui.Queryable;
 import consulo.document.util.TextRange;
@@ -14,7 +16,7 @@ import com.intellij.psi.impl.file.impl.FileManagerImpl;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;

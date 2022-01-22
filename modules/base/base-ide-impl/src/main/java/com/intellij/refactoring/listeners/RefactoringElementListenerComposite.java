@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.listeners;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

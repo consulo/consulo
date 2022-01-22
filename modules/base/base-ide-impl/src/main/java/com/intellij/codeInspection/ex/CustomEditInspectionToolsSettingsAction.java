@@ -6,8 +6,8 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.component.util.Iconable;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

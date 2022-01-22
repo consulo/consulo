@@ -20,7 +20,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;

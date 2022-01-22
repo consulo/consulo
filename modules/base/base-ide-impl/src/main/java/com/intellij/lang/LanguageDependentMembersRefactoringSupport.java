@@ -18,6 +18,7 @@ package com.intellij.lang;
 
 import com.intellij.refactoring.classMembers.ClassMembersRefactoringSupport;
 import consulo.container.plugin.PluginIds;
+import consulo.language.LanguageExtension;
 
 /**
  * @author Dennis.Ushakov

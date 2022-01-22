@@ -24,12 +24,12 @@
 
     <projectConfigurable displayName="Language Injections" id="IntelliLang.Configuration" parentId="editor" instance="org.intellij.plugins.intelliLang.InjectionsSettingsUI" nonDefaultProject="true"/>
 
-    <multiHostInjector forClass="com.intellij.psi.PsiLanguageInjectionHost"
+    <multiHostInjector forClass="consulo.language.psi.PsiLanguageInjectionHost"
                        implementationClass="org.intellij.plugins.intelliLang.inject.CommentLanguageInjector"/>
-    <multiHostInjector forClass="com.intellij.psi.PsiLanguageInjectionHost"
+    <multiHostInjector forClass="consulo.language.psi.PsiLanguageInjectionHost"
                        implementationClass="org.intellij.plugins.intelliLang.inject.TemporaryPlacesInjector"/>
 
-    <multiHostInjector forClass="com.intellij.psi.PsiLanguageInjectionHost"
+    <multiHostInjector forClass="consulo.language.psi.PsiLanguageInjectionHost"
                        implementationClass="org.intellij.plugins.intelliLang.inject.DefaultLanguageInjector" order="last"/>
 
     <projectService serviceInterface="org.intellij.plugins.intelliLang.inject.TemporaryPlacesRegistry"

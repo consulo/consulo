@@ -16,6 +16,7 @@
 package com.intellij.refactoring;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
 /**
@@ -32,8 +33,8 @@ public abstract class RefactoringActionHandlerFactory {
   /**
    * Creates handler for Safe Delete refactoring.<p>
    *
-   * {@link RefactoringActionHandler#invoke(Project, com.intellij.psi.PsiElement[], com.intellij.openapi.actionSystem.DataContext)}
-   * accepts a list of {@link com.intellij.psi.PsiElement}s to delete.
+   * {@link RefactoringActionHandler#invoke(Project, PsiElement[], com.intellij.openapi.actionSystem.DataContext)}
+   * accepts a list of {@link PsiElement}s to delete.
    * @return
    */
   public abstract RefactoringActionHandler createSafeDeleteHandler();

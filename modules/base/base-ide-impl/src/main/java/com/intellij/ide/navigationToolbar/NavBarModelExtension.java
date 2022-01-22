@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
 import consulo.util.dataholder.Key;
 

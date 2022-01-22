@@ -2,6 +2,9 @@
 package com.intellij.psi.impl.file.impl;
 
 import com.intellij.AppTopics;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
+import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.module.content.ProjectTopics;
 import consulo.application.Application;
 import consulo.document.Document;

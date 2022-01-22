@@ -34,12 +34,12 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.RecursiveTreeElementWalkingVisitor;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

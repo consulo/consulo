@@ -17,7 +17,7 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.SchemeMetaInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.color.ColorValue;

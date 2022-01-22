@@ -32,13 +32,13 @@ import com.intellij.ide.util.gotoByName.ChooseByNamePopup;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.psi.*;
 import com.intellij.psi.search.SearchScope;
 import javax.annotation.Nonnull;
 

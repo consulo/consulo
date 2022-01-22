@@ -16,19 +16,19 @@
 package com.intellij.psi.formatter;
 
 import com.intellij.codeInsight.actions.ReformatCodeProcessor;
-import com.intellij.lang.ASTFactory;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTFactory;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.checkin.ReformatBeforeCheckinHandler;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.TokenType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.TokenType;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.*;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.CharTable;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.util.CharTable;
 import com.intellij.util.containers.ContainerUtilRt;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

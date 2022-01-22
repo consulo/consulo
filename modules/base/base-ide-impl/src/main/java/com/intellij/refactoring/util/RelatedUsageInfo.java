@@ -16,8 +16,8 @@
 
 package com.intellij.refactoring.util;
 
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author yole

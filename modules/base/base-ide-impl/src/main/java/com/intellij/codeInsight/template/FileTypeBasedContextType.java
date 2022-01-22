@@ -16,10 +16,9 @@
 
 package com.intellij.codeInsight.template;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 

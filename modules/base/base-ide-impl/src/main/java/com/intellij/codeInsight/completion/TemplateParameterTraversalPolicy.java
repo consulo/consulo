@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author Evgeny Gerashchenko

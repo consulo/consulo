@@ -16,10 +16,10 @@
 
 package com.intellij.psi.filters;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.TokenType;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.TokenType;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import javax.annotation.Nullable;
 

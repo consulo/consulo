@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author yole

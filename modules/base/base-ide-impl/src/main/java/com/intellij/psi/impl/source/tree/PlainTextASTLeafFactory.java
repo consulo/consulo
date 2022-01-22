@@ -20,9 +20,9 @@
 package com.intellij.psi.impl.source.tree;
 
 import consulo.psi.tree.ASTLeafFactory;
-import consulo.lang.LanguageVersion;
-import com.intellij.psi.PlainTextTokenTypes;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.version.LanguageVersion;
+import consulo.language.ast.PlainTextTokenTypes;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

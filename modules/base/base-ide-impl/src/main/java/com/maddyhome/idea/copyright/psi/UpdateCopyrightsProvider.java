@@ -17,7 +17,7 @@ package com.maddyhome.idea.copyright.psi;
 
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.ui.TemplateCommentPanel;
 import javax.annotation.Nonnull;

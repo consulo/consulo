@@ -4,7 +4,7 @@ package com.intellij.psi.impl.source.codeStyle;
 import consulo.document.Document;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.ChangedRangesInfo;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Contract;

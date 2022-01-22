@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.injection.ReferenceInjector;
 import javax.annotation.Nonnull;
 

@@ -24,7 +24,7 @@ import consulo.project.Project;
 import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.DependenciesToolWindow;
 import com.intellij.packageDependencies.ui.DependenciesPanel;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import javax.annotation.Nonnull;

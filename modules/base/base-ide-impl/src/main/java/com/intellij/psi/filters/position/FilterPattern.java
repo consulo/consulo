@@ -19,7 +19,7 @@ import com.intellij.patterns.ObjectPattern;
 import com.intellij.patterns.InitialPatternCondition;
 import com.intellij.util.ProcessingContext;
 import com.intellij.psi.filters.ElementFilter;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nullable;
 
 /**

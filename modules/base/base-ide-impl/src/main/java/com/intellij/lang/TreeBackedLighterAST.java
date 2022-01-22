@@ -15,7 +15,7 @@
  */
 package com.intellij.lang;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.*;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

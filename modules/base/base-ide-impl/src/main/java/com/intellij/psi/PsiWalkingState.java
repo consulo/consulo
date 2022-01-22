@@ -16,6 +16,9 @@
 
 package com.intellij.psi;
 
+import consulo.language.psi.PsiCompiledElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
 import consulo.logging.Logger;
 import com.intellij.util.WalkingState;
 import javax.annotation.Nonnull;

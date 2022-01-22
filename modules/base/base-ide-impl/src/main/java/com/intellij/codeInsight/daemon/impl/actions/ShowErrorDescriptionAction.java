@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.ui.accessibility.ScreenReader;
 
 import javax.annotation.Nonnull;

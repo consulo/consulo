@@ -16,9 +16,16 @@
 
 package com.intellij.lang;
 
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.LanguageSubstitutor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;

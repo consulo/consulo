@@ -17,14 +17,14 @@ package consulo.psi.tree.impl;
 
 import consulo.psi.tree.ASTLeafFactory;
 import com.intellij.lang.LanguageParserDefinitions;
-import consulo.lang.LanguageVersion;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.psi.TokenType;
+import consulo.language.version.LanguageVersion;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.ast.TokenType;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.impl.source.tree.PsiCoreCommentImpl;
 import com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.psi.tree.ILeafElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

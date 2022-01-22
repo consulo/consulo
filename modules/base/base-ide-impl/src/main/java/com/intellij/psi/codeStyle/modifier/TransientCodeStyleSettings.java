@@ -5,7 +5,7 @@ import com.intellij.application.options.CodeStyle;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.component.util.ModificationTracker;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.FileIndentOptionsProvider;
 import consulo.application.util.function.Processor;

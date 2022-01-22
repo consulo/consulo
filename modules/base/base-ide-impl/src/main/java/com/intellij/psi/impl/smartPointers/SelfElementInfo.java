@@ -1,12 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl.smartPointers;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;
 import consulo.document.FileDocumentManager;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.document.util.Segment;

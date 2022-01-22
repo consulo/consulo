@@ -16,7 +16,7 @@
 
 package com.intellij.ide.commander;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author yole

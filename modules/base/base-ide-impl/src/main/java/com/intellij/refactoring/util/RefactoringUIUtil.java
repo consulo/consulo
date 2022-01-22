@@ -19,12 +19,12 @@ package com.intellij.refactoring.util;
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.ElementDescriptionUtil;
 import consulo.project.Project;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.usageView.UsageViewUtil;
 

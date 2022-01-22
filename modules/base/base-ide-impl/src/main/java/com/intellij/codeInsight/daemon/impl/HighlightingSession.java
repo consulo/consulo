@@ -19,7 +19,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 public interface HighlightingSession {

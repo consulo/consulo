@@ -18,17 +18,17 @@ package com.intellij.codeInspection;
 
 import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
 import com.intellij.lang.Commenter;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageCommenters;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.NullableComputable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiParserFacade;
-import com.intellij.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiParserFacade;
+import consulo.language.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NonNls;
 

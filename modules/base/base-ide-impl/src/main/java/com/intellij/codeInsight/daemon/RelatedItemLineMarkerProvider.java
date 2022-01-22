@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNameIdentifierOwner;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 

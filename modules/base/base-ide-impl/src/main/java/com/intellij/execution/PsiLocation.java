@@ -19,8 +19,8 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 

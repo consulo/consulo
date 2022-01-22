@@ -3,7 +3,7 @@ package com.intellij.codeInsight.daemon;
 import com.intellij.codeInsight.daemon.impl.PsiElementListNavigator;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;

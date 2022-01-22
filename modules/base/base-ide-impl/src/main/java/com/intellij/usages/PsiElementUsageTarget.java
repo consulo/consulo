@@ -15,7 +15,7 @@
  */
 package com.intellij.usages;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author max

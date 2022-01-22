@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAware {
   @Override

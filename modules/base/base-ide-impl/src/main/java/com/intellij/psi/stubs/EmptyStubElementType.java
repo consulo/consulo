@@ -1,7 +1,10 @@
 package com.intellij.psi.stubs;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiElement;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.IndexSink;
+import consulo.language.psi.stub.StubElement;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

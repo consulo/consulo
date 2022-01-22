@@ -15,7 +15,7 @@
  */
 package com.intellij.pom.tree.events;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import javax.annotation.Nonnull;
 
 /**

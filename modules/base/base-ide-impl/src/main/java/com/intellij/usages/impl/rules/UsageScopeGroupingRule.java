@@ -21,7 +21,7 @@ import consulo.project.content.ProjectRootManager;
 import consulo.project.content.TestSourcesFilter;
 import com.intellij.openapi.vcs.FileStatus;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsageGroup;

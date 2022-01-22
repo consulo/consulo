@@ -17,10 +17,10 @@
 package com.intellij.psi.impl.source.codeStyle;
 
 import com.intellij.application.options.CodeStyle;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import consulo.psi.impl.source.codeStyle.IndentHelperExtension;
 

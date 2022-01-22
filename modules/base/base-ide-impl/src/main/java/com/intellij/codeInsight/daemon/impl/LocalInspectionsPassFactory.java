@@ -26,7 +26,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.util.TextRange;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 

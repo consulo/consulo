@@ -16,6 +16,10 @@
 package com.intellij.codeInspection;
 
 import com.intellij.psi.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNamedElement;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;

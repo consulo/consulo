@@ -16,7 +16,7 @@
 package com.intellij.psi.templateLanguages;
 
 import com.intellij.lang.LangBundle;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import consulo.project.Project;

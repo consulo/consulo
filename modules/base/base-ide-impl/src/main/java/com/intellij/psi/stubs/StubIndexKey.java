@@ -19,9 +19,9 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.indexing.ID;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 public final class StubIndexKey<K, Psi extends PsiElement> extends ID<K, Psi> {

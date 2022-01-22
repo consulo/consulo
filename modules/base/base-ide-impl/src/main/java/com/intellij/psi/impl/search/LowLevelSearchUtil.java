@@ -16,15 +16,16 @@
 
 package com.intellij.psi.impl.search;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.document.Document;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.impl.source.tree.TreeElement;

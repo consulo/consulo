@@ -15,10 +15,11 @@
  */
 package com.intellij.lang.refactoring;
 
+import consulo.language.Language;
 import consulo.project.Project;
 
 /**
- * Instances of NamesValidator are obtained from {@link com.intellij.lang.Language} instance.
+ * Instances of NamesValidator are obtained from {@link Language} instance.
  * An instance encapsulates knowledge of identifier rules and keyword set of the language.
  *
  * @since 5.0.1

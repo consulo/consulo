@@ -15,13 +15,13 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.LighterAST;
-import com.intellij.lang.LighterASTNode;
+import consulo.language.ast.LighterAST;
+import consulo.language.ast.LighterASTNode;
 import com.intellij.lang.LighterASTTokenNode;
-import com.intellij.lang.LighterLazyParseableNode;
+import consulo.language.ast.LighterLazyParseableNode;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;

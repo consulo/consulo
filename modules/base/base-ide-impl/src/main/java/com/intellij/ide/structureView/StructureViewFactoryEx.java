@@ -17,7 +17,7 @@
 package com.intellij.ide.structureView;
 
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

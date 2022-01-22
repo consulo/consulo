@@ -15,9 +15,9 @@
  */
 package consulo.psi.impl.source.internal;
 
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.StubBasedPsiElement;
 import com.intellij.psi.impl.source.SubstrateRef;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
 
 import javax.annotation.Nonnull;
 

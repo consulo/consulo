@@ -17,8 +17,8 @@
 package com.intellij.refactoring.copy;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author yole

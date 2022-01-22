@@ -16,7 +16,9 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.document.Document;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -27,7 +29,7 @@ public abstract class FileCopyPatcher {
   /**
    * On completion, a file copy is created and this method is invoked on corresponding document. This is usually
    * done to ensure that there is some non-whitespace text at caret position, for example, to find reference at
-   * that offset and ask for its {@link com.intellij.psi.PsiReference#getVariants()}. In
+   * that offset and ask for its {@link PsiReference#getVariants()}. In
    * {@link com.intellij.codeInsight.completion.CompletionContributor} it will also be easier to determine which
    * variants to suggest at current position.
    *

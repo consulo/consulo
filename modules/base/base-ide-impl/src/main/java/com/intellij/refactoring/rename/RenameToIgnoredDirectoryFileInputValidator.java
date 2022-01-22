@@ -19,9 +19,9 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.project.Project;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
 import javax.annotation.Nullable;
 

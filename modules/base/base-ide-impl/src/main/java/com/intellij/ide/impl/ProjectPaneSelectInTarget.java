@@ -23,7 +23,7 @@ import com.intellij.ide.projectView.impl.ProjectViewPane;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFileSystemItem;
 
 public class ProjectPaneSelectInTarget extends ProjectViewSelectInTarget implements DumbAware {
   public ProjectPaneSelectInTarget(Project project) {

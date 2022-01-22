@@ -21,7 +21,7 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.ide.IdeView;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.content.library.Library;
@@ -30,7 +30,7 @@ import com.intellij.openapi.util.Condition;
 import consulo.annotation.DeprecationInfo;
 import consulo.execution.ExecutionDataKeys;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author yole

@@ -16,11 +16,12 @@
 
 package com.intellij.lang.injection;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import consulo.lang.LanguageVersion;
-import consulo.lang.util.LanguageVersionUtil;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiElement;
+import consulo.language.version.LanguageVersion;
+import consulo.language.version.LanguageVersionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +32,7 @@ import javax.annotation.Nullable;
  * These injected fragments are treated by IDE as separate tiny files in a specific language and corresponding code insight features,<br/>
  * like completion, highlighting, navigation become available there.<br/>
  * You can get hold of an instance of {@link MultiHostRegistrar} by registering your own implementation of {@link MultiHostInjector} and<br/>
- * implementing its {@link MultiHostInjector#getLanguagesToInject(MultiHostRegistrar, com.intellij.psi.PsiElement)} method.<br/>
+ * implementing its {@link MultiHostInjector#getLanguagesToInject(MultiHostRegistrar, PsiElement)} method.<br/>
  */
 public interface MultiHostRegistrar {
   /**

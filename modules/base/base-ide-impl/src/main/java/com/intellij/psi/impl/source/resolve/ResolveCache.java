@@ -18,13 +18,13 @@ package com.intellij.psi.impl.source.resolve;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.psi.*;
 import consulo.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.RecursionGuard;
 import com.intellij.openapi.util.RecursionManager;
 import com.intellij.openapi.util.Trinity;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.util.PsiUtilCore;

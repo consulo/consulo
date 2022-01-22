@@ -20,6 +20,8 @@
 package com.intellij.lang;
 
 import consulo.container.plugin.PluginIds;
+import consulo.language.LanguageExtension;
+import consulo.language.parser.ParserDefinition;
 
 public class LanguageParserDefinitions extends LanguageExtension<ParserDefinition> {
   public static final LanguageParserDefinitions INSTANCE = new LanguageParserDefinitions();

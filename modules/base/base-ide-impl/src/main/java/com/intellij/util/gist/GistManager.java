@@ -16,7 +16,7 @@
 package com.intellij.util.gist;
 
 import consulo.application.ApplicationManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.io.DataExternalizer;
 import consulo.annotation.DeprecationInfo;

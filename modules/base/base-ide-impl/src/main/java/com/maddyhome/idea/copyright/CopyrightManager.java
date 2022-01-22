@@ -23,7 +23,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import consulo.component.persist.PersistentStateComponent;

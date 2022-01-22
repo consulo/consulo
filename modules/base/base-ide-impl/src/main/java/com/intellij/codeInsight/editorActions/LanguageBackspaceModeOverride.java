@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 public class LanguageBackspaceModeOverride extends LanguageExtension<BackspaceModeOverride> {

@@ -16,14 +16,14 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTFactory;
+import consulo.language.ast.ASTNode;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.intellij.reference.SoftReference;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.logging.Logger;
 import javax.annotation.Nonnull;

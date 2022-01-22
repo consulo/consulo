@@ -1,13 +1,13 @@
 package com.intellij.dupLocator.util;
 
 import com.intellij.dupLocator.DuplicatesProfile;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiAnchor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.usageView.UsageInfo;
 import javax.annotation.Nonnull;

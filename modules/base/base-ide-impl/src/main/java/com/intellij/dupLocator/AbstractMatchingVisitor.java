@@ -16,7 +16,7 @@
 package com.intellij.dupLocator;
 
 import com.intellij.dupLocator.util.NodeFilter;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.dupLocator.iterators.ArrayBackedNodeIterator;
 import com.intellij.dupLocator.iterators.FilteringNodeIterator;
 import com.intellij.dupLocator.iterators.NodeIterator;

@@ -17,7 +17,7 @@ package com.intellij.psi.templateLanguages;
 
 import com.intellij.lang.DependentLanguage;
 import com.intellij.lang.InjectableLanguage;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguagePerFileMappings;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;

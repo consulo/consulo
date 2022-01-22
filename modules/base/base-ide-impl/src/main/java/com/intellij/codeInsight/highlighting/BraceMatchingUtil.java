@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.highlighting;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageBraceMatching;
 import com.intellij.lang.PairedBraceMatcher;
 import consulo.document.Document;
@@ -26,10 +26,10 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeExtensionPoint;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import com.intellij.util.containers.Stack;
 import org.jetbrains.annotations.TestOnly;
 

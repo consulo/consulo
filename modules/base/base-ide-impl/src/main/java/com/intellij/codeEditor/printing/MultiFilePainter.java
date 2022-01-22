@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 import java.awt.*;
 import java.awt.print.PageFormat;

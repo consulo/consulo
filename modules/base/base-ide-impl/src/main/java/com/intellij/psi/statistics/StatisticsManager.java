@@ -17,7 +17,7 @@ package com.intellij.psi.statistics;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.SettingsSavingComponent;
-import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.application.extension.KeyedExtensionCollector;
 import consulo.container.plugin.PluginIds;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;

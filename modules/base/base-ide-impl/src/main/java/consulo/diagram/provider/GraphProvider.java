@@ -16,7 +16,7 @@
 package consulo.diagram.provider;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.diagram.builder.GraphBuilder;
 import javax.annotation.Nonnull;
 

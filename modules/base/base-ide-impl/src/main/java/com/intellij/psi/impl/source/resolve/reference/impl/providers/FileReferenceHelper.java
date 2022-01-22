@@ -20,8 +20,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

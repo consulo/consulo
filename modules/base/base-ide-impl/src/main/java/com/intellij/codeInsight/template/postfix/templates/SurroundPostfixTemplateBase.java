@@ -19,7 +19,7 @@ import com.intellij.lang.surroundWith.Surrounder;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.Condition;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public abstract class SurroundPostfixTemplateBase extends StatementWrapPostfixTemplate {

@@ -2,9 +2,9 @@
 package com.intellij.ide.navigationToolbar;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiCompiledElement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiCompiledElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
 

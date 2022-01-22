@@ -16,13 +16,15 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.lang.*;
+import consulo.language.ast.*;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.util.containers.BooleanStack;
 import com.intellij.util.containers.Stack;

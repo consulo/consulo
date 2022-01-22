@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.lang;
 
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import javax.annotation.Nonnull;

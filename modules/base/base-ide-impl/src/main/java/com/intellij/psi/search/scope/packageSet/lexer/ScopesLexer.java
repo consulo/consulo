@@ -3,8 +3,8 @@
 /* It's an automatically generated code. Do not modify it. */
 package com.intellij.psi.search.scope.packageSet.lexer;
 
-import com.intellij.psi.tree.IElementType;
-import com.intellij.lexer.LexerBase;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.LexerBase;
 
 
 /**

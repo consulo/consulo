@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.language.psi.PsiModificationTracker;
 import consulo.component.messagebus.MessageBus;
 
 import java.util.HashSet;

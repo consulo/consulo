@@ -17,7 +17,7 @@ package consulo.fileTypes.ui.impl;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.ActionToolbarPosition;
 import consulo.application.Application;
 import com.intellij.openapi.fileTypes.*;

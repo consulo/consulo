@@ -21,7 +21,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -71,7 +72,7 @@ public interface EnterHandlerDelegate {
    * @param dataContext The data context passed to the Enter handler.
    * @return One of <code>{@link Result} values.</code>
    * @see DataContext
-   * @see com.intellij.psi.PsiDocumentManager
+   * @see PsiDocumentManager
    */
   Result postProcessEnter(@Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull DataContext dataContext);
 }

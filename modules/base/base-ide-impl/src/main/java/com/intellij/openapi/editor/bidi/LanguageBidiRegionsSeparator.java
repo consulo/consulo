@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor.bidi;
 
-import com.intellij.lang.LanguageExtension;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.LanguageExtension;
+import consulo.language.ast.IElementType;
 import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;

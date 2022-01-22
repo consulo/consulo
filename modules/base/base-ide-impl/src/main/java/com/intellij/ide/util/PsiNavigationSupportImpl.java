@@ -8,8 +8,8 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

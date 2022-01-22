@@ -6,6 +6,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Computable;
@@ -13,7 +14,6 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.ide.IconDescriptorUpdaters;
 

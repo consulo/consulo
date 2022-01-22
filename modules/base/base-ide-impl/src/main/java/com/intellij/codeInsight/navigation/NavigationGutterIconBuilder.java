@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.ConstantFunction;

@@ -17,10 +17,10 @@ package com.intellij.psi.scope.util;
 
 import consulo.logging.Logger;
 import consulo.progress.ProgressIndicatorProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiInvalidElementAccessException;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiInvalidElementAccessException;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.resolve.PsiScopeProcessor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

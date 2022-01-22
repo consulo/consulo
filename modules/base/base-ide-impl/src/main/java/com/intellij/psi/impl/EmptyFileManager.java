@@ -17,9 +17,9 @@ package com.intellij.psi.impl;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.util.containers.ContainerUtil;

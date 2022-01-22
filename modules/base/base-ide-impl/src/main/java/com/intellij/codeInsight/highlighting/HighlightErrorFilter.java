@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.highlighting;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiErrorElement;
+import consulo.language.psi.PsiErrorElement;
 import javax.annotation.Nonnull;
 
 /**

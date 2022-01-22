@@ -19,6 +19,7 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.project.Project;

@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeExtensionPoint;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

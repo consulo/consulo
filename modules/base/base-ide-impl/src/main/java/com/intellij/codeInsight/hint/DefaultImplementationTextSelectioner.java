@@ -22,7 +22,7 @@ package com.intellij.codeInsight.hint;
 
 import consulo.logging.Logger;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public class DefaultImplementationTextSelectioner implements ImplementationTextSelectioner {

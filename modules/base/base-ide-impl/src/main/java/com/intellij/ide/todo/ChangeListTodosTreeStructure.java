@@ -26,7 +26,7 @@ import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 import java.util.Collection;
 

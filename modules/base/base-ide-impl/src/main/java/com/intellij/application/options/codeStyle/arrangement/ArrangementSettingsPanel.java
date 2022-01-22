@@ -21,7 +21,7 @@ import com.intellij.application.options.codeStyle.arrangement.color.ArrangementC
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProviderImpl;
 import com.intellij.application.options.codeStyle.arrangement.group.ArrangementGroupingRulesPanel;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesPanel;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;

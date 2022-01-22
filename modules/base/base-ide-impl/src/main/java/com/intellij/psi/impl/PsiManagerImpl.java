@@ -1,10 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl;
 
-import com.intellij.lang.PsiBuilderFactory;
+import consulo.language.file.FileViewProvider;
+import consulo.language.parser.PsiBuilderFactory;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
+import consulo.language.psi.*;
+import consulo.language.psi.event.PsiTreeChangeListener;
 import consulo.logging.Logger;
 import consulo.progress.ProgressIndicator;
 import consulo.progress.ProgressIndicatorProvider;
@@ -17,10 +20,8 @@ import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.psi.impl.file.impl.FileManagerImpl;
-import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;

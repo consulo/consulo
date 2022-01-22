@@ -28,7 +28,7 @@ import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.AutoScrollToSourceHandler;
 import com.intellij.ui.TreeSpeedSearch;

@@ -16,7 +16,7 @@
 
 package com.intellij.lang.findUsages;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**

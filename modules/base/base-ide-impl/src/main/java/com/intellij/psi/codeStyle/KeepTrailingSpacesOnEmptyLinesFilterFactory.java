@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.SmartStripTrailingSpacesFilter;
 import com.intellij.openapi.editor.StripTrailingSpacesFilter;
 import com.intellij.openapi.editor.StripTrailingSpacesFilterFactory;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,9 +16,9 @@
 package com.intellij.packageDependencies.ui;
 
 import consulo.logging.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiQualifiedNamedElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiQualifiedNamedElement;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.refactoring.listeners.RefactoringElementAdapter;
 import com.intellij.refactoring.listeners.RefactoringElementListener;

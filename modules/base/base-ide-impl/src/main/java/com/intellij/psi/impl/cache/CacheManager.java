@@ -19,7 +19,7 @@ package com.intellij.psi.impl.cache;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;

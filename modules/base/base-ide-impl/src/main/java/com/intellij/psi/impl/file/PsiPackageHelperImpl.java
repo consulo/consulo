@@ -17,9 +17,9 @@
 package com.intellij.psi.impl.file;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiDirectoryContainer;
-import consulo.psi.PsiPackageManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectoryContainer;
+import consulo.language.psi.PsiPackageManager;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

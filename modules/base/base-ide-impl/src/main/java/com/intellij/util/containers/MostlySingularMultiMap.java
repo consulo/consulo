@@ -21,7 +21,7 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 
 import javax.annotation.Nonnull;

@@ -17,9 +17,9 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.ChangeLocalityDetector;
 import com.intellij.codeInspection.SuppressionUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
 import javax.annotation.Nonnull;
 
 public class DefaultChangeLocalityDetector implements ChangeLocalityDetector {

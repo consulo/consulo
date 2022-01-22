@@ -19,10 +19,11 @@
  */
 package com.intellij.psi.util;
 
+import consulo.language.psi.PsiModificationTracker;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NonNls;
@@ -32,7 +33,7 @@ import javax.annotation.Nullable;
 public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair<Long, T>>> {
   private final Function<H, T> myFunction;
   /**
-   * One of {@link com.intellij.psi.util.PsiModificationTracker} constants that marks when to flush cache
+   * One of {@link PsiModificationTracker} constants that marks when to flush cache
    */
   @Nonnull
   private final Key<?> myModifyCause;
@@ -96,7 +97,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
    *
    * @param name        key name
    * @param function    function to reproduce new value when old value is stale
-   * @param modifyCause one one {@link com.intellij.psi.util.PsiModificationTracker}'s constants that marks when to flush cache
+   * @param modifyCause one one {@link PsiModificationTracker}'s constants that marks when to flush cache
    * @param <T>         value type
    * @param <H>         key type
    * @return instance
@@ -108,7 +109,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
   }
 
   /**
-   * Creates cache key value using {@link com.intellij.psi.util.PsiModificationTracker#JAVA_STRUCTURE_MODIFICATION_COUNT} as
+   * Creates cache key value using {@link PsiModificationTracker#JAVA_STRUCTURE_MODIFICATION_COUNT} as
    * modification count to flush cache
    *
    * @param name     key name

@@ -24,7 +24,7 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.impl.LineMarkersPass;
 import consulo.document.Document;
 import com.intellij.openapi.editor.markup.SeparatorPlacement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 

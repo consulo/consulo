@@ -16,11 +16,12 @@
 package com.intellij.psi;
 
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageExtension;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.container.plugin.PluginIds;
+import consulo.language.psi.LanguageSubstitutor;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

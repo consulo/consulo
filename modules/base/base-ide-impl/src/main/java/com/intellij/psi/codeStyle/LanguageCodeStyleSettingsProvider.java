@@ -3,11 +3,11 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.application.options.CodeStyleBean;
 import com.intellij.application.options.IndentOptionsEditor;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

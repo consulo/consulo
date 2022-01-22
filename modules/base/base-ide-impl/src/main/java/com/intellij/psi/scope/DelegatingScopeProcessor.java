@@ -1,8 +1,9 @@
 package com.intellij.psi.scope;
 
+import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

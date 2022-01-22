@@ -17,7 +17,7 @@
 package com.intellij.pom.tree.events.impl;
 
 import com.intellij.pom.tree.events.ChangeInfo;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.source.tree.CompositeElement;

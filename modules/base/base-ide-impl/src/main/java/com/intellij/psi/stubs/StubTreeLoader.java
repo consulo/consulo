@@ -15,9 +15,13 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiCompiledElement;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;

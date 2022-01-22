@@ -17,7 +17,7 @@ package com.intellij.openapi.options;
 
 import consulo.component.util.localize.AbstractBundle;
 import com.intellij.CommonBundle;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;

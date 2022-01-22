@@ -19,7 +19,7 @@ import com.intellij.codeInsight.daemon.QuickFixActionRegistrar;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import consulo.project.DumbService;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiReference;
 import com.intellij.util.ReflectionUtil;
 import javax.annotation.Nonnull;
 

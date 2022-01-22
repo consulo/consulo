@@ -16,8 +16,8 @@
 
 package com.intellij.ide;
 
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nullable;
 
 /**

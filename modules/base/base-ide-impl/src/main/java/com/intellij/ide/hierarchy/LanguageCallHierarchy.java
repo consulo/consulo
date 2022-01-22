@@ -16,7 +16,7 @@
 
 package com.intellij.ide.hierarchy;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**

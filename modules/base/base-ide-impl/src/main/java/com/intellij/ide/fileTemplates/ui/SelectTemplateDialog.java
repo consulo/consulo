@@ -23,7 +23,7 @@ import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
-import com.intellij.psi.PsiDirectory;
+import consulo.language.psi.PsiDirectory;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.annotation.RequiredUIAccess;
 

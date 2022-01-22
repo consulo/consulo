@@ -16,8 +16,8 @@
 
 package com.intellij.psi.filters;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
 
 /**
  * @author yole

@@ -18,19 +18,21 @@ package com.intellij.psi.impl;
 
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.navigation.ItemPresentation;
+import consulo.language.psi.*;
+import consulo.language.psi.resolve.ResolveState;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

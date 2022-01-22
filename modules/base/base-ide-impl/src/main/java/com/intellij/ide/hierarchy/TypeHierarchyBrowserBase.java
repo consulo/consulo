@@ -24,7 +24,7 @@ import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.ui.PopupHandler;
 import javax.annotation.Nonnull;
 

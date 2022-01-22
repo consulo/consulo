@@ -16,13 +16,13 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.GotoClassContributor;
 import com.intellij.navigation.NavigationItem;
 import consulo.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;
 
 import javax.annotation.Nonnull;

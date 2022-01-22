@@ -17,8 +17,8 @@ package com.intellij.psi.util.proximity;
 
 import com.intellij.openapi.util.NullableLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.ProximityLocation;
 import com.intellij.util.LogicalRoot;
 import com.intellij.util.LogicalRootsManager;

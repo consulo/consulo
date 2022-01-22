@@ -15,11 +15,11 @@
  */
 package consulo.fileTypes;
 
-import consulo.lang.LanguageVersion;
-import com.intellij.lexer.Lexer;
+import consulo.language.version.LanguageVersion;
+import consulo.language.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 /**

@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.colors.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;

@@ -3,10 +3,10 @@ package com.intellij.refactoring.extractMethod;
 import com.intellij.codeInsight.PsiEquivalenceUtil;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
-import com.intellij.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 
 import javax.annotation.Nonnull;

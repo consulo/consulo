@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;

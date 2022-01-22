@@ -17,6 +17,9 @@ package com.intellij.codeInspection;
 
 import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.colors.TextAttributesKey;

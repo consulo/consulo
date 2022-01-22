@@ -15,11 +15,11 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.progress.ProgressIndicatorProvider;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
 import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.StringFactory;
 import javax.annotation.Nonnull;

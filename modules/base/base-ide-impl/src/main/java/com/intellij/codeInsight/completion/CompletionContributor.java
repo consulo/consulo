@@ -17,19 +17,20 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.ActionManager;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.application.extension.KeyedExtensionCollector;
 import com.intellij.openapi.util.Pair;
 import com.intellij.patterns.ElementPattern;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Consumer;
 import com.intellij.util.ProcessingContext;
@@ -53,7 +54,7 @@ import java.util.Set;
  * A: Define a completion.contributor extension of type {@link CompletionContributor}.
  * Or, if the place you want to complete in contains a {@link PsiReference}, just return the variants
  * you want to suggest from its {@link PsiReference#getVariants()} method as {@link String}s,
- * {@link com.intellij.psi.PsiElement}s, or better {@link LookupElement}s.<p>
+ * {@link PsiElement}s, or better {@link LookupElement}s.<p>
  *
  * Q: OK, but what to do with CompletionContributor?<br>
  * A: There are two ways. The easier and preferred one is to provide constructor in your contributor and register completion providers there:
@@ -64,7 +65,7 @@ import java.util.Set;
  * you access PSI. Don't spend long time inside read action, since this will prevent user from selecting lookup element or cancelling completion.<p>
  *
  * Q: What does the {@link CompletionParameters#getPosition()} return?<br>
- * A: When completion is invoked, the file being edited is first copied (the original file can be accessed from {@link com.intellij.psi.PsiFile#getOriginalFile()}
+ * A: When completion is invoked, the file being edited is first copied (the original file can be accessed from {@link PsiFile#getOriginalFile()}
  * and {@link CompletionParameters#getOriginalFile()}. Then a special 'dummy identifier' string is inserted to the copied file at caret offset (removing the selection).
  * Most often this string is an identifier (see {@link com.intellij.codeInsight.completion.CompletionInitializationContext#DUMMY_IDENTIFIER}).
  * This is usually done to guarantee that there'll always be some non-empty element there, which will be easy to describe via {@link ElementPattern}s.
@@ -223,7 +224,7 @@ public abstract class CompletionContributor {
    * Invoked in a read action in parallel to the completion process. Used to calculate the replacement offset
    * (see {@link com.intellij.codeInsight.completion.CompletionInitializationContext#setReplacementOffset(int)})
    * if it takes too much time to spend it in {@link #beforeCompletion(CompletionInitializationContext)},
-   * e.g. doing {@link com.intellij.psi.PsiFile#findReferenceAt(int)}
+   * e.g. doing {@link PsiFile#findReferenceAt(int)}
    *
    * Guaranteed to be invoked before any lookup element is selected
    *

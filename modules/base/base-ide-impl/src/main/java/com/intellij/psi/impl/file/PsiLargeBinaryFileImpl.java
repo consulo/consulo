@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.impl.file;
 
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiLargeBinaryFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiLargeBinaryFile;
 import com.intellij.psi.impl.PsiManagerImpl;
 
 public class PsiLargeBinaryFileImpl extends PsiBinaryFileImpl implements PsiLargeBinaryFile {

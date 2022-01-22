@@ -19,8 +19,10 @@
  */
 package com.intellij.psi.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ILazyParseableElementType;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

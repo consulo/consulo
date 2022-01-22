@@ -1,11 +1,11 @@
 package com.intellij.indentation;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.annotation.UsedInPlugin;
-import consulo.lang.LanguageVersion;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.version.LanguageVersion;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiParser;
+import consulo.language.ast.IElementType;
 import com.intellij.util.containers.Stack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

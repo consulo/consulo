@@ -20,8 +20,8 @@ import consulo.component.extension.Extensions;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
 import com.intellij.psi.codeStyle.NameUtil;
 import javax.annotation.Nullable;
 

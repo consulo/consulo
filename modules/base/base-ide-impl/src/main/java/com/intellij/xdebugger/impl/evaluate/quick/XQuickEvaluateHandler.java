@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.SelectionModel;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.evaluation.ExpressionInfo;

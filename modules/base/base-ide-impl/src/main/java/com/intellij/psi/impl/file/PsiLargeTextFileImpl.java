@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.file;
 
-import com.intellij.psi.FileViewProvider;
+import consulo.language.file.FileViewProvider;
 import com.intellij.psi.PsiLargeTextFile;
 import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
 

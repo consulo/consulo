@@ -20,9 +20,11 @@
 package com.intellij.lang;
 
 import com.intellij.lang.annotation.ExternalAnnotator;
-import com.intellij.psi.PsiFile;
+import consulo.language.LanguageExtension;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginIds;
+import consulo.language.Language;
 
 import java.util.List;
 

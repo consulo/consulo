@@ -24,7 +24,7 @@
  */
 package com.intellij.refactoring.classMembers;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import java.util.Collection;
 

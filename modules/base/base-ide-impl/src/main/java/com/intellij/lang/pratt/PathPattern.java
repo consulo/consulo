@@ -17,7 +17,7 @@ package com.intellij.lang.pratt;
 
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -20,11 +20,11 @@ import com.intellij.ide.util.DirectoryUtil;
 import consulo.module.content.layer.ContentFolder;
 import consulo.project.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.IncorrectOperationException;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiManager;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.psi.PsiPackage;
+import consulo.language.psi.PsiPackageManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 

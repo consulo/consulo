@@ -18,7 +18,7 @@ package com.intellij.lang;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public interface LanguageCodeInsightActionHandler extends CodeInsightActionHandler {
   

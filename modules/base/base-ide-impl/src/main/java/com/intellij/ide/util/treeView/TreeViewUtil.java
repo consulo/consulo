@@ -19,10 +19,10 @@ import com.intellij.ide.projectView.ViewSettings;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.psi.PsiPackage;
+import consulo.language.psi.PsiPackage;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.ConcurrentMap;

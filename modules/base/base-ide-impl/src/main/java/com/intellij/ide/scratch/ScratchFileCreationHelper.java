@@ -4,16 +4,16 @@
 package com.intellij.ide.scratch;
 
 import com.intellij.ide.IdeView;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageExtension;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;

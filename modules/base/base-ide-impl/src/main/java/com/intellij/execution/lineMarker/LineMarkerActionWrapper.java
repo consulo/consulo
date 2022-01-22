@@ -7,7 +7,7 @@ import com.intellij.execution.PsiLocation;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

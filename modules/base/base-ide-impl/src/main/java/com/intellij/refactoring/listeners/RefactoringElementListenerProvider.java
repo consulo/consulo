@@ -16,10 +16,10 @@
 package com.intellij.refactoring.listeners;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
- * Refactorings invoke {@link #getListener(com.intellij.psi.PsiElement)} of registered
+ * Refactorings invoke {@link #getListener(PsiElement)} of registered
  * {@linkplain RefactoringElementListenerProvider} before particular element is subjected to refactoring.
  * @author dsl
  */

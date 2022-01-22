@@ -16,8 +16,8 @@
 
 package com.intellij.refactoring.listeners.impl;
 
-import com.intellij.psi.*;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author dsl

@@ -38,7 +38,7 @@ import com.intellij.openapi.vcs.FilePath;
 import consulo.util.io.CharsetToolkit;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.testFramework.BinaryLightVirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.LineSeparator;

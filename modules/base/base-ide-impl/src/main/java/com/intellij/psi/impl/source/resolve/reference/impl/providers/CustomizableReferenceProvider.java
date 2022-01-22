@@ -17,8 +17,8 @@
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.util.ProcessingContext;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

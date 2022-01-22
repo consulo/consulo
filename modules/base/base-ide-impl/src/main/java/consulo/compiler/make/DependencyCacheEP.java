@@ -15,7 +15,7 @@
  */
 package consulo.compiler.make;
 
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.ReflectionUtil;

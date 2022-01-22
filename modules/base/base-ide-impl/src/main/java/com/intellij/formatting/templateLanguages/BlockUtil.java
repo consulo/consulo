@@ -19,7 +19,7 @@ import com.intellij.formatting.ASTBlock;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Spacing;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;

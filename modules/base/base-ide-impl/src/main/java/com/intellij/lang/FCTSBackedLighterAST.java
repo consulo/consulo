@@ -15,8 +15,10 @@
  */
 package com.intellij.lang;
 
-import com.intellij.util.CharTable;
+import consulo.language.ast.LighterAST;
+import consulo.language.util.CharTable;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.language.ast.LighterASTNode;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;

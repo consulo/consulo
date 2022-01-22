@@ -16,7 +16,7 @@
 
 package com.intellij.psi.search;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author ven

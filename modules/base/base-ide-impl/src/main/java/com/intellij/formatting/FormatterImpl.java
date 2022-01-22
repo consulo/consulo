@@ -3,7 +3,7 @@
 package com.intellij.formatting;
 
 import com.intellij.formatting.engine.ExpandableIndent;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
@@ -13,15 +13,15 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Couple;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.formatter.FormattingDocumentModelImpl;
 import com.intellij.psi.formatter.PsiBasedFormattingModel;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.SequentialTask;
 import com.intellij.util.text.CharArrayUtil;
 import jakarta.inject.Singleton;

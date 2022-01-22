@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.util;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageNamesValidation;
 import consulo.project.Project;
 import com.intellij.refactoring.extractMethod.AbstractVariableData;

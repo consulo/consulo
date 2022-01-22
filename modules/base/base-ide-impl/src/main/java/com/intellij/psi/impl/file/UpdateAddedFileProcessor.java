@@ -17,8 +17,8 @@
 package com.intellij.psi.impl.file;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 
 import javax.annotation.Nullable;
 

@@ -18,8 +18,8 @@ package com.intellij.psi.stubs;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

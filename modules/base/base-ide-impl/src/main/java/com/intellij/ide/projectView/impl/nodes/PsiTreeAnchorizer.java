@@ -19,7 +19,7 @@ import com.intellij.ide.util.treeView.TreeAnchorizer;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import jakarta.inject.Singleton;

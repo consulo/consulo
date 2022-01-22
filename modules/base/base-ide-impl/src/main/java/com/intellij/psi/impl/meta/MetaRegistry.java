@@ -22,7 +22,7 @@ import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.UserDataCache;
 import com.intellij.patterns.ElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.filters.position.PatternFilter;
 import com.intellij.psi.meta.MetaDataContributor;

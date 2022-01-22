@@ -16,12 +16,15 @@
 
 package org.intellij.plugins.intelliLang.inject;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

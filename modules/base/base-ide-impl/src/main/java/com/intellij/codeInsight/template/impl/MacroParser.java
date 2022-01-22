@@ -20,10 +20,10 @@ import com.google.common.annotations.VisibleForTesting;
 import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.Macro;
 import com.intellij.codeInsight.template.macro.MacroFactory;
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -145,7 +145,7 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighterFactory"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.elementIcon" beanClass="consulo.lang.LanguageElementIcon"/>
+    <extensionPoint name="lang.elementIcon" beanClass="consulo.language.LanguageElementIcon"/>
 
     <extensionPoint name="gutterMarkPreprocessor" interface="com.intellij.openapi.editor.GutterMarkPreprocessor"/>
 
@@ -441,12 +441,12 @@
     <extensionPoint name="daemon.changeLocalityDetector"
                     interface="com.intellij.codeInsight.daemon.ChangeLocalityDetector"/>
 
-    <extensionPoint name="languageInjector" interface="com.intellij.psi.LanguageInjector"/>
+    <extensionPoint name="languageInjector" interface="consulo.language.psi.LanguageInjector"/>
     <extensionPoint name="concatenationAwareInjector" interface="com.intellij.lang.injection.ConcatenationAwareInjector" area="PROJECT"/>
     <extensionPoint name="multiHostInjector"
                     beanClass="consulo.lang.injection.MultiHostInjectorExtensionPoint"
                     area="PROJECT">
-      <with attribute="forClass" implements="com.intellij.psi.PsiElement"/>
+      <with attribute="forClass" implements="consulo.language.psi.PsiElement"/>
       <with attribute="implementationClass" implements="com.intellij.lang.injection.MultiHostInjector"/>
     </extensionPoint>
 
@@ -553,17 +553,17 @@
     </extensionPoint>
 
     <extensionPoint name="lang.parserDefinition" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.ParserDefinition"/>
+      <with attribute="implementationClass" implements="consulo.language.parser.ParserDefinition"/>
     </extensionPoint>
 
     <extensionPoint name="metaLanguage" interface="com.intellij.lang.MetaLanguage"/>
 
     <extensionPoint name="lang.versionResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.lang.LanguageVersionResolver"/>
+      <with attribute="implementationClass" implements="consulo.language.version.LanguageVersionResolver"/>
     </extensionPoint>
 
     <extensionPoint name="lang.defineVersion" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.lang.LanguageVersion"/>
+      <with attribute="implementationClass" implements="consulo.language.version.LanguageVersion"/>
     </extensionPoint>
 
     <extensionPoint name="lang.treePatcher" beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -580,11 +580,11 @@
 
 
     <extensionPoint name="lang.fileViewProviderFactory" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.FileViewProviderFactory"/>
+      <with attribute="implementationClass" implements="consulo.language.file.FileViewProviderFactory"/>
     </extensionPoint>
 
     <extensionPoint name="fileType.fileViewProviderFactory" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.FileViewProviderFactory"/>
+      <with attribute="implementationClass" implements="consulo.language.file.FileViewProviderFactory"/>
     </extensionPoint>
 
     <extensionPoint name="multiLangCommenter"
@@ -816,8 +816,8 @@
     </extensionPoint>
 
     <extensionPoint name="psi.referenceProvider" beanClass="com.intellij.psi.PsiReferenceProviderBean"/>
-    <extensionPoint name="psi.packageSupportProvider" interface="consulo.psi.PsiPackageSupportProvider"/>
-    <extensionPoint name="psi.directoryMethodProxy" interface="consulo.psi.PsiDirectoryMethodProxy"/>
+    <extensionPoint name="psi.packageSupportProvider" interface="consulo.language.psi.PsiPackageSupportProvider"/>
+    <extensionPoint name="psi.directoryMethodProxy" interface="consulo.language.psi.PsiDirectoryMethodProxy"/>
     <extensionPoint name="patterns.patternClass" beanClass="com.intellij.patterns.compiler.PatternClassBean"/>
 
     <extensionPoint name="pom.declarationSearcher" interface="com.intellij.pom.PomDeclarationSearcher"/>
@@ -988,7 +988,7 @@
                     interface="com.intellij.codeInsight.generation.surroundWith.SurroundWithRangeAdjuster"/>
 
     <extensionPoint name="lang.substitutor" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.LanguageSubstitutor"/>
+      <with attribute="implementationClass" implements="consulo.language.psi.LanguageSubstitutor"/>
     </extensionPoint>
 
     <extensionPoint name="createFromTemplateActionReplacer"
@@ -1457,7 +1457,7 @@
     <applicationService serviceInterface="com.intellij.find.impl.FindPopupScopeUIProvider"
                         serviceImplementation="com.intellij.find.impl.FindPopupScopeUIProviderImpl"/>
 
-    <projectService serviceInterface="consulo.psi.PsiPackageManager"
+    <projectService serviceInterface="consulo.language.psi.PsiPackageManager"
                     serviceImplementation="consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorProviderImpl"/>
@@ -1716,7 +1716,7 @@
     <applicationService serviceInterface="com.intellij.execution.filters.TextConsoleBuilderFactory"
                         serviceImplementation="com.intellij.execution.filters.TextConsoleBuilderFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.lang.PsiBuilderFactory"
+    <applicationService serviceInterface="consulo.language.parser.PsiBuilderFactory"
                         serviceImplementation="com.intellij.lang.impl.PsiBuilderFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.documentation.DocumentationManagerUtil"
@@ -1817,7 +1817,7 @@
     <applicationService serviceInterface="com.intellij.psi.search.PredefinedSearchScopeProvider"
                         serviceImplementation="com.intellij.psi.search.PredefinedSearchScopeProviderImpl"/>
 
-    <applicationService serviceInterface="com.intellij.psi.PsiReferenceService"
+    <applicationService serviceInterface="consulo.language.psi.PsiReferenceService"
                         serviceImplementation="com.intellij.psi.PsiReferenceServiceImpl"/>
 
     <applicationService serviceInterface="com.intellij.patterns.compiler.PatternCompilerFactory"
@@ -1926,7 +1926,7 @@
     <projectService serviceInterface="com.intellij.find.FindManager"
                     serviceImplementation="com.intellij.find.impl.FindManagerImpl"/>
 
-    <projectService serviceInterface="com.intellij.psi.PsiParserFacade"
+    <projectService serviceInterface="consulo.language.psi.PsiParserFacade"
                     serviceImplementation="com.intellij.psi.impl.PsiParserFacadeImpl"/>
 
     <projectService serviceInterface="com.intellij.ide.util.gotoByName.GotoFileConfiguration"
@@ -2082,9 +2082,9 @@
     <syntaxHighlighter factoryClass="com.intellij.openapi.fileTypes.LanguageFileTypeHighlighterProvider"/>
     <structureViewBuilder factoryClass="com.intellij.ide.highlighter.LanguageFileTypeStructureViewBuilderProvider"/>
 
-    <lang.elementManipulator forClass="com.intellij.psi.PsiPlainTextFile"
+    <lang.elementManipulator forClass="consulo.language.psi.PsiPlainTextFile"
                              implementationClass="com.intellij.psi.impl.source.resolve.reference.impl.manipulators.PlainFileManipulator"/>
-    <lang.elementManipulator forClass="com.intellij.psi.PsiComment"
+    <lang.elementManipulator forClass="consulo.language.psi.PsiComment"
                              implementationClass="com.intellij.psi.impl.source.resolve.reference.impl.manipulators.PsiCommentManipulator"/>
 
     <applicationService serviceInterface="com.intellij.ide.macro.MacroManager" serviceImplementation="com.intellij.ide.macro.MacroManager"/>
@@ -2405,10 +2405,10 @@
 
     <editorTabTitleProvider implementation="com.intellij.openapi.fileEditor.impl.UniqueNameEditorTabTitleProvider"/>
 
-    <projectService serviceInterface="com.intellij.psi.util.PsiModificationTracker"
+    <projectService serviceInterface="consulo.language.psi.PsiModificationTracker"
                     serviceImplementation="com.intellij.psi.impl.PsiModificationTrackerImpl"/>
 
-    <itemPresentationProvider forClass="com.intellij.psi.PsiDirectory"
+    <itemPresentationProvider forClass="consulo.language.psi.PsiDirectory"
                               implementationClass="com.intellij.navigation.DirectoryPresentationProvider"/>
 
     <projectService serviceInterface="consulo.module.ModulePointerManager"
@@ -2808,7 +2808,7 @@
   </applicationListeners>
 
   <projectListeners>
-    <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="com.intellij.psi.util.PsiModificationTracker$Listener"/>
+    <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="consulo.language.psi.PsiModificationTracker$Listener"/>
     <listener class="consulo.roots.ExtensionListenerByLayerListenerInvoker" topic="consulo.module.content.layer.event.ModuleRootLayerListener"/>
   </projectListeners>
 </consulo-plugin>

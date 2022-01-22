@@ -16,7 +16,7 @@
 package com.intellij.semantic;
 
 import com.intellij.patterns.ElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.NullableFunction;
 
 /**

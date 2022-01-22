@@ -19,7 +19,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.ColoredTreeCellRenderer;

@@ -23,8 +23,8 @@ import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.component.extension.Extensions;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;

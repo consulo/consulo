@@ -4,7 +4,7 @@ package com.intellij.formatting.fileSet;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

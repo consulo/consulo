@@ -15,9 +15,9 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -48,7 +48,7 @@ public class FileReferenceUtil {
    * @param references references, typically from PsiElement.getReferences()
    * @return PsiFile if the last FileReference resolves into a real file.
    * @see com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
-   * @see com.intellij.psi.PsiElement#getReferences()
+   * @see PsiElement#getReferences()
    */
   @Nullable
   public static PsiFile findFile(PsiReference...references) {

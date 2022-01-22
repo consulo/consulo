@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.formatting.FormatConstants;
 import com.intellij.ide.DataManager;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.editor.*;

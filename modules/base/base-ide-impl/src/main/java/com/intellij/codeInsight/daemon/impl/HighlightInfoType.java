@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.WriteExternalException;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import org.jdom.Element;

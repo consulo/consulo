@@ -1,7 +1,7 @@
 package com.intellij.coverage;
 
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 public interface CoverageAnnotator {
   /**
    *
-   * @param directory  {@link com.intellij.psi.PsiDirectory} to obtain coverage information for
+   * @param directory  {@link PsiDirectory} to obtain coverage information for
    * @param manager
    * @return human-readable coverage information
    */
@@ -21,7 +21,7 @@ public interface CoverageAnnotator {
 
   /**
    *
-   * @param file {@link com.intellij.psi.PsiFile} to obtain coverage information for
+   * @param file {@link PsiFile} to obtain coverage information for
    * @param manager
    * @return human-readable coverage information
    */

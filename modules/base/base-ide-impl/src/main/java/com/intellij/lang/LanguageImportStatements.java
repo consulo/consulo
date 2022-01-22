@@ -19,7 +19,8 @@
  */
 package com.intellij.lang;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.LanguageExtension;
+import consulo.language.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginIds;
 

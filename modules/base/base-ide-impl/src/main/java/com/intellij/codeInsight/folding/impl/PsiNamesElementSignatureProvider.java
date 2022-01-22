@@ -16,7 +16,8 @@
 package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
+import consulo.language.psi.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -86,7 +87,7 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
     }
     else if (DOC_COMMENT_MARKER.equals(elementMarker)) {
       PsiElement candidate = parent.getFirstChild();
-      return candidate instanceof PsiComment ? candidate : null; 
+      return candidate instanceof PsiComment ? candidate : null;
     }
     else if (CODE_BLOCK_MARKER.equals(elementMarker)) {
       for (PsiElement child = parent.getFirstChild(); child != null; child = child.getNextSibling()) {

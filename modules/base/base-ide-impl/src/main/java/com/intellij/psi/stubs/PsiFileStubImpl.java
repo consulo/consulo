@@ -20,11 +20,12 @@
 package com.intellij.psi.stubs;
 
 import com.google.common.base.MoreObjects;
-import com.intellij.lang.Language;
+import consulo.language.Language;
+import consulo.language.psi.stub.IStubElementType;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.tree.IStubFileElementType;

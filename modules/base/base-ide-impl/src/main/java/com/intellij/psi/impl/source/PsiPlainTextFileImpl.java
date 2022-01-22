@@ -16,14 +16,18 @@
 
 package com.intellij.psi.impl.source;
 
+import consulo.language.ast.PlainTextTokenTypes;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiPlainTextFile;
+import consulo.language.psi.PsiReference;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import javax.annotation.Nonnull;
 
-public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFile{
+public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFile {
   private final FileType myFileType;
 
   public PsiPlainTextFileImpl(FileViewProvider viewProvider) {

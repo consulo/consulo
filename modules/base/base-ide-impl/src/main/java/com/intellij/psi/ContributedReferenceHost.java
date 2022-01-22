@@ -15,6 +15,10 @@
  */
 package com.intellij.psi;
 
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceService;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -23,8 +27,8 @@ import javax.annotation.Nonnull;
 public interface ContributedReferenceHost extends PsiElement {
   /**
    * By contributed reference host contract must always return
-   * {@link com.intellij.psi.PsiReferenceService#getReferences(PsiElement, com.intellij.psi.PsiReferenceService.Hints)}
-   * @return {@link com.intellij.psi.PsiReferenceService#getContributedReferences(PsiElement)}
+   * {@link PsiReferenceService#getReferences(PsiElement, PsiReferenceService.Hints)}
+   * @return {@link PsiReferenceService#getContributedReferences(PsiElement)}
    */
   @Override
   @Nonnull

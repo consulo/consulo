@@ -17,6 +17,8 @@
 package com.intellij.psi;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileSystemItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

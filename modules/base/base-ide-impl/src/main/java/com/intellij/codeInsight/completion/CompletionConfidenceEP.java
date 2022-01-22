@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageExtension;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
 import com.intellij.lang.LanguageExtensionPoint;
 import consulo.container.plugin.PluginIds;
 

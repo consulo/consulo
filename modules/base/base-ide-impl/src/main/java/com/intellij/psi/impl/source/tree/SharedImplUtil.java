@@ -16,18 +16,22 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.FileASTNode;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.FileASTNode;
 import consulo.application.ApplicationManager;
+import consulo.language.ast.TokenType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.CharTable;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.IElementType;
+import consulo.language.util.CharTable;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

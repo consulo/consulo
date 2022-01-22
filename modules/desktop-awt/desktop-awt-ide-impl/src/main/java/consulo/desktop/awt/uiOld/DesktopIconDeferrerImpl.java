@@ -27,7 +27,7 @@ import com.intellij.openapi.util.LowMemoryWatcher;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.language.psi.PsiModificationTracker;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.Function;
 import consulo.component.messagebus.MessageBusConnection;

@@ -15,9 +15,11 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.impl.source.StubbedSpine;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.stub.StubElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

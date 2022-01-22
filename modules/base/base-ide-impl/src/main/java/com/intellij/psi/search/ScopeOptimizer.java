@@ -16,7 +16,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

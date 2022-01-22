@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LighterASTNode;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.LighterASTNode;
 import com.intellij.lang.LighterASTTokenNode;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import consulo.application.Application;
@@ -25,16 +25,19 @@ import consulo.document.Document;
 import com.intellij.openapi.util.Ref;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.function.ThrowableRunnable;
+import consulo.language.ast.TokenType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
+import consulo.language.util.CharTable;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.psi.stubs.ObjectStubSerializer;
-import com.intellij.psi.stubs.Stub;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.stub.ObjectStubSerializer;
+import consulo.language.psi.stub.Stub;
+import consulo.language.ast.IElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
@@ -522,7 +525,7 @@ public class DebugUtil {
 
   /**
    * Marks a start of PSI modification action. Any PSI/AST elements invalidated inside such an action will contain a debug trace
-   * identifying this transaction, and so will {@link com.intellij.psi.PsiInvalidElementAccessException} thrown when accessing such invalid
+   * identifying this transaction, and so will {@link PsiInvalidElementAccessException} thrown when accessing such invalid
    * elements. This should help finding out why a specific PSI element has become invalid.
    *
    * @param trace The debug trace that the invalidated elements should be identified by. May be null, then current stack trace is used.

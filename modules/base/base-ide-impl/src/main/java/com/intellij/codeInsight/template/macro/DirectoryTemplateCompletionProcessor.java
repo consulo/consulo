@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.macro;
 
 import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiFileSystemItem;
 
 /**
  * @author yole

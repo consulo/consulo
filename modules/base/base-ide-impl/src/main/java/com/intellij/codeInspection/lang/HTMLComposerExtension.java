@@ -21,7 +21,7 @@
 package com.intellij.codeInspection.lang;
 
 import com.intellij.codeInspection.reference.RefEntity;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.util.dataholder.Key;
 
 public interface HTMLComposerExtension<T> {

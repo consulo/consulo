@@ -12,9 +12,9 @@ import com.intellij.dupLocator.iterators.SiblingNodeIterator;
 import com.intellij.dupLocator.util.DuplocatorUtil;
 import com.intellij.dupLocator.util.NodeFilter;
 import com.intellij.dupLocator.util.PsiFragment;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 

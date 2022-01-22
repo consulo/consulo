@@ -1,11 +1,11 @@
 package com.intellij.indentation;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import consulo.document.Document;
 import consulo.project.DumbAware;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;

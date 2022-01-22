@@ -15,7 +15,7 @@
  */
 package com.intellij.notification.impl;
 
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 /**

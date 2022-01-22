@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.cache.impl.id;
 
-import com.intellij.openapi.fileTypes.FileTypeExtension;
+import consulo.virtualFileSystem.fileType.FileTypeExtension;
 import consulo.container.plugin.PluginIds;
 
 /**

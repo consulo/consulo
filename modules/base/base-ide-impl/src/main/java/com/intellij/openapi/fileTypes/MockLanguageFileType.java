@@ -19,7 +19,8 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
+import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 

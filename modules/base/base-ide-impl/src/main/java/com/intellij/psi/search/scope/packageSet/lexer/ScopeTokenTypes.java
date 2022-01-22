@@ -19,8 +19,8 @@
  */
 package com.intellij.psi.search.scope.packageSet.lexer;
 
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 
 public interface ScopeTokenTypes extends TokenType {
   IElementType IDENTIFIER = new ScopeTokenType("Scope.IDENTIFIER");

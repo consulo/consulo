@@ -16,9 +16,9 @@
 package com.intellij.codeInsight.folding.impl;
 
 import consulo.document.util.TextRange;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

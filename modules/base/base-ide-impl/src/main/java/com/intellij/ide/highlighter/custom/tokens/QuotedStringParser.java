@@ -17,7 +17,7 @@
 package com.intellij.ide.highlighter.custom.tokens;
 
 import consulo.logging.Logger;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 /**
  * @author dsl

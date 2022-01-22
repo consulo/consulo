@@ -3,7 +3,7 @@ package com.intellij.psi.impl;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
@@ -19,6 +19,9 @@ import com.intellij.openapi.editor.impl.FrozenDocument;
 import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.progress.*;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
+import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.*;
@@ -602,7 +605,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   @Override
-  public void performLaterWhenAllCommitted(@Nonnull final Runnable runnable, final ModalityState modalityState) {
+  public void performLaterWhenAllCommitted(@Nonnull final Runnable runnable, final consulo.ui.ModalityState modalityState) {
     final Runnable whenAllCommitted = () -> ApplicationManager.getApplication().invokeLater(() -> {
       if (hasUncommitedDocuments()) {
         // no luck, will try later

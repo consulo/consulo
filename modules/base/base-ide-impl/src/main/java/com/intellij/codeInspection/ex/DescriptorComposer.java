@@ -25,7 +25,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;

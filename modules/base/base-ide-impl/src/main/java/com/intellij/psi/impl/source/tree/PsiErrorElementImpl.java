@@ -17,10 +17,14 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.*;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
+import consulo.language.Language;
+import consulo.language.psi.OuterLanguageElement;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.TokenType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.PsiWhiteSpace;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.LazyInstance;
 import consulo.component.extension.KeyedLazyInstance;

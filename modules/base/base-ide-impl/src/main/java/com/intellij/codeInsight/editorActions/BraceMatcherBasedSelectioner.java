@@ -25,8 +25,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

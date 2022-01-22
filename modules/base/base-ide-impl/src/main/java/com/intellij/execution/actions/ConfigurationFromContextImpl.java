@@ -16,7 +16,7 @@
 package com.intellij.execution.actions;
 
 import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 /**

@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import consulo.logging.Logger;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.copy.CopyHandler;
 
 public class CloneElementAction extends CopyElementAction {

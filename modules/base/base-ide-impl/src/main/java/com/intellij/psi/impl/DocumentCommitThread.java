@@ -2,13 +2,18 @@
 package com.intellij.psi.impl;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.lang.FileASTNode;
+import consulo.language.ast.FileASTNode;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.application.event.ApplicationListener;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import consulo.document.util.TextRange;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiCompiledElement;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;

@@ -16,8 +16,8 @@
 
 package com.intellij.formatting.blocks;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.TokenType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenType;
 
 import javax.annotation.Nullable;
 

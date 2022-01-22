@@ -18,7 +18,7 @@ package com.intellij.pom;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.pom.event.PomModelListener;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 import java.util.Set;
 

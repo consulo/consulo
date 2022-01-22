@@ -17,7 +17,7 @@ package com.intellij.codeInsight.navigation;
 
 import consulo.application.ReadAction;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.Usage;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.newvfs.impl;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.language.psi.PsiModificationTracker;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

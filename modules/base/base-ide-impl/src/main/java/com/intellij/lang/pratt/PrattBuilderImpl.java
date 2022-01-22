@@ -15,13 +15,13 @@
  */
 package com.intellij.lang.pratt;
 
-import com.intellij.lang.ITokenTypeRemapper;
+import consulo.language.parser.ITokenTypeRemapper;
 import com.intellij.lang.LangBundle;
-import com.intellij.lang.PsiBuilder;
+import consulo.language.parser.PsiBuilder;
 import com.intellij.lang.impl.PsiBuilderImpl;
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
 import com.intellij.openapi.util.Trinity;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

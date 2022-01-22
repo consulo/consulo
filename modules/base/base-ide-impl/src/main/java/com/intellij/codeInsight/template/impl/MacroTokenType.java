@@ -16,9 +16,9 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.Language;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 
 /**
  * @author yole

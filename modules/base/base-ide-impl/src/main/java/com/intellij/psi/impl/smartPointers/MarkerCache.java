@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.smartPointers;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;
 import com.intellij.openapi.editor.impl.ManualRangeMarker;
@@ -25,8 +25,8 @@ import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

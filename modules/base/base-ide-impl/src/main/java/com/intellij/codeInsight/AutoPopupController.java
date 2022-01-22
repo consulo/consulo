@@ -8,7 +8,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

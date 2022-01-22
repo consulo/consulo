@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.source.resolve.reference;
 
 import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.PsiComment;
+import consulo.language.psi.PsiComment;
 import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.psi.PsiReferenceRegistrar;
 import com.intellij.psi.ReferenceProviderType;

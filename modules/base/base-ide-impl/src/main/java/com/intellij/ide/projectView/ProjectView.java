@@ -22,7 +22,7 @@ import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

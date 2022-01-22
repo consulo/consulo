@@ -18,8 +18,8 @@ package com.intellij.packageDependencies;
 
 import com.intellij.analysis.AnalysisScope;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.PsiFileEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

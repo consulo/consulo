@@ -30,8 +30,8 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.component.util.Iconable;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

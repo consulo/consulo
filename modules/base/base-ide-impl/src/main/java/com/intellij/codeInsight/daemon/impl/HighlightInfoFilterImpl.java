@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 public class HighlightInfoFilterImpl implements HighlightInfoFilter {

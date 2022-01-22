@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Text;
 import com.intellij.xdebugger.XExpression;

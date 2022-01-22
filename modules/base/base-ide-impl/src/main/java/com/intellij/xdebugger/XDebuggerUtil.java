@@ -16,14 +16,14 @@
 
 package com.intellij.xdebugger;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
 import com.intellij.xdebugger.breakpoints.*;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
@@ -120,7 +120,7 @@ public abstract class XDebuggerUtil {
   public abstract XValueContainer getValueContainer(DataContext dataContext);
 
   /**
-   * Process all {@link com.intellij.psi.PsiElement}s on the specified line
+   * Process all {@link PsiElement}s on the specified line
    *
    * @param project   project
    * @param document  document

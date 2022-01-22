@@ -13,8 +13,8 @@
 // limitations under the License.
 package com.intellij.psi.codeStyle;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiFile;
+import consulo.language.Language;
+import consulo.language.psi.PsiFile;
 
 /**
  * Contains fields which are left for compatibility with earlier versions. These fields shouldn't be used anymore. Every language must have

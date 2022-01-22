@@ -18,8 +18,8 @@ package com.intellij.ide.util;
 
 import com.intellij.psi.ElementDescriptionLocation;
 import com.intellij.psi.ElementDescriptionProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
 import javax.annotation.Nonnull;
 
 /**

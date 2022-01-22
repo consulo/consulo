@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.FileStatus;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

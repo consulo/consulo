@@ -20,6 +20,8 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl;
+import consulo.language.psi.PsiLanguageInjectionHost;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

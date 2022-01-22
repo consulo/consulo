@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.FormattingModeAwareIndentAdjuster;
 import javax.annotation.Nonnull;

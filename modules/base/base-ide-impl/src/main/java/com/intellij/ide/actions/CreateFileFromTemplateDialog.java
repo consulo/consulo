@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.ui.ValidableComponent;

@@ -15,10 +15,10 @@
  */
 package com.intellij.xdebugger.evaluation;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;

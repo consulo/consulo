@@ -17,6 +17,10 @@ package com.intellij.refactoring.util;
 
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.*;

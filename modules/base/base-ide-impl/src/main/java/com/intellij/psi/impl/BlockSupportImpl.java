@@ -2,12 +2,16 @@
 
 package com.intellij.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.FileASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.FileASTNode;
+import consulo.language.Language;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.document.Document;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ILazyParseableElementType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import consulo.progress.ProgressIndicator;
@@ -25,8 +29,8 @@ import com.intellij.psi.text.BlockSupport;
 import com.intellij.psi.tree.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.CharTable;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.CharTable;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;

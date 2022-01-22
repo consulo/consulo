@@ -3,12 +3,14 @@
 package com.intellij.psi;
 
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
@@ -20,9 +22,9 @@ import com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.impl.source.StubbedSpine;
-import com.intellij.psi.stubs.IStubElementType;
+import consulo.language.psi.stub.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.logging.Logger;

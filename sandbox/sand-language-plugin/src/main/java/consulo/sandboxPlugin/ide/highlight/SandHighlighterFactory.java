@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.highlight;
 
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
 import javax.annotation.Nonnull;

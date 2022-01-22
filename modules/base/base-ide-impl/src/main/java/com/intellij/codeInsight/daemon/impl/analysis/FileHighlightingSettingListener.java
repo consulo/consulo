@@ -31,7 +31,7 @@
 
 package com.intellij.codeInsight.daemon.impl.analysis;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 

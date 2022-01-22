@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.component.messagebus.MessageBus;

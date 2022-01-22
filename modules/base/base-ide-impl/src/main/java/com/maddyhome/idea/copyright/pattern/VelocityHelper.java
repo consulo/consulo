@@ -19,7 +19,7 @@ package com.maddyhome.idea.copyright.pattern;
 import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;

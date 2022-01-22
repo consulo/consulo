@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.unwrap;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.openapi.util.Pair;
 import consulo.project.Project;
 import com.intellij.openapi.editor.Editor;

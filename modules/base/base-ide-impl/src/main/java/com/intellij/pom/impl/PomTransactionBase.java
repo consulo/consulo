@@ -19,8 +19,8 @@ import com.intellij.pom.PomManager;
 import com.intellij.pom.PomModelAspect;
 import com.intellij.pom.PomTransaction;
 import com.intellij.pom.event.PomModelEvent;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nullable;
 
 public abstract class PomTransactionBase implements PomTransaction{

@@ -16,15 +16,15 @@
 package com.intellij.psi.impl.cache.impl.id;
 
 import com.intellij.ide.highlighter.HighlighterFactory;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
+import consulo.language.parser.ParserDefinition;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -37,15 +37,15 @@ import com.intellij.psi.impl.cache.impl.todo.TodoIndexEntry;
 import com.intellij.psi.impl.cache.impl.todo.TodoIndexers;
 import com.intellij.psi.impl.cache.impl.todo.VersionedTodoIndexer;
 import com.intellij.psi.search.IndexPattern;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.intellij.util.codeInsight.CommentUtilCore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.DataIndexer;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.SubstitutedFileType;
-import consulo.lang.LanguageVersion;
-import consulo.lang.util.LanguageVersionUtil;
+import consulo.language.version.LanguageVersion;
+import consulo.language.version.LanguageVersionUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,8 +15,8 @@
  */
 package com.intellij.dupLocator;
 
-import com.intellij.lang.LighterAST;
-import com.intellij.lang.LighterASTNode;
+import consulo.language.ast.LighterAST;
+import consulo.language.ast.LighterASTNode;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

@@ -21,7 +21,7 @@
  */
 package com.intellij.refactoring.actions;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.refactoring.InlineActionHandler;
 import com.intellij.lang.refactoring.InlineHandler;
 import com.intellij.lang.refactoring.InlineHandlers;
@@ -29,8 +29,8 @@ import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.Extensions;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.inline.InlineRefactoringActionHandler;

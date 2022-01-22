@@ -20,7 +20,7 @@
 package com.intellij.refactoring.rename;
 
 import com.intellij.openapi.util.Condition;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.Function;
 import com.intellij.util.ProcessingContext;
 

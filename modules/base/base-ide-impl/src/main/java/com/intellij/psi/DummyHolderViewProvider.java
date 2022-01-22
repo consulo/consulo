@@ -1,8 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.SharedPsiElementImplUtil;
 import com.intellij.psi.impl.source.DummyHolder;

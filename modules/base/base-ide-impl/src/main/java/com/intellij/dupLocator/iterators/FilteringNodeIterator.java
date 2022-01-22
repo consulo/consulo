@@ -1,7 +1,7 @@
 package com.intellij.dupLocator.iterators;
 
 import com.intellij.dupLocator.util.NodeFilter;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * Iterator over important nodes

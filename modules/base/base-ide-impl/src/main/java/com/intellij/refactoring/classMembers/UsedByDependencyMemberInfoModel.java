@@ -17,7 +17,7 @@
 package com.intellij.refactoring.classMembers;
 
 import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author dsl

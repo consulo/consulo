@@ -18,7 +18,7 @@ package com.intellij.psi.impl;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;

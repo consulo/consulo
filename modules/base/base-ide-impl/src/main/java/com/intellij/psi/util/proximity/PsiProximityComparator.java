@@ -20,7 +20,7 @@ import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.Weigher;
 import com.intellij.psi.WeighingComparable;
 import com.intellij.psi.WeighingService;

@@ -17,8 +17,8 @@ package com.intellij.patterns;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

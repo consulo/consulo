@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import javax.annotation.Nonnull;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 /**
  * @author peter

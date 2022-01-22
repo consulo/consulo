@@ -3,7 +3,7 @@
 package com.intellij.psi.impl.search;
 
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.TodoItem;
 import com.intellij.psi.search.TodoPattern;
 import javax.annotation.Nonnull;

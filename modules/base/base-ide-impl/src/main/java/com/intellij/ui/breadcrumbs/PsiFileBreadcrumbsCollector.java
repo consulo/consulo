@@ -2,10 +2,13 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
+import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;

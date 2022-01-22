@@ -35,7 +35,7 @@ import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.options.colors.EditorHighlightingProvidingColorSettingsPage;
 import com.intellij.openapi.options.colors.RainbowColorSettingsPage;
 import consulo.document.util.TextRange;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.util.Alarm;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.UIUtil;

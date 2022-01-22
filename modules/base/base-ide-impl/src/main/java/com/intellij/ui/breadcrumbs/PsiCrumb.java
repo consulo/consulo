@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiAnchor;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

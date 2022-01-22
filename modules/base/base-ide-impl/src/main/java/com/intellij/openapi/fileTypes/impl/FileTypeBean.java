@@ -3,7 +3,7 @@ package com.intellij.openapi.fileTypes.impl;
 
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.container.plugin.PluginDescriptor;

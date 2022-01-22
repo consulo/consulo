@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.Editor;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

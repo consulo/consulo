@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.ThrowableRunnable;
 import consulo.logging.Logger;

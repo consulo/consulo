@@ -20,7 +20,7 @@ import consulo.document.event.DocumentListener;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import com.intellij.psi.PsiCodeFragment;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
 

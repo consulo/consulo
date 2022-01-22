@@ -42,7 +42,7 @@ import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.psi.ExternalChangeAction;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.util.ObjectUtils;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;

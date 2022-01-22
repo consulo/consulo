@@ -16,12 +16,12 @@
 
 package com.intellij.lang.folding;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageExtension;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
 import consulo.document.Document;
 import consulo.project.DumbService;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginIds;
 

@@ -26,7 +26,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.project.DumbAware;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 
 public class SearchAgainAction extends AnAction implements DumbAware {
   public SearchAgainAction() {

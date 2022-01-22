@@ -15,15 +15,15 @@
  */
 package com.intellij.psi.codeStyle;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.component.persist.JDOMExternalizable;
 import consulo.component.persist.WriteExternalException;
 import consulo.document.Document;
 import consulo.component.persist.InvalidDataException;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.*;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.ArrangementSettings;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;

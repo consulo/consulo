@@ -1,6 +1,8 @@
 package com.intellij.psi.stubs;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author peter

@@ -16,8 +16,11 @@
 
 package com.intellij.psi;
 
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+
 /**
- * Can be implemented by {@link com.intellij.psi.PsiReference}
+ * Can be implemented by {@link PsiReference}
  * @author Dmitry Avdeev
  */
 public interface ResolvingHint {

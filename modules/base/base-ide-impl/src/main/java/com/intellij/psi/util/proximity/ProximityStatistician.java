@@ -16,7 +16,7 @@
 package com.intellij.psi.util.proximity;
 
 import com.intellij.psi.statistics.Statistician;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.ProximityLocation;
 
 /**

@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

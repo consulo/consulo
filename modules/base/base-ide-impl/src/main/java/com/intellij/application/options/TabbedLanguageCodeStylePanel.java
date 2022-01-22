@@ -19,7 +19,7 @@ import com.intellij.application.options.codeStyle.CodeStyleBlankLinesPanel;
 import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import com.intellij.application.options.codeStyle.CodeStyleSpacesPanel;
 import com.intellij.application.options.codeStyle.WrappingAndBracesPanel;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;

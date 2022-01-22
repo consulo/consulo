@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.smartPointers;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.SmartPsiElementPointer;
 import javax.annotation.Nullable;
 

@@ -1,6 +1,6 @@
 package com.intellij.dupLocator.iterators;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * Iterator that limits processing of specified number of nodes

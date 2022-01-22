@@ -31,10 +31,15 @@ import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import com.intellij.codeInspection.ui.ProblemDescriptionNode;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNamedElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -18,9 +18,9 @@ package com.intellij.psi.impl.source.resolve.reference;
 
 import consulo.project.IndexNotReadyException;
 import com.intellij.patterns.ElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.PsiReferenceProvider;
-import com.intellij.psi.PsiReferenceService;
+import consulo.language.psi.PsiReferenceService;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;

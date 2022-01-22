@@ -15,10 +15,10 @@
  */
 package com.intellij.tasks.doc;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.FakePsiElement;
 import com.intellij.tasks.Task;
 

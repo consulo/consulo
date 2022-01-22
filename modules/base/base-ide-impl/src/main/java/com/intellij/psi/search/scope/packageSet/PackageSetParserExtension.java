@@ -20,7 +20,7 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nullable;
 

@@ -15,6 +15,8 @@
  */
 package com.intellij.psi.stubs;
 
+import consulo.language.psi.stub.Stub;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

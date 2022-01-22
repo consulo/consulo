@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiUtilCore;
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @see com.intellij.psi.util.PsiTreeUtil#processElements(com.intellij.psi.PsiElement, PsiElementProcessor)
+ * @see com.intellij.psi.util.PsiTreeUtil#processElements(PsiElement, PsiElementProcessor)
  */
 public interface PsiElementProcessor<T extends PsiElement> {
   /**

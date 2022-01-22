@@ -19,8 +19,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -161,7 +161,7 @@ public abstract class HighlightManager {
                                               @Nullable ColorValue scrollmarkColor);
 
   /**
-   * @deprecated Use {@link #addOccurrenceHighlights(com.intellij.openapi.editor.Editor, com.intellij.psi.PsiElement[], com.intellij.openapi.editor.markup.TextAttributes, boolean, java.util.Collection)} instead (it does the same thing).
+   * @deprecated Use {@link #addOccurrenceHighlights(com.intellij.openapi.editor.Editor, PsiElement[], com.intellij.openapi.editor.markup.TextAttributes, boolean, java.util.Collection)} instead (it does the same thing).
    */
   public abstract void addElementsOccurrenceHighlights(@Nonnull Editor editor,
                                                        @Nonnull PsiElement[] elements,

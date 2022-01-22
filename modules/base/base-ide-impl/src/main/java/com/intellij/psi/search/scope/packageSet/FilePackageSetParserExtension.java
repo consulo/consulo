@@ -21,7 +21,7 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.analysis.AnalysisScopeBundle;
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import javax.annotation.Nullable;
 

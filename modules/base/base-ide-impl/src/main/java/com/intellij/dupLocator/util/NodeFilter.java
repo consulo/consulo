@@ -1,6 +1,6 @@
 package com.intellij.dupLocator.util;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * Base class for tree filtering

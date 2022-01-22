@@ -17,8 +17,8 @@ package com.intellij.formatting.engine;
 
 import com.intellij.diagnostic.LogMessageEx;
 import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;

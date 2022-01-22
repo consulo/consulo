@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public class CodeInspectionOnEditorAction extends AnAction {
   @Override

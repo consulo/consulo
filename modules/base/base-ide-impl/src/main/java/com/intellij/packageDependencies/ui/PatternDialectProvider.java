@@ -25,7 +25,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

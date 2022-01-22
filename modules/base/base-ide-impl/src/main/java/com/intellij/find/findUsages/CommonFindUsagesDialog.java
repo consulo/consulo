@@ -20,7 +20,7 @@ import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.help.HelpManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.ui.SimpleColoredComponent;

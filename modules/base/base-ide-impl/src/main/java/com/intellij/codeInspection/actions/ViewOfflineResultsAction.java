@@ -53,7 +53,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.profile.Profile;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

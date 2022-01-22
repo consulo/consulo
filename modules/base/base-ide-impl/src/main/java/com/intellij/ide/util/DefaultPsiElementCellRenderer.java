@@ -17,7 +17,7 @@
 package com.intellij.ide.util;
 
 import consulo.component.util.Iconable;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;
 
 public class DefaultPsiElementCellRenderer extends PsiElementListCellRenderer<PsiElement> {

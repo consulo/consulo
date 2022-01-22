@@ -19,7 +19,7 @@ package com.intellij.codeInspection.actions;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.codeInspection.*;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,8 +15,8 @@
  */
 package com.intellij.refactoring.rename.inplace;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageExtension;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
 import com.intellij.openapi.command.CommandProcessor;
@@ -26,11 +26,11 @@ import com.intellij.openapi.command.impl.StartMarkAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.progress.ProgressManager;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.RefactoringActionHandler;

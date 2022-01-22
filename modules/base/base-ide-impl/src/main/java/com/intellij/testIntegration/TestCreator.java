@@ -18,7 +18,7 @@ package com.intellij.testIntegration;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public interface TestCreator {
   boolean isAvailable(Project project, Editor editor, PsiFile file);

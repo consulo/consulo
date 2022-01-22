@@ -5,8 +5,8 @@ import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 public final class UndoUtil {

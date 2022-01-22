@@ -17,8 +17,8 @@
 package com.intellij.refactoring.safeDelete.usageInfo;
 
 import consulo.logging.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 
 /**
  * @author dsl

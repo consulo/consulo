@@ -2,9 +2,9 @@
 package com.intellij.psi.templateLanguages;
 
 import com.intellij.FileIntPropertyPusher;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;

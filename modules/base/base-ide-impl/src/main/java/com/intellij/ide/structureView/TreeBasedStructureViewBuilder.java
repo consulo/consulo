@@ -18,6 +18,7 @@ package com.intellij.ide.structureView;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -31,7 +32,7 @@ import javax.annotation.Nullable;
  *
  * @see StructureViewModel
  * @see TextEditorBasedStructureViewModel
- * @see com.intellij.lang.LanguageStructureViewBuilder#getStructureViewBuilder(com.intellij.psi.PsiFile)
+ * @see com.intellij.lang.LanguageStructureViewBuilder#getStructureViewBuilder(PsiFile)
  */
 public abstract class TreeBasedStructureViewBuilder implements StructureViewBuilder {
   /**

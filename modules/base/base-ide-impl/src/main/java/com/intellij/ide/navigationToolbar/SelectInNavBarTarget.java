@@ -25,8 +25,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFileSystemItem;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

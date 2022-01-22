@@ -32,7 +32,7 @@ import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.ui.AppIcon;
 import com.intellij.ui.SystemNotifications;
 import javax.annotation.Nonnull;

@@ -18,7 +18,7 @@ package com.intellij.refactoring.changeSignature;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import com.intellij.psi.PsiCodeFragment;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.CodeFragmentTableCellEditorBase;
 import com.intellij.refactoring.ui.CodeFragmentTableCellRenderer;

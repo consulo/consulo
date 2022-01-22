@@ -18,7 +18,7 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.disposer.Disposable;
 
 import javax.swing.*;

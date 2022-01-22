@@ -21,7 +21,7 @@ import com.intellij.lang.CodeDocumentationAwareCommenter;
 import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
 import consulo.document.util.TextRange;
-import com.intellij.psi.LiteralTextEscaper;
+import consulo.language.psi.LiteralTextEscaper;
 import com.intellij.psi.impl.source.tree.PsiCommentImpl;
 import javax.annotation.Nonnull;
 

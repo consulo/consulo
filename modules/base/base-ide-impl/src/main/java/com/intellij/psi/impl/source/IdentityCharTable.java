@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source;
 
-import com.intellij.util.CharTable;
+import consulo.language.util.CharTable;
 import javax.annotation.Nonnull;
 
 /*

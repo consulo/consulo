@@ -26,10 +26,11 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorGutter;
+import consulo.language.psi.*;
 import consulo.project.DumbAware;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.psi.*;
+
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

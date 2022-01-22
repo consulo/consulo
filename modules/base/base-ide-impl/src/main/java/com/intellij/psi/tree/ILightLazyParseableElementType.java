@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.tree;
 
-import com.intellij.lang.LighterASTNode;
-import com.intellij.lang.LighterLazyParseableNode;
+import consulo.language.ast.LighterASTNode;
+import consulo.language.ast.LighterLazyParseableNode;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 
 /**

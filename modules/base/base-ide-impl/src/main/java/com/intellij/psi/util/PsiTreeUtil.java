@@ -15,24 +15,27 @@
  */
 package com.intellij.psi.util;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.util.Condition;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.OuterLanguageElement;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.lang.LanguageVersion;
-import consulo.lang.LanguageVersionResolver;
-import consulo.lang.LanguageVersionResolvers;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
+import consulo.language.version.LanguageVersion;
+import consulo.language.version.LanguageVersionResolver;
+import consulo.language.version.LanguageVersionResolvers;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -83,7 +86,7 @@ public class PsiTreeUtil {
   }
 
   /**
-   * Checks whether one element in the psi tree is under another in {@link com.intellij.psi.PsiElement#getContext()}  hierarchy.
+   * Checks whether one element in the psi tree is under another in {@link PsiElement#getContext()}  hierarchy.
    *
    * @param ancestor parent candidate. <code>false</code> will be returned if ancestor is null.
    * @param element  child candidate

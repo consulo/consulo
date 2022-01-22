@@ -16,13 +16,13 @@
 
 package com.intellij.refactoring.actions;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.SyntheticElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.SyntheticElement;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.rename.RenameHandlerRegistry;
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.usageView;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import javax.annotation.Nonnull;
 

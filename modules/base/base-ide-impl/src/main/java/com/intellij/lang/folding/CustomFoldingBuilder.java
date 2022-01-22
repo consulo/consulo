@@ -15,14 +15,14 @@
  */
 package com.intellij.lang.folding;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.project.PossiblyDumbAware;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.registry.RegistryValue;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.Stack;
 import consulo.annotation.access.RequiredReadAction;
 

@@ -16,9 +16,9 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 public interface JavaLikeQuoteHandler extends QuoteHandler {

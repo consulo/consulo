@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.file.impl.FileManager;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;

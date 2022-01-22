@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl.source;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.stubs.Stub;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.stub.Stub;
 import com.intellij.psi.stubs.StubTree;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

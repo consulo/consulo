@@ -30,7 +30,7 @@ import javax.swing.event.AncestorListener;
 
 import org.intellij.plugins.intelliLang.inject.InjectedLanguage;
 import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;

@@ -22,7 +22,7 @@ import com.intellij.lang.folding.CustomFoldingProvider;
 import com.intellij.navigation.ItemPresentation;
 import consulo.document.util.TextRange;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

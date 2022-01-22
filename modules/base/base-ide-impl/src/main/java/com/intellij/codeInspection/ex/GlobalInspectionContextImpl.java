@@ -48,6 +48,8 @@ import com.intellij.openapi.components.PathMacroManager;
 import consulo.document.Document;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.language.psi.*;
+import consulo.language.util.IncorrectOperationException;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;

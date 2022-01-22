@@ -24,8 +24,8 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.tasks.actions.BaseTaskAction;
 import com.intellij.tasks.context.WorkingContextManager;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author Dmitry Avdeev

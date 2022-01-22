@@ -2,7 +2,7 @@
 package com.intellij.psi.search;
 
 import consulo.project.Project;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiReference;
 import com.intellij.util.AbstractQuery;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;

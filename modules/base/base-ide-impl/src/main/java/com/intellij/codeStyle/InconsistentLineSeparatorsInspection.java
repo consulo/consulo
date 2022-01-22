@@ -23,9 +23,9 @@ import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 /**

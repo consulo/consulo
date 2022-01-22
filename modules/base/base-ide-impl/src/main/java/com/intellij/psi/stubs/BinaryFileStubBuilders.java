@@ -19,7 +19,7 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.fileTypes.FileTypeExtension;
+import consulo.virtualFileSystem.fileType.FileTypeExtension;
 import consulo.container.plugin.PluginIds;
 
 public class BinaryFileStubBuilders extends FileTypeExtension<BinaryFileStubBuilder> {

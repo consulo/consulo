@@ -18,7 +18,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.text.MergingCharSequence;

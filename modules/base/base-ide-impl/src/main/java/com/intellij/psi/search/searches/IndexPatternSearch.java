@@ -3,7 +3,7 @@ package com.intellij.psi.search.searches;
 
 import consulo.application.ApplicationManager;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.IndexPatternProvider;

@@ -3,6 +3,10 @@ package com.intellij.psi.util;
 
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.RecursionGuard;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.ResolveResult;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -27,9 +31,9 @@ import javax.annotation.Nonnull;
  * is still reachable and not garbage-collected, and dependencies haven't changed. Therefore CachedValue results
  * should be equivalent and interchangeable if they're called multiple times. Examples:
  * <ul>
- * <li>If PSI declarations are cached, {@link #equals} or at least {@link com.intellij.psi.PsiManager#areElementsEquivalent}
+ * <li>If PSI declarations are cached, {@link #equals} or at least {@link PsiManager#areElementsEquivalent}
  * should hold for results from the same CachedValue.</li>
- * <li>{@link com.intellij.psi.ResolveResult} objects should have equivalent {@code getElement()} values.</li>
+ * <li>{@link ResolveResult} objects should have equivalent {@code getElement()} values.</li>
  * <li>Cached arrays or lists should have the same number of elements, and they also should be equivalent and come in the same order.</li>
  * <li>If the result object's class has a meaningful {@link #equals} method, it should hold.</li>
  * </ul>
@@ -54,7 +58,7 @@ import javax.annotation.Nonnull;
  * <li>Thread-locals at the moment of creation. If you use them (either directly or via {@link RecursionGuard#currentStack()}),
  * please try not to. If you really have to, also use {@link RecursionGuard#prohibitResultCaching(Object)}
  * to ensure values depending on unstable data won't be cached.</li>
- * <li>PSI elements around {@code X}, when {@code X} is a {@link com.intellij.psi.PsiElement} itself,
+ * <li>PSI elements around {@code X}, when {@code X} is a {@link PsiElement} itself,
  * as they can change during the lifetime of that PSI element. Example:
  * <pre>
  *   PsiMethod[] methods = psiClass.getMethods();

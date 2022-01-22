@@ -25,7 +25,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
@@ -34,9 +34,9 @@ import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 
 public class CodeBlockUtil {
   private CodeBlockUtil() {

@@ -16,10 +16,10 @@
 package com.intellij.execution.lineMarker;
 
 import com.intellij.ide.DataManager;
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.Function;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginIds;

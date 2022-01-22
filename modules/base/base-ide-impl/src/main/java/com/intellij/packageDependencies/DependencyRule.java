@@ -17,7 +17,7 @@ package com.intellij.packageDependencies;
 
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.ComplementPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.PackageSet;

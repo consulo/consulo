@@ -26,7 +26,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import consulo.ide.base.BaseDataManager;
 
 import javax.annotation.Nonnull;

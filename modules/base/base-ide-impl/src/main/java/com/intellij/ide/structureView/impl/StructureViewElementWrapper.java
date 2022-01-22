@@ -18,11 +18,11 @@ package com.intellij.ide.structureView.impl;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

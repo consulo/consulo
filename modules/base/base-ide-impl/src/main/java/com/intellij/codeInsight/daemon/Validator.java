@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 

@@ -19,6 +19,8 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.application.extension.KeyedExtensionCollector;
+
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;

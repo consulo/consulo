@@ -16,13 +16,14 @@
 
 package org.intellij.plugins.intelliLang.inject;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
+import consulo.language.parser.ParserDefinition;
 import com.intellij.lang.injection.MultiHostRegistrar;
+import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import consulo.project.Project;
 import com.intellij.openapi.util.Ref;

@@ -16,8 +16,8 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTFactory;
+import consulo.language.ast.ASTNode;
 import com.intellij.pom.PomManager;
 import com.intellij.pom.PomModel;
 import com.intellij.pom.event.PomModelEvent;
@@ -25,15 +25,15 @@ import com.intellij.pom.impl.PomTransactionBase;
 import com.intellij.pom.tree.TreeAspect;
 import com.intellij.pom.tree.events.TreeChangeEvent;
 import com.intellij.pom.tree.events.impl.TreeChangeEventImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.DummyHolder;
 import com.intellij.psi.impl.source.DummyHolderFactory;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.CharTable;
+import consulo.language.util.CharTable;
 import java.util.HashMap;
 
 import javax.annotation.Nonnull;

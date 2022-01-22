@@ -20,7 +20,7 @@ import com.intellij.codeInsight.editorActions.ExtendWordSelectionHandlerBase;
 import com.intellij.codeInsight.editorActions.SelectWordUtil;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 
 import java.util.List;

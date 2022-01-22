@@ -18,13 +18,13 @@ package com.intellij.codeInspection;
 import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;
 
 /**
- * See {@link InspectionManager#createProblemDescriptor(com.intellij.psi.PsiElement, String, LocalQuickFix, ProblemHighlightType, boolean) } for method descriptions.
+ * See {@link InspectionManager#createProblemDescriptor(PsiElement, String, LocalQuickFix, ProblemHighlightType, boolean) } for method descriptions.
  */
 public interface ProblemDescriptor extends CommonProblemDescriptor {
   ProblemDescriptor[] EMPTY_ARRAY = new ProblemDescriptor[0];

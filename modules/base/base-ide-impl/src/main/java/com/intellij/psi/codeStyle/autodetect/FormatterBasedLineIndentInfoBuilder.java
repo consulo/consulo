@@ -21,7 +21,7 @@ import com.intellij.formatting.Indent;
 import consulo.document.Document;
 import consulo.progress.ProgressIndicator;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiComment;
+import consulo.language.psi.PsiComment;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.formatter.common.NewLineBlocksIterator;
 import com.intellij.util.containers.ContainerUtil;

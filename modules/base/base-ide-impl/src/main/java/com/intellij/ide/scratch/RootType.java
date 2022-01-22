@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.scratch;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.lang.LanguageUtil;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditorManager;

@@ -18,6 +18,8 @@ package com.intellij.codeInsight.template;
 
 import consulo.document.Document;
 import com.intellij.psi.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
 public class PsiElementResult implements Result {
   private SmartPsiElementPointer myPointer = null;

@@ -19,7 +19,7 @@ package com.intellij.codeInsight.template;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 

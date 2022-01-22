@@ -15,9 +15,10 @@
  */
 package com.intellij.psi.stubs;
 
+import consulo.language.psi.stub.Stub;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @author Dmitry Avdeev

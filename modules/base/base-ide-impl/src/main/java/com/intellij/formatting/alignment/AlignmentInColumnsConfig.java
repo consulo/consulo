@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting.alignment;
 
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 
 /**
  * Encapsulates information necessary for correct <code>'align in columns'</code> processing.

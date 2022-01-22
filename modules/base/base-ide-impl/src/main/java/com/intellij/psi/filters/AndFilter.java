@@ -16,7 +16,7 @@
 
 package com.intellij.psi.filters;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import java.util.ArrayList;
 import java.util.Iterator;

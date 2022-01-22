@@ -15,15 +15,15 @@
  */
 package consulo.sandboxPlugin.ide.module;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiManager;
+import consulo.language.Language;
+import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageBase;
 import com.intellij.util.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
-import consulo.psi.PsiPackageSupportProvider;
+import consulo.language.psi.PsiPackage;
+import consulo.language.psi.PsiPackageManager;
+import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import javax.annotation.Nonnull;

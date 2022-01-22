@@ -15,7 +15,7 @@
  */
 package com.intellij.lang;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 /**
  * Defines a single pair of braces which need to be matched when editing code in a custom language.

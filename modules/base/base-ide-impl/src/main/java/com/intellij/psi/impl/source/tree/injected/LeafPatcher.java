@@ -16,13 +16,13 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.LiteralTextEscaper;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.LiteralTextEscaper;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.*;
 import consulo.logging.Logger;

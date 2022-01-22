@@ -1,10 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.ex.util;
 
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.LexerPosition;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.lexer.FlexAdapter;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.LexerPosition;
+import consulo.language.ast.IElementType;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;

@@ -15,6 +15,8 @@
  */
 package com.intellij.psi;
 
+import consulo.language.psi.PsiElement;
+
 /**
  * @author gregsh
  */

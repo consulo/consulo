@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.impl.rules;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.usages.UsageTarget;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -3,7 +3,7 @@ package com.intellij.codeInsight.completion.util;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.util.PsiUtilCore;
 

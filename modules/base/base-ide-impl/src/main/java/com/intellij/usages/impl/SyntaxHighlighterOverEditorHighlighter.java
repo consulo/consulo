@@ -15,8 +15,8 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.lexer.LayeredLexer;
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.LayeredLexer;
+import consulo.language.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.ex.util.LayeredHighlighterIterator;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
@@ -29,7 +29,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.search.LexerEditorHighlighterLexer;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 
 /**

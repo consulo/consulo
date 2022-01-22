@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.cache.impl;
 
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
 
 public interface IdAndToDoScannerBasedOnFilterLexer {
   // lexer should be the same

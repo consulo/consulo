@@ -22,7 +22,7 @@ import consulo.project.content.ProjectFileIndex;
 import consulo.project.content.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.include.FileIncludeManager;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import javax.annotation.Nullable;

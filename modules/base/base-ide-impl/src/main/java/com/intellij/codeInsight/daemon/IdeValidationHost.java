@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 /**

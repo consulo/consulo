@@ -3,7 +3,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;
 

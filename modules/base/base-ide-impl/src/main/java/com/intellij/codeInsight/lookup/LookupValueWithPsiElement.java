@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author Maxim.Mossienko

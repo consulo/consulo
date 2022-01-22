@@ -18,7 +18,7 @@ package com.intellij.application.options;
 
 import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import com.intellij.application.options.codeStyle.excludedFiles.ExcludedFilesList;
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

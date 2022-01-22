@@ -18,8 +18,8 @@ package com.intellij.psi.impl.smartPointers;
 import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.PsiAnchor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

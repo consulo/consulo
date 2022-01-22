@@ -16,19 +16,19 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lexer.Lexer;
+import consulo.language.ast.ASTNode;
+import consulo.language.lexer.Lexer;
 import consulo.application.ApplicationManager;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.OuterLanguageElement;
+import consulo.language.ast.IElementType;
 import com.intellij.psi.tree.IStrongWhitespaceHolderElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.controlflow;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 import java.util.Collection;
 

@@ -22,7 +22,7 @@ import com.intellij.lang.LanguageImportStatements;
 import com.intellij.openapi.help.HelpManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.vcsUtil.VcsUtil;

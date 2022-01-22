@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 /**

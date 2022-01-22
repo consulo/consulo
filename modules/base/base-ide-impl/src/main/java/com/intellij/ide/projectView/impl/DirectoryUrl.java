@@ -24,8 +24,8 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 

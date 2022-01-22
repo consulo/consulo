@@ -20,7 +20,7 @@
 package com.intellij.psi.impl;
 
 import consulo.document.Document;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 

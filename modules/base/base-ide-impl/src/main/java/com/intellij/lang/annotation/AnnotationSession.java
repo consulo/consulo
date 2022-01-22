@@ -20,7 +20,7 @@
 package com.intellij.lang.annotation;
 
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 public class AnnotationSession extends UserDataHolderBase {

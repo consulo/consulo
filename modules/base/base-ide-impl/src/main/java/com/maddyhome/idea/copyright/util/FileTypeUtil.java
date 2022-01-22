@@ -19,7 +19,7 @@ package com.maddyhome.idea.copyright.util;
 import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;

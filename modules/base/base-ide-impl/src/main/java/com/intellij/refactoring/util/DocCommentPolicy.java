@@ -24,8 +24,8 @@
  */
 package com.intellij.refactoring.util;
 
-import com.intellij.psi.PsiComment;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiComment;
+import consulo.language.util.IncorrectOperationException;
 
 public class DocCommentPolicy<T extends PsiComment> {
   public static final int ASIS = 0;

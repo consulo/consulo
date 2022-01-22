@@ -29,8 +29,8 @@ import consulo.component.extension.Extensions;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 
 import jakarta.inject.Inject;
 import java.awt.datatransfer.Transferable;

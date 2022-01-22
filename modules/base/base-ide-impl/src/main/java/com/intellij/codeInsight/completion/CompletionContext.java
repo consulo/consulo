@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 public class CompletionContext {
   public static final Key<CompletionContext> COMPLETION_CONTEXT_KEY = Key.create("CompletionContext");

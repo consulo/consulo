@@ -24,7 +24,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;

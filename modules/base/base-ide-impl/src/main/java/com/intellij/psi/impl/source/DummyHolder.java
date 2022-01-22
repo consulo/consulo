@@ -16,16 +16,22 @@
 
 package com.intellij.psi.impl.source;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
+import consulo.language.ast.TokenType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.util.CharTable;
+import consulo.language.util.CharTable;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

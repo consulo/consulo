@@ -2,7 +2,7 @@ package com.intellij.coverage.view;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.project.Project;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiNamedElement;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**

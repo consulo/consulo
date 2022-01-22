@@ -16,12 +16,12 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.lang.LanguageParserDefinitions;
-import consulo.lang.LanguageVersion;
-import com.intellij.lang.ParserDefinition;
+import consulo.language.version.LanguageVersion;
+import consulo.language.parser.ParserDefinition;
 import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ThreeState;

@@ -22,7 +22,7 @@
  */
 package com.intellij.formatting;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 public interface CustomFormattingModelBuilder extends FormattingModelBuilder {
   /**

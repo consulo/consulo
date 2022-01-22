@@ -26,7 +26,7 @@ import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.util.Alarm;

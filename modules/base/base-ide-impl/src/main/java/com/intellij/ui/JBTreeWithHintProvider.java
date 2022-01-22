@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.ui.popup.HintUpdateSupply;
 import javax.annotation.Nullable;
 

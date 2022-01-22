@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.lang.format;
 
 import com.intellij.lang.ImportOptimizer;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import consulo.sandboxPlugin.lang.psi.SandFile;
 
 import javax.annotation.Nonnull;

@@ -25,8 +25,8 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.intellij.util.SmartList;
 import javax.annotation.Nonnull;
 

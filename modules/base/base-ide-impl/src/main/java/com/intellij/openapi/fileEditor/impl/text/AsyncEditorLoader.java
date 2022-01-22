@@ -26,7 +26,7 @@ import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;

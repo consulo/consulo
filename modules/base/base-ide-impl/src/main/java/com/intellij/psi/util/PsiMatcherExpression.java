@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.util;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 public interface PsiMatcherExpression {
   Boolean match(PsiElement element);

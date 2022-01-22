@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.lang;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringActionHandler;
 
 /**
