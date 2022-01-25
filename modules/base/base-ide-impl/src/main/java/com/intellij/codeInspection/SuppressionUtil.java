@@ -29,7 +29,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiParserFacade;
 import consulo.language.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

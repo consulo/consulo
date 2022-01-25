@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbAware;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
 import consulo.awt.TargetAWT;
 

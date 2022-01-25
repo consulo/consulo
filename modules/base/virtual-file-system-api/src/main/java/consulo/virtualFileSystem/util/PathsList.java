@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class PathsList {
   private final List<String> myPath = new ArrayList<>();
@@ -37,7 +38,7 @@ public class PathsList {
 
   private static final Function<String, VirtualFile> PATH_TO_LOCAL_VFILE = path -> StandardFileSystems.local().findFileByPath(path.replace(File.separatorChar, '/'));
 
-  private static final Function<VirtualFile, String> LOCAL_PATH = PathUtil::getLocalPath;
+  private static final Function<VirtualFile, String> LOCAL_PATH = VirtualFilePathUtil::getLocalPath;
 
   private static final Function<String, VirtualFile> PATH_TO_DIR = s -> {
     VirtualFile file = PATH_TO_LOCAL_VFILE.apply(s);
@@ -70,7 +71,7 @@ public class PathsList {
   }
 
   public void add(VirtualFile file) {
-    add(LOCAL_PATH.fun(file));
+    add(LOCAL_PATH.apply(file));
   }
 
   public void addFirst(String path) {
@@ -91,10 +92,10 @@ public class PathsList {
       return Collections.emptyList();
     }
     else {
-      return JBIterable.from(StringUtil.tokenize(path, File.pathSeparator)).filter(element -> {
+      return () -> StreamSupport.stream(StringUtil.tokenize(path, File.pathSeparator).spliterator(), false).filter(element -> {
         element = element.trim();
         return !element.isEmpty() && !myPathSet.contains(element);
-      });
+      }).iterator();
     }
   }
 

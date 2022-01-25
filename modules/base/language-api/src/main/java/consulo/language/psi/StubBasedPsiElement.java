@@ -19,9 +19,8 @@
  */
 package consulo.language.psi;
 
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
-import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

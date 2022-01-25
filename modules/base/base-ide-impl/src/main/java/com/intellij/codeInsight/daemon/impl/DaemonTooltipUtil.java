@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.EditorMouseHoverPopupManager;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.ErrorStripTooltipRendererProvider;
 import com.intellij.openapi.editor.ex.TooltipAction;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.HintHint;
 import javax.annotation.Nonnull;
 

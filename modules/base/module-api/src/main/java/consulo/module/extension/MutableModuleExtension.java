@@ -16,7 +16,6 @@
 package consulo.module.extension;
 
 import consulo.disposer.Disposable;
-import consulo.module.layer.ModifiableModuleRootLayer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -31,10 +30,6 @@ public interface MutableModuleExtension<T extends ModuleExtension<T>> extends Mo
   @Nullable
   @RequiredUIAccess
   Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck);
-
-  @Override
-  @Nonnull
-  ModifiableModuleRootLayer getModuleRootLayer();
 
   void setEnabled(boolean val);
 

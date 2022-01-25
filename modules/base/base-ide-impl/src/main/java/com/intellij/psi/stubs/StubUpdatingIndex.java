@@ -16,7 +16,7 @@
 package com.intellij.psi.stubs;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.application.ReadAction;
 import consulo.language.psi.stub.Stub;

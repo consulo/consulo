@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

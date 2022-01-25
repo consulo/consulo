@@ -18,8 +18,8 @@ package com.intellij.usageView;
 
 import com.intellij.ide.TypePresentationService;
 import com.intellij.psi.*;
-import com.intellij.psi.meta.PsiMetaData;
-import com.intellij.psi.meta.PsiMetaOwner;
+import consulo.language.psi.meta.PsiMetaData;
+import consulo.language.psi.meta.PsiMetaOwner;
 import com.intellij.psi.meta.PsiPresentableMetaData;
 import com.intellij.lang.LangBundle;
 import consulo.language.Language;

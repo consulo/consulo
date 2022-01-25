@@ -32,7 +32,7 @@ import com.intellij.psi.impl.source.DummyHolder;
 import com.intellij.psi.impl.source.DummyHolderFactory;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.CharTable;
 import java.util.HashMap;
 

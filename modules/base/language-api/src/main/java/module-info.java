@@ -16,4 +16,8 @@ module consulo.language.api {
   exports consulo.language.util;
   exports consulo.language.version;
   exports consulo.language.psi.resolve;
+  exports consulo.language.template;
+  exports consulo.language.psi.scope;
+  exports consulo.language.psi.meta;
+  exports consulo.language.psi.stub;
 }

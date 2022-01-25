@@ -20,7 +20,7 @@ import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.fileTypes.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeAssocTable;
 import com.intellij.openapi.util.text.StringUtil;

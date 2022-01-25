@@ -2,7 +2,7 @@
 package com.intellij.openapi.fileTypes.impl;
 
 import com.intellij.openapi.fileTypes.ExtensionFileNameMatcher;
-import com.intellij.openapi.fileTypes.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

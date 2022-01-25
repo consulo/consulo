@@ -35,7 +35,7 @@ import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.io.ByteSequence;
 import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileWithId;
@@ -445,7 +445,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   private static void initializeMatchers(FileTypeBean bean) {
     bean.addMatchers(ContainerUtil.concat(parse(bean.extensions), parse(bean.fileNames, token -> new ExactFileNameMatcher(token)),
-                                          parse(bean.fileNamesCaseInsensitive, token -> new ExactFileNameMatcher(token, true)), parse(bean.patterns, token -> FileNameMatcherFactory.getInstance().createMatcher(token))));
+                                          parse(bean.fileNamesCaseInsensitive, token -> new ExactFileNameMatcher(token, true)), parse(bean.patterns, token -> FileNameMatcherFactory
+                    .getInstance().createMatcher(token))));
   }
 
   private void instantiatePendingFileTypes() {

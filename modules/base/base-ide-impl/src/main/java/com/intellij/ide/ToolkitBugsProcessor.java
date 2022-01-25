@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.BitUtil;
 import consulo.logging.Logger;

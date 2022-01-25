@@ -30,7 +30,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.search.PsiElementProcessor;
+import consulo.language.psi.resolve.PsiElementProcessor;
 import com.intellij.usages.PsiElementUsageTarget;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageView;

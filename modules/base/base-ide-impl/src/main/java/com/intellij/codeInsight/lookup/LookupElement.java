@@ -6,7 +6,7 @@ import com.intellij.navigation.PsiElementNavigationItem;
 import com.intellij.openapi.util.ClassConditionKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
-import com.intellij.psi.SmartPsiElementPointer;
+import consulo.language.psi.SmartPsiElementPointer;
 import consulo.util.dataholder.UserDataHolderBase;
 
 import javax.annotation.Nonnull;

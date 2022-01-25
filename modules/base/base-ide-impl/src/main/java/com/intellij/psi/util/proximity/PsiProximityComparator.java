@@ -17,7 +17,7 @@
 package com.intellij.psi.util.proximity;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;

@@ -23,7 +23,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.FileDocumentManager;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;

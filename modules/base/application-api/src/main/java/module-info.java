@@ -26,4 +26,5 @@ module consulo.application.api {
   exports consulo.application.internal.concurrency;
 
   exports consulo.application.util.function;
+  exports consulo.application.util.registry;
 }

@@ -18,13 +18,13 @@ package com.intellij.openapi.vcs.checkin;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
-import consulo.project.content.ProjectFileIndex;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

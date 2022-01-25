@@ -29,7 +29,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
+import consulo.language.template.TemplateLanguageFileViewProvider;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

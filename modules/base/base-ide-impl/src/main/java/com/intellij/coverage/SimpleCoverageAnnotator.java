@@ -1,8 +1,8 @@
 package com.intellij.coverage;
 
 import consulo.project.Project;
-import consulo.project.content.ProjectFileIndex;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import consulo.project.content.TestSourcesFilter;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.SystemInfo;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui.playback.commands;
 
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;

@@ -17,7 +17,7 @@ package com.intellij.psi.impl;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.LighterASTNode;
-import com.intellij.lang.LighterASTTokenNode;
+import consulo.language.ast.LighterASTTokenNode;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -38,7 +38,7 @@ import com.intellij.psi.impl.source.tree.TreeElement;
 import consulo.language.psi.stub.ObjectStubSerializer;
 import consulo.language.psi.stub.Stub;
 import consulo.language.ast.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;

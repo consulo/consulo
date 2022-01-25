@@ -37,7 +37,7 @@ import com.intellij.patterns.compiler.PatternCompilerImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import com.intellij.ui.EditorTextField;
 
 /**

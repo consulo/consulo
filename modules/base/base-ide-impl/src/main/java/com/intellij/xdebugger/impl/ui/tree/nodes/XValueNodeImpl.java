@@ -20,7 +20,7 @@ import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColoredTextContainer;

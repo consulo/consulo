@@ -19,7 +19,7 @@ package com.intellij.ide.macro;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.content.bundle.Sdk;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.module.extension.ModuleExtensionWithSdk;

@@ -19,7 +19,7 @@ package com.intellij.codeInsight.intention.impl;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.ide.scratch.ScratchFileService;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

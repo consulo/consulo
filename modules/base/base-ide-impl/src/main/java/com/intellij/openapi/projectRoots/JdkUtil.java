@@ -23,18 +23,18 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.configurations.SimpleJavaParameters;
 import com.intellij.ide.util.PropertiesComponent;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkTypeId;
-import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
+import com.intellij.openapi.vfs.encoding.EncodingManager;
+import com.intellij.util.PathUtil;
+import com.intellij.util.ReflectionUtil;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkTypeId;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import com.intellij.util.ReflectionUtil;
-import consulo.logging.Logger;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
 import javax.annotation.Nonnull;
@@ -207,15 +207,15 @@ public class JdkUtil {
               writer.close();
             }
 
-            String classpath = VirtualFilePathUtil.getJarPathForClass(commandLineWrapper);
-            final String utilRtPath = VirtualFilePathUtil.getJarPathForClass(StringUtilRt.class);
+            String classpath = PathUtil.getJarPathForClass(commandLineWrapper);
+            final String utilRtPath = PathUtil.getJarPathForClass(StringUtilRt.class);
             if (!classpath.equals(utilRtPath)) {
               classpath += File.pathSeparator + utilRtPath;
             }
             Class urlClassLoader = ReflectionUtil.findClassOrNull("consulo.util.nodep.classloader.UrlClassLoader", JdkUtil.class.getClassLoader());
             assert urlClassLoader != null;
             if (urlClassLoader.getName().equals(vmParametersList.getPropertyValue("java.system.class.loader"))) {
-              classpath += File.pathSeparator + VirtualFilePathUtil.getJarPathForClass(urlClassLoader);
+              classpath += File.pathSeparator + PathUtil.getJarPathForClass(urlClassLoader);
               //classpath += File.pathSeparator + PathUtil.getJarPathForClass(THashMap.class);
             }
 

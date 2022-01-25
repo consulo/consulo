@@ -30,7 +30,7 @@ import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.cache.CacheManager;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;
 import com.intellij.psi.impl.cache.impl.id.IdIndexEntry;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.CommonProcessors;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.FileBasedIndex;

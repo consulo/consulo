@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import javax.annotation.Nonnull;
 
 public class ShowParameterInfoAction extends BaseCodeInsightAction implements DumbAware {

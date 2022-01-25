@@ -20,7 +20,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;

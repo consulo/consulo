@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.FoldRegion;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.SmartPsiElementPointer;
+import consulo.language.psi.SmartPsiElementPointer;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

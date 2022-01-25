@@ -20,6 +20,7 @@
 package com.intellij.openapi.fileTypes;
 
 import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;

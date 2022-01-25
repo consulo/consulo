@@ -3,6 +3,7 @@
 package com.intellij.lang;
 
 import consulo.language.Language;
+import consulo.language.MetaLanguage;
 
 import javax.annotation.Nonnull;
 

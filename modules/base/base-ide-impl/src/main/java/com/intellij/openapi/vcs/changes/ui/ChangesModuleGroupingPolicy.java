@@ -18,10 +18,10 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.project.content.ProjectFileIndex;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;

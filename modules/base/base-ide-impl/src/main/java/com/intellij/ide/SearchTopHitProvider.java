@@ -3,7 +3,7 @@ package com.intellij.ide;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

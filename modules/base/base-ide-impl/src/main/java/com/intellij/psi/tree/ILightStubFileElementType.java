@@ -15,18 +15,14 @@
  */
 package com.intellij.psi.tree;
 
-import com.intellij.lang.*;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.LighterASTNode;
-import consulo.language.parser.ParserDefinition;
-import consulo.language.parser.PsiBuilder;
-import consulo.language.parser.PsiBuilderFactory;
-import consulo.language.parser.PsiParser;
+import consulo.language.parser.*;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.stubs.LightStubBuilder;
-import com.intellij.psi.stubs.PsiFileStub;
+import consulo.language.psi.stub.PsiFileStub;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import consulo.language.version.LanguageVersion;
 import org.jetbrains.annotations.NonNls;

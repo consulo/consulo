@@ -15,7 +15,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiNamedElement;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.ObjectUtils;
 

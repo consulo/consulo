@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.actions.CopyAction;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.annotation.access.RequiredWriteAction;

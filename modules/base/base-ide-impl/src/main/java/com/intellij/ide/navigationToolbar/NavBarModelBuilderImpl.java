@@ -5,7 +5,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

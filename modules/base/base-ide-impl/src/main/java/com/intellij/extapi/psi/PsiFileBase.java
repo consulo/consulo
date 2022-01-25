@@ -17,7 +17,7 @@
 package com.intellij.extapi.psi;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileViewProvider;

@@ -15,7 +15,6 @@
  */
 package com.intellij.psi;
 
-
 public class PsiLock {
   @Deprecated
   public static final Object LOCK = new PsiLock();

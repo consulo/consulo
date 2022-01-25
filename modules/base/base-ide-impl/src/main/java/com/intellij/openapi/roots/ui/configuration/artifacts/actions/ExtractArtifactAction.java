@@ -16,8 +16,6 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
@@ -29,10 +27,12 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,7 +69,7 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
     final Collection<? extends PackagingElement> selectedElements = selection.getElements();
     String initialName = "artifact";
     if (selectedElements.size() == 1) {
-      initialName = VirtualFilePathUtil.suggestFileName(ContainerUtil.getFirstItem(selectedElements, null).createPresentation(myArtifactEditor.getContext()).getPresentableName());
+      initialName = PathUtil.suggestFileName(ContainerUtil.getFirstItem(selectedElements, null).createPresentation(myArtifactEditor.getContext()).getPresentableName());
     }
     IExtractArtifactDialog dialog = showDialog(treeComponent, initialName);
     if (dialog == null) return;

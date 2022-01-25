@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.Presentation;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWithoutContent;
+import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

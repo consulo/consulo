@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.util;
 
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 
 public class BekUtil {
   public static boolean isBekEnabled() { // todo drop later

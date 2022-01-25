@@ -19,7 +19,7 @@ import consulo.desktop.awt.ui.plaf.DarculaMetalTheme;
 import consulo.desktop.awt.ui.plaf.LafManagerImplUtil;
 import consulo.desktop.awt.ui.plaf.ideaOld.IntelliJMetalLookAndFeel;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBInsets;

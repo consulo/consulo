@@ -16,8 +16,8 @@
 package com.intellij.openapi.externalSystem.psi.search;
 
 import consulo.project.Project;
-import com.intellij.psi.search.DelegatingGlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.DelegatingGlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import javax.annotation.Nonnull;
 
 /**

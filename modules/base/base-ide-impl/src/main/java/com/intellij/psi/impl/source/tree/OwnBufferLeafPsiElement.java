@@ -27,10 +27,10 @@ import com.intellij.psi.impl.ResolveScopeManager;
 import com.intellij.psi.impl.SharedPsiElementImplUtil;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import consulo.language.psi.resolve.PsiScopeProcessor;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.SearchScope;
 import consulo.language.ast.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 

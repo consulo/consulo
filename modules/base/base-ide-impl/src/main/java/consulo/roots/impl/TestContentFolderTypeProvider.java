@@ -20,7 +20,7 @@ import consulo.project.ProjectBundle;
 import consulo.roots.PackageBasedContentFolderTypeProvider;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import consulo.ui.ex.util.LightDarkColorValue;
+import consulo.ui.util.LightDarkColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

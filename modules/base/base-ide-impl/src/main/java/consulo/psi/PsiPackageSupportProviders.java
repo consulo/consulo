@@ -20,7 +20,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectRootManager;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import consulo.annotation.access.RequiredReadAction;

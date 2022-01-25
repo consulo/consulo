@@ -16,6 +16,7 @@
 
 package com.intellij.psi.search;
 
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.UnloadedModuleDescription;
@@ -23,10 +24,10 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import consulo.project.content.ProjectFileIndex;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiBundle;
+import consulo.language.psi.PsiBundle;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

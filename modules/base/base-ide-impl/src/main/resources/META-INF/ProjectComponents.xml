@@ -50,7 +50,7 @@
     </component>
 
     <component>
-      <interface-class>consulo.project.content.ProjectRootManager</interface-class>
+      <interface-class>consulo.module.content.ProjectRootManager</interface-class>
       <implementation-class>com.intellij.openapi.roots.impl.ProjectRootManagerComponent</implementation-class>
       <loadForDefaultProject/>
     </component>

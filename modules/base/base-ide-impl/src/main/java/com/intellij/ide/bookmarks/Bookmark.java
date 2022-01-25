@@ -49,7 +49,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import consulo.ui.ex.util.LightDarkColorValue;
+import consulo.ui.util.LightDarkColorValue;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

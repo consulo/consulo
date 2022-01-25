@@ -32,7 +32,7 @@ import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import consulo.component.persist.InvalidDataException;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
 import consulo.annotation.access.RequiredReadAction;

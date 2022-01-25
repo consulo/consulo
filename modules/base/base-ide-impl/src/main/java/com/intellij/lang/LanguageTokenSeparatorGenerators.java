@@ -17,11 +17,12 @@ package com.intellij.lang;
 
 import consulo.language.LanguageExtension;
 import consulo.language.ast.ASTNode;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiManager;
 import consulo.language.ast.TokenType;
 import com.intellij.psi.impl.source.tree.Factory;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import consulo.container.plugin.PluginIds;
 import consulo.language.Language;
 

@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.CaretAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 
 import javax.annotation.Nullable;
 

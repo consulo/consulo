@@ -31,35 +31,35 @@ import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPa
 import com.intellij.execution.testframework.ui.TestResultsPanel;
 import com.intellij.execution.testframework.ui.TestsProgressAnimator;
 import com.intellij.openapi.actionSystem.AnAction;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.progress.util.ColorProgressBar;
-import consulo.project.Project;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pass;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Alarm;
 import com.intellij.util.OpenSourceUtil;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.update.Update;
+import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import consulo.progress.ProcessCanceledException;
+import consulo.progress.ProgressIndicator;
+import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -74,8 +74,8 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author: Roman Chernyatchik
@@ -839,7 +839,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
         handler.getTransformer().setOutputProperty(OutputKeys.INDENT, "yes");
         handler.getTransformer().setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
-        final String configurationNameIncludedDate = VirtualFilePathUtil.suggestFileName(myConfiguration.getName()) + " - " +
+        final String configurationNameIncludedDate = PathUtil.suggestFileName(myConfiguration.getName()) + " - " +
                                                      new SimpleDateFormat(HISTORY_DATE_FORMAT).format(new Date());
 
         myOutputFile = new File(TestStateStorage.getTestHistoryRoot(myProject), configurationNameIncludedDate + ".xml");

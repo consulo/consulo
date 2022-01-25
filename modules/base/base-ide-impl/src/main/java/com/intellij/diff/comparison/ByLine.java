@@ -21,7 +21,7 @@ import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.Range;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;

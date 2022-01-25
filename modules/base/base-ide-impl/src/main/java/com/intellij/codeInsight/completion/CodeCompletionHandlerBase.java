@@ -36,7 +36,7 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;

@@ -16,8 +16,8 @@
 package consulo.language.psi;
 
 import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.search.GlobalSearchScope;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.util.collection.ArrayFactory;
 import org.jetbrains.annotations.NonNls;
 

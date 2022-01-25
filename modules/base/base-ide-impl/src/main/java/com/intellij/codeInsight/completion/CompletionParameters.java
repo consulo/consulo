@@ -4,7 +4,7 @@ package com.intellij.codeInsight.completion;
 import com.intellij.openapi.editor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.PsiReference;
 
 import javax.annotation.Nonnull;

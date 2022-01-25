@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.smartPointers;
 
-import com.intellij.lang.LanguageUtil;
+import consulo.language.util.LanguageUtil;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;

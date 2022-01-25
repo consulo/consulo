@@ -37,7 +37,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.FilterComponent;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;

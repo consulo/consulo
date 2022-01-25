@@ -17,6 +17,7 @@ package com.intellij.psi.stubs;
 
 import consulo.language.Language;
 import com.intellij.lang.TreeBackedLighterAST;
+import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.Stub;
 import consulo.language.psi.stub.StubElement;
 import consulo.virtualFileSystem.fileType.FileType;

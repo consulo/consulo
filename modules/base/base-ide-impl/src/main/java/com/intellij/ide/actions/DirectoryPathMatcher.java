@@ -30,7 +30,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopesCore;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;

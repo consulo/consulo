@@ -31,7 +31,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.annotation.access.RequiredWriteAction;
 
 import javax.annotation.Nullable;

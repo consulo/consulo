@@ -9,7 +9,7 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.PsiElementProcessor;
+import consulo.language.psi.resolve.PsiElementProcessor;
 import com.intellij.psi.search.PsiFileSystemItemProcessor;
 import com.intellij.util.ArrayUtil;
 import consulo.language.util.IncorrectOperationException;

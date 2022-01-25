@@ -15,18 +15,17 @@
  */
 package consulo.language;
 
-import consulo.language.version.LanguageVersion;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.UsedInPlugin;
-import consulo.lang.LanguageVersion;
-import consulo.lang.LanguageVersionDefines;
+import consulo.language.file.LanguageFileType;
+import consulo.language.version.LanguageVersion;
+import consulo.language.version.LanguageVersionDefines;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

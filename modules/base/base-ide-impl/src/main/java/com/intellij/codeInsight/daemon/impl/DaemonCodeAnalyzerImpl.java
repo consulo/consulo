@@ -48,7 +48,7 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.*;
 import consulo.language.psi.PsiModificationTracker;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.io.storage.HeavyProcessLatch;

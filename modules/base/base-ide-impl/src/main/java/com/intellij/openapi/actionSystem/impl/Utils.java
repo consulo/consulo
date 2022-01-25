@@ -5,7 +5,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;

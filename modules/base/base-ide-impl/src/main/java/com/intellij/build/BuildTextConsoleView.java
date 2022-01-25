@@ -9,7 +9,7 @@ import com.intellij.execution.process.AnsiEscapeDecoder;
 import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import consulo.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

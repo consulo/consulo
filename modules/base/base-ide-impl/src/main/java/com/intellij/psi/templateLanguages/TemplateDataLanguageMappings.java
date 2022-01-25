@@ -16,12 +16,13 @@
 package com.intellij.psi.templateLanguages;
 
 import com.intellij.lang.DependentLanguage;
-import com.intellij.lang.InjectableLanguage;
+import consulo.language.InjectableLanguage;
 import consulo.language.Language;
 import com.intellij.lang.LanguagePerFileMappings;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.language.template.TemplateLanguage;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.FilePropertyPusher;
 import com.intellij.openapi.util.Condition;

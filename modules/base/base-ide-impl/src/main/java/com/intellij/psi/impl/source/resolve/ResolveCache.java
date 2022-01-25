@@ -27,7 +27,7 @@ import com.intellij.openapi.util.RecursionManager;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ObjectUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.map.ConcurrentWeakKeySoftValueHashMap;

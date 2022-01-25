@@ -25,8 +25,8 @@ import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiFileRange;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiFileRange;
 import com.intellij.usageView.UsageInfo;
 import javax.annotation.Nonnull;
 

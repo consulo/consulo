@@ -17,7 +17,7 @@ package consulo.language.psi;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
-import consulo.project.content.ProjectFileIndex;
+import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import consulo.content.ContentFolderTypeProvider;

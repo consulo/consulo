@@ -41,7 +41,7 @@ import com.intellij.psi.impl.search.PsiTodoSearchHelperImpl;
 import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.search.TodoAttributesUtil;
 import com.intellij.psi.search.TodoItem;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.SmartList;

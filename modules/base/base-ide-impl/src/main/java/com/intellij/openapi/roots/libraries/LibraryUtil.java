@@ -19,31 +19,31 @@
  */
 package com.intellij.openapi.roots.libraries;
 
+import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.util.PathUtil;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.text.StringTokenizer;
+import consulo.application.util.function.Processor;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.OrderEnumerator;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.application.util.function.Processor;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.StringTokenizer;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.content.base.SourcesOrderRootType;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -185,7 +185,7 @@ public class LibraryUtil {
     }
     String[] urls = library.getUrls(BinariesOrderRootType.getInstance());
     if (urls.length > 0) {
-      return VirtualFilePathUtil.getFileName(VfsUtilCore.urlToPath(urls[0]));
+      return PathUtil.getFileName(VfsUtilCore.urlToPath(urls[0]));
     }
     return "Empty Library";
   }

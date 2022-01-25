@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import consulo.language.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.SmartPsiElementPointer;
+import consulo.language.psi.SmartPsiElementPointer;
 import com.intellij.util.SmartList;
 import javax.annotation.Nonnull;
 

@@ -20,7 +20,7 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.PsiRecursiveElementVisitor;
+import consulo.language.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 

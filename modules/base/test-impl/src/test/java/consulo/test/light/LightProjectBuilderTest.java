@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import com.intellij.psi.impl.DebugUtil;
 import consulo.application.util.function.ThrowableRunnable;
 import org.junit.Assert;

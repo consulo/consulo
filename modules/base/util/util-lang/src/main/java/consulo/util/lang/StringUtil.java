@@ -16,18 +16,96 @@
 package consulo.util.lang;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 /**
  * Based on IDEA code
  */
 public class StringUtil {
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimEnd(@Nonnull String s, @NonNls @Nonnull String suffix) {
+    return trimEnd(s, suffix, false);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimEnd(@Nonnull String s, @NonNls @Nonnull String suffix, boolean ignoreCase) {
+    boolean endsWith = ignoreCase ? endsWithIgnoreCase(s, suffix) : s.endsWith(suffix);
+    if (endsWith) {
+      return s.substring(0, s.length() - suffix.length());
+    }
+    return s;
+  }
+
+  @Contract(pure = true)
+  public static boolean endsWithIgnoreCase(@NonNls @Nonnull CharSequence text, @NonNls @Nonnull CharSequence suffix) {
+    int l1 = text.length();
+    int l2 = suffix.length();
+    if (l1 < l2) return false;
+
+    for (int i = l1 - 1; i >= l1 - l2; i--) {
+      if (!charsEqualIgnoreCase(text.charAt(i), suffix.charAt(i + l2 - l1))) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  @Contract(pure = true)
+  public static boolean endsWith(@Nonnull CharSequence text, @Nonnull CharSequence suffix) {
+    int l1 = text.length();
+    int l2 = suffix.length();
+    if (l1 < l2) return false;
+
+    for (int i = l1 - 1; i >= l1 - l2; i--) {
+      if (text.charAt(i) != suffix.charAt(i + l2 - l1)) return false;
+    }
+
+    return true;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static Iterable<String> tokenize(@Nonnull String s, @Nonnull String separators) {
+    final consulo.util.lang.text.StringTokenizer tokenizer = new consulo.util.lang.text.StringTokenizer(s, separators);
+    return () -> tokenizer;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static Iterable<String> tokenize(@Nonnull final StringTokenizer tokenizer) {
+    return new Iterable<>() {
+      @Nonnull
+      @Override
+      public Iterator<String> iterator() {
+        return new Iterator<>() {
+          @Override
+          public boolean hasNext() {
+            return tokenizer.hasMoreTokens();
+          }
+
+          @Override
+          public String next() {
+            return tokenizer.nextToken();
+          }
+
+          @Override
+          public void remove() {
+            throw new UnsupportedOperationException();
+          }
+        };
+      }
+    };
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <T> String join(@Nonnull Collection<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull String separator) {
@@ -282,6 +360,12 @@ public class StringUtil {
       return (char)(a + ('A' - 'a'));
     }
     return Character.toUpperCase(a);
+  }
+
+  @Contract(value = "null -> null; !null -> !null", pure = true)
+  public static String toLowerCase(@Nullable final String str) {
+    //noinspection ConstantConditions
+    return str == null ? null : str.toLowerCase(Locale.US);
   }
 
   @Contract(pure = true)

@@ -4,7 +4,7 @@ package com.intellij.ui.components;
 import com.intellij.notification.Notification;
 import com.intellij.openapi.ui.TypingTarget;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.components.JBScrollPane.Alignment;
 import com.intellij.ui.scale.JBUIScale;

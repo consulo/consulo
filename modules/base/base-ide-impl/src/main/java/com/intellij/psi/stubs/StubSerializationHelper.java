@@ -13,6 +13,7 @@ import com.intellij.util.io.DataEnumeratorEx;
 import com.intellij.util.io.DataInputOutputUtil;
 import consulo.disposer.Disposable;
 import consulo.language.psi.stub.ObjectStubSerializer;
+import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.Stub;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;

@@ -20,9 +20,7 @@ import com.intellij.openapi.diff.impl.patch.PatchEP;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import com.intellij.openapi.diff.impl.patch.TextFilePatch;
 import com.intellij.openapi.progress.ProgressManager;
-import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
@@ -32,17 +30,18 @@ import com.intellij.openapi.vcs.changes.shelf.ShelveChangesManager;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedChangeList;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedChangesViewManager;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcsUtil.VcsCatchingRunnable;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -82,10 +81,8 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
           allPatches.addAll(ContainerUtil.map(patchGroupsToApply.get(virtualFile), new Function<TextFilePatchInProgress, TextFilePatch>() {
             public TextFilePatch fun(TextFilePatchInProgress patchInProgress) {
               final TextFilePatch was = patchInProgress.getPatch();
-              was.setBeforeName(
-                      VirtualFilePathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getBeforeName()))));
-              was.setAfterName(
-                      VirtualFilePathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getAfterName()))));
+              was.setBeforeName(PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getBeforeName()))));
+              was.setAfterName(PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getAfterName()))));
               return was;
             }
           }));

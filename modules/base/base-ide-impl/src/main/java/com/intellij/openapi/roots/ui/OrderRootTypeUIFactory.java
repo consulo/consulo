@@ -22,7 +22,7 @@ package com.intellij.openapi.roots.ui;
 
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.extensions.KeyedFactoryEPBean;
+import consulo.component.extension.KeyedFactoryEPBean;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import consulo.content.OrderRootType;

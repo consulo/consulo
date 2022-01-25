@@ -19,7 +19,7 @@ import com.google.common.base.MoreObjects;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.progress.ProcessCanceledException;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessToken;

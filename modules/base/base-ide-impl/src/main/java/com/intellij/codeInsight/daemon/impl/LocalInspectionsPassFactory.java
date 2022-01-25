@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.document.util.TextRange;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 
 import javax.annotation.Nonnull;

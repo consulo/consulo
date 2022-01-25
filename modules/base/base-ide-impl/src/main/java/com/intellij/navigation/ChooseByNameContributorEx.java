@@ -2,7 +2,7 @@
 package com.intellij.navigation;
 
 import consulo.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.ArrayUtilRt;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.FindSymbolParameters;

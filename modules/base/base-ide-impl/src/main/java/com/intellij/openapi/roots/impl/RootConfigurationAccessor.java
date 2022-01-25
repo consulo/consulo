@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;

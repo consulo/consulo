@@ -20,7 +20,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.ObjectUtils;
 import consulo.ui.annotation.RequiredUIAccess;

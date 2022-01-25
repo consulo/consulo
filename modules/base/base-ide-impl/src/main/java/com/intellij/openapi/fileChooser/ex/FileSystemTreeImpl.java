@@ -19,7 +19,7 @@ import com.intellij.openapi.fileChooser.impl.FileTreeStructure;
 import com.intellij.openapi.fileChooser.tree.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;

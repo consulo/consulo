@@ -4,6 +4,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.PsiReferenceService;
 
 /**

@@ -2,7 +2,7 @@
 package com.intellij.ui.tree.ui;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.ui.paint.PaintUtil;
 import com.intellij.ui.scale.JBUIScale;

@@ -16,7 +16,7 @@
 package consulo.psi.tree.impl;
 
 import consulo.psi.tree.ASTLeafFactory;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.version.LanguageVersion;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.ast.TokenType;

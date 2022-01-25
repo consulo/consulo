@@ -20,6 +20,7 @@
 package com.intellij.openapi.fileTypes;
 
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
 
 import javax.annotation.Nonnull;
 

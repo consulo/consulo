@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import consulo.content.OrderRootType;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import com.intellij.openapi.util.Comparing;
 import consulo.module.content.layer.OrderRootsEnumerator;
 import consulo.module.content.layer.orderEntry.DependencyScope;

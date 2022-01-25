@@ -17,12 +17,9 @@ package com.intellij.psi.impl.smartPointers;
 
 import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import javax.annotation.Nonnull;
 

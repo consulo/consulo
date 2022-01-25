@@ -33,13 +33,13 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.project.content.ProjectFileIndex;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
 
 import java.util.HashMap;
 import java.util.HashSet;

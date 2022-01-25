@@ -17,7 +17,7 @@ package com.intellij.psi.impl.cache.impl.id;
 
 import com.intellij.ide.highlighter.HighlighterFactory;
 import consulo.language.Language;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;

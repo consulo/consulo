@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.module.impl.scopes;
 
-import consulo.project.Project;
-import consulo.content.library.Library;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.util.PathUtil;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import consulo.content.library.Library;
+import consulo.project.Project;
 
 /**
  * @author nik
@@ -39,7 +39,7 @@ public class LibraryScope extends LibraryScopeBase {
     if (name == null) {
       String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
       if (urls.length > 0) {
-        name = VirtualFilePathUtil.getFileName(VfsUtilCore.urlToPath(urls[0]));
+        name = PathUtil.getFileName(VfsUtilCore.urlToPath(urls[0]));
       }
       else {
         name = "empty";

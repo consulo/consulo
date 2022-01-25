@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElementAction;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 
 /**
  * @author Konstantin Bulenkov

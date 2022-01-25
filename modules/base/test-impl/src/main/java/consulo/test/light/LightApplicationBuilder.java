@@ -20,7 +20,7 @@ import com.intellij.ide.UiActivityMonitor;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.treeView.TreeAnchorizer;
 import com.intellij.lang.LanguageExtensionPoint;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.PsiBuilderFactory;
 import com.intellij.lang.impl.PsiBuilderFactoryImpl;
 import consulo.disposer.Disposable;

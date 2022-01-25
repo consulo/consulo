@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

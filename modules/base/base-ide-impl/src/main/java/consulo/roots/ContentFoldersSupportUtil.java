@@ -20,7 +20,7 @@ import consulo.ide.IconDescriptor;
 import consulo.module.content.layer.ContentFolderPropertyProvider;
 import consulo.module.content.layer.ContentFolderSupportPatcher;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 

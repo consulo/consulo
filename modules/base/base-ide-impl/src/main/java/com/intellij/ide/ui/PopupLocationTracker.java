@@ -3,7 +3,7 @@ package com.intellij.ide.ui;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

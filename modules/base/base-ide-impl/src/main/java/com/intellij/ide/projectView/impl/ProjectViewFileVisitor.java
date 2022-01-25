@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import javax.swing.tree.TreePath;
 import java.util.function.Predicate;
 
-import static com.intellij.psi.util.PsiUtilCore.getVirtualFile;
+import static consulo.language.psi.PsiUtilCore.getVirtualFile;
 
 class ProjectViewFileVisitor extends AbstractTreeNodeVisitor<VirtualFile> {
   ProjectViewFileVisitor(@Nonnull VirtualFile file, Predicate<? super TreePath> predicate) {

@@ -18,6 +18,7 @@ package consulo.content;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -35,6 +36,11 @@ import java.util.function.Predicate;
  * @since 22:32/31.10.13
  */
 public abstract class ContentFolderTypeProvider {
+  @Nonnull
+  public static Predicate<ContentFolderTypeProvider> allExceptExcluded() {
+    return typeProvider -> !(typeProvider instanceof ExcludedContentFolderTypeProvider);
+  }
+
   public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME = ExtensionPointName.create("consulo.contentFolderTypeProvider");
 
   private final String myId;

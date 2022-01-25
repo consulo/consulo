@@ -19,9 +19,9 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import java.util.HashMap;
-import com.intellij.util.graph.Graph;
+import consulo.component.util.graph.Graph;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

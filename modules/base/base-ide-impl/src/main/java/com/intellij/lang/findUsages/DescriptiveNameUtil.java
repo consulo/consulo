@@ -19,8 +19,8 @@ import consulo.language.Language;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.meta.PsiMetaData;
-import com.intellij.psi.meta.PsiMetaOwner;
+import consulo.language.psi.meta.PsiMetaData;
+import consulo.language.psi.meta.PsiMetaOwner;
 import javax.annotation.Nonnull;
 
 public class DescriptiveNameUtil {

@@ -17,7 +17,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionResolvers;

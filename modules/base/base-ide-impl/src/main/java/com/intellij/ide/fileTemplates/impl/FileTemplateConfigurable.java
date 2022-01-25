@@ -48,7 +48,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import com.intellij.testFramework.LightVirtualFile;

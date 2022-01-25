@@ -23,7 +23,7 @@
 package com.intellij.execution.filters;
 
 import consulo.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;
 

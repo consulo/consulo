@@ -15,20 +15,20 @@
  */
 package com.intellij.util.ui;
 
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -72,7 +72,7 @@ public class LocalPathCellEditor extends AbstractTableCellEditor {
   @Override
   public Object getCellEditorValue() {
     String value = myComponent.getChildComponent().getText();
-    return myNormalizePath ? VirtualFilePathUtil.toSystemDependentName(StringUtil.nullize(value)) : value;
+    return myNormalizePath ? PathUtil.toSystemDependentName(StringUtil.nullize(value)) : value;
   }
 
   @Override

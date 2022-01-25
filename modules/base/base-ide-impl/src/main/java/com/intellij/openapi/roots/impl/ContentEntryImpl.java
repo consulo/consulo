@@ -29,7 +29,7 @@ import consulo.module.Module;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.DirectoryIndexExcludePolicy;
 import consulo.roots.impl.ContentEntryEx;
-import consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.roots.impl.LightContentFolderImpl;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.virtualFileSystem.VirtualFile;

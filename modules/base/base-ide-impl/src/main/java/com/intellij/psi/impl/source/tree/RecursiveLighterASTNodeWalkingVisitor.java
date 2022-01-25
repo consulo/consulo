@@ -18,9 +18,9 @@ package com.intellij.psi.impl.source.tree;
 
 import consulo.language.ast.LighterAST;
 import consulo.language.ast.LighterASTNode;
-import com.intellij.lang.LighterASTTokenNode;
+import consulo.language.ast.LighterASTTokenNode;
 import consulo.language.ast.LighterLazyParseableNode;
-import com.intellij.util.WalkingState;
+import consulo.util.collection.util.WalkingState;
 import com.intellij.util.containers.Stack;
 import javax.annotation.Nonnull;
 

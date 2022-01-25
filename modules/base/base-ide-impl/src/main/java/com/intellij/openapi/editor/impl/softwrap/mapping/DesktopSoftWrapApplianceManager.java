@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapEngine;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.annotation.DeprecationInfo;
 import consulo.editor.impl.CodeEditorBase;
 import consulo.editor.impl.softwrap.mapping.SoftWrapApplianceManager;

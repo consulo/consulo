@@ -19,7 +19,7 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.ProjectAndLibrariesScope;
 import com.intellij.psi.search.ProjectScopeImpl;
 import consulo.application.util.function.Processor;

@@ -23,7 +23,7 @@ import com.intellij.psi.SyntaxTraverser;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IFileElementType;
 import consulo.language.ast.ILazyParseableElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.TreeTraversal;
 import javax.annotation.Nonnull;

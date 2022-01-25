@@ -36,7 +36,7 @@ import java.util.Collection;
 
 import static consulo.application.ApplicationManager.getApplication;
 import static com.intellij.openapi.util.SystemInfo.isMac;
-import static com.intellij.openapi.util.registry.Registry.is;
+import static consulo.application.util.registry.Registry.is;
 import static com.intellij.ui.paint.RectanglePainter.DRAW;
 import static com.intellij.util.EditSourceOnDoubleClickHandler.isExpandPreferable;
 import static com.intellij.util.ReflectionUtil.getMethod;

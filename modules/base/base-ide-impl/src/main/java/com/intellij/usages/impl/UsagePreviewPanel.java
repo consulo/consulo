@@ -44,7 +44,7 @@ import consulo.document.Document;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.Gray;

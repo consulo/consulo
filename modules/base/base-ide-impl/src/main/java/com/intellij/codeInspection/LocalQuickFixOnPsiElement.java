@@ -19,8 +19,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
 import javax.annotation.Nonnull;
 
 public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {

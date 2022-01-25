@@ -392,7 +392,7 @@ public class VfsUtil extends VfsUtilCore {
   }
 
   public static VirtualFile createChildSequent(Object requestor, @Nonnull VirtualFile dir, @Nonnull String prefix, @Nonnull String extension) throws IOException {
-    String dotExt = VirtualFilePathUtil.makeFileName("", extension);
+    String dotExt = PathUtil.makeFileName("", extension);
     String fileName = prefix + dotExt;
     int i = 1;
     while (dir.findChild(fileName) != null) {

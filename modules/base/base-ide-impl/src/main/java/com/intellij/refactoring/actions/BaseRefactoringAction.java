@@ -34,7 +34,7 @@ import consulo.language.psi.*;
 import consulo.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;

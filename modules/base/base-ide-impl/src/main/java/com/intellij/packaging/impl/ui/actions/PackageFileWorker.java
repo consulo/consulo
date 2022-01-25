@@ -18,31 +18,31 @@ package com.intellij.packaging.impl.ui.actions;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.deployment.DeploymentUtil;
-import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import consulo.project.Project;
-import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.ArtifactRootElement;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.PackagingElementPath;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.io.zip.JBZipEntry;
 import com.intellij.util.io.zip.JBZipFile;
 import consulo.application.AccessRule;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
+import consulo.progress.ProgressIndicator;
+import consulo.project.Project;
+import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -178,7 +178,7 @@ public class PackageFileWorker {
         final JBZipEntry entry = zipFile.getOrCreateEntry(nextPathInArchive);
         LOG.debug("  extracting to temp file: " + nextPathInArchive + " from " + archivePath);
         final File tempFile = FileUtil.createTempFile("packageFile" + FileUtil.sanitizeFileName(nextPathInArchive),
-                                                      FileUtilRt.getExtension(VirtualFilePathUtil.getFileName(nextPathInArchive)));
+                                                      FileUtilRt.getExtension(PathUtil.getFileName(nextPathInArchive)));
         if (entry.getSize() != -1) {
           FileUtil.writeToFile(tempFile, entry.getData());
         }

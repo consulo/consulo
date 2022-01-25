@@ -12,7 +12,7 @@ import com.intellij.lang.LanguageSurrounders;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import javax.annotation.Nonnull;
 
 public class SurroundWithAction extends BaseCodeInsightAction {

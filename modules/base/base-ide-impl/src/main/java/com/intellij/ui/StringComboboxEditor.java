@@ -29,7 +29,7 @@ import com.intellij.openapi.ui.ComboBox;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 
 import javax.swing.*;
 

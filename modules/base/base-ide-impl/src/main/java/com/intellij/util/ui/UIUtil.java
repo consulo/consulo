@@ -18,7 +18,7 @@ package com.intellij.util.ui;
 import consulo.component.util.localize.BundleBase;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.io.CharsetToolkit;
 import com.intellij.ui.*;

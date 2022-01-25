@@ -17,7 +17,7 @@ package com.intellij.ui.speedSearch;
 
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;

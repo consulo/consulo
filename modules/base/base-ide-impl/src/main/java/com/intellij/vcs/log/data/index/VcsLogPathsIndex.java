@@ -20,9 +20,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.Change;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.DataIndexer;
 import com.intellij.util.indexing.StorageException;
@@ -35,6 +34,7 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;
@@ -202,7 +202,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
           result.add(path);
           if (myRoots.contains(path)) break;
 
-          path = VirtualFilePathUtil.getParentPath(path);
+          path = PathUtil.getParentPath(path);
         }
       }
       return result;

@@ -16,7 +16,7 @@
 package org.intellij.plugins.intelliLang.inject;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageUtil;
+import consulo.language.util.LanguageUtil;
 import com.intellij.util.ArrayUtil;
 
 import javax.annotation.Nonnull;

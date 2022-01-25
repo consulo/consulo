@@ -9,7 +9,7 @@ import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.Stack;

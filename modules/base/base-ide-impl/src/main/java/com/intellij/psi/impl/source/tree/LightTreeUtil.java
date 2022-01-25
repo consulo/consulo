@@ -17,7 +17,7 @@ package com.intellij.psi.impl.source.tree;
 
 import consulo.language.ast.LighterAST;
 import consulo.language.ast.LighterASTNode;
-import com.intellij.lang.LighterASTTokenNode;
+import consulo.language.ast.LighterASTTokenNode;
 import consulo.language.ast.LighterLazyParseableNode;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.language.ast.IElementType;

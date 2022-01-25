@@ -37,7 +37,7 @@ import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -54,7 +54,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopeUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.*;
@@ -80,7 +80,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.PropertyKey;
@@ -719,7 +718,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       myUsagePreviewPanel.updateLayout(selection);
       myUsagePreviewTitle.clear();
       if (myUsagePreviewPanel.getCannotPreviewMessage(selection) == null && file != null) {
-        myUsagePreviewTitle.append(VirtualFilePathUtil.getFileName(file), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        myUsagePreviewTitle.append(PathUtil.getFileName(file), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         VirtualFile virtualFile = VfsUtil.findFileByIoFile(new File(file), true);
         String locationPath = virtualFile == null ? null : getPresentablePath(myProject, virtualFile.getParent(), 120);
         if (locationPath != null) {
@@ -1217,7 +1216,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
           }
 
           String file = lastUsageFileRef.get();
-          String usageFile = VirtualFilePathUtil.toSystemIndependentName(usage.getPath());
+          String usageFile = PathUtil.toSystemIndependentName(usage.getPath());
           if (file == null || !file.equals(usageFile)) {
             resultsFilesCount.incrementAndGet();
             lastUsageFileRef.set(usageFile);

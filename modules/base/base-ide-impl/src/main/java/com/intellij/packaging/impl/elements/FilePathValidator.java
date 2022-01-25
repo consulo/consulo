@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class FilePathValidator implements InputValidator {
       return false;
     }
     for (String fileName : fileNames) {
-      if (!VirtualFilePathUtil.isValidFileName(fileName)) {
+      if (!PathUtil.isValidFileName(fileName)) {
         return false;
       }
     }

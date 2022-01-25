@@ -17,7 +17,7 @@
 package com.intellij.psi.util;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.PsiRecursiveElementVisitor;
+import consulo.language.psi.PsiRecursiveElementVisitor;
 import javax.annotation.Nonnull;
 
 import java.util.List;

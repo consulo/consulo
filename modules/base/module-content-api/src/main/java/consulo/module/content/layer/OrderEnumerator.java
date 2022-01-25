@@ -15,17 +15,17 @@
  */
 package consulo.module.content.layer;
 
-import com.intellij.util.PathsList;
 import consulo.application.util.function.Processor;
 import consulo.content.OrderRootType;
 import consulo.content.library.Library;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.project.Project;
-import consulo.project.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.PathsList;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;

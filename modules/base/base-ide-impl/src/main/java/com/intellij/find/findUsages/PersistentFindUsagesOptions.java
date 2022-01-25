@@ -3,7 +3,7 @@ package com.intellij.find.findUsages;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.project.Project;
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.SearchScope;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;

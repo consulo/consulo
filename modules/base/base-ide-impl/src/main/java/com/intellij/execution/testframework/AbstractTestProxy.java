@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

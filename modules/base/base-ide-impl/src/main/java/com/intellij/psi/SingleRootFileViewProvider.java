@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageUtil;
+import consulo.language.util.LanguageUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -30,7 +30,7 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.AtomicFieldUpdater;

@@ -20,8 +20,8 @@ import com.intellij.find.impl.FindInProjectUtil;
 import consulo.module.Module;
 import com.intellij.openapi.util.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.SearchScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,16 +15,12 @@
  */
 package consulo.module;
 
-import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.module.UnloadedModuleDescription;
-import consulo.project.Project;
-import com.intellij.util.graph.Graph;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.component.util.graph.Graph;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;

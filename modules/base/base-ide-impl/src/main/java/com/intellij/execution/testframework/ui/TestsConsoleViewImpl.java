@@ -20,7 +20,7 @@ import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.impl.ConsoleViewRunningState;
 import com.intellij.execution.process.ProcessHandler;
 import consulo.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 
 /**
  * @author Roman.Chernyatchik

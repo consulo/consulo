@@ -20,7 +20,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import consulo.project.Project;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vcs.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ui.update.MergingUpdateQueue;

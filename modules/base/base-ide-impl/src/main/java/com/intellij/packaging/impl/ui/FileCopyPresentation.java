@@ -20,11 +20,12 @@ import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -45,10 +46,10 @@ public class FileCopyPresentation extends PackagingElementPresentation {
       parentPath = parent != null ? FileUtil.toSystemDependentName(parent.getPath()) : "";
     }
     else {
-      parentPath = FileUtil.toSystemDependentName(VirtualFilePathUtil.getParentPath(filePath));
+      parentPath = FileUtil.toSystemDependentName(PathUtil.getParentPath(filePath));
     }
 
-    String sourceFileName = VirtualFilePathUtil.getFileName(filePath);
+    String sourceFileName = PathUtil.getFileName(filePath);
     if (!sourceFileName.equals(myOutputFileName)) {
       mySourcePath = parentPath + "/" + sourceFileName;
     }

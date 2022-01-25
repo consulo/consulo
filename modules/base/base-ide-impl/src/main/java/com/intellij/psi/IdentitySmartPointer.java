@@ -21,6 +21,8 @@ package com.intellij.psi;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
 import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;

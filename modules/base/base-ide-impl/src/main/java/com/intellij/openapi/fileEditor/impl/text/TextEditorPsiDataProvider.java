@@ -32,7 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.impl.source.tree.injected.InjectedCaret;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import consulo.codeInsight.TargetElementUtil;
 
 import javax.annotation.Nonnull;

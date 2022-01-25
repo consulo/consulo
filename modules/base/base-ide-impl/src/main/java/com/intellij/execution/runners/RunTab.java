@@ -31,7 +31,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -26,7 +26,7 @@ import java.util.Set;
 
 import static consulo.module.content.ProjectTopics.PROJECT_ROOTS;
 import static consulo.virtualFileSystem.VirtualFileManager.VFS_CHANGES;
-import static com.intellij.psi.util.PsiUtilCore.getVirtualFile;
+import static consulo.language.psi.PsiUtilCore.getVirtualFile;
 
 public abstract class ProjectFileNodeUpdater {
   private static final Logger LOG = Logger.getInstance(ProjectFileNodeUpdater.class);

@@ -17,9 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapManager;
-import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
@@ -32,8 +30,10 @@ import com.intellij.packaging.elements.CompositePackagingElementType;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -105,7 +105,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
 
     final Project project = myArtifactEditor.getContext().getProject();
     final String elementName = ContainerUtil.getFirstItem(selected, null).createPresentation(myArtifactEditor.getContext()).getPresentableName();
-    final String baseName = VirtualFilePathUtil.suggestFileName(elementName);
+    final String baseName = PathUtil.suggestFileName(elementName);
     final CompositePackagingElement<?> newParent = type.createComposite(parent, baseName, myArtifactEditor.getContext());
     if (newParent != null) {
       treeComponent.editLayout(new Runnable() {

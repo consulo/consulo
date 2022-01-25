@@ -22,7 +22,7 @@ import com.intellij.analysis.BaseAnalysisAction;
 import com.intellij.analysis.BaseAnalysisActionDialog;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import consulo.project.Project;
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.SearchScope;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;

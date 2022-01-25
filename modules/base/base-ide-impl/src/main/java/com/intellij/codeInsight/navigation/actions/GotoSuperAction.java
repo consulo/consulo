@@ -26,7 +26,7 @@ import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -21,8 +21,6 @@ import consulo.virtualFileSystem.LocalFileProvider;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,69 +60,7 @@ public class VirtualFilePathUtil {
   }
 
   @Nonnull
-  public static String getJarPathForClass(@Nonnull Class aClass) {
-    final String pathForClass = PathManager.getJarPathForClass(aClass);
-    assert pathForClass != null : aClass;
-    return pathForClass;
-  }
-
-  @Nonnull
   public static String toPresentableUrl(@Nonnull String url) {
     return getLocalPath(VirtualFileManager.extractPath(url));
-  }
-
-  public static String getCanonicalPath(@NonNls String path) {
-    return FileUtil.toCanonicalPath(path);
-  }
-
-  @Nonnull
-  public static String getFileName(@Nonnull String path) {
-    return PathUtilRt.getFileName(path);
-  }
-
-  @Nullable
-  public static String getFileExtension(@Nonnull String name) {
-    int index = name.lastIndexOf('.');
-    if (index < 0) return null;
-    return name.substring(index + 1);
-  }
-
-  @Nonnull
-  public static String getParentPath(@Nonnull String path) {
-    return PathUtilRt.getParentPath(path);
-  }
-
-  @Nonnull
-  public static String suggestFileName(@Nonnull String text) {
-    return PathUtilRt.suggestFileName(text);
-  }
-
-  @Nonnull
-  public static String suggestFileName(@Nonnull String text, final boolean allowDots, final boolean allowSpaces) {
-    return PathUtilRt.suggestFileName(text, allowDots, allowSpaces);
-  }
-
-  public static boolean isValidFileName(@Nonnull String fileName) {
-    return PathUtilRt.isValidFileName(fileName, true);
-  }
-
-  public static boolean isValidFileName(@Nonnull String fileName, boolean strict) {
-    return PathUtilRt.isValidFileName(fileName, strict);
-  }
-
-  @Contract("null -> null; !null -> !null")
-  public static String toSystemIndependentName(@Nullable String path) {
-    return path == null ? null : FileUtilRt.toSystemIndependentName(path);
-  }
-
-
-  @Contract("null -> null; !null -> !null")
-  public static String toSystemDependentName(@Nullable String path) {
-    return path == null ? null : FileUtilRt.toSystemDependentName(path);
-  }
-
-  @Nonnull
-  public static String makeFileName(@Nonnull String name, @Nullable String extension) {
-    return name + (StringUtil.isEmpty(extension) ? "" : "." + extension);
   }
 }

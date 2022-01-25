@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.util.IncorrectOperationException;
 import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.module.extension.ModuleExtension;

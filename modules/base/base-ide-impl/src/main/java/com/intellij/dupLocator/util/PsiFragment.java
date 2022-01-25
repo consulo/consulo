@@ -8,7 +8,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.usageView.UsageInfo;
 import javax.annotation.Nonnull;
 

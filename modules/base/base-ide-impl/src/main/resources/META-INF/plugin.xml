@@ -104,7 +104,7 @@
                     interface="com.intellij.openapi.fileEditor.FileEditorProvider"/>
 
     <extensionPoint name="fileTypeFactory"
-                    interface="com.intellij.openapi.fileTypes.FileTypeFactory"/>
+                    interface="consulo.virtualFileSystem.fileType.FileTypeFactory"/>
 
     <extensionPoint name="fileTypeOverrider" interface="com.intellij.openapi.fileTypes.impl.FileTypeOverrider"/>
 
@@ -137,7 +137,7 @@
     <extensionPoint name="cachedValuesFactory" interface="com.intellij.util.CachedValuesFactory" area="PROJECT"/>
 
     <extensionPoint name="syntaxHighlighter"
-                    beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
+                    beanClass="consulo.component.extension.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighter"/>
     </extensionPoint>
 
@@ -162,7 +162,7 @@
       <with attribute="implementationClass" implements="com.intellij.codeInsight.hints.InlayParameterHintsProvider"/>
     </extensionPoint>
 
-    <extensionPoint name="applicationLoadListener" interface="com.intellij.ide.ApplicationLoadListener"/>
+    <extensionPoint name="applicationLoadListener" interface="consulo.application.event.ApplicationLoadListener"/>
 
     <extensionPoint name="editorTabTitleProvider" interface="com.intellij.openapi.fileEditor.impl.EditorTabTitleProvider"/>
     <extensionPoint name="editorTabColorProvider" interface="com.intellij.openapi.fileEditor.impl.EditorTabColorProvider"/>
@@ -308,7 +308,7 @@
     <extensionPoint name="compiler.additionalOutputDirectoriesProvider"
                     interface="consulo.compiler.impl.AdditionalOutputDirectoriesProvider"/>
     <extensionPoint name="orderRootTypeEditor"
-                    beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
+                    beanClass="consulo.component.extension.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="com.intellij.openapi.roots.ui.OrderRootTypeUIFactory"/>
     </extensionPoint>
 
@@ -556,7 +556,7 @@
       <with attribute="implementationClass" implements="consulo.language.parser.ParserDefinition"/>
     </extensionPoint>
 
-    <extensionPoint name="metaLanguage" interface="com.intellij.lang.MetaLanguage"/>
+    <extensionPoint name="metaLanguage" interface="consulo.language.MetaLanguage"/>
 
     <extensionPoint name="lang.versionResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.version.LanguageVersionResolver"/>
@@ -624,7 +624,7 @@
     <extensionPoint name="moduleRootsProcessor" interface="consulo.roots.impl.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="consulo.content.OrderRootType"/>
     <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType"/>
-    <extensionPoint name="orderEntryTypeEditor" beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
+    <extensionPoint name="orderEntryTypeEditor" beanClass="consulo.component.extension.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="consulo.roots.orderEntry.OrderEntryTypeEditor"/>
     </extensionPoint>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
@@ -741,7 +741,7 @@
     <extensionPoint name="elementDescriptionProvider" interface="com.intellij.psi.ElementDescriptionProvider"/>
 
     <extensionPoint name="structureViewBuilder"
-                    beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
+                    beanClass="consulo.component.extension.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="com.intellij.ide.structureView.StructureViewBuilder"/>
     </extensionPoint>
 
@@ -1220,7 +1220,7 @@
     <applicationService serviceInterface="consulo.util.ApplicationPropertiesComponent"
                         serviceImplementation="com.intellij.ide.util.AppPropertiesComponentImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.fileTypes.FileNameMatcherFactory"
+    <applicationService serviceInterface="consulo.virtualFileSystem.fileType.FileNameMatcherFactory"
                         serviceImplementation="com.intellij.openapi.fileTypes.impl.FileNameMatcherFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
@@ -1871,11 +1871,11 @@
                     serviceImplementation="com.intellij.find.replaceInProject.ReplaceInProjectManager"/>
     <projectService serviceInterface="com.intellij.codeHighlighting.TextEditorHighlightingPassManager"
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.TextEditorHighlightingPassManagerImpl"/>
-    <projectService serviceInterface="com.intellij.psi.PsiFileFactory"
+    <projectService serviceInterface="consulo.language.psi.PsiFileFactory"
                     serviceImplementation="com.intellij.psi.impl.PsiFileFactoryImpl"/>
     <projectService serviceInterface="com.intellij.psi.text.BlockSupport"
                     serviceImplementation="com.intellij.psi.impl.BlockSupportImpl"/>
-    <projectService serviceInterface="com.intellij.psi.SmartPointerManager"
+    <projectService serviceInterface="consulo.language.psi.SmartPointerManager"
                     serviceImplementation="com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.codeStyle.CodeStyleManager"
                     serviceImplementation="com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl"/>
@@ -1959,7 +1959,7 @@
                     serviceImplementation="com.intellij.psi.impl.cache.impl.IndexTodoCacheManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.impl.ResolveScopeManager"
                     serviceImplementation="com.intellij.psi.impl.file.impl.ResolveScopeManagerImpl"/>
-    <projectService serviceInterface="consulo.project.content.ProjectFileIndex"
+    <projectService serviceInterface="consulo.module.content.ProjectFileIndex"
                     serviceImplementation="com.intellij.openapi.roots.impl.ProjectFileIndexImpl"/>
     <projectService serviceInterface="com.intellij.psi.impl.source.resolve.ResolveCache"
                     serviceImplementation="com.intellij.psi.impl.source.resolve.ResolveCache"/>
@@ -2530,7 +2530,7 @@
     <contentFolderTypeProvider implementation="consulo.roots.impl.TestContentFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="consulo.roots.impl.TestResourceContentFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="consulo.roots.impl.WebResourcesFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="consulo.roots.impl.ExcludedContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.content.base.ExcludedContentFolderTypeProvider"/>
 
     <contentFolderPropertyProvider implementation="consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
 

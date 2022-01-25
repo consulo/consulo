@@ -24,7 +24,7 @@ import com.intellij.ide.todo.TodoTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.application.ReadAction;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;

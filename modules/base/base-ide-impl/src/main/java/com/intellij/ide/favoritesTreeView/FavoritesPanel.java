@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.SmartPsiElementPointer;
+import consulo.language.psi.SmartPsiElementPointer;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.Function;
 import consulo.disposer.Disposer;

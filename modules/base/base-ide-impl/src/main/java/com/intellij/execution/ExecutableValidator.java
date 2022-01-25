@@ -25,7 +25,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.util.io.CharsetToolkit;
 import consulo.ui.image.Image;
 

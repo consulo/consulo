@@ -27,6 +27,7 @@ import com.intellij.util.SmartList;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceProvider;
 import consulo.util.dataholder.Key;
 import org.intellij.plugins.intelliLang.Configuration;
 import org.intellij.plugins.intelliLang.inject.InjectedLanguage;

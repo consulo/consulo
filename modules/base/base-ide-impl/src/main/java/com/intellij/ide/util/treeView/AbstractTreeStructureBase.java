@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static com.intellij.openapi.util.registry.Registry.is;
+import static consulo.application.util.registry.Registry.is;
 
 public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
   private static final Logger LOG = Logger.getInstance(AbstractTreeStructureBase.class);

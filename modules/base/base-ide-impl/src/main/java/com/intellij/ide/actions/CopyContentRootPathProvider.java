@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
-import consulo.project.content.ProjectFileIndex;
+import consulo.module.content.ProjectFileIndex;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ObjectUtil;

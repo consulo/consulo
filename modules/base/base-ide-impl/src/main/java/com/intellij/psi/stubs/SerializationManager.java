@@ -4,7 +4,7 @@ package com.intellij.psi.stubs;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.language.ast.IElementType;
-import com.intellij.psi.tree.StubFileElementType;
+import consulo.language.psi.stub.StubFileElementType;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.ObjectStubSerializer;
 import consulo.language.psi.stub.StubSerializer;

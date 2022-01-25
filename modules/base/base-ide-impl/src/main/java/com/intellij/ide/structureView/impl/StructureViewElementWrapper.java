@@ -23,7 +23,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.pom.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
+import consulo.language.template.TemplateLanguageFileViewProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

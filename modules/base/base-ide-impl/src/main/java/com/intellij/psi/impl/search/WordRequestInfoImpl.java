@@ -1,6 +1,6 @@
 package com.intellij.psi.impl.search;
 
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.SearchScope;
 import com.intellij.psi.search.SearchSession;
 import javax.annotation.Nonnull;
 

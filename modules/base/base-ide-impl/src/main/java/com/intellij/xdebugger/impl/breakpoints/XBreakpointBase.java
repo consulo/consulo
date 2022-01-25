@@ -25,7 +25,7 @@ import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.ColorUtil;

@@ -17,7 +17,7 @@
 package com.intellij.psi.search.searches;
 
 import consulo.application.Application;
-import com.intellij.openapi.extensions.SimpleSmartExtensionPoint;
+import consulo.component.extension.SimpleSmartExtensionPoint;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.QueryExecutor;

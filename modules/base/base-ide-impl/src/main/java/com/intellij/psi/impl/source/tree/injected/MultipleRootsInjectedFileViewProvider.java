@@ -26,7 +26,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
+import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.ast.IElementType;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;

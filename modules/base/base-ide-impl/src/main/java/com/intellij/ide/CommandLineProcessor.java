@@ -20,7 +20,7 @@ import consulo.application.Application;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

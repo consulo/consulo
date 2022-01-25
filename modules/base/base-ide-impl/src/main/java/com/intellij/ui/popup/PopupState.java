@@ -13,7 +13,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.lang.ref.WeakReference;
 
-import static com.intellij.openapi.util.registry.Registry.intValue;
+import static consulo.application.util.registry.Registry.intValue;
 
 /**
  * This helper class is intended to prevent opening

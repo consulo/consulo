@@ -20,7 +20,6 @@ import consulo.component.messagebus.Topic;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.module.Module;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
-import consulo.module.layer.ModuleRootLayer;
 import consulo.project.Project;
 import org.jdom.Element;
 
@@ -42,9 +41,6 @@ public interface ModuleExtension<T extends ModuleExtension> extends PersistentSt
 
   @Nonnull
   Module getModule();
-
-  @Nonnull
-  ModuleRootLayer getModuleRootLayer();
 
   @Nonnull
   Project getProject();

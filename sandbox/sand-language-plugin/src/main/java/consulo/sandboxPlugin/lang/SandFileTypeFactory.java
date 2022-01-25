@@ -16,8 +16,8 @@
 package consulo.sandboxPlugin.lang;
 
 import consulo.language.version.LanguageVersion;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.ColorUtil;
 import javax.annotation.Nullable;
 

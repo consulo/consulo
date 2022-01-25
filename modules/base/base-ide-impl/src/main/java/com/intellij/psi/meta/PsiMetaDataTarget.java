@@ -17,6 +17,8 @@ package com.intellij.psi.meta;
 
 import com.intellij.pom.PomRenameableTarget;
 import com.intellij.psi.DelegatePsiTarget;
+import consulo.language.psi.meta.PsiMetaData;
+
 import javax.annotation.Nonnull;
 
 /**

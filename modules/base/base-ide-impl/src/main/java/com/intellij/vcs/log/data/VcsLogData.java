@@ -26,7 +26,7 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vcs.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;

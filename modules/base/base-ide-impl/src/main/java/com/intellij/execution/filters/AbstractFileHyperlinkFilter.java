@@ -4,7 +4,7 @@ package com.intellij.execution.filters;
 import consulo.application.ReadAction;
 import com.intellij.openapi.application.WriteAction;
 import consulo.project.Project;
-import consulo.project.content.ProjectFileIndex;
+import consulo.module.content.ProjectFileIndex;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

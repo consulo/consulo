@@ -3,7 +3,7 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.impl.view.EditorPainter;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.annotation.DeprecationInfo;
 import consulo.editor.impl.CodeEditorCaretBase;
 import consulo.logging.Logger;

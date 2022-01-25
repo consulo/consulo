@@ -16,16 +16,18 @@
 package com.intellij.psi;
 
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiRefElementCreator;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
 public abstract class PsiChildLink<Parent extends PsiElement, Child extends PsiElement> implements PsiRefElementCreator<Parent, Child> {
   
-  @javax.annotation.Nullable
-  public abstract Child findLinkedChild(@javax.annotation.Nullable Parent parent);
+  @Nullable
+  public abstract Child findLinkedChild(@Nullable Parent parent);
 
   @Nonnull
   public final PsiElementRef<Child> createChildRef(@Nonnull Parent parent) {

@@ -20,33 +20,33 @@ import com.intellij.diff.contents.*;
 import com.intellij.diff.tools.util.DiffNotifications;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUtil;
-import consulo.document.Document;
 import com.intellij.openapi.editor.EditorFactory;
-import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.ide.CopyPasteManager;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
-import consulo.util.io.CharsetToolkit;
 import com.intellij.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
 import com.intellij.testFramework.BinaryLightVirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.LineSeparator;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import consulo.application.AccessRule;
-import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.style.StandardColors;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -384,8 +384,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
                                                 @Nonnull String prefix,
                                                 @Nonnull String suffix,
                                                 @Nonnull byte[] content) throws IOException {
-    File tempFile = FileUtil.createTempFile(VirtualFilePathUtil.suggestFileName(prefix + "_", true, false),
-                                            VirtualFilePathUtil.suggestFileName("_" + suffix, true, false), true);
+    File tempFile = FileUtil.createTempFile(PathUtil.suggestFileName(prefix + "_", true, false), PathUtil.suggestFileName("_" + suffix, true, false), true);
     if (content.length != 0) {
       FileUtil.writeToFile(tempFile, content);
     }

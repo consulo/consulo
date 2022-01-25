@@ -4,7 +4,7 @@ package com.intellij.openapi.file.exclude;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.fileTypes.DirectoryFileType;
+import consulo.virtualFileSystem.fileType.DirectoryFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;

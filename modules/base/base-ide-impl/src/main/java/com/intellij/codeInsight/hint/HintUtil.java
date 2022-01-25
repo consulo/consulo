@@ -14,7 +14,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import consulo.ui.ex.util.LightDarkColorValue;
+import consulo.ui.util.LightDarkColorValue;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 

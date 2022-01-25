@@ -37,7 +37,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import com.intellij.util.DocumentUtil;

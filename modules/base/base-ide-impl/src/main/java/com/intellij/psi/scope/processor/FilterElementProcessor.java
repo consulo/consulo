@@ -18,7 +18,7 @@ package com.intellij.psi.scope.processor;
 
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.filters.ElementFilter;
-import com.intellij.psi.search.PsiElementProcessor;
+import consulo.language.psi.resolve.PsiElementProcessor;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

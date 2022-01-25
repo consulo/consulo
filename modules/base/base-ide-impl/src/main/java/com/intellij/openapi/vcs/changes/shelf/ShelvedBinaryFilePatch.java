@@ -16,7 +16,8 @@
 package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.diff.impl.patch.FilePatch;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -47,7 +48,7 @@ public class ShelvedBinaryFilePatch extends FilePatch {
 
   @Nullable
   private static String getFileName(String filePath) {
-    return filePath != null ? VirtualFilePathUtil.getFileName(filePath) : null;
+    return filePath != null ? PathUtil.getFileName(filePath) : null;
   }
 
   @Override

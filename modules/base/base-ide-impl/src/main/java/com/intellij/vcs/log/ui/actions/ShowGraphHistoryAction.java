@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcs.log.data.VcsLogData;

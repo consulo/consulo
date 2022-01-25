@@ -17,7 +17,7 @@
 package org.intellij.plugins.intelliLang.inject;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import consulo.language.psi.*;
@@ -33,7 +33,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.injection.ReferenceInjector;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;

@@ -24,7 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.FilteredQuery;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;

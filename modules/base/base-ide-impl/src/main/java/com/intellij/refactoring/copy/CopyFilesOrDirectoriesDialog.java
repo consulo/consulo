@@ -19,31 +19,31 @@ import com.intellij.ide.util.DirectoryUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.IdeActions;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.language.psi.*;
-import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.RecentsManager;
 import com.intellij.ui.TextFieldWithHistoryWithBrowseButton;
 import com.intellij.ui.components.JBLabelDecorator;
-import consulo.language.util.IncorrectOperationException;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.application.ApplicationManager;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.language.psi.*;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -248,7 +248,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
         return;
       }
 
-      if (myFileCopy && !VirtualFilePathUtil.isValidFileName(newName)) {
+      if (myFileCopy && !PathUtil.isValidFileName(newName)) {
         Messages.showErrorDialog(myNewNameField, "Name is not a valid file name");
         return;
       }
@@ -300,7 +300,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
     }
     if (myShowNewNameField) {
       final String newName = getNewName();
-      if (newName.length() == 0 || myFileCopy && !VirtualFilePathUtil.isValidFileName(newName)) {
+      if (newName.length() == 0 || myFileCopy && !PathUtil.isValidFileName(newName)) {
         setOKActionEnabled(false);
         return;
       }

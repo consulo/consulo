@@ -15,21 +15,21 @@
  */
 package com.intellij.openapi.vcs;
 
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.nio.charset.Charset;
 
@@ -91,7 +91,7 @@ public class LocalFilePath implements FilePath {
   @Override
   @Nullable
   public FilePath getParentPath() {
-    String parent = VirtualFilePathUtil.getParentPath(myPath);
+    String parent = PathUtil.getParentPath(myPath);
     return parent.isEmpty() ? null : new LocalFilePath(parent, true);
   }
 
@@ -117,7 +117,7 @@ public class LocalFilePath implements FilePath {
   @Nonnull
   @Override
   public String getName() {
-    return VirtualFilePathUtil.getFileName(myPath);
+    return PathUtil.getFileName(myPath);
   }
 
   @Nonnull
@@ -148,7 +148,7 @@ public class LocalFilePath implements FilePath {
     VirtualFile file = getVirtualFile();
     String path = myPath;
     while ((file == null || !file.isValid()) && !path.isEmpty()) {
-      path = VirtualFilePathUtil.getParentPath(path);
+      path = PathUtil.getParentPath(path);
       file = LocalFileSystem.getInstance().findFileByPath(path);
     }
     if (file != null) {

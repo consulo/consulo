@@ -25,6 +25,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.SmartList;
 import com.intellij.util.graph.*;
 import consulo.application.ApplicationProperties;
+import consulo.component.util.graph.Graph;
+import consulo.component.util.graph.InboundSemiGraph;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.impl.*;
 import consulo.container.impl.classloader.Java9ModuleInitializer;

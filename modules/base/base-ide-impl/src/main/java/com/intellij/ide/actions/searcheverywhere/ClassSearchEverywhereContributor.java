@@ -11,7 +11,7 @@ import com.intellij.ide.util.gotoByName.GotoClassModel2;
 import com.intellij.ide.util.gotoByName.GotoClassSymbolConfiguration;
 import com.intellij.lang.DependentLanguage;
 import consulo.language.Language;
-import com.intellij.lang.LanguageUtil;
+import consulo.language.util.LanguageUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.language.file.LanguageFileType;
@@ -20,7 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.IdeUICustomization;
 import javax.annotation.Nonnull;
 

@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.ui.playback.PlaybackContext;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TimedOutCallback;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.wm.IdeFocusManager;
 import consulo.util.concurrent.ActionCallback;

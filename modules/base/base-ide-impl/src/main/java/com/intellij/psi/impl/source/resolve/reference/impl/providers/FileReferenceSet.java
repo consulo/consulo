@@ -21,7 +21,7 @@ import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;

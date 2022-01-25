@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.patterns.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.Consumer;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.MultiMap;

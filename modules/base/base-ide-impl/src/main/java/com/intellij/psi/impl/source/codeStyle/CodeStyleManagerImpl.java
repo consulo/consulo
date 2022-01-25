@@ -10,6 +10,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.language.CompositeLanguage;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.PlainTextTokenTypes;

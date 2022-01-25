@@ -3,7 +3,7 @@ package com.intellij.util.indexing.hash;
 
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.AbstractUpdateData;

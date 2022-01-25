@@ -27,35 +27,34 @@ import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.ide.script.IdeScriptBindings;
 import com.intellij.openapi.actionSystem.*;
-import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.language.psi.*;
-import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.ObjectUtils;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.ide.script.IdeScriptEngine;
 import org.jetbrains.ide.script.IdeScriptEngineManager;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -104,7 +103,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
     List<String> extensions = IdeScriptEngineManager.getInstance().getFileExtensions(language);
     try {
-      String pathName = VirtualFilePathUtil.makeFileName(DEFAULT_FILE_NAME, ContainerUtil.getFirstItem(extensions));
+      String pathName = PathUtil.makeFileName(DEFAULT_FILE_NAME, ContainerUtil.getFirstItem(extensions));
       VirtualFile virtualFile = IdeConsoleRootType.getInstance().findFile(project, pathName, ScratchFileService.Option.create_if_missing);
       if (virtualFile != null) {
         FileEditorManager.getInstance(project).openFile(virtualFile, true);

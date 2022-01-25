@@ -20,8 +20,8 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

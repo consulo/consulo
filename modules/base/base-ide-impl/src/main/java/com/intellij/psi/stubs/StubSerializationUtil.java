@@ -16,6 +16,7 @@
 package com.intellij.psi.stubs;
 
 import consulo.language.psi.stub.ObjectStubSerializer;
+import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.Stub;
 
 /**

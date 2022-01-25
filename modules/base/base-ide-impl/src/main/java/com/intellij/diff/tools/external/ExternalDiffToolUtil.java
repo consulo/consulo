@@ -23,29 +23,29 @@ import com.intellij.diff.util.Side;
 import com.intellij.diff.util.ThreeSide;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;
-import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.util.io.CharsetToolkit;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWithoutContent;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.LineSeparator;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.execution.ParametersListUtil;
 import consulo.application.AccessRule;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.progress.ProgressIndicator;
+import consulo.project.Project;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileWithoutContent;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -513,7 +513,7 @@ public class ExternalDiffToolUtil {
       }
       if (name.length() > 50) name = name.substring(0, 50);
 
-      return VirtualFilePathUtil.suggestFileName(name + "." + ext, true, false);
+      return PathUtil.suggestFileName(name + "." + ext, true, false);
     }
   }
 }

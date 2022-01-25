@@ -17,7 +17,7 @@ package com.intellij.openapi.module.impl.scopes;
 
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleScopeProvider;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 import jakarta.inject.Inject;

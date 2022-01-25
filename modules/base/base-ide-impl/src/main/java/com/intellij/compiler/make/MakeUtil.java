@@ -22,8 +22,8 @@ package com.intellij.compiler.make;
 
 import com.intellij.openapi.compiler.CompileContext;
 import consulo.module.Module;
-import consulo.project.content.ProjectFileIndex;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 

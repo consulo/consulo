@@ -3,7 +3,7 @@ package com.intellij.ui.mac.foundation;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.sun.jna.Pointer;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

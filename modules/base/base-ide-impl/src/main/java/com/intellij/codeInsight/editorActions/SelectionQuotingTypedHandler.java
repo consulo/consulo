@@ -26,7 +26,7 @@ import consulo.component.extension.Extensions;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 

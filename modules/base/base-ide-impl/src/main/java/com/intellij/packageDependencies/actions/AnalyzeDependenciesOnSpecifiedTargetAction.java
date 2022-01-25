@@ -19,7 +19,7 @@ import com.intellij.analysis.AnalysisScope;
 import com.intellij.openapi.actionSystem.*;
 import consulo.module.Module;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

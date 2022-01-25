@@ -33,7 +33,7 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
 import consulo.util.concurrent.ActionCallback;
 

@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFileSystemItem;
 import javax.annotation.Nonnull;

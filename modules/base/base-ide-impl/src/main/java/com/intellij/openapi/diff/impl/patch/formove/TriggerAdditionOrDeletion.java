@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.patch.formove;
 
 import consulo.project.Project;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.SortByVcsRoots;

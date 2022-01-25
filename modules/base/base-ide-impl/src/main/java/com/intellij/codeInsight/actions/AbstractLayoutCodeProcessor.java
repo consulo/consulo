@@ -33,7 +33,7 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import com.intellij.psi.PsiBundle;
+import consulo.language.psi.PsiBundle;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

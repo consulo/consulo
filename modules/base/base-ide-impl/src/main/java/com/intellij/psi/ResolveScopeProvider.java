@@ -18,7 +18,7 @@ package com.intellij.psi;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

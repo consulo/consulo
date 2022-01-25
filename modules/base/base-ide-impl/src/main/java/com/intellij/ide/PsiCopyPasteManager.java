@@ -28,7 +28,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.io.CharsetToolkit;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;

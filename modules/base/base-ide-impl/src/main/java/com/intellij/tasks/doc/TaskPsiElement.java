@@ -17,7 +17,7 @@ package com.intellij.tasks.doc;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.FakePsiElement;
 import com.intellij.tasks.Task;

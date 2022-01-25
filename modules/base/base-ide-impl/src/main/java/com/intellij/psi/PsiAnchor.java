@@ -26,7 +26,7 @@ import consulo.language.psi.stub.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import consulo.language.psi.stub.StubElement;
 import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 

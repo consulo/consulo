@@ -22,8 +22,8 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.logging.Logger;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;
-import com.intellij.psi.meta.PsiMetaData;
-import com.intellij.psi.meta.PsiMetaOwner;
+import consulo.language.psi.meta.PsiMetaData;
+import consulo.language.psi.meta.PsiMetaOwner;
 import javax.annotation.Nonnull;
 
 /**

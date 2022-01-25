@@ -28,7 +28,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.version.LanguageVersion;
 import javax.annotation.Nonnull;

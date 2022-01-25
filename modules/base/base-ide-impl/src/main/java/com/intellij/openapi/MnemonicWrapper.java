@@ -4,7 +4,7 @@ package com.intellij.openapi;
 import com.intellij.ide.ui.UISettings;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;

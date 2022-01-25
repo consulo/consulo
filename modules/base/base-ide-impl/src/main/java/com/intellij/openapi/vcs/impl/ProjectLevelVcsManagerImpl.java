@@ -34,7 +34,7 @@ import consulo.component.persist.InvalidDataException;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ChangesUtil;

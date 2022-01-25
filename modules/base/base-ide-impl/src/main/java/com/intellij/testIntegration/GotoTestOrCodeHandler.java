@@ -30,7 +30,7 @@ import consulo.project.Project;
 import com.intellij.pom.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.SmartList;
 import consulo.ui.image.Image;
 

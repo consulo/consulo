@@ -18,7 +18,7 @@ package consulo.application.impl;
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
-import com.intellij.ide.ApplicationLoadListener;
+import consulo.application.event.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
@@ -326,7 +326,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   private void fireBeforeApplicationLoaded() {
-    ApplicationLoadListener.EP_NAME.forEachExtensionSafe(this, it -> it.beforeApplicationLoaded());
+    ApplicationLoadListener.EP_NAME.forEachExtensionSafe(this, ApplicationLoadListener::beforeApplicationLoaded);
   }
 
   @Override

@@ -3,12 +3,10 @@ package com.intellij.ide.browsers;
 
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Function;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.LocalPathCellEditor;
@@ -16,6 +14,8 @@ import com.intellij.util.ui.table.IconTableCellRenderer;
 import com.intellij.util.ui.table.TableModelEditor;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.actions.webSearch.WebSearchEngine;
 import consulo.ide.actions.webSearch.WebSearchOptions;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
@@ -46,7 +46,7 @@ final class BrowserSettingsPanel {
   private static final EditableColumnInfo<ConfigurableWebBrowser, String> PATH_COLUMN_INFO = new EditableColumnInfo<ConfigurableWebBrowser, String>("Path") {
     @Override
     public String valueOf(ConfigurableWebBrowser item) {
-      return VirtualFilePathUtil.toSystemDependentName(item.getPath());
+      return PathUtil.toSystemDependentName(item.getPath());
     }
 
     @Override

@@ -22,7 +22,7 @@ import consulo.project.Project;
 import com.intellij.psi.search.PredefinedSearchScopeProvider;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.search.SearchRequestCollector;
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.SearchScope;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;

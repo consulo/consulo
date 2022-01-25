@@ -18,6 +18,7 @@ package com.intellij.compiler;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.component.util.graph.Graph;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;

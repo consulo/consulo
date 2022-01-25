@@ -19,6 +19,7 @@ package com.intellij.psi;
 import consulo.language.Language;
 import consulo.application.Application;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReferenceProvider;
 import consulo.logging.Logger;
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;

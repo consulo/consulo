@@ -15,7 +15,7 @@
  */
 package consulo.externalStorage;
 
-import com.intellij.ide.ApplicationLoadListener;
+import consulo.application.event.ApplicationLoadListener;
 import consulo.application.Application;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;

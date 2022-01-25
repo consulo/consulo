@@ -14,7 +14,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Conditions;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.refactoring.copy.CopyHandler;
 import com.intellij.refactoring.move.MoveCallback;
 import com.intellij.refactoring.move.MoveHandler;

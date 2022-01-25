@@ -17,7 +17,7 @@ package com.intellij.psi.impl.search;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.SearchScope;
 
 public interface CustomPropertyScopeProvider {
   ExtensionPointName<CustomPropertyScopeProvider> EP_NAME = ExtensionPointName.create("consulo.customPropertyScopeProvider");

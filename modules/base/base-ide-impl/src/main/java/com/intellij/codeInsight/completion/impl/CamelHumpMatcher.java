@@ -8,7 +8,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;

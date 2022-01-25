@@ -2,7 +2,7 @@
 package com.intellij.ui.paint;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.paint.PaintUtil.RoundingMode;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.ui.JBUI;

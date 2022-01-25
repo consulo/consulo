@@ -21,7 +21,7 @@ import com.intellij.codeInsight.controlflow.impl.InstructionImpl;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

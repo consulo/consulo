@@ -40,7 +40,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.search.LightIndexPatternSearch;
 import com.intellij.psi.impl.search.TodoItemsCreator;

@@ -28,13 +28,13 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.content.ContentIterator;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
+import consulo.language.psi.PsiRecursiveElementWalkingVisitor;
 
 import java.io.PrintStream;
 import java.util.HashMap;

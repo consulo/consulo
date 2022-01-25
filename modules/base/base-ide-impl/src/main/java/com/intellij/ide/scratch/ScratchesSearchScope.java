@@ -5,7 +5,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import javax.annotation.Nonnull;
 
 import java.util.Objects;

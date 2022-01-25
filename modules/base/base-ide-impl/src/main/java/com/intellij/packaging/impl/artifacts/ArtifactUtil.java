@@ -15,8 +15,6 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import consulo.module.Module;
-import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Trinity;
@@ -24,21 +22,23 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactProperties;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.elements.*;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.application.util.function.Processor;
+import com.intellij.util.PathUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
+import consulo.application.util.function.Processor;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
+import consulo.module.Module;
+import consulo.project.Project;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -636,7 +636,7 @@ public class ArtifactUtil {
   }
 
   public static String suggestArtifactFileName(String artifactName) {
-    return VirtualFilePathUtil.suggestFileName(artifactName, true, true);
+    return PathUtil.suggestFileName(artifactName, true, true);
   }
 }
 

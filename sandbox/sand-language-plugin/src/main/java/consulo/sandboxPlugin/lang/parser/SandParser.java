@@ -15,11 +15,11 @@
  */
 package consulo.sandboxPlugin.lang.parser;
 
-import com.intellij.lang.*;
 import com.intellij.openapi.util.Pair;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ASTNode;
 import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiBuilderUtil;
 import consulo.language.parser.PsiParser;
 import consulo.language.version.LanguageVersion;
 import javax.annotation.Nonnull;

@@ -4,7 +4,7 @@ package com.intellij.ui.components;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.mac.foundation.ID;
 import com.intellij.util.Alarm;

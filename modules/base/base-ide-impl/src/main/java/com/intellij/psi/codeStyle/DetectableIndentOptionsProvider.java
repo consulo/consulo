@@ -22,7 +22,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiBinaryFile;
-import com.intellij.psi.PsiCompiledFile;
+import consulo.language.psi.PsiCompiledFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.testFramework.LightVirtualFile;

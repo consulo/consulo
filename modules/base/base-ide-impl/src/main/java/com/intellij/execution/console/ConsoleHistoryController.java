@@ -18,48 +18,52 @@ package com.intellij.execution.console;
 import com.intellij.AppTopics;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.ide.scratch.ScratchFileService;
-import consulo.language.Language;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import consulo.application.AccessToken;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.UndoConstants;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.CaretModel;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.actions.ContentChooser;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
-import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
-import consulo.document.Document;
-import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtils;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
+import consulo.application.AccessToken;
+import consulo.application.ApplicationManager;
 import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -466,7 +470,7 @@ public class ConsoleHistoryController {
     }
 
     public boolean loadHistoryOld(String id) {
-      File file = new File(VirtualFilePathUtil.toSystemDependentName(getOldHistoryFilePath(id)));
+      File file = new File(PathUtil.toSystemDependentName(getOldHistoryFilePath(id)));
       if (!file.exists()) return false;
       try {
         Element rootElement = JDOMUtil.load(file);
@@ -491,7 +495,7 @@ public class ConsoleHistoryController {
     }
 
     private void saveHistoryOld() {
-      File file = new File(VirtualFilePathUtil.toSystemDependentName(getOldHistoryFilePath(myId)));
+      File file = new File(PathUtil.toSystemDependentName(getOldHistoryFilePath(myId)));
       final File dir = file.getParentFile();
       if (!dir.exists() && !dir.mkdirs() || !dir.isDirectory()) {
         LOG.error("failed to create folder: " + dir.getAbsolutePath());
@@ -568,12 +572,12 @@ public class ConsoleHistoryController {
 
   @Nonnull
   private static String getHistoryName(@Nonnull ConsoleRootType rootType, @Nonnull String id) {
-    return rootType.getConsoleTypeId() + "/" + VirtualFilePathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());
+    return rootType.getConsoleTypeId() + "/" + PathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());
   }
 
   @Nullable
   public static VirtualFile getContentFile(@Nonnull final ConsoleRootType rootType, @Nonnull String id, ScratchFileService.Option option) {
-    final String pathName = VirtualFilePathUtil.makeFileName(rootType.getContentPathName(id), rootType.getDefaultFileExtension());
+    final String pathName = PathUtil.makeFileName(rootType.getContentPathName(id), rootType.getDefaultFileExtension());
     try {
       return rootType.findFile(null, pathName, option);
     }

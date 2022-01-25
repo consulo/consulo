@@ -26,7 +26,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import consulo.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ScalableIcon;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.PaintingParent;
 import com.intellij.ui.RetrievableIcon;
 import com.intellij.ui.tabs.impl.TabLabel;

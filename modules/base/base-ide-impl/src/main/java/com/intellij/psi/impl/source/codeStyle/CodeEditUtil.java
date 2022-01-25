@@ -31,7 +31,7 @@ import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import consulo.language.psi.OuterLanguageElement;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.codeInsight.CommentUtilCore;
 import com.intellij.util.text.CharArrayUtil;

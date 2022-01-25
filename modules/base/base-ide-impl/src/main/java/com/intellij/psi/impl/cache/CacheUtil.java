@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.cache;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;

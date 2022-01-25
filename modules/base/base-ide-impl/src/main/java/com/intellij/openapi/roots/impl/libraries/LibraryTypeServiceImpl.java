@@ -15,24 +15,25 @@
  */
 package com.intellij.openapi.roots.impl.libraries;
 
+import com.intellij.openapi.roots.libraries.LibraryTypeService;
+import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.PathUtil;
 import consulo.content.library.LibraryProperties;
 import consulo.content.library.LibraryType;
 import consulo.content.library.NewLibraryConfiguration;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.project.Project;
-import com.intellij.openapi.roots.libraries.*;
-import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.OrderRoot;
-import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import consulo.content.library.ui.LibraryEditor;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
@@ -74,14 +75,14 @@ public class LibraryTypeServiceImpl extends LibraryTypeService {
 
   public static String suggestLibraryName(@Nonnull VirtualFile[] classesRoots) {
     if (classesRoots.length >= 1) {
-      return FileUtil.getNameWithoutExtension(VirtualFilePathUtil.getFileName(classesRoots[0].getPath()));
+      return FileUtil.getNameWithoutExtension(PathUtil.getFileName(classesRoots[0].getPath()));
     }
     return DEFAULT_LIBRARY_NAME;
   }
 
   public static String suggestLibraryName(@Nonnull List<OrderRoot> roots) {
     if (roots.size() >= 1) {
-      return FileUtil.getNameWithoutExtension(VirtualFilePathUtil.getFileName(roots.get(0).getFile().getPath()));
+      return FileUtil.getNameWithoutExtension(PathUtil.getFileName(roots.get(0).getFile().getPath()));
     }
     return DEFAULT_LIBRARY_NAME;
   }

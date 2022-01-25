@@ -19,7 +19,7 @@ import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import javax.annotation.Nonnull;
 
 class HardElementInfo extends SmartPointerElementInfo {

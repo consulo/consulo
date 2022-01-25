@@ -17,8 +17,8 @@
 package com.intellij.psi.impl.source.tree;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.psi.PsiRecursiveVisitor;
-import com.intellij.util.WalkingState;
+import consulo.language.psi.PsiRecursiveVisitor;
+import consulo.util.collection.util.WalkingState;
 import javax.annotation.Nonnull;
 
 public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisitor implements PsiRecursiveVisitor {

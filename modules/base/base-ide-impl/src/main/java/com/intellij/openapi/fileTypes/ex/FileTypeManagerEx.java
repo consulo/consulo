@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileTypes.ex;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 
 import javax.annotation.Nonnull;

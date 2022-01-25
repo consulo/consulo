@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.cache.impl.todo;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.application.Application;
 import consulo.virtualFileSystem.fileType.FileType;

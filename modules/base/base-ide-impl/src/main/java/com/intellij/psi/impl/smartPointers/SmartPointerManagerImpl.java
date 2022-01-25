@@ -2,10 +2,7 @@
 package com.intellij.psi.impl.smartPointers;
 
 import consulo.application.ApplicationManager;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiInvalidElementAccessException;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
@@ -16,9 +13,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
-import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.reference.SoftReference;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

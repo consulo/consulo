@@ -17,12 +17,13 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.icons.AllIcons;
-import consulo.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.INativeFileType;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class NativeFileType implements INativeFileType {
   }
 
   @Override
-  public boolean openFileInAssociatedApplication(final Project project, @Nonnull final VirtualFile file) {
+  public boolean openFileInAssociatedApplication(final ComponentManager project, @Nonnull final VirtualFile file) {
     return openAssociatedApplication(file);
   }
 

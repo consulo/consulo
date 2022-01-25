@@ -16,15 +16,15 @@
 package com.intellij.ide.browsers.firefox;
 
 import com.intellij.ide.browsers.BrowserSpecificSettings;
-import consulo.configurable.Configurable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.xmlb.annotations.Tag;
+import consulo.configurable.Configurable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
   }
 
   public void setProfilesIniPath(@Nullable String value) {
-    myProfilesIniPath = VirtualFilePathUtil.toSystemIndependentName(StringUtil.nullize(value));
+    myProfilesIniPath = PathUtil.toSystemIndependentName(StringUtil.nullize(value));
   }
 
   @Nullable

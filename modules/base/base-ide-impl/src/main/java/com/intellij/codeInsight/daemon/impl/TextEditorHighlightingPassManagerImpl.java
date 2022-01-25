@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;

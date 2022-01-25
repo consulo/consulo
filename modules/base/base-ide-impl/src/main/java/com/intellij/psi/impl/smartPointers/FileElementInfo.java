@@ -2,7 +2,7 @@
 package com.intellij.psi.impl.smartPointers;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageUtil;
+import consulo.language.util.LanguageUtil;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;

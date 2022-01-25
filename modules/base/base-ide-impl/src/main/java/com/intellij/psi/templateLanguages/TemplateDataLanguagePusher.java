@@ -3,6 +3,7 @@ package com.intellij.psi.templateLanguages;
 
 import com.intellij.FileIntPropertyPusher;
 import consulo.language.Language;
+import consulo.language.template.TemplateLanguage;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import consulo.module.Module;

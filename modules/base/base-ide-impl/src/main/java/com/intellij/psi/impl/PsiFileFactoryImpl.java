@@ -19,13 +19,13 @@
  */
 package com.intellij.psi.impl;
 
-import com.intellij.lang.*;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.FileViewProviderFactory;
 import consulo.language.file.LanguageFileViewProviders;
 import consulo.language.lexer.Lexer;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiBuilderFactory;

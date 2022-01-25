@@ -16,7 +16,7 @@
 package consulo.psi.tree.impl;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.psi.tree.PsiElementFactory;

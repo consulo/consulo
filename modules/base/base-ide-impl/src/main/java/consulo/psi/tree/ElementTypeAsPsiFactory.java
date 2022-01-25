@@ -19,7 +19,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ReflectionUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;

@@ -23,7 +23,7 @@ package com.intellij.packageDependencies;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
-import com.intellij.psi.PsiRecursiveElementVisitor;
+import consulo.language.psi.PsiRecursiveElementVisitor;
 import consulo.language.psi.PsiReference;
 
 import jakarta.inject.Singleton;

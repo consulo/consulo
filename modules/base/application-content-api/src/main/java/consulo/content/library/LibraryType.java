@@ -21,7 +21,6 @@ import consulo.content.base.BinariesOrderRootType;
 import consulo.content.library.ui.LibraryEditorComponent;
 import consulo.content.library.ui.LibraryPropertiesEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
-import consulo.module.layer.ModuleRootModel;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -36,6 +35,8 @@ import java.util.List;
  * &lt;extensions defaultExtensionNs="com.intellij"&gt;<br>
  * &nbsp;&nbsp;&lt;library.type implementation="qualified-class-name"/&gt;<br>
  * &lt;/extensions&gt;
+ *
+ * @see ModuleAwareLibraryType
  *
  * @author nik
  */
@@ -69,11 +70,7 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
   @Nullable
   public abstract NewLibraryConfiguration createNewLibrary(@Nonnull JComponent parentComponent, @Nullable VirtualFile contextDirectory,
                                                            @Nonnull Project project);
-
-  /**
-   * @return {@code true} if library of this type can be added as a dependency to {@code module}
-   */
-  public boolean isAvailable(@Nonnull ModuleRootModel moduleRootModel) {
+  public boolean isAvailable() {
     return true;
   }
 

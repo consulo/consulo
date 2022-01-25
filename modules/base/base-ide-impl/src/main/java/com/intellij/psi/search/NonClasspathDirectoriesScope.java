@@ -16,6 +16,7 @@
 
 package com.intellij.psi.search;
 
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;

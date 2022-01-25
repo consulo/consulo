@@ -21,7 +21,7 @@ import com.intellij.openapi.util.UserDataCache;
 import com.intellij.openapi.vcs.IssueNavigationConfiguration;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import com.intellij.psi.PsiReferenceProvider;
+import consulo.language.psi.PsiReferenceProvider;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;

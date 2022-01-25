@@ -32,7 +32,6 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.PathManager;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
@@ -41,29 +40,30 @@ import com.intellij.openapi.externalSystem.service.remote.ExternalSystemProgress
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
-import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.JdkUtil;
-import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.SimpleJavaSdkType;
-import consulo.module.content.layer.orderEntry.DependencyScope;
 import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.psi.PsiBundle;
 import com.intellij.util.Alarm;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.component.extension.ExtensionPointName;
 import consulo.container.boot.ContainerPathManager;
+import consulo.content.bundle.Sdk;
+import consulo.language.psi.PsiBundle;
 import consulo.logging.Logger;
+import consulo.module.content.layer.orderEntry.DependencyScope;
+import consulo.project.ProjectBundle;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -128,21 +128,21 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
         params.setJdk(new SimpleJavaSdkType().createJdk("tmp", SystemProperties.getJavaHome()));
 
         params.setWorkingDirectory(ContainerPathManager.get().getBinPath());
-        final List<String> classPath = ContainerUtilRt.newArrayList();
+        final List<String> classPath = new ArrayList<>();
 
         // IDE jars.
         classPath.addAll(PathManager.getUtilClassPath());
-        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(ProjectBundle.class), classPath);
+        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(ProjectBundle.class), classPath);
         ExternalSystemApiUtil.addBundle(params.getClassPath(), "messages.ProjectBundle", ProjectBundle.class);
-        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(PsiBundle.class), classPath);
-        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(Alarm.class), classPath);
-        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(DependencyScope.class), classPath);
-        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(ExtensionPointName.class), classPath);
-        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(OpenProjectFileChooserDescriptor.class), classPath);
-        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(ExternalSystemTaskNotificationListener.class), classPath);
+        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(PsiBundle.class), classPath);
+        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(Alarm.class), classPath);
+        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(DependencyScope.class), classPath);
+        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(ExtensionPointName.class), classPath);
+        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(OpenProjectFileChooserDescriptor.class), classPath);
+        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(ExternalSystemTaskNotificationListener.class), classPath);
 
         // External system module jars
-        ContainerUtil.addIfNotNull(VirtualFilePathUtil.getJarPathForClass(getClass()), classPath);
+        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(getClass()), classPath);
         ExternalSystemApiUtil.addBundle(params.getClassPath(), "messages.CommonBundle", CommonBundle.class);
         params.getClassPath().addAll(classPath);
 
@@ -161,7 +161,7 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
         if (externalSystemId != null) {
           ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
           if (manager != null) {
-            params.getClassPath().add(VirtualFilePathUtil.getJarPathForClass(manager.getProjectResolverClass().getClass()));
+            params.getClassPath().add(PathUtil.getJarPathForClass(manager.getProjectResolverClass().getClass()));
             params.getProgramParametersList().add(manager.getProjectResolverClass().getName());
             params.getProgramParametersList().add(manager.getTaskManagerClass().getName());
             manager.enhanceRemoteProcessing(params);

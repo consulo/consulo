@@ -36,7 +36,7 @@ import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;

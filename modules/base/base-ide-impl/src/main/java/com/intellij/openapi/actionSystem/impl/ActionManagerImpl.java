@@ -19,7 +19,7 @@ import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import consulo.util.concurrent.ActionCallback;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;

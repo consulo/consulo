@@ -27,7 +27,7 @@ import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
 import com.intellij.openapi.editor.Editor;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.WriteExternalException;

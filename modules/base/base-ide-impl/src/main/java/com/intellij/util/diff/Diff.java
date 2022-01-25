@@ -16,7 +16,7 @@
 package com.intellij.util.diff;
 
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;

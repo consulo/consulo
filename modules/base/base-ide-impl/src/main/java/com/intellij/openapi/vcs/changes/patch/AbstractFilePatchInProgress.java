@@ -19,7 +19,6 @@ import com.intellij.diff.chains.DiffRequestProducer;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchReader;
 import com.intellij.openapi.diff.impl.patch.formove.PathMerger;
-import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.FilePath;
@@ -27,11 +26,12 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.CurrentContentRevision;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,8 +79,8 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
   }
 
   private FilePatchStatus getStatus(final T patch) {
-    final String beforeName = VirtualFilePathUtil.toSystemIndependentName(patch.getBeforeName());
-    final String afterName = VirtualFilePathUtil.toSystemIndependentName(patch.getAfterName());
+    final String beforeName = PathUtil.toSystemIndependentName(patch.getBeforeName());
+    final String afterName = PathUtil.toSystemIndependentName(patch.getAfterName());
 
     if (patch.isNewFile() || (beforeName == null)) {
       return FilePatchStatus.ADDED;
@@ -268,7 +268,7 @@ public abstract class AbstractFilePatchInProgress<T extends FilePatch> implement
     private final int[] myParts;
 
     private StripCapablePath(final String path) {
-      final String corrected = VirtualFilePathUtil.toSystemIndependentName(path.trim());
+      final String corrected = PathUtil.toSystemIndependentName(path.trim());
       mySourcePath = new StringBuilder(corrected);
       final String[] steps = corrected.split("/");
       myStripMax = steps.length - 1;

@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.keymap.impl.ui;
 
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.KeyStrokeAdapter;
 
 import javax.swing.*;

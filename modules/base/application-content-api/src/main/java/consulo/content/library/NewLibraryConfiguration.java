@@ -15,9 +15,7 @@
  */
 package consulo.content.library;
 
-import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
-import consulo.content.library.LibraryProperties;
-import consulo.content.library.LibraryType;
+import consulo.content.library.ui.LibraryEditor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

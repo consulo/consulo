@@ -20,6 +20,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

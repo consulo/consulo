@@ -37,7 +37,7 @@ import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.JDOMExternalizable;
 import consulo.component.persist.WriteExternalException;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;

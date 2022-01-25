@@ -20,6 +20,7 @@
 package com.intellij.lang;
 
 import consulo.language.ast.IElementType;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.version.LanguageVersion;
 

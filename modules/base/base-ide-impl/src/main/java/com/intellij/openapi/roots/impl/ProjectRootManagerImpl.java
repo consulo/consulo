@@ -29,7 +29,7 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.project.content.ProjectFileIndex;
+import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.language.psi.PsiManager;

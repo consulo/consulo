@@ -19,7 +19,7 @@ import consulo.application.Application;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.PsiFileFactoryImpl;
 import com.intellij.psi.impl.PsiManagerImpl;

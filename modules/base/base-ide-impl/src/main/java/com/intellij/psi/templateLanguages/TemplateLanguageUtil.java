@@ -7,6 +7,8 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.OuterLanguageElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.template.TemplateLanguageFileViewProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

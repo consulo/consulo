@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileTypes.INativeFileType;
+import consulo.virtualFileSystem.fileType.INativeFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import consulo.project.DumbAware;
 import com.intellij.openapi.vfs.PersistentFSConstants;

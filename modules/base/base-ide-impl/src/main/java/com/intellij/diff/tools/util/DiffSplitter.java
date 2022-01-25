@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.GridBag;
 import consulo.ui.annotation.RequiredUIAccess;

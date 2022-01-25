@@ -16,7 +16,7 @@ import com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.project.DumbAware;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.FontUtil;
 import consulo.util.dataholder.Key;

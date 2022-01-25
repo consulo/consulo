@@ -24,34 +24,35 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.progress.*;
+import com.intellij.openapi.progress.PerformInBackgroundOption;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
-import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ExceptionUtil;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.io.URLUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.logging.Logger;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.xml.transform.OutputKeys;
@@ -110,7 +111,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
     LOG.assertTrue(project != null);
     final ExportTestResultsConfiguration config = ExportTestResultsConfiguration.getInstance(project);
 
-    final String name = ExecutionBundle.message("export.test.results.filename", VirtualFilePathUtil.suggestFileName(myRunConfiguration.getName()));
+    final String name = ExecutionBundle.message("export.test.results.filename", PathUtil.suggestFileName(myRunConfiguration.getName()));
     String filename = name + "." + config.getExportFormat().getDefaultExtension();
     boolean showDialog = true;
     while (showDialog) {

@@ -25,7 +25,7 @@ import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.playback.commands.ActionCommand;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
@@ -33,7 +33,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
 import consulo.disposer.Disposer;
 

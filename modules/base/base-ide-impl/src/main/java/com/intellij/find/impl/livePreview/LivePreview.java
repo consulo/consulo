@@ -32,7 +32,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.PositionTracker;

@@ -15,15 +15,15 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.version.LanguageVersion;
 import consulo.language.parser.ParserDefinition;
 import com.intellij.patterns.PlatformPatterns;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ThreeState;
 import javax.annotation.Nonnull;
 

@@ -18,7 +18,7 @@ package com.intellij.psi;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

@@ -2,6 +2,7 @@
 package com.intellij.lang;
 
 import consulo.language.Language;
+import consulo.language.MetaLanguage;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

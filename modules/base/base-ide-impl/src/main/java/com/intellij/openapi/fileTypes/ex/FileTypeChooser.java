@@ -43,6 +43,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

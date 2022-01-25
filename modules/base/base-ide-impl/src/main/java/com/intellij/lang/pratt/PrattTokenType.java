@@ -16,7 +16,7 @@
 package com.intellij.lang.pratt;
 
 import consulo.language.Language;
-import com.intellij.psi.PsiBundle;
+import consulo.language.psi.PsiBundle;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

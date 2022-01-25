@@ -18,7 +18,7 @@ package com.intellij.openapi.actionSystem.impl;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
 
 import jakarta.inject.Singleton;

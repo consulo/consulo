@@ -40,7 +40,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.ScreenUtil;

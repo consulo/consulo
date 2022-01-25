@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.fileTypes.FileTypeFactory;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.changes.patch.PatchFileType;
 import javax.annotation.Nonnull;

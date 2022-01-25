@@ -8,7 +8,7 @@ import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
 import com.intellij.diagnostic.PluginException;
 import consulo.language.Language;
 import com.intellij.lang.LanguageAnnotators;
-import com.intellij.lang.LanguageUtil;
+import consulo.language.util.LanguageUtil;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.diagnostic.Logger;

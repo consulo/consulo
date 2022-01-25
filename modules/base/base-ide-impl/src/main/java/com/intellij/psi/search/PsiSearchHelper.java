@@ -17,6 +17,8 @@ package com.intellij.psi.search;
 
 import com.intellij.concurrency.AsyncFuture;
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.SearchScope;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

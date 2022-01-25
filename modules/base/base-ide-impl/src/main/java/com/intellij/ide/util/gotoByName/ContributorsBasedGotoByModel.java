@@ -18,7 +18,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.Processors;

@@ -2,7 +2,7 @@
 package com.intellij.psi.stubs;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
@@ -14,7 +14,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
-import com.intellij.psi.templateLanguages.TemplateLanguage;
+import consulo.language.template.TemplateLanguage;
 import consulo.language.ast.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.containers.ContainerUtil;

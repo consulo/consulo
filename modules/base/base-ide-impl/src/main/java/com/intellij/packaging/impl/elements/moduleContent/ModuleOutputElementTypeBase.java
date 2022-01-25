@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.elements.moduleContent;
 
 import com.google.common.base.Predicates;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ContentEntry;

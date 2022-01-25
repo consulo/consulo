@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import consulo.language.util.IncorrectOperationException;
 

@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.extensions.KeyedFactoryEPBean;
+import consulo.component.extension.KeyedFactoryEPBean;
 import consulo.annotation.DeprecationInfo;
 import consulo.injecting.InjectingContainerOwner;
 

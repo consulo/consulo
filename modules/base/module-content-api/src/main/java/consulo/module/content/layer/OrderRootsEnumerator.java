@@ -15,11 +15,10 @@
  */
 package consulo.module.content.layer;
 
-import com.intellij.util.NotNullFunction;
-import com.intellij.util.PathsList;
 import consulo.module.Module;
-import consulo.module.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.PathsList;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;

@@ -6,7 +6,7 @@ import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.SmartPsiElementPointer;
+import consulo.language.psi.SmartPsiElementPointer;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import jakarta.inject.Inject;
 

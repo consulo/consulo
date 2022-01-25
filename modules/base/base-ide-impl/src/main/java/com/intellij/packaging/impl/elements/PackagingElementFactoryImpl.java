@@ -16,17 +16,10 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.icons.AllIcons;
-import consulo.logging.Logger;
-import consulo.module.Module;
-import consulo.module.ModulePointerManager;
-import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryTable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
@@ -35,19 +28,27 @@ import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
 import com.intellij.packaging.impl.elements.moduleContent.TestModuleOutputElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.packaging.impl.elements.ZipArchivePackagingElement;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.ui.image.Image;
 import consulo.component.util.pointer.NamedPointer;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModulePointerManager;
+import consulo.packaging.impl.elements.ZipArchivePackagingElement;
+import consulo.project.Project;
+import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -162,7 +163,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
   @Override
   public void addFileCopy(@Nonnull CompositePackagingElement<?> root, @Nonnull String outputDirectoryPath, @Nonnull String sourceFilePath, @Nullable String outputFileName) {
-    final String fileName = VirtualFilePathUtil.getFileName(sourceFilePath);
+    final String fileName = PathUtil.getFileName(sourceFilePath);
     if (outputFileName != null && outputFileName.equals(fileName)) {
       outputFileName = null;
     }

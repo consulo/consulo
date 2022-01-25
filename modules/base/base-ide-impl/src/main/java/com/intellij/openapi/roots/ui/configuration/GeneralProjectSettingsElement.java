@@ -23,7 +23,7 @@ import consulo.module.content.layer.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Chunk;
-import com.intellij.util.graph.Graph;
+import consulo.component.util.graph.Graph;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;

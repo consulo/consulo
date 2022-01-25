@@ -15,10 +15,15 @@
  */
 package com.intellij.util;
 
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.SystemInfoRt;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,6 +35,40 @@ import java.util.Set;
  * @author nik
  */
 public class PathUtil {
+  @Nullable
+  public static String getFileExtension(@Nonnull String name) {
+    int index = name.lastIndexOf('.');
+    if (index < 0) return null;
+    return name.substring(index + 1);
+  }
+
+  public static String getCanonicalPath(@NonNls String path) {
+    return FileUtil.toCanonicalPath(path);
+  }
+
+  @Contract("null -> null; !null -> !null")
+  public static String toSystemIndependentName(@Nullable String path) {
+    return path == null ? null : FileUtilRt.toSystemIndependentName(path);
+  }
+
+
+  @Contract("null -> null; !null -> !null")
+  public static String toSystemDependentName(@Nullable String path) {
+    return path == null ? null : FileUtilRt.toSystemDependentName(path);
+  }
+
+  @Nonnull
+  public static String makeFileName(@Nonnull String name, @Nullable String extension) {
+    return name + (StringUtil.isEmpty(extension) ? "" : "." + extension);
+  }
+
+  @Nonnull
+  public static String getJarPathForClass(@Nonnull Class aClass) {
+    final String pathForClass = PathManager.getJarPathForClass(aClass);
+    assert pathForClass != null : aClass;
+    return pathForClass;
+  }
+
   @Nonnull
   public static String getFileName(@Nonnull String path) {
     if (StringUtil.isEmpty(path)) {
@@ -104,6 +143,10 @@ public class PathUtil {
    */
   public static boolean isValidFileName(@Nonnull String fileName, boolean strict) {
     return isValidFileName(fileName, Platform.CURRENT, strict, FS_CHARSET);
+  }
+
+  public static boolean isValidFileName(@Nonnull String fileName) {
+    return isValidFileName(fileName, true);
   }
 
   public enum Platform {

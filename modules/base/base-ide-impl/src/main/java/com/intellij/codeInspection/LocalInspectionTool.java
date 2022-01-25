@@ -15,11 +15,7 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.psi.*;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiElementVisitor;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;
@@ -116,7 +112,7 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
   /**
    * Override the method to provide your own inspection visitor, if you need to store additional state in the
    * LocalInspectionToolSession user data or get information about the inspection scope.
-   * Visitor created must not be recursive (e.g. it must not inherit {@link com.intellij.psi.PsiRecursiveElementVisitor})
+   * Visitor created must not be recursive (e.g. it must not inherit {@link PsiRecursiveElementVisitor})
    * since it will be fed with every element in the file anyway.
    * Visitor created must be thread-safe since it might be called on several elements concurrently.
    *
@@ -132,7 +128,7 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
 
   /**
    * Override the method to provide your own inspection visitor.
-   * Visitor created must not be recursive (e.g. it must not inherit {@link com.intellij.psi.PsiRecursiveElementVisitor})
+   * Visitor created must not be recursive (e.g. it must not inherit {@link PsiRecursiveElementVisitor})
    * since it will be fed with every element in the file anyway.
    * Visitor created must be thread-safe since it might be called on several elements concurrently.
    *

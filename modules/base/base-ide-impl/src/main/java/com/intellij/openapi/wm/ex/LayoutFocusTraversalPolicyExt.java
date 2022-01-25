@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.ex;
 
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

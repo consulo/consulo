@@ -15,13 +15,13 @@
  */
 package consulo.language.parser;
 
-import consulo.language.ast.ASTNode;
-import consulo.project.Project;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.TokenSet;
-import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import consulo.annotation.DeprecationInfo;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.LighterASTNode;
+import consulo.language.ast.TokenSet;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nonnull;

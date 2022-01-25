@@ -17,8 +17,8 @@ package com.intellij.codeInsight.lookup;
 
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.meta.PsiMetaData;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.meta.PsiMetaData;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.IconUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptorUpdaters;

@@ -18,7 +18,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectRootManager;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;

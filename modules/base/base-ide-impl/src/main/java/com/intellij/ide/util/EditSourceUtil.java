@@ -27,7 +27,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import javax.annotation.Nullable;
 
 public class EditSourceUtil {

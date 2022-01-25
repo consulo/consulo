@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.*;
 import org.jetbrains.annotations.TestOnly;
 

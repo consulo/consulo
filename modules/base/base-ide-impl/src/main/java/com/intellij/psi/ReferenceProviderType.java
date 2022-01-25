@@ -17,6 +17,7 @@ package com.intellij.psi;
 
 import consulo.application.extension.KeyedExtensionCollector;
 import consulo.container.plugin.PluginIds;
+import consulo.language.psi.PsiReferenceProvider;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

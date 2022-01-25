@@ -19,7 +19,7 @@ import consulo.language.Language;
 import consulo.language.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.extensions.KeyedFactoryEPBean;
+import consulo.component.extension.KeyedFactoryEPBean;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.ast.IElementType;

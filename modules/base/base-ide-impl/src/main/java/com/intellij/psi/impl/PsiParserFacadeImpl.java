@@ -21,7 +21,6 @@ import com.intellij.lang.Commenter;
 import consulo.language.Language;
 import com.intellij.lang.LanguageCommenters;
 import consulo.language.file.LanguageFileType;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.source.DummyHolderFactory;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.FileElement;

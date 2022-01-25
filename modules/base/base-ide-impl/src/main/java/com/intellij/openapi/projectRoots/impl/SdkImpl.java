@@ -8,7 +8,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.projectRoots.*;
 import consulo.content.OrderRootType;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectRootManager;
 import consulo.content.RootProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;

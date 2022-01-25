@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.settings;
 
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.border.IdeaTitledBorder;

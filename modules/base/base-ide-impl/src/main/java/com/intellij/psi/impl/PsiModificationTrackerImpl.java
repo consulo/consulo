@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Condition;
 import consulo.component.util.ModificationTracker;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.language.ast.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.application.internal.TransactionGuardEx;

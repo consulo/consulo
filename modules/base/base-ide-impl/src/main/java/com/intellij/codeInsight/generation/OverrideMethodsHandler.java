@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

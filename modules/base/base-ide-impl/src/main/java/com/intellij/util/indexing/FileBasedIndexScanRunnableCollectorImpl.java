@@ -24,7 +24,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
-import consulo.project.content.ProjectFileIndex;
+import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.JBIterable;
 import consulo.application.AccessRule;

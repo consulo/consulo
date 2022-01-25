@@ -23,7 +23,7 @@ import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.DiffLog;
 import consulo.language.util.IncorrectOperationException;

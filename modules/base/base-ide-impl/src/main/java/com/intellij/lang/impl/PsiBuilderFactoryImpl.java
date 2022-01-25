@@ -16,11 +16,11 @@
 
 package com.intellij.lang.impl;
 
-import com.intellij.lang.*;
 import consulo.language.ast.LighterLazyParseableNode;
 import consulo.language.lexer.Lexer;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiBuilderFactory;

@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import javax.annotation.Nonnull;
 
 public class LineMover extends StatementUpDownMover {

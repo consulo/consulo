@@ -22,7 +22,7 @@ import com.intellij.diff.comparison.iterables.FairDiffIterable;
 import com.intellij.diff.util.Range;
 import com.intellij.diff.util.Side;
 import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

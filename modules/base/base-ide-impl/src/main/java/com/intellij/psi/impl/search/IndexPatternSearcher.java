@@ -3,7 +3,7 @@
 package com.intellij.psi.impl.search;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageParserDefinitions;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.lexer.Lexer;
 import com.intellij.openapi.application.QueryExecutorBase;

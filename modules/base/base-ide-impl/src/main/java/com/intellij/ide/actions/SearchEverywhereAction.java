@@ -29,7 +29,7 @@ import com.intellij.openapi.keymap.MacKeymapUtil;
 import com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.project.DumbAware;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

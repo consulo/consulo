@@ -29,7 +29,7 @@ import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.PsiRecursiveElementVisitor;
+import consulo.language.psi.PsiRecursiveElementVisitor;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;

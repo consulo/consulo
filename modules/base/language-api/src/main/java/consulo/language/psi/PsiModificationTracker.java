@@ -1,12 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi;
 
-import com.intellij.openapi.components.ServiceManager;
-import consulo.project.Project;
+import consulo.annotation.DeprecationInfo;
 import consulo.component.messagebus.MessageBus;
-import consulo.util.dataholder.Key;
-import consulo.component.util.ModificationTracker;
 import consulo.component.messagebus.Topic;
+import consulo.component.util.ModificationTracker;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -31,6 +32,8 @@ public interface PsiModificationTracker extends ModificationTracker {
    *
    * @see #getInstance(Project)
    */
+  @Deprecated
+  @DeprecationInfo("#getInstance(Project)")
   class SERVICE {
     private SERVICE() {
     }
@@ -39,13 +42,13 @@ public interface PsiModificationTracker extends ModificationTracker {
      * @return The instance of {@link PsiModificationTracker} corresponding to the given project.
      */
     public static PsiModificationTracker getInstance(Project project) {
-      return ServiceManager.getService(project, PsiModificationTracker.class);
+      return PsiModificationTracker.getInstance(project);
     }
   }
 
   @Nonnull
   static PsiModificationTracker getInstance(Project project) {
-    return ServiceManager.getService(project, PsiModificationTracker.class);
+    return project.getInstance(PsiModificationTracker.class);
   }
 
   /**

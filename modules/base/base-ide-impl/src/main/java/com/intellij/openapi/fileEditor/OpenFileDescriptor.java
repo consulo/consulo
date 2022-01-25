@@ -25,7 +25,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.INativeFileType;
+import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;

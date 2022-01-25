@@ -3,6 +3,7 @@ module consulo.util.collection {
   requires transitive consulo.util.lang;
 
   exports consulo.util.collection;
+  exports consulo.util.collection.util;
 
   // TODO exports only to impl modules
   exports consulo.util.collection.impl.map;

@@ -6,7 +6,7 @@ import consulo.application.Application;
 import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.MixedColorProducer;

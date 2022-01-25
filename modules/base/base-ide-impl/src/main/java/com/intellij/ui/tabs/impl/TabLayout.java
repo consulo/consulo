@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

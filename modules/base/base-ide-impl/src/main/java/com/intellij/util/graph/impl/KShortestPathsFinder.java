@@ -19,7 +19,7 @@ import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.util.containers.FList;
 import com.intellij.util.containers.MultiMap;
-import com.intellij.util.graph.Graph;
+import consulo.component.util.graph.Graph;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;

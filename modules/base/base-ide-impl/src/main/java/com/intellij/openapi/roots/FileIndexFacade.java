@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.component.util.ModificationTracker;
 import consulo.module.Module;
 import consulo.project.Project;

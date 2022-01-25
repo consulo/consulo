@@ -17,6 +17,7 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
 
 import javax.annotation.Nonnull;
 

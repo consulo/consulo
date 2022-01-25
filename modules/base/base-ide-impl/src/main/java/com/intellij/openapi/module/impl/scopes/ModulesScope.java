@@ -17,10 +17,10 @@ package com.intellij.openapi.module.impl.scopes;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.project.content.ProjectFileIndex;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

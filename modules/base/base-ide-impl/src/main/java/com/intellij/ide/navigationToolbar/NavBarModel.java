@@ -13,8 +13,8 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.project.content.ProjectFileIndex;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.CommonProcessors;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import static com.intellij.psi.util.PsiUtilCore.findFileSystemItem;
+import static consulo.language.psi.PsiUtilCore.findFileSystemItem;
 
 /**
  * @author Konstantin Bulenkov

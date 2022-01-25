@@ -23,6 +23,7 @@ import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
+import com.intellij.util.PathUtil;
 import consulo.application.ApplicationManager;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
@@ -398,7 +399,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
                                  @Nonnull final String[] additionalParameters) {
     Runnable launchTask = null;
     if (browserPath == null && browser != null) {
-      browserPath = VirtualFilePathUtil.toSystemDependentName(browser.getPath());
+      browserPath = PathUtil.toSystemDependentName(browser.getPath());
       launchTask = new Runnable() {
         @Override
         public void run() {

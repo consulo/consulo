@@ -17,6 +17,7 @@ package com.intellij.codeInspection;
 
 import com.intellij.codeInsight.intention.FileModifier;
 import consulo.component.util.Iconable;
+import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
 
 /**
@@ -26,7 +27,7 @@ import consulo.project.Project;
  * Instead, use the {@link ProblemDescriptor#getPsiElement()}
  * in {@link QuickFix#applyFix(Project, CommonProblemDescriptor)}
  * to retrieve the PSI context the fix will work on.
- * See also {@link LocalQuickFixOnPsiElement} which uses {@link com.intellij.psi.SmartPsiElementPointer} instead of storing PSI elements.
+ * See also {@link LocalQuickFixOnPsiElement} which uses {@link SmartPsiElementPointer} instead of storing PSI elements.
  * <p/>
  * Implement {@link Iconable Iconable} interface to
  * change icon in quick fix popup menu.

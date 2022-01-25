@@ -19,7 +19,7 @@
  */
 package com.intellij.psi;
 
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.PsiFile;
 
 public interface PsiCodeFragment extends PsiFile {

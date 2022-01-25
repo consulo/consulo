@@ -27,7 +27,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.util.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;

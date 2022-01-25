@@ -16,35 +16,35 @@
 package com.intellij.openapi.roots.ui;
 
 import com.intellij.icons.AllIcons;
-import consulo.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkType;
-import consulo.module.content.layer.ContentFolder;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.impl.LightFilePointer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.io.URLUtil;
-import consulo.content.bundle.SdkUtil;
-import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
-import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.content.base.BinariesOrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkType;
+import consulo.content.bundle.SdkUtil;
+import consulo.content.library.Library;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.module.Module;
+import consulo.module.content.layer.ContentFolder;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntryType;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -88,7 +88,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     }
 
     final String url = StringUtil.trimEnd(files[0], URLUtil.ARCHIVE_SEPARATOR);
-    return SimpleTextCellAppearance.regular(VirtualFilePathUtil.getFileName(url), AllIcons.Nodes.PpLib);
+    return SimpleTextCellAppearance.regular(PathUtil.getFileName(url), AllIcons.Nodes.PpLib);
   }
 
   @Nonnull
@@ -131,7 +131,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @Nonnull
   @Override
   public CellAppearanceEx forContentFolder(@Nonnull final ContentFolder folder) {
-    return formatRelativePath(folder, folder.getType().getChildDirectoryIcon(null));
+    return formatRelativePath(folder, folder.getType().getChildDirectoryIcon(null, null));
   }
 
   @Nonnull

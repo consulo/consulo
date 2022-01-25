@@ -4,11 +4,10 @@ package com.intellij.openapi.fileTypes;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.Topic;
 import consulo.application.internal.PerApplicationInstance;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

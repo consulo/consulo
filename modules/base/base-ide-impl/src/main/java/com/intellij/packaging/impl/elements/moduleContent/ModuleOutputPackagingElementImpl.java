@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.elements.moduleContent;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;

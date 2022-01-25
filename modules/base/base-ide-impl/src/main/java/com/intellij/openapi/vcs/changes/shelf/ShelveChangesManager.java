@@ -17,15 +17,9 @@
 package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.concurrency.JobScheduler;
-import consulo.component.persist.InvalidDataException;
-import consulo.component.persist.JDOMExternalizable;
-import consulo.component.persist.WriteExternalException;
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.ProjectComponent;
-import consulo.component.persist.RoamingType;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.diff.impl.patch.*;
@@ -35,10 +29,8 @@ import com.intellij.openapi.diff.impl.patch.formove.PatchApplier;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
-import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -49,21 +41,30 @@ import com.intellij.openapi.vcs.changes.patch.PatchFileType;
 import com.intellij.openapi.vcs.changes.patch.PatchNameChecker;
 import com.intellij.openapi.vcs.changes.ui.RollbackChangesDialog;
 import com.intellij.openapi.vcs.changes.ui.RollbackWorker;
-import consulo.util.io.CharsetToolkit;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.application.util.function.Processor;
+import com.intellij.util.PathUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
 import com.intellij.util.text.CharArrayCharSequence;
-import consulo.component.util.text.UniqueNameGenerator;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.FilesProgress;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Processor;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.Topic;
+import consulo.component.persist.InvalidDataException;
+import consulo.component.persist.JDOMExternalizable;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.WriteExternalException;
+import consulo.component.util.text.UniqueNameGenerator;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.progress.ProgressIndicator;
+import consulo.project.Project;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jdom.Parent;
@@ -71,8 +72,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.io.*;
@@ -272,7 +271,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
       if (file.SHELVED_PATH != null) {
         File shelvedFile = new File(file.SHELVED_PATH);
         if (!StringUtil.isEmptyOrSpaces(file.AFTER_PATH) && shelvedFile.exists()) {
-          File newShelvedFile = new File(targetDirectory, VirtualFilePathUtil.getFileName(file.AFTER_PATH));
+          File newShelvedFile = new File(targetDirectory, PathUtil.getFileName(file.AFTER_PATH));
           try {
             FileUtil.copy(shelvedFile, newShelvedFile);
             file.SHELVED_PATH = FileUtil.toSystemIndependentName(newShelvedFile.getPath());

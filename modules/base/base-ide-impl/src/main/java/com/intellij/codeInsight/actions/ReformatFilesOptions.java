@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.actions;
 
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.SearchScope;
 import javax.annotation.Nullable;
 
 public interface ReformatFilesOptions extends LayoutCodeOptions {

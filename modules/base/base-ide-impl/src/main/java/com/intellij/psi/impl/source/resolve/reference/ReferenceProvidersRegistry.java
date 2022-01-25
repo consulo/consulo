@@ -20,6 +20,7 @@ import consulo.language.Language;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.PsiReferenceService;
 import consulo.progress.ProgressIndicatorProvider;
 import com.intellij.psi.*;

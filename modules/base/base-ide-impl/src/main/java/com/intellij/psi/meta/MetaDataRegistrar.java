@@ -19,6 +19,7 @@ package com.intellij.psi.meta;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.filters.ElementFilter;
+import consulo.language.psi.meta.PsiMetaData;
 
 /**
  * Provides association for elements matching given filter with metadata class.

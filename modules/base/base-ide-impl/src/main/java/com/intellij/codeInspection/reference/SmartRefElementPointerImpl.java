@@ -18,7 +18,7 @@ package com.intellij.codeInspection.reference;
 
 import consulo.logging.Logger;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.SmartPsiElementPointer;
+import consulo.language.psi.SmartPsiElementPointer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

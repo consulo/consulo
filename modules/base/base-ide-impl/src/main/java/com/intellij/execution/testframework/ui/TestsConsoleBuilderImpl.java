@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.ui;
 import com.intellij.execution.filters.TextConsoleBuilderImpl;
 import com.intellij.execution.ui.ConsoleView;
 import consulo.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 
 /**
  * @author Roman.Chernyatchik

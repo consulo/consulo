@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.util.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 
 class ProjectFilesCondition implements Condition<VirtualFile> {
   private static final int MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT = 2;

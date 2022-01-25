@@ -25,7 +25,7 @@ import consulo.logging.Logger;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.project.content.ProjectFileIndex;
+import consulo.module.content.ProjectFileIndex;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

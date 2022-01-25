@@ -21,6 +21,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;

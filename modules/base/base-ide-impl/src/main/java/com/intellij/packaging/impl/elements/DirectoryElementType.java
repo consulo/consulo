@@ -17,14 +17,14 @@ package com.intellij.packaging.impl.elements;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.compiler.CompilerBundle;
-import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.CompositePackagingElementType;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -73,8 +73,8 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
       return null;
     }
     path = FileUtil.toSystemIndependentName(path);
-    final String parentPath = VirtualFilePathUtil.getParentPath(path);
-    final String fileName = VirtualFilePathUtil.getFileName(path);
+    final String parentPath = PathUtil.getParentPath(path);
+    final String fileName = PathUtil.getFileName(path);
     final PackagingElement<?> element = new DirectoryPackagingElement(fileName);
     return (CompositePackagingElement<?>)PackagingElementFactoryImpl.getInstance(context.getProject()).createParentDirectories(parentPath, element);
 

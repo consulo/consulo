@@ -34,7 +34,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.SequentialModalProgressTask;
 import javax.annotation.Nonnull;

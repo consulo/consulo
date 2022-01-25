@@ -26,6 +26,7 @@ module consulo.component.api {
   exports consulo.component.util.localize;
   exports consulo.component.util.pointer;
   exports consulo.component.util.text;
+  exports consulo.component.util.graph;
 
   // TODO only to impl module
   exports consulo.component.extension.internal;

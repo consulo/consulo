@@ -16,7 +16,9 @@
 package consulo.language.ast;
 
 import consulo.language.Language;
+import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiBuilderFactory;
 import consulo.language.parser.PsiParser;
 import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;

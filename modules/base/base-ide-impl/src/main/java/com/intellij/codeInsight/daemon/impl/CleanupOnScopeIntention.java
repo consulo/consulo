@@ -22,7 +22,7 @@ import com.intellij.analysis.BaseAnalysisActionDialog;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.actions.CleanupIntention;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;

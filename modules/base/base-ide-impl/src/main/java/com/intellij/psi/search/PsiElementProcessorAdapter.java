@@ -23,6 +23,7 @@ import com.intellij.openapi.application.ReadActionProcessor;
 import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.resolve.PsiElementProcessor;
 
 public class PsiElementProcessorAdapter<T extends PsiElement> extends ReadActionProcessor<T> implements Processor<T> {
   private final PsiElementProcessor<T> myProcessor;

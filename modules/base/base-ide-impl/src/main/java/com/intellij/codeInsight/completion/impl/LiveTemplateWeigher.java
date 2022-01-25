@@ -4,7 +4,7 @@ package com.intellij.codeInsight.completion.impl;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementWeigher;
 import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

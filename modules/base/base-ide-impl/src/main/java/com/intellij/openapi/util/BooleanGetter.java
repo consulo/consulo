@@ -15,20 +15,18 @@
  */
 package com.intellij.openapi.util;
 
-public interface BooleanGetter {
-  BooleanGetter TRUE = new BooleanGetter() {
-    @Override
-    public boolean get() {
-      return true;
-    }
-  };
+import java.util.function.BooleanSupplier;
 
-  BooleanGetter FALSE = new BooleanGetter() {
-    @Override
-    public boolean get() {
-      return false;
-    }
-  };
+@FunctionalInterface
+public interface BooleanGetter extends BooleanSupplier {
+  BooleanGetter TRUE = () -> true;
+
+  BooleanGetter FALSE = () -> false;
 
   boolean get();
+
+  @Override
+  default boolean getAsBoolean() {
+    return get();
+  }
 }

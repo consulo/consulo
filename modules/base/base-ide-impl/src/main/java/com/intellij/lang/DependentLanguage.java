@@ -15,11 +15,14 @@
  */
 package com.intellij.lang;
 
+import consulo.language.InjectableLanguage;
+import consulo.language.template.TemplateLanguage;
+
 /**
  * A language that isn't meant to be a file's toplevel language, and it can't be injected. Probably,
  * it's a language of some chameleon (see {@link ChameleonTrasformer})
  *
- * @see com.intellij.psi.templateLanguages.TemplateLanguage
+ * @see TemplateLanguage
  * @see InjectableLanguage
  * @author peter
  */

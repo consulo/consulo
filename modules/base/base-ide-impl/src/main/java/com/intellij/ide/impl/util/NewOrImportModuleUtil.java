@@ -33,7 +33,7 @@ import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
-import consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;

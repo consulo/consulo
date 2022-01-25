@@ -38,7 +38,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.roots.ContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

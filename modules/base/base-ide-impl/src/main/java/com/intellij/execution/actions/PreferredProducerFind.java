@@ -21,7 +21,7 @@ import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.impl.ConfigurationFromContextWrapper;
 import com.intellij.execution.junit.RuntimeConfigurationProducer;
-import com.intellij.openapi.extensions.ExtensionException;
+import consulo.component.extension.ExtensionException;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

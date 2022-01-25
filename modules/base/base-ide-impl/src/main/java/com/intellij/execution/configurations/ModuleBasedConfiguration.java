@@ -18,7 +18,7 @@ package com.intellij.execution.configurations;
 
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.component.persist.InvalidDataException;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.persist.WriteExternalException;

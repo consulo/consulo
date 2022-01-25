@@ -5,7 +5,7 @@ import com.intellij.ide.ui.UISettings;
 import consulo.desktop.awt.ui.plaf.intellij.IdeaPopupMenuUI;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;
 import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.ui.scale.JBUIScale;

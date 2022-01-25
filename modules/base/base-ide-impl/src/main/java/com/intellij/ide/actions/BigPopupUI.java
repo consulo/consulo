@@ -7,7 +7,7 @@ import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.WindowMoveListener;
 import com.intellij.ui.components.JBList;

@@ -20,20 +20,20 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.module.Module;
-import consulo.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.RawCommandLineEditor;
 import com.intellij.ui.TextAccessor;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
+import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -192,7 +192,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
 
   public void reset(CommonProgramRunConfigurationParameters configuration) {
     setProgramParameters(configuration.getProgramParameters());
-    setWorkingDirectory(VirtualFilePathUtil.toSystemDependentName(configuration.getWorkingDirectory()));
+    setWorkingDirectory(PathUtil.toSystemDependentName(configuration.getWorkingDirectory()));
 
     myEnvVariablesComponent.setEnvs(configuration.getEnvs());
     myEnvVariablesComponent.setPassParentEnvs(configuration.isPassParentEnvs());

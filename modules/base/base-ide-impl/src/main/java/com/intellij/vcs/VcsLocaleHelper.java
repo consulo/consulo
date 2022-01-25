@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs;
 
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

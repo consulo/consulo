@@ -16,6 +16,8 @@
 
 package com.intellij.openapi.module.impl;
 
+import consulo.component.util.graph.Graph;
+import consulo.component.util.graph.InboundSemiGraph;
 import consulo.module.*;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;

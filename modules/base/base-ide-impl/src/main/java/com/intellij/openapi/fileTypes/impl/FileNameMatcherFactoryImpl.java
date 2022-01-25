@@ -17,6 +17,9 @@ package com.intellij.openapi.fileTypes.impl;
 
 import com.intellij.openapi.fileTypes.*;
 import javax.annotation.Nonnull;
+
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
 import jakarta.inject.Singleton;
 
 /**

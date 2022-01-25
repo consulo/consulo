@@ -6,6 +6,7 @@ import com.intellij.application.options.IndentOptionsEditor;
 import consulo.language.Language;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
+import consulo.language.psi.PsiFileFactory;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
@@ -66,7 +67,7 @@ public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSetting
    * Allows to customize PSI file creation for a language settings preview panel.
    * <p>
    * <b>IMPORTANT</b>: The created file must be a non-physical one with PSI events disabled. For more information see
-   * {@link com.intellij.psi.PsiFileFactory#createFileFromText(String, Language, CharSequence, boolean, boolean)} where
+   * {@link PsiFileFactory#createFileFromText(String, Language, CharSequence, boolean, boolean)} where
    * {@code eventSystemEnabled} parameter must be {@code false}
    *
    * @param project current project

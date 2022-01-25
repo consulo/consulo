@@ -41,7 +41,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.ast.TokenType;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import consulo.language.ast.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

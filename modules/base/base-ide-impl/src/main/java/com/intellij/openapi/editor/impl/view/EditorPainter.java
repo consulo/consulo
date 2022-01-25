@@ -16,7 +16,7 @@ import com.intellij.openapi.editor.markup.TextAttributesEffectsBuilder.EffectDes
 import com.intellij.openapi.util.Couple;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.CachingPainter;
 import com.intellij.ui.paint.EffectPainter;
 import com.intellij.ui.paint.LinePainter2D;
@@ -34,7 +34,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import consulo.ui.ex.util.LightDarkColorValue;
+import consulo.ui.util.LightDarkColorValue;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.collection.primitive.ints.IntMaps;

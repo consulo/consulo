@@ -11,7 +11,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiDocumentManager;
 import javax.annotation.Nonnull;
 

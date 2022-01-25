@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBCheckBox;

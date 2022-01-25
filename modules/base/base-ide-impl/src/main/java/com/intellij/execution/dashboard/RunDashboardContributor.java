@@ -20,7 +20,7 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.ide.projectView.PresentationData;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 
 /**
  * In order to show run configurations of the specific configuration type in Run Dashboard tool window,

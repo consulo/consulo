@@ -17,7 +17,6 @@ package com.intellij.execution.configurations;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.ArrayUtil;
 import com.pty4j.PtyProcess;
 import consulo.application.ApplicationProperties;

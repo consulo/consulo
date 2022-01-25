@@ -20,6 +20,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.content.library.*;
 import consulo.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.module.content.library.ModuleAwareLibraryType;
 import consulo.project.Project;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.ModuleRootModel;
@@ -153,7 +154,7 @@ public class LibraryEditingUtil {
     List<LibraryType> suitableTypes = new ArrayList<LibraryType>();
     suitableTypes.add(null);
     for (LibraryType libraryType : LibraryType.EP_NAME.getExtensionList()) {
-      if (libraryType.getCreateActionName() != null && libraryType.isAvailable(classpathPanel.getRootModel())) {
+      if (libraryType.getCreateActionName() != null && isAvailable(libraryType, classpathPanel.getRootModel())) {
         suitableTypes.add(libraryType);
       }
     }
@@ -195,7 +196,7 @@ public class LibraryEditingUtil {
     for (Module module : modulesModel.getModules()) {
       final ModuleRootModel rootModel = modulesModel.getRootModel(module);
 
-      if (type != null && !type.isAvailable(rootModel)) {
+      if (type != null && !isAvailable(type, rootModel)) {
         continue;
       }
       if (library != null) {
@@ -212,5 +213,13 @@ public class LibraryEditingUtil {
 
   public static void showDialogAndAddLibraryToDependencies(@Nonnull Library library, @Nonnull Project project, boolean allowEmptySelection) {
     ProjectStructureValidator.showDialogAndAddLibraryToDependencies(library, project, allowEmptySelection);
+  }
+
+  public static boolean isAvailable(LibraryType<?> type, ModuleRootModel moduleRootModel) {
+    if (type instanceof ModuleAwareLibraryType moduleAwareLibraryType) {
+      return moduleAwareLibraryType.isAvailable(moduleRootModel);
+    }
+
+    return type.isAvailable();
   }
 }

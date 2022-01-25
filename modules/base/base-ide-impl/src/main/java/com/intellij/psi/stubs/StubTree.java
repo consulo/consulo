@@ -21,6 +21,7 @@ package com.intellij.psi.stubs;
 
 import com.intellij.psi.impl.source.StubbedSpine;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.Stub;
 import consulo.language.psi.stub.StubElement;
 

@@ -15,20 +15,20 @@
  */
 package com.intellij.ide.scratch;
 
-import consulo.language.Language;
-import com.intellij.lang.LanguageUtil;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.util.PathUtil;
+import consulo.application.ApplicationManager;
+import consulo.language.Language;
+import consulo.language.util.LanguageUtil;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Objects;
@@ -65,9 +65,9 @@ public class ScratchUtil {
     String ext = actual.getDefaultExtension();
     if (StringUtil.isEmpty(ext)) return;
 
-    String newName = VirtualFilePathUtil.makeFileName(file.getNameWithoutExtension(), ext);
+    String newName = PathUtil.makeFileName(file.getNameWithoutExtension(), ext);
     VirtualFile parent = file.getParent();
-    newName = parent != null && parent.findChild(newName) != null ? VirtualFilePathUtil.makeFileName(file.getName(), ext) : newName;
+    newName = parent != null && parent.findChild(newName) != null ? PathUtil.makeFileName(file.getName(), ext) : newName;
     file.rename(ScratchUtil.class, newName);
   }
 

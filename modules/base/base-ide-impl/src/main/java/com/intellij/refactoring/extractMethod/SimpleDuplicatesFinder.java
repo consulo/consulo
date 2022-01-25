@@ -5,9 +5,9 @@ import com.intellij.openapi.progress.ProgressManager;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
+import consulo.language.psi.PsiRecursiveElementWalkingVisitor;
 import consulo.language.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

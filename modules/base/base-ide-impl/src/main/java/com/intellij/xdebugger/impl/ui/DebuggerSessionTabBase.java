@@ -33,7 +33,7 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebuggerBundle;

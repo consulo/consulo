@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.search;
 
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.CommonProcessors;

@@ -18,7 +18,7 @@ package com.intellij.lang.parser;
 
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
 import com.intellij.lang.*;
-import com.intellij.lang.impl.PsiBuilderAdapter;
+import consulo.language.parser.PsiBuilderAdapter;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import consulo.language.lexer.Lexer;
 import consulo.language.Language;

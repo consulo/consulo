@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.richcopy.view;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.util.StringBuilderSpinAllocator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

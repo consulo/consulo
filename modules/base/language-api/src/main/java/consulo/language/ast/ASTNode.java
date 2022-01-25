@@ -2,12 +2,10 @@
 
 package consulo.language.ast;
 
-import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
-import consulo.util.dataholder.UserDataHolder;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

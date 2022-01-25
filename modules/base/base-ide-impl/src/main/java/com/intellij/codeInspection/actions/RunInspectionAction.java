@@ -35,11 +35,11 @@ import consulo.application.ApplicationManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.SearchScope;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

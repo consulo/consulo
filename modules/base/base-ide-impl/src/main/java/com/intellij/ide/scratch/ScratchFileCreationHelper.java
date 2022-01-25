@@ -4,20 +4,20 @@
 package com.intellij.ide.scratch;
 
 import com.intellij.ide.IdeView;
-import consulo.language.Language;
-import consulo.language.LanguageExtension;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
-import consulo.language.file.LanguageFileType;
-import consulo.project.Project;
-import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
+import consulo.application.util.function.Computable;
 import consulo.container.plugin.PluginIds;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
+import consulo.language.file.LanguageFileType;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,7 +59,7 @@ public abstract class ScratchFileCreationHelper {
     LanguageFileType fileType = language.getAssociatedFileType();
     CharSequence fileSnippet = StringUtil.first(text, 10 * 1024, false);
     PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
-    return fileFactory.createFileFromText(VirtualFilePathUtil.makeFileName("a", fileType == null ? "" : fileType.getDefaultExtension()), language, fileSnippet);
+    return fileFactory.createFileFromText(PathUtil.makeFileName("a", fileType == null ? "" : fileType.getDefaultExtension()), language, fileSnippet);
   }
 
   @Nonnull

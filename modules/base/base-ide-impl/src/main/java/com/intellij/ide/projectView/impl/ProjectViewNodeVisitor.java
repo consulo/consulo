@@ -5,7 +5,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.ui.tree.AbstractTreeNodeVisitor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,8 +13,8 @@ import javax.annotation.Nullable;
 import javax.swing.tree.TreePath;
 import java.util.function.Predicate;
 
-import static com.intellij.psi.SmartPointerManager.createPointer;
-import static com.intellij.psi.util.PsiUtilCore.getVirtualFile;
+import static consulo.language.psi.SmartPointerManager.createPointer;
+import static consulo.language.psi.PsiUtilCore.getVirtualFile;
 
 class ProjectViewNodeVisitor extends AbstractTreeNodeVisitor<PsiElement> {
   private final VirtualFile file;

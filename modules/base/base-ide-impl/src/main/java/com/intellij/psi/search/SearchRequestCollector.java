@@ -10,6 +10,10 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.application.util.function.Processor;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.scope.SearchScope;
+
 import javax.annotation.Nonnull;
 
 import java.util.*;

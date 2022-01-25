@@ -27,7 +27,7 @@ import com.intellij.pom.StatePreservingNavigatable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.AstLoadingFilter;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;

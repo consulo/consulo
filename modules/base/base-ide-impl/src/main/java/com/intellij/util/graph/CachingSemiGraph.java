@@ -16,6 +16,7 @@
 package com.intellij.util.graph;
 
 import com.intellij.util.containers.ContainerUtil;
+import consulo.component.util.graph.InboundSemiGraph;
 
 import java.util.*;
 

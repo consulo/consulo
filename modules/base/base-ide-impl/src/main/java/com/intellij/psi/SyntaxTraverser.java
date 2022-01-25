@@ -2,12 +2,12 @@ package com.intellij.psi;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.LighterASTNode;
-import com.intellij.lang.LighterASTTokenNode;
+import consulo.language.ast.LighterASTTokenNode;
 import consulo.language.parser.PsiBuilder;
 import com.intellij.openapi.util.*;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IFileElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteredTraverserBase;

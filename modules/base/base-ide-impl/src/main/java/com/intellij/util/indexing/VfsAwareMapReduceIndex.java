@@ -10,7 +10,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;

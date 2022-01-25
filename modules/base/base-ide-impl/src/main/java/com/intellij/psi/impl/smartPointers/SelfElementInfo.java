@@ -14,7 +14,6 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

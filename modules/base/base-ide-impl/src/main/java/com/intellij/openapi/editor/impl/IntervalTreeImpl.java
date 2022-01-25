@@ -9,7 +9,7 @@ import com.intellij.openapi.util.Getter;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 import com.intellij.util.SmartList;
-import com.intellij.util.WalkingState;
+import consulo.util.collection.util.WalkingState;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.longs.LongSet;

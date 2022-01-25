@@ -18,20 +18,20 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.FileCopyPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 
 /**
@@ -61,7 +61,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   }
 
   public String getOutputFileName() {
-    return myRenamedOutputFileName != null ? myRenamedOutputFileName : VirtualFilePathUtil.getFileName(myFilePath);
+    return myRenamedOutputFileName != null ? myRenamedOutputFileName : PathUtil.getFileName(myFilePath);
   }
 
   @Override
@@ -123,7 +123,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
 
   @Override
   public void rename(@Nonnull String newName) {
-    myRenamedOutputFileName = newName.equals(VirtualFilePathUtil.getFileName(myFilePath)) ? null : newName;
+    myRenamedOutputFileName = newName.equals(PathUtil.getFileName(myFilePath)) ? null : newName;
   }
 
   @Nullable

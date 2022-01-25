@@ -34,7 +34,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiRecursiveVisitor;
+import consulo.language.psi.PsiRecursiveVisitor;
 import com.intellij.util.CommonProcessors;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;

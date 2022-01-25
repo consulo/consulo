@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import java.util.HashMap;
 import consulo.logging.Logger;
 

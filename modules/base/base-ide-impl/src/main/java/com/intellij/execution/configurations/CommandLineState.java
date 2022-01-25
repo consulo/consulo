@@ -32,7 +32,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.application.ApplicationManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import javax.annotation.Nonnull;
 
 /**

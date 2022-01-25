@@ -5,13 +5,13 @@ import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.project.content.ProjectFileIndex;
+import consulo.module.content.ProjectFileIndex;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.intellij.openapi.util.registry.Registry.is;
+import static consulo.application.util.registry.Registry.is;
 import static com.intellij.openapi.vfs.VfsUtilCore.isAncestor;
 
 public interface ProjectFileNode {

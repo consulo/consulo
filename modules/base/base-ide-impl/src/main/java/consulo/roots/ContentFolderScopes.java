@@ -18,6 +18,7 @@ package consulo.roots;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.roots.impl.*;
 import javax.annotation.Nonnull;
 

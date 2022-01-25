@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.readOnlyHandler;
 import com.intellij.ide.IdeBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;

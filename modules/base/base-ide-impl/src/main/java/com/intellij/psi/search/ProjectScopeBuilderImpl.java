@@ -2,15 +2,16 @@
 package com.intellij.psi.search;
 
 import com.intellij.ide.scratch.RootType;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.module.UnloadedModuleDescription;
 import consulo.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
-import consulo.project.content.ProjectRootManager;
+import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.impl.ProjectFileIndexImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiBundle;
+import consulo.language.psi.PsiBundle;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

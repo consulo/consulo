@@ -27,7 +27,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.ast.IElementType;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;

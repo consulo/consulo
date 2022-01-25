@@ -15,12 +15,14 @@
  */
 package com.intellij.psi;
 
+import com.intellij.openapi.extensions.impl.LoadingOrder;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Allows to add custom logic to common comparators. Should be registered under "weigher" extension point with "key" parameter specified.
- * It's almost a must to specify how your weigher relates to the others by priority (see {@link com.intellij.openapi.extensions.LoadingOrder}).
+ * It's almost a must to specify how your weigher relates to the others by priority (see {@link LoadingOrder}).
  *
  * Known key values include:
  *  <li> "proximity" to measure proximity level of an element in a particular place (location)

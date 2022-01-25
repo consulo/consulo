@@ -7,7 +7,7 @@ import com.intellij.ide.actions.NewActionGroup;
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.idea.ActionsBundle;
 import consulo.language.Language;
-import com.intellij.lang.LanguageUtil;
+import consulo.language.util.LanguageUtil;
 import com.intellij.lang.PerFileMappings;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.*;
@@ -21,16 +21,15 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.containers.JBIterable;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -164,7 +163,7 @@ public class ScratchFileActions {
     String relativePath = rootType != ScratchRootType.getInstance() ? "" : FileUtil.getRelativePath(ScratchFileService.getInstance().getRootPath(rootType), dir.getPath(), '/');
 
     String fileName = (StringUtil.isEmpty(relativePath) ? "" : relativePath + "/") +
-                      VirtualFilePathUtil.makeFileName(ObjectUtils.notNull(context.filePrefix, "scratch") + (context.fileCounter != null ? context.fileCounter.create() : ""), context.fileExtension);
+                      PathUtil.makeFileName(ObjectUtils.notNull(context.filePrefix, "scratch") + (context.fileCounter != null ? context.fileCounter.create() : ""), context.fileExtension);
     VirtualFile file = ScratchRootType.getInstance().createScratchFile(project, fileName, language, context.text, context.createOption);
     if (file == null) return null;
 

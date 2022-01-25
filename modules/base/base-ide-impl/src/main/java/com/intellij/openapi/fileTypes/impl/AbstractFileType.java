@@ -17,6 +17,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.SmartList;
 import com.intellij.util.text.StringTokenizer;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.NonNls;

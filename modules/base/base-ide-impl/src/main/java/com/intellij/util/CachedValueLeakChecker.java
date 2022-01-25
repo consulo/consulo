@@ -9,7 +9,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ref.DebugReflectionUtil;
 import consulo.logging.Logger;

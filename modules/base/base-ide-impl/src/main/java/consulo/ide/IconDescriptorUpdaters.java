@@ -17,14 +17,11 @@ package consulo.ide;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.NullableFunction;
 import consulo.annotation.access.RequiredReadAction;

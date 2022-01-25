@@ -29,11 +29,11 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.file.PsiFileImplUtil;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
-import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.scope.SearchScope;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.psi.PsiElementWithSubtreeChangeNotifier;
+import consulo.language.psi.PsiElementWithSubtreeChangeNotifier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

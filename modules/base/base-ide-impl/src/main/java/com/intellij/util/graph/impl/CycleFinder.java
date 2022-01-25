@@ -16,7 +16,7 @@
 
 package com.intellij.util.graph.impl;
 
-import com.intellij.util.graph.Graph;
+import consulo.component.util.graph.Graph;
 import javax.annotation.Nonnull;
 
 import java.util.*;

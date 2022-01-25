@@ -25,7 +25,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileFactory;
 import consulo.util.lang.LocalTimeCounter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

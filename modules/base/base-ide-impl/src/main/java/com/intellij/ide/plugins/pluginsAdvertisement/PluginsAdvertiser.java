@@ -17,9 +17,9 @@ package com.intellij.ide.plugins.pluginsAdvertisement;
 
 import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.fileTypes.FileNameMatcher;
-import com.intellij.openapi.fileTypes.FileNameMatcherFactory;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;

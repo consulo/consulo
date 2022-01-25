@@ -1,5 +1,6 @@
 package com.intellij.openapi.externalSystem.service.project.manage;
 
+import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.logging.Logger;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.Key;

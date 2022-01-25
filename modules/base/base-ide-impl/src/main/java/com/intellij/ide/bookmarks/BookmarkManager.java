@@ -37,7 +37,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.document.event.DocumentEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.psi.PsiDocumentListener;
+import consulo.language.psi.event.PsiDocumentListener;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.component.messagebus.MessageBus;

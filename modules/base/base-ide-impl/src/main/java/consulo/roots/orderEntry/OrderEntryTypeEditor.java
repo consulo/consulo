@@ -17,7 +17,7 @@ package consulo.roots.orderEntry;
 
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.extensions.KeyedFactoryEPBean;
+import consulo.component.extension.KeyedFactoryEPBean;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.project.Project;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.impl.http;
 
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import com.intellij.util.PathUtil;
 import consulo.container.boot.ContainerPathManager;
 
 import javax.annotation.Nonnull;
@@ -51,8 +51,8 @@ public class LocalFileStorage {
     int index = baseName.lastIndexOf('.');
     String prefix = index == -1 ? baseName : baseName.substring(0, index);
     String suffix = index == -1 ? "" : baseName.substring(index+1);
-    prefix = VirtualFilePathUtil.suggestFileName(prefix);
-    suffix = VirtualFilePathUtil.suggestFileName(suffix);
+    prefix = PathUtil.suggestFileName(prefix);
+    suffix = PathUtil.suggestFileName(suffix);
     File file = FileUtil.findSequentNonexistentFile(myStorageIODirectory, prefix, suffix);
     FileUtil.createIfDoesntExist(file);
     return file;

@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import consulo.project.Project;
-import com.intellij.psi.PsiDocCommentBase;
+import consulo.language.psi.PsiDocCommentBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;

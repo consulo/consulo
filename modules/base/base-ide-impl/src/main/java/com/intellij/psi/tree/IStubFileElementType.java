@@ -18,13 +18,11 @@ package com.intellij.psi.tree;
 
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
-import consulo.language.psi.stub.IStubElementType;
-import consulo.language.psi.stub.IndexSink;
-import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.stubs.*;
-import com.intellij.psi.templateLanguages.TemplateLanguage;
+import consulo.language.template.TemplateLanguage;
 import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

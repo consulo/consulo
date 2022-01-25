@@ -8,7 +8,7 @@ package com.intellij.psi.stubs;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.ObjectUtils;
 import consulo.application.util.function.Processor;
 import com.intellij.util.Processors;

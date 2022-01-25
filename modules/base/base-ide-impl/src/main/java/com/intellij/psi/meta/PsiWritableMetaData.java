@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.meta;
 
+import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.util.IncorrectOperationException;
 
 /**

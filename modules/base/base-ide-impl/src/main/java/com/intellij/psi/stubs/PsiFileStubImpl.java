@@ -22,6 +22,7 @@ package com.intellij.psi.stubs;
 import com.google.common.base.MoreObjects;
 import consulo.language.Language;
 import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.PsiFileStub;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import consulo.language.file.FileViewProvider;

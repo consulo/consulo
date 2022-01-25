@@ -15,6 +15,8 @@
  */
 package com.intellij.util.graph.impl;
 
+import consulo.component.util.graph.Graph;
+import consulo.component.util.graph.InboundSemiGraph;
 import consulo.progress.ProgressIndicator;
 import com.intellij.util.Chunk;
 import com.intellij.util.graph.*;

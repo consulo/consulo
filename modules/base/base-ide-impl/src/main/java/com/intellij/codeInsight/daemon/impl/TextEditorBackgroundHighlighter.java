@@ -23,7 +23,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.psi.PsiCompiledFile;
+import consulo.language.psi.PsiCompiledFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.PsiFileEx;

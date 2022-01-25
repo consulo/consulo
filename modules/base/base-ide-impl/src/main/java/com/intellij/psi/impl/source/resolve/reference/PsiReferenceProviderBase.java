@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.resolve.reference;
 
-import com.intellij.psi.PsiReferenceProvider;
+import consulo.language.psi.PsiReferenceProvider;
 
 /**
  *

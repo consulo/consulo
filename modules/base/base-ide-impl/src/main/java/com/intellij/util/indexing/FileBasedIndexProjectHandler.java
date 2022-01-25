@@ -31,7 +31,7 @@ import consulo.content.ContentIterator;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;

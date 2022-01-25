@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.application.util.function.Computable;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.search.PsiSearchHelper;
-import com.intellij.psi.search.SearchScope;
+import consulo.language.psi.scope.SearchScope;
 import com.intellij.util.Query;
 import com.intellij.util.QueryExecutor;
 import javax.annotation.Nonnull;

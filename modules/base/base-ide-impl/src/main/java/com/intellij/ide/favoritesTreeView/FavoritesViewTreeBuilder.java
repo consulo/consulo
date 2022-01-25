@@ -1,10 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.favoritesTreeView;
 
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
+import consulo.language.psi.*;
 import consulo.module.content.ProjectTopics;
 import com.intellij.ide.CopyPasteUtil;
 import com.intellij.ide.projectView.BaseProjectTreeBuilder;
@@ -23,8 +20,6 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiUtilCore;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.util.concurrent.Promise;

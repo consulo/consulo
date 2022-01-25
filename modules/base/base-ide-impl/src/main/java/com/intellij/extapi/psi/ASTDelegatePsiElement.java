@@ -32,7 +32,7 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.impl.source.tree.*;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.Function;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
@@ -41,7 +41,7 @@ import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.impl.SingleProjectHolder;
-import consulo.psi.PsiElementWithSubtreeChangeNotifier;
+import consulo.language.psi.PsiElementWithSubtreeChangeNotifier;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

@@ -18,6 +18,7 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PatternUtil;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
 
 import javax.annotation.Nonnull;
 import java.util.regex.Matcher;

@@ -23,7 +23,7 @@ import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
 import com.intellij.reference.SoftReference;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.primitive.ints.IntStack;

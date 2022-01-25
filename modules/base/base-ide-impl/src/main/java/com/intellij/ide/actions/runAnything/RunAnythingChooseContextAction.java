@@ -31,7 +31,7 @@ import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.ListSeparator;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.registry.Registry;
+import consulo.application.util.registry.Registry;
 import com.intellij.ui.ErrorLabel;
 import com.intellij.ui.popup.ActionPopupStep;
 import com.intellij.ui.popup.PopupFactoryImpl;

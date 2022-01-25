@@ -4,7 +4,7 @@ package com.intellij.ide.scratch;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.LangBundle;
 import consulo.language.Language;
-import com.intellij.lang.LanguageUtil;
+import consulo.language.util.LanguageUtil;
 import com.intellij.lang.PerFileMappings;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.BasicUndoableAction;

@@ -17,7 +17,7 @@
 package com.intellij.util.indexing;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.impl.AbstractUpdateData;
 import org.jetbrains.annotations.TestOnly;

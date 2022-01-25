@@ -17,6 +17,7 @@ package com.intellij.psi;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiRefElementCreator;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

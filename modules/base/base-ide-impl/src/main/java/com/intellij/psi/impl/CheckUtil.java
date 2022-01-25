@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
-import com.intellij.psi.PsiBundle;
+import consulo.language.psi.PsiBundle;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

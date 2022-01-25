@@ -15,22 +15,22 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import consulo.project.Project;
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.VirtualFileAdapter;
-import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
-import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.packaging.impl.elements.FileOrDirectoryCopyPackagingElement;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import javax.annotation.Nonnull;
+import com.intellij.util.PathUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileAdapter;
+import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -60,7 +60,7 @@ public class ArtifactVirtualFileListener extends VirtualFileAdapter {
           String path = element.getFilePath();
           while (path.length() > 0) {
             result.put(path, artifact);
-            path = VirtualFilePathUtil.getParentPath(path);
+            path = PathUtil.getParentPath(path);
           }
           return true;
         }
