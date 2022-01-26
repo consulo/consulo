@@ -10,6 +10,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.progress.ProgressManager;
+import consulo.document.util.FileContentUtilCore;
 import consulo.language.Language;
 import consulo.language.ast.*;
 import consulo.language.file.FileViewProvider;

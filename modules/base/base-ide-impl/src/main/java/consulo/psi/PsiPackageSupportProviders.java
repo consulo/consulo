@@ -21,8 +21,8 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
+import consulo.language.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValuesManager;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
 

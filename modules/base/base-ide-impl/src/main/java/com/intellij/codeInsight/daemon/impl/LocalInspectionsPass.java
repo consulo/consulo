@@ -46,7 +46,7 @@ import consulo.language.psi.*;
 import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.Trinity;

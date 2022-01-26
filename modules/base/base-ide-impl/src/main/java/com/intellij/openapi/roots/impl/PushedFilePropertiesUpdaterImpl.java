@@ -17,7 +17,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.project.*;

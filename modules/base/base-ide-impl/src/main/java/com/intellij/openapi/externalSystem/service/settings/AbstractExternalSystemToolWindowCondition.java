@@ -21,7 +21,7 @@ import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import javax.annotation.Nonnull;
 
 /**

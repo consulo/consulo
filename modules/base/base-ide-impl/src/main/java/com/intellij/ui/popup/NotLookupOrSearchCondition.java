@@ -17,7 +17,7 @@
 package com.intellij.ui.popup;
 
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import com.intellij.codeInsight.lookup.LookupManager;

@@ -24,7 +24,7 @@ import consulo.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;

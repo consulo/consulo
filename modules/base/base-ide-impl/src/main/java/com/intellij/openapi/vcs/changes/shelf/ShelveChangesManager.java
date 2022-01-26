@@ -49,6 +49,7 @@ import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.FilesProgress;
 import consulo.application.ApplicationManager;
+import consulo.application.util.function.Condition;
 import consulo.application.util.function.Processor;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;

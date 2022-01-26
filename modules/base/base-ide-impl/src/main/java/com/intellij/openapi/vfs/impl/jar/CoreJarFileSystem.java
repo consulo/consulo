@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.impl.jar;
 
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
+import com.intellij.openapi.vfs.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ConcurrentFactoryMap;
@@ -29,7 +29,7 @@ import java.util.Map;
  * @author yole
  */
 @Deprecated
-public class CoreJarFileSystem extends DeprecatedVirtualFileSystem {
+public class CoreJarFileSystem extends BaseVirtualFileSystem {
   private final Map<String, CoreJarHandler> myHandlers = ConcurrentFactoryMap.createMap(key -> new CoreJarHandler(CoreJarFileSystem.this, key));
   @Nonnull
   @Override

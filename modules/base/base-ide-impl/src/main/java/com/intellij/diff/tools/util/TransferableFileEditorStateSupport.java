@@ -28,7 +28,7 @@ import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.fileEditor.TransferableFileEditorState;
 import consulo.project.DumbAware;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.ToggleActionButton;

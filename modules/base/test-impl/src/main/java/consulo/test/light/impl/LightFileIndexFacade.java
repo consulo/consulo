@@ -17,7 +17,7 @@ package consulo.test.light.impl;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

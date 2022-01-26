@@ -18,7 +18,7 @@ package consulo.test.light;
 import consulo.application.Application;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.PsiFileFactoryImpl;

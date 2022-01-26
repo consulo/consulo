@@ -17,16 +17,16 @@
 /*
  * @author max
  */
-package com.intellij.psi.search;
+package consulo.language.psi.scope.internal;
 
-import com.intellij.openapi.components.ServiceManager;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 public abstract class ProjectScopeBuilder {
   public static ProjectScopeBuilder getInstance(Project project) {
-    return ServiceManager.getService(project, ProjectScopeBuilder.class);
+    return project.getInstance(ProjectScopeBuilder.class);
   }
 
   @Nonnull

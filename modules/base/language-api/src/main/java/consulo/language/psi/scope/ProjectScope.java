@@ -3,11 +3,12 @@
 /*
  * @author max
  */
-package com.intellij.psi.search;
+package consulo.language.psi.scope;
 
-import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.internal.ProjectScopeBuilder;
 import consulo.project.Project;
-import com.intellij.openapi.util.NotNullLazyKey;
+import consulo.util.dataholder.NotNullLazyKey;
+
 import javax.annotation.Nonnull;
 
 public class ProjectScope {

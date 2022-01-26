@@ -32,6 +32,7 @@ import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
+import consulo.application.util.function.Condition;
 import consulo.disposer.Disposer;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.annotation.RequiredUIAccess;

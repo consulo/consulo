@@ -22,7 +22,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
 import consulo.application.util.registry.Registry;

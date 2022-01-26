@@ -17,7 +17,7 @@ package com.intellij.codeInsight.template.postfix.templates;
 
 import com.intellij.lang.surroundWith.Surrounder;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

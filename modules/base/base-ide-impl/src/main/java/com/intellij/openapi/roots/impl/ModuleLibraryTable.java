@@ -27,7 +27,7 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.content.library.PersistentLibraryKind;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ConvertingIterator;
 import com.intellij.util.containers.Convertor;

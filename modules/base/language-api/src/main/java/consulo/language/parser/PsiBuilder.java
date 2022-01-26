@@ -20,6 +20,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.TokenSet;
+import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;

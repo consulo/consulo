@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.intellij.psi.stubs;
+package consulo.language.psi.stub;
 
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
-import consulo.language.psi.stub.IStubElementType;
-import consulo.language.psi.stub.ObjectStubSerializer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;

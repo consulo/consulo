@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source.tree;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;

@@ -15,8 +15,8 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Condition;
+import consulo.application.util.function.Conditions;
 import javax.annotation.Nonnull;
 
 import java.util.Iterator;

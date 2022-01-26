@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.fragments;
 
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.document.util.TextRange;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;

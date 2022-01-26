@@ -34,6 +34,8 @@ import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.compiler.ex.CompilerPathsEx;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
+import consulo.application.util.function.Condition;
+import consulo.application.util.function.Conditions;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;

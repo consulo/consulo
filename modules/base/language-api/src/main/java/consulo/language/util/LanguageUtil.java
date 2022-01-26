@@ -16,27 +16,28 @@
 
 package consulo.language.util;
 
-import consulo.language.InjectableLanguage;
-import consulo.language.lexer.Lexer;
-import consulo.language.Language;
-import consulo.language.ast.ASTNode;
-import consulo.language.parser.ParserDefinition;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.LanguageSubstitutor;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.LanguageFileType;
-import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.templateLanguages.TemplateLanguage;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.function.Condition;
+import consulo.language.InjectableLanguage;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.LanguageFileType;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.LanguageParserDefinitions;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.LanguageSubstitutor;
+import consulo.language.psi.LanguageSubstitutors;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.template.TemplateLanguage;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

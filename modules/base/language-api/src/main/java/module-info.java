@@ -8,6 +8,7 @@ module consulo.language.api {
 
   exports consulo.language;
   exports consulo.language.ast;
+  exports consulo.language.content;
   exports consulo.language.psi;
   exports consulo.language.parser;
   exports consulo.language.lexer;
@@ -20,4 +21,8 @@ module consulo.language.api {
   exports consulo.language.psi.scope;
   exports consulo.language.psi.meta;
   exports consulo.language.psi.stub;
+  exports consulo.language.psi.util;
+
+  // TODO impl package
+  exports consulo.language.psi.scope.internal;
 }

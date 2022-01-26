@@ -16,7 +16,7 @@
 package com.intellij.testFramework;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
+import com.intellij.openapi.vfs.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
@@ -56,7 +56,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     myOriginalFile = originalFile;
   }
 
-  private static class MyVirtualFileSystem extends DeprecatedVirtualFileSystem implements NonPhysicalFileSystem {
+  private static class MyVirtualFileSystem extends BaseVirtualFileSystem implements NonPhysicalFileSystem {
     @NonNls private static final String PROTOCOL = "mock";
 
     private MyVirtualFileSystem() {

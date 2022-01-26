@@ -26,7 +26,7 @@ import consulo.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.LanguageSubstitutors;
+import consulo.language.psi.LanguageSubstitutors;
 import com.intellij.testFramework.LightVirtualFile;
 import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;

@@ -16,6 +16,7 @@ import com.intellij.ide.actions.WindowAction;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
+import consulo.application.util.function.Conditions;
 import consulo.language.Language;
 import com.intellij.lang.LanguageDocumentation;
 import com.intellij.lang.documentation.*;

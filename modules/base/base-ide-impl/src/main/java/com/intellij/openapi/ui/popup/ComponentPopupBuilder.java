@@ -3,7 +3,7 @@ package com.intellij.openapi.ui.popup;
 
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ActiveComponent;
 import com.intellij.util.BooleanFunction;

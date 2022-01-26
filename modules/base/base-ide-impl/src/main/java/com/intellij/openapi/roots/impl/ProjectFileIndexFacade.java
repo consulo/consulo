@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.component.util.ModificationTracker;

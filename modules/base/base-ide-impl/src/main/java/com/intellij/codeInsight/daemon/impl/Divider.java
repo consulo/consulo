@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import consulo.language.Language;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;

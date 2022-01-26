@@ -15,8 +15,8 @@
  */
 package com.intellij.vcs.log.ui;
 
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Condition;
+import consulo.application.util.function.Conditions;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.util.containers.ContainerUtil;

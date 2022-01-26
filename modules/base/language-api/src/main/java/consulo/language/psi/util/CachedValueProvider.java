@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi.util;
+package consulo.language.psi.util;
 
-import com.intellij.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
+
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 public interface CachedValueProvider<T> {

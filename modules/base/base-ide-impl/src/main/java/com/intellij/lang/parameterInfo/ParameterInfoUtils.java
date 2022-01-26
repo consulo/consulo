@@ -15,7 +15,7 @@
 package com.intellij.lang.parameterInfo;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Conditions;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

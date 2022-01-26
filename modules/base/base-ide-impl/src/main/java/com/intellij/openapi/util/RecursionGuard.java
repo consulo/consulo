@@ -16,6 +16,7 @@
 package com.intellij.openapi.util;
 
 import consulo.application.util.function.Computable;
+import consulo.language.psi.util.CachedValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,7 +85,7 @@ public abstract class RecursionGuard<Key> {
      * If you use this with {@link #doPreventingRecursion}, then the
      * {@link RecursionManager#markStack()}+{@link #mayCacheNow()} should be outside of recursion prevention call. Otherwise
      * even the outer recursive computation result won't be cached. In particular, {@code doPreventingRecursion} calls should
-     * be inside your {@link com.intellij.psi.util.CachedValue} provider, not outside cached value access.
+     * be inside your {@link CachedValue} provider, not outside cached value access.
      */
     @SuppressWarnings("JavaDoc")
     boolean mayCacheNow();

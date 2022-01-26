@@ -3,10 +3,10 @@
 package com.intellij.psi.impl;
 
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.ParameterizedCachedValue;
-import com.intellij.psi.util.ParameterizedCachedValueProvider;
+import consulo.language.psi.util.CachedValue;
+import consulo.language.psi.util.CachedValueProvider;
+import consulo.language.psi.util.ParameterizedCachedValue;
+import consulo.language.psi.util.ParameterizedCachedValueProvider;
 import com.intellij.util.CachedValuesFactory;
 import javax.annotation.Nonnull;
 

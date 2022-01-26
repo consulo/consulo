@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;

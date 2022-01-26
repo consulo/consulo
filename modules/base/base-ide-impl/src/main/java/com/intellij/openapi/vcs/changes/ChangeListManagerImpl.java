@@ -18,6 +18,7 @@ package com.intellij.openapi.vcs.changes;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
+import consulo.application.util.function.Condition;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.document.FileDocumentManager;

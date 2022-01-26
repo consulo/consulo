@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.stubs;
 
+import consulo.language.psi.stub.SerializationManager;
 import consulo.language.psi.stub.Stub;
 
 import javax.annotation.Nonnull;

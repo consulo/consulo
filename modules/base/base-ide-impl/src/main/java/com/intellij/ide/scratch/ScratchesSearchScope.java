@@ -3,7 +3,7 @@ package com.intellij.ide.scratch;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.util.NotNullLazyKey;
+import consulo.util.dataholder.NotNullLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import javax.annotation.Nonnull;

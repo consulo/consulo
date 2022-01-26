@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;

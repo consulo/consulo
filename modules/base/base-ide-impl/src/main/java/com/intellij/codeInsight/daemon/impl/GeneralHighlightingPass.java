@@ -29,7 +29,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

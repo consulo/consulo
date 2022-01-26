@@ -16,7 +16,7 @@
 package com.intellij.psi.util.proximity;
 
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.util.NotNullLazyKey;
+import consulo.util.dataholder.NotNullLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

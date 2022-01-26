@@ -16,8 +16,9 @@
 package consulo.language.psi;
 
 import consulo.component.util.localize.AbstractBundle;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -26,14 +27,14 @@ public class PsiBundle extends AbstractBundle{
   private static final PsiBundle ourInstance = new PsiBundle();
 
   private PsiBundle() {
-    super("messages.PsiBundle");
+    super("consulo.language.psi.PsiBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.PsiBundle") String key) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.language.psi.PsiBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.PsiBundle") String key, Object... params) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.language.psi.PsiBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 

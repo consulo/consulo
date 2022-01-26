@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.ui.TreeSpeedSearch;

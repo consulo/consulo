@@ -8,6 +8,8 @@ import com.intellij.ide.util.treeView.TreeRunnable.TreeConsumer;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
+import consulo.application.util.function.Condition;
+import consulo.application.util.function.Conditions;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.*;

@@ -20,7 +20,7 @@ import com.intellij.execution.testframework.Printer;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

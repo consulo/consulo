@@ -47,7 +47,7 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
     }
   }
 
-  static List<StubFieldAccessor> loadRegisteredStubElementTypes() {
+  public static List<StubFieldAccessor> loadRegisteredStubElementTypes() {
     List<StubFieldAccessor> result = new ArrayList<>();
     for (StubElementTypeHolderEP bean : StubElementTypeHolderEP.EP_NAME.getExtensionList()) {
       result.addAll(bean.initializeOptimized());

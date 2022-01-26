@@ -22,7 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.FileContentUtilCore;
+import consulo.document.util.FileContentUtilCore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

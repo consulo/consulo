@@ -18,6 +18,7 @@ package com.intellij.util;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.document.util.FileContentUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.project.ProjectUtil;
@@ -27,6 +28,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -38,7 +40,7 @@ import java.util.LinkedHashSet;
  */
 public class FileContentUtil extends FileContentUtilCore {
 
-  public static void setFileText(@javax.annotation.Nullable Project project, final VirtualFile virtualFile, final String text) throws IOException {
+  public static void setFileText(@Nullable Project project, final VirtualFile virtualFile, final String text) throws IOException {
     if (project == null) {
       project = ProjectUtil.guessProjectForFile(virtualFile);
     }

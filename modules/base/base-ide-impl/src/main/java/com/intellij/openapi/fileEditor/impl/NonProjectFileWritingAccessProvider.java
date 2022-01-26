@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
-import com.intellij.openapi.util.NotNullLazyKey;
+import consulo.util.dataholder.NotNullLazyKey;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vfs.*;

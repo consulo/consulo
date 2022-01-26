@@ -1,13 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.psi.stubs;
+package consulo.language.psi.stub;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.language.ast.IElementType;
-import consulo.language.psi.stub.StubFileElementType;
-import consulo.language.psi.stub.IStubElementType;
-import consulo.language.psi.stub.ObjectStubSerializer;
-import consulo.language.psi.stub.StubSerializer;
 
 import java.util.List;
 
@@ -24,7 +20,7 @@ public abstract class SerializationManager {
 
   protected abstract void registerSerializer(String externalId, Computable<ObjectStubSerializer> lazySerializer);
 
-  protected void initSerializers() {
+  public void initSerializers() {
     if (mySerializersLoaded) return;
     //noinspection SynchronizeOnThis
     synchronized (this) {

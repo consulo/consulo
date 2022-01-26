@@ -43,7 +43,7 @@ import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.*;
 import com.intellij.psi.search.FilenameIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.psi.search.ProjectScope;
+import consulo.language.psi.scope.ProjectScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
 import consulo.codeInsight.completion.CompletionProvider;

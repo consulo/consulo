@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.Functions;
 import consulo.util.collection.Maps;
@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import static com.intellij.openapi.util.Conditions.not;
+import static consulo.application.util.function.Conditions.not;
 
 /**
  * A redesigned version of com.google.common.collect.TreeTraversal.

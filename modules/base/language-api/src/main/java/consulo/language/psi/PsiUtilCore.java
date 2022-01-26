@@ -15,11 +15,6 @@
  */
 package consulo.language.psi;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.TimeoutUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
@@ -31,6 +26,7 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
 import consulo.language.ast.IElementType;
+import consulo.language.content.FileIndexFacade;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
@@ -43,6 +39,8 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -644,7 +642,7 @@ public class PsiUtilCore {
         sb.append("\n  root=").append(o.getLanguage().getID()).append("/").append(o.getClass().getName());
       }
     }
-    LOG.error("no PSI for file '" + file.getName() + "'", new Attachment(file.getPresentableUrl(), sb.toString()));
+    LOG.error("no PSI for file '" + file.getName() + "'", AttachmentFactory.get().create(file.getPresentableUrl(), sb.toString()));
     throw new AssertionError();
   }
 

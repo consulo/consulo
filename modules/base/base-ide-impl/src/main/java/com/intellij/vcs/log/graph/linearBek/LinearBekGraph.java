@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph.linearBek;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.api.EdgeFilter;
 import com.intellij.vcs.log.graph.api.LinearGraph;

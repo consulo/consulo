@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.stubs.LightStubBuilder;
 import consulo.language.psi.stub.PsiFileStub;
-import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.language.version.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
 

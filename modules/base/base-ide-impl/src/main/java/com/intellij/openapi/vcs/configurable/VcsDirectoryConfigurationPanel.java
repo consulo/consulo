@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 import java.io.IOException;
 
-public class DummyFileSystem extends DeprecatedVirtualFileSystem implements NonPhysicalFileSystem {
+public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysicalFileSystem {
   @NonNls public static final String PROTOCOL = "dummy";
   private VirtualFileDirectoryImpl myRoot;
 

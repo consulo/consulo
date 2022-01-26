@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.application.util.function;
 
-import com.intellij.reference.SoftReference;
-import com.intellij.util.Function;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.SoftReference;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.function.Function;
 
 /**
  * @author max
  */
 @SuppressWarnings("unchecked")
 public class Conditions {
-  private Conditions() { }
+  private Conditions() {
+  }
 
   public final static Condition<Object> TRUE = Condition.TRUE;
   public final static Condition<Object> FALSE = Condition.FALSE;
@@ -49,37 +52,23 @@ public class Conditions {
   }
 
   public static <T> Condition<T> instanceOf(final Class<?> clazz) {
-    return new Condition<T>() {
-      public boolean value(T t) {
-        return clazz.isInstance(t);
-      }
-    };
+    return t -> clazz.isInstance(t);
   }
 
   public static <T> Condition<T> notInstanceOf(final Class<?> clazz) {
-    return new Condition<T>() {
-      public boolean value(T t) {
-        return !clazz.isInstance(t);
-      }
-    };
+    return t -> !clazz.isInstance(t);
   }
 
   public static Condition<Class> assignableTo(final Class clazz) {
-    return new Condition<Class>() {
-      public boolean value(Class t) {
-        return clazz.isAssignableFrom(t);
-      }
-    };
+    return t -> clazz.isAssignableFrom(t);
   }
 
   public static <T> Condition<T> instanceOf(final Class<?>... clazz) {
-    return new Condition<T>() {
-      public boolean value(T t) {
-        for (Class<?> aClass : clazz) {
-          if (aClass.isInstance(t)) return true;
-        }
-        return false;
+    return t -> {
+      for (Class<?> aClass : clazz) {
+        if (aClass.isInstance(t)) return true;
       }
+      return false;
     };
   }
 
@@ -88,19 +77,11 @@ public class Conditions {
   }
 
   public static <T> Condition<T> equalTo(final Object option) {
-    return new Condition<T>() {
-      public boolean value(T t) {
-        return Comparing.equal(t, option);
-      }
-    };
+    return t -> Comparing.equal(t, option);
   }
 
   public static <T> Condition<T> notEqualTo(final Object option) {
-    return new Condition<T>() {
-      public boolean value(T t) {
-        return !Comparing.equal(t, option);
-      }
-    };
+    return t -> !Comparing.equal(t, option);
   }
 
   public static <T> Condition<T> oneOf(T... options) {
@@ -108,18 +89,14 @@ public class Conditions {
   }
 
   public static <T> Condition<T> oneOf(final Collection<? extends T> options) {
-    return new Condition<T>() {
-      public boolean value(T t) {
-        return options.contains(t);
-      }
-    };
+    return t -> options.contains(t);
   }
 
   public static <T> Condition<T> not(Condition<T> c) {
     if (c == TRUE) return alwaysFalse();
     if (c == FALSE) return alwaysTrue();
     if (c instanceof Not) return ((Not)c).c;
-    return new Not<T>(c);
+    return new Not<>(c);
   }
 
   public static <T> Condition<T> and(Condition<T> c1, Condition<T> c2) {
@@ -129,7 +106,7 @@ public class Conditions {
   public static <T> Condition<T> and2(Condition<? super T> c1, Condition<? super T> c2) {
     if (c1 == TRUE || c2 == FALSE) return (Condition<T>)c2;
     if (c2 == TRUE || c1 == FALSE) return (Condition<T>)c1;
-    return new And<T>(c1, c2);
+    return new And<>(c1, c2);
   }
 
   public static <T> Condition<T> or(Condition<T> c1, Condition<T> c2) {
@@ -139,19 +116,15 @@ public class Conditions {
   public static <T> Condition<T> or2(Condition<? super T> c1, Condition<? super T> c2) {
     if (c1 == FALSE || c2 == TRUE) return (Condition<T>)c2;
     if (c2 == FALSE || c1 == TRUE) return (Condition<T>)c1;
-    return new Or<T>(c1, c2);
+    return new Or<>(c1, c2);
   }
 
   public static <A, B> Condition<A> compose(final Function<? super A, B> fun, final Condition<? super B> condition) {
-    return new Condition<A>() {
-      public boolean value(A o) {
-        return condition.value(fun.fun(o));
-      }
-    };
+    return o -> condition.value(fun.apply(o));
   }
 
   public static <T> Condition<T> cached(Condition<T> c) {
-    return new SoftRefCache<T>(c);
+    return new SoftRefCache<>(c);
   }
 
   private static class Not<T> implements Condition<T> {
@@ -161,6 +134,7 @@ public class Conditions {
       this.c = c;
     }
 
+    @Override
     public boolean value(T value) {
       return !c.value(value);
     }
@@ -175,6 +149,7 @@ public class Conditions {
       this.c2 = c2;
     }
 
+    @Override
     public boolean value(T object) {
       return c1.value(object) && c2.value(object);
     }
@@ -189,25 +164,27 @@ public class Conditions {
       this.c2 = c2;
     }
 
+    @Override
     public boolean value(T object) {
       return c1.value(object) || c2.value(object);
     }
   }
 
   private static class SoftRefCache<T> implements Condition<T> {
-    private final HashMap<Integer, Pair<SoftReference<T>, Boolean>> myCache = new HashMap<Integer, Pair<SoftReference<T>, Boolean>>();
+    private final HashMap<Integer, Pair<SoftReference<T>, Boolean>> myCache = new HashMap<>();
     private final Condition<T> myCondition;
 
     public SoftRefCache(Condition<T> condition) {
       myCondition = condition;
     }
 
+    @Override
     public final boolean value(T object) {
       final int key = object.hashCode();
       final Pair<SoftReference<T>, Boolean> entry = myCache.get(key);
       if (entry == null || entry.first.get() != object) {
         boolean value = myCondition.value(object);
-        myCache.put(key, Pair.create(new SoftReference<T>(object), value));
+        myCache.put(key, Pair.create(new SoftReference<>(object), value));
         return value;
       }
       else {

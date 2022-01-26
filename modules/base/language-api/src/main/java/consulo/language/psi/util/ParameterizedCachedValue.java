@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi.util;
+package consulo.language.psi.util;
+
+import consulo.language.psi.util.CachedValue;
 
 /**
  * A variation on {@link CachedValue} which allows to reuse the same value provider in all cached values, make it static

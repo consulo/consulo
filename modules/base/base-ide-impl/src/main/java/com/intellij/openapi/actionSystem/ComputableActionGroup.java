@@ -17,8 +17,8 @@ package com.intellij.openapi.actionSystem;
 
 import consulo.project.DumbAware;
 import consulo.component.util.ModificationTracker;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValue;
+import consulo.language.psi.util.CachedValueProvider;
 import com.intellij.util.CachedValueImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

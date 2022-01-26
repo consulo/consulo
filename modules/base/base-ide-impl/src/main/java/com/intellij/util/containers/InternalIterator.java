@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 
 import java.util.Collection;
 import java.util.Map;

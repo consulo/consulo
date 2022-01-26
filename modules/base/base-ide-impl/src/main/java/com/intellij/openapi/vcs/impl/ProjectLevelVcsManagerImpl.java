@@ -29,7 +29,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import consulo.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import consulo.component.persist.InvalidDataException;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.persist.WriteExternalException;

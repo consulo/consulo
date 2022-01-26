@@ -15,6 +15,7 @@ import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import consulo.disposer.Disposable;
+import consulo.language.psi.util.CachedValue;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -36,7 +37,7 @@ public final class IdempotenceChecker {
 
   /**
    * Perform some basic checks whether the two given objects are equivalent and interchangeable,
-   * as described in e.g {@link com.intellij.psi.util.CachedValue} contract. This method should be used
+   * as described in e.g {@link CachedValue} contract. This method should be used
    * in places caching results of various computations, which are expected to be idempotent:
    * they can be performed several times, or on multiple threads, and the results should be interchangeable.<p></p>
    * <p>

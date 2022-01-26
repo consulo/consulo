@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 
 import java.io.IOException;
 
-public abstract class DeprecatedVirtualFileSystem implements VirtualFileSystem {
+public abstract class BaseVirtualFileSystem implements VirtualFileSystem {
   private final EventDispatcher<VirtualFileListener> myEventDispatcher = EventDispatcher.create(VirtualFileListener.class);
 
   protected void startEventPropagation() {

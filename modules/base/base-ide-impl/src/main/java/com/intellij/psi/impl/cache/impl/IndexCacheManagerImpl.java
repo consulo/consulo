@@ -22,7 +22,7 @@ import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicatorProvider;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;

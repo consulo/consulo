@@ -14,7 +14,7 @@ import consulo.language.file.LanguageFileType;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.LanguageSubstitutors;
+import consulo.language.psi.LanguageSubstitutors;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;

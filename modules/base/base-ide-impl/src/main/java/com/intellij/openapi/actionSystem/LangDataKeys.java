@@ -26,7 +26,7 @@ import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.content.library.Library;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.annotation.DeprecationInfo;
 import consulo.execution.ExecutionDataKeys;
 import consulo.util.dataholder.Key;

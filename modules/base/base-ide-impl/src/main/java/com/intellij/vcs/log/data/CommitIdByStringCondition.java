@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.data;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.vcs.log.CommitId;
 import javax.annotation.Nonnull;

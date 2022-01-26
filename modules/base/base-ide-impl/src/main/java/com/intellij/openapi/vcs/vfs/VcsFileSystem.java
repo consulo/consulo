@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.vfs;
 
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
+import com.intellij.openapi.vfs.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 
-public class VcsFileSystem extends DeprecatedVirtualFileSystem {
+public class VcsFileSystem extends BaseVirtualFileSystem {
 
   public static final String COULD_NOT_IMPLEMENT_MESSAGE = VcsBundle.message("exception.text.internal.errror.could.not.implement.method");
   private static final String PROTOCOL = "vcs";

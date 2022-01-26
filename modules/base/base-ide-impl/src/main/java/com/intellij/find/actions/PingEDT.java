@@ -15,7 +15,7 @@
  */
 package com.intellij.find.actions;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

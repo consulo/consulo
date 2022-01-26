@@ -19,7 +19,7 @@
  */
 package com.intellij.ui.speedSearch;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.ui.ListUtil;
 import javax.annotation.Nonnull;
 

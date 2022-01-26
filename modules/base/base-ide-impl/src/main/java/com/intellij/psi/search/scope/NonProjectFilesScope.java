@@ -19,7 +19,7 @@ import com.intellij.ide.scratch.ScratchUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.ProjectScope;
+import consulo.language.psi.scope.ProjectScope;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;

@@ -17,8 +17,8 @@
 package com.intellij.util;
 
 import consulo.project.Project;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValue;
+import consulo.language.psi.util.CachedValueProvider;
 import javax.annotation.Nonnull;
 
 public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValue<T> {

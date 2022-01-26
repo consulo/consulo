@@ -18,7 +18,7 @@ package com.intellij.ide.browsers;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.MutableCollectionComboBoxModel;
 import com.intellij.ui.SimpleListCellRenderer;

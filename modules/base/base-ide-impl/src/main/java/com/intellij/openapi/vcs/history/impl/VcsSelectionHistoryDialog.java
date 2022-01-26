@@ -38,7 +38,7 @@ import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Conditions;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.annotate.ShowAllAffectedGenericAction;

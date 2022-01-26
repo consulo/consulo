@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.progress.ProcessCanceledException;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Ref;
 import consulo.virtualFileSystem.VirtualFile;

@@ -15,13 +15,11 @@
  */
 package consulo.language.psi.scope;
 
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.scope.SearchScope;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

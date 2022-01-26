@@ -24,7 +24,7 @@ import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import com.intellij.openapi.module.ModuleScopeProvider;
+import consulo.language.psi.scope.internal.ModuleScopeProvider;
 import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;
 import consulo.project.DumbModeTask;
 import com.intellij.openapi.project.DumbServiceImpl;

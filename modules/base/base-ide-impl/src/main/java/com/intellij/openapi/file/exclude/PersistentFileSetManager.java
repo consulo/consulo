@@ -12,7 +12,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.openapi.vfs.newvfs.impl.CachedFileType;
-import com.intellij.util.FileContentUtilCore;
+import consulo.document.util.FileContentUtilCore;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

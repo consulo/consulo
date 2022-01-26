@@ -42,6 +42,7 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class PsiTreeUtil {
@@ -273,7 +274,7 @@ public class PsiTreeUtil {
   @Nonnull
   public static <T extends PsiElement> Collection<T> findChildrenOfAnyType(@Nullable final PsiElement element, @Nonnull final Class<? extends T>... classes) {
     if (element == null) {
-      return ContainerUtil.emptyList();
+      return List.of();
     }
 
     PsiElementProcessor.CollectElements<T> processor = new PsiElementProcessor.CollectElements<T>() {
@@ -344,7 +345,7 @@ public class PsiTreeUtil {
     List<T> result = null;
     for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
       if (aClass.isInstance(child)) {
-        if (result == null) result = new SmartList<T>();
+        if (result == null) result = new ArrayList<T>();
         //noinspection unchecked
         result.add((T)child);
       }
@@ -356,7 +357,7 @@ public class PsiTreeUtil {
   public static <T extends PsiElement> List<T> getChildrenOfTypeAsList(@Nullable PsiElement element, @Nonnull Class<T> aClass) {
     if (element == null) return Collections.emptyList();
 
-    List<T> result = new SmartList<T>();
+    List<T> result = new ArrayList<T>();
     for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
       if (aClass.isInstance(child)) {
         //noinspection unchecked
@@ -390,7 +391,7 @@ public class PsiTreeUtil {
       return getChildrenOfTypeAsList(element, aClass);
     }
 
-    List<T> result = new SmartList<>();
+    List<T> result = new ArrayList<>();
     for (StubElement childStub : stub.getChildrenStubs()) {
       PsiElement child = childStub.getPsi();
       if (aClass.isInstance(child)) {
@@ -1012,12 +1013,12 @@ public class PsiTreeUtil {
     return true;
   }
 
-  public static boolean treeWalkUp(@Nonnull final PsiElement entrance, @Nullable final PsiElement maxScope, PairProcessor<PsiElement, PsiElement> eachScopeAndLastParent) {
+  public static boolean treeWalkUp(@Nonnull final PsiElement entrance, @Nullable final PsiElement maxScope, BiPredicate<PsiElement, PsiElement> eachScopeAndLastParent) {
     PsiElement prevParent = null;
     PsiElement scope = entrance;
 
     while (scope != null) {
-      if (!eachScopeAndLastParent.process(scope, prevParent)) return false;
+      if (!eachScopeAndLastParent.test(scope, prevParent)) return false;
 
       if (scope == maxScope) break;
       prevParent = scope;

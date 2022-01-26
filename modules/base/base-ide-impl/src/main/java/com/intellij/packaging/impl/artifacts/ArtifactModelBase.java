@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactModel;
 import com.intellij.packaging.artifacts.ArtifactType;

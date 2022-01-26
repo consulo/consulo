@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.FoldingGroup;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.component.util.ModificationTracker;
+import consulo.language.psi.util.CachedValueProvider;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 
@@ -19,7 +20,7 @@ import java.util.Set;
  *
  * <p><a name="Dependencies"><b>Dependencies</b></a></p>
  * Dependencies are objects (in particular, instances of {@link ModificationTracker},
- * more info - {@link com.intellij.psi.util.CachedValueProvider.Result#getDependencyItems here}),
+ * more info - {@link CachedValueProvider.Result#getDependencyItems here}),
  * which can be tracked for changes, that should trigger folding regions recalculation for an editor (initiating code folding pass).
  *
  * @author max

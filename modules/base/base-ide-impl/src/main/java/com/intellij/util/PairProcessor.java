@@ -16,15 +16,19 @@
 
 package com.intellij.util;
 
+import java.util.function.BiPredicate;
+
 /**
  * @author Gregory.Shrago
  */
-public interface PairProcessor<S, T> {
-  PairProcessor TRUE = new PairProcessor() {
-    @Override
-    public boolean process(Object o, Object o1) {
-      return true;
-    }
-  };
+@FunctionalInterface
+public interface PairProcessor<S, T> extends BiPredicate<S, T> {
+  PairProcessor TRUE = (o, o1) -> true;
+
   boolean process(S s, T t);
+
+  @Override
+  default boolean test(S s, T t) {
+    return process(s, t);
+  }
 }

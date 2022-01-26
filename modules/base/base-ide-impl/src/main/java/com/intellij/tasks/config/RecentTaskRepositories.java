@@ -17,7 +17,7 @@ package com.intellij.tasks.config;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.tasks.TaskRepository;
 import com.intellij.tasks.impl.TaskManagerImpl;

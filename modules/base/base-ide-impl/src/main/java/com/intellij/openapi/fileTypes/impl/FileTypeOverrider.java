@@ -2,6 +2,7 @@
 package com.intellij.openapi.fileTypes.impl;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.document.util.FileContentUtilCore;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.virtualFileSystem.VirtualFile;
@@ -16,7 +17,7 @@ import javax.annotation.Nullable;
  * completely replaces the file's normal file type for PSI, actions and all other features.
  * <p>
  * If the override conditions for a given {@code FileTypeOverrider} change, it needs to call
- * {@link com.intellij.util.FileContentUtilCore#reparseFiles(VirtualFile...)} if it's possible to identify specific files affected
+ * {@link FileContentUtilCore#reparseFiles(VirtualFile...)} if it's possible to identify specific files affected
  * by the change, or {@link FileTypeManagerEx#makeFileTypesChange(String, Runnable)} ()} if the change affects an unknown number of files.
  */
 public interface FileTypeOverrider {

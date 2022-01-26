@@ -26,7 +26,7 @@ import com.intellij.diff.util.ThreeSide;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;

@@ -8,7 +8,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.component.util.ModificationTracker;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.language.ast.IElementType;

@@ -6,6 +6,7 @@ import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.util.PropertiesComponent;
+import consulo.document.util.FileContentUtilCore;
 import consulo.language.Language;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

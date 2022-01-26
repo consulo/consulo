@@ -17,8 +17,8 @@ package com.intellij.util.containers;
 
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Condition;
+import consulo.application.util.function.Conditions;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.*;
 import consulo.application.util.function.Processor;

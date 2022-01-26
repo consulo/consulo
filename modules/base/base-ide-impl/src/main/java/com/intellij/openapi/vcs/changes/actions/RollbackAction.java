@@ -33,7 +33,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.*;

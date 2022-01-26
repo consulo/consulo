@@ -27,7 +27,7 @@ import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;

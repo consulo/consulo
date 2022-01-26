@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.local;
 
-import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
+import com.intellij.openapi.vfs.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
@@ -28,7 +28,7 @@ import java.io.IOException;
 /**
  * @author yole
  */
-public class CoreLocalFileSystem extends DeprecatedVirtualFileSystem {
+public class CoreLocalFileSystem extends BaseVirtualFileSystem {
   @Nonnull
   @Override
   public String getProtocol() {

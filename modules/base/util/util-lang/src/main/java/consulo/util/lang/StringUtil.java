@@ -27,6 +27,23 @@ import java.util.function.Function;
  * Based on IDEA code
  */
 public class StringUtil {
+  @Nonnull
+  @Contract(pure = true)
+  public static String first(@Nonnull String text, final int maxLength, final boolean appendEllipsis) {
+    return text.length() > maxLength ? text.substring(0, maxLength) + (appendEllipsis ? "..." : "") : text;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static CharSequence first(@Nonnull CharSequence text, final int length, final boolean appendEllipsis) {
+    return text.length() > length ? text.subSequence(0, length) + (appendEllipsis ? "..." : "") : text;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static CharSequence last(@Nonnull CharSequence text, final int length, boolean prependEllipsis) {
+    return text.length() > length ? (prependEllipsis ? "..." : "") + text.subSequence(text.length() - length, text.length()) : text;
+  }
 
   @Nonnull
   @Contract(pure = true)

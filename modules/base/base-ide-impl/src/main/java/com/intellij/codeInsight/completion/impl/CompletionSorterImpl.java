@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion.impl;
 
 import com.intellij.codeInsight.completion.CompletionSorter;
 import com.intellij.codeInsight.lookup.*;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

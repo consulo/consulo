@@ -2,11 +2,11 @@
 package com.intellij.util;
 
 import consulo.language.ast.ASTNode;
+import consulo.language.psi.util.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.Getter;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.util.*;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;

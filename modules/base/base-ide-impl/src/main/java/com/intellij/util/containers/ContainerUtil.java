@@ -17,6 +17,8 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.*;
 import com.intellij.util.*;
+import consulo.application.util.function.Condition;
+import consulo.application.util.function.Conditions;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;

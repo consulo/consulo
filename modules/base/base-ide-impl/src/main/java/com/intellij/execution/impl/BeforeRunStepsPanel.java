@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Conditions;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.CollectionListModel;

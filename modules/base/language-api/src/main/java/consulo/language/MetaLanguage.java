@@ -2,11 +2,11 @@
 package consulo.language;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Allows to register a language extension for a group of languages defined by a certain criterion.
@@ -36,6 +36,6 @@ public abstract class MetaLanguage extends Language {
    */
   @Nonnull
   public Collection<Language> getMatchingLanguages() {
-    return ContainerUtil.filter(Language.getRegisteredLanguages(), this::matchesLanguage);
+    return Language.getRegisteredLanguages().stream().filter(this::matchesLanguage).collect(Collectors.toList());
   }
 }

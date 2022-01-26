@@ -25,9 +25,9 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
+import consulo.language.psi.util.CachedValue;
+import consulo.language.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValuesManager;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

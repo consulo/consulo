@@ -23,7 +23,7 @@ import com.intellij.openapi.keymap.KeymapGroupFactory;
 import com.intellij.openapi.keymap.impl.ui.ActionsTreeUtil;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 
 /**

@@ -25,7 +25,7 @@ package com.intellij.openapi.keymap;
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 
 import javax.annotation.Nullable;
 

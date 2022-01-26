@@ -9,7 +9,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.ui.awt.RelativePoint;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;

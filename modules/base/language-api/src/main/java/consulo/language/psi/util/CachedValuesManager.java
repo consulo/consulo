@@ -1,22 +1,21 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.psi.util;
+package consulo.language.psi.util;
 
-import consulo.language.psi.PsiModificationTracker;
-import consulo.project.Project;
-import com.intellij.openapi.util.Getter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.ConcurrencyUtil;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * A service used to create and store {@link CachedValue} objects.<p/>
@@ -149,7 +148,7 @@ public abstract class CachedValuesManager {
   public static <T> T getCachedValue(final @Nonnull PsiElement context, @Nonnull Key<CachedValue<T>> key, final @Nonnull CachedValueProvider<T> provider) {
     CachedValue<T> value = context.getUserData(key);
     if (value != null) {
-      Getter<T> data = value.getUpToDateOrNull();
+      Supplier<T> data = value.getUpToDateOrNull();
       if (data != null) {
         return data.get();
       }
@@ -188,13 +187,13 @@ public abstract class CachedValuesManager {
   }
 
   @Nonnull
+  @SuppressWarnings("unchecked")
   private static <T> Key<CachedValue<T>> getKeyForClass(@Nonnull Class<?> providerClass, ConcurrentMap<String, Key<CachedValue<?>>> keyForProvider) {
     String name = providerClass.getName();
     Key<CachedValue<?>> key = keyForProvider.get(name);
     if (key == null) {
-      key = ConcurrencyUtil.cacheOrGet(keyForProvider, name, Key.create(name));
+      key = keyForProvider.computeIfAbsent(name, Key::create);
     }
-    //noinspection unchecked,rawtypes
     return (Key)key;
   }
 }

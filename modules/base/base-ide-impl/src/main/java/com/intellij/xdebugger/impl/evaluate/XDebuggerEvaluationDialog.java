@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

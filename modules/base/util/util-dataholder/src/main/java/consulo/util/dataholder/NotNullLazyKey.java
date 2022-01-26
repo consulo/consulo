@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
-
-import com.intellij.util.NotNullFunction;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolder;
+package consulo.util.dataholder;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * @author peter
  */
 public class NotNullLazyKey<T, H extends UserDataHolder> extends Key<T> {
-  private final NotNullFunction<H, T> myFunction;
+  private final Function<H, T> myFunction;
 
-  private NotNullLazyKey(@Nonnull String name, @Nonnull NotNullFunction<H, T> function) {
+  private NotNullLazyKey(@Nonnull String name, @Nonnull Function<H, T> function) {
     super(name);
     myFunction = function;
   }
@@ -36,12 +33,12 @@ public class NotNullLazyKey<T, H extends UserDataHolder> extends Key<T> {
   public final T getValue(@Nonnull H h) {
     T data = h.getUserData(this);
     if (data == null) {
-      h.putUserData(this, data = myFunction.fun(h));
+      h.putUserData(this, data = myFunction.apply(h));
     }
     return data;
   }
 
-  public static <T, H extends UserDataHolder> NotNullLazyKey<T, H> create(@Nonnull String name, @Nonnull NotNullFunction<H, T> function) {
+  public static <T, H extends UserDataHolder> NotNullLazyKey<T, H> create(@Nonnull String name, @Nonnull Function<H, T> function) {
     return new NotNullLazyKey<>(name, function);
   }
 }

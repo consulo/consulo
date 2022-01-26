@@ -15,8 +15,8 @@
  */
 package consulo.language.psi.resolve;
 
-import com.intellij.psi.util.PsiUtilCore;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiElementFilter;
 import consulo.language.psi.util.PsiTreeUtil;
 

@@ -18,7 +18,7 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
@@ -38,8 +38,8 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.intellij.openapi.util.Conditions.not;
-import static com.intellij.openapi.util.Conditions.notNull;
+import static consulo.application.util.function.Conditions.not;
+import static consulo.application.util.function.Conditions.notNull;
 
 /**
  * @author ignatov

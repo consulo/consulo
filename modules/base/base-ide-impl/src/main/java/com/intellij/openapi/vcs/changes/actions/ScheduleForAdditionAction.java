@@ -29,7 +29,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.document.FileDocumentManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;

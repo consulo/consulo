@@ -15,6 +15,7 @@
  */
 package com.intellij.util.diff;
 
+import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.ref.SimpleReference;

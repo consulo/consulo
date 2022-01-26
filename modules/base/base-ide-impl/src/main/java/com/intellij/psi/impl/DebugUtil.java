@@ -41,7 +41,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 

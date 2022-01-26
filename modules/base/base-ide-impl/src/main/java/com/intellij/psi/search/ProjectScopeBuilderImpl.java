@@ -3,10 +3,11 @@ package com.intellij.psi.search;
 
 import com.intellij.ide.scratch.RootType;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.internal.ProjectScopeBuilder;
 import consulo.module.Module;
 import consulo.module.UnloadedModuleDescription;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.impl.ProjectFileIndexImpl;

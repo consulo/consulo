@@ -68,7 +68,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.scope.LocalSearchScope;
-import com.intellij.psi.search.ProjectScope;
+import consulo.language.psi.scope.ProjectScope;
 import com.intellij.psi.search.PsiSearchHelper;
 import consulo.language.psi.scope.SearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;

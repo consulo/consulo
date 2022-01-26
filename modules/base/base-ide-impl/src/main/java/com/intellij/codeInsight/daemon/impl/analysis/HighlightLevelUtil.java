@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
-import com.intellij.psi.search.ProjectScope;
+import consulo.language.psi.scope.ProjectScope;
 import javax.annotation.Nonnull;
 
 public class HighlightLevelUtil {

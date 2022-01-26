@@ -1,19 +1,20 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.stubs;
 
-import consulo.disposer.Disposable;
-import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
+import consulo.application.util.function.Computable;
 import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
 import consulo.language.psi.stub.ObjectStubSerializer;
+import consulo.language.psi.stub.SerializationManager;
 import consulo.language.psi.stub.Stub;
 import consulo.logging.Logger;
-
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 

@@ -6,7 +6,7 @@ import com.intellij.ide.util.treeView.WeighedItem;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.search.PredefinedSearchScopeProvider;

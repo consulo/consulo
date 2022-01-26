@@ -193,7 +193,7 @@
 
     <extensionPoint name="toolWindow" beanClass="com.intellij.openapi.wm.ToolWindowEP">
       <with attribute="factoryClass" implements="com.intellij.openapi.wm.ToolWindowFactory"/>
-      <with attribute="conditionClass" implements="com.intellij.openapi.util.Condition"/>
+      <with attribute="conditionClass" implements="consulo.application.util.function.Condition"/>
     </extensionPoint>
 
     <extensionPoint name="productivityFeaturesProvider" interface="com.intellij.featureStatistics.ProductivityFeaturesProvider"/>
@@ -397,7 +397,7 @@
     <extensionPoint name="extendWordSelectionHandler"
                     interface="com.intellij.codeInsight.editorActions.ExtendWordSelectionHandler"/>
     <extensionPoint name="basicWordSelectionFilter"
-                    interface="com.intellij.openapi.util.Condition"/>
+                    interface="consulo.application.util.function.Condition"/>
     <extensionPoint name="typedHandler"
                     interface="com.intellij.codeInsight.editorActions.TypedHandlerDelegate"/>
     <extensionPoint name="selectionDequotingFilter"
@@ -845,7 +845,7 @@
 
     <extensionPoint name="highlightRangeExtension" interface="com.intellij.codeInsight.daemon.impl.HighlightRangeExtension"/>
 
-    <extensionPoint name="elementsToHighlightFilter" interface="com.intellij.openapi.util.Condition"/>
+    <extensionPoint name="elementsToHighlightFilter" interface="consulo.application.util.function.Condition"/>
 
     <extensionPoint name="sdkType" interface="consulo.content.bundle.SdkType"/>
     <extensionPoint name="predefinedBundlesProvider" interface="consulo.content.bundle.PredefinedBundlesProvider"/>
@@ -891,7 +891,7 @@
     <extensionPoint name="moveFileHandler" interface="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler"/>
     <extensionPoint name="automaticRenamerFactory" interface="com.intellij.refactoring.rename.naming.AutomaticRenamerFactory"/>
     <extensionPoint name="nameSuggestionProvider" interface="com.intellij.refactoring.rename.NameSuggestionProvider"/>
-    <extensionPoint name="vetoRenameCondition" interface="com.intellij.openapi.util.Condition"/>
+    <extensionPoint name="vetoRenameCondition" interface="consulo.application.util.function.Condition"/>
 
     <extensionPoint name="rename.inplace.resolveSnapshotProvider"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -1000,7 +1000,7 @@
     </extensionPoint>
 
     <extensionPoint name="stubElementTypeHolder"
-                    beanClass="com.intellij.psi.stubs.StubElementTypeHolderEP"/>
+                    beanClass="consulo.language.psi.stub.StubElementTypeHolderEP"/>
 
     <extensionPoint name="newModuleBuilder" interface="consulo.ide.newProject.NewModuleBuilder"/>
 
@@ -1077,7 +1077,7 @@
                     interface="com.intellij.refactoring.listeners.RefactoringElementListenerProvider"
                     area="PROJECT"/>
 
-    <extensionPoint name="problemFileHighlightFilter" interface="com.intellij.openapi.util.Condition" area="PROJECT"/>
+    <extensionPoint name="problemFileHighlightFilter" interface="consulo.application.util.function.Condition" area="PROJECT"/>
 
     <extensionPoint name="problemHighlightFilter" interface="com.intellij.codeInsight.daemon.ProblemHighlightFilter"/>
 
@@ -1403,7 +1403,7 @@
     <projectService serviceInterface="consulo.project.DumbService"
                     serviceImplementation="com.intellij.openapi.project.DumbServiceImpl"/>
 
-    <projectService serviceInterface="com.intellij.psi.util.CachedValuesManager"
+    <projectService serviceInterface="consulo.language.psi.util.CachedValuesManager"
                     serviceImplementation="com.intellij.util.CachedValuesManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.projectlevelman.AllVcsesI"
@@ -1599,7 +1599,7 @@
     <projectService serviceInterface="com.intellij.openapi.vcs.changes.ui.ChangesGroupingPolicyFactory"
                     serviceImplementation="com.intellij.openapi.vcs.changes.ui.ChangesModuleGroupingPolicyFactory"/>
 
-    <projectService serviceInterface="com.intellij.openapi.roots.FileIndexFacade"
+    <projectService serviceInterface="consulo.language.content.FileIndexFacade"
                     serviceImplementation="com.intellij.openapi.roots.impl.ProjectFileIndexFacade"/>
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.VcsPathPresenter"
                     serviceImplementation="com.intellij.openapi.vcs.impl.ModuleVcsPathPresenter"/>
@@ -1890,7 +1890,7 @@
     <projectService serviceInterface="com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable"
                     serviceImplementation="com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable"/>
 
-    <projectService serviceInterface="com.intellij.psi.search.ProjectScopeBuilder"
+    <projectService serviceInterface="consulo.language.psi.scope.internal.ProjectScopeBuilder"
                     serviceImplementation="com.intellij.psi.search.ProjectScopeBuilderImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.module.ProjectLoadingErrorsNotifier"
@@ -1967,7 +1967,7 @@
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
     <moduleService serviceInterface="consulo.module.content.ModuleRootManager"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>
-    <moduleService serviceInterface="com.intellij.openapi.module.ModuleScopeProvider"
+    <moduleService serviceInterface="consulo.language.psi.scope.internal.ModuleScopeProvider"
                    serviceImplementation="com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl"/>
     <projectService serviceInterface="consulo.project.content.ProjectRootModificationTracker"
                     serviceImplementation="com.intellij.openapi.roots.ProjectRootModificationTrackerImpl"/>

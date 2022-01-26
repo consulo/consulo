@@ -5,6 +5,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.indexing.ID;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
+import consulo.language.psi.stub.SerializationManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -3,6 +3,7 @@ package com.intellij.psi.impl;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.injected.editor.DocumentWindow;
+import consulo.document.util.FileContentUtilCore;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.application.*;
@@ -24,7 +25,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiDocumentListener;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import com.intellij.openapi.util.*;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;

@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots;
+package consulo.language.content;
 
-import com.intellij.openapi.components.ServiceManager;
-import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.component.util.ModificationTracker;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -36,7 +35,7 @@ public abstract class FileIndexFacade {
   }
 
   public static FileIndexFacade getInstance(Project project) {
-    return ServiceManager.getService(project, FileIndexFacade.class);
+    return project.getInstance(FileIndexFacade.class);
   }
 
   @Nonnull

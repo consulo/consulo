@@ -15,7 +15,7 @@
  */
 package com.intellij.find.findUsages;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

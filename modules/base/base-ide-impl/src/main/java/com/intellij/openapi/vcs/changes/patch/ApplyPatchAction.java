@@ -37,7 +37,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;

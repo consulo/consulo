@@ -25,7 +25,7 @@ import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;

@@ -11,7 +11,7 @@ import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
 import com.intellij.ide.ui.UISettings;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import com.intellij.patterns.StandardPatterns;

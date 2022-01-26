@@ -33,7 +33,7 @@ import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import consulo.language.psi.*;
 import consulo.progress.ProcessCanceledException;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;

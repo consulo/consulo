@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph.collapsing;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.api.LiteLinearGraph;
 import javax.annotation.Nonnull;

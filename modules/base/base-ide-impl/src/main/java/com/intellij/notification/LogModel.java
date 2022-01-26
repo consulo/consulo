@@ -18,7 +18,7 @@ package com.intellij.notification;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.util.containers.ContainerUtil;

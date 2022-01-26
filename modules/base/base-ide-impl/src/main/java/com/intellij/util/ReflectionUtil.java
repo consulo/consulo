@@ -17,7 +17,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.DifferenceFilter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;

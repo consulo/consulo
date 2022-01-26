@@ -33,7 +33,7 @@ import consulo.language.util.CharTable;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
-import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.language.util.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.SimpleReference;

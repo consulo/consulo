@@ -14,9 +14,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.PsiParameterizedCachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.ParameterizedCachedValue;
+import consulo.language.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValuesManager;
+import consulo.language.psi.util.ParameterizedCachedValue;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

@@ -17,7 +17,7 @@ package com.intellij.dvcs.ui;
 
 import com.intellij.dvcs.repo.Repository;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcs.log.VcsFullCommitDetails;

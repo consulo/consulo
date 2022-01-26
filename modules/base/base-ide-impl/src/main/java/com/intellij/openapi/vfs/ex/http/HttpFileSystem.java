@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.ex.http;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
+import com.intellij.openapi.vfs.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
-public abstract class HttpFileSystem extends DeprecatedVirtualFileSystem {
+public abstract class HttpFileSystem extends BaseVirtualFileSystem {
   @NonNls public static final String PROTOCOL = StandardFileSystems.HTTP_PROTOCOL;
 
   public static HttpFileSystem getInstance() {

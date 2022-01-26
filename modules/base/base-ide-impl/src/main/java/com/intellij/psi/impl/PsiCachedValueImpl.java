@@ -17,8 +17,8 @@
 package com.intellij.psi.impl;
 
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValue;
+import consulo.language.psi.util.CachedValueProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

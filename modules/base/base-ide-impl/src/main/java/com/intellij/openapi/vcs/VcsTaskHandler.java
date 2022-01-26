@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

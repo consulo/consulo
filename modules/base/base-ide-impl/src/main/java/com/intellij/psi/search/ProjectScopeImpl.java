@@ -19,7 +19,7 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiBundle;
 import javax.annotation.Nonnull;

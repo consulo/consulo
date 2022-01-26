@@ -15,7 +15,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Conditions;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;

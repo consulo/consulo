@@ -1,5 +1,6 @@
 package com.intellij.psi;
 
+import consulo.application.util.function.Condition;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.LighterASTTokenNode;
@@ -12,7 +13,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteredTraverserBase;
 import com.intellij.util.containers.JBIterable;
-import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.document.util.TextRange;
 import consulo.language.ast.TokenType;
 import consulo.language.psi.PsiElement;
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import static com.intellij.openapi.util.Conditions.compose;
+import static consulo.application.util.function.Conditions.compose;
 
 /**
  * @author gregsh

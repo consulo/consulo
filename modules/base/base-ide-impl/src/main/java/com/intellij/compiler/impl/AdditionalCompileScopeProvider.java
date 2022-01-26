@@ -19,7 +19,7 @@ package com.intellij.compiler.impl;
 import com.intellij.openapi.compiler.CompileScope;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import javax.annotation.Nonnull;
 
 /**

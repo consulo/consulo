@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,7 +35,6 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

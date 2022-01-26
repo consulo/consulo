@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.LanguageSubstitutors;
+import consulo.language.psi.LanguageSubstitutors;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 

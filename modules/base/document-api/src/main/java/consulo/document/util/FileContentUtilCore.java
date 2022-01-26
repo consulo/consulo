@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.document.util;
 
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
@@ -42,20 +42,17 @@ public class FileContentUtilCore {
 
   @RequiredUIAccess
   public static void reparseFiles(@Nonnull final Collection<? extends VirtualFile> files) {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        // files must be processed under one write action to prevent firing event for invalid files.
-        final Set<VFilePropertyChangeEvent> events = new HashSet<VFilePropertyChangeEvent>();
-        for (VirtualFile file : files) {
-          saveOrReload(file, events);
-        }
-
-        BulkFileListener publisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFileManager.VFS_CHANGES);
-        List<VFileEvent> eventList = new ArrayList<VFileEvent>(events);
-        publisher.before(eventList);
-        publisher.after(eventList);
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      // files must be processed under one write action to prevent firing event for invalid files.
+      final Set<VFilePropertyChangeEvent> events = new HashSet<>();
+      for (VirtualFile file : files) {
+        saveOrReload(file, events);
       }
+
+      BulkFileListener publisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFileManager.VFS_CHANGES);
+      List<VFileEvent> eventList = new ArrayList<VFileEvent>(events);
+      publisher.before(eventList);
+      publisher.after(eventList);
     });
   }
 

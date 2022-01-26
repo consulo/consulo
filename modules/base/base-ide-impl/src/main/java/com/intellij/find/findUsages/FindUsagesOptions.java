@@ -20,7 +20,7 @@ import com.intellij.find.FindSettings;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.project.Project;
 import com.intellij.psi.search.PredefinedSearchScopeProvider;
-import com.intellij.psi.search.ProjectScope;
+import consulo.language.psi.scope.ProjectScope;
 import com.intellij.psi.search.SearchRequestCollector;
 import consulo.language.psi.scope.SearchScope;
 import consulo.annotation.access.RequiredReadAction;

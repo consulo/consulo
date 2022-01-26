@@ -24,7 +24,7 @@ import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.application.util.registry.Registry;

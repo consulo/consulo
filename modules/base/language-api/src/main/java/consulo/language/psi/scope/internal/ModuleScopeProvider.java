@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.module;
+package consulo.language.psi.scope.internal;
 
 
-import com.intellij.openapi.components.ServiceManager;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 
@@ -28,7 +27,7 @@ import javax.annotation.Nonnull;
 public interface ModuleScopeProvider {
   @Nonnull
   static ModuleScopeProvider getInstance(@Nonnull Module module) {
-    return ServiceManager.getService(module, ModuleScopeProvider.class);
+    return module.getInstance(ModuleScopeProvider.class);
   }
 
   /**

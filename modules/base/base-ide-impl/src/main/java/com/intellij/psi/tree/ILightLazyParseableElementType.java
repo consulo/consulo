@@ -17,7 +17,7 @@ package com.intellij.psi.tree;
 
 import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.LighterLazyParseableNode;
-import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.language.util.FlyweightCapableTreeStructure;
 
 /**
  * Provides more flexible parsing capabilities for ILazyParseableElementType.

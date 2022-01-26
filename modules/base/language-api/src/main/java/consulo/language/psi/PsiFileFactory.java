@@ -15,15 +15,14 @@
  */
 package consulo.language.psi;
 
-import consulo.language.Language;
-import com.intellij.openapi.components.ServiceManager;
-import consulo.language.util.IncorrectOperationException;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
+import consulo.language.Language;
+import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

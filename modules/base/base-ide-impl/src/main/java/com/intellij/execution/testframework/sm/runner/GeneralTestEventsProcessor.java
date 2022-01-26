@@ -20,7 +20,7 @@ import com.intellij.execution.testframework.sm.runner.events.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.util.containers.TransferToEDTQueue;

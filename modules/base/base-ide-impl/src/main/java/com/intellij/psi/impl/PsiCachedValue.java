@@ -24,7 +24,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.PsiModificationTracker;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CachedValueBase;

@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

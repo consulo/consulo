@@ -5,7 +5,7 @@ package com.intellij.codeInsight;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;

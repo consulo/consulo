@@ -30,7 +30,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
-import com.intellij.psi.search.ProjectScope;
+import consulo.language.psi.scope.ProjectScope;
 import com.intellij.psi.util.PsiUtilBase;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;

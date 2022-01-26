@@ -18,7 +18,7 @@ package com.intellij.internal.statistic;
 import com.intellij.internal.statistic.beans.PatchedUsage;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;

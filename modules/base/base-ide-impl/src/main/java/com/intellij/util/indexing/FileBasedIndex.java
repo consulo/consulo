@@ -9,7 +9,7 @@ import consulo.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.content.ContentIterator;
 import consulo.module.content.ProjectFileIndex;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vfs.*;

@@ -44,7 +44,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.LimitedPool;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
-import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.language.util.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.language.version.LanguageVersion;

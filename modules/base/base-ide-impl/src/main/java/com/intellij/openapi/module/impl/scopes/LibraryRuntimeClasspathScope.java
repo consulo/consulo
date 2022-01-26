@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;

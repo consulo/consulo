@@ -22,6 +22,7 @@ import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import consulo.application.ApplicationManager;
+import consulo.application.util.function.Condition;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;

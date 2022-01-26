@@ -22,7 +22,7 @@ import com.intellij.openapi.keymap.KeymapExtension;
 import com.intellij.openapi.keymap.KeymapGroup;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 
 import java.util.Arrays;
 import java.util.HashMap;

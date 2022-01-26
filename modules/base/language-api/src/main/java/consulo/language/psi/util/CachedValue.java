@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.psi.util;
+package consulo.language.psi.util;
 
-import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.RecursionGuard;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.ResolveResult;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * A wrapper object that holds a computation ({@link #getValueProvider()}) and caches the result of the computation.
@@ -102,5 +102,5 @@ public interface CachedValue<T> {
   /**
    * @return if {@link #hasUpToDateValue()}, then a wrapper around the cached value, otherwise {@code null}.
    */
-  Getter<T> getUpToDateOrNull();
+  Supplier<T> getUpToDateOrNull();
 }

@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi;
+package consulo.language.psi;
 
 import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.container.plugin.PluginIds;
+import consulo.document.util.FileContentUtilCore;
 import consulo.language.Language;
 import consulo.language.LanguageExtension;
-import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import consulo.container.plugin.PluginIds;
-import consulo.language.psi.LanguageSubstitutor;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.FileContentUtilCore;
-import com.intellij.util.ObjectUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -70,20 +71,19 @@ public final class LanguageSubstitutors extends LanguageExtension<LanguageSubsti
         if (prevSubstitutedLang == null) {
           return; // no need to reparse for the first language substitution
         }
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+
+        Application application = Application.get();
+        if (application.isUnitTestMode()) {
           return;
         }
         file.putUserData(REPARSING_SCHEDULED, true);
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (file.replace(REPARSING_SCHEDULED, true, null)) {
-              LOG.info("Reparsing " + file.getPath() + " because of language substitution " +
-                       prevLang.getID() + "->" + substitutedLang.getID());
-              FileContentUtilCore.reparseFiles(file);
-            }
+        application.invokeLater(() -> {
+          if (file.replace(REPARSING_SCHEDULED, true, null)) {
+            LOG.info("Reparsing " + file.getPath() + " because of language substitution " +
+                     prevLang.getID() + "->" + substitutedLang.getID());
+            FileContentUtilCore.reparseFiles(file);
           }
-        }, ModalityState.defaultModalityState());
+        }, application.getDefaultModalityState());
       }
     }
   }

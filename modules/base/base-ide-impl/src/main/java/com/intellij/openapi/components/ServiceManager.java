@@ -18,7 +18,7 @@ package com.intellij.openapi.components;
 import consulo.application.Application;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.util.NotNullLazyKey;
+import consulo.util.dataholder.NotNullLazyKey;
 import consulo.component.ComponentManager;
 
 import javax.annotation.Nonnull;

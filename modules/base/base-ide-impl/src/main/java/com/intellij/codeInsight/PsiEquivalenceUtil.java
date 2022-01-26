@@ -18,7 +18,7 @@ package com.intellij.codeInsight;
 
 import consulo.language.ast.ASTNode;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;

@@ -15,9 +15,9 @@
  */
 package consulo.language.psi.scope;
 
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiBundle;
+import consulo.language.psi.PsiBundle;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

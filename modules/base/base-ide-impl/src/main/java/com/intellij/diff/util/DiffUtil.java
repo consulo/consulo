@@ -77,7 +77,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.WindowWrapper;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

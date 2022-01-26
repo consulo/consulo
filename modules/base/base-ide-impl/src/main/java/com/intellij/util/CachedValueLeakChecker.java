@@ -8,7 +8,7 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ref.DebugReflectionUtil;

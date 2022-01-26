@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 

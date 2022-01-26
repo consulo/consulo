@@ -15,6 +15,7 @@
  */
 package org.intellij.plugins.intelliLang;
 
+import consulo.application.util.function.Condition;
 import consulo.language.Language;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -29,8 +30,8 @@ import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValue;
+import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.containers.ConcurrentFactoryMap;

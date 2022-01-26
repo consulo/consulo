@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.AbstractFileViewProvider;
-import com.intellij.psi.LanguageSubstitutors;
+import consulo.language.psi.LanguageSubstitutors;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.smartPointers.Identikit;
 import com.intellij.psi.impl.smartPointers.SelfElementInfo;

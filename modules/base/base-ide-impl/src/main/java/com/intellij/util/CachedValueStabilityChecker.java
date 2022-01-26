@@ -4,9 +4,11 @@ package com.intellij.util;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValueProvider;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.psi.util.CachedValue;
+import consulo.language.psi.util.CachedValuesManager;
 import consulo.logging.Logger;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.util.dataholder.Key;
@@ -24,7 +26,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
 /**
- * This class checks the contract described in {@link com.intellij.psi.util.CachedValue} documentation, that its
+ * This class checks the contract described in {@link CachedValue} documentation, that its
  * {@link CachedValueProvider} may not capture anything short-lived, thread-local or caller-dependent from the context,
  * to avoid unstable and invalid cached results. The checker uses reflection to traverse fields of the given provider
  * to ensure they contain the same (or equal) values when invoked multiple times.
@@ -54,7 +56,7 @@ import java.util.function.Supplier;
  * </li>
  * </ol>
  * <p>
- * Note that these checks only happen in {@link com.intellij.psi.util.CachedValuesManager#getCachedValue} methods,
+ * Note that these checks only happen in {@link CachedValuesManager#getCachedValue} methods,
  * where providers are instantiated afresh on each call. If you manually create a cached value and put into a field or
  * user data, you're still prone to the very same issues with capturing unstable values from the context,
  * but no checks can catch that for you, you're on your own.

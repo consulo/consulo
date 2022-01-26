@@ -5,6 +5,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.intellij.AppTopics;
 import com.intellij.history.LocalHistory;
 import com.intellij.ide.plugins.PluginManager;
+import consulo.application.util.function.Condition;
 import consulo.language.ast.ASTNode;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;

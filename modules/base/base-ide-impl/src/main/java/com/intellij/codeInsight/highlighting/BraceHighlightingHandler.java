@@ -55,7 +55,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import consulo.project.DumbAwareRunnable;
 import consulo.project.Project;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Conditions;
 import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;

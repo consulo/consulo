@@ -34,7 +34,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import consulo.language.file.LanguageFileViewProviders;
-import com.intellij.psi.LanguageSubstitutors;
+import consulo.language.psi.LanguageSubstitutors;
 import com.intellij.ui.ExpandableItemsHandlerFactory;
 import com.intellij.ui.TreeUIHelper;
 import consulo.component.extension.KeyedLazyInstanceEP;

@@ -15,8 +15,8 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Condition;
+import consulo.application.util.function.Conditions;
 import com.intellij.util.Function;
 import com.intellij.util.Functions;
 
@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import static com.intellij.openapi.util.Conditions.not;
+import static consulo.application.util.function.Conditions.not;
 
 public abstract class FilteredTraverserBase<T, Self extends FilteredTraverserBase<T, Self>> implements Iterable<T> {
 

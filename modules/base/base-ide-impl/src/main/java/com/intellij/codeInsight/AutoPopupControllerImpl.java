@@ -18,7 +18,7 @@ import com.intellij.openapi.editor.EditorActivityManager;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;

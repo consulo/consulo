@@ -17,7 +17,7 @@ package com.intellij.lang;
 
 import consulo.language.ast.LighterAST;
 import consulo.language.util.CharTable;
-import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.language.ast.LighterASTNode;
 import consulo.util.lang.ref.SimpleReference;
 

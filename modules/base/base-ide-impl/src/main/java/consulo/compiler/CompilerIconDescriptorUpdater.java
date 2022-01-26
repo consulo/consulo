@@ -18,7 +18,7 @@ package consulo.compiler;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.compiler.CompilerManager;
 import consulo.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
+import consulo.language.content.FileIndexFacade;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;

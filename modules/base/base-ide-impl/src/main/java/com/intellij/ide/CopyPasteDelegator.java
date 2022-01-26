@@ -11,7 +11,7 @@ import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.util.Conditions;
+import consulo.application.util.function.Conditions;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.language.psi.scope.GlobalSearchScope;

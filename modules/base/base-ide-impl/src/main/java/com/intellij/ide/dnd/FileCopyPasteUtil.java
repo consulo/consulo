@@ -16,7 +16,7 @@
 package com.intellij.ide.dnd;
 
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;

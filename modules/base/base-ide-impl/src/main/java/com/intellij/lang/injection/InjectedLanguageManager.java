@@ -20,7 +20,7 @@ import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
 import consulo.project.Project;
-import com.intellij.openapi.util.NotNullLazyKey;
+import consulo.util.dataholder.NotNullLazyKey;
 import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;

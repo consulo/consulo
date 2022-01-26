@@ -6,7 +6,7 @@ import consulo.virtualFileSystem.HiddenFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.psi.search.ProjectScope;
+import consulo.language.psi.scope.ProjectScope;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -18,7 +18,7 @@ package com.intellij.codeInspection.actions;
 import com.intellij.find.impl.FindDialog;
 import com.intellij.find.impl.FindInProjectUtil;
 import consulo.module.Module;
-import com.intellij.openapi.util.Condition;
+import consulo.application.util.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.SearchScope;

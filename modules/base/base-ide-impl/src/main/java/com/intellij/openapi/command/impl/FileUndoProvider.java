@@ -14,7 +14,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
-import com.intellij.util.FileContentUtilCore;
+import consulo.document.util.FileContentUtilCore;
 
 import javax.annotation.Nonnull;
 

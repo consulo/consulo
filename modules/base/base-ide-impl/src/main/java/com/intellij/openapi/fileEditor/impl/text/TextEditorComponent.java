@@ -40,7 +40,7 @@ import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.util.FileContentUtilCore;
+import consulo.document.util.FileContentUtilCore;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
