@@ -43,6 +43,8 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.logging.Logger;
+import consulo.util.lang.TimeoutUtil;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

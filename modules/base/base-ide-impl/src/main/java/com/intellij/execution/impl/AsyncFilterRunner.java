@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.util.TimeoutUtil;
+import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

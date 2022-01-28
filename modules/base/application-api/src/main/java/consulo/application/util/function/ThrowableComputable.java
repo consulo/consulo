@@ -15,7 +15,14 @@
  */
 package consulo.application.util.function;
 
+import consulo.util.lang.function.ThrowableSupplier;
+
 @FunctionalInterface
-public interface ThrowableComputable<T, E extends Throwable> {
+public interface ThrowableComputable<T, E extends Throwable> extends ThrowableSupplier<T, E> {
   T compute() throws E;
+
+  @Override
+  default T get() throws E {
+    return compute();
+  }
 }

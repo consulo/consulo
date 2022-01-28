@@ -8,7 +8,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.util.indexing.CustomInputsIndexFileBasedIndexExtension;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.DataInputOutputUtil;
+import consulo.util.io.DataInputOutputUtil;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

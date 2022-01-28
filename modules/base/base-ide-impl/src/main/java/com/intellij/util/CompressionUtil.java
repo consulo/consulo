@@ -17,8 +17,8 @@ package com.intellij.util;
 
 import com.intellij.openapi.util.ThreadLocalCachedByteArray;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.util.io.DataInputOutputUtil;
-import com.intellij.util.io.DataOutputStream;
+import consulo.util.io.DataInputOutputUtil;
+import consulo.util.io.DataOutputStream;
 import com.intellij.util.text.StringFactory;
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;

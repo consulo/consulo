@@ -6,6 +6,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.indexing.impl.forward.IntForwardIndex;
 import com.intellij.util.io.*;
+import consulo.util.io.IOUtil;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

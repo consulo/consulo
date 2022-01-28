@@ -19,6 +19,8 @@
  */
 package com.intellij.util.io;
 
+import consulo.util.io.DataInputOutputUtil;
+
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

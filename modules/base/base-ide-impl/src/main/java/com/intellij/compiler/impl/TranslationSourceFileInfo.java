@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.intellij.util.io.DataInputOutputUtil;
+import consulo.util.io.DataInputOutputUtil;
 import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntLongHashMap;

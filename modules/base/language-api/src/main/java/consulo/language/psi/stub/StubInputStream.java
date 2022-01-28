@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package com.intellij.psi.stubs;
+package consulo.language.psi.stub;
 
-import com.intellij.util.io.*;
+import consulo.util.io.AbstractStringEnumerator;
+import consulo.util.io.DataInputOutputUtil;
+import consulo.util.io.IOUtil;
+import consulo.util.io.StringRef;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,5 +57,4 @@ public class StubInputStream extends DataInputStream {
   public int readVarInt() throws IOException {
     return DataInputOutputUtil.readINT(this);
   }
-
 }

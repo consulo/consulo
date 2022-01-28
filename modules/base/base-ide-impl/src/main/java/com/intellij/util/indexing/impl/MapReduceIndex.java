@@ -29,7 +29,7 @@ import com.intellij.util.indexing.impl.forward.ForwardIndexAccessor;
 import com.intellij.util.indexing.impl.forward.IntForwardIndex;
 import com.intellij.util.indexing.impl.forward.IntForwardIndexAccessor;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.DataOutputStream;
+import consulo.util.io.DataOutputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

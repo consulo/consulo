@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.util.lang;
 
 import java.lang.ref.SoftReference;
 
 public abstract class ThreadLocalCachedValue<T> {
-  private final ThreadLocal<SoftReference<T>> myThreadLocal = new ThreadLocal<SoftReference<T>>();
+  private final ThreadLocal<SoftReference<T>> myThreadLocal = new ThreadLocal<>();
 
   public T getValue() {
-    T value = com.intellij.reference.SoftReference.dereference(myThreadLocal.get());
+    T value = consulo.util.lang.ref.SoftReference.dereference(myThreadLocal.get());
     if (value == null) {
       value = create();
       myThreadLocal.set(new SoftReference<T>(value));

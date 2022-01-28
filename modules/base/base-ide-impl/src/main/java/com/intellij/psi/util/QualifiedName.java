@@ -16,9 +16,9 @@
 package com.intellij.psi.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
+import consulo.util.io.StringRef;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

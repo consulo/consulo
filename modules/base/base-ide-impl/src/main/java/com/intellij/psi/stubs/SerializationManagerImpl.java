@@ -2,7 +2,7 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
 import consulo.application.util.function.Computable;
 import consulo.container.boot.ContainerPathManager;

@@ -19,12 +19,12 @@
  */
 package com.intellij.util.io.storage;
 
-import com.intellij.openapi.Forceable;
+import consulo.util.io.Forceable;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.io.DataOutputStream;
+import consulo.util.io.DataOutputStream;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.RecordDataOutput;
 import com.intellij.util.io.UnsyncByteArrayInputStream;

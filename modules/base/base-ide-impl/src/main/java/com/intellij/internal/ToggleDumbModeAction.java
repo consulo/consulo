@@ -24,7 +24,7 @@ import consulo.project.DumbAware;
 import consulo.project.DumbModeTask;
 import com.intellij.openapi.project.DumbServiceImpl;
 import consulo.project.Project;
-import com.intellij.util.TimeoutUtil;
+import consulo.util.lang.TimeoutUtil;
 import javax.annotation.Nonnull;
 
 /**

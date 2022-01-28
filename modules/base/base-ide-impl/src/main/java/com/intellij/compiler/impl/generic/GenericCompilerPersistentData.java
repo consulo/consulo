@@ -16,7 +16,7 @@
 package com.intellij.compiler.impl.generic;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;

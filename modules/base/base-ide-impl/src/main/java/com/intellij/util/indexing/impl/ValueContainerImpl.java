@@ -21,7 +21,7 @@ import com.intellij.util.indexing.ValueContainer;
 import com.intellij.util.indexing.containers.ChangeBufferingList;
 import com.intellij.util.indexing.containers.IntIdsIterator;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.DataInputOutputUtil;
+import consulo.util.io.DataInputOutputUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

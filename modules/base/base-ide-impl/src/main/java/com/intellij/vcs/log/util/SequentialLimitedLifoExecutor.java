@@ -17,7 +17,7 @@ package com.intellij.vcs.log.util;
 
 import consulo.disposer.Disposable;
 import com.intellij.util.Consumer;
-import com.intellij.util.ThrowableConsumer;
+import consulo.util.lang.function.ThrowableConsumer;
 import com.intellij.util.concurrency.QueueProcessor;
 import consulo.disposer.Disposer;
 

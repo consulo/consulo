@@ -22,6 +22,7 @@ import com.intellij.util.indexing.StorageException;
 import com.intellij.util.indexing.ValueContainer;
 import com.intellij.util.io.*;
 import consulo.logging.Logger;
+import consulo.util.io.IOUtil;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

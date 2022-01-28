@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.io;
+package consulo.util.io;
 
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

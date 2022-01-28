@@ -20,6 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.ThreadLocalCachedValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

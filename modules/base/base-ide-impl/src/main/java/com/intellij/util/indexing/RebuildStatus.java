@@ -17,7 +17,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.progress.ProgressManager;
 import consulo.application.util.function.ThrowableRunnable;
-import com.intellij.util.TimeoutUtil;
+import consulo.util.lang.TimeoutUtil;
 
 import java.util.HashMap;
 import java.util.Map;

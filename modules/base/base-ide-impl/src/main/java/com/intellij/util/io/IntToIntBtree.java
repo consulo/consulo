@@ -4,6 +4,7 @@ package com.intellij.util.io;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ObjectUtil;
+import consulo.util.io.IOUtil;
 import gnu.trove.TIntIntHashMap;
 import javax.annotation.Nonnull;
 

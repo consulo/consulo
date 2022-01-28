@@ -7,7 +7,7 @@ import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.indexing.impl.InputData;
 import com.intellij.util.indexing.impl.InputDataDiffBuilder;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.DataOutputStream;
+import consulo.util.io.DataOutputStream;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -4,7 +4,7 @@ package com.intellij.psi.codeStyle;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.FList;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.NameUtilCore;

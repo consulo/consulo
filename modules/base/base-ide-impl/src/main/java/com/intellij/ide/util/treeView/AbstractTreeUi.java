@@ -33,6 +33,7 @@ import consulo.progress.ProcessCanceledException;
 import consulo.progress.ProgressIndicator;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.TimeoutUtil;
 import org.jetbrains.annotations.NonNls;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;

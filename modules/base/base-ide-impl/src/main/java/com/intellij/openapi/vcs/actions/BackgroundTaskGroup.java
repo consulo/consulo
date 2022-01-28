@@ -23,7 +23,7 @@ import com.intellij.openapi.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
-import com.intellij.util.ThrowableConsumer;
+import consulo.util.lang.function.ThrowableConsumer;
 import consulo.application.util.function.ThrowableRunnable;
 import javax.annotation.Nonnull;
 

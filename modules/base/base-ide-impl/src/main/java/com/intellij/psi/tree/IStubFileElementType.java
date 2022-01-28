@@ -19,6 +19,7 @@ package com.intellij.psi.tree;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.stub.*;
+import consulo.language.psi.stub.StubOutputStream;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.stubs.*;

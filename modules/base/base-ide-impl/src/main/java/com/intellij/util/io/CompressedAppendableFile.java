@@ -8,6 +8,8 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.CompressionUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.SLRUMap;
+import consulo.util.io.DataInputOutputUtil;
+import consulo.util.io.DataOutputStream;
 import gnu.trove.TLongArrayList;
 import javax.annotation.Nonnull;
 
@@ -229,7 +231,7 @@ public class CompressedAppendableFile {
 
   public synchronized <Data> void append(Data value, KeyDescriptor<Data> descriptor) throws IOException {
     final BufferExposingByteArrayOutputStream bos = new BufferExposingByteArrayOutputStream();
-    DataOutput out = new DataOutputStream(bos);
+    DataOutput out = new consulo.util.io.DataOutputStream(bos);
     descriptor.save(out, value);
     final int size = bos.size();
     final byte[] buffer = bos.getInternalBuffer();
@@ -293,7 +295,7 @@ public class CompressedAppendableFile {
   private void saveNextChunkIfNeeded() throws IOException {
     if (myBufferPosition == myNextChunkBuffer.length) {
       BufferExposingByteArrayOutputStream compressedOut = new BufferExposingByteArrayOutputStream();
-      DataOutputStream compressedDataOut = new DataOutputStream(compressedOut);
+      consulo.util.io.DataOutputStream compressedDataOut = new consulo.util.io.DataOutputStream(compressedOut);
       compress(compressedDataOut, myNextChunkBuffer);
       compressedDataOut.close();
 
@@ -329,7 +331,7 @@ public class CompressedAppendableFile {
     return ArrayUtil.realloc(table, Math.max(table.length * 8 / 5, table.length + 1));
   }
 
-  protected int compress(DataOutputStream compressedDataOut, byte[] buffer) throws IOException {
+  protected int compress(consulo.util.io.DataOutputStream compressedDataOut, byte[] buffer) throws IOException {
     return CompressionUtil.writeCompressedWithoutOriginalBufferLength(compressedDataOut, buffer, myAppendBufferLength);
   }
 
@@ -339,11 +341,11 @@ public class CompressedAppendableFile {
   }
 
   protected void saveChunk(BufferExposingByteArrayOutputStream compressedChunk, long endOfFileOffset) throws IOException {
-    try (DataOutputStream stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(getChunksFile(), true)))) {
+    try (consulo.util.io.DataOutputStream stream = new consulo.util.io.DataOutputStream(new BufferedOutputStream(new FileOutputStream(getChunksFile(), true)))) {
       stream.write(compressedChunk.getInternalBuffer(), 0, compressedChunk.size());
     }
 
-    try (DataOutputStream chunkLengthStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(getChunkLengthFile(), true)))) {
+    try (consulo.util.io.DataOutputStream chunkLengthStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(getChunkLengthFile(), true)))) {
       DataInputOutputUtil.writeINT(chunkLengthStream, compressedChunk.size());
     }
   }

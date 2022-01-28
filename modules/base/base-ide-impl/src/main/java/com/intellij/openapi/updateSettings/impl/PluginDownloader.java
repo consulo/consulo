@@ -25,7 +25,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.TimeoutUtil;
+import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
 import consulo.container.boot.ContainerPathManager;

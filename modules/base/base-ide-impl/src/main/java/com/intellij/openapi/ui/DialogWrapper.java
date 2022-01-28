@@ -47,7 +47,7 @@ import com.intellij.ui.components.JBOptionButton;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.TimeoutUtil;
+import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.ui.*;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;

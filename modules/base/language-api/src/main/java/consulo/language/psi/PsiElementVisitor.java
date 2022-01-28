@@ -16,7 +16,6 @@
 package consulo.language.psi;
 
 import consulo.progress.ProgressIndicatorProvider;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
 
 /**
  * Visitor which can be used to visit elements for all languages.

@@ -9,6 +9,8 @@ import com.intellij.openapi.vfs.newvfs.persistent.ContentHashesUtil;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.io.*;
+import consulo.util.io.DataInputOutputUtil;
+
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.util.io;
 
-/*
- * @author max
+import java.io.Closeable;
+
+/**
+ * Author: dmitrylomov
  */
-package com.intellij.openapi;
+public interface AbstractStringEnumerator extends Closeable, Forceable, DataEnumerator<String> {
 
-public interface Forceable {
-  boolean isDirty();
-  void force();
+  void markCorrupted();
 }

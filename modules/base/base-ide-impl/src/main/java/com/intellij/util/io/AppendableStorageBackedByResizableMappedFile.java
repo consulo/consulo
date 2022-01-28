@@ -17,6 +17,9 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import consulo.application.util.function.Processor;
+import consulo.util.io.DataInputOutputUtil;
+import consulo.util.io.DataOutputStream;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -148,7 +151,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
   public <Data> int append(Data value, KeyDescriptor<Data> descriptor) throws IOException {
     final BufferExposingByteArrayOutputStream bos = new BufferExposingByteArrayOutputStream();
-    DataOutput out = new DataOutputStream(bos);
+    DataOutput out = new consulo.util.io.DataOutputStream(bos);
     descriptor.save(out, value);
     final int size = bos.size();
     final byte[] buffer = bos.getInternalBuffer();
@@ -207,14 +210,14 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       comparer = buildOldComparerStream(addr, sameValue);
     }
 
-    DataOutput out = new DataOutputStream(comparer);
+    DataOutput out = new consulo.util.io.DataOutputStream(comparer);
     descriptor.save(out, value);
     comparer.close();
 
     if (testMode) {
       final boolean[] sameValue2 = new boolean[1];
       OutputStream comparer2 = buildOldComparerStream(addr, sameValue2);
-      out = new DataOutputStream(comparer2);
+      out = new consulo.util.io.DataOutputStream(comparer2);
       descriptor.save(out, value);
       comparer2.close();
       assert sameValue[0] == sameValue2[0];
@@ -301,7 +304,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
   private class MyCompressedAppendableFile extends CompressedAppendableFile {
     private final File myFile;
-    private DataOutputStream myChunkLengthTableStream;
+    private consulo.util.io.DataOutputStream myChunkLengthTableStream;
 
     MyCompressedAppendableFile(File file) {
       super(getPagedFileStorage().getFile());

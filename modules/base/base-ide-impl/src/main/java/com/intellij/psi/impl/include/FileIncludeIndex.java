@@ -13,7 +13,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 import com.intellij.util.io.KeyDescriptor;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import javax.annotation.Nonnull;

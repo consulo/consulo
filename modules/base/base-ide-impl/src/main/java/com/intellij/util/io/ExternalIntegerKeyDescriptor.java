@@ -19,6 +19,8 @@
  */
 package com.intellij.util.io;
 
+import consulo.util.io.DataInputOutputUtil;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

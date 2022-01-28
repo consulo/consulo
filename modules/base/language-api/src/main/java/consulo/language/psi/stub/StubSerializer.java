@@ -15,12 +15,7 @@
  */
 package consulo.language.psi.stub;
 
-import consulo.language.psi.stub.IndexSink;
-import consulo.language.psi.stub.ObjectStubSerializer;
-import consulo.language.psi.stub.StubElement;
-
 import javax.annotation.Nonnull;
-
 import java.io.IOException;
 
 /*
@@ -33,6 +28,7 @@ public interface StubSerializer<T extends StubElement> extends ObjectStubSeriali
 
   @Override
   void serialize(@Nonnull T stub, @Nonnull StubOutputStream dataStream) throws IOException;
+
   @Nonnull
   @Override
   T deserialize(@Nonnull StubInputStream dataStream, final StubElement parentStub) throws IOException;

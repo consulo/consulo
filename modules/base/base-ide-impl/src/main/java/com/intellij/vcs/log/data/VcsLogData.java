@@ -30,7 +30,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vcs.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
-import com.intellij.util.ThrowableConsumer;
+import consulo.util.lang.function.ThrowableConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.data.index.VcsLogIndex;

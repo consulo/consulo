@@ -5,6 +5,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.IndexSink;
 import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

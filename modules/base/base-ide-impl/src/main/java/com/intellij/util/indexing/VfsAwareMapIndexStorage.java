@@ -27,11 +27,13 @@ import com.intellij.util.SystemProperties;
 import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;
-import com.intellij.util.io.DataOutputStream;
+import consulo.util.io.DataOutputStream;
 import com.intellij.util.io.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.io.DataInputOutputUtil;
+import consulo.util.io.IOUtil;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.TestOnly;
 

@@ -24,7 +24,7 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.CommonProcessors;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.io.PersistentEnumeratorBase;
 import com.intellij.vcs.log.*;

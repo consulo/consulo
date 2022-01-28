@@ -19,10 +19,12 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.io.DataOutputStream;
+import consulo.util.io.DataOutputStream;
 import com.intellij.util.io.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.util.io.DataInputOutputUtil;
+import consulo.util.io.IOUtil;
 import gnu.trove.*;
 
 import javax.annotation.Nonnull;

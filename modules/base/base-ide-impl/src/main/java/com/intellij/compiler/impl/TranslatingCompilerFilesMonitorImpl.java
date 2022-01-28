@@ -48,7 +48,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.intellij.util.io.DataOutputStream;
+import consulo.util.io.DataOutputStream;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;

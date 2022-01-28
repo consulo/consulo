@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.collection.primitive.objects.ObjectIntMap;

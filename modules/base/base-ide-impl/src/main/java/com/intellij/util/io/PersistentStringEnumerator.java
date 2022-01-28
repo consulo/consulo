@@ -15,6 +15,9 @@
  */
 package com.intellij.util.io;
 
+import consulo.util.io.AbstractStringEnumerator;
+import consulo.util.io.DataEnumerator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

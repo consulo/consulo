@@ -25,7 +25,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

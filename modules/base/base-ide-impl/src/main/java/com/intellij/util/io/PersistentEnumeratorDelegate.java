@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.openapi.Forceable;
+import consulo.util.io.Forceable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,7 +16,7 @@
 package com.intellij.openapi.util.io;
 
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.util.ThrowableConsumer;
+import consulo.util.lang.function.ThrowableConsumer;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.*;
 
+@Deprecated
 public class DataInputOutputUtilRt {
   public static int readINT(@Nonnull DataInput record) throws IOException {
     final int val = record.readUnsignedByte();

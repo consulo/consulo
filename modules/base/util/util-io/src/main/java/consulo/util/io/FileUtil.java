@@ -18,15 +18,145 @@ package consulo.util.io;
 
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class FileUtil {
+  private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
+
+  private static final int MAX_FILE_IO_ATTEMPTS = 10;
+  private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
+
+  /**
+   * @param file file or directory to delete
+   * @return true if the file did not exist or was successfully deleted
+   */
+  public static boolean delete(@Nonnull File file) {
+    try {
+      deleteRecursivelyNIO2(file.toPath());
+      return true;
+    }
+    catch (Exception e) {
+      LOG.info("Fail to delete file: " + file, e);
+      return false;
+    }
+  }
+
+  /**
+   * @param file file or directory to delete
+   * @return true if the file did not exist or was successfully deleted
+   */
+  public static boolean delete(@Nonnull Path path) {
+    try {
+      deleteRecursivelyNIO2(path);
+      return true;
+    }
+    catch (Exception e) {
+      LOG.info("Fail to delete path: " + path, e);
+      return false;
+    }
+  }
+
+  static void deleteRecursivelyNIO2(Path path) throws IOException {
+    if (Files.isRegularFile(path)) {
+      performDeleteNIO2(path);
+      return;
+    }
+
+    Files.walkFileTree(path, new FileVisitor<Path>() {
+      @Override
+      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        if (OSInfo.isWindows) {
+          boolean notDirectory = attrs.isOther();
+
+          if (notDirectory) {
+            performDeleteNIO2(dir);
+            return FileVisitResult.SKIP_SUBTREE;
+          }
+        }
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        performDeleteNIO2(file);
+
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        performDeleteNIO2(dir);
+
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+        return FileVisitResult.CONTINUE;
+      }
+    });
+  }
+
+  static void performDeleteNIO2(Path path) throws IOException {
+    Boolean result = doIOOperation(lastAttempt -> {
+      try {
+        Files.deleteIfExists(path);
+        return Boolean.TRUE;
+      }
+      catch (IOException e) {
+        // file is read-only: fallback to standard java.io API
+        if (e instanceof AccessDeniedException) {
+          File file = path.toFile();
+          if (file == null) {
+            return Boolean.FALSE;
+          }
+          if (file.delete() || !file.exists()) {
+            return Boolean.TRUE;
+          }
+        }
+      }
+      return lastAttempt ? Boolean.FALSE : null;
+    });
+
+    if (!Boolean.TRUE.equals(result)) {
+      throw new IOException("Failed to delete " + path) {
+        @Override
+        public synchronized Throwable fillInStackTrace() {
+          return this; // optimization: the stacktrace is not needed: the exception is used to terminate tree walking and to pass the result
+        }
+      };
+    }
+  }
+
+  public interface RepeatableIOOperation<T, E extends Throwable> {
+    @Nullable
+    T execute(boolean lastAttempt) throws E;
+  }
+
+  @Nullable
+  public static <T, E extends Throwable> T doIOOperation(@Nonnull RepeatableIOOperation<T, E> ioTask) throws E {
+    for (int i = MAX_FILE_IO_ATTEMPTS; i > 0; i--) {
+      T result = ioTask.execute(i == 1);
+      if (result != null) return result;
+
+      try {
+        //noinspection BusyWait
+        Thread.sleep(10);
+      }
+      catch (InterruptedException ignored) {
+      }
+    }
+    return null;
+  }
+
   protected interface SymlinkResolver {
     @Nonnull
     String resolveSymlinksAndCanonicalize(@Nonnull String path, char separatorChar, boolean removeLastSlash);

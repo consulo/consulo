@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.compiler;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.SmartList;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 
 import java.io.DataInput;
 import java.io.DataOutput;

@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
 
-public interface ThrowableConsumer<S, T extends Throwable> {
-  void consume(final S s) throws T;
+/*
+ * @author max
+ */
+package consulo.util.io;
+
+public interface Forceable {
+  boolean isDirty();
+
+  void force();
 }

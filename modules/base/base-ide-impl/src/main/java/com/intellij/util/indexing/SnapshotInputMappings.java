@@ -4,6 +4,7 @@ package com.intellij.util.indexing;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.util.io.IOUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.ByteArraySequence;
@@ -18,7 +19,7 @@ import com.intellij.util.indexing.impl.InputData;
 import com.intellij.util.indexing.impl.forward.AbstractForwardIndexAccessor;
 import com.intellij.util.indexing.impl.forward.PersistentMapBasedForwardIndex;
 import com.intellij.util.io.*;
-import com.intellij.util.io.DataOutputStream;
+import consulo.util.io.DataOutputStream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

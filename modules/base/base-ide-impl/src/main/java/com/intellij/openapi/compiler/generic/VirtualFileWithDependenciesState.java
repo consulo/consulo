@@ -18,7 +18,7 @@ package com.intellij.openapi.compiler.generic;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

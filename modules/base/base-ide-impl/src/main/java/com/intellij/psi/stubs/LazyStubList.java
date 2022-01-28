@@ -3,9 +3,10 @@ package com.intellij.psi.stubs;
 
 import consulo.language.ast.IElementType;
 import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.io.AbstractStringEnumerator;
+import consulo.util.io.AbstractStringEnumerator;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.ObjectStubSerializer;
+import consulo.language.psi.stub.StubInputStream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

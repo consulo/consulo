@@ -13,7 +13,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.project.startup.IdeaStartupActivity;
 import consulo.application.util.function.Condition;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.util.TimeoutUtil;
+import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.concurrency.QueueProcessor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;

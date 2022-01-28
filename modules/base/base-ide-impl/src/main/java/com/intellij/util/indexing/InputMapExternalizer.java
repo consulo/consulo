@@ -4,7 +4,7 @@ package com.intellij.util.indexing;
 import com.intellij.util.SmartList;
 import com.intellij.util.indexing.impl.InputIndexDataExternalizer;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.DataInputOutputUtil;
+import consulo.util.io.DataInputOutputUtil;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;

@@ -1,10 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util.io;
+package consulo.util.io;
 
-import com.intellij.openapi.util.ThreadLocalCachedValue;
-import consulo.application.util.function.ThrowableComputable;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.ThreadLocalCachedValue;
+import consulo.util.lang.function.ThrowableSupplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,8 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class IOUtil {
-  @SuppressWarnings("SpellCheckingInspection")
-  public static final boolean BYTE_BUFFERS_USE_NATIVE_BYTE_ORDER = SystemProperties.getBooleanProperty("idea.bytebuffers.use.native.byte.order", true);
+  public static final boolean BYTE_BUFFERS_USE_NATIVE_BYTE_ORDER = true;//SystemProperties.getBooleanProperty("idea.bytebuffers.use.native.byte.order", true);
 
   private static final int STRING_HEADER_SIZE = 1;
   private static final int STRING_LENGTH_THRESHOLD = 255;
@@ -199,19 +196,19 @@ public class IOUtil {
     }
   }
 
-  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableComputable<T, ? extends IOException> factoryComputable, @Nonnull final File file) throws IOException {
+  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableSupplier<T, ? extends IOException> factoryComputable, @Nonnull final File file) throws IOException {
     return openCleanOrResetBroken(factoryComputable, () -> deleteAllFilesStartingWith(file));
   }
 
-  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableComputable<T, ? extends IOException> factoryComputable, @Nonnull Runnable cleanupCallback) throws IOException {
+  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableSupplier<T, ? extends IOException> factoryComputable, @Nonnull Runnable cleanupCallback) throws IOException {
     try {
-      return factoryComputable.compute();
+      return factoryComputable.get();
     }
     catch (IOException ex) {
       cleanupCallback.run();
     }
 
-    return factoryComputable.compute();
+    return factoryComputable.get();
   }
 
   public static void writeStringList(@Nonnull DataOutput out, @Nonnull Collection<String> list) throws IOException {

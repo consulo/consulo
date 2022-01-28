@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.io;
-
-import com.intellij.openapi.Forceable;
-
-import java.io.Closeable;
+package consulo.util.lang;
 
 /**
- * Author: dmitrylomov
+ * @author Konstantin Bulenkov
  */
-public interface AbstractStringEnumerator extends Closeable, Forceable, DataEnumerator<String> {
-
-  void markCorrupted();
+public final class TimeoutUtil {
+  public static void sleep(final long millis) {
+    try {
+      Thread.sleep(millis);
+    }
+    catch (InterruptedException ignored) { }
+  }
 }

@@ -19,7 +19,7 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.util.ThreadLocalCachedValue;
+import consulo.util.lang.ThreadLocalCachedValue;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.ArrayUtil;

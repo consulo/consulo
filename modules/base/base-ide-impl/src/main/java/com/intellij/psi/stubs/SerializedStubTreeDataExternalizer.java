@@ -4,7 +4,7 @@ package com.intellij.psi.stubs;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CompressionUtil;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.DataInputOutputUtil;
+import consulo.util.io.DataInputOutputUtil;
 import com.intellij.util.io.PersistentHashMapValueStorage;
 import javax.annotation.Nonnull;
 

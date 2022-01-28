@@ -4,7 +4,7 @@ package com.intellij.psi.stubs;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.indexing.ID;
 import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.DataInputOutputUtil;
+import consulo.util.io.DataInputOutputUtil;
 import consulo.language.psi.stub.SerializationManager;
 
 import javax.annotation.Nonnull;

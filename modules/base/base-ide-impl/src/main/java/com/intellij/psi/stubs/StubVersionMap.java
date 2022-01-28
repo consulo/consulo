@@ -20,7 +20,7 @@ import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IndexInfrastructure;
 import com.intellij.util.indexing.IndexingStamp;
-import com.intellij.util.io.DataInputOutputUtil;
+import consulo.util.io.DataInputOutputUtil;
 import consulo.logging.Logger;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TObjectLongHashMap;

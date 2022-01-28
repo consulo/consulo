@@ -24,6 +24,7 @@ import consulo.application.util.function.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
+import consulo.util.io.IOUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.EmptyConsumer;
 import consulo.application.util.function.Processor;

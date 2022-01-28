@@ -14,6 +14,9 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.SystemProperties;
 import javax.annotation.Nonnull;
 
+import consulo.util.io.DataInputOutputUtil;
+import consulo.util.io.DataOutputStream;
+import consulo.util.io.IOUtil;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nullable;
@@ -110,16 +113,16 @@ public class PersistentHashMapValueStorage {
 
   private static final boolean useSingleFileDescriptor = SystemProperties.getBooleanProperty("idea.use.single.file.descriptor.for.persistent.hash.map", true);
 
-  private static final FileAccessorCache<String, DataOutputStream> ourAppendersCache = new FileAccessorCache<String, DataOutputStream>(CACHE_PROTECTED_QUEUE_SIZE, CACHE_PROBATIONAL_QUEUE_SIZE) {
+  private static final FileAccessorCache<String, consulo.util.io.DataOutputStream> ourAppendersCache = new FileAccessorCache<String, consulo.util.io.DataOutputStream>(CACHE_PROTECTED_QUEUE_SIZE, CACHE_PROBATIONAL_QUEUE_SIZE) {
     @Nonnull
     @Override
-    protected DataOutputStream createAccessor(String path) throws IOException {
+    protected consulo.util.io.DataOutputStream createAccessor(String path) throws IOException {
       OutputStream out = useSingleFileDescriptor ? new OutputStreamOverRandomAccessFileCache(path) : new FileOutputStream(path, true);
-      return new DataOutputStream(new BufferedOutputStream(out));
+      return new consulo.util.io.DataOutputStream(new BufferedOutputStream(out));
     }
 
     @Override
-    protected void disposeAccessor(@Nonnull DataOutputStream fileAccessor) throws IOException {
+    protected void disposeAccessor(@Nonnull consulo.util.io.DataOutputStream fileAccessor) throws IOException {
       if (!useSingleFileDescriptor) IOUtil.syncStream(fileAccessor);
       fileAccessor.close();
     }
@@ -167,7 +170,7 @@ public class PersistentHashMapValueStorage {
 
       // avoid corruption issue when disk fails to write first record synchronously or unexpected first write file increase (IDEA-106306),
       // code depends on correct value of mySize
-      FileAccessorCache.Handle<DataOutputStream> streamCacheValue = ourAppendersCache.getIfCached(myPath);
+      FileAccessorCache.Handle<consulo.util.io.DataOutputStream> streamCacheValue = ourAppendersCache.getIfCached(myPath);
       if (streamCacheValue != null) {
         try {
           IOUtil.syncStream(streamCacheValue.get());
@@ -198,19 +201,19 @@ public class PersistentHashMapValueStorage {
     if (!allowedToCompactChunks()) throw new AssertionError();
     if (prevChunkAddress != 0 && myOptions.myHasNoChunks) throw new AssertionError();
     long result = mySize; // volatile read
-    final FileAccessorCache.Handle<DataOutputStream> appender = myCompressedAppendableFile != null ? null : ourAppendersCache.get(myPath);
+    final FileAccessorCache.Handle<consulo.util.io.DataOutputStream> appender = myCompressedAppendableFile != null ? null : ourAppendersCache.get(myPath);
 
     try {
       if (myCompressedAppendableFile != null) {
         BufferExposingByteArrayOutputStream stream = new BufferExposingByteArrayOutputStream(15);
-        DataOutputStream testStream = new DataOutputStream(stream);
+        consulo.util.io.DataOutputStream testStream = new consulo.util.io.DataOutputStream(stream);
         saveHeader(dataLength, prevChunkAddress, result, testStream);
         myCompressedAppendableFile.append(stream.getInternalBuffer(), stream.size());
         myCompressedAppendableFile.append(data, offset, dataLength);
         mySize += stream.size() + dataLength;  // volatile write
       }
       else {
-        DataOutputStream dataOutputStream = appender.get();
+        consulo.util.io.DataOutputStream dataOutputStream = appender.get();
         dataOutputStream.resetWrittenBytesCount();
 
         saveHeader(dataLength, prevChunkAddress, result, dataOutputStream);
@@ -225,7 +228,7 @@ public class PersistentHashMapValueStorage {
     return result;
   }
 
-  private void saveHeader(int dataLength, long prevChunkAddress, long result, @Nonnull DataOutputStream dataOutputStream) throws IOException {
+  private void saveHeader(int dataLength, long prevChunkAddress, long result, @Nonnull consulo.util.io.DataOutputStream dataOutputStream) throws IOException {
     DataInputOutputUtil.writeINT(dataOutputStream, dataLength);
     if (!myOptions.myHasNoChunks) {
       if (result < prevChunkAddress) {
@@ -597,7 +600,7 @@ public class PersistentHashMapValueStorage {
 
     if (myOptions.myCompactChunksWithValueDeserialization) {
       final BufferExposingByteArrayOutputStream stream = new BufferExposingByteArrayOutputStream(result.buffer.length);
-      DataOutputStream testStream = new DataOutputStream(stream);
+      consulo.util.io.DataOutputStream testStream = new consulo.util.io.DataOutputStream(stream);
       appender.append(testStream);
       newValueOffset = appendBytes(stream.toByteArraySequence(), 0);
       myChunksBytesAfterRemoval += stream.size();
@@ -665,7 +668,7 @@ public class PersistentHashMapValueStorage {
   }
 
   private static void forceAppender(String path) {
-    final FileAccessorCache.Handle<DataOutputStream> cached = ourAppendersCache.getIfCached(path);
+    final FileAccessorCache.Handle<consulo.util.io.DataOutputStream> cached = ourAppendersCache.getIfCached(path);
     if (cached != null) {
       try {
         cached.get().flush();

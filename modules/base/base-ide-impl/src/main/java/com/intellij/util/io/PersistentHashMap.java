@@ -5,13 +5,15 @@ import consulo.application.util.function.Processor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.LowMemoryWatcher;
-import com.intellij.openapi.util.ThreadLocalCachedValue;
+import consulo.util.lang.ThreadLocalCachedValue;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import com.intellij.util.containers.LimitedPool;
 import com.intellij.util.containers.SLRUCache;
+import consulo.util.io.DataOutputStream;
+import consulo.util.io.IOUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

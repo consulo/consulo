@@ -20,7 +20,7 @@ import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.IOUtil;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

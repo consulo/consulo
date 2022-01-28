@@ -24,7 +24,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.MemoryDumpHelper;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.TimeoutUtil;
+import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.container.ExitCodes;
 import consulo.ui.annotation.RequiredUIAccess;

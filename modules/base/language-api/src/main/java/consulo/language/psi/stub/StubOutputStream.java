@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi.stubs;
+package consulo.language.psi.stub;
 
-import com.intellij.util.io.AbstractStringEnumerator;
-import com.intellij.util.io.DataInputOutputUtil;
-import com.intellij.util.io.DataOutputStream;
-import com.intellij.util.io.IOUtil;
+import consulo.util.io.AbstractStringEnumerator;
+import consulo.util.io.DataInputOutputUtil;
+import consulo.util.io.DataOutputStream;
+import consulo.util.io.IOUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
