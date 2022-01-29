@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.frame;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
 import consulo.util.dataholder.Key;

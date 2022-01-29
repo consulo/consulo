@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 
 import javax.swing.*;
 

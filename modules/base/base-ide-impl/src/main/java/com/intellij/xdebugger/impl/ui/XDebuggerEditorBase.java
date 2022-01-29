@@ -16,14 +16,14 @@
 package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
@@ -38,7 +38,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import consulo.language.psi.PsiElement;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.ClickListener;

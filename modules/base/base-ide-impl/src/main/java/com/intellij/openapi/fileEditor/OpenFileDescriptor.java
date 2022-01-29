@@ -15,13 +15,14 @@
  */
 package com.intellij.openapi.fileEditor;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInManager;
 import com.intellij.ide.SelectInTarget;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.*;
 import consulo.document.FileDocumentManager;
+import consulo.document.LazyRangeMarkerFactory;
 import consulo.document.RangeMarker;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -31,7 +32,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.pom.Navigatable;
 
 import javax.annotation.Nonnull;

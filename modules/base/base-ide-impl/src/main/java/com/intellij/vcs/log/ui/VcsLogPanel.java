@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui;
 
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.vcs.log.impl.VcsLogManager;

@@ -17,13 +17,13 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.IdeNotificationArea;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;

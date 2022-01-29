@@ -34,7 +34,7 @@ import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.awt.RelativePoint;

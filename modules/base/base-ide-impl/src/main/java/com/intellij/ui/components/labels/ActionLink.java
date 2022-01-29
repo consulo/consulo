@@ -15,10 +15,11 @@
  */
 package com.intellij.ui.components.labels;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.dataContext.DataProvider;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;

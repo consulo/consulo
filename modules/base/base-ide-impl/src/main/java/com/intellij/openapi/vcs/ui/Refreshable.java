@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.ui;
 
+import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
 /**
@@ -26,9 +27,9 @@ import consulo.util.dataholder.Key;
 public interface Refreshable {
   /**
    * The data ID which can be used to retrieve the active <code>Refreshable</code>
-   * instance from {@link com.intellij.openapi.actionSystem.DataContext}.
+   * instance from {@link DataContext}.
    *
-   * @see com.intellij.openapi.actionSystem.DataContext#getData(Key)
+   * @see DataContext#getData(Key)
    */
   Key<Refreshable> PANEL_KEY = Key.create("Refreshable.Panel");
 

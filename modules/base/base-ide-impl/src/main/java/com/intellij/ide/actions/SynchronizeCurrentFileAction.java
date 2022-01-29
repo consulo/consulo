@@ -11,7 +11,7 @@ import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.containers.JBIterable;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,7 +15,8 @@
  */
 package com.intellij.execution.lineMarker;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataContext;
 import consulo.language.LanguageExtension;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;

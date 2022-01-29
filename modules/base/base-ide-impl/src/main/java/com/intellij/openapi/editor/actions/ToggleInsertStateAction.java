@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 
 public class ToggleInsertStateAction extends EditorAction {
   public ToggleInsertStateAction() {

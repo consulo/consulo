@@ -44,7 +44,7 @@
 
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager" serviceImplementation="consulo.start.UnifiedWelcomeFrameManager"/>
 
-    <applicationService serviceInterface="com.intellij.ide.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
+    <applicationService serviceInterface="consulo.dataContext.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
 
     <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.desktop.swt.startup.customize.DesktopSwtStartupCustomizeManager"/>
 
@@ -62,11 +62,11 @@
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue" serviceImplementation="consulo.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
-    <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtApplicationIdeFocusManagerImpl" lazy="false"/>
+    <applicationService serviceInterface="consulo.project.ui.wm.internal.ApplicationIdeFocusManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtApplicationIdeFocusManagerImpl" lazy="false"/>
 
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtSystemDockImpl"/>
 
-    <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="consulo.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
+    <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
 
     <projectService serviceInterface="com.intellij.ui.docking.DockManager" serviceImplementation="consulo.ui.docking.impl.UnifiedDockManagerImpl"/>
 

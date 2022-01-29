@@ -5,7 +5,7 @@ import com.intellij.icons.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.StatusBar;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.JBRectangle;
 import com.intellij.util.ui.JBUI;

@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide;
+package consulo.dataContext;
 
-import com.intellij.openapi.actionSystem.AsyncDataContext;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataProvider;
 import consulo.application.Application;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
-import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,7 +66,7 @@ public abstract class DataManager {
   /**
    * @param dataContext find by key if instance of {@link UserDataHolder}
    * @param dataKey     key to find value by
-   * @return value stored by {@link #saveInDataContext(com.intellij.openapi.actionSystem.DataContext, Key, Object)}
+   * @return value stored by {@link #saveInDataContext(DataContext, Key, Object)}
    */
   @Nullable
   public abstract <T> T loadFromDataContext(@Nonnull DataContext dataContext, @Nonnull Key<T> dataKey);

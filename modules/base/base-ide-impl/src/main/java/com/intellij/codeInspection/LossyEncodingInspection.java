@@ -22,11 +22,11 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.bootstrap.charset.Native2AsciiCharset;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.document.Document;

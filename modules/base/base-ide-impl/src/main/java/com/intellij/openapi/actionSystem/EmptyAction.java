@@ -16,6 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 

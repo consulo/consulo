@@ -22,6 +22,7 @@ package com.intellij.ide.actions;
 import consulo.application.CommonBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
+import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;

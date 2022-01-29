@@ -43,6 +43,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.project.DumbAwareAction;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.util.Pair;

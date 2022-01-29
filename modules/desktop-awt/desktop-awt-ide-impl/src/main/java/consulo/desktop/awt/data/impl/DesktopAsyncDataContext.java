@@ -10,6 +10,9 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
+import consulo.dataContext.AsyncDataContext;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 

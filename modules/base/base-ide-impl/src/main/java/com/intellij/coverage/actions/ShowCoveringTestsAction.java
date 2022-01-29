@@ -11,6 +11,7 @@ import com.intellij.coverage.CoverageSuite;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import consulo.application.progress.ProgressManager;

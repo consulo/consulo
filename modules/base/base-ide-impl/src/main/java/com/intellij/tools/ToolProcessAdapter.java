@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 
 /**

@@ -22,14 +22,14 @@ import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.StatusBar;
 import com.intellij.util.Alarm;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ReflectionUtil;
 import consulo.ui.UIAccess;
-import consulo.wm.util.IdeFrameUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.Accessible;

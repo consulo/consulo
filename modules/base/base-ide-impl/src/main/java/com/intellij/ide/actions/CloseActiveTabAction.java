@@ -15,8 +15,9 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;

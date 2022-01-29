@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;

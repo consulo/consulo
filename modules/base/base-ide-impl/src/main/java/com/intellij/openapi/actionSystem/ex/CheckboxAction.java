@@ -16,10 +16,11 @@
 
 package com.intellij.openapi.actionSystem.ex;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.util.ui.UIUtil;
+import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 

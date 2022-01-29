@@ -15,18 +15,18 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.application.Application;
 import consulo.project.Project;
 import com.intellij.openapi.wm.FocusWatcher;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
-import consulo.wm.util.IdeFrameUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

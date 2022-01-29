@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.runAnything.groups;
 
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.CollectionListModel;

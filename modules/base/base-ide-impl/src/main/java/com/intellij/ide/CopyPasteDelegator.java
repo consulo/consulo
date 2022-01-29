@@ -3,10 +3,11 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.TransactionGuard;
 import consulo.component.extension.ExtensionPointName;
+import consulo.dataContext.DataManager;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.project.DumbService;

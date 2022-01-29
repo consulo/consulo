@@ -17,7 +17,7 @@ package consulo.externalService.impl.action;
 
 import com.intellij.ide.actions.SettingsEntryPointActionProvider;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.externalService.ExternalServiceConfiguration;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

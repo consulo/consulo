@@ -1,7 +1,7 @@
 package com.intellij.openapi.vcs.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;

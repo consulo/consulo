@@ -28,7 +28,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.rmi.RemoteUtil;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

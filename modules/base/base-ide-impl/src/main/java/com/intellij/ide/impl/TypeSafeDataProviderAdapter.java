@@ -22,7 +22,7 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import consulo.util.dataholder.Key;

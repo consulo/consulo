@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.configurable;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ex.Settings;

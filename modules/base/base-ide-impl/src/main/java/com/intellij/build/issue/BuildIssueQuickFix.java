@@ -15,7 +15,7 @@
  */
 package com.intellij.build.issue;
 
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 
 import java.util.concurrent.CompletableFuture;

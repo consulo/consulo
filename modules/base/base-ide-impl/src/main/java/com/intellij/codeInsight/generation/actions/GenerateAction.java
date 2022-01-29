@@ -20,6 +20,7 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAwareAction;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

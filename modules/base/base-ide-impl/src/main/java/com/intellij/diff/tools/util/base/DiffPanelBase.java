@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.util.base;
 
 import com.intellij.diff.DiffContext;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.components.panels.Wrapper;

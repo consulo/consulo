@@ -20,7 +20,7 @@ import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.BalloonHandler;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.StatusBar;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;

@@ -23,7 +23,7 @@ import com.intellij.execution.configurations.UnknownConfigurationType;
 import com.intellij.execution.impl.RunConfigurationBeforeRunProvider;
 import com.intellij.execution.impl.RunConfigurationSelector;
 import com.intellij.execution.impl.RunManagerImpl;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.actionSystem.ActionToolbarPosition;
 import consulo.configurable.ConfigurationException;

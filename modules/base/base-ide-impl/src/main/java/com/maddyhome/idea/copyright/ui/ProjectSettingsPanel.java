@@ -15,10 +15,10 @@
  */
 package com.maddyhome.idea.copyright.ui;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.util.scopeChooser.PackageSetChooserCombo;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.configurable.Configurable;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.project.Project;

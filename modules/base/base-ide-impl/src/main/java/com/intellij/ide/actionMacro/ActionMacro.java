@@ -27,6 +27,7 @@ import consulo.component.persist.JDOMExternalizable;
 import com.intellij.openapi.util.Pair;
 import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.dataContext.DataContext;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

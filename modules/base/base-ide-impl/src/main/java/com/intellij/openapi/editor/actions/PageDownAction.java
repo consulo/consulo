@@ -27,7 +27,7 @@ package com.intellij.openapi.editor.actions;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 
 public class PageDownAction extends EditorAction {
   public static class Handler extends EditorActionHandler {

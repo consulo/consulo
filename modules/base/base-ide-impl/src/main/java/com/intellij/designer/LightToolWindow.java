@@ -33,6 +33,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.project.ui.wm.IdeFocusManager;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.util.ui.ToolwindowPaintUtil;
 import consulo.wm.impl.ToolWindowContentUI;

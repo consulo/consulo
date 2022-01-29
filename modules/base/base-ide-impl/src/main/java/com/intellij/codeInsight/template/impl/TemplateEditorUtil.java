@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import consulo.language.lexer.CompositeLexer;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;

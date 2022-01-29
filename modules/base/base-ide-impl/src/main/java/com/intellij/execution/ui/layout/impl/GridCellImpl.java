@@ -20,7 +20,7 @@ import com.intellij.execution.ui.layout.*;
 import com.intellij.execution.ui.layout.actions.CloseViewAction;
 import com.intellij.execution.ui.layout.actions.MinimizeViewAction;
 import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import com.intellij.openapi.ui.popup.JBPopup;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.DimensionService;

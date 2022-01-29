@@ -16,8 +16,8 @@
 package com.intellij.openapi.wm.impl;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
 
 import javax.swing.*;
 import java.awt.*;

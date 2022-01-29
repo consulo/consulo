@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.mac;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
@@ -24,6 +24,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeymapManagerImpl;
+import consulo.dataContext.DataContext;
 import consulo.eawt.wrapper.GestureUtilitiesWrapper;
 import consulo.eawt.wrapper.event.PressureEventWrapper;
 import consulo.eawt.wrapper.event.PressureListenerWrapper;

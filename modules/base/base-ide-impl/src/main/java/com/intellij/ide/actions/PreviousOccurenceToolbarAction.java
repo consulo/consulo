@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.OccurenceNavigator;
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 
 public class PreviousOccurenceToolbarAction extends PreviousOccurenceAction {

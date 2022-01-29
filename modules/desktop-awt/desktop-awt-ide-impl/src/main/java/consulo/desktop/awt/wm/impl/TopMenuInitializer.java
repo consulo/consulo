@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl;
 
 import com.intellij.ide.CommandLineProcessor;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.Application;

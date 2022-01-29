@@ -30,7 +30,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Condition;
 import consulo.application.util.function.Conditions;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Function;

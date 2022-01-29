@@ -10,7 +10,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import consulo.application.AppUIExecutor;
 import com.intellij.openapi.editor.Editor;

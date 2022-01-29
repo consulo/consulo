@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import consulo.dataContext.DataContext;
+
 /**
  * Markup interface to ignore the visible children count and always call "actionPerformed".
  * {@link ActionGroup#canBePerformed(DataContext)} in submenus is combined with visible

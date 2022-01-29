@@ -16,13 +16,13 @@
 package consulo.ide.plugins;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.plugins.PluginHeaderPanel;
 import com.intellij.ide.plugins.PluginManagerColumnInfo;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.ide.plugins.PluginNode;
 import com.intellij.ide.ui.search.SearchUtil;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.JBHtmlEditorKit;

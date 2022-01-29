@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.fileEditor.impl.text;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.util.ui.JBSwingUtilities;

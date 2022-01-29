@@ -13,31 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.project.ui.wm;
 
-import consulo.project.Project;
 import javax.annotation.Nullable;
 
-public interface ExpirableRunnable extends Runnable, Expirable  {
+/**
+ * User: spLeaner
+ */
+public interface StatusBarInfo {
 
-  abstract class ForProject implements ExpirableRunnable {
-    private final Project myProject;
+  /**
+   * Set status bar text
+   * @param s text to be shown in the status bar
+   */
+  void setInfo(@Nullable String s);
 
-    protected ForProject(@Nullable Project project) {
-      myProject = project;
-    }
-
-    @Override
-    public boolean isExpired() {
-      return myProject == null || myProject.isDisposed();
-    }
-  }
-
-  abstract class AlwaysValid implements ExpirableRunnable {
-    @Override
-    public boolean isExpired() {
-      return false;
-    }
-  }
-
+  void setInfo(@Nullable String s, @Nullable String requestor);
+  
+  String getInfo();
 }

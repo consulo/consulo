@@ -24,6 +24,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.actionSystem.ex.ComboBoxButtonImpl;
+import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

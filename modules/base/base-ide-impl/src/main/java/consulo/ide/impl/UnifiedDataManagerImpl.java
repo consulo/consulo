@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl;
 
-import com.intellij.openapi.actionSystem.AsyncDataContext;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.AsyncDataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.wm.WindowManager;
 import consulo.ide.base.BaseDataManager;
 import jakarta.inject.Inject;

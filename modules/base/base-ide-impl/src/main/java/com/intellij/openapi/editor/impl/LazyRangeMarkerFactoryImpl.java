@@ -16,25 +16,25 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.codeStyle.CodeStyleFacade;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.LazyRangeMarkerFactory;
-import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.document.FileDocumentManager;
-import consulo.project.Project;
+import com.intellij.util.containers.WeakList;
+import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.LazyRangeMarkerFactory;
+import consulo.document.RangeMarker;
+import consulo.document.event.DocumentEvent;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.containers.WeakList;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Singleton

@@ -19,7 +19,7 @@ package com.intellij.ide.favoritesTreeView.actions;
 import com.intellij.ide.actions.QuickSwitchSchemeAction;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import com.intellij.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

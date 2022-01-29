@@ -15,7 +15,7 @@
  */
 package consulo.fileEditor.impl.text;
 
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import com.intellij.openapi.editor.Editor;
 import consulo.disposer.Disposable;
 import jakarta.inject.Singleton;

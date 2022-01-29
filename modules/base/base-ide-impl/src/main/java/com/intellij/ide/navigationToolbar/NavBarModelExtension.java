@@ -20,8 +20,8 @@
  */
 package com.intellij.ide.navigationToolbar;
 
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

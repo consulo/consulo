@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import consulo.document.Document;
-import com.intellij.openapi.editor.LazyRangeMarkerFactory;
+import consulo.document.LazyRangeMarkerFactory;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;

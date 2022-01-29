@@ -16,8 +16,9 @@
 
 package com.intellij.tasks.actions;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.playback.commands.ActionCommand;

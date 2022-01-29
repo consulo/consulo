@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;

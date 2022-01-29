@@ -12,7 +12,7 @@ import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Condition;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.LoadingNode;
 import com.intellij.ui.ScrollingUtil;

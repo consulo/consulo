@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.dataContext;
 
-public interface Expirable {
-
-  boolean isExpired();
-
+/**
+ * @author VISTALL
+ * @since 2019-11-02
+ */
+public interface AsyncDataContext extends DataContext {
 }

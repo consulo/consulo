@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm;
+package consulo.project.ui.wm;
 
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.ui.BalloonLayout;
-import consulo.ui.Window;
+import consulo.project.Project;
 import consulo.ui.Rectangle2D;
+import consulo.ui.Window;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

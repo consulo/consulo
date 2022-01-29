@@ -16,8 +16,8 @@
 package com.intellij.ui.table;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.util.ExpirableRunnable;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBViewport;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -14,7 +14,9 @@ import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.ui.popup.*;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.TextWithMnemonic;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ColorUtil;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm;
+package consulo.application.ui.wm;
 
 import consulo.disposer.Disposable;
 import consulo.util.concurrent.AsyncResult;

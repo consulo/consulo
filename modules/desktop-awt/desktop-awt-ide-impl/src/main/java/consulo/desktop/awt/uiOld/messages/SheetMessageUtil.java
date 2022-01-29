@@ -16,7 +16,7 @@
 package consulo.desktop.awt.uiOld.messages;
 
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.ModalityHelper;
 import com.intellij.ui.mac.foundation.MacUtil;

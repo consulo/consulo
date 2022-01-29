@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.BusyObject;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;

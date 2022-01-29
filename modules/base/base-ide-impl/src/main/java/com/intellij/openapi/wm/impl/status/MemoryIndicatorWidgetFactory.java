@@ -2,8 +2,8 @@
 package com.intellij.openapi.wm.impl.status;
 
 import consulo.project.Project;
-import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
 import com.intellij.openapi.wm.StatusBarWidgetFactory;
 import com.intellij.ui.UIBundle;
 import consulo.disposer.Disposer;

@@ -4,6 +4,9 @@ package com.intellij.openapi.wm;
 import consulo.project.Project;
 import consulo.component.extension.ExtensionPointName;
 import consulo.container.plugin.PluginIds;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

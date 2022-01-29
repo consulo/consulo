@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;

@@ -42,6 +42,7 @@ open module consulo.ide.impl {
   requires transitive consulo.module.content.api;
   requires transitive consulo.language.api;
   requires transitive consulo.indexing.io;
+  requires transitive consulo.datacontext.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -1346,7 +1347,6 @@ open module consulo.ide.impl {
   exports consulo.ui.docking.impl;
   exports consulo.ui.ex;
   exports consulo.ui.ex.impl;
-  exports consulo.ui.ex.util;
   exports consulo.ui.plaf;
   exports consulo.ui.popup;
   //exports consulo.ui.tree;
@@ -1372,7 +1372,6 @@ open module consulo.ide.impl {
   exports consulo.wm.impl.layout;
   exports consulo.wm.impl.status;
   exports consulo.wm.impl.welcomeScreen;
-  exports consulo.wm.util;
   exports consulo.xdebugger;
   exports consulo.xdebugger.breakpoints;
   //exports consulo.xdebugger.impl;

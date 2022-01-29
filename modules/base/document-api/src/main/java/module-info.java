@@ -4,6 +4,7 @@
  */
 module consulo.document.api {
   requires transitive consulo.application.api;
+  requires transitive consulo.project.api;
   requires transitive consulo.virtual.file.system.api;
 
   requires transitive kava.beans;

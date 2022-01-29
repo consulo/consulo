@@ -16,7 +16,7 @@
 
 package com.intellij.ide.impl.dataRules;
 
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageTargetUtil;

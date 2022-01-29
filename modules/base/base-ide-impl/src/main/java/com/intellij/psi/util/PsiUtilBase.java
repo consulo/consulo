@@ -16,12 +16,12 @@
 
 package com.intellij.psi.util;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.Caret;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

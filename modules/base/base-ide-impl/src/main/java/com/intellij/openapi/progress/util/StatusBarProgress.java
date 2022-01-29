@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.ObjectUtil;

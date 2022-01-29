@@ -2,7 +2,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.actionSystem.*;
@@ -10,6 +10,7 @@ import com.intellij.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.DumbAwareAction;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -27,6 +28,9 @@ import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;

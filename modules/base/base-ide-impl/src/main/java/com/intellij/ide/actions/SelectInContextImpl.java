@@ -18,6 +18,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.SelectInContext;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

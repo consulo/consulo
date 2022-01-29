@@ -12,7 +12,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 
 import javax.annotation.Nonnull;
 

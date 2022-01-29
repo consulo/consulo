@@ -20,6 +20,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.project.ui.wm.IdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

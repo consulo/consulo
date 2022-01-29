@@ -4,7 +4,7 @@ package com.intellij.ide;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

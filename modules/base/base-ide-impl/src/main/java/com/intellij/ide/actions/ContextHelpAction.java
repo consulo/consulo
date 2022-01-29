@@ -19,6 +19,7 @@ import consulo.application.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.help.HelpManager;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 
 import javax.annotation.Nullable;

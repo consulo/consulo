@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.TitledHandler;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;

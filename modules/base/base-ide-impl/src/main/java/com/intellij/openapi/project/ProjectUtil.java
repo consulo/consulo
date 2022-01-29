@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.project;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.application.PathManagerEx;
 import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
 import consulo.module.Module;

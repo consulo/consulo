@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.wm;
 
+import consulo.project.ui.wm.CustomStatusBarWidget;
+
 /**
  * @author pegov
  */

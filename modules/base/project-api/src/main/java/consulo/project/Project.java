@@ -17,6 +17,7 @@ package consulo.project;
 
 import consulo.application.Application;
 import consulo.component.ComponentManager;
+import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
@@ -29,6 +30,8 @@ import javax.annotation.Nullable;
  */
 public interface Project extends ComponentManager {
   String DIRECTORY_STORE_FOLDER = ".consulo";
+
+  Key<Project> KEY = Key.create(Project.class);
 
   /**
    * @return project annotation

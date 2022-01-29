@@ -7,11 +7,11 @@ import com.intellij.openapi.ui.popup.IdePopupEventDispatcher;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.wm.util.IdeFrameUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -12,6 +12,8 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.command.CommandProcessor;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import consulo.language.psi.*;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;

@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.TreeExpander;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.Presentation;
 import consulo.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;

@@ -19,6 +19,8 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.StatusBar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

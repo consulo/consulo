@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.wm;
 
+import consulo.project.ui.wm.IdeFrame;
+
 import java.util.EventListener;
 
 public interface WindowManagerListener extends EventListener {

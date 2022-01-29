@@ -24,7 +24,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.CommonBundle;
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

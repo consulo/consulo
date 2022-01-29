@@ -19,10 +19,10 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.project.DumbAware;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.wm.util.IdeFrameUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
 

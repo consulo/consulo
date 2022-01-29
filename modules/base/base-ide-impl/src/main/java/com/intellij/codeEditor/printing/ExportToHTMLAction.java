@@ -18,6 +18,7 @@ package com.intellij.codeEditor.printing;
 
 import consulo.application.CommonBundle;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

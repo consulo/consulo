@@ -23,6 +23,7 @@ import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.codeInspection.ex.GlobalInspectionContextImpl;
 import com.intellij.codeInspection.ex.InspectionManagerEx;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;

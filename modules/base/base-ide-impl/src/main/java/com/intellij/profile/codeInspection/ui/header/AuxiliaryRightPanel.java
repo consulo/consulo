@@ -16,7 +16,7 @@
 package com.intellij.profile.codeInspection.ui.header;
 
 import com.intellij.openapi.ui.ex.MultiLineLabel;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;

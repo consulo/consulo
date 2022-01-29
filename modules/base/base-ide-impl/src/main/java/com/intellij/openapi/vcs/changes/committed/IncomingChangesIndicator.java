@@ -16,9 +16,9 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.application.Application;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.*;
@@ -29,6 +29,8 @@ import com.intellij.util.Consumer;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 

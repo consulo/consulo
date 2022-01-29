@@ -2,8 +2,9 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.ide.ActivityTracker;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
+import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -21,8 +22,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.util.concurrent.ActionCallback;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ReflectionUtil;

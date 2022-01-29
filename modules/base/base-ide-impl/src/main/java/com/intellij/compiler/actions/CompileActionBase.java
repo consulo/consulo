@@ -19,6 +19,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.editor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;

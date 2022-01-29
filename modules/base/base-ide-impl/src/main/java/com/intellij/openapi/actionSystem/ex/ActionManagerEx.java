@@ -16,9 +16,10 @@
 package com.intellij.openapi.actionSystem.ex;
 
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.container.plugin.PluginId;
+import consulo.dataContext.DataContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

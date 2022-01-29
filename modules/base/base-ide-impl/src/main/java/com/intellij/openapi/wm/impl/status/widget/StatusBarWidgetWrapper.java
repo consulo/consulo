@@ -7,7 +7,7 @@ import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.TextPanel;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.awt.RelativePoint;

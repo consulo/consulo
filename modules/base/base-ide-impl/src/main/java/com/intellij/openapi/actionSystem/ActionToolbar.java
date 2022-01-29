@@ -17,6 +17,7 @@ package com.intellij.openapi.actionSystem;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.dataContext.DataContext;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

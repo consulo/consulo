@@ -16,8 +16,8 @@
 package com.intellij.util;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.StatePreservingNavigatable;
 

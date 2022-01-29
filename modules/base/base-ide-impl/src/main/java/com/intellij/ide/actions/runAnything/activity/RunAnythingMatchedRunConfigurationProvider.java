@@ -3,7 +3,7 @@ package com.intellij.ide.actions.runAnything.activity;
 
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 

@@ -16,6 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.dataContext.DataContext;
 
 import java.util.List;
 

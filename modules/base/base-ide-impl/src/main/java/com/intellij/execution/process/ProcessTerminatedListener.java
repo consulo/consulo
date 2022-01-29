@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.StatusBar;
 import org.jetbrains.annotations.NonNls;
 
 /**

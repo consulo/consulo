@@ -18,6 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.dataContext.DataProvider;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.wm.ToolWindow;

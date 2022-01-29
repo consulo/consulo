@@ -2,7 +2,8 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.concurrency.SensitiveProgressWrapper;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.AsyncDataContext;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -13,6 +14,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWrapper;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.application.util.function.Conditions;

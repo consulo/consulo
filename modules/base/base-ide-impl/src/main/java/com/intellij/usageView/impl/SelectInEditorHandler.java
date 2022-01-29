@@ -15,7 +15,7 @@
  */
 package com.intellij.usageView.impl;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.util.OpenSourceUtil;
 
 import javax.swing.*;

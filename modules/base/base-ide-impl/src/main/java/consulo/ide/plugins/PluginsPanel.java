@@ -15,7 +15,7 @@
  */
 package consulo.ide.plugins;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.plugins.AvailablePluginsManagerMain;
 import com.intellij.ide.plugins.InstalledPluginsManagerMain;
 import com.intellij.ide.plugins.PluginInstallUtil;
@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBEditorTabs;

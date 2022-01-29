@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.editorActions.moveLeftRight;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.editor.Caret;
 import consulo.document.Document;

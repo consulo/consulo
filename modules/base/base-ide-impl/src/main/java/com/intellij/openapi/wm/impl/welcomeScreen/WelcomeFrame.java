@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import consulo.annotation.DeprecationInfo;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;

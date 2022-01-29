@@ -19,6 +19,7 @@ package com.intellij.find.actions;
 
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

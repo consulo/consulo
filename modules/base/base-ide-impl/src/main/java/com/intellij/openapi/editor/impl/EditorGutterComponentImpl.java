@@ -29,6 +29,8 @@ import com.intellij.openapi.editor.impl.view.IterationState;
 import com.intellij.openapi.editor.impl.view.VisualLinesIterator;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
 import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

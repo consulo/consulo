@@ -7,7 +7,7 @@ import com.intellij.ide.util.gotoByName.*;
 import consulo.language.Language;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;

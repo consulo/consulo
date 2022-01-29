@@ -9,7 +9,7 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.concurrency.EdtScheduledExecutorService;

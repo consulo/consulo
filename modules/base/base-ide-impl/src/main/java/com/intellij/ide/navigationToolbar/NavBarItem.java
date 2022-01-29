@@ -5,7 +5,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.navigationToolbar.ui.NavBarUI;
 import com.intellij.ide.util.treeView.TreeAnchorizer;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.SimpleColoredComponent;

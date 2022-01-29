@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor;
+package consulo.document;
 
-import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import consulo.document.RangeMarker;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 public abstract class LazyRangeMarkerFactory {
   public static LazyRangeMarkerFactory getInstance(Project project) {
-    return ServiceManager.getService(project, LazyRangeMarkerFactory.class);
+    return project.getInstance(LazyRangeMarkerFactory.class);
   }
 
   @Nonnull

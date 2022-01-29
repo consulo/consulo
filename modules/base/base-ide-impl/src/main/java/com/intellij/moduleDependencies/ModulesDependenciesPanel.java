@@ -17,6 +17,7 @@
 package com.intellij.moduleDependencies;
 
 import consulo.application.CommonBundle;
+import consulo.dataContext.DataProvider;
 import consulo.module.content.ProjectTopics;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.icons.AllIcons;
@@ -499,7 +500,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     }
   }
 
-  private static class MyTreePanel extends JPanel implements DataProvider{
+  private static class MyTreePanel extends JPanel implements DataProvider {
     private final Tree myTree;
     private final Project myProject;
     public MyTreePanel(final Tree tree, Project project) {

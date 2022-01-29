@@ -16,7 +16,7 @@
 package consulo.ide.macro;
 
 import com.intellij.ide.macro.Macro;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.module.Module;
 import com.intellij.openapi.vfs.VfsUtil;

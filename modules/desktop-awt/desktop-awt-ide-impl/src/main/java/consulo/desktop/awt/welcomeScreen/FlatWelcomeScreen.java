@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;

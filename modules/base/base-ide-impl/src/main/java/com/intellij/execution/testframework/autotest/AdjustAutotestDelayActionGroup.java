@@ -16,8 +16,9 @@
 package com.intellij.execution.testframework.autotest;
 
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;

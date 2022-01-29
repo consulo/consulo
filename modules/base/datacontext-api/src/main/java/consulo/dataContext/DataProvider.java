@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.actionSystem;
+package consulo.dataContext;
 
+import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

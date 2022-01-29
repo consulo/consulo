@@ -19,6 +19,7 @@ import com.intellij.ide.actions.SettingsEntryPointActionProvider;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import com.intellij.openapi.project.DumbAwareAction;
+import consulo.dataContext.DataContext;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.localize.LocalizeValue;

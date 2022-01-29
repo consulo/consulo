@@ -21,6 +21,7 @@ module consulo.application.api {
   exports consulo.application.constraint;
   exports consulo.application.extension;
   exports consulo.application.progress;
+  exports consulo.application.ui.wm;
 
   // TODO [VISTALL] impl package
   exports consulo.application.internal;

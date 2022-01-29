@@ -13,22 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm;
+package consulo.project.ui.wm;
 
+import consulo.awt.TargetAWT;
+import consulo.project.ui.wm.StatusBarWidget;
+import consulo.ui.Component;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 
 /**
  * User: spLeaner
  */
-public interface StatusBarInfo {
+public interface CustomStatusBarWidget extends StatusBarWidget {
+  @Nonnull
+  default JComponent getComponent() {
+    Component uiComponent = getUIComponent();
+    if (uiComponent != null) {
+      return (JComponent)TargetAWT.to(uiComponent);
+    }
 
-  /**
-   * Set status bar text
-   * @param s text to be shown in the status bar
-   */
-  void setInfo(@Nullable String s);
+    throw new AbstractMethodError();
+  }
 
-  void setInfo(@Nullable String s, @Nullable String requestor);
-  
-  String getInfo();
+  @Nullable
+  default Component getUIComponent() {
+    // override isUnified() too
+    return null;
+  }
+
+  default boolean isUnified() {
+    return false;
+  }
 }

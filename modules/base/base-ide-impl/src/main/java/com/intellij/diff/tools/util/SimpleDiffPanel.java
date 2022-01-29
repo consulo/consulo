@@ -18,7 +18,7 @@ package com.intellij.diff.tools.util;
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.tools.util.base.DiffPanelBase;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import com.intellij.util.ui.JBUI;
 import javax.annotation.Nonnull;
 

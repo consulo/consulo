@@ -21,7 +21,7 @@ import com.intellij.codeInsight.highlighting.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

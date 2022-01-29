@@ -5,7 +5,7 @@ package com.intellij.refactoring;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import consulo.language.Language;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.Application;

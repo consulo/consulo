@@ -31,6 +31,7 @@ import com.intellij.ui.*;
 import com.intellij.util.Producer;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
@@ -44,7 +45,7 @@ import java.awt.*;
 /**
  * @author yole
  */
-public abstract class TestResultsPanel extends JPanel implements Disposable, DataProvider  {
+public abstract class TestResultsPanel extends JPanel implements Disposable, DataProvider {
   private JScrollPane myLeftPane;
   private JComponent myStatisticsComponent;
   private Splitter myStatisticsSplitter;

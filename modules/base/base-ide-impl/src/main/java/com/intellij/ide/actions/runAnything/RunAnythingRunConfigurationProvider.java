@@ -3,7 +3,7 @@ package com.intellij.ide.actions.runAnything;
 
 import com.intellij.execution.actions.ChooseRunConfigurationPopup;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

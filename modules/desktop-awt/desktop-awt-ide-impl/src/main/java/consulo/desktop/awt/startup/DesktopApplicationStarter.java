@@ -29,7 +29,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.desktop.awt.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;

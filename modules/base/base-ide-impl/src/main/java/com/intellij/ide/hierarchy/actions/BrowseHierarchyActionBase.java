@@ -19,6 +19,7 @@ package com.intellij.ide.hierarchy.actions;
 import com.intellij.ide.hierarchy.HierarchyBrowser;
 import com.intellij.ide.hierarchy.HierarchyBrowserManager;
 import com.intellij.ide.hierarchy.HierarchyProvider;
+import consulo.dataContext.DataContext;
 import consulo.language.LanguageExtension;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;

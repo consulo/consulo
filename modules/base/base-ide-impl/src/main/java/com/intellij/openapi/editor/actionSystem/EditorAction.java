@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.util.dataholder.Key;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.panels.ValidatingComponent;
 

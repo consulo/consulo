@@ -16,8 +16,9 @@
 package consulo.roots.ui.configuration;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.language.util.ModuleUtilCore;

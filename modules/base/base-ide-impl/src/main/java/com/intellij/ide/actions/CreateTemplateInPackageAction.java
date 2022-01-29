@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeView;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;

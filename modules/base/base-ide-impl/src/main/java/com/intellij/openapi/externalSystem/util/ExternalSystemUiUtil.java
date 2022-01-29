@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.util;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
@@ -33,6 +33,8 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
+import consulo.dataContext.DataContext;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

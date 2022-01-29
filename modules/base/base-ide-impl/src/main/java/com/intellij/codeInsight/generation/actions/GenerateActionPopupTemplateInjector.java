@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.generation.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 
 /**
  * Generate action could provide an action to edit corresponding file template. It would appear then in the subMenu of the Generate... popup

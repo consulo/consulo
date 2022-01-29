@@ -15,7 +15,7 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.actions.CloseAction;
 import com.intellij.ide.actions.ShowContentAction;
 import com.intellij.ide.util.PropertiesComponent;
@@ -33,6 +33,7 @@ import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
 import consulo.application.util.function.Condition;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.annotation.RequiredUIAccess;

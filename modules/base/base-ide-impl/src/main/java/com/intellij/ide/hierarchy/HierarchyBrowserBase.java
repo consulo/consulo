@@ -22,6 +22,7 @@ import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.util.treeView.AbstractTreeUi;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.progress.ProgressIndicator;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import consulo.disposer.Disposable;

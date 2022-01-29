@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.runAnything.activity;
 
 import com.intellij.ide.actions.runAnything.RunAnythingCache;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

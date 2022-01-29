@@ -16,6 +16,8 @@
 package com.intellij.openapi.keymap.impl;
 
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
+
 import javax.annotation.Nonnull;
 
 import java.awt.event.InputEvent;

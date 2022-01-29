@@ -6,6 +6,9 @@ import consulo.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.*;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

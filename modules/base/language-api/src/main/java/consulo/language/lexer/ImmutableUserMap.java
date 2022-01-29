@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.containers;
+package consulo.language.lexer;
 
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
@@ -48,10 +48,11 @@ public abstract class ImmutableUserMap {
       myValue = value;
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public <T> T get(@Nonnull final Key<T> key) {
       if (key.equals(myKey)) return (T)myValue;
       return myNext.get(key);
     }
-
   }
 }

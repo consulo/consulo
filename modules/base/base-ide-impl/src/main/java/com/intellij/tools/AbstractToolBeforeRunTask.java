@@ -18,7 +18,7 @@ package com.intellij.tools;
 import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;

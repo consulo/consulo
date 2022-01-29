@@ -31,6 +31,7 @@ import com.intellij.history.Label;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

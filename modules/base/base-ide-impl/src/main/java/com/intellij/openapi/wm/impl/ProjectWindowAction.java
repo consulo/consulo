@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import consulo.awt.TargetAWT;
 

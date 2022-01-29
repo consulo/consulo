@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm;
+package consulo.project.ui.wm;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
 import consulo.application.Application;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.ui.wm.FocusRequestor;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
+import consulo.project.ui.wm.internal.ApplicationIdeFocusManager;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.util.ExpirableRunnable;
+import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
-import consulo.wm.ApplicationIdeFocusManager;
-import consulo.wm.ProjectIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -164,7 +162,7 @@ public interface IdeFocusManager extends FocusRequestor {
   public static IdeFocusManager findInstanceByContext(@Nullable DataContext context) {
     IdeFocusManager instance = null;
     if (context != null) {
-      instance = getInstanceSafe(context.getData(CommonDataKeys.PROJECT));
+      instance = getInstanceSafe(context.getData(Project.KEY));
     }
 
     if (instance == null) {

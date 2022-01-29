@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -37,6 +37,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.configurable.ConfigurationException;
+import consulo.dataContext.DataProvider;
 import consulo.module.Module;
 import consulo.module.content.layer.event.ModuleRootAdapter;
 import consulo.module.content.layer.event.ModuleRootEvent;

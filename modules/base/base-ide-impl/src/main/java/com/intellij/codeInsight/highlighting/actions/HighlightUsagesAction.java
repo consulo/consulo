@@ -20,6 +20,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;

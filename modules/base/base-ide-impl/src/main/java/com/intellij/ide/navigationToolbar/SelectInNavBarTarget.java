@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.navigationToolbar;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.SelectInManager;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.impl.SelectInTargetPsiWrapper;
@@ -23,7 +23,7 @@ import com.intellij.ide.ui.UISettings;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;

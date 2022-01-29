@@ -15,13 +15,14 @@
  */
 package com.intellij.openapi.keymap.impl;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ProhibitAWTEvents;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
+import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -47,8 +48,8 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
@@ -69,7 +70,7 @@ import consulo.awt.TargetAWT;
 import consulo.awt.hacking.AWTKeyStrokeHacking;
 import consulo.ide.base.BaseDataManager;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
-import consulo.wm.util.IdeFrameUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

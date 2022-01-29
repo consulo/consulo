@@ -26,6 +26,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.dataContext.DataContext;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

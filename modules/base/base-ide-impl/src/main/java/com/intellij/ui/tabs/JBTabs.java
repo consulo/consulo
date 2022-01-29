@@ -16,7 +16,7 @@
 package com.intellij.ui.tabs;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
 import com.intellij.ui.awt.RelativePoint;

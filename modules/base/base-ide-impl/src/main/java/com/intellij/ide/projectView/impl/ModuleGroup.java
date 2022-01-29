@@ -20,7 +20,7 @@
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;

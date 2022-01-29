@@ -30,7 +30,7 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.awt.TargetAWT;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
-import consulo.wm.util.IdeFrameUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

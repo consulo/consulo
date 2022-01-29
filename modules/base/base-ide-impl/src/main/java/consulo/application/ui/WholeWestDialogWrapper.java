@@ -15,7 +15,7 @@
  */
 package consulo.application.ui;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

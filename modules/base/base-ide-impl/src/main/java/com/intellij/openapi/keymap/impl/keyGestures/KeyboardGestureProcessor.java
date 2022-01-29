@@ -22,6 +22,7 @@ import com.intellij.openapi.keymap.impl.KeyState;
 import consulo.application.util.registry.Registry;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
+import consulo.dataContext.DataContext;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

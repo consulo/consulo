@@ -36,7 +36,7 @@ import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.wm.util.IdeFrameUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

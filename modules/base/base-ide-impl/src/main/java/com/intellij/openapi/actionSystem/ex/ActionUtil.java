@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.actionSystem.ex;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.application.TransactionGuard;
+import consulo.dataContext.DataContext;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.language.util.ModuleUtilCore;

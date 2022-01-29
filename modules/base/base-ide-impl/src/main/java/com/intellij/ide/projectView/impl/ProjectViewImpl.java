@@ -17,6 +17,8 @@
 package com.intellij.ide.projectView.impl;
 
 import consulo.component.persist.WriteExternalException;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
 import consulo.language.psi.*;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectTopics;
@@ -71,6 +73,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.module.content.ProjectRootManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;

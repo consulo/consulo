@@ -18,7 +18,7 @@ package com.intellij.ui;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import consulo.project.Project;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;

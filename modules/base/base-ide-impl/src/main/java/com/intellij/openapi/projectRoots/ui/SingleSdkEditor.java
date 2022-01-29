@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.projectRoots.ui;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.configurable.ConfigurationException;

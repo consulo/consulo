@@ -27,7 +27,7 @@ import com.intellij.openapi.ui.playback.commands.ActionCommand;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.util.text.StringTokenizer;
 import consulo.util.concurrent.ActionCallback;
 

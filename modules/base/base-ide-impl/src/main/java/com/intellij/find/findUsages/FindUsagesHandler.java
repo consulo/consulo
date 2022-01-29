@@ -15,8 +15,8 @@
  */
 package com.intellij.find.findUsages;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ReadActionProcessor;
 import consulo.project.Project;

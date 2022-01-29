@@ -18,7 +18,7 @@ package consulo.desktop.awt.settings;
 import consulo.application.CommonBundle;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import com.intellij.openapi.help.HelpManager;

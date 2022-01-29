@@ -15,6 +15,8 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.project.DumbService;

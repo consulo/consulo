@@ -4,14 +4,14 @@ package com.intellij.psi.impl.source.codeStyle;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.*;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.injected.editor.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.lang.LanguageFormatting;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;

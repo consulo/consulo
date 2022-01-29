@@ -15,16 +15,16 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ModalityState;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
-import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.util.ExpirableRunnable;
+import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.WeakFocusStackManager;
 import consulo.util.concurrent.AsyncResult;
-import consulo.wm.ProjectIdeFocusManager;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

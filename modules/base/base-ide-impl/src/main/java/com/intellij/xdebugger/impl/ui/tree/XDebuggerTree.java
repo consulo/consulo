@@ -17,11 +17,13 @@ package com.intellij.xdebugger.impl.ui.tree;
 
 import com.intellij.execution.configurations.RemoteRunProfile;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.application.util.function.Condition;
 import consulo.disposer.Disposable;

@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.wm.util;
+package consulo.project.ui.wm;
 
-import com.intellij.openapi.wm.IdeFrame;
 import consulo.ui.Window;
 
 import javax.annotation.Nullable;

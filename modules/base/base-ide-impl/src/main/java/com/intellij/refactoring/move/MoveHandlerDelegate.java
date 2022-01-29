@@ -18,7 +18,7 @@ package com.intellij.refactoring.move;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;

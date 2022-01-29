@@ -27,6 +27,7 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
+import consulo.dataContext.DataProvider;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

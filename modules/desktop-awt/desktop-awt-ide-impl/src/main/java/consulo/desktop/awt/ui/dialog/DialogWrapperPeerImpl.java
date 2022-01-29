@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.dialog;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
@@ -28,6 +28,7 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
+import consulo.dataContext.DataProvider;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -41,8 +42,8 @@ import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.WindowStateService;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
@@ -69,7 +70,7 @@ import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import consulo.wm.util.IdeFrameUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

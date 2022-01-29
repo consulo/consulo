@@ -20,7 +20,7 @@ import com.intellij.execution.process.ProcessListener;
 import com.intellij.ide.macro.MacroManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import javax.annotation.Nullable;
 

@@ -70,6 +70,8 @@
     <module>modules/base/file-chooser-api</module>
     <module>modules/base/language-api</module>
     <module>modules/base/index-io</module>
+    <module>modules/base/datacontext-api</module>
+    <module>modules/base/ui-ex-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

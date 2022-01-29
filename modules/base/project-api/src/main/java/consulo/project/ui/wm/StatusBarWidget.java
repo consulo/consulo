@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm;
+package consulo.project.ui.wm;
 
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -26,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.border.Border;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 /**
  * User: spLeaner

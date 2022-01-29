@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.keymap.impl.keyGestures;
 
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.KeyboardGestureAction;
 import com.intellij.openapi.actionSystem.Presentation;
 

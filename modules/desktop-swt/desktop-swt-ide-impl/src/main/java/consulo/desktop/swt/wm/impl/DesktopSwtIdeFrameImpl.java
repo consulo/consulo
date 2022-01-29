@@ -18,7 +18,7 @@ package consulo.desktop.swt.wm.impl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import com.intellij.ui.BalloonLayout;

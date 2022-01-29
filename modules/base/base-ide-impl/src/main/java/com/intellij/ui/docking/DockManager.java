@@ -17,7 +17,7 @@ package com.intellij.ui.docking;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

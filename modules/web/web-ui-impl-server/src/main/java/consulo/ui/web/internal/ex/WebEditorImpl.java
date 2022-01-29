@@ -15,8 +15,8 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataContext;
 import consulo.application.Application;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;

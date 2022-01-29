@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.rename;
 
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.refactoring.RefactoringActionHandler;
 

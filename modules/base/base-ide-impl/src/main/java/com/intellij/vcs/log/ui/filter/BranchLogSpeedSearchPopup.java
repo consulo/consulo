@@ -17,6 +17,8 @@ package com.intellij.vcs.log.ui.filter;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.vcs.ui.FlatSpeedSearchPopup;
+import consulo.dataContext.DataContext;
+
 import javax.annotation.Nonnull;
 
 public class BranchLogSpeedSearchPopup extends FlatSpeedSearchPopup {

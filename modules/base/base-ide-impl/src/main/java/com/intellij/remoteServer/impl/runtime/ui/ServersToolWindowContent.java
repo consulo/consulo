@@ -1,11 +1,12 @@
 package com.intellij.remoteServer.impl.runtime.ui;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.ide.util.treeView.TreeVisitor;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServersTreeStructure;

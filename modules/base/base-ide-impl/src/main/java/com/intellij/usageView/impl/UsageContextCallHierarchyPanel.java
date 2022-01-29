@@ -20,7 +20,7 @@ import com.intellij.ide.hierarchy.*;
 import com.intellij.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.project.Project;
 import consulo.disposer.Disposer;

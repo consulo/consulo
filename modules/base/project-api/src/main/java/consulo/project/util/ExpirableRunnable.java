@@ -13,36 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm;
+package consulo.project.util;
 
-import consulo.awt.TargetAWT;
-import consulo.ui.Component;
-
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
-/**
- * User: spLeaner
- */
-public interface CustomStatusBarWidget extends StatusBarWidget {
-  @Nonnull
-  default JComponent getComponent() {
-    Component uiComponent = getUIComponent();
-    if (uiComponent != null) {
-      return (JComponent)TargetAWT.to(uiComponent);
+public interface ExpirableRunnable extends Runnable, Expirable  {
+
+  abstract class ForProject implements ExpirableRunnable {
+    private final Project myProject;
+
+    protected ForProject(@Nullable Project project) {
+      myProject = project;
     }
 
-    throw new AbstractMethodError();
+    @Override
+    public boolean isExpired() {
+      return myProject == null || myProject.isDisposed();
+    }
   }
 
-  @Nullable
-  default Component getUIComponent() {
-    // override isUnified() too
-    return null;
-  }
-
-  default boolean isUnified() {
-    return false;
+  abstract class AlwaysValid implements ExpirableRunnable {
+    @Override
+    public boolean isExpired() {
+      return false;
+    }
   }
 }

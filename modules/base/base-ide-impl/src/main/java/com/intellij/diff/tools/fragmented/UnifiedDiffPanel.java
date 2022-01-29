@@ -18,7 +18,7 @@ package com.intellij.diff.tools.fragmented;
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.comparison.DiffTooBigException;
 import com.intellij.diff.tools.util.base.DiffPanelBase;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.JBUI;

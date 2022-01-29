@@ -15,12 +15,12 @@
  */
 package consulo.desktop.swt.wm.impl;
 
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.application.ModalityState;
 import consulo.util.concurrent.AsyncResult;
-import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.openapi.wm.IdeFrame;
-import consulo.wm.ApplicationIdeFocusManager;
+import consulo.project.util.ExpirableRunnable;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.internal.ApplicationIdeFocusManager;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

@@ -2,7 +2,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;

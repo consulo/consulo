@@ -34,8 +34,8 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.*;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FocusManagerImpl;
@@ -57,6 +57,7 @@ import consulo.awt.hacking.SequencedEventNestedFieldHolder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.project.util.ExpirableRunnable;
 import sun.awt.SunToolkit;
 
 import javax.annotation.Nonnull;

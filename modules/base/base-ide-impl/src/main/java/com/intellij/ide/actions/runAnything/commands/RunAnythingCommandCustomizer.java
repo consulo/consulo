@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.runAnything.commands;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
 

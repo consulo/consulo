@@ -6,6 +6,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.NewActionGroup;
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.idea.ActionsBundle;
+import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import com.intellij.lang.PerFileMappings;

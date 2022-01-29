@@ -23,7 +23,7 @@
 package com.intellij.openapi.vcs.changes.shelf;
 
 import consulo.application.CommonBundle;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.actions.EditSourceAction;
 import com.intellij.ide.util.treeView.TreeState;
@@ -34,6 +34,7 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.awt.TargetAWT;

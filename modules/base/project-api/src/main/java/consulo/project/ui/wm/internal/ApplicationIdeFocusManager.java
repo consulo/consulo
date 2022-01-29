@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.wm;
+package consulo.project.ui.wm.internal;
 
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 
 /**
  * @author VISTALL
  * @since 2018-08-24
+ *
+ * TODO [VISTALL] move this class to application mode, and IdeFocusManager move too, but for now it's contains some project refs
  */
-public interface ProjectIdeFocusManager extends IdeFocusManager {
+public interface ApplicationIdeFocusManager extends IdeFocusManager {
 }

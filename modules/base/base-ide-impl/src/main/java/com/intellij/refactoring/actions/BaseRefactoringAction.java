@@ -23,6 +23,7 @@ import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.lang.ContextAwareActionHandler;
+import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;

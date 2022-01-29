@@ -21,7 +21,7 @@ import com.intellij.xdebugger.XDebuggerManager;
 import javax.annotation.Nonnull;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 
 /**
  * @author nik

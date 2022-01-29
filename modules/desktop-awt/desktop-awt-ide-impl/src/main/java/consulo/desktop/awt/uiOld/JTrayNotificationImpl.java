@@ -2,8 +2,8 @@
 package consulo.desktop.awt.uiOld;
 
 import consulo.application.Application;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;

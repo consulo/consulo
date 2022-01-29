@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.language.psi.scope.SearchScope;
 import consulo.project.Project;

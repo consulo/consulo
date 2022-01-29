@@ -2,14 +2,13 @@
 package com.intellij.ide.actions.runAnything.groups;
 
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.util.text.Matcher;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.List;
 
 public abstract class RunAnythingGroupBase extends RunAnythingGroup {
   @Nonnull

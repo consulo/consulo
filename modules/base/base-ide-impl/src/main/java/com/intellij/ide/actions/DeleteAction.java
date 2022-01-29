@@ -20,6 +20,7 @@ import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.TitledHandler;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.project.DumbAware;
 import consulo.project.Project;

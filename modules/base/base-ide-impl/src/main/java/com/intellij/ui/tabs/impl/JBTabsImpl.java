@@ -17,13 +17,14 @@ package com.intellij.ui.tabs.impl;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.Gray;
@@ -66,7 +67,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
 
-import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
+import static consulo.project.ui.wm.IdeFocusManager.getGlobalInstance;
 
 /**
  * Consulo tab panel

@@ -17,7 +17,7 @@
 package com.intellij.execution.ui.layout.impl;
 
 import com.intellij.execution.ui.layout.*;
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import com.intellij.openapi.ui.NullableComponent;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;

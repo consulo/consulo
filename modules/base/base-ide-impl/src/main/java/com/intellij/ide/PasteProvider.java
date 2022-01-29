@@ -16,7 +16,7 @@
 
 package com.intellij.ide;
 
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import javax.annotation.Nonnull;
 
 public interface PasteProvider {

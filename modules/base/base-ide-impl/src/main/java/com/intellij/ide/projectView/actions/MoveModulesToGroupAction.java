@@ -24,6 +24,7 @@ import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;

@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.navigationToolbar;
 
+import consulo.dataContext.DataContext;
 import consulo.module.content.ProjectTopics;
 import com.intellij.ide.actions.CopyAction;
 import com.intellij.ide.actions.CutAction;
@@ -35,7 +36,7 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.IdeFocusManager;
+import consulo.project.ui.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.problems.ProblemListener;
 import consulo.language.psi.PsiManager;

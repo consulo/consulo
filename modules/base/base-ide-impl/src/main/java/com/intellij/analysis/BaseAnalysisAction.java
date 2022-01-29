@@ -16,6 +16,7 @@
 
 package com.intellij.analysis;
 
+import consulo.dataContext.DataContext;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;

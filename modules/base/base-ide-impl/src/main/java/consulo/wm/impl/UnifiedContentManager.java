@@ -15,7 +15,7 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.openapi.actionSystem.DataProvider;
+import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.util.concurrent.AsyncResult;

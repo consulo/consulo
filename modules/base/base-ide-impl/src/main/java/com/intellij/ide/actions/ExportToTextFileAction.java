@@ -18,6 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.ExporterToTextFile;
 import com.intellij.ide.util.ExportToFileUtil;
 import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 
 public class ExportToTextFileAction extends AnAction {

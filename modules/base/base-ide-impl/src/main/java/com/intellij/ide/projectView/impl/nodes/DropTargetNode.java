@@ -2,7 +2,7 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiFileSystemItem;
 import javax.annotation.Nonnull;
 

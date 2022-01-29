@@ -36,6 +36,8 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.Extensions;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

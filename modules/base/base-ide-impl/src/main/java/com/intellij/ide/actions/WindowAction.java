@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbAware;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;

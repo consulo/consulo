@@ -26,7 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
 public interface CommonDataKeys {
-  Key<Project> PROJECT = Key.create("project");
+  Key<Project> PROJECT = Project.KEY;
   Key<Module> MODULE = Key.create("module");
   Key<Editor> EDITOR = Key.create("editor");
   /**

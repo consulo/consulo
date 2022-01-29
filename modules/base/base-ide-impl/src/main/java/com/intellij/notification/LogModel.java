@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Trinity;
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.StatusBar;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.Topic;
 import com.intellij.util.ui.UIUtil;

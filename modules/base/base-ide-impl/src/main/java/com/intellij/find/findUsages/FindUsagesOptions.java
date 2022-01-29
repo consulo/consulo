@@ -17,7 +17,7 @@
 package com.intellij.find.findUsages;
 
 import com.intellij.find.FindSettings;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.psi.search.PredefinedSearchScopeProvider;
 import consulo.language.psi.scope.ProjectScope;

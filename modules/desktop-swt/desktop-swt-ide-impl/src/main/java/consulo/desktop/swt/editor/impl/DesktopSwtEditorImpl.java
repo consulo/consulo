@@ -15,8 +15,8 @@
  */
 package consulo.desktop.swt.editor.impl;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;

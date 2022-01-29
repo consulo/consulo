@@ -13,7 +13,7 @@ import consulo.application.util.function.Conditions;
 import com.intellij.openapi.util.Ref;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.FocusRequestor;
+import consulo.application.ui.wm.FocusRequestor;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

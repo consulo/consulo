@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.ui;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.EmptyAction;
 import consulo.project.DumbAware;
 import com.intellij.openapi.ui.popup.ListPopupStep;

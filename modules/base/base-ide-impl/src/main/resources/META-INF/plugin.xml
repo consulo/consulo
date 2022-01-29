@@ -1421,7 +1421,7 @@
     <projectService serviceInterface="com.intellij.openapi.vcs.VcsFileListenerContextHelper"
                     serviceImplementation="com.intellij.openapi.vcs.VcsFileListenerContextHelper"/>
 
-    <projectService serviceInterface="com.intellij.openapi.editor.LazyRangeMarkerFactory"
+    <projectService serviceInterface="consulo.document.LazyRangeMarkerFactory"
                     serviceImplementation="com.intellij.openapi.editor.impl.LazyRangeMarkerFactoryImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.project.ProjectReloadState"

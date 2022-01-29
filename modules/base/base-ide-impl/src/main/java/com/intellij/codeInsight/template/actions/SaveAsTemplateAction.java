@@ -34,7 +34,7 @@ import consulo.language.Language;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

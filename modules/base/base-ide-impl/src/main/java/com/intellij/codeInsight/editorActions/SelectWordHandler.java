@@ -17,13 +17,13 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.language.CompositeLanguage;
 import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import consulo.dataContext.DataContext;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;

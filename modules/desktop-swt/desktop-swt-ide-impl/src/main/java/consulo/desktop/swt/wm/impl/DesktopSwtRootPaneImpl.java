@@ -15,7 +15,7 @@
  */
 package consulo.desktop.swt.wm.impl;
 
-import com.intellij.openapi.wm.StatusBar;
+import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;

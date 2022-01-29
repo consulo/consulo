@@ -20,6 +20,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import consulo.application.util.registry.Registry;

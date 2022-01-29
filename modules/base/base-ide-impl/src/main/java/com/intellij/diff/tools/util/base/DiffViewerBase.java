@@ -25,6 +25,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressWindow;
+import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

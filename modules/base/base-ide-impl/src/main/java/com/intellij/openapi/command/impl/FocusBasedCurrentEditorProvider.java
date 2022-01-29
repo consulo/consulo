@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.Application;
 import com.intellij.openapi.fileEditor.FileEditor;

@@ -19,7 +19,7 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrame;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import consulo.component.messagebus.MessageBusConnection;
