@@ -4,7 +4,7 @@ package com.intellij.psi.stubs;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.indexing.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndex;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;

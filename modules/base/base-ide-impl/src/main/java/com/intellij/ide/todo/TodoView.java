@@ -13,7 +13,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.disposer.Disposable;

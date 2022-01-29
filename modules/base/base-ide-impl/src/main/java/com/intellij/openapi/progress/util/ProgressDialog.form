@@ -89,7 +89,7 @@
                 <properties>
                   <enabled value="true"/>
                   <focusPainted value="true"/>
-                  <text resource-bundle="messages/CommonBundle" key="button.cancel"/>
+                  <text resource-bundle="consulo/application/CommonBundle" key="button.cancel"/>
                 </properties>
               </component>
               <component id="da7ab" class="javax.swing.JButton" binding="myBackgroundButton">

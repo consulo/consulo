@@ -20,7 +20,7 @@ import com.intellij.compiler.impl.packagingCompiler.DestinationInfo;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.SmartList;
-import com.intellij.util.io.DataExternalizer;
+import consulo.index.io.data.DataExternalizer;
 import javax.annotation.Nonnull;
 
 import java.util.List;

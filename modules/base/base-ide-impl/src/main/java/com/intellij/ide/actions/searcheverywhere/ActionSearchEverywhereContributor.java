@@ -15,7 +15,7 @@ import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;
 import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;

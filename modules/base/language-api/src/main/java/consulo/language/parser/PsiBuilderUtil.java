@@ -18,7 +18,7 @@ package consulo.language.parser;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.lexer.Lexer;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

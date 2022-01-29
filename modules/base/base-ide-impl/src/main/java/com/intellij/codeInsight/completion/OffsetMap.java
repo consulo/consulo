@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 

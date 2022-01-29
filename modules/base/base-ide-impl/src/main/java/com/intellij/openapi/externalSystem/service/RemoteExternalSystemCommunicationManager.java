@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -47,7 +47,6 @@ import com.intellij.util.Alarm;
 import com.intellij.util.PathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.ContainerUtilRt;
 import consulo.component.extension.ExtensionPointName;
 import consulo.container.boot.ContainerPathManager;
 import consulo.content.bundle.Sdk;

@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.requests;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.contents.FileContent;
 import com.intellij.diff.merge.BinaryMergeRequest;

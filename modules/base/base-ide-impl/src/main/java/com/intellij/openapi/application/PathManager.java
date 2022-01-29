@@ -133,7 +133,7 @@ public class PathManager {
       }
     }
 
-    final String resourceRoot = getResourceRoot(PathManager.class, "/messages/CommonBundle.properties");  // platform-resources-en
+    final String resourceRoot = getResourceRoot(PathManager.class, "/consulo/application/CommonBundle.properties");  // platform-resources-en
     if (resourceRoot != null) {
       classPath.add(new File(resourceRoot).getAbsolutePath());
     }

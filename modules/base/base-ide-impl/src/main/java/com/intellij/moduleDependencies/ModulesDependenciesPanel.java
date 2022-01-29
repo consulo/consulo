@@ -16,7 +16,7 @@
 
 package com.intellij.moduleDependencies;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import consulo.module.content.ProjectTopics;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.icons.AllIcons;
@@ -27,8 +27,8 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;

@@ -9,7 +9,7 @@ import com.intellij.ide.util.gotoByName.SimpleChooseByNameModel;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;

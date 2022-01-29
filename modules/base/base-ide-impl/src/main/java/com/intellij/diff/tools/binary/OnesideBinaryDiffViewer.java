@@ -23,7 +23,7 @@ import com.intellij.diff.tools.util.DiffNotifications;
 import com.intellij.diff.tools.util.side.OnesideDiffViewer;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileEditor;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

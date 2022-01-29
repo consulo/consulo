@@ -15,6 +15,7 @@
  */
 package com.intellij.util.indexing;
 
+import consulo.language.psi.stub.IndexableFileSet;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;

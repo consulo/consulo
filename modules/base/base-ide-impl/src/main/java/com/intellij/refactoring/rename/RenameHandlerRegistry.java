@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.component.extension.Extensions;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.util.dataholder.Key;

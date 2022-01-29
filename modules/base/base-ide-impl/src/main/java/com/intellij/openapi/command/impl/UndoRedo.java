@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import com.intellij.openapi.command.undo.DocumentReference;

@@ -16,19 +16,19 @@
 
 package com.intellij.codeEditor.printing;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.progress.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;
@@ -39,8 +39,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
 
 import javax.annotation.Nonnull;
 

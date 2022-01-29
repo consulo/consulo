@@ -45,7 +45,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import consulo.component.util.ModificationTracker;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;

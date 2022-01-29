@@ -15,7 +15,7 @@ import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import com.intellij.openapi.project.impl.ProjectImpl;

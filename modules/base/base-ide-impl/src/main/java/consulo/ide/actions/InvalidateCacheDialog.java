@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.util.gist.GistManager;
-import com.intellij.util.indexing.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;

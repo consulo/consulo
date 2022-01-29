@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

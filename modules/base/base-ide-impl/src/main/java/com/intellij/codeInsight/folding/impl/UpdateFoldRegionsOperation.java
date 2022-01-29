@@ -11,7 +11,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.impl.DesktopFoldingModelImpl;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Ref;

@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.module.impl;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;

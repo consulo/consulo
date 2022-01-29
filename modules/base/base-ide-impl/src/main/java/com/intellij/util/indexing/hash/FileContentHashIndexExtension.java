@@ -2,6 +2,11 @@
 package com.intellij.util.indexing.hash;
 
 import consulo.disposer.Disposable;
+import consulo.index.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.ID;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.logging.Logger;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.ShutDownTracker;
@@ -9,7 +14,7 @@ import com.intellij.openapi.vfs.newvfs.persistent.ContentHashesUtil;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.io.*;
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataInputOutputUtil;
 
 import javax.annotation.Nonnull;
 

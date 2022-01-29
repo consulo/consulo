@@ -17,8 +17,8 @@
 package com.maddyhome.idea.copyright.actions;
 
 import consulo.module.Module;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.EmptyRunnable;

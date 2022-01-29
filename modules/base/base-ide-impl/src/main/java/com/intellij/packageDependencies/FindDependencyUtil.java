@@ -17,9 +17,9 @@
 package com.intellij.packageDependencies;
 
 import com.intellij.analysis.AnalysisScopeBundle;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

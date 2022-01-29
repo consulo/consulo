@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.copy;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.CopyPasteDelegator;
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.util.EditorHelper;

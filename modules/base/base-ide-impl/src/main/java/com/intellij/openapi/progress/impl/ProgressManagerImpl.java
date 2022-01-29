@@ -5,9 +5,9 @@ package com.intellij.openapi.progress.impl;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import com.intellij.openapi.progress.util.PingProgress;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWindow;

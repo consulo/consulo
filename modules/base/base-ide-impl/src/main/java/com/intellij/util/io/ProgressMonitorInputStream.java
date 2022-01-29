@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

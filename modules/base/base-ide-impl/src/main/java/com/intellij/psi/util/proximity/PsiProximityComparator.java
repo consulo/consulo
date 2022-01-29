@@ -27,7 +27,7 @@ import com.intellij.psi.WeighingService;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
 import com.intellij.psi.util.ProximityLocation;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.FactoryMap;
 import javax.annotation.Nullable;
 

@@ -11,10 +11,10 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import consulo.application.util.function.Processor;
-import com.intellij.util.Processors;
+import consulo.application.util.function.Processors;
 import com.intellij.util.SmartList;
-import com.intellij.util.indexing.ID;
-import com.intellij.util.indexing.IdFilter;
+import consulo.index.io.ID;
+import consulo.language.psi.stub.IdFilter;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 

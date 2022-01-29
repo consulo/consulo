@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.diff.ex.DiffFragment;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;

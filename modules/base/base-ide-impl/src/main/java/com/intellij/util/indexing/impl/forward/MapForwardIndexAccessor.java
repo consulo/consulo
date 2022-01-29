@@ -2,7 +2,7 @@
 package com.intellij.util.indexing.impl.forward;
 
 import com.intellij.util.indexing.impl.InputData;
-import com.intellij.util.io.DataExternalizer;
+import consulo.index.io.data.DataExternalizer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

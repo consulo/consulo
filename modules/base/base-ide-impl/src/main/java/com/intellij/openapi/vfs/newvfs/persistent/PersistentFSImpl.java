@@ -34,6 +34,7 @@ import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.*;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileAttributes;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

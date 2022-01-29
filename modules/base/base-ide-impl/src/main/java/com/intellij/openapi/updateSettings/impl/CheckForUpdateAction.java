@@ -18,7 +18,7 @@ package com.intellij.openapi.updateSettings.impl;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;

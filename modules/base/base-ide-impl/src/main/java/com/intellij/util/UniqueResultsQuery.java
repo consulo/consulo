@@ -3,7 +3,7 @@
 package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.HashingStrategy;

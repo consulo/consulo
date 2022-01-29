@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.vcs.persistent;
 
-import consulo.util.io.Forceable;
+import consulo.index.io.Forceable;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataOutputStream;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataOutputStream;
+import consulo.index.io.KeyDescriptor;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.logging.Logger;
 

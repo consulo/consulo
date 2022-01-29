@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.problems.WolfTheProblemSolverImpl;
 import consulo.document.Document;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.document.util.TextRange;

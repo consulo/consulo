@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs;
 
 import consulo.disposer.Disposable;
 import com.intellij.openapi.progress.BackgroundTaskQueue;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.ZipperUpdater;

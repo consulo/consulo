@@ -26,7 +26,7 @@ import com.intellij.psi.search.FileTypeIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndex;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;

@@ -17,7 +17,7 @@ package com.intellij.util.indexing.impl;
 
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.function.ThrowableRunnable;
-import com.intellij.util.indexing.IndexId;
+import consulo.index.io.IndexId;
 import com.intellij.util.indexing.StorageException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

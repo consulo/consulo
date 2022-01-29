@@ -17,7 +17,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;
-import com.intellij.util.Processors;
+import consulo.application.util.function.Processors;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 

@@ -16,8 +16,8 @@
 package com.intellij.diff.chains;
 
 import com.intellij.diff.requests.DiffRequest;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;

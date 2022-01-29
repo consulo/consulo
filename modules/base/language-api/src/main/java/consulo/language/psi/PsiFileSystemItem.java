@@ -15,13 +15,12 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.PsiElementProcessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.annotation.access.RequiredReadAction;
 
 /**
  * Represents a file or directory which can be renamed.

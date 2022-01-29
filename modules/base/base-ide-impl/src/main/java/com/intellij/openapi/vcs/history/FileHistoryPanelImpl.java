@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.icons.AllIcons;
@@ -32,10 +32,10 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.document.FileDocumentManager;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;

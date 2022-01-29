@@ -16,9 +16,7 @@
 
 package consulo.language.psi;
 
-import com.intellij.psi.search.GlobalSearchScope;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.scope.GlobalSearchScope;
 
 import javax.annotation.Nonnull;
 
@@ -37,7 +35,7 @@ public interface PsiDirectoryContainer extends PsiNamedElement {
 
   /**
    * Returns the array of directories corresponding to the package in the specified search scope.
-   *
+   *                                                                         PsiReferenceProvider
    * @param scope the scope in which directories are searched.
    * @return the array of directories.
    */

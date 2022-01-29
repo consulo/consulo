@@ -4,10 +4,10 @@ package com.intellij.openapi.actionSystem.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
-import consulo.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.concurrency.Semaphore;
 

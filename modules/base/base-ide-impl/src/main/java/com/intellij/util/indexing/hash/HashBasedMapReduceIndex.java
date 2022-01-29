@@ -1,11 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing.hash;
 
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.indexing.impl.MapIndexStorage;
 import com.intellij.util.indexing.provided.ProvidedIndexExtension;
+import consulo.language.psi.stub.FileBasedIndex;
 
 import javax.annotation.Nonnull;
 import java.io.File;

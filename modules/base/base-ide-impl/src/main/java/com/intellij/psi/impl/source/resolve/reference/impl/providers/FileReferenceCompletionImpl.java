@@ -24,7 +24,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.FilteringProcessor;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;

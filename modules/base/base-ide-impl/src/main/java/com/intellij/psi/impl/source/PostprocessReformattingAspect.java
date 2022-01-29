@@ -13,7 +13,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.language.ast.TokenType;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;

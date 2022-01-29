@@ -5,7 +5,7 @@
  */
 package com.intellij.analysis;
 
-import com.intellij.openapi.progress.PerformInBackgroundOption;
+import consulo.application.progress.PerformInBackgroundOption;
 import consulo.project.Project;
 
 public class PerformAnalysisInBackgroundOption implements PerformInBackgroundOption {

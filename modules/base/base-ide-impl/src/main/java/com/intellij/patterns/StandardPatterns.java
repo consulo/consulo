@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

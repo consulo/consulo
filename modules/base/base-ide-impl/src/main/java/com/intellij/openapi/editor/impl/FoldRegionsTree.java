@@ -8,7 +8,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.FoldRegion;
 import consulo.document.RangeMarker;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtil;
 import consulo.util.collection.HashingStrategy;

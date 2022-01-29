@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import consulo.virtualFileSystem.util.PathsList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.compiler.ModuleCompilerPathsManager;

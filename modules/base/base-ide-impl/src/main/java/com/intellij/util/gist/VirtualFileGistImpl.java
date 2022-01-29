@@ -17,16 +17,16 @@ package com.intellij.util.gist;
 
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWithId;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.containers.FactoryMap;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

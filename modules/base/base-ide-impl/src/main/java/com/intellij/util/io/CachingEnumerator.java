@@ -16,7 +16,8 @@
 package com.intellij.util.io;
 
 import com.intellij.util.containers.SLRUMap;
-import consulo.util.io.DataEnumerator;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataEnumerator;
 
 import javax.annotation.Nullable;
 

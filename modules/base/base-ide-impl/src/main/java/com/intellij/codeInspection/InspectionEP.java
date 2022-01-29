@@ -16,7 +16,7 @@
 package com.intellij.codeInspection;
 
 import consulo.component.util.localize.AbstractBundle;
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.lang.LanguageExtensionPoint;
 import consulo.application.Application;

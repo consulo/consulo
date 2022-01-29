@@ -15,10 +15,10 @@
  */
 package consulo.language.psi.stub;
 
-import consulo.util.io.AbstractStringEnumerator;
-import consulo.util.io.DataInputOutputUtil;
-import consulo.util.io.DataOutputStream;
-import consulo.util.io.IOUtil;
+import consulo.index.io.AbstractStringEnumerator;
+import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.data.DataOutputStream;
+import consulo.index.io.data.IOUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.util;
 
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.KeyDescriptor;
 import com.intellij.util.io.PagedFileStorage;
 import com.intellij.util.io.PersistentBTreeEnumerator;
 import javax.annotation.Nonnull;

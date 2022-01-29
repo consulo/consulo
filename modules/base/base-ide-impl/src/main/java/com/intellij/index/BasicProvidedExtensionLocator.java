@@ -5,11 +5,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.StubUpdatingIndex;
 import com.intellij.psi.stubs.provided.StubProvidedIndexExtension;
 import com.intellij.util.indexing.FileBasedIndexExtension;
-import com.intellij.util.indexing.ID;
+import consulo.index.io.ID;
 import com.intellij.util.indexing.provided.ProvidedIndexExtension;
 import com.intellij.util.indexing.provided.ProvidedIndexExtensionLocator;
-import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.KeyDescriptor;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

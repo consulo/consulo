@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.model.task;
 
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 
 /**

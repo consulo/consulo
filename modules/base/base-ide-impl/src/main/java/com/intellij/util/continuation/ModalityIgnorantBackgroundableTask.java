@@ -16,9 +16,9 @@
 package com.intellij.util.continuation;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.PerformInBackgroundOption;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;

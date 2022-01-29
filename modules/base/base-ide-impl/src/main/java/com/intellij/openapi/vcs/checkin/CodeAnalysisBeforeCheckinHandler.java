@@ -16,11 +16,11 @@
 
 package com.intellij.openapi.vcs.checkin;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.codeInsight.CodeSmellInfo;
 import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

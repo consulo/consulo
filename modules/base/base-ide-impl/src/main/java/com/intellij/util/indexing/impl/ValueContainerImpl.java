@@ -20,8 +20,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.indexing.ValueContainer;
 import com.intellij.util.indexing.containers.ChangeBufferingList;
 import com.intellij.util.indexing.containers.IntIdsIterator;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

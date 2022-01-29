@@ -33,7 +33,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.Consumer;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;

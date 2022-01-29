@@ -2,6 +2,8 @@
 package com.intellij.util.indexing;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.index.io.ID;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.vfs.PersistentFSConstants;
 import consulo.virtualFileSystem.VirtualFile;

@@ -8,7 +8,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.FList;
-import consulo.util.io.IOUtil;
+import consulo.index.io.data.IOUtil;
 import com.intellij.util.text.NameUtilCore;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;

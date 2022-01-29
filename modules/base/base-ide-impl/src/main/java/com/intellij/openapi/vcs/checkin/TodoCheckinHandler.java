@@ -25,9 +25,9 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -55,7 +55,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
-import static com.intellij.CommonBundle.getCancelButtonText;
+import static consulo.application.CommonBundle.getCancelButtonText;
 import static com.intellij.openapi.ui.Messages.*;
 import static com.intellij.util.ui.UIUtil.getWarningIcon;
 

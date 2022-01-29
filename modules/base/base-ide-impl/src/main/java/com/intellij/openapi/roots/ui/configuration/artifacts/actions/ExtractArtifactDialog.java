@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactTypeCellRenderer;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;

@@ -16,7 +16,7 @@
 
 package com.intellij.usageView;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 

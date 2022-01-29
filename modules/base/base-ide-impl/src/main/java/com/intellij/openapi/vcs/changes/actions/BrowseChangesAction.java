@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

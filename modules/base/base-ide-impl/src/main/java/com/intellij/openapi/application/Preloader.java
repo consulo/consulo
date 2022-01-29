@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.application;
 
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import consulo.util.lang.TimeoutUtil;

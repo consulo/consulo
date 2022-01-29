@@ -16,6 +16,7 @@
 
 package com.intellij.util.indexing;
 
+import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.Processor;

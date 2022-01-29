@@ -21,7 +21,7 @@ import com.intellij.ide.actions.CloseTabToolbarAction;
 import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.util.treeView.AbstractTreeUi;
 import com.intellij.openapi.actionSystem.*;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import consulo.disposer.Disposable;

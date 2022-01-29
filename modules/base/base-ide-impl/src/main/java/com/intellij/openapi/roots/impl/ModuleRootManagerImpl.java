@@ -28,7 +28,7 @@ import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.layer.*;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import consulo.component.persist.InvalidDataException;

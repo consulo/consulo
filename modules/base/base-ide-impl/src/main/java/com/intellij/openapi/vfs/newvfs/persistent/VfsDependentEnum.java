@@ -17,9 +17,9 @@ package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataInputOutputUtil;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.KeyDescriptor;
 
 import javax.annotation.Nonnull;
 import java.io.*;

@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.ex.dummy;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import com.intellij.openapi.vfs.VirtualFileWithId;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import javax.annotation.Nonnull;
 
 abstract class VirtualFileImpl extends VirtualFile implements VirtualFileWithId {

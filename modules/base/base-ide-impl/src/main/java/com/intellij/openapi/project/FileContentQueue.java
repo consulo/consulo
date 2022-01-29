@@ -3,8 +3,8 @@ package com.intellij.openapi.project;
 
 import com.intellij.ide.caches.FileContent;
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;

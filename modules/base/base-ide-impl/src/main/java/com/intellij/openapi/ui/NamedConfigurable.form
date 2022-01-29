@@ -30,7 +30,7 @@
             </constraints>
             <properties>
               <labelFor value="85a0f"/>
-              <text resource-bundle="messages/CommonBundle" key="name.label.text"/>
+              <text resource-bundle="consulo/application/CommonBundle" key="name.label.text"/>
             </properties>
           </component>
           <component id="85a0f" class="javax.swing.JTextField" binding="myNameField">

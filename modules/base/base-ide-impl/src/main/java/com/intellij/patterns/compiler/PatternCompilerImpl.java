@@ -25,7 +25,7 @@ import com.intellij.patterns.ElementPatternCondition;
 import com.intellij.patterns.InitialPatternCondition;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
 import com.intellij.util.containers.Stack;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.AppTopics;
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.application.options.CodeStyle;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
@@ -21,7 +21,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import com.intellij.openapi.fileTypes.UnknownFileType;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;

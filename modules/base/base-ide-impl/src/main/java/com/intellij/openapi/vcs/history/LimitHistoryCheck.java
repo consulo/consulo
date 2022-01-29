@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.vcs.VcsConfiguration;

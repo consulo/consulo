@@ -15,14 +15,14 @@
  */
 package consulo.desktop.awt.settings;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.project.Project;
 import consulo.content.bundle.SdkTable;

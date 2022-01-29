@@ -16,13 +16,15 @@
 package com.intellij.openapi.progress.util;
 
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressManager;
+
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
 public interface BlockingProgressIndicator extends ProgressIndicatorEx {
   /**
-   * @deprecated Do not use, it's too low level and dangerous. Instead, consider using run* methods in {@link com.intellij.openapi.progress.ProgressManager} or {@link ProgressRunner}
+   * @deprecated Do not use, it's too low level and dangerous. Instead, consider using run* methods in {@link ProgressManager} or {@link ProgressRunner}
    */
   @Deprecated
   void startBlocking(@Nonnull Runnable init, @Nonnull CompletableFuture<?> stopCondition);

@@ -17,7 +17,7 @@ package com.intellij.openapi.application.ex;
 
 import consulo.application.EdtReplacementThread;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.concurrency.Semaphore;
@@ -26,8 +26,8 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;

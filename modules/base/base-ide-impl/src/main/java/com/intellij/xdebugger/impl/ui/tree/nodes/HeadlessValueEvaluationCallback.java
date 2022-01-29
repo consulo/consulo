@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.notification.NotificationType;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.util.Alarm;
 import com.intellij.util.concurrency.Semaphore;

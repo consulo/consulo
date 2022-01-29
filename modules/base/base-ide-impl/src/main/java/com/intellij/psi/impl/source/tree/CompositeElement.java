@@ -20,7 +20,7 @@ import com.intellij.diagnostic.ThreadDumper;
 import consulo.language.ast.ASTFactory;
 import consulo.language.ast.ASTNode;
 import consulo.application.ApplicationManager;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.tree.events.impl.TreeChangeEventImpl;
 import consulo.language.psi.PsiElement;

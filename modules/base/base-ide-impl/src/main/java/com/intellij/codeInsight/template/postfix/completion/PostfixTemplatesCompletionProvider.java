@@ -9,10 +9,10 @@ import com.intellij.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.patterns.StandardPatterns;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import consulo.codeInsight.completion.CompletionProvider;
 import javax.annotation.Nonnull;
 

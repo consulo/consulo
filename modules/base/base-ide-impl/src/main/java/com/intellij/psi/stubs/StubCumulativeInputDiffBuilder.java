@@ -6,6 +6,9 @@ import com.intellij.util.indexing.impl.DebugAssertions;
 import com.intellij.util.indexing.impl.InputDataDiffBuilder;
 import com.intellij.util.indexing.impl.KeyValueUpdateProcessor;
 import com.intellij.util.indexing.impl.RemovedKeyProcessor;
+import consulo.language.psi.stub.StubIndex;
+import consulo.language.psi.stub.StubIndexKey;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

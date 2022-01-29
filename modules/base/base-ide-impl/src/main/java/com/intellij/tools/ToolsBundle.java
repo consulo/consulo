@@ -16,7 +16,7 @@
 
 package com.intellij.tools;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;

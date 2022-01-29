@@ -30,7 +30,7 @@ import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import consulo.language.file.LanguageFileViewProviders;

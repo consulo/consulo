@@ -15,10 +15,10 @@ import com.intellij.openapi.util.text.TrigramBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.cache.CacheManager;
 import com.intellij.psi.search.*;
-import com.intellij.util.Processors;
+import consulo.application.util.function.Processors;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.DumbModeAccessType;
-import com.intellij.util.indexing.FileBasedIndex;
+import consulo.language.psi.stub.DumbModeAccessType;
+import consulo.language.psi.stub.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexImpl;
 
 import javax.annotation.Nonnull;

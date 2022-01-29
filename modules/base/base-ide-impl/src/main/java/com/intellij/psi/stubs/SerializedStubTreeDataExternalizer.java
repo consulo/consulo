@@ -3,8 +3,8 @@ package com.intellij.psi.stubs;
 
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CompressionUtil;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
 import com.intellij.util.io.PersistentHashMapValueStorage;
 import javax.annotation.Nonnull;
 

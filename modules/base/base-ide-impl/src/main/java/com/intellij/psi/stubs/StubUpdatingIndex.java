@@ -15,14 +15,18 @@
  */
 package com.intellij.psi.stubs;
 
+import consulo.index.io.ID;
 import consulo.language.Language;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.application.ReadAction;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.Stub;
+import consulo.language.psi.stub.StubIndex;
+import consulo.language.psi.stub.StubIndexKey;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.virtualFileSystem.VirtualFile;
@@ -36,8 +40,8 @@ import com.intellij.util.indexing.impl.DebugAssertions;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.indexing.impl.InputDataDiffBuilder;
 import com.intellij.util.indexing.impl.forward.EmptyForwardIndex;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
 import com.intellij.util.io.PersistentHashMapValueStorage;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;

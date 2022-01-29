@@ -3,7 +3,7 @@ package com.intellij.dupLocator.index;
 import com.intellij.dupLocator.util.PsiFragment;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.PersistentHashMap;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;

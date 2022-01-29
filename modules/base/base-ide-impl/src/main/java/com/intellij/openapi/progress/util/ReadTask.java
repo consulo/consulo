@@ -17,8 +17,8 @@ package com.intellij.openapi.progress.util;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Computable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

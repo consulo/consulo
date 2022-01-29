@@ -6,7 +6,7 @@ import com.intellij.diagnostic.EventWatcher;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import com.intellij.util.ExceptionUtil;
 import consulo.util.concurrent.ActionCallback;
 import org.jetbrains.annotations.NonNls;

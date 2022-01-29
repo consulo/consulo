@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.folding.impl.FoldingUpdate;
 import com.intellij.openapi.editor.Editor;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

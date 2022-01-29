@@ -16,6 +16,7 @@
 
 package com.intellij.util.indexing;
 
+import consulo.index.io.ID;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
@@ -23,6 +24,8 @@ import com.intellij.util.indexing.impl.ChangeTrackingValueContainer;
 import com.intellij.util.indexing.impl.DebugAssertions;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.indexing.impl.UpdatableValueContainer;
+import consulo.language.psi.stub.IdFilter;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

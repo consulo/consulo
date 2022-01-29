@@ -6,7 +6,7 @@ import com.intellij.util.indexing.impl.InputDataDiffBuilder;
 import com.intellij.util.indexing.impl.MapInputDataDiffBuilder;
 import com.intellij.util.indexing.impl.forward.AbstractMapForwardIndexAccessor;
 import com.intellij.util.indexing.impl.forward.IntForwardIndexAccessor;
-import com.intellij.util.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.EnumeratorIntegerDescriptor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

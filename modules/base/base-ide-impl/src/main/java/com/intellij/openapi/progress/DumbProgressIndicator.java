@@ -2,7 +2,7 @@ package com.intellij.openapi.progress;
 
 import com.intellij.openapi.application.ModalityState;
 import consulo.localize.LocalizeValue;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 
 import javax.annotation.Nonnull;
 

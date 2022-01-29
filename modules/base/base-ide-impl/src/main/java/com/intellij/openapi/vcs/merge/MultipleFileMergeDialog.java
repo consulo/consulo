@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.merge;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.InvalidDiffRequestException;

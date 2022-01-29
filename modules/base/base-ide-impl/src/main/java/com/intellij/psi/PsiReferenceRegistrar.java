@@ -19,15 +19,16 @@ import com.intellij.patterns.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceProvider;
+import consulo.language.util.ProcessingContext;
 
 import javax.annotation.Nonnull;
 
 /**
  * Allows to register reference providers for specific locations. The locations are described by
  * {@link com.intellij.patterns.ElementPattern}s. If a pattern matches some PSI element, then the corresponding
- * {@link PsiReferenceProvider#getReferencesByElement(PsiElement, com.intellij.util.ProcessingContext)} is executed, from
+ * {@link PsiReferenceProvider#getReferencesByElement(PsiElement, ProcessingContext)} is executed, from
  * which one can return the references whose {@link PsiReference#getElement()} is the same as the first parameter of
- * {@link PsiReferenceProvider#getReferencesByElement(PsiElement, com.intellij.util.ProcessingContext)}.
+ * {@link PsiReferenceProvider#getReferencesByElement(PsiElement, ProcessingContext)}.
  *
  * @author peter
  */

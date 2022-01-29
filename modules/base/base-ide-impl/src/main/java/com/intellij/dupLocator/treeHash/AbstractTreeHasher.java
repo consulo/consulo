@@ -4,7 +4,7 @@ import com.intellij.dupLocator.NodeSpecificHasher;
 import com.intellij.dupLocator.TreeHasher;
 import com.intellij.dupLocator.util.PsiFragment;
 import consulo.language.Language;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LeafElement;

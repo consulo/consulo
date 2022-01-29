@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source.tree;
 import consulo.language.ast.ASTNode;
 import consulo.language.lexer.Lexer;
 import consulo.application.ApplicationManager;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Ref;
 import consulo.language.psi.PsiComment;

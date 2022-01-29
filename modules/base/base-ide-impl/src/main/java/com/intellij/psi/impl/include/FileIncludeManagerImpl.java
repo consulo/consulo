@@ -7,7 +7,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileWithId;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiFileSystemItem;

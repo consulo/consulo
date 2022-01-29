@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;

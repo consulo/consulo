@@ -6,8 +6,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
-import com.intellij.util.indexing.FileBasedIndex;
-import com.intellij.util.indexing.IdFilter;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.IdFilter;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

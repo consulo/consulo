@@ -21,7 +21,7 @@ import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.codeInsight.folding.impl.FoldingUpdate;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.Editor;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.IndexNotReadyException;
 import consulo.project.PossiblyDumbAware;
 import consulo.util.dataholder.Key;

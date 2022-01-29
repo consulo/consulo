@@ -15,6 +15,8 @@
  */
 package com.intellij.util.io;
 
+import consulo.index.io.data.DataExternalizer;
+
 import javax.annotation.Nullable;
 import java.io.DataOutput;
 import java.io.IOException;

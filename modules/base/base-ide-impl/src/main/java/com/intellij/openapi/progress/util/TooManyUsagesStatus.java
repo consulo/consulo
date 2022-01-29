@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.progress.util;
 
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;

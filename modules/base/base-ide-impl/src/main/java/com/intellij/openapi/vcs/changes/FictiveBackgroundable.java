@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.application.ModalityState;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import javax.annotation.Nonnull;

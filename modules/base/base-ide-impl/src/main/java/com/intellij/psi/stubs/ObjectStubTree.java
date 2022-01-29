@@ -18,6 +18,7 @@ package com.intellij.psi.stubs;
 import com.intellij.util.ArrayUtil;
 import consulo.language.psi.stub.IndexSink;
 import consulo.language.psi.stub.Stub;
+import consulo.language.psi.stub.StubIndexKey;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;

@@ -21,7 +21,7 @@ import com.intellij.ide.FrameStateManager;
 import com.intellij.ide.impl.ProjectUtil;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.io.FileUtil;

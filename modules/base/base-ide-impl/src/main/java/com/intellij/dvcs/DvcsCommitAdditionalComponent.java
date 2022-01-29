@@ -16,7 +16,7 @@
 package com.intellij.dvcs;
 
 import com.intellij.dvcs.ui.DvcsBundle;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;

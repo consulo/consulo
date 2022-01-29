@@ -15,7 +15,7 @@ import consulo.language.psi.PsiManager;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.DataExternalizer;
+import consulo.index.io.data.DataExternalizer;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

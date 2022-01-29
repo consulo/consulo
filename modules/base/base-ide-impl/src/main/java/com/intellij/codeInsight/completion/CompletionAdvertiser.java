@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.featureStatistics.FeatureUsageTracker;

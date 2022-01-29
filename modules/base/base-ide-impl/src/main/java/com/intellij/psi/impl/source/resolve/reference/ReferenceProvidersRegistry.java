@@ -22,9 +22,9 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.PsiReferenceService;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import com.intellij.psi.*;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import javax.annotation.Nonnull;
 
 /**

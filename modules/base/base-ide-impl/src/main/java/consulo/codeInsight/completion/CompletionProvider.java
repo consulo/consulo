@@ -17,7 +17,7 @@ package consulo.codeInsight.completion;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 

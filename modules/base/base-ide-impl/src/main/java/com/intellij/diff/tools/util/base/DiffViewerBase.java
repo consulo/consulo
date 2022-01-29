@@ -23,7 +23,7 @@ import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.util.DiffTaskQueue;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
 import consulo.disposer.Disposer;

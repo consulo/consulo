@@ -19,7 +19,7 @@ import consulo.language.ast.LighterAST;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.LighterASTTokenNode;
 import consulo.language.ast.LighterLazyParseableNode;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import com.intellij.util.SmartList;

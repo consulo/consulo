@@ -16,7 +16,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;

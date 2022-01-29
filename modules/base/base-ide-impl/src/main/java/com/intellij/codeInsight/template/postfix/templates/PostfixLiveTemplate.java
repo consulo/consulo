@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.application.util.function.Condition;
 import consulo.application.util.function.Conditions;

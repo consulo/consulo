@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.repo;
 
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;

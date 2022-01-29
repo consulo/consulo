@@ -15,6 +15,8 @@
  */
 package com.intellij.util.io;
 
+import consulo.index.io.InlineKeyDescriptor;
+
 /**
  * @author peter
  */

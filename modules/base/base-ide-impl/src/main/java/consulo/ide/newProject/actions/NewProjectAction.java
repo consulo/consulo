@@ -15,7 +15,7 @@
  */
 package consulo.ide.newProject.actions;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;

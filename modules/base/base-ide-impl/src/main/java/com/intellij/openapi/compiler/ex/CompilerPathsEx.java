@@ -17,7 +17,7 @@ package com.intellij.openapi.compiler.ex;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompilerPaths;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;

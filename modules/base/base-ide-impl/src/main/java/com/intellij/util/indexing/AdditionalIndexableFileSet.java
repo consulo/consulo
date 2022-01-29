@@ -17,6 +17,7 @@ package com.intellij.util.indexing;
 
 import consulo.content.ContentIterator;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.language.psi.stub.IndexableFileSet;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 

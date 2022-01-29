@@ -28,7 +28,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.util.PairProcessor;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.LafManager;

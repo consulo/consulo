@@ -25,7 +25,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import consulo.language.psi.*;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.DumbService;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Comparing;

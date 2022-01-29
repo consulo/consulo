@@ -16,7 +16,7 @@
 
 package com.intellij.history.integration.ui.views;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.requests.ContentDiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
@@ -36,8 +36,8 @@ import com.intellij.ide.ui.SplitterProportionsDataImpl;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.help.HelpManager;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.ui.popup.Balloon;

@@ -19,7 +19,7 @@ import com.intellij.diff.comparison.iterables.DiffIterableUtil.*;
 import com.intellij.diff.comparison.iterables.FairDiffIterable;
 import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.Range;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

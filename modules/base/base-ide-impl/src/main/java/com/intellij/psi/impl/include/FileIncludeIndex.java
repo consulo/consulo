@@ -2,6 +2,8 @@
 
 package com.intellij.psi.impl.include;
 
+import consulo.index.io.ID;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -11,10 +13,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.indexing.*;
-import com.intellij.util.io.DataExternalizer;
+import consulo.index.io.data.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
-import consulo.util.io.IOUtil;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.IOUtil;
+import consulo.index.io.KeyDescriptor;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import javax.annotation.Nonnull;
 

@@ -24,7 +24,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.application.Application;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;

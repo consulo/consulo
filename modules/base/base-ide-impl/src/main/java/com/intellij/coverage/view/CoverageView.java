@@ -1,6 +1,6 @@
 package com.intellij.coverage.view;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.coverage.CoverageDataManager;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.execution.RunManagerEx;

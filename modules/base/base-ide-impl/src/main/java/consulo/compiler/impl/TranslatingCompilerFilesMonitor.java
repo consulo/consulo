@@ -19,7 +19,7 @@ import com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.TranslatingCompiler;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.util.Trinity;
 import consulo.virtualFileSystem.VirtualFile;

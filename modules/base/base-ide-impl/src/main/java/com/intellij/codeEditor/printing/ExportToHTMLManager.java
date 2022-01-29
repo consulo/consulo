@@ -16,7 +16,7 @@
 
 package com.intellij.codeEditor.printing;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -28,8 +28,8 @@ import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.configurable.ConfigurationException;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.ThrowableComputable;

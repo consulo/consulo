@@ -19,7 +19,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import consulo.project.DumbAware;
 import consulo.project.DumbService;

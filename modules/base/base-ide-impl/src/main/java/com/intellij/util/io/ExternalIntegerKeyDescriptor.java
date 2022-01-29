@@ -19,7 +19,8 @@
  */
 package com.intellij.util.io;
 
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataInputOutputUtil;
 
 import java.io.DataInput;
 import java.io.DataOutput;

@@ -25,7 +25,7 @@ import com.intellij.psi.search.FilenameIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.FindSymbolParameters;
-import com.intellij.util.indexing.IdFilter;
+import consulo.language.psi.stub.IdFilter;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

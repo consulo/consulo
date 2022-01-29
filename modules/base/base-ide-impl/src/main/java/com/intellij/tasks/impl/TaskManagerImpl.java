@@ -23,9 +23,9 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.ui.Messages;
@@ -556,8 +556,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 		addTask(task);
 		if(task.isIssue())
 		{
-			StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> ProgressManager.getInstance().run(new com.intellij.openapi.progress.Task.Backgroundable(myProject, "Updating " +
-					task.getPresentableId())
+			StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> ProgressManager.getInstance().run(new consulo.application.progress.Task.Backgroundable(myProject, "Updating " +
+																																													  task.getPresentableId())
 			{
 
 				@Override
@@ -1238,7 +1238,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 		public Element servers = new Element("servers");
 	}
 
-	private abstract class TestConnectionTask extends com.intellij.openapi.progress.Task.Modal
+	private abstract class TestConnectionTask extends consulo.application.progress.Task.Modal
 	{
 
 		protected Exception myException;

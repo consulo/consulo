@@ -19,7 +19,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import com.intellij.psi.injection.ReferenceInjector;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import javax.annotation.Nonnull;
 
 /**

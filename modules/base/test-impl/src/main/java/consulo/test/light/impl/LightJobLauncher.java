@@ -20,8 +20,8 @@ import consulo.application.Application;
 import consulo.application.internal.concurrency.Job;
 import consulo.application.internal.concurrency.JobLauncher;
 import consulo.application.util.function.Processor;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -17,7 +17,7 @@ package com.intellij.util.indexing;
 
 import consulo.application.util.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWithId;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.language.psi.scope.GlobalSearchScope;
 
 class ProjectFilesCondition implements Condition<VirtualFile> {

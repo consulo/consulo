@@ -19,7 +19,7 @@
  */
 package com.intellij.util.io.storage;
 
-import consulo.util.io.Forceable;
+import consulo.index.io.Forceable;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtilRt;

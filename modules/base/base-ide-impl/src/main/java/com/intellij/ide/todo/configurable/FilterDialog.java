@@ -16,7 +16,7 @@
 
 package com.intellij.ide.todo.configurable;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.todo.TodoFilter;
 import com.intellij.openapi.help.HelpManager;

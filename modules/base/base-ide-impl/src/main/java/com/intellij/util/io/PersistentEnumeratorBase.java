@@ -15,9 +15,11 @@
  */
 package com.intellij.util.io;
 
-import consulo.util.io.Forceable;
+import consulo.index.io.Forceable;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
+import consulo.index.io.InlineKeyDescriptor;
+import consulo.index.io.KeyDescriptor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.SLRUMap;

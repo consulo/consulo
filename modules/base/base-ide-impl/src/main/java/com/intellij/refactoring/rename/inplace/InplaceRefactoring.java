@@ -79,7 +79,7 @@ import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.ui.DottedBorder;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.PopupFactoryImpl;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.Query;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.PositionTracker;

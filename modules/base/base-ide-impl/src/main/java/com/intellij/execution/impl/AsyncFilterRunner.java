@@ -10,7 +10,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.TimeoutUtil;

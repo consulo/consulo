@@ -24,7 +24,7 @@ import com.intellij.execution.impl.ConsoleBuffer;
 import com.intellij.execution.testframework.*;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Ref;
 import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;

@@ -16,7 +16,6 @@
 package consulo.language.psi.resolve;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.ResolveState;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

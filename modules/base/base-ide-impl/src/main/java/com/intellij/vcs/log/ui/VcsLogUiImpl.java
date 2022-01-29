@@ -5,7 +5,7 @@ import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import consulo.disposer.Disposer;

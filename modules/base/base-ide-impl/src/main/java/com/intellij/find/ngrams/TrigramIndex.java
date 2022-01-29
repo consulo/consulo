@@ -19,16 +19,18 @@
  */
 package com.intellij.find.ngrams;
 
+import consulo.index.io.ID;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.openapi.util.text.TrigramBuilder;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.*;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataInputOutputUtil;
-import com.intellij.util.io.EnumeratorIntegerDescriptor;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.KeyDescriptor;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;

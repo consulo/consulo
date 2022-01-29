@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs.newvfs;
 
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWithId;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.util.lang.DeprecatedMethodException;
 import org.jetbrains.annotations.NonNls;

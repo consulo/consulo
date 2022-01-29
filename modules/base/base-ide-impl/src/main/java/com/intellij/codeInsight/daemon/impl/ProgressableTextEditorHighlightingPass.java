@@ -20,7 +20,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;

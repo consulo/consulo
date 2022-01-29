@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

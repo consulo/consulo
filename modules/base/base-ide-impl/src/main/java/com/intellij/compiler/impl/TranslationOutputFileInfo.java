@@ -18,7 +18,7 @@ package com.intellij.compiler.impl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
-import com.intellij.util.indexing.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 

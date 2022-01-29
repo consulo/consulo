@@ -16,7 +16,7 @@
 package com.intellij.patterns;
 
 import com.intellij.util.PairProcessor;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

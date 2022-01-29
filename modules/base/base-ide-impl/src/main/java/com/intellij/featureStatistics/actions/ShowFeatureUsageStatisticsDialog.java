@@ -15,7 +15,7 @@
  */
 package com.intellij.featureStatistics.actions;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.featureStatistics.*;
 import com.intellij.ide.util.TipUIUtil;
 import consulo.application.Application;

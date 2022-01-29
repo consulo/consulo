@@ -16,11 +16,11 @@
 
 package com.intellij.openapi.progress.impl;
 
-import com.intellij.openapi.progress.PerformInBackgroundOption;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.progress.TaskInfo;
+import consulo.application.progress.DumbModeAction;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.Task;
+import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.progress.util.ProgressWindow;
-import com.intellij.openapi.project.*;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;

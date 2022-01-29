@@ -7,7 +7,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.concurrency.AppExecutorUtil;

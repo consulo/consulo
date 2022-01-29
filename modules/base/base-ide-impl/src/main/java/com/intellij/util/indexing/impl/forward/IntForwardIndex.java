@@ -2,7 +2,7 @@
 package com.intellij.util.indexing.impl.forward;
 
 import com.intellij.openapi.util.io.ByteArraySequence;
-import com.intellij.util.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.EnumeratorIntegerDescriptor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

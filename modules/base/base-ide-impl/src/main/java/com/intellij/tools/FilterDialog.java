@@ -26,7 +26,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.PopupHandler;
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

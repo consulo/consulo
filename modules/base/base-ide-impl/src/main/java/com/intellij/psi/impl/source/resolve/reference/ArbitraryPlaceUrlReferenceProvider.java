@@ -25,7 +25,7 @@ import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import com.intellij.util.SmartList;
 import consulo.util.BombedStringUtil;
 

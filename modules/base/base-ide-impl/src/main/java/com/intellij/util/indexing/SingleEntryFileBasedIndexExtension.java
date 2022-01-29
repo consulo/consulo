@@ -16,9 +16,10 @@
 
 package com.intellij.util.indexing;
 
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.io.EnumeratorIntegerDescriptor;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.KeyDescriptor;
 import javax.annotation.Nonnull;
 
 /**

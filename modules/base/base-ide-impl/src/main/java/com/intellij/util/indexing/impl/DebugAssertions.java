@@ -17,7 +17,7 @@ package com.intellij.util.indexing.impl;
 
 import consulo.logging.Logger;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.indexing.IndexId;
+import consulo.index.io.IndexId;
 
 public class DebugAssertions {
   private static final Logger LOG = Logger.getInstance(DebugAssertions.class);

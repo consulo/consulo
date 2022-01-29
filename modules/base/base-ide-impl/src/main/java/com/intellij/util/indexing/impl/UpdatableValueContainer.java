@@ -17,7 +17,7 @@
 package com.intellij.util.indexing.impl;
 
 import com.intellij.util.indexing.ValueContainer;
-import com.intellij.util.io.DataExternalizer;
+import consulo.index.io.data.DataExternalizer;
 
 import java.io.DataOutput;
 import java.io.IOException;

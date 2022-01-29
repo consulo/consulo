@@ -16,7 +16,7 @@
 package com.intellij.tasks;
 
 import com.intellij.openapi.Disposable;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.changes.LocalChangeList;

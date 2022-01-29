@@ -1,7 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.io;
 
+import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
+import consulo.index.io.InlineKeyDescriptor;
+import consulo.index.io.IntInlineKeyDescriptor;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.LowMemoryWatcher;
@@ -12,8 +17,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import com.intellij.util.containers.LimitedPool;
 import com.intellij.util.containers.SLRUCache;
-import consulo.util.io.DataOutputStream;
-import consulo.util.io.IOUtil;
+import consulo.index.io.data.DataOutputStream;
+import consulo.index.io.data.IOUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

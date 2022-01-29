@@ -16,7 +16,7 @@
 package consulo.actionSystem.impl;
 
 import consulo.component.util.localize.AbstractBundle;
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeKey;

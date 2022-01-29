@@ -16,7 +16,7 @@
 package com.intellij.diagnostic;
 
 import com.intellij.openapi.components.ServiceManager;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.external.api.UserAccount;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;

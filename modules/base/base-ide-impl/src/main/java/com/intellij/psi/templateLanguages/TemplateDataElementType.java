@@ -7,7 +7,7 @@ import consulo.language.LanguageExtension;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.lexer.Lexer;
 import consulo.language.file.LanguageFileType;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.VolatileNotNullLazyValue;

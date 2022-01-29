@@ -13,7 +13,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.language.psi.*;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import consulo.project.DumbService;

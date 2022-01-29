@@ -15,7 +15,9 @@
  */
 package com.intellij.util.io;
 
-import consulo.util.io.Forceable;
+import consulo.index.io.Forceable;
+import consulo.index.io.KeyDescriptor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

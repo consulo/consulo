@@ -19,7 +19,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;

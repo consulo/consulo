@@ -6,7 +6,7 @@ import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import consulo.document.Document;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

@@ -16,7 +16,7 @@
 
 package com.intellij.compiler.impl;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.build.BuildContentManager;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
@@ -40,9 +40,9 @@ import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.content.layer.ContentEntry;

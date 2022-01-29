@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.compiler.generic;
 
-import com.intellij.util.io.DataExternalizer;
+import consulo.index.io.data.DataExternalizer;
 
 import java.io.DataInput;
 import java.io.DataOutput;

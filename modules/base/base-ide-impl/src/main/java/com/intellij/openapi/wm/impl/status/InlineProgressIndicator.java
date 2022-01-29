@@ -3,14 +3,13 @@ package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.progress.TaskInfo;
+import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.InplaceButton;
-import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.JBIterable;

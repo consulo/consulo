@@ -19,7 +19,9 @@ package com.intellij.psi.search;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.EnumeratorStringDescriptor;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.ID;
+import consulo.language.psi.stub.FileBasedIndex;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

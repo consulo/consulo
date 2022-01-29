@@ -31,10 +31,12 @@ import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.impl.VcsChangesLazilyParsedDetails;
 import com.intellij.vcs.log.util.PersistentUtil;
 import consulo.disposer.Disposable;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import consulo.util.io.IOUtil;
+import consulo.index.io.data.IOUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

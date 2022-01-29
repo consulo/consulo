@@ -19,7 +19,7 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.StaticGetter;
 import com.intellij.psi.impl.DebugUtil;

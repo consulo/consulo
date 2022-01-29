@@ -2,13 +2,13 @@
 package com.intellij.util.indexing.impl.forward;
 
 import com.intellij.util.indexing.IndexExtension;
-import com.intellij.util.indexing.IndexId;
+import consulo.index.io.IndexId;
 import com.intellij.util.indexing.impl.CollectionInputDataDiffBuilder;
 import com.intellij.util.indexing.impl.InputData;
 import com.intellij.util.indexing.impl.InputDataDiffBuilder;
 import com.intellij.util.indexing.impl.InputIndexDataExternalizer;
-import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.KeyDescriptor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

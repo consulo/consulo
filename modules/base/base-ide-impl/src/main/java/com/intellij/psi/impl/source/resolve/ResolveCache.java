@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source.resolve;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.language.psi.*;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.RecursionGuard;

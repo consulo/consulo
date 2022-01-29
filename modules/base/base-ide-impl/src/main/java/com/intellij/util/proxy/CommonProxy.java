@@ -15,7 +15,7 @@
  */
 package com.intellij.util.proxy;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;

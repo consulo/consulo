@@ -3,7 +3,7 @@ package com.intellij.execution.process;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.util.lang.DeprecatedMethodException;
 
 import javax.annotation.Nonnull;

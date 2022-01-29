@@ -16,7 +16,7 @@
 package com.intellij.psi.scope.util;
 
 import consulo.logging.Logger;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.psi.resolve.ResolveState;

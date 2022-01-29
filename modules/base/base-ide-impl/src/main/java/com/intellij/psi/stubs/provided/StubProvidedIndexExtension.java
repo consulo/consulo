@@ -4,13 +4,14 @@ package com.intellij.psi.stubs.provided;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.*;
-import com.intellij.util.indexing.ID;
+import consulo.index.io.ID;
 import com.intellij.util.indexing.provided.ProvidedIndexExtension;
-import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.EnumeratorIntegerDescriptor;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.KeyDescriptor;
 import com.intellij.util.io.VoidDataExternalizer;
 import consulo.disposer.Disposer;
+import consulo.language.psi.stub.StubIndexExtension;
 
 import javax.annotation.Nonnull;
 

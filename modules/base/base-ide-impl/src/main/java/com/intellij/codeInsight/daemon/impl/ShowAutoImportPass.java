@@ -20,7 +20,7 @@ import consulo.application.TransactionGuard;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

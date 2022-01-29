@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.ExporterToTextFile;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.components.PathMacroManager;

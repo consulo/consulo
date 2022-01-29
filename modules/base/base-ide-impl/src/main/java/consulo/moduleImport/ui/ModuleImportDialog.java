@@ -15,7 +15,7 @@
  */
 package consulo.moduleImport.ui;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

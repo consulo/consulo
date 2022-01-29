@@ -26,7 +26,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;

@@ -17,6 +17,7 @@
 package com.intellij.util.indexing;
 
 import consulo.document.Document;
+import consulo.index.io.ID;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import javax.annotation.Nonnull;

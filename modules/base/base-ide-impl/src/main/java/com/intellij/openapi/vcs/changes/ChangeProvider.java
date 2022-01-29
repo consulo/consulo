@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes;
 
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsProviderMarker;
 import consulo.virtualFileSystem.VirtualFile;

@@ -18,8 +18,8 @@ package com.intellij.util.indexing.impl;
 
 import consulo.application.util.function.Computable;
 import com.intellij.util.indexing.ValueContainer;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 

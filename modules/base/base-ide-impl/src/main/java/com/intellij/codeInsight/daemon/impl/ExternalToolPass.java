@@ -28,7 +28,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.ui.update.Update;

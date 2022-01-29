@@ -8,7 +8,7 @@ import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.lang.LanguageFormatting;
 import consulo.document.Document;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtilRt;

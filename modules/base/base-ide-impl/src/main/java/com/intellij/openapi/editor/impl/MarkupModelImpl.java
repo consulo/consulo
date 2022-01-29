@@ -17,6 +17,7 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.application.ApplicationManager;
+import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

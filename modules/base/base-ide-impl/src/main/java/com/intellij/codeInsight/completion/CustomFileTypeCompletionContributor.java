@@ -25,7 +25,7 @@ import consulo.project.DumbAware;
 import com.intellij.psi.CustomHighlighterTokenType;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;

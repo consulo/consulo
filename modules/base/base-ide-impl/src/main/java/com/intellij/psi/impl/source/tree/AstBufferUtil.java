@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.source.tree;
 
 import consulo.language.ast.ASTNode;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;

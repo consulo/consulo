@@ -16,9 +16,9 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.IOUtil;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.IOUtil;
+import consulo.index.io.KeyDescriptor;
 import com.intellij.util.io.PersistentHashMap;
 import org.jetbrains.annotations.NonNls;
 

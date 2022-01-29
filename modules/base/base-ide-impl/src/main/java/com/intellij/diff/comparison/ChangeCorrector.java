@@ -19,7 +19,7 @@ import com.intellij.diff.comparison.ByLine.Line;
 import com.intellij.diff.comparison.iterables.DiffIterableUtil;
 import com.intellij.diff.comparison.iterables.FairDiffIterable;
 import com.intellij.diff.util.Range;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.util.collection.primitive.ints.IntList;
 
 import javax.annotation.Nonnull;

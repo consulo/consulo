@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 
 import java.io.IOException;
 import java.util.HashMap;

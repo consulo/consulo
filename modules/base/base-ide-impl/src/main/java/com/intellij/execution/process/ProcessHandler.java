@@ -16,7 +16,7 @@
 package com.intellij.execution.process;
 
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.util.concurrency.Semaphore;

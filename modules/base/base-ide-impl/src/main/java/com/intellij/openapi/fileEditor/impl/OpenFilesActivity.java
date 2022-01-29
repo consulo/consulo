@@ -16,8 +16,8 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import consulo.ui.UIAccess;

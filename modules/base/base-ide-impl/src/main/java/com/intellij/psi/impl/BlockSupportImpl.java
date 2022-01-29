@@ -14,7 +14,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;

@@ -30,7 +30,7 @@ import com.intellij.openapi.diff.impl.patch.TextFilePatch;
 import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Ref;

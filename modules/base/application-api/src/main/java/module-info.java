@@ -20,7 +20,8 @@ module consulo.application.api {
   exports consulo.application.event;
   exports consulo.application.constraint;
   exports consulo.application.extension;
-  exports consulo.progress;
+  exports consulo.application.progress;
+
   // TODO [VISTALL] impl package
   exports consulo.application.internal;
   exports consulo.application.internal.concurrency;

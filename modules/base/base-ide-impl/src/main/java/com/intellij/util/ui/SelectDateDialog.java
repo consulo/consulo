@@ -17,7 +17,7 @@ package com.intellij.util.ui;
 
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 
 import javax.swing.*;
 import java.awt.*;

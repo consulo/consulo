@@ -19,8 +19,8 @@
  */
 package com.intellij.util.io;
 
-import consulo.util.io.DataInputOutputUtil;
-import consulo.util.io.IOUtil;
+import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.data.IOUtil;
 
 import java.io.DataInput;
 import java.io.EOFException;

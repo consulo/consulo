@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.browsers;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.Patches;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -25,8 +25,8 @@ import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.util.PathUtil;
 import consulo.application.ApplicationManager;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -41,7 +41,6 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.ArrayUtil;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.ZipUtil;

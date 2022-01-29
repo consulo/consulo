@@ -5,7 +5,9 @@ import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ReadActionProcessor;
+import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
+import consulo.application.util.function.Processors;
 
 import javax.annotation.Nonnull;
 

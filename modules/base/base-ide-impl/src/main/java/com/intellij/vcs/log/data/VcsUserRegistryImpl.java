@@ -15,6 +15,7 @@
  */
 package com.intellij.vcs.log.data;
 
+import consulo.index.io.KeyDescriptor;
 import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
@@ -25,7 +26,7 @@ import com.intellij.vcs.log.impl.VcsUserImpl;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.util.io.IOUtil;
+import consulo.index.io.data.IOUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

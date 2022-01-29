@@ -15,10 +15,10 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.util.indexing.IndexId;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataInputOutputUtil;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.IndexId;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.KeyDescriptor;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

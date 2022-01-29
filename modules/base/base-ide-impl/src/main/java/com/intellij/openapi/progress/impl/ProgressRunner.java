@@ -16,10 +16,12 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.ui.EDT;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

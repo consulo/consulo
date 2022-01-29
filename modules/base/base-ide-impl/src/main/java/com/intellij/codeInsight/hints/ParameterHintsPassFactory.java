@@ -31,7 +31,7 @@ import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.CaretVisualPositionKeeper;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

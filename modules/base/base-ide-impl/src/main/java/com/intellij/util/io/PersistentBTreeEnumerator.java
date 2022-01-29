@@ -4,7 +4,9 @@ package com.intellij.util.io;
 import com.intellij.util.ArrayUtilRt;
 import consulo.application.util.function.Processor;
 import com.intellij.util.SystemProperties;
-import consulo.util.io.IOUtil;
+import consulo.index.io.InlineKeyDescriptor;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.IOUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

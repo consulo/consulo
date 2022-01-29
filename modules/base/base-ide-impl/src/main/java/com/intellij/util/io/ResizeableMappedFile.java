@@ -19,8 +19,8 @@
  */
 package com.intellij.util.io;
 
-import consulo.util.io.DataOutputStream;
-import consulo.util.io.Forceable;
+import consulo.index.io.data.DataOutputStream;
+import consulo.index.io.Forceable;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.SystemProperties;
@@ -123,14 +123,14 @@ public class ResizeableMappedFile implements Forceable {
 
   private void writeLength(final long len) {
     final File lengthFile = getLengthFile();
-    consulo.util.io.DataOutputStream stream = null;
+    DataOutputStream stream = null;
     try {
-      stream = FileUtilRt.doIOOperation(new FileUtilRt.RepeatableIOOperation<consulo.util.io.DataOutputStream, IOException>() {
+      stream = FileUtilRt.doIOOperation(new FileUtilRt.RepeatableIOOperation<DataOutputStream, IOException>() {
         boolean parentWasCreated;
 
         @Nullable
         @Override
-        public consulo.util.io.DataOutputStream execute(boolean lastAttempt) throws IOException {
+        public DataOutputStream execute(boolean lastAttempt) throws IOException {
           try {
             return new DataOutputStream(new FileOutputStream(lengthFile));
           }

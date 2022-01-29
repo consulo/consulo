@@ -16,7 +16,7 @@
 
 package com.intellij.packageDependencies.ui;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
@@ -34,7 +34,7 @@ import consulo.logging.Logger;
 import consulo.component.extension.Extensions;
 import consulo.module.ModuleManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;

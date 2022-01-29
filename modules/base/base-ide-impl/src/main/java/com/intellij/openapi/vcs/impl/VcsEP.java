@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.impl;
 
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.util.xmlb.annotations.Attribute;

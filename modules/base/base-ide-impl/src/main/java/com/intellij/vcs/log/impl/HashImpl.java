@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.impl;
 
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataInputOutputUtil;
 import com.intellij.vcs.log.Hash;
 import javax.annotation.Nonnull;
 

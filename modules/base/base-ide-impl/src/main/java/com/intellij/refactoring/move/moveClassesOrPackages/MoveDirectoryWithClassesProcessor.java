@@ -20,7 +20,7 @@
  */
 package com.intellij.refactoring.move.moveClassesOrPackages;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;

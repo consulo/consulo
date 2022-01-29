@@ -16,7 +16,7 @@
 package consulo.application;
 
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 
 public class RunResult<T> extends Result<T> {
 

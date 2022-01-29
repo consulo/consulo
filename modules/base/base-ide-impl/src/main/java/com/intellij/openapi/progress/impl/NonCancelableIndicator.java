@@ -17,8 +17,8 @@ package com.intellij.openapi.progress.impl;
 
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.NonCancelableSection;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.StandardProgressIndicator;
 import consulo.localize.LocalizeValue;
 

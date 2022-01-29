@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.tasks;
 
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.impl.BaseRepository;
 import com.intellij.tasks.impl.LocalTaskImpl;

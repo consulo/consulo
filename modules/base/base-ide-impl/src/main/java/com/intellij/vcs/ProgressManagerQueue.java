@@ -16,11 +16,12 @@
 package com.intellij.vcs;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.progress.*;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
 
 import javax.annotation.Nonnull;
 

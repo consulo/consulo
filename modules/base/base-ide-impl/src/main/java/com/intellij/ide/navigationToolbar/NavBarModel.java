@@ -17,7 +17,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PairProcessor;
 import consulo.application.util.function.Processor;

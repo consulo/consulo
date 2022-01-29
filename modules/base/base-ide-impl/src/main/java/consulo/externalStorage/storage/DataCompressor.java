@@ -17,7 +17,7 @@ package consulo.externalStorage.storage;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.StreamUtil;
-import consulo.util.io.DataOutputStream;
+import consulo.index.io.data.DataOutputStream;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.io.UnsyncByteArrayOutputStream;
 import net.jpountz.lz4.LZ4BlockInputStream;

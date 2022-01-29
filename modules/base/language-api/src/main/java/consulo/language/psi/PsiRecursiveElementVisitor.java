@@ -16,7 +16,7 @@
 package consulo.language.psi;
 
 import consulo.language.file.FileViewProvider;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 
 import java.util.List;
 

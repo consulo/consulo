@@ -20,7 +20,7 @@ import com.intellij.ide.actions.SettingsEntryPointAction;
 import com.intellij.ide.plugins.*;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;

@@ -13,7 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import com.intellij.ide.actions.TemplateKindCombo;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.tasks.CustomTaskState;

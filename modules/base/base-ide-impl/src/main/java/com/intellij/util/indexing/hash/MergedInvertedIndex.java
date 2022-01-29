@@ -2,6 +2,8 @@
 package com.intellij.util.indexing.hash;
 
 import consulo.application.util.function.Computable;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.Processor;

@@ -16,7 +16,7 @@
 package com.intellij.errorreport;
 
 import com.google.common.reflect.TypeToken;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.external.api.ErrorReportBean;

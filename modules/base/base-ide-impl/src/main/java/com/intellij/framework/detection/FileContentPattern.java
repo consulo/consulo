@@ -16,7 +16,7 @@
 package com.intellij.framework.detection;
 
 import com.intellij.patterns.*;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.xml.NanoXmlUtil;

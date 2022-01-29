@@ -17,7 +17,7 @@
 package com.intellij.psi.stubs;
 
 import consulo.language.psi.PsiNamedElement;
-import consulo.util.io.StringRef;
+import consulo.index.io.StringRef;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.StubElement;
 

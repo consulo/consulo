@@ -5,7 +5,7 @@ import consulo.project.Project;
 import com.intellij.openapi.roots.impl.FilePropertyPusher;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataInputOutputUtil;
 import javax.annotation.Nonnull;
 
 import java.io.DataInputStream;

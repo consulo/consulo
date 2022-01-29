@@ -23,7 +23,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;

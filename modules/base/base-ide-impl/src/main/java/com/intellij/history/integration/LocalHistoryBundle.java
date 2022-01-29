@@ -16,7 +16,7 @@
 
 package com.intellij.history.integration;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;

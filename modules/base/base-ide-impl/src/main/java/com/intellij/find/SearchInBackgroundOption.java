@@ -17,7 +17,7 @@
 package com.intellij.find;
 
 import com.intellij.ide.GeneralSettings;
-import com.intellij.openapi.progress.PerformInBackgroundOption;
+import consulo.application.progress.PerformInBackgroundOption;
 
 /**
  * @author max

@@ -44,7 +44,7 @@ import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.module.content.layer.OrderEnumerator;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.orderEntry.OrderEntrySerializationUtil;

@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.meta;
 
 import consulo.disposer.Disposable;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.UserDataCache;

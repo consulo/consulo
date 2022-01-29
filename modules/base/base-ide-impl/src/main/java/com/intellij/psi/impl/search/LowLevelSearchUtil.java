@@ -22,7 +22,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

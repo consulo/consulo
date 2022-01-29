@@ -21,7 +21,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.PersistentFSConstants;

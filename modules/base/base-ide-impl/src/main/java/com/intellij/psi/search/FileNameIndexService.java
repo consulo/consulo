@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
-import com.intellij.util.indexing.IdFilter;
+import consulo.language.psi.stub.IdFilter;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

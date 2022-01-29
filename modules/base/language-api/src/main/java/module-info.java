@@ -5,6 +5,7 @@
 module consulo.language.api {
   requires transitive consulo.module.content.api;
   requires transitive consulo.document.api;
+  requires transitive consulo.indexing.io;
 
   exports consulo.language;
   exports consulo.language.ast;

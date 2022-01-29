@@ -15,6 +15,8 @@
  */
 package com.intellij.util.io;
 
+import consulo.index.io.KeyDescriptor;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

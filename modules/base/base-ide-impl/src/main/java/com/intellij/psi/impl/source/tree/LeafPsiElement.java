@@ -36,7 +36,7 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import consulo.project.impl.SingleProjectHolder;
 import org.jetbrains.annotations.Contract;

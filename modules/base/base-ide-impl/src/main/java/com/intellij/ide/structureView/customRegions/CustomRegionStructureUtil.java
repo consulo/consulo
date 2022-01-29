@@ -8,7 +8,7 @@ import com.intellij.lang.folding.CustomFoldingBuilder;
 import com.intellij.lang.folding.CustomFoldingProvider;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.LanguageFolding;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiFileEx;

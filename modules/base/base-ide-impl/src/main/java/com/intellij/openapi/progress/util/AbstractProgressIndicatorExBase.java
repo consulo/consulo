@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.progress.util;
 
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.TaskInfo;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.WeakList;

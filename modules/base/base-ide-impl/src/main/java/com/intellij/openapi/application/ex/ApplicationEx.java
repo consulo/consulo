@@ -17,8 +17,8 @@ package com.intellij.openapi.application.ex;
 
 import consulo.application.AccessToken;
 import consulo.application.Application;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;

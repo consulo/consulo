@@ -15,7 +15,7 @@
  */
 package com.intellij.util.text;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.SystemInfo;

@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.pom.NavigatableAdapter;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.Consumer;
 import com.intellij.util.FilteringProcessor;
 

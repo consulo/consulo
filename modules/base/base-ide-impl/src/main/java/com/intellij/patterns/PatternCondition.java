@@ -15,7 +15,7 @@
  */
 package com.intellij.patterns;
 
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -18,8 +18,8 @@ package com.intellij.psi.impl.cache.impl;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ReadActionProcessor;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
@@ -31,9 +31,9 @@ import com.intellij.psi.impl.cache.CacheManager;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;
 import com.intellij.psi.impl.cache.impl.id.IdIndexEntry;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
-import com.intellij.util.indexing.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndex;
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 

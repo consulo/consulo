@@ -12,7 +12,7 @@ import consulo.language.util.LanguageUtil;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;

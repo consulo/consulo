@@ -16,7 +16,7 @@
 
 package consulo.language.psi;
 
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 
 import javax.annotation.Nonnull;
 

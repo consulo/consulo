@@ -4,7 +4,7 @@ package com.intellij.ide.actions.searcheverywhere;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

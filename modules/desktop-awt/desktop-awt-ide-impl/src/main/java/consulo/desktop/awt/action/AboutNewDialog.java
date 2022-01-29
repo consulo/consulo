@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.action;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.concurrency.JobScheduler;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;

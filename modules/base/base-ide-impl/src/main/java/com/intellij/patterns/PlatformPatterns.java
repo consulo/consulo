@@ -21,7 +21,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.pom.PomTarget;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import javax.annotation.Nonnull;
 
 /**

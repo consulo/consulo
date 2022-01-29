@@ -16,7 +16,7 @@
 
 package com.intellij.execution;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;

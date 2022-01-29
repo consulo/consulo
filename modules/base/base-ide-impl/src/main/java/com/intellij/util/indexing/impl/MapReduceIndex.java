@@ -15,8 +15,9 @@
  */
 package com.intellij.util.indexing.impl;
 
+import consulo.index.io.IndexId;
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.LowMemoryWatcher;
@@ -28,8 +29,8 @@ import com.intellij.util.indexing.impl.forward.ForwardIndex;
 import com.intellij.util.indexing.impl.forward.ForwardIndexAccessor;
 import com.intellij.util.indexing.impl.forward.IntForwardIndex;
 import com.intellij.util.indexing.impl.forward.IntForwardIndexAccessor;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataOutputStream;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataOutputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

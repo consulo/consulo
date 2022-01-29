@@ -22,7 +22,7 @@ import consulo.component.ComponentManager;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.components.impl.stores.IComponentStore;
 import consulo.components.impl.stores.StateComponentInfo;

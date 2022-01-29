@@ -15,6 +15,7 @@
  */
 package com.intellij.util.indexing;
 
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

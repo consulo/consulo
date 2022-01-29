@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.history;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.MessageType;

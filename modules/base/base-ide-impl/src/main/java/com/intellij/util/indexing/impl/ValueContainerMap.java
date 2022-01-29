@@ -15,8 +15,8 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.KeyDescriptor;
 import com.intellij.util.io.PersistentHashMap;
 
 import javax.annotation.Nonnull;

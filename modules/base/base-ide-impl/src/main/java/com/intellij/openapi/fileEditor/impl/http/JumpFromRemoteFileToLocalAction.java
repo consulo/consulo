@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl.http;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

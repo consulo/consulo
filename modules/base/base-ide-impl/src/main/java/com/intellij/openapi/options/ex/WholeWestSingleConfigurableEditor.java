@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options.ex;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.help.HelpManager;

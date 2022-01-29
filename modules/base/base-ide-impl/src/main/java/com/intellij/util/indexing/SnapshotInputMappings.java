@@ -1,10 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing;
 
+import consulo.index.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.ID;
+import consulo.index.io.data.DataExternalizer;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.util.io.IOUtil;
+import consulo.index.io.data.IOUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.ByteArraySequence;
@@ -19,7 +22,7 @@ import com.intellij.util.indexing.impl.InputData;
 import com.intellij.util.indexing.impl.forward.AbstractForwardIndexAccessor;
 import com.intellij.util.indexing.impl.forward.PersistentMapBasedForwardIndex;
 import com.intellij.util.io.*;
-import consulo.util.io.DataOutputStream;
+import consulo.index.io.data.DataOutputStream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

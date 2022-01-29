@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 
 import javax.annotation.Nullable;
 

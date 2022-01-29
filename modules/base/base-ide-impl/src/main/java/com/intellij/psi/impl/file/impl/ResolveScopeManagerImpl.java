@@ -22,7 +22,7 @@ import consulo.language.psi.PsiManager;
 import consulo.module.Module;
 import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import consulo.module.content.layer.orderEntry.*;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.LibraryScopeCache;
 import com.intellij.openapi.util.Pair;

@@ -2,9 +2,9 @@ package com.intellij.coverage;
 
 import com.intellij.coverage.view.CoverageView;
 import com.intellij.coverage.view.CoverageViewManager;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

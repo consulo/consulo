@@ -16,7 +16,7 @@
 
 package com.intellij.util.indexing;
 
-import com.intellij.util.io.DataExternalizer;
+import consulo.index.io.data.DataExternalizer;
 import com.intellij.util.io.VoidDataExternalizer;
 import javax.annotation.Nonnull;
 

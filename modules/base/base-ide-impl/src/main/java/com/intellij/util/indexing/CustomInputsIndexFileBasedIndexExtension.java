@@ -19,7 +19,7 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.util.io.DataExternalizer;
+import consulo.index.io.data.DataExternalizer;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
 import consulo.application.ApplicationManager;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiInvalidElementAccessException;

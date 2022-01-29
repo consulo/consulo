@@ -6,7 +6,7 @@ import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
 import consulo.application.event.ApplicationListener;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.event.AsyncFileListener;

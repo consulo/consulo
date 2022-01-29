@@ -713,7 +713,7 @@
 
     <!-- File-Based Index-->
     <extensionPoint name="fileBasedIndex" interface="com.intellij.util.indexing.FileBasedIndexExtension"/>
-    <extensionPoint name="stubIndex" interface="com.intellij.psi.stubs.StubIndexExtension"/>
+    <extensionPoint name="stubIndex" interface="consulo.language.psi.stub.StubIndexExtension"/>
     <extensionPoint name="indexedRootsContributor" interface="com.intellij.util.indexing.IndexableSetContributor"/>
     <extensionPoint name="include.provider" interface="com.intellij.psi.impl.include.FileIncludeProvider"/>
 
@@ -1240,7 +1240,7 @@
     <applicationService serviceInterface="com.intellij.openapi.vfs.tracker.VirtualFileTracker"
                         serviceImplementation="com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
+    <applicationService serviceInterface="consulo.application.progress.ProgressManager"
                         serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"/>
 
     <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>

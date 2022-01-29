@@ -16,7 +16,7 @@
 package consulo.content.library.ui;
 
 import consulo.content.library.LibraryRootType;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

@@ -18,7 +18,7 @@ package com.intellij.util.concurrency;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
 import consulo.logging.Logger;

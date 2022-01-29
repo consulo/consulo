@@ -15,8 +15,8 @@
  */
 package com.intellij.vcsUtil;
 
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

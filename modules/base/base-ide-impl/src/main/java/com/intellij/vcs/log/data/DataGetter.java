@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.data;
 
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.util.Consumer;
 import com.intellij.vcs.log.VcsShortCommitDetails;
 import javax.annotation.Nonnull;

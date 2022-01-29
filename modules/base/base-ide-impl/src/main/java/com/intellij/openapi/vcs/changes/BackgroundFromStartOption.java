@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.progress.PerformInBackgroundOption;
+import consulo.application.progress.PerformInBackgroundOption;
 
 public class BackgroundFromStartOption implements PerformInBackgroundOption {
   private final static BackgroundFromStartOption ourInstance = new BackgroundFromStartOption();

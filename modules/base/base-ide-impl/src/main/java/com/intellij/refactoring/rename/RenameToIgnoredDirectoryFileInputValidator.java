@@ -22,7 +22,7 @@ import com.intellij.patterns.PlatformPatterns;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import javax.annotation.Nullable;
 
 /**

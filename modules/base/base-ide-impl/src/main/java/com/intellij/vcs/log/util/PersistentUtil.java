@@ -15,10 +15,11 @@
  */
 package com.intellij.vcs.log.util;
 
+import consulo.index.io.KeyDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.util.io.IOUtil;
+import consulo.index.io.data.IOUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;

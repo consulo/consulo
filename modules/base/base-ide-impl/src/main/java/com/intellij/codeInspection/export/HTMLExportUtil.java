@@ -18,7 +18,7 @@ package com.intellij.codeInspection.export;
 import com.intellij.codeInspection.InspectionsBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.ThrowableRunnable;

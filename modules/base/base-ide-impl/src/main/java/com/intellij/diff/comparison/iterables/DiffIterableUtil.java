@@ -19,7 +19,7 @@ import com.intellij.diff.comparison.DiffTooBigException;
 import com.intellij.diff.comparison.TrimUtil;
 import com.intellij.diff.fragments.DiffFragment;
 import com.intellij.diff.util.Range;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;

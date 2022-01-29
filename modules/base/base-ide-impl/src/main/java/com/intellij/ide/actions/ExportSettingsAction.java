@@ -20,7 +20,7 @@
 package com.intellij.ide.actions;
 
 import consulo.component.util.localize.AbstractBundle;
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;

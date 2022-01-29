@@ -28,7 +28,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.impl.ModuleRootsProcessor;

@@ -3,7 +3,7 @@ package com.intellij.concurrency;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;
 import consulo.application.Application;
@@ -12,8 +12,8 @@ import consulo.application.internal.concurrency.Job;
 import consulo.application.internal.concurrency.JobLauncher;
 import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

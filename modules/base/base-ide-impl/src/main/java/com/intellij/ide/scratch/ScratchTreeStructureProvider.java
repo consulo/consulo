@@ -16,7 +16,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.language.file.LanguageFileType;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.language.psi.*;
 import consulo.project.DumbAware;
 import consulo.project.Project;

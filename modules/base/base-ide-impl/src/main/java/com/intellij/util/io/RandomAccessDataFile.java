@@ -19,7 +19,7 @@
  */
 package com.intellij.util.io;
 
-import consulo.util.io.Forceable;
+import consulo.index.io.Forceable;
 import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 

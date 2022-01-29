@@ -21,7 +21,7 @@ import com.intellij.diff.comparison.ByWord.NewlineChunk;
 import com.intellij.diff.comparison.iterables.FairDiffIterable;
 import com.intellij.diff.util.Range;
 import com.intellij.diff.util.Side;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.registry.Registry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

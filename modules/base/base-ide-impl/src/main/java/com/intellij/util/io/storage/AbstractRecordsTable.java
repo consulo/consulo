@@ -19,7 +19,7 @@
  */
 package com.intellij.util.io.storage;
 
-import consulo.util.io.Forceable;
+import consulo.index.io.Forceable;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.RandomAccessDataFile;
 import consulo.disposer.Disposable;

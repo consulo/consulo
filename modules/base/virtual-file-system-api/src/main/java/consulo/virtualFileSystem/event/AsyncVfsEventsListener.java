@@ -15,7 +15,7 @@
  */
 package consulo.virtualFileSystem.event;
 
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

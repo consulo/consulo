@@ -22,9 +22,9 @@
  */
 package com.intellij.openapi.progress.util;
 
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.StandardProgressIndicator;
-import com.intellij.openapi.progress.WrappedProgressIndicator;
+import consulo.application.progress.WrappedProgressIndicator;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

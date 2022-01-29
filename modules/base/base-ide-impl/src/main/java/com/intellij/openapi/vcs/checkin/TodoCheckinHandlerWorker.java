@@ -27,7 +27,7 @@ import com.intellij.openapi.diff.impl.processing.DiffFragmentsProcessor;
 import com.intellij.openapi.diff.impl.processing.DiffPolicy;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.diff.impl.util.TextDiffTypeEnum;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Getter;

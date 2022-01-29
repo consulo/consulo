@@ -51,7 +51,7 @@ import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.SimpleTreeBuilder;
 import com.intellij.ui.treeStructure.WeightBasedComparator;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;

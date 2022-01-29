@@ -19,7 +19,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.vfs.newvfs.persistent.ContentHashesUtil;
 import com.intellij.openapi.vfs.newvfs.persistent.FlushingDaemon;
-import consulo.util.io.IOUtil;
+import consulo.index.io.data.IOUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

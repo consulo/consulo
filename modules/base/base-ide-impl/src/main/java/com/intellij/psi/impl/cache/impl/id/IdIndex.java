@@ -3,6 +3,8 @@
 package com.intellij.psi.impl.cache.impl.id;
 
 import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
+import consulo.index.io.ID;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
@@ -14,9 +16,9 @@ import com.intellij.psi.search.UsageSearchContext;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.*;
-import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.InlineKeyDescriptor;
-import com.intellij.util.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.InlineKeyDescriptor;
+import consulo.index.io.KeyDescriptor;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

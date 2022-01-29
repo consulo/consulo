@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.actions.EditSourceAction;

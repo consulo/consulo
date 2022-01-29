@@ -16,7 +16,7 @@
 package com.intellij.patterns;
 
 import javax.annotation.Nullable;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 
 /**
  * @see {@link com.intellij.patterns.StandardPatterns} and its extenders

@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.component.messagebus.Topic;
 

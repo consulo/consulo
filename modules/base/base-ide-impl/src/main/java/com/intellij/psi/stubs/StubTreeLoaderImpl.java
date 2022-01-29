@@ -18,6 +18,7 @@ package com.intellij.psi.stubs;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.*;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.Stub;
 import consulo.logging.Logger;

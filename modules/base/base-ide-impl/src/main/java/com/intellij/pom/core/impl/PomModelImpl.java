@@ -15,6 +15,7 @@
  */
 package com.intellij.pom.core.impl;
 
+import consulo.application.progress.ProgressManager;
 import consulo.language.ast.ASTNode;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
@@ -26,9 +27,9 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.disposer.Disposer;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.pom.PomModel;
 import com.intellij.pom.PomModelAspect;

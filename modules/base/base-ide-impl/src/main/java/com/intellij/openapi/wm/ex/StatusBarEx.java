@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.wm.ex;
 
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.TaskInfo;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.BalloonHandler;
 import com.intellij.openapi.util.Pair;

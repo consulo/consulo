@@ -3,7 +3,7 @@ package com.intellij.util.indexing.impl.forward;
 
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.io.ByteSequenceDataExternalizer;
-import com.intellij.util.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.PersistentHashMap;
 import com.intellij.util.io.PersistentHashMapValueStorage;
 import consulo.logging.Logger;

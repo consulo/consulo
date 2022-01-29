@@ -20,7 +20,7 @@ import com.intellij.history.core.Paths;
 import com.intellij.history.core.StreamUtil;
 import com.intellij.history.core.revisions.Difference;
 import com.intellij.history.utils.LocalHistoryLog;
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataInputOutputUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import consulo.util.collection.Maps;
 import gnu.trove.TIntObjectHashMap;

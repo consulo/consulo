@@ -15,9 +15,9 @@
  */
 package com.intellij.patterns;
 
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;

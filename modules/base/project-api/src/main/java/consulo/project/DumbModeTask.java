@@ -16,7 +16,7 @@
 package consulo.project;
 
 import consulo.disposer.Disposable;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 
 import javax.annotation.Nonnull;
 

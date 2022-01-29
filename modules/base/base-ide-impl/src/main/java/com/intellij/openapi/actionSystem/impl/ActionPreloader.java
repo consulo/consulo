@@ -18,7 +18,7 @@ package com.intellij.openapi.actionSystem.impl;
 import com.intellij.openapi.actionSystem.ActionManager;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.PreloadingActivity;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 
 /**

@@ -17,7 +17,7 @@ package consulo.externalService.impl;
 
 import com.google.gson.Gson;
 import consulo.application.Application;
-import com.intellij.openapi.progress.Task;
+import consulo.application.progress.Task;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.HttpRequests;

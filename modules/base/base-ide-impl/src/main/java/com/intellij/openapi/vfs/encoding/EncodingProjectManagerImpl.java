@@ -16,7 +16,7 @@ import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.component.util.ModificationTracker;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.module.content.ProjectFileIndex;

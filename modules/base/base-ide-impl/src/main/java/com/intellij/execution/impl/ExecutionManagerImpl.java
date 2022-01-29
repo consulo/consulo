@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.impl;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.execution.*;
 import com.intellij.execution.configuration.CompatibilityAwareRunProfile;
 import com.intellij.execution.configurations.RunConfiguration;
@@ -40,7 +40,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.TransactionGuard;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.progress.ProcessCanceledException;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

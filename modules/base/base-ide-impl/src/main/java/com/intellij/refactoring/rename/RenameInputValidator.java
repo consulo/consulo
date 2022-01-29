@@ -19,7 +19,7 @@ package com.intellij.refactoring.rename;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.patterns.ElementPattern;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 
 /**
  * @author Gregory.Shrago

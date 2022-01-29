@@ -25,7 +25,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndex;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,7 +16,7 @@
 
 package com.intellij.codeEditor.printing;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;

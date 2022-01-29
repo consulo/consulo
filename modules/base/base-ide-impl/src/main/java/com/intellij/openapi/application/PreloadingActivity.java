@@ -16,7 +16,7 @@
 package com.intellij.openapi.application;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 
 /**

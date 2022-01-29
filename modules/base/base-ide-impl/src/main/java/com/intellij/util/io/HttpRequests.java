@@ -20,7 +20,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import consulo.application.ApplicationManager;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;

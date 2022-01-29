@@ -19,7 +19,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.document.FileDocumentManager;

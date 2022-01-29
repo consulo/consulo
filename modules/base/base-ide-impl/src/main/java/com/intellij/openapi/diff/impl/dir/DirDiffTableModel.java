@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.dir;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.diff.*;
@@ -29,7 +29,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.dir.actions.popup.WarnOnDeletion;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;

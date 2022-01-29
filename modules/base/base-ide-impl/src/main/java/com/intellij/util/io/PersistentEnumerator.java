@@ -15,6 +15,8 @@
  */
 package com.intellij.util.io;
 
+import consulo.index.io.KeyDescriptor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

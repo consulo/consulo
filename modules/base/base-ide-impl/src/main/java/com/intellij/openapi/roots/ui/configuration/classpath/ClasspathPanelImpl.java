@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.classpath;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.find.FindBundle;
 import com.intellij.ide.DataManager;

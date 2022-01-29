@@ -1,6 +1,6 @@
 package com.intellij.dupLocator;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.newProject.ui;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.util.treeView.NodeDescriptor;

@@ -18,6 +18,8 @@ package com.intellij.util.indexing;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.impl.IndexStorage;
+import consulo.language.psi.stub.IdFilter;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

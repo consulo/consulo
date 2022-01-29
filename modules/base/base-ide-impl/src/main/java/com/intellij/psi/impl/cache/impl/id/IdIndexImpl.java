@@ -7,8 +7,8 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.util.indexing.CustomInputsIndexFileBasedIndexExtension;
-import com.intellij.util.io.DataExternalizer;
-import consulo.util.io.DataInputOutputUtil;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

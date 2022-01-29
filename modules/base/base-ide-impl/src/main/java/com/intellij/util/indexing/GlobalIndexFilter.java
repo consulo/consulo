@@ -2,6 +2,7 @@
 package com.intellij.util.indexing;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.index.io.IndexId;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

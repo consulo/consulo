@@ -10,7 +10,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileWithId;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import com.intellij.openapi.vfs.newvfs.impl.CachedFileType;
 import consulo.document.util.FileContentUtilCore;
 import org.jdom.Attribute;

@@ -20,13 +20,15 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.progress.impl.ProgressManagerImpl;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.QueueProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

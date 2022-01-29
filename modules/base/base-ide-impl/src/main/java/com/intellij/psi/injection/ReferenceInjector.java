@@ -20,7 +20,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

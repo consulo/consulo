@@ -17,8 +17,8 @@ package com.intellij.util.ui;
 
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
-import com.intellij.openapi.progress.PerformInBackgroundOption;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

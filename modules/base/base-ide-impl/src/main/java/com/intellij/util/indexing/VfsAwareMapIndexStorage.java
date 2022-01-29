@@ -16,7 +16,10 @@
 
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.language.psi.stub.IdFilter;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -27,13 +30,13 @@ import com.intellij.util.SystemProperties;
 import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;
-import consulo.util.io.DataOutputStream;
+import consulo.index.io.data.DataOutputStream;
 import com.intellij.util.io.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
-import consulo.util.io.DataInputOutputUtil;
-import consulo.util.io.IOUtil;
+import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.data.IOUtil;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.TestOnly;
 

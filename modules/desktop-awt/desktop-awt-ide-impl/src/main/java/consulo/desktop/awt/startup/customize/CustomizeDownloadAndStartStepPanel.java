@@ -28,7 +28,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.desktop.application.util.Restarter;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 

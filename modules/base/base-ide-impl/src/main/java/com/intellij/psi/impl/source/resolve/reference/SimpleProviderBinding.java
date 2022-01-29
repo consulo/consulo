@@ -21,7 +21,7 @@ import com.intellij.patterns.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.PsiReferenceService;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

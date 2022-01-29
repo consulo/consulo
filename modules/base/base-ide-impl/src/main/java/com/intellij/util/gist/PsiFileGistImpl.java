@@ -34,7 +34,7 @@ import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.indexing.FileContentImpl;
-import com.intellij.util.io.DataExternalizer;
+import consulo.index.io.data.DataExternalizer;
 import javax.annotation.Nonnull;
 
 /**

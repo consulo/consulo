@@ -16,7 +16,7 @@
 package com.intellij.util.io;
 
 import consulo.logging.Logger;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

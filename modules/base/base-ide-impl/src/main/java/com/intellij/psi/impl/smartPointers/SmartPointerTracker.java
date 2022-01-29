@@ -10,7 +10,7 @@ import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import org.jetbrains.annotations.TestOnly;
 

@@ -17,7 +17,7 @@ package com.intellij.patterns;
 
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 import javax.annotation.Nonnull;
 
 /**

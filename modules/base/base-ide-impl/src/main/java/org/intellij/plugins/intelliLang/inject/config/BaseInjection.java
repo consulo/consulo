@@ -17,7 +17,7 @@ package org.intellij.plugins.intelliLang.inject.config;
 
 import consulo.language.Language;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

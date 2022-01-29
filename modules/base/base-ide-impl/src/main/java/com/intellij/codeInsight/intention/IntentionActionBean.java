@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.intention;
 
 import consulo.component.util.localize.AbstractBundle;
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import consulo.application.Application;
 import consulo.logging.Logger;
 import consulo.component.extension.AbstractExtensionPointBean;

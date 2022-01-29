@@ -16,7 +16,7 @@
 package consulo.bundle.impl;
 
 import com.intellij.openapi.application.PreloadingActivity;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkTable;
 import consulo.content.bundle.SdkType;

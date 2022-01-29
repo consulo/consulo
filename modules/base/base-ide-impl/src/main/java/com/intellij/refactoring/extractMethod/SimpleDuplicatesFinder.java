@@ -1,7 +1,7 @@
 package com.intellij.refactoring.extractMethod;
 
 import com.intellij.codeInsight.PsiEquivalenceUtil;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;

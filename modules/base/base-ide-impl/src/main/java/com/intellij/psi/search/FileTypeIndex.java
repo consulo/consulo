@@ -18,9 +18,9 @@ package com.intellij.psi.search;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.CommonProcessors;
+import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
-import com.intellij.util.indexing.ID;
+import consulo.index.io.ID;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

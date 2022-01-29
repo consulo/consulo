@@ -29,7 +29,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiElement;

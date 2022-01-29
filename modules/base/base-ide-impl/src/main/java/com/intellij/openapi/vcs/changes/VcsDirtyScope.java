@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.application.util.function.Processor;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 
 import java.util.Collection;
 import java.util.Set;

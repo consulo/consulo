@@ -22,7 +22,7 @@ package com.intellij.refactoring.rename;
 import consulo.application.util.function.Condition;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.Function;
-import com.intellij.util.ProcessingContext;
+import consulo.language.util.ProcessingContext;
 
 import javax.annotation.Nullable;
 

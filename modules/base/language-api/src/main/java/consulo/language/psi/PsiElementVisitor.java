@@ -15,7 +15,7 @@
  */
 package consulo.language.psi;
 
-import consulo.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressIndicatorProvider;
 
 /**
  * Visitor which can be used to visit elements for all languages.

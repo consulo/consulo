@@ -16,6 +16,8 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.util.io.ByteArraySequence;
+import consulo.index.io.data.DataExternalizer;
+
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

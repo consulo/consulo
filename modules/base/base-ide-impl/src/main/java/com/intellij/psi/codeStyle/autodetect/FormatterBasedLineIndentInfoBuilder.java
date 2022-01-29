@@ -19,7 +19,7 @@ import com.intellij.formatting.ASTBlock;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
 import consulo.document.Document;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiComment;
 import com.intellij.psi.formatter.common.AbstractBlock;

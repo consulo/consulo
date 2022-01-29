@@ -17,8 +17,9 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import consulo.application.util.function.Processor;
-import consulo.util.io.DataInputOutputUtil;
-import consulo.util.io.DataOutputStream;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.data.DataOutputStream;
 
 import javax.annotation.Nonnull;
 
@@ -151,7 +152,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
   public <Data> int append(Data value, KeyDescriptor<Data> descriptor) throws IOException {
     final BufferExposingByteArrayOutputStream bos = new BufferExposingByteArrayOutputStream();
-    DataOutput out = new consulo.util.io.DataOutputStream(bos);
+    DataOutput out = new DataOutputStream(bos);
     descriptor.save(out, value);
     final int size = bos.size();
     final byte[] buffer = bos.getInternalBuffer();
@@ -210,14 +211,14 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       comparer = buildOldComparerStream(addr, sameValue);
     }
 
-    DataOutput out = new consulo.util.io.DataOutputStream(comparer);
+    DataOutput out = new DataOutputStream(comparer);
     descriptor.save(out, value);
     comparer.close();
 
     if (testMode) {
       final boolean[] sameValue2 = new boolean[1];
       OutputStream comparer2 = buildOldComparerStream(addr, sameValue2);
-      out = new consulo.util.io.DataOutputStream(comparer2);
+      out = new DataOutputStream(comparer2);
       descriptor.save(out, value);
       comparer2.close();
       assert sameValue[0] == sameValue2[0];
@@ -304,7 +305,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
   private class MyCompressedAppendableFile extends CompressedAppendableFile {
     private final File myFile;
-    private consulo.util.io.DataOutputStream myChunkLengthTableStream;
+    private DataOutputStream myChunkLengthTableStream;
 
     MyCompressedAppendableFile(File file) {
       super(getPagedFileStorage().getFile());

@@ -17,7 +17,7 @@ package com.intellij.util.graph;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.util.graph.Graph;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.util.Chunk;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

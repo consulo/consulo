@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.application.impl;
 
-import com.intellij.CommonBundle;
+import consulo.application.CommonBundle;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.ide.*;
@@ -26,9 +26,9 @@ import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.impl.ProgressResult;
 import com.intellij.openapi.progress.impl.ProgressRunner;

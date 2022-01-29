@@ -5,28 +5,28 @@ import com.google.common.collect.ConcurrentHashMultiset;
 import com.intellij.codeWithMe.ClientId;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.ThreadDumper;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.progress.*;
-import consulo.project.Project;
-import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;
-import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.*;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.progress.ProcessCanceledException;
-import consulo.progress.ProgressIndicator;
+import consulo.project.Project;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
@@ -257,7 +257,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process,
                                                      @Nonnull @Nls String progressTitle,
                                                      boolean canBeCanceled,
-                                                     @Nullable Project project,
+                                                     @Nullable ComponentManager project,
                                                      @Nullable JComponent parentComponent) {
     Task.Modal task = new Task.Modal(project, progressTitle, parentComponent, canBeCanceled) {
       @Override
@@ -269,7 +269,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   }
 
   @Override
-  public void runProcessWithProgressAsynchronously(@Nonnull Project project,
+  public void runProcessWithProgressAsynchronously(@Nonnull ComponentManager project,
                                                    @Nonnull @Nls String progressTitle,
                                                    @Nonnull Runnable process,
                                                    @Nullable Runnable successRunnable,
@@ -278,7 +278,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   }
 
   @Override
-  public void runProcessWithProgressAsynchronously(@Nonnull Project project,
+  public void runProcessWithProgressAsynchronously(@Nonnull ComponentManager project,
                                                    @Nonnull @Nls String progressTitle,
                                                    @Nonnull final Runnable process,
                                                    @Nullable final Runnable successRunnable,

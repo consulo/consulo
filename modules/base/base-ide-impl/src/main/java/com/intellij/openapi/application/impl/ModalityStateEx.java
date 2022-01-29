@@ -2,7 +2,7 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.openapi.application.ModalityState;
-import consulo.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakList;
