@@ -16,6 +16,11 @@
 package com.intellij.execution.dashboard;
 
 import com.intellij.ui.content.*;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentManager;
+import consulo.project.ui.wm.content.ContentUI;
+import consulo.project.ui.wm.content.event.ContentManagerEvent;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

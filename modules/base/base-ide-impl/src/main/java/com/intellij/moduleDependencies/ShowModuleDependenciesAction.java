@@ -27,8 +27,8 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentFactory;
 
 import javax.swing.*;
 import java.awt.*;

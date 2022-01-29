@@ -21,7 +21,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 
 public class RestoreViewAction extends AnAction {
 

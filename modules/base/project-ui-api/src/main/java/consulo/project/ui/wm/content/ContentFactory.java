@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.content;
+package consulo.project.ui.wm.content;
 
-import com.intellij.openapi.components.ServiceManager;
-import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.Application;
+import consulo.project.Project;
 import consulo.ui.Component;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface ContentFactory {
   @Nonnull
   static ContentFactory getInstance() {
-    return ServiceManager.getService(ContentFactory.class);
+    return Application.get().getInstance(ContentFactory.class);
   }
 
   @Nonnull
@@ -61,7 +62,7 @@ public interface ContentFactory {
     @Nonnull
     @Deprecated
     public static ContentFactory getInstance() {
-      return ServiceManager.getService(ContentFactory.class);
+      return Application.get().getInstance(ContentFactory.class);
     }
   }
   // endregion

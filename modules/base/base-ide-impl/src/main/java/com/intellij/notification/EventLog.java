@@ -36,7 +36,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BalloonLayoutData;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;

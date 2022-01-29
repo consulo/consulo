@@ -16,7 +16,7 @@
 package consulo.wm.impl.layout;
 
 import consulo.ui.ex.popup.ListPopup;
-import com.intellij.ui.content.ContentManagerEvent;
+import consulo.project.ui.wm.content.event.ContentManagerEvent;
 
 /**
  * @author VISTALL

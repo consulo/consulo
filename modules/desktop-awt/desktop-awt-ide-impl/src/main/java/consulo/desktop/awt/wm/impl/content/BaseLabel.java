@@ -17,9 +17,9 @@ package consulo.desktop.awt.wm.impl.content;
 
 import consulo.dataContext.DataManager;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowDataKeys;
+import consulo.project.ui.wm.ToolWindowDataKeys;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;

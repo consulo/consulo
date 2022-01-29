@@ -22,8 +22,8 @@ import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentManager;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 

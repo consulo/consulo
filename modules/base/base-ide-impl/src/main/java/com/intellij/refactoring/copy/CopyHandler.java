@@ -29,7 +29,7 @@ import com.intellij.openapi.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 
 import javax.swing.*;
 

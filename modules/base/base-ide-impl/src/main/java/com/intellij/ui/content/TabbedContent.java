@@ -16,6 +16,9 @@
 package com.intellij.ui.content;
 
 import com.intellij.openapi.util.Pair;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentManager;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

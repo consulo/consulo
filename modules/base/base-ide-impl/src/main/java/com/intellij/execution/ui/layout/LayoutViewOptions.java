@@ -18,7 +18,7 @@ package com.intellij.execution.ui.layout;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import javax.annotation.Nonnull;
 
 public interface LayoutViewOptions {

@@ -15,7 +15,7 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.ui.content.ContentUI;
+import consulo.project.ui.wm.content.ContentUI;
 
 /**
  * @author VISTALL

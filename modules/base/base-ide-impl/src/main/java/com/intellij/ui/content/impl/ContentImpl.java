@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.util.BusyObject;
 import consulo.application.util.function.Computable;
 import com.intellij.ui.content.AlertIcon;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.ContentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;

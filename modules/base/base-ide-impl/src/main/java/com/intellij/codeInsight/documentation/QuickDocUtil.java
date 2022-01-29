@@ -23,7 +23,7 @@ import com.intellij.openapi.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiQualifiedNamedElement;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtil;

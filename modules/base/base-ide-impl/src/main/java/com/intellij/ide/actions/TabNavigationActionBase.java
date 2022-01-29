@@ -23,7 +23,7 @@ import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.util.ArrayUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import javax.annotation.Nonnull;

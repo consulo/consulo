@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.content.ContentManagerUtil;
 
 public class CloseActiveTabAction extends AnAction implements DumbAware {

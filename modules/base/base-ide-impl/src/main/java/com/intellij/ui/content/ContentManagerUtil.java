@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.ui.wm.content.ContentManager;
 
 public class ContentManagerUtil {
   private ContentManagerUtil() {

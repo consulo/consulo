@@ -17,7 +17,7 @@ package com.intellij.ui.content.impl;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.content.TabbedContent;
 import com.intellij.util.ContentUtilEx;
 import javax.annotation.Nonnull;

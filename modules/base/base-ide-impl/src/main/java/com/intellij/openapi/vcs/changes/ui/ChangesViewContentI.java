@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 
 import javax.annotation.Nullable;
 

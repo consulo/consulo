@@ -29,7 +29,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

@@ -65,7 +65,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.*;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupUpdateProcessor;
 import com.intellij.ui.tabs.FileColorManagerImpl;

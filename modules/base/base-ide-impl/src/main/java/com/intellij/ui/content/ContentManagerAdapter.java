@@ -15,6 +15,9 @@
  */
 package com.intellij.ui.content;
 
+import consulo.project.ui.wm.content.event.ContentManagerEvent;
+import consulo.project.ui.wm.content.event.ContentManagerListener;
+
 public class ContentManagerAdapter implements ContentManagerListener {
   public void contentAdded(ContentManagerEvent event) {}
 

@@ -17,6 +17,10 @@ package com.intellij.ui.content;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataProvider;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentManager;
+import consulo.project.ui.wm.content.ContentUI;
+import consulo.project.ui.wm.content.event.ContentManagerEvent;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;

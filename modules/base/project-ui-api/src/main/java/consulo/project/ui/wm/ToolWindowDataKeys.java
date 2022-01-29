@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm;
+package consulo.project.ui.wm;
 
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import consulo.util.dataholder.Key;
 
 /**

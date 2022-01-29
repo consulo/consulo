@@ -22,10 +22,10 @@ import consulo.dataContext.DataProvider;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
-import com.intellij.ui.content.ContentManagerEvent;
+import consulo.project.ui.wm.content.event.ContentManagerEvent;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 

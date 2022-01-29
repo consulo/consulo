@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.content;
+package consulo.project.ui.wm.content;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
+
 import javax.annotation.Nonnull;
 
 public interface ContentUI extends Disposable {

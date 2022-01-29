@@ -6,9 +6,9 @@ import consulo.application.util.function.Condition;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowFactory;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentFactory;
+import consulo.project.ui.wm.content.ContentManager;
 
 /**
  * User: evgeny.zakrevsky

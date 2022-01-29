@@ -16,7 +16,7 @@
 
 package com.intellij.execution.ui.layout;
 
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 
 public interface GridCell {
   int getContentCount();

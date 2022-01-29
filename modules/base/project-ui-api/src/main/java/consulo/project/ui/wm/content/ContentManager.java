@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.content;
+package consulo.project.ui.wm.content;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
-import consulo.dataContext.DataProvider;
-import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.project.ui.wm.content.event.ContentManagerListener;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

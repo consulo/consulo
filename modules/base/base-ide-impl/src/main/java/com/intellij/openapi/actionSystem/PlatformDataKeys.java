@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.ContentManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;

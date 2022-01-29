@@ -7,6 +7,7 @@ module consulo.project.ui.api {
   requires java.desktop;
   requires transitive consulo.project.api;
   requires transitive consulo.ui.ex.api;
+  requires transitive kava.beans;
 
   exports consulo.project.ui;
   exports consulo.project.ui.wm;

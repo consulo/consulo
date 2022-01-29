@@ -32,7 +32,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import com.intellij.util.ui.UIUtil;
 import consulo.execution.ExecutionDataKeys;
 import consulo.logging.Logger;

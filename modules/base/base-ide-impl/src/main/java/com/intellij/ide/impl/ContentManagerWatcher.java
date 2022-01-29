@@ -16,9 +16,9 @@
 package com.intellij.ide.impl;
 
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.content.ContentManagerEvent;
-import com.intellij.ui.content.ContentManagerListener;
+import consulo.project.ui.wm.content.ContentManager;
+import consulo.project.ui.wm.content.event.ContentManagerEvent;
+import consulo.project.ui.wm.content.event.ContentManagerListener;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 

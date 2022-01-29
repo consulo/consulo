@@ -34,9 +34,9 @@ import consulo.util.dataholder.Key;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
 import com.intellij.ui.AncestorListenerAdapter;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentFactory;
+import consulo.project.ui.wm.content.ContentManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

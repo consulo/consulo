@@ -51,7 +51,7 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import consulo.desktop.awt.ui.plaf.beg.BegMenuItemUI;
 import consulo.desktop.awt.ui.plaf.beg.IdeaMenuUI;
 import com.intellij.ui.tree.ui.DefaultTreeUI;

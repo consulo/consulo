@@ -47,7 +47,7 @@ import com.intellij.openapi.vcs.changes.ui.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.ui.*;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import com.intellij.util.Alarm;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.ui.JBUI;

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.hierarchy;
 
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 
 import javax.swing.*;
 

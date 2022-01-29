@@ -20,8 +20,8 @@ import consulo.project.DumbAware;
 import com.intellij.openapi.ui.ShadowAction;
 import consulo.disposer.Disposer;
 import com.intellij.ui.UIBundle;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentManager;
 import javax.annotation.Nonnull;
 
 public abstract class TabbedContentAction extends AnAction implements DumbAware {

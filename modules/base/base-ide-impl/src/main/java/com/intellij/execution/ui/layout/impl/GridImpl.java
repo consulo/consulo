@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import com.intellij.ui.tabs.JBTabsPresentation;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

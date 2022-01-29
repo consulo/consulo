@@ -17,9 +17,9 @@ package consulo.wm.impl;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import consulo.util.concurrent.AsyncResult;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentFactory;
+import consulo.project.ui.wm.content.ContentManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

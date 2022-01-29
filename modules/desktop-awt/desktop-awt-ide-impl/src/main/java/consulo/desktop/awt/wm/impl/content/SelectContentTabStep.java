@@ -18,7 +18,7 @@ package consulo.desktop.awt.wm.impl.content;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.content.TabbedContent;
 
 import javax.annotation.Nonnull;

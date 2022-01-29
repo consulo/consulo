@@ -17,8 +17,8 @@ package consulo.desktop.awt.wm.impl.content;
 
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.ui.awt.RelativeRectangle;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManagerEvent;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.event.ContentManagerEvent;
 import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;

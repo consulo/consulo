@@ -24,7 +24,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.JBUI;
 

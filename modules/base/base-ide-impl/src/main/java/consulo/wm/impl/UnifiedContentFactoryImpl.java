@@ -17,6 +17,10 @@ package consulo.wm.impl;
 
 import consulo.project.Project;
 import com.intellij.ui.content.*;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentFactory;
+import consulo.project.ui.wm.content.ContentManager;
+import consulo.project.ui.wm.content.ContentUI;
 import consulo.ui.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

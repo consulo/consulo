@@ -15,11 +15,9 @@
  */
 package consulo.project.ui.wm;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.util.BusyObject;
-import com.intellij.ui.content.ContentManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
+import consulo.project.ui.wm.content.ContentManager;
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;

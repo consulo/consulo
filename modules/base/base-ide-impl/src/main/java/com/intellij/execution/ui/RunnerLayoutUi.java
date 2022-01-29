@@ -23,9 +23,9 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComponentWithActions;
 import consulo.util.concurrent.ActionCallback;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.content.ContentManagerListener;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentManager;
+import consulo.project.ui.wm.content.event.ContentManagerListener;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 

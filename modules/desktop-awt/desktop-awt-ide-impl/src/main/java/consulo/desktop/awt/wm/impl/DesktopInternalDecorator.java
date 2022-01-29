@@ -35,7 +35,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.ui.content.Content;
+import consulo.project.ui.wm.content.Content;
 import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.JBUI;

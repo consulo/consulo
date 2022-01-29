@@ -15,8 +15,8 @@
  */
 package com.intellij.util;
 
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
+import consulo.project.ui.wm.content.Content;
+import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.content.TabbedContent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
