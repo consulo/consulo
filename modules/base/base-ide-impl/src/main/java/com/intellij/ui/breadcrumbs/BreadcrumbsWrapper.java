@@ -3,7 +3,7 @@ package com.intellij.ui.breadcrumbs;
 
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;

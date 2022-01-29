@@ -22,7 +22,7 @@ import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 
 /**
  * @author Eugene Zhuravlev

@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
 import consulo.project.Project;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import javax.annotation.Nonnull;
 
 public class EditorGotoLineNumberDialog extends GotoLineNumberDialog {

@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
 import consulo.project.util.ExpirableRunnable;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.WeakFocusStackManager;
 import consulo.util.concurrent.AsyncResult;

@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
 import javax.annotation.Nonnull;
 
 public class MaximizeToolWindowAction extends AnAction implements DumbAware {

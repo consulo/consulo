@@ -23,8 +23,8 @@ import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.ui.popup.PopupStep;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import javax.annotation.Nonnull;
 

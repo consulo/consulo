@@ -17,7 +17,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.OccurenceNavigator;
 import com.intellij.ide.OccurenceNavigatorSupport;
 import com.intellij.ide.actions.EditSourceAction;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;

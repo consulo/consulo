@@ -27,9 +27,9 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

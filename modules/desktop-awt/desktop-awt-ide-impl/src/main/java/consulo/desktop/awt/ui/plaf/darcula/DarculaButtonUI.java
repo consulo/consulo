@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

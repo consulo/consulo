@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

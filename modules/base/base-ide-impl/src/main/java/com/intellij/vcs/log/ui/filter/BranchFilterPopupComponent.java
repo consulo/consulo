@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsLogBranchFilter;

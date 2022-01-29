@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

@@ -3,8 +3,8 @@ package com.intellij.ide.ui.newItemPopup;
 
 import com.intellij.ide.IdeBundle;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.Consumer;
 import consulo.awt.TargetAWT;

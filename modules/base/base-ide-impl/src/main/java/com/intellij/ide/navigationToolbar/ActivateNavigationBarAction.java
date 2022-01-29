@@ -15,14 +15,14 @@
  */
 package com.intellij.ide.navigationToolbar;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -18,8 +18,8 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import consulo.project.DumbAware;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ToolWindowType;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowType;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 

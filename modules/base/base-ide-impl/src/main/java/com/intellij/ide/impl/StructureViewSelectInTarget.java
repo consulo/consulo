@@ -25,7 +25,7 @@ import com.intellij.ide.structureView.StructureViewWrapper;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.project.Project;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 
 public class StructureViewSelectInTarget implements SelectInTarget {
   private final Project myProject;

@@ -25,7 +25,7 @@ import consulo.application.progress.TaskInfo;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.EmptyRunnable;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import consulo.language.util.IncorrectOperationException;
 import consulo.component.messagebus.Topic;

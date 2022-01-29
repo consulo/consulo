@@ -30,7 +30,7 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.util.ShutDownTracker;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.util.dataholder.Key;

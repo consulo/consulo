@@ -15,13 +15,12 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.ui.content.ContentManagerListener;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
-import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
 

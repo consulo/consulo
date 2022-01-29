@@ -7,6 +7,10 @@ import com.intellij.openapi.ui.popup.*;
 import consulo.disposer.Disposer;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.content.TabbedContent;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

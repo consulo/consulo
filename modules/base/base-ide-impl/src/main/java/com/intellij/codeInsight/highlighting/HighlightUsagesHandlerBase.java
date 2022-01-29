@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.Consumer;

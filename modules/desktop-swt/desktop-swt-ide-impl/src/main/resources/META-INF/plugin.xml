@@ -34,11 +34,11 @@
 
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil" serviceImplementation="consulo.options.impl.UnifiedShowSettingsUtil"/>
 
-    <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtToolWindowManagerImpl" lazy="false"/>
+    <projectService serviceInterface="consulo.project.ui.wm.ToolWindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtToolWindowManagerImpl" lazy="false"/>
 
     <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.ide.actions.impl.UnifiedAboutManager"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtWindowManagerImpl"/>
+    <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtWindowManagerImpl"/>
 
     <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.ide.tipOfDay.UnifiedTipOfDayManager"/>
 

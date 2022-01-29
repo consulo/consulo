@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;

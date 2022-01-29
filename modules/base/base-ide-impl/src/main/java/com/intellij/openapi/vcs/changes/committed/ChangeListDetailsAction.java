@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ChangeList;

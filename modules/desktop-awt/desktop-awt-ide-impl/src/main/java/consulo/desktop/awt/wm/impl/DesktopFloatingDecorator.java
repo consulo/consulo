@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
@@ -32,7 +32,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
-import consulo.ui.ex.ToolWindowFloatingDecorator;
+import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.ui.Rectangle2D;
 
 import javax.annotation.Nonnull;

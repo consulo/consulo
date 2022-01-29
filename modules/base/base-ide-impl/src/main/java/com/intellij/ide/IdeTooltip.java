@@ -15,9 +15,9 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import consulo.application.util.registry.Registry;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.update.ComparableObject;
 

@@ -16,8 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;

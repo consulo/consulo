@@ -17,11 +17,11 @@ package com.intellij.ide.dnd;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 

@@ -1,0 +1,15 @@
+/**
+ * @author VISTALL
+ * @since 29/01/2022
+ */
+module consulo.project.ui.api {
+  // todo obsolete dep
+  requires java.desktop;
+  requires transitive consulo.project.api;
+  requires transitive consulo.ui.ex.api;
+
+  exports consulo.project.ui;
+  exports consulo.project.ui.wm;
+  exports consulo.project.ui.wm.event;
+  exports consulo.project.ui.wm.internal;
+}

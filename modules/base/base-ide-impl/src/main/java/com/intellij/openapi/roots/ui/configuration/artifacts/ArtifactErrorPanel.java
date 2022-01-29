@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

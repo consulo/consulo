@@ -19,7 +19,7 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
-import com.intellij.openapi.ui.popup.LightweightWindowEvent;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.profile.codeInspection.SeverityProvider;
 import com.intellij.profile.codeInspection.ui.LevelChooserAction;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;

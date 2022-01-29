@@ -14,6 +14,8 @@ import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupListener;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

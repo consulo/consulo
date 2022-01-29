@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.util.ArrayUtil;
 
 import javax.swing.*;

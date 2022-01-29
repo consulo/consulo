@@ -16,7 +16,7 @@
 package com.intellij.ui.components.panels;
 
 import com.intellij.openapi.ui.NullableComponent;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 
 import javax.swing.*;
 import java.awt.*;

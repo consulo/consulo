@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.FindUsagesInProjectStructureActionBase;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.treeStructure.Tree;
 
 import java.awt.*;

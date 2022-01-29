@@ -16,11 +16,11 @@
 
 package com.intellij.ui.popup;
 
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.ui.BalloonLayout;
+import consulo.project.ui.wm.BalloonLayout;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
 import consulo.awt.TargetAWT;

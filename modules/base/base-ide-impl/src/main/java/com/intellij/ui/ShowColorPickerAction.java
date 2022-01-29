@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

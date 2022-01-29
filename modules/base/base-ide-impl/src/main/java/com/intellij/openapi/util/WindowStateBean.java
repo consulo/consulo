@@ -2,7 +2,7 @@
 package com.intellij.openapi.util;
 
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.awt.TargetAWT;
 import consulo.component.util.ModificationTracker;
 

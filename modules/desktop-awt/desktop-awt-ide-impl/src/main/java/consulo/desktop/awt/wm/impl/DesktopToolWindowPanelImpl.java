@@ -16,17 +16,17 @@
 package consulo.desktop.awt.wm.impl;
 
 import com.intellij.ide.RemoteDesktopService;
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowType;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.project.ui.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.ScreenUtil;
@@ -38,8 +38,8 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.ToolWindowInternalDecorator;
-import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
+import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.ex.impl.ToolWindowPanelImplEx;
 
 import javax.annotation.Nonnull;

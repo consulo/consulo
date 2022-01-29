@@ -20,7 +20,7 @@ import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.notification.EventLog;
 import com.intellij.notification.Notification;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import com.intellij.ui.BalloonImpl;
 import com.intellij.ui.BalloonLayoutConfiguration;
 import com.intellij.ui.BalloonLayoutData;

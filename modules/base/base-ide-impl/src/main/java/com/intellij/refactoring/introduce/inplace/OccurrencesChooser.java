@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.LightweightWindowEvent;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.Pass;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

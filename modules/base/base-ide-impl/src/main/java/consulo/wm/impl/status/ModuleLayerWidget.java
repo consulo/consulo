@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.application.WriteAction;
 import consulo.language.util.ModuleUtilCore;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.Comparing;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;

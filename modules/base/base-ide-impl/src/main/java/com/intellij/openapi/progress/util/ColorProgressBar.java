@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.progress.util;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;

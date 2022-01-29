@@ -16,7 +16,7 @@
 package com.intellij.application.options.codeStyle.arrangement.animation;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;

@@ -42,7 +42,7 @@ import com.intellij.openapi.vcs.ui.CommitMessage;
 import com.intellij.openapi.vcs.ui.Refreshable;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;

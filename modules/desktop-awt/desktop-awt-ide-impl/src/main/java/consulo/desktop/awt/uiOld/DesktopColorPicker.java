@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.ColorPickerListener;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.Alarm;

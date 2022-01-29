@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.popup.util;
 
-import com.intellij.openapi.ui.popup.MnemonicNavigationFilter;
+import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.popup.WizardPopup;
 import javax.annotation.Nonnull;

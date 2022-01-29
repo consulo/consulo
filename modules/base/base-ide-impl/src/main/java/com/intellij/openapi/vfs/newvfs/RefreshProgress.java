@@ -22,7 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import consulo.ui.UIAccess;
 

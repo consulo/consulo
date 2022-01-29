@@ -9,7 +9,7 @@ import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.ui.image.Image;

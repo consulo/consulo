@@ -32,7 +32,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;

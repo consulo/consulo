@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import consulo.ui.annotation.RequiredUIAccess;

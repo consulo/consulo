@@ -8,7 +8,7 @@ import com.intellij.codeInsight.lookup.*;
 import com.intellij.codeInsight.lookup.impl.EmptyLookupItem;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Condition;

@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.console;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.component.util.SimpleModificationTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;

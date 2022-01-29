@@ -22,7 +22,7 @@ import consulo.component.persist.Storage;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.openapi.wm.WindowManagerListener;
+import consulo.project.ui.wm.event.WindowManagerListener;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;

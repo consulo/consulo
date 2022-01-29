@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
 import consulo.project.Project;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.SmartList;

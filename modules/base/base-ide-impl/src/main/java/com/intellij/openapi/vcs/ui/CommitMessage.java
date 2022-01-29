@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.*;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 

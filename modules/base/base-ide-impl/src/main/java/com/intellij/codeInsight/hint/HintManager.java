@@ -3,7 +3,7 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 

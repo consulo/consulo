@@ -16,7 +16,7 @@ import com.intellij.ide.actions.runAnything.groups.RunAnythingGroup;
 import com.intellij.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import com.intellij.ide.actions.runAnything.ui.RunAnythingScrollingUtil;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ide.util.ElementsChooser;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -77,7 +77,7 @@ import java.util.stream.Collectors;
 
 import static com.intellij.ide.actions.runAnything.RunAnythingAction.ALT_IS_PRESSED;
 import static com.intellij.ide.actions.runAnything.RunAnythingAction.SHIFT_IS_PRESSED;
-import static consulo.project.ui.wm.IdeFocusManager.getGlobalInstance;
+import static consulo.project.ui.IdeFocusManager.getGlobalInstance;
 import static java.awt.FlowLayout.RIGHT;
 
 public class RunAnythingPopupUI extends BigPopupUI {

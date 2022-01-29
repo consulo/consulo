@@ -20,7 +20,7 @@ import consulo.application.CommonBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.tree.TreeUtil;

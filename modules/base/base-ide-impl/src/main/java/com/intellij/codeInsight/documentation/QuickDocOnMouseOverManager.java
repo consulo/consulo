@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Ref;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

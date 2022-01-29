@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.util;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtilRt;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.ScreenUtil;
 import consulo.component.util.ModificationTracker;
 import consulo.logging.Logger;

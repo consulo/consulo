@@ -18,7 +18,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.PanelWithText;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;

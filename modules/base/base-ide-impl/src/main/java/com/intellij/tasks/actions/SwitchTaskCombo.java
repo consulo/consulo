@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.tasks.LocalTask;

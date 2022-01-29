@@ -65,7 +65,7 @@ import consulo.document.util.TextRange;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.scope.SearchScope;

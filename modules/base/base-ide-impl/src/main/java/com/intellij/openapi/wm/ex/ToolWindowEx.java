@@ -17,10 +17,10 @@ package com.intellij.openapi.wm.ex;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowType;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowType;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;

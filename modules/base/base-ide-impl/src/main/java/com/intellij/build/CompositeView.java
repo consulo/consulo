@@ -9,7 +9,7 @@ import consulo.dataContext.DataProvider;
 import consulo.project.DumbAware;
 import com.intellij.openapi.ui.ComponentContainer;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.dataholder.Key;

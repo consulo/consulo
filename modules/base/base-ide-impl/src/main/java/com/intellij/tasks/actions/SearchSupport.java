@@ -32,6 +32,10 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.ui.ListScrollingUtil;
 import com.intellij.ui.SortedListModel;
 import com.intellij.ui.components.JBList;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

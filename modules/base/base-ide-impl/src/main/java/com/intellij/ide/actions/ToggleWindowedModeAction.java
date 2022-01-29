@@ -22,8 +22,8 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ToolWindowType;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowType;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 

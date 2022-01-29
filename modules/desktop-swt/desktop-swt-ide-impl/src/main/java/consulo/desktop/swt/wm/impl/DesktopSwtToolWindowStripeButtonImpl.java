@@ -15,12 +15,12 @@
  */
 package consulo.desktop.swt.wm.impl;
 
-import com.intellij.openapi.wm.ToolWindowAnchor;
+import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.WindowInfo;
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;

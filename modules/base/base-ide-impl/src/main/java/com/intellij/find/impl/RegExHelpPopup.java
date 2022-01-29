@@ -19,7 +19,7 @@ import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.ide.BrowserUtil;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.util.MinimizeButton;
 import com.intellij.ui.ScrollPaneFactory;

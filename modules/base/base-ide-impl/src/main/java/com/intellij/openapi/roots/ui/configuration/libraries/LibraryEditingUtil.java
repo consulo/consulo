@@ -34,7 +34,7 @@ import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator;
-import com.intellij.openapi.ui.popup.PopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import consulo.application.util.function.Condition;
 import consulo.virtualFileSystem.VirtualFileManager;

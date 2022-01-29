@@ -39,7 +39,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.module.content.ProjectRootManager;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.content.Content;

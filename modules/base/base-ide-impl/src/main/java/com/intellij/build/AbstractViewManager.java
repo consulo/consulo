@@ -14,7 +14,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.AtomicClearableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.ui.SystemNotifications;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.content.Content;

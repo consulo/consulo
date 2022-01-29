@@ -15,16 +15,16 @@
  */
 package consulo.desktop.swt.wm.impl;
 
-import com.intellij.openapi.wm.ToolWindowAnchor;
+import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.ToolWindowInternalDecorator;
-import consulo.ui.ex.ToolWindowPanel;
-import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
+import consulo.ui.ex.toolWindow.ToolWindowPanel;
+import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;

@@ -18,7 +18,7 @@ import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;

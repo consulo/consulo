@@ -19,7 +19,7 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import consulo.project.DumbAware;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 
 public class JumpToLastWindowAction extends AnAction implements DumbAware {

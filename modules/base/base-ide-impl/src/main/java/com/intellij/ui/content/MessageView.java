@@ -17,7 +17,7 @@ package com.intellij.ui.content;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import javax.annotation.Nonnull;
 
 public interface MessageView {

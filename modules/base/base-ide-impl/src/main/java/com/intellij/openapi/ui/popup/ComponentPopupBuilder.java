@@ -8,6 +8,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ActiveComponent;
 import com.intellij.util.BooleanFunction;
 import consulo.application.util.function.Processor;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupListener;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

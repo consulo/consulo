@@ -27,7 +27,7 @@ import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;

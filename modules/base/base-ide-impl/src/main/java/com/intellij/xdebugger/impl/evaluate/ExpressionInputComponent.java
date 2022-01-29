@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.FixedSizeButton;
-import com.intellij.openapi.ui.popup.PopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBLabel;

@@ -2,7 +2,7 @@
 
 package com.intellij.ide.navigationToolbar;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ide.util.treeView.TreeAnchorizer;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;

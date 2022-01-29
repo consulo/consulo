@@ -1,9 +1,9 @@
 package com.intellij.refactoring.introduce.inplace;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;

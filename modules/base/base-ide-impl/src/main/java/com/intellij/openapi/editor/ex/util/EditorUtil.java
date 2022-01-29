@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.ex.util;
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;

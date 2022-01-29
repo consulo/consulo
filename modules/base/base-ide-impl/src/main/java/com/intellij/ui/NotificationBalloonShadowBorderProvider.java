@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import com.intellij.util.ui.JBInsets;
 
 import javax.annotation.Nonnull;

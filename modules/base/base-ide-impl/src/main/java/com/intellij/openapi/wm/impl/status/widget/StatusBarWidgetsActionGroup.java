@@ -7,7 +7,7 @@ import com.intellij.openapi.project.DumbAwareToggleAction;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.openapi.wm.StatusBarWidgetFactory;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.containers.ContainerUtil;

@@ -2,14 +2,14 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.DocumentAdapter;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.*;

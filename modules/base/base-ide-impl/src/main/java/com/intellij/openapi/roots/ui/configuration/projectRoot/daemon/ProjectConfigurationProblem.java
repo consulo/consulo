@@ -16,10 +16,10 @@ import consulo.dataContext.DataManager;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationError;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

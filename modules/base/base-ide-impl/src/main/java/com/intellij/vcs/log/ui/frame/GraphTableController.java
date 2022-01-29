@@ -17,7 +17,7 @@ package com.intellij.vcs.log.ui.frame;
 
 import com.intellij.ide.IdeTooltip;
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import com.intellij.ui.HintHint;

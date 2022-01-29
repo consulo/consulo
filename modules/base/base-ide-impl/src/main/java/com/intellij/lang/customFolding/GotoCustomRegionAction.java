@@ -26,7 +26,7 @@ import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
 import consulo.language.file.FileViewProvider;

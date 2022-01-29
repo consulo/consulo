@@ -10,10 +10,10 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.Toggleable;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.JBPopupListener;
-import com.intellij.openapi.ui.popup.LightweightWindowEvent;
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

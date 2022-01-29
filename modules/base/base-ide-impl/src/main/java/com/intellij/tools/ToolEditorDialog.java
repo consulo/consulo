@@ -33,7 +33,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.Consumer;

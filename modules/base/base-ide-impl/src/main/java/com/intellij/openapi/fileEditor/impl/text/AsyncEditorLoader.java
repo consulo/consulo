@@ -25,7 +25,7 @@ import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.concurrency.AppExecutorUtil;

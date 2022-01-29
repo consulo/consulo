@@ -38,7 +38,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import consulo.document.util.FileContentUtilCore;
 import consulo.component.messagebus.MessageBusConnection;

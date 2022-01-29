@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.project.DumbAware;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

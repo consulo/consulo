@@ -17,6 +17,8 @@ package com.intellij.openapi.ui.popup;
 
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.ex.popup.PopupStep;
+
 import javax.annotation.Nullable;
 
 import java.util.Collections;

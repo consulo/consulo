@@ -18,14 +18,14 @@ package consulo.web.wm.impl;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.layout.DockLayout;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 

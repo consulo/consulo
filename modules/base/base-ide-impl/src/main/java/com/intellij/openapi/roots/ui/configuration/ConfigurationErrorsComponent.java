@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;

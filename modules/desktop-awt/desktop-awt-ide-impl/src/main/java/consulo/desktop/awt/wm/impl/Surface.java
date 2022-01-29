@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.openapi.wm.ToolWindowAnchor;
+import consulo.project.ui.wm.ToolWindowAnchor;
 
 import javax.swing.*;
 import java.awt.*;

@@ -31,7 +31,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;

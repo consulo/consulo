@@ -219,13 +219,13 @@
     <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.desktop.awt.startup.customize.DesktopStartupCustomizeManager"/>
     <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService" serviceImplementation="consulo.desktop.awt.application.DesktopRemoteDesktopDetector"/>
     <applicationService serviceInterface="consulo.project.ui.wm.internal.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false"/>
-    <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl" lazy="false"/>
+    <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.ui.DialogWrapperPeerFactory" serviceImplementation="consulo.desktop.awt.ui.dialog.DialogWrapperPeerFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.ui.mac.MacMessages" serviceImplementation="consulo.desktop.awt.uiOld.messages.JBMacMessages"/>
     <applicationService serviceInterface="consulo.ui.popup.JWindowPopupFactory" serviceImplementation="consulo.desktop.awt.ui.popup.impl.JWindowPopupFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileSystemTreeFactory" serviceImplementation="consulo.desktop.awt.fileChooser.impl.DesktopFileSystemTreeFactoryImpl"/>
     <projectService serviceInterface="com.intellij.openapi.fileEditor.FileEditorManager" serviceImplementation="consulo.desktop.awt.fileEditor.impl.DesktopPsiAwareFileEditorManagerImpl" lazy="false"/>
-    <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
+    <projectService serviceInterface="consulo.project.ui.wm.ToolWindowManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopIdeFocusManagerImpl" lazy="false"/>
 
     <projectService serviceInterface="com.intellij.ui.docking.DockManager" serviceImplementation="consulo.desktop.awt.uiOld.docking.impl.DesktopDockManagerImpl"/>

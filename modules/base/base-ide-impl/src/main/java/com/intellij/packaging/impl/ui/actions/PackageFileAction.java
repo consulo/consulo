@@ -16,7 +16,7 @@ import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder;

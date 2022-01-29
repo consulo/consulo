@@ -17,7 +17,7 @@ package com.intellij.openapi.ui.playback.commands;
 
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.playback.PlaybackContext;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.util.concurrent.ActionCallback;
 
 import java.awt.*;

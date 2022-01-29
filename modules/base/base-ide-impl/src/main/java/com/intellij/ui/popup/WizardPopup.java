@@ -19,6 +19,10 @@ import com.intellij.ui.speedSearch.SpeedSearch;
 import com.intellij.util.ui.TimerUtil;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.SpeedSearchFilter;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 

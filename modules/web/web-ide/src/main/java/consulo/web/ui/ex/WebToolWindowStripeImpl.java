@@ -17,7 +17,7 @@ package consulo.web.ui.ex;
 
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.Component;
-import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;

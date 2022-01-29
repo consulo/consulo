@@ -40,7 +40,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static consulo.project.ui.wm.IdeFocusManager.getGlobalInstance;
+import static consulo.project.ui.IdeFocusManager.getGlobalInstance;
 
 /**
  * Created by Denis Fokin

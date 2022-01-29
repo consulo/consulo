@@ -42,5 +42,4 @@ public class ComponentTreeEventDispatcher<T extends EventListener> {
   public T getMulticaster() {
     return myMulticaster;
   }
-
 }

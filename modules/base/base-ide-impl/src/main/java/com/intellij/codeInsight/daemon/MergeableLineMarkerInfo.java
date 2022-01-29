@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Function;

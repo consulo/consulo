@@ -2,7 +2,7 @@
 package com.intellij.build;
 
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;

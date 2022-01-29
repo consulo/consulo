@@ -22,7 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.util.concurrent.ActionCallback;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.ObjectUtils;

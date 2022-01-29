@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.versionBrowser;
 
 import com.intellij.openapi.vcs.VcsBundle;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.IdeBorderFactory;
 
 import javax.swing.*;

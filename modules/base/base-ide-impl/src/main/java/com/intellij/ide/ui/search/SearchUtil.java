@@ -22,7 +22,7 @@ import com.intellij.openapi.options.MasterDetails;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.GlassPanel;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;

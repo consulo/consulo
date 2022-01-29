@@ -13,7 +13,6 @@ module consulo.project.api {
   exports consulo.project;
   exports consulo.project.event;
   exports consulo.project.startup;
-  exports consulo.project.ui.wm;
   exports consulo.project.util;
   // TODO [VISTALL] impl
   exports consulo.project.internal;

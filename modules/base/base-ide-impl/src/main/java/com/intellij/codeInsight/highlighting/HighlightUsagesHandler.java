@@ -41,7 +41,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.pom.PomTarget;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.pom.PsiDeclaredTarget;

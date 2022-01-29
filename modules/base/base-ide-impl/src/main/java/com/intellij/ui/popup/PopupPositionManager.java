@@ -10,12 +10,12 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.DimensionService;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -5,7 +5,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdePopupManager;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.util.Consumer;
 
 import javax.swing.*;

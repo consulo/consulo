@@ -17,9 +17,9 @@ package com.intellij.compiler;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;

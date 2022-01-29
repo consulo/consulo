@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.EmptyAction;
 import consulo.project.DumbAware;
-import com.intellij.openapi.ui.popup.ListPopupStep;
+import consulo.ui.ex.popup.ListPopupStep;
 import consulo.application.util.function.Condition;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.ui.popup.WizardPopup;

@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.util;
 
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;

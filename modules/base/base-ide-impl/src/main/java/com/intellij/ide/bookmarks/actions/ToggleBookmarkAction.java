@@ -24,7 +24,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 
 public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
   public ToggleBookmarkAction() {

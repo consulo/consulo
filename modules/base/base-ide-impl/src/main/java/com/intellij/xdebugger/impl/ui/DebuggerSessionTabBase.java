@@ -32,7 +32,7 @@ import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;

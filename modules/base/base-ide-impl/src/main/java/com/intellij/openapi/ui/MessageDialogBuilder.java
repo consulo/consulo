@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui;
 
 import consulo.project.Project;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.mac.MacMessages;
 import com.intellij.util.ObjectUtil;
 import consulo.ui.image.Image;

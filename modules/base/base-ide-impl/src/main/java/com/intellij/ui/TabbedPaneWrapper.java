@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.util.IJSwingUtilities;

@@ -19,7 +19,7 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

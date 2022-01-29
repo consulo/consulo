@@ -15,13 +15,13 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.ToolWindowAnchor;
+import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
@@ -30,7 +30,7 @@ import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.wm.impl.ToolWindowManagerBase;
 
 import javax.swing.*;

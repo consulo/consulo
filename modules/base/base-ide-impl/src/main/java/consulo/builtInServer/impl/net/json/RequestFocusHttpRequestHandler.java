@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.json;
 
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.util.BitUtil;
 import consulo.awt.TargetAWT;

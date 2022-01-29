@@ -34,7 +34,7 @@ import com.intellij.openapi.project.ex.ProjectManagerEx;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.TimedReference;

@@ -11,6 +11,11 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.popup.ListSeparator;
+import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.MnemonicNavigationFilter;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.SpeedSearchFilter;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

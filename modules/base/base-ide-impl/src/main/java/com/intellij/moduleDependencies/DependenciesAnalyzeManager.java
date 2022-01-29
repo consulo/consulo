@@ -23,10 +23,10 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 

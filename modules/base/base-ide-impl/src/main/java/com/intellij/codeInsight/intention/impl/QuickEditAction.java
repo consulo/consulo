@@ -24,7 +24,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.ElementManipulators;

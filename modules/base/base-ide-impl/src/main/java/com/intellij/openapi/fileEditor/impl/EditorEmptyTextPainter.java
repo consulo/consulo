@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.actions.ActivateToolWindowAction;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.keymap.KeymapManager;
@@ -27,9 +27,9 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;

@@ -17,8 +17,8 @@ package com.intellij.ui;
 
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.UIUtil;
 
 import javax.annotation.Nullable;

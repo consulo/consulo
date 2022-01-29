@@ -24,7 +24,7 @@ import consulo.application.TransactionGuard;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ide.actions.AboutManager;
 import consulo.start.CommandLineArgs;
 import consulo.ui.Window;

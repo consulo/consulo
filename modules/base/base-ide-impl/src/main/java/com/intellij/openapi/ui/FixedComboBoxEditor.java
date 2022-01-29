@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.util.SystemInfo;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;

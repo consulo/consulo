@@ -26,7 +26,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import consulo.project.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.PopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.*;
 import consulo.application.util.registry.Registry;

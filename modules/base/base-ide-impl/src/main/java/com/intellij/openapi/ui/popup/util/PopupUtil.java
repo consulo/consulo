@@ -22,15 +22,18 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.*;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.hacking.PopupFactoryHacking;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopup;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

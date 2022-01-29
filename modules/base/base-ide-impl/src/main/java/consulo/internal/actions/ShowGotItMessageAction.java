@@ -17,10 +17,10 @@ package consulo.internal.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.ui.ex.popup.Balloon;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.GotItMessage;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 
 import java.awt.*;
 

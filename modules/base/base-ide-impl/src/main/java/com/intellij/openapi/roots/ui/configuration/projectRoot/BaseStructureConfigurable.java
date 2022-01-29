@@ -32,7 +32,7 @@ import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsState;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.TreeSpeedSearch;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;

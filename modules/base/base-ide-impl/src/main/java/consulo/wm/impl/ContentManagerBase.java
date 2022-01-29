@@ -20,7 +20,7 @@ import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.content.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
@@ -31,7 +31,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.wm.ContentEx;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 

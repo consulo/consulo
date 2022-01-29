@@ -22,6 +22,7 @@ module consulo.application.api {
   exports consulo.application.extension;
   exports consulo.application.progress;
   exports consulo.application.ui.wm;
+  exports consulo.application.ui;
 
   // TODO [VISTALL] impl package
   exports consulo.application.internal;

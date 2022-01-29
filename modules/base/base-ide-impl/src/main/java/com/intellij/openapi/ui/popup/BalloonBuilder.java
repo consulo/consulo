@@ -16,6 +16,7 @@
 package com.intellij.openapi.ui.popup;
 
 import consulo.disposer.Disposable;
+import consulo.ui.ex.popup.Balloon;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -43,6 +43,8 @@ open module consulo.ide.impl {
   requires transitive consulo.language.api;
   requires transitive consulo.indexing.io;
   requires transitive consulo.datacontext.api;
+  requires transitive consulo.ui.ex.api;
+  requires transitive consulo.project.ui.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -564,7 +566,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.editor.richcopy.settings;
   exports com.intellij.openapi.editor.richcopy.view;
   exports com.intellij.openapi.editor.textarea;
-  exports com.intellij.openapi.extensions;
   exports com.intellij.openapi.extensions.impl;
   exports com.intellij.openapi.externalSystem;
   exports com.intellij.openapi.externalSystem.action;
@@ -675,7 +676,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.util.io;
   exports com.intellij.openapi.util.io.win32;
   exports com.intellij.openapi.util.process;
-  exports com.intellij.openapi.util.registry;
   exports com.intellij.openapi.util.text;
   exports com.intellij.openapi.vcs;
   exports com.intellij.openapi.vcs.actions;
@@ -1345,7 +1345,6 @@ open module consulo.ide.impl {
   exports consulo.ui.dialog.impl;
   exports consulo.ui.docking;
   exports consulo.ui.docking.impl;
-  exports consulo.ui.ex;
   exports consulo.ui.ex.impl;
   exports consulo.ui.plaf;
   exports consulo.ui.popup;
@@ -1367,7 +1366,6 @@ open module consulo.ide.impl {
   exports consulo.vfs.impl.zip;
   exports consulo.vfs.newvfs;
   exports consulo.vfs.newvfs.persistent;
-  exports consulo.wm;
   exports consulo.wm.impl;
   exports consulo.wm.impl.layout;
   exports consulo.wm.impl.status;

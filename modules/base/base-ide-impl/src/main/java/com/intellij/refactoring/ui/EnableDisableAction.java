@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.ui;
 
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

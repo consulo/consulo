@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.dnd;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.logging.Logger;

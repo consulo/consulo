@@ -2,7 +2,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.language.Language;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;

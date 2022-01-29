@@ -15,10 +15,10 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ActionManager;
 import consulo.project.Project;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.tabs.impl.singleRow.CompressibleSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;

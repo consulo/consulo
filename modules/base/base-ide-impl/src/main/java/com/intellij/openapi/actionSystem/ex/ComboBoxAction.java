@@ -16,9 +16,9 @@
 package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.application.util.function.Condition;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;

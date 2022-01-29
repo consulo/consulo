@@ -22,7 +22,7 @@ import consulo.application.progress.Task;
 import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.project.DumbService;

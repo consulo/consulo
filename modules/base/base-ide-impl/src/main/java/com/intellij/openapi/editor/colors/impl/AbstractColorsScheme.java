@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.markup.EffectType;

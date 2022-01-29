@@ -15,8 +15,8 @@
  */
 package com.intellij.ui.popup.list;
 
-import com.intellij.openapi.ui.popup.ListPopupStep;
-import com.intellij.openapi.ui.popup.ListSeparator;
+import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.ListSeparator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.speedSearch.SpeedSearch;

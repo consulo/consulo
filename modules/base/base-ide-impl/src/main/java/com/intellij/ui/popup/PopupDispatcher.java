@@ -4,7 +4,7 @@ package com.intellij.ui.popup;
 import com.intellij.ide.IdeEventQueue;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.popup.IdePopupEventDispatcher;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 

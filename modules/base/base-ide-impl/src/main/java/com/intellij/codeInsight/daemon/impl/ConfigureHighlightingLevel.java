@@ -26,7 +26,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.markup.InspectionsLevel;
 import consulo.module.content.ProjectFileIndex;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.FileViewProvider;

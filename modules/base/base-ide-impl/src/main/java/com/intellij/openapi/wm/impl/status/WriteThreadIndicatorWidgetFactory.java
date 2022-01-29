@@ -6,7 +6,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import com.intellij.openapi.wm.StatusBarWidgetFactory;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ObjectUtils;

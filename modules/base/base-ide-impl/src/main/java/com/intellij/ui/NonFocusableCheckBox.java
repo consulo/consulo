@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 
 import javax.swing.*;
 

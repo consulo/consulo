@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionPopupMenu;
 import consulo.dataContext.DataContext;
@@ -32,7 +32,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
-import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

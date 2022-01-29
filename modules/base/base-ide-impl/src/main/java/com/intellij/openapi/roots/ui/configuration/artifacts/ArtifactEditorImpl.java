@@ -47,7 +47,7 @@ import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.ui.*;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.ThreeStateCheckBox;

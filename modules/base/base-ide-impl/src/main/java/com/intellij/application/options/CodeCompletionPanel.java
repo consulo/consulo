@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.PowerSaveMode;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.IdeActions;

@@ -17,7 +17,7 @@ package com.intellij.codeInsight.navigation;
 
 import consulo.project.Project;
 import com.intellij.openapi.ui.JBListUpdater;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Ref;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.components.JBList;

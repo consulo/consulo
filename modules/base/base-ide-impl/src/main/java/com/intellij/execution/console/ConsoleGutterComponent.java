@@ -17,7 +17,7 @@ package com.intellij.execution.console;
 
 import com.intellij.codeInsight.hint.TooltipController;
 import com.intellij.codeInsight.hint.TooltipGroup;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.colors.EditorFontType;
@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 

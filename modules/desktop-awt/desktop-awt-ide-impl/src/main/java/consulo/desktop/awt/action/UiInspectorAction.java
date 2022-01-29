@@ -17,7 +17,7 @@ package consulo.desktop.awt.action;
 
 import com.google.common.base.MoreObjects;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;

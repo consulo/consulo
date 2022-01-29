@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.ui.popup;
 
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
+
 /**
  * @author yole
  */

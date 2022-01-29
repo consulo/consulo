@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -18,8 +18,8 @@ package com.intellij.execution.dashboard;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.application.util.function.Condition;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

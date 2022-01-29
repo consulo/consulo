@@ -27,10 +27,10 @@ import com.intellij.openapi.externalSystem.service.task.ui.ExternalSystemTasksTr
 import com.intellij.openapi.externalSystem.service.ui.DefaultExternalSystemUiAware;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
 import consulo.dataContext.DataContext;

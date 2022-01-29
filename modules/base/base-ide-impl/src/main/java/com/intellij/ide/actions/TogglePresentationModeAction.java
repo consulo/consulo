@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.ui.LafManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;

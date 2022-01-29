@@ -3,7 +3,7 @@ package com.intellij.ui.components;
 
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.ide.RemoteDesktopService;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.application.Application;
 
 import javax.swing.*;

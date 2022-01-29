@@ -8,7 +8,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBarWidget;

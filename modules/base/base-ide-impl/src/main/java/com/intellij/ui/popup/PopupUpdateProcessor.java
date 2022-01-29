@@ -21,7 +21,7 @@ import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.lookup.*;
 import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.LightweightWindowEvent;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.language.psi.PsiElement;
 

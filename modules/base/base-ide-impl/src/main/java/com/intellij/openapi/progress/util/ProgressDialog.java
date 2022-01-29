@@ -10,7 +10,7 @@ import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.PopupBorder;
 import com.intellij.ui.TitlePanel;

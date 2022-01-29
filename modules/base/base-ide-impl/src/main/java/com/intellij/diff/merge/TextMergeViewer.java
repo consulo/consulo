@@ -57,7 +57,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;

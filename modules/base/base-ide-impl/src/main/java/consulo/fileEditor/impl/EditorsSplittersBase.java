@@ -15,7 +15,7 @@
  */
 package consulo.fileEditor.impl;
 
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.event.UISettingsListener;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

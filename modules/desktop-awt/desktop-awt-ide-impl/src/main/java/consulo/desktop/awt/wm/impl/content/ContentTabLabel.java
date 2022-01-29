@@ -6,7 +6,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeTooltip;
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;

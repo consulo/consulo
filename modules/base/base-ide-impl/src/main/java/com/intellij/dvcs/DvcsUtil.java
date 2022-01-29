@@ -44,7 +44,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.impl.status.StatusBarUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;

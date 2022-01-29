@@ -32,7 +32,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.pom.Navigatable;
 
 import javax.annotation.Nonnull;

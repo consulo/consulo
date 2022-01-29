@@ -27,8 +27,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.vcs.actions.AbstractVcsAction;
 import com.intellij.openapi.vcs.actions.VcsContext;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindow;
 
 public class ShowChangesViewAction extends AbstractVcsAction {
   protected void actionPerformed(VcsContext e) {

@@ -20,7 +20,7 @@ import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ide.util.treeView.smartTree.NodeProvider;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import consulo.language.Language;

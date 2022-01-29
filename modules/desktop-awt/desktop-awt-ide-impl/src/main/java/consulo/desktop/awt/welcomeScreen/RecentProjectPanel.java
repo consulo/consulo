@@ -35,7 +35,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.UniqueNameBuilder;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.dataContext.DataManager;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.ListUtil;

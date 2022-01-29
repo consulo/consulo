@@ -32,7 +32,7 @@ import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

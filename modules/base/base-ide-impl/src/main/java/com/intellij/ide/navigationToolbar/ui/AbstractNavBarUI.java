@@ -4,7 +4,7 @@ package com.intellij.ide.navigationToolbar.ui;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.navigationToolbar.NavBarItem;
 import com.intellij.ide.navigationToolbar.NavBarPanel;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;

@@ -17,7 +17,7 @@ package com.intellij.openapi.keymap.impl.ui;
 
 import com.intellij.icons.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.QuickList;

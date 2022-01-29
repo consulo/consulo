@@ -18,7 +18,7 @@ package com.intellij.internal.focus;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.impl.FocusManagerImpl;
 import com.intellij.openapi.wm.impl.FocusRequestInfo;
 

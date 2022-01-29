@@ -19,7 +19,7 @@ import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.awt.TargetAWT;
 
 import consulo.component.persist.PersistentStateComponent;

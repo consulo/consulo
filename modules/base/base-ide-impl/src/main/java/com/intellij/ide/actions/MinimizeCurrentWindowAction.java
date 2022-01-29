@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import consulo.project.ui.wm.IdeFocusManager;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.IdeFocusManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import consulo.awt.TargetAWT;
 

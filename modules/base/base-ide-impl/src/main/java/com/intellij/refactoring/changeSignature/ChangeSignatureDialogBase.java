@@ -33,7 +33,7 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.Application;
 import consulo.project.DumbAware;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.actions.AboutManager;
 import consulo.ui.Window;

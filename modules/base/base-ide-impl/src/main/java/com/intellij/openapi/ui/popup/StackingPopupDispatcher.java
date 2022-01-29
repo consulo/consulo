@@ -16,6 +16,7 @@
 package com.intellij.openapi.ui.popup;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.ui.ex.popup.JBPopup;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

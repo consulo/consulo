@@ -24,7 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;

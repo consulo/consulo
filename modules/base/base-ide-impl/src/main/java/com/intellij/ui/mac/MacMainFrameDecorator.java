@@ -15,8 +15,8 @@
  */
 package com.intellij.ui.mac;
 
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import com.intellij.openapi.application.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.BuildNumber;

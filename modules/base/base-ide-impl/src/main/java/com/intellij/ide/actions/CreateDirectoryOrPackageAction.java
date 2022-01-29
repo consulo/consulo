@@ -31,7 +31,7 @@ import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import com.intellij.openapi.ui.InputValidatorEx;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Trinity;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

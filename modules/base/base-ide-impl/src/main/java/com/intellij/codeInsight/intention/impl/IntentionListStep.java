@@ -11,12 +11,16 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import consulo.logging.Logger;
+import consulo.ui.ex.popup.ListSeparator;
+import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.MnemonicNavigationFilter;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.SpeedSearchFilter;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.TestOnly;
 

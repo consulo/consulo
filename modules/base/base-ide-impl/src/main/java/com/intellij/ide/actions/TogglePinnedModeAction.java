@@ -16,8 +16,8 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowType;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowType;
 
 public class TogglePinnedModeAction extends BaseToolWindowToggleAction {
 

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl.content;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowDataKeys;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.content.Content;

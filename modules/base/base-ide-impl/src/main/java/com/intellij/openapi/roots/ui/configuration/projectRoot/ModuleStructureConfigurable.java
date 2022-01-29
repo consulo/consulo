@@ -42,7 +42,7 @@ import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;

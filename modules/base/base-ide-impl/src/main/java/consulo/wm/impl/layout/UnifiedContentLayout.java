@@ -15,7 +15,7 @@
  */
 package consulo.wm.impl.layout;
 
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import com.intellij.ui.content.ContentManagerEvent;
 
 /**

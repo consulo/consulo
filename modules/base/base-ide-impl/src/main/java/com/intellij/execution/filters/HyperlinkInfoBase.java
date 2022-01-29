@@ -16,7 +16,7 @@
 package com.intellij.execution.filters;
 
 import consulo.project.Project;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

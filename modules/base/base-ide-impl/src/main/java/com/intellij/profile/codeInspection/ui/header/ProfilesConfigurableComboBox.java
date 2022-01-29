@@ -16,7 +16,7 @@
 package com.intellij.profile.codeInspection.ui.header;
 
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.profile.Profile;
 import com.intellij.ui.ListCellRendererWrapper;
 

@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import consulo.wm.impl.ToolWindowContentUI;

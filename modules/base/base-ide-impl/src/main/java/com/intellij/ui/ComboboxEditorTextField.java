@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListener;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.util.ui.UIUtil;
 
 import javax.annotation.Nonnull;

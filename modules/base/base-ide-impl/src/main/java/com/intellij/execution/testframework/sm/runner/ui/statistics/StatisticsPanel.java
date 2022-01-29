@@ -28,7 +28,7 @@ import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.TableUtil;

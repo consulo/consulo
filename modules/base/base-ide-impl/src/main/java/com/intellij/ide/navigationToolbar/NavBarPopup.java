@@ -7,7 +7,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.ui.speedSearch.ListWithFilter;

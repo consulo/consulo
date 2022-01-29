@@ -17,7 +17,7 @@ package consulo.test.light;
 
 import consulo.application.internal.concurrency.JobLauncher;
 import com.intellij.ide.UiActivityMonitor;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ide.util.treeView.TreeAnchorizer;
 import com.intellij.lang.LanguageExtensionPoint;
 import consulo.language.parser.LanguageParserDefinitions;

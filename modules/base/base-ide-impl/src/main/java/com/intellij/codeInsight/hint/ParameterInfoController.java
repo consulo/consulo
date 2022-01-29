@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.Balloon.Position;
+import consulo.ui.ex.popup.Balloon.Position;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;

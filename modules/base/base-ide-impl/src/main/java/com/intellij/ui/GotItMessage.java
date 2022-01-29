@@ -16,11 +16,11 @@
 package com.intellij.ui;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;

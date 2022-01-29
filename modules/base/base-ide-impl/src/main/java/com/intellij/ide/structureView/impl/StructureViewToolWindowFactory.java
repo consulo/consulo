@@ -19,8 +19,8 @@ package com.intellij.ide.structureView.impl;
 import com.intellij.ide.structureView.StructureViewFactory;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.ui.annotation.RequiredUIAccess;
 

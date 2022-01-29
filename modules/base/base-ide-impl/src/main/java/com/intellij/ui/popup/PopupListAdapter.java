@@ -7,7 +7,7 @@ import com.intellij.openapi.ui.JBListUpdater;
 import com.intellij.openapi.ui.ListComponentUpdater;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.util.dataholder.Key;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.ListUtil;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBList;

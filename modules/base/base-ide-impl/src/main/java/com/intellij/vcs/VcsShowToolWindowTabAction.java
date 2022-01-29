@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

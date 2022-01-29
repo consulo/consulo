@@ -14,7 +14,7 @@ import com.intellij.openapi.editor.markup.ActiveGutterRenderer;
 import com.intellij.openapi.editor.markup.LineMarkerRenderer;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.ui.scale.JBUIScale;

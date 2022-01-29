@@ -40,7 +40,7 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.SimpleColoredText;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.IconUtil;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import org.intellij.lang.annotations.JdkConstants;

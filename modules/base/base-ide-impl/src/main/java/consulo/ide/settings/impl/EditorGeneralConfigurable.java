@@ -19,7 +19,7 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPass;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

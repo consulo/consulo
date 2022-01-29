@@ -16,11 +16,11 @@
 package consulo.desktop.awt.uiOld;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import com.intellij.ui.Gray;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;

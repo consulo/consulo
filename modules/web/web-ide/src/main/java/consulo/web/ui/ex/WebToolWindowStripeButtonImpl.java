@@ -15,12 +15,12 @@
  */
 package consulo.web.ui.ex;
 
-import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.application.ui.UISettings;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;

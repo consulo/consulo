@@ -30,7 +30,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.pom.Navigatable;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.AppIcon;

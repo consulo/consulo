@@ -21,7 +21,7 @@ import consulo.application.Application;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.docking.DockableContent;
 import com.intellij.ui.tabs.JBTabs;

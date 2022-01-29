@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.plaf.intellij;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;

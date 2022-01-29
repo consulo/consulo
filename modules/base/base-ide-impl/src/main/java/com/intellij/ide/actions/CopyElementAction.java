@@ -21,7 +21,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

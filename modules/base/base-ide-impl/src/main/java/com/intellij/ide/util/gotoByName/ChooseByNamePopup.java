@@ -4,7 +4,7 @@ package com.intellij.ide.util.gotoByName;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

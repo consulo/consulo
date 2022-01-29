@@ -25,7 +25,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;

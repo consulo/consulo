@@ -2,15 +2,15 @@
 package com.intellij.openapi.wm.impl.status.widget;
 
 import com.intellij.ide.HelpTooltipManager;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.TextPanel;
 import com.intellij.ui.ClickListener;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.PopupState;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBFont;

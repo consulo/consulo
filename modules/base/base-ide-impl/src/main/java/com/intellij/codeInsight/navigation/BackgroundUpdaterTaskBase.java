@@ -7,7 +7,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.ui.GenericListComponentUpdater;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Ref;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsageView;

@@ -16,6 +16,8 @@
 
 package com.intellij.openapi.ui.popup;
 
+import consulo.ui.ex.popup.JBPopup;
+
 /**
  * @author mike
  */

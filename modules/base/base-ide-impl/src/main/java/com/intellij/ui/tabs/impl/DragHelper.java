@@ -16,12 +16,12 @@
 package com.intellij.ui.tabs.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.MouseDragHelper;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.util.Axis;

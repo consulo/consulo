@@ -37,7 +37,7 @@ import com.intellij.openapi.util.NullUtils;
 import com.intellij.openapi.util.Weighted;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.FocusWatcher;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.PrevNextActionsDescriptor;
 import com.intellij.ui.SideBorder;
 import com.intellij.ui.TabbedPaneWrapper;

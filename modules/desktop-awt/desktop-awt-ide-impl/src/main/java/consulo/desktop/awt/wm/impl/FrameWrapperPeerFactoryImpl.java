@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import consulo.project.Project;
@@ -26,12 +26,12 @@ import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
-import com.intellij.ui.BalloonLayout;
+import consulo.project.ui.wm.BalloonLayout;
 import com.intellij.ui.FrameState;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.Window;

@@ -8,7 +8,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.EditorTextField;
 import consulo.awt.TargetAWT;
 

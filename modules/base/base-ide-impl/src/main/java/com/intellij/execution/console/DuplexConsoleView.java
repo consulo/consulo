@@ -32,7 +32,7 @@ import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.dataContext.DataProvider;
 import consulo.project.DumbAware;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;

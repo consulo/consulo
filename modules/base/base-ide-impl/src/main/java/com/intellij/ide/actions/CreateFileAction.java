@@ -29,7 +29,7 @@ import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.InputValidatorEx;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;

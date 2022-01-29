@@ -21,9 +21,9 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ToolWindowType;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowType;
 
 public class ToggleDockModeAction extends ToggleAction implements DumbAware {
 

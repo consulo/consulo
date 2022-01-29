@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.ui.LafManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.project.DumbAware;

@@ -30,7 +30,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import consulo.project.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.util.Alarm;
 import consulo.disposer.Disposable;

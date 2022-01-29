@@ -4,7 +4,7 @@ package com.intellij.ui.popup.async;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.PopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.disposer.Disposer;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.popup.NextStepHandler;

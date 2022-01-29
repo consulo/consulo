@@ -24,7 +24,7 @@ import com.intellij.openapi.util.ShutDownTracker;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.AppIconScheme;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.ui.AppIcon;

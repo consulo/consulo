@@ -47,7 +47,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.Function;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;

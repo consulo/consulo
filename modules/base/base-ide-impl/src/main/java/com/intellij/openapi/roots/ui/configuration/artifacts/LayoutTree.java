@@ -27,7 +27,7 @@ import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.RenameablePackagingElement;
 import com.intellij.ui.TreeSpeedSearch;

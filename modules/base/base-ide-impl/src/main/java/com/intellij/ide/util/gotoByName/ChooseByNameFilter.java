@@ -20,10 +20,10 @@ import com.intellij.ide.util.ElementsChooser;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.JBPopupListener;
-import com.intellij.openapi.ui.popup.LightweightWindowEvent;
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 

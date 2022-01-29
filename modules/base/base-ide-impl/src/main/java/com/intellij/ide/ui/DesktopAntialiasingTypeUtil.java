@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.ui;
 
+import consulo.application.ui.UISettings;
 import consulo.desktop.util.awt.DesktopAntialiasingType;
 import consulo.ui.AntialiasingType;
 

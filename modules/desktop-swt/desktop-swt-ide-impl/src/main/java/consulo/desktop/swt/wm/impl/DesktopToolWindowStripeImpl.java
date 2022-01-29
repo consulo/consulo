@@ -18,7 +18,7 @@ package consulo.desktop.swt.wm.impl;
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.desktop.swt.ui.impl.layout.DesktopSwtLayoutComponent;
 import consulo.ui.Size;
-import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;

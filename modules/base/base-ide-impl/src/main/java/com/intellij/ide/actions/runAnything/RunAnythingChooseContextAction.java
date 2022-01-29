@@ -30,7 +30,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.ListSeparator;
+import consulo.ui.ex.popup.ListSeparator;
 import consulo.application.util.function.Conditions;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.ErrorLabel;

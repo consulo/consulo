@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.ui.tree;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.application.Application;
@@ -12,12 +12,12 @@ import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Condition;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.LoadingNode;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.tree.TreeVisitor;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ObjectUtil;

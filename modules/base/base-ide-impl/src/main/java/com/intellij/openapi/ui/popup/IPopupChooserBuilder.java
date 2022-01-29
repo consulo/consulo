@@ -6,6 +6,8 @@ import consulo.application.util.function.Computable;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import consulo.application.util.function.Processor;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupListener;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

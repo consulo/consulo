@@ -5,7 +5,7 @@
 package com.mxgraph.swing;
 
 import com.intellij.icons.AllIcons;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.model.mxGraphModel;

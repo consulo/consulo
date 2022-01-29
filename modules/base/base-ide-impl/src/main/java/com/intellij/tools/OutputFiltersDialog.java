@@ -21,7 +21,7 @@ package com.intellij.tools;
 
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.ui.DialogWrapper;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import javax.annotation.Nonnull;

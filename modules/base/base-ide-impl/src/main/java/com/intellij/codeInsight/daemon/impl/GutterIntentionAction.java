@@ -13,7 +13,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import consulo.language.util.IncorrectOperationException;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

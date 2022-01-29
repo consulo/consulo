@@ -9,7 +9,7 @@ import com.intellij.codeInsight.lookup.CharFilter;
 import com.intellij.codeInsight.lookup.LookupFocusDegree;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.editor.Caret;

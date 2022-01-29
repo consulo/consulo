@@ -40,7 +40,7 @@ import com.intellij.openapi.util.Pass;
 import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Alarm;

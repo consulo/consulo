@@ -32,7 +32,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import consulo.dataContext.DataProvider;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.AppIcon;

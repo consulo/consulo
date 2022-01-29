@@ -125,7 +125,7 @@
 
     <extensionPoint name="schemeOwner" beanClass="com.intellij.openapi.components.ServiceBean"/>
 
-    <extensionPoint name="ideRootPaneNorth" interface="com.intellij.openapi.wm.IdeRootPaneNorthExtension" area="PROJECT"/>
+    <extensionPoint name="ideRootPaneNorth" interface="consulo.project.ui.wm.IdeRootPaneNorthExtension" area="PROJECT"/>
 
     <extensionPoint name="handleTypeFactory" interface="com.intellij.openapi.vcs.readOnlyHandler.HandleTypeFactory" area="PROJECT"/>
     <extensionPoint name="customFileTypeFactory" interface="com.intellij.openapi.fileTypes.ex.CustomFileTypeFactory"/>
@@ -192,7 +192,7 @@
     <extensionPoint name="customFileDropHandler" area="PROJECT" interface="com.intellij.openapi.editor.CustomFileDropHandler"/>
 
     <extensionPoint name="toolWindow" beanClass="com.intellij.openapi.wm.ToolWindowEP">
-      <with attribute="factoryClass" implements="com.intellij.openapi.wm.ToolWindowFactory"/>
+      <with attribute="factoryClass" implements="consulo.project.ui.wm.ToolWindowFactory"/>
       <with attribute="conditionClass" implements="consulo.application.util.function.Condition"/>
     </extensionPoint>
 
@@ -1200,8 +1200,8 @@
 
     <extensionPoint name="uiDecorator" interface="consulo.ui.decorator.UIDecorator"/>
 
-    <extensionPoint name="statusBarWidgetProvider" interface="com.intellij.openapi.wm.StatusBarWidgetProvider"/>
-    <extensionPoint name="statusBarWidgetFactory" interface="com.intellij.openapi.wm.StatusBarWidgetFactory"/>
+    <extensionPoint name="statusBarWidgetProvider" interface="consulo.project.ui.wm.StatusBarWidgetProvider"/>
+    <extensionPoint name="statusBarWidgetFactory" interface="consulo.project.ui.wm.StatusBarWidgetFactory"/>
 
     <extensionPoint name="settingsEntryPointActionProvider" interface="com.intellij.ide.actions.SettingsEntryPointActionProvider"/>
   </extensionPoints>
@@ -1292,7 +1292,7 @@
                         serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingManagerImpl"/>
     <applicationService serviceInterface="com.intellij.ide.plugins.PluginManagerUISettings"
                         serviceImplementation="com.intellij.ide.plugins.PluginManagerUISettings"/>
-    <applicationService serviceImplementation="com.intellij.ide.ui.UISettings"/>
+    <applicationService serviceImplementation="consulo.application.ui.UISettings"/>
     <applicationService serviceInterface="com.intellij.codeInsight.hint.HintManager"
                         serviceImplementation="com.intellij.codeInsight.hint.HintManagerImpl"/>
     <applicationService serviceInterface="com.intellij.codeInsight.hint.TooltipController"

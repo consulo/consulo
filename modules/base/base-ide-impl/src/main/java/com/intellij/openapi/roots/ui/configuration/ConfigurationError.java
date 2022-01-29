@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

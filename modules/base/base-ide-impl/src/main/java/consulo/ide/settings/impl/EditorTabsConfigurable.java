@@ -15,7 +15,7 @@
  */
 package consulo.ide.settings.impl;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;

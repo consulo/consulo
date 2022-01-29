@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 
 import java.util.Map;
 

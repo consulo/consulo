@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.pom.Navigatable;

@@ -16,13 +16,13 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.actionholder.ActionRef;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.ui.plaf.gtk.GtkMenuUI;

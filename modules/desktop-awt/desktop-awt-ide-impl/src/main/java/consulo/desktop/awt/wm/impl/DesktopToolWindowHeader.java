@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.PopupHandler;

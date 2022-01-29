@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.UIBundle;
 
 import javax.swing.*;

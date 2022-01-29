@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.popup.mock;
 
-import com.intellij.openapi.ui.popup.ListPopupStep;
+import consulo.ui.ex.popup.ListPopupStep;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import javax.annotation.Nonnull;
 

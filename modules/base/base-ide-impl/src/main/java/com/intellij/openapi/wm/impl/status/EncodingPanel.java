@@ -5,7 +5,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsListener;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;

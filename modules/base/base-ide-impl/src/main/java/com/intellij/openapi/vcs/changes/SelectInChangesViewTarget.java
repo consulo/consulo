@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import javax.annotation.Nullable;
 
 /**

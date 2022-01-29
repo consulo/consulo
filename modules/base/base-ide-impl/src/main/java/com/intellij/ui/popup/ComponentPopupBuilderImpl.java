@@ -25,6 +25,8 @@ import com.intellij.ui.ActiveComponent;
 import com.intellij.util.BooleanFunction;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -15,6 +15,8 @@
  */
 package com.intellij.ui.awt;
 
+import consulo.ui.ex.RelativePoint;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;

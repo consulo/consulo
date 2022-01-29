@@ -24,7 +24,7 @@ import com.intellij.execution.configurations.UnknownRunConfiguration;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.application.util.function.Conditions;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.AnActionButton;

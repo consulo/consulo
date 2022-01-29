@@ -31,7 +31,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;

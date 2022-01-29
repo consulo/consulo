@@ -14,7 +14,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.ui.OnePixelDivider;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleColoredComponent;

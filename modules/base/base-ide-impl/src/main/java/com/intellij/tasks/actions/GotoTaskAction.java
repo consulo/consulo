@@ -12,7 +12,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Ref;
 import consulo.language.psi.PsiManager;
 import com.intellij.tasks.LocalTask;

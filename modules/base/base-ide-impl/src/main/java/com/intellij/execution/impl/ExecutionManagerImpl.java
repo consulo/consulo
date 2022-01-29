@@ -48,7 +48,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.Alarm;

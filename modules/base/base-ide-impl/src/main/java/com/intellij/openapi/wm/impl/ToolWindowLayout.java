@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.application.ui.UISettings;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.util.ArrayUtil;
 import java.util.HashMap;
-import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

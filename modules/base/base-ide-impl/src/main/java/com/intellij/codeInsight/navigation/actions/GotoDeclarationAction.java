@@ -45,7 +45,7 @@ import consulo.document.util.TextRange;
 import com.intellij.pom.Navigatable;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.codeInsight.TargetElementUtil;

@@ -17,14 +17,14 @@ package com.intellij.xdebugger.impl.evaluate.quick.common;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.LightweightWindowEvent;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.ui.treeStructure.Tree;

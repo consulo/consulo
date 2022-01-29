@@ -21,7 +21,7 @@ package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.util.Ref;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import com.intellij.ui.*;
 import com.intellij.util.ArrayUtil;

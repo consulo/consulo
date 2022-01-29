@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 
 public final class ChangeProjectViewAction extends AnAction {
   @Override

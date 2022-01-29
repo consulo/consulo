@@ -31,7 +31,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;

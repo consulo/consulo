@@ -18,7 +18,7 @@ package com.intellij.ui.tabs;
 
 import com.intellij.icons.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

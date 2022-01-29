@@ -9,7 +9,7 @@ import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;
 import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.project.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

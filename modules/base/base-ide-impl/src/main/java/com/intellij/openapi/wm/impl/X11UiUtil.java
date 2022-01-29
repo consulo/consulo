@@ -18,7 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;

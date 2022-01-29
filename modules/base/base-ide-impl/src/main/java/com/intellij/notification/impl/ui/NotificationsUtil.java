@@ -16,7 +16,7 @@
 package com.intellij.notification.impl.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.ui.MessageType;

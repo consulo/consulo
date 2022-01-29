@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import consulo.project.Project;
 import consulo.disposer.Disposer;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.popup.util.DetailView;

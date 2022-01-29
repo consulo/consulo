@@ -35,7 +35,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.document.Document;

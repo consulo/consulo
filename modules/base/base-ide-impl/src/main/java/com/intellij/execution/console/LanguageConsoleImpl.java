@@ -38,7 +38,7 @@ import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.scope.GlobalSearchScope;

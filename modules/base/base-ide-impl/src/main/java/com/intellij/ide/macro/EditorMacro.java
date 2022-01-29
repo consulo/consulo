@@ -20,7 +20,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 
 import javax.annotation.Nullable;
 

@@ -36,7 +36,7 @@ import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.ui.GenericListComponentUpdater;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Ref;

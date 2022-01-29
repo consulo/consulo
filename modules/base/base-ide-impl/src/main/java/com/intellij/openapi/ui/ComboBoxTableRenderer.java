@@ -24,6 +24,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.ex.popup.ListSeparator;
+import consulo.ui.ex.popup.*;
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

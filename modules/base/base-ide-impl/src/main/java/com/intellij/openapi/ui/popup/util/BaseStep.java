@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.ui.popup.util;
 
-import com.intellij.openapi.ui.popup.MnemonicNavigationFilter;
-import com.intellij.openapi.ui.popup.PopupStep;
-import com.intellij.openapi.ui.popup.SpeedSearchFilter;
+import consulo.ui.ex.popup.MnemonicNavigationFilter;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.SpeedSearchFilter;
 import com.intellij.util.ui.UIUtil;
 
 public abstract class BaseStep<T> implements PopupStep<T>, SpeedSearchFilter<T>, MnemonicNavigationFilter<T> {

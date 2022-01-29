@@ -6,13 +6,13 @@ import com.intellij.ide.IdeTooltip;
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.TooltipEvent;
 import consulo.logging.Logger;
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.application.util.registry.Registry;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.panels.OpaquePanel;
 import javax.annotation.Nonnull;
 

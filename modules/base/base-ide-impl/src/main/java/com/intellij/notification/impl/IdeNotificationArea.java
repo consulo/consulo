@@ -16,8 +16,8 @@
 package com.intellij.notification.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import com.intellij.notification.EventLog;
 import com.intellij.notification.LogModel;
 import com.intellij.notification.Notification;
@@ -26,9 +26,9 @@ import com.intellij.notification.impl.ui.NotificationsUtil;
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
-import com.intellij.openapi.wm.IconLikeCustomStatusBarWidget;
+import consulo.project.ui.wm.IconLikeCustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.Component;
 import consulo.ui.Label;

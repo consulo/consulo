@@ -17,7 +17,7 @@ package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -29,7 +29,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.plaf.gtk.GtkMenuItemUI;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;

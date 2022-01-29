@@ -11,7 +11,7 @@ import com.intellij.openapi.ui.MessageType;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;

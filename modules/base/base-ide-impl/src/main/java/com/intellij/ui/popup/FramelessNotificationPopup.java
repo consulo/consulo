@@ -16,13 +16,13 @@
 
 package com.intellij.ui.popup;
 
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.LightweightWindowEvent;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.ui.ListenerUtil;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;

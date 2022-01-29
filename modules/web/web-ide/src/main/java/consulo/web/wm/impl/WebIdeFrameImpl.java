@@ -17,11 +17,11 @@ package consulo.web.wm.impl;
 
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
-import com.intellij.ui.BalloonLayout;
+import consulo.project.ui.wm.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

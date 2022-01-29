@@ -11,7 +11,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

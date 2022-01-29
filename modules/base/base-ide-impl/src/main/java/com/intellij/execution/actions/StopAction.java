@@ -23,6 +23,9 @@ import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.SmartList;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

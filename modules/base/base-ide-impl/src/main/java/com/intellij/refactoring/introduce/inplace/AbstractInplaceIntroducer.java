@@ -37,7 +37,7 @@ import consulo.document.Document;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
@@ -47,7 +47,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.PositionTracker;
+import consulo.ui.ex.PositionTracker;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

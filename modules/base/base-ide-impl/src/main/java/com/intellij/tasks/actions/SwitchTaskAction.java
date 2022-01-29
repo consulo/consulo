@@ -33,6 +33,9 @@ import com.intellij.tasks.impl.TaskManagerImpl;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.popup.ListSeparator;
+import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.settings;
 
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import com.intellij.ide.ui.search.ConfigurableHit;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
@@ -40,7 +40,7 @@ import com.intellij.openapi.ui.NullableComponent;
 import consulo.application.util.function.Conditions;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.LightColors;

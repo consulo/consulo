@@ -44,7 +44,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.AppIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;

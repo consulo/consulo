@@ -29,7 +29,7 @@ import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.psi.impl.source.tree.injected.InjectedCaret;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;

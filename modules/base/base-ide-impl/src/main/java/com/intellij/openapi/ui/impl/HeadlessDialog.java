@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui.impl;
 
 import com.intellij.openapi.ui.DialogWrapper;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -9,7 +9,7 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.language.lexer.Lexer;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.UndoUtil;

@@ -16,7 +16,7 @@
 package com.intellij.ide.dnd;
 
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import javax.annotation.Nullable;
 

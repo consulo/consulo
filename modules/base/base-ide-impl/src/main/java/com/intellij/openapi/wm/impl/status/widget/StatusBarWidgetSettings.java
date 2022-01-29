@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.wm.impl.status.widget;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.wm.StatusBarWidgetFactory;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import com.intellij.openapi.wm.impl.status.MemoryUsagePanel;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import jakarta.inject.Singleton;

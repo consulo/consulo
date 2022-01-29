@@ -22,7 +22,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
 import consulo.project.DumbAware;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 
 public class NextSplitAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {

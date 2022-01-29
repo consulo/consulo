@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.util.NullableComputable;
 import com.intellij.openapi.util.Pair;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.HoverHyperlinkLabel;

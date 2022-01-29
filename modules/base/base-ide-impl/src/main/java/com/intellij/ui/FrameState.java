@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import consulo.awt.TargetAWT;
 import consulo.awt.hacking.AWTAccessorHacking;

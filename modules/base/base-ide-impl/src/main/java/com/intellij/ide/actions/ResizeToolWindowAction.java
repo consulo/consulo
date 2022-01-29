@@ -28,9 +28,9 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.awt.TargetAWT;
+import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
-import consulo.project.ui.wm.IdeFrameUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

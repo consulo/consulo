@@ -62,7 +62,7 @@ import com.intellij.openapi.vcs.vfs.VcsVirtualFile;
 import com.intellij.openapi.vcs.vfs.VcsVirtualFolder;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.dualView.CellWrapper;

@@ -34,7 +34,7 @@ import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import com.intellij.openapi.vcs.changes.actions.RollbackDialogAction;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.EventDispatcher;

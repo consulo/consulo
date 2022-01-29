@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;

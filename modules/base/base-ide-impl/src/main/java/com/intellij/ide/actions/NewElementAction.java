@@ -23,7 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.application.util.function.Condition;
 
 import javax.annotation.Nullable;

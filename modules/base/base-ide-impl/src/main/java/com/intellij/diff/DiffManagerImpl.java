@@ -35,7 +35,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.WindowWrapper;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;

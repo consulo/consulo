@@ -31,7 +31,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.configurable.Configurable;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.application.util.function.Condition;
 import consulo.document.util.TextRange;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.ui.GraphicsConfig;

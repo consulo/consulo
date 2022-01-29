@@ -29,6 +29,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
 import javax.swing.*;
 import java.awt.*;

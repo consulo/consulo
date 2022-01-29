@@ -17,8 +17,8 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;

@@ -16,7 +16,7 @@
  */
 package consulo.desktop.awt.ui.plaf.beg;
 
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;

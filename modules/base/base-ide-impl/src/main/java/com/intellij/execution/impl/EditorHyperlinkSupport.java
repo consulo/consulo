@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.pom.NavigatableAdapter;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.Consumer;
 import com.intellij.util.FilteringProcessor;

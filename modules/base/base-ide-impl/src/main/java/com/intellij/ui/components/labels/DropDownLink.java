@@ -3,9 +3,9 @@ package com.intellij.ui.components.labels;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.popup.IPopupChooserBuilder;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.util.PopupState;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Consumer;

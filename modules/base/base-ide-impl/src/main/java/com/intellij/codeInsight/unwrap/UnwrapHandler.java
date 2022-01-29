@@ -32,6 +32,8 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.*;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiElement;

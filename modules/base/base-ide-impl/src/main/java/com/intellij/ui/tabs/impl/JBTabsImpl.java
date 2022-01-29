@@ -24,12 +24,12 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.*;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
@@ -67,7 +67,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
 
-import static consulo.project.ui.wm.IdeFocusManager.getGlobalInstance;
+import static consulo.project.ui.IdeFocusManager.getGlobalInstance;
 
 /**
  * Consulo tab panel

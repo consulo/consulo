@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.project.DumbAware;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 
 public class ViewNavigationBarAction extends ToggleAction implements DumbAware {
   @Override

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.project.ProjectUtilCore;

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.uiOld.docking.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.Presentation;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
@@ -34,13 +34,13 @@ import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.MutualMap;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.VerticalBox;

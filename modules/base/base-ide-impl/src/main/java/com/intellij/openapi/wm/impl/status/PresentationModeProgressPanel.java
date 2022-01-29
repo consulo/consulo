@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

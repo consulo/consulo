@@ -19,7 +19,7 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
 import com.intellij.util.containers.MultiMap;
 import consulo.container.plugin.PluginDescriptor;

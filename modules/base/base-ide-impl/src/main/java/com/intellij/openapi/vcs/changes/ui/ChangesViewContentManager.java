@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.content.*;

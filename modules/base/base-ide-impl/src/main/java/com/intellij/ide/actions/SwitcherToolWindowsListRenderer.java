@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.ui.*;
 import com.intellij.util.ui.JBUI;
 import consulo.ui.annotation.RequiredUIAccess;

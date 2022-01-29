@@ -28,7 +28,7 @@ import com.intellij.openapi.keymap.impl.ui.MouseShortcutPanel;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.impl.FocusManagerImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;

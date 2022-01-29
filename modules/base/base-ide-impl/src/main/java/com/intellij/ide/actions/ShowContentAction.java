@@ -19,9 +19,9 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ShadowAction;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowContentUiType;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowContentUiType;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

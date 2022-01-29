@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.application.util.function.Condition;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsNotifier;

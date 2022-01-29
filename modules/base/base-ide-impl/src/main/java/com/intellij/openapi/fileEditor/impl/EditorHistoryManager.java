@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;

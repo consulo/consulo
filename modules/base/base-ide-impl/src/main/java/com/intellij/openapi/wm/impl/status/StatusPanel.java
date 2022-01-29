@@ -29,7 +29,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Alarm;

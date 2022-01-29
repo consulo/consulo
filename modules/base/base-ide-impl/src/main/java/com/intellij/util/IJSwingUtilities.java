@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.wm.ex.WindowManagerEx;

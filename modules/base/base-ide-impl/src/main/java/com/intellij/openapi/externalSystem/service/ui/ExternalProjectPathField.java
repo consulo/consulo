@@ -36,7 +36,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.FixedSizeButton;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;

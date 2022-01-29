@@ -31,7 +31,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;

@@ -23,7 +23,7 @@ import com.intellij.openapi.util.TimedOutCallback;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.keymap.KeymapManager;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import consulo.util.concurrent.ActionCallback;
 
 import javax.swing.*;

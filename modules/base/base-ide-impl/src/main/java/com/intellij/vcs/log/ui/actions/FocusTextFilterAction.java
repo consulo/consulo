@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
-import consulo.project.ui.wm.IdeFocusManager;
+import consulo.project.ui.IdeFocusManager;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;

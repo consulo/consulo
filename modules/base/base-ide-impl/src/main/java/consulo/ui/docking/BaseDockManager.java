@@ -23,7 +23,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.MutualMap;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockContainerFactory;
 import com.intellij.ui.docking.DockManager;

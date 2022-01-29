@@ -17,7 +17,7 @@ package com.intellij.ide.dnd;
 
 import consulo.logging.Logger;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.ArrayUtil;
 

@@ -15,18 +15,18 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.event.UISettingsListener;
 import com.intellij.openapi.MnemonicHelper;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.util.WindowStateService;
-import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.ui.BalloonLayout;
+import consulo.project.ui.wm.BalloonLayout;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.JBUI;

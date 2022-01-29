@@ -12,7 +12,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.util.containers.JBIterable;
 import consulo.ui.annotation.RequiredUIAccess;
 

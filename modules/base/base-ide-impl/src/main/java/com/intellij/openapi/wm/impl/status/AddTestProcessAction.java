@@ -25,11 +25,11 @@ import consulo.application.progress.Task;
 import consulo.project.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.RelativePoint;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

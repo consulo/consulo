@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.ex;
 
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
+import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.ui.AppIcon;
 import consulo.ui.annotation.RequiredUIAccess;

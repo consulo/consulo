@@ -31,7 +31,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import javax.annotation.Nonnull;
 
 import java.io.File;

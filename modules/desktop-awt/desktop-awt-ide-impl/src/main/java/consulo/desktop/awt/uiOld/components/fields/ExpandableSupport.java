@@ -2,12 +2,12 @@
 package consulo.desktop.awt.uiOld.components.fields;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.ui.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pair;
 import consulo.desktop.awt.uiOld.Expandable;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent.Extension;
 import com.intellij.util.Function;
 import com.intellij.util.ui.UIUtil;

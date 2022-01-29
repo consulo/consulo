@@ -19,9 +19,9 @@ import consulo.project.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

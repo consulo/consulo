@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.PopupAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.project.DumbAware;
-import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.ex.RelativePoint;
 
 import javax.swing.*;
 import java.awt.*;

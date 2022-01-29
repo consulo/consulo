@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ide.ui.UISettings;
+import consulo.application.ui.UISettings;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ArrayUtil;
