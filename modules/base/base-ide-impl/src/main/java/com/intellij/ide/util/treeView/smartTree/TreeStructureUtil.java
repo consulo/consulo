@@ -17,7 +17,7 @@
 package com.intellij.ide.util.treeView.smartTree;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ui.PlaceHolder;
+import consulo.ui.ex.PlaceHolder;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

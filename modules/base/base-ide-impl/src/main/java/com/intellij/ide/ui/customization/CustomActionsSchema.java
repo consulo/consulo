@@ -16,9 +16,9 @@
 package com.intellij.ide.ui.customization;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;

@@ -16,14 +16,12 @@
 package com.intellij.execution.testframework.ui;
 
 import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.openapi.progress.util.ColorProgressBar;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBProgressBar;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ui.JBDimension;
-import com.intellij.util.ui.JBEmptyBorder;
+import consulo.application.ui.awt.JBDimension;
 
 import javax.swing.*;
 import java.awt.*;

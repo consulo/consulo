@@ -11,7 +11,7 @@ import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FakeFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 

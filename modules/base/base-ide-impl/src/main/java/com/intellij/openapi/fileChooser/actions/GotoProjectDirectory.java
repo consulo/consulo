@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.fileChooser.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import consulo.application.Application;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import consulo.virtualFileSystem.VirtualFile;

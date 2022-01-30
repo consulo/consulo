@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import consulo.fileEditor.impl.EditorComposite;

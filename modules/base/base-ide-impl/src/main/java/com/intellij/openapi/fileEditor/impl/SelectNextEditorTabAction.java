@@ -19,9 +19,9 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.project.DumbAware;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.dumb.DumbAware;
 
 // The only purpose of this action is to serve as placeholder for assigning keyboard shortcuts.
 // For actual tab switching code, see EditorComposite constructor.

@@ -19,7 +19,7 @@ package com.intellij.execution.ui.actions;
 import com.intellij.execution.ui.layout.Grid;
 import com.intellij.execution.ui.layout.Tab;
 import com.intellij.execution.ui.layout.ViewContext;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.ui.wm.content.Content;
 

@@ -15,7 +15,7 @@
  */
 package consulo.project.impl;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.EmptyRunnable;

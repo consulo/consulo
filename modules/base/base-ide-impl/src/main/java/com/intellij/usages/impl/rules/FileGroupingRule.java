@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.util.dataholder.Key;

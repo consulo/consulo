@@ -5,7 +5,7 @@ import com.intellij.openapi.util.ColoredItem;
 import com.intellij.ui.BackgroundSupplier;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.list.ListCellBackgroundSupplier;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

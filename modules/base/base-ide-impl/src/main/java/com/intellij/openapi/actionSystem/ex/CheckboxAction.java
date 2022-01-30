@@ -18,10 +18,14 @@ package com.intellij.openapi.actionSystem.ex;
 
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.util.text.TextWithMnemonic;
-import com.intellij.util.ui.UIUtil;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.application.ui.awt.UIUtil;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

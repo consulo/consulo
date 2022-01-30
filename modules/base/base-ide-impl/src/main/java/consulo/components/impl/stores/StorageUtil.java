@@ -36,7 +36,7 @@ import consulo.virtualFileSystem.event.VirtualFileEvent;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UnsyncByteArrayOutputStream;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

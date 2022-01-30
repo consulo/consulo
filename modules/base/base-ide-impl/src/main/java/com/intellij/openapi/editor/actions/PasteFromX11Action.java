@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 
 import javax.swing.*;
 import java.awt.*;

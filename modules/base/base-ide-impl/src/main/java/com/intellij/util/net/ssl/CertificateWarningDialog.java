@@ -1,13 +1,13 @@
 package com.intellij.util.net.ssl;
 
 import com.intellij.icons.AllIcons;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -29,13 +29,10 @@ import com.intellij.execution.testframework.Filter;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentContainer;
+import consulo.ui.ex.ComponentContainer;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Getter;
 import consulo.component.persist.InvalidDataException;
@@ -43,9 +40,12 @@ import consulo.component.persist.WriteExternalException;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
@@ -94,7 +94,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
   }
 
   private boolean isActive(AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return false;
     }

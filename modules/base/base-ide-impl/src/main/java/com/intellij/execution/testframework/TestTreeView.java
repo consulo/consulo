@@ -24,6 +24,7 @@ import com.intellij.execution.Location;
 import com.intellij.execution.testframework.ui.BaseTestProxyNodeDescriptor;
 import com.intellij.ide.CopyProvider;
 import com.intellij.ide.actions.CopyReferenceAction;
+import consulo.application.ui.awt.JBColor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -38,7 +39,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
 

@@ -15,8 +15,8 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

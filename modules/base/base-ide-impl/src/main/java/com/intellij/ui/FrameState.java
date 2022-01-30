@@ -15,11 +15,11 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.awt.hacking.AWTAccessorHacking;
 
 import javax.annotation.Nonnull;

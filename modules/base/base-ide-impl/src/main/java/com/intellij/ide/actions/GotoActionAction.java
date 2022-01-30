@@ -26,10 +26,11 @@ import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.dataContext.DataContext;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -37,7 +38,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,7 +57,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    if (Registry.is("new.search.everywhere") && e.getProject() != null) {
+    if (Registry.is("new.search.everywhere") && e.getData(CommonDataKeys.PROJECT) != null) {
       showInSearchEverywherePopup(ActionSearchEverywhereContributor.class.getSimpleName(), e, false, true);
     }
     else {
@@ -66,7 +67,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     Editor editor = e.getData(CommonDataKeys.EDITOR);
 

@@ -24,7 +24,7 @@ import consulo.language.Language;
 import com.intellij.lang.LanguageCodeInsightActionHandler;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import javax.annotation.Nonnull;

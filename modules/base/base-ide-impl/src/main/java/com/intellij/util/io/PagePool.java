@@ -19,7 +19,7 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import consulo.util.collection.impl.map.LinkedHashMap;
 
 import javax.annotation.Nonnull;

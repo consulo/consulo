@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.util.Consumer;
 import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.*;
 import jakarta.inject.Inject;

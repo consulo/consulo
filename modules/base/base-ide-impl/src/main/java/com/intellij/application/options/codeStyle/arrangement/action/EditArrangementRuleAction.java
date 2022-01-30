@@ -16,10 +16,10 @@
 package com.intellij.application.options.codeStyle.arrangement.action;
 
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.Toggleable;
 import com.intellij.openapi.application.ApplicationBundle;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.util.IconUtil;
 import consulo.util.collection.primitive.ints.IntList;
 

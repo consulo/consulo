@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.util.QueryParameters;
 import javax.annotation.Nonnull;

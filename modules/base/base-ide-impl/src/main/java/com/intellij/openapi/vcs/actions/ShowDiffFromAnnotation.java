@@ -19,7 +19,7 @@ import com.intellij.diff.DiffDialogHints;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.icons.AllIcons;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.diff.DiffNavigationContext;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

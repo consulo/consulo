@@ -19,6 +19,7 @@ package com.intellij.refactoring.ui;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import consulo.application.ui.awt.JBColor;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;

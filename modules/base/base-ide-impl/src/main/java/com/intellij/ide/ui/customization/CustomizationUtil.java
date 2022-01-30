@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.ui.customization;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.util.text.TextWithMnemonic;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import com.intellij.openapi.util.Pair;
@@ -27,6 +27,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.ui.tree.TreeUtil;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -70,7 +71,7 @@ public class CustomizationUtil {
   }
 
 
-  static AnAction [] getReordableChildren(ActionGroup group, CustomActionsSchema schema, String defaultGroupName, AnActionEvent e) {
+  static AnAction[] getReordableChildren(ActionGroup group, CustomActionsSchema schema, String defaultGroupName, AnActionEvent e) {
     String text = group.getTemplatePresentation().getText();
     ActionManager actionManager = ActionManager.getInstance();
     final ArrayList<AnAction> reorderedChildren = new ArrayList<AnAction>();

@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.module.Module;
@@ -49,7 +49,7 @@ public class OpenModuleSettingsAction extends EditSourceAction {
   }
 
   public static boolean isModuleInContext(@Nonnull AnActionEvent e) {
-    final Project project = getEventProject(e);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     final Module module = e.getData(LangDataKeys.MODULE);
     if (project != null && module != null) {
       final VirtualFile moduleFolder = e.getData(CommonDataKeys.VIRTUAL_FILE);

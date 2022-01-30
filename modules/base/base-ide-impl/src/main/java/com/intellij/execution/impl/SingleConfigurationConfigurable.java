@@ -26,7 +26,7 @@ import com.intellij.openapi.options.SettingsEditorConfigurable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBCheckBox;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 

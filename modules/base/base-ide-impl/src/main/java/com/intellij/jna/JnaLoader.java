@@ -15,7 +15,7 @@
  */
 package com.intellij.jna;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.sun.jna.Native;
 import consulo.logging.Logger;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

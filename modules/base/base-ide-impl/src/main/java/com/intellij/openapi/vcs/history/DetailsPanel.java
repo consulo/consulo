@@ -23,10 +23,10 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.util.ui.HtmlPanel;
 import com.intellij.util.ui.StatusText;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.desktop.util.awt.StringHtmlUtil;
 
 import javax.annotation.Nonnull;

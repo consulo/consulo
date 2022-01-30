@@ -32,7 +32,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;

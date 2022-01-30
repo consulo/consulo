@@ -15,9 +15,10 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.application.WriteAction;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.ModifiableModuleModel;
@@ -42,7 +43,7 @@ public class ImportModuleAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     assert project != null;
     executeImportAction(project, null);
   }
@@ -68,7 +69,7 @@ public class ImportModuleAction extends AnAction {
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
-    if (e.getProject() == null) {
+    if (e.getData(CommonDataKeys.PROJECT) == null) {
       presentation.setEnabledAndVisible(false);
       return;
     }

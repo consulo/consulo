@@ -16,8 +16,8 @@
 package com.intellij.vcs.log.ui.filter;
 
 import com.google.common.primitives.Chars;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -33,8 +33,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.textCompletion.DefaultTextCompletionValueDescriptor;
 import com.intellij.util.textCompletion.TextFieldWithCompletion;
 import com.intellij.util.textCompletion.ValuesCompletionProvider.ValuesCompletionProviderDumbAware;
-import com.intellij.util.ui.JBDimension;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBDimension;
+import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

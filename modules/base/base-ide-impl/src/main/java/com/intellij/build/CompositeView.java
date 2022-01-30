@@ -6,12 +6,15 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataProvider;
-import consulo.project.DumbAware;
-import com.intellij.openapi.ui.ComponentContainer;
+import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.ComponentContainer;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 

@@ -20,14 +20,16 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAwareAction;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.dataContext.DataContext;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
 
 public class GenerateAction extends DumbAwareAction {
   @RequiredUIAccess
@@ -122,7 +124,7 @@ public class GenerateAction extends DumbAwareAction {
     @Override
     @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      final Project project = getEventProject(e);
+      final Project project = e.getData(CommonDataKeys.PROJECT);
       assert project != null;
       final DumbService dumbService = DumbService.getInstance(project);
       try {

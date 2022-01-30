@@ -29,6 +29,8 @@ import consulo.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.ThrowableConvertor;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;

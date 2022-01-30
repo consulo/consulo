@@ -19,8 +19,8 @@ import com.intellij.ide.passwordSafe.config.PasswordSafeSettings;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.DialogUtil;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.swing.*;
 

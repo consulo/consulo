@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.border.IdeaTitledBorder;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

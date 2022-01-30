@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.StatusText;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

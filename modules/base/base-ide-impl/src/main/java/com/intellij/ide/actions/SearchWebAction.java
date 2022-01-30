@@ -8,7 +8,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.dataContext.DataContext;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.ide.actions.webSearch.WebSearchEngine;
@@ -16,6 +16,10 @@ import consulo.ide.actions.webSearch.WebSearchOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import jakarta.inject.Inject;
 import java.awt.datatransfer.DataFlavor;
 

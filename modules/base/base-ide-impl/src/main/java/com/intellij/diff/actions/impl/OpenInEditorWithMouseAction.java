@@ -19,9 +19,11 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.pom.Navigatable;
+import consulo.ui.ex.action.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -58,7 +60,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
       return;
     }
 
-    if (e.getProject() == null) {
+    if (e.getData(CommonDataKeys.PROJECT) == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }

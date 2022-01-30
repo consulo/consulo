@@ -16,7 +16,7 @@
 package com.intellij.diff.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -28,8 +28,9 @@ import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.application.util.function.Conditions;
 import consulo.application.util.registry.Registry;
@@ -39,8 +40,8 @@ import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
@@ -137,7 +138,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Application.get().invokeLater(() -> {
-        Project project = e.getProject();
+        Project project = e.getData(CommonDataKeys.PROJECT);
 
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setUseApplicationDialog();
@@ -296,7 +297,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }

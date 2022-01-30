@@ -16,8 +16,9 @@
 
 package com.intellij.tasks.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.tasks.CustomTaskState;
@@ -38,7 +39,7 @@ public class CloseTaskAction extends BaseTaskAction
 	@RequiredUIAccess
 	public void actionPerformed(@Nonnull AnActionEvent e)
 	{
-		Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
 		assert project != null;
 		TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(project);
 		LocalTask task = taskManager.getActiveTask();

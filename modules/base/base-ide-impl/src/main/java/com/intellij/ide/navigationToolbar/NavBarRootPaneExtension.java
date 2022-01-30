@@ -33,10 +33,11 @@ import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.JBSwingUtilities;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.action.*;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 

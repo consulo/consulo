@@ -16,11 +16,10 @@
 package com.intellij.openapi.keymap;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.application.util.registry.RegistryValueListener;
@@ -28,9 +27,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.MacKeymapUtil;
+import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,28 +43,12 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class KeymapUtil {
-
-  @NonNls
-  private static final String APPLE_LAF_AQUA_LOOK_AND_FEEL_CLASS_NAME = "apple.laf.AquaLookAndFeel";
-  @NonNls
-  private static final String GET_KEY_MODIFIERS_TEXT_METHOD = "getKeyModifiersText";
-  @NonNls
-  private static final String CANCEL_KEY_TEXT = "Cancel";
-  @NonNls
-  private static final String BREAK_KEY_TEXT = "Break";
-  @NonNls
   private static final String SHIFT = "shift";
-  @NonNls
   private static final String CONTROL = "control";
-  @NonNls
   private static final String CTRL = "ctrl";
-  @NonNls
   private static final String META = "meta";
-  @NonNls
   private static final String ALT = "alt";
-  @NonNls
   private static final String ALT_GRAPH = "altGraph";
-  @NonNls
   private static final String DOUBLE_CLICK = "doubleClick";
 
   private static final Set<Integer> ourTooltipKeys = new HashSet<Integer>();
@@ -181,25 +166,7 @@ public class KeymapUtil {
   }
 
   public static String getKeystrokeText(KeyStroke accelerator) {
-    if (accelerator == null) return "";
-    if (SystemInfo.isMac) {
-      return MacKeymapUtil.getKeyStrokeText(accelerator);
-    }
-    String acceleratorText = "";
-    int modifiers = accelerator.getModifiers();
-    if (modifiers > 0) {
-      acceleratorText = getModifiersText(modifiers);
-    }
-
-    final int code = accelerator.getKeyCode();
-    String keyText = SystemInfo.isMac ? MacKeymapUtil.getKeyText(code) : KeyEvent.getKeyText(code);
-    // [vova] this is dirty fix for bug #35092
-    if (CANCEL_KEY_TEXT.equals(keyText)) {
-      keyText = BREAK_KEY_TEXT;
-    }
-
-    acceleratorText += keyText;
-    return acceleratorText.trim();
+    return ShortcutUtil.getKeystrokeText(accelerator);
   }
 
   private static String getModifiersText(@JdkConstants.InputEventMask int modifiers) {
@@ -427,13 +394,7 @@ public class KeymapUtil {
 
   @Nullable
   public static KeyStroke getKeyStroke(@Nonnull final ShortcutSet shortcutSet) {
-    final Shortcut[] shortcuts = shortcutSet.getShortcuts();
-    if (shortcuts.length == 0 || !(shortcuts[0] instanceof KeyboardShortcut)) return null;
-    final KeyboardShortcut shortcut = (KeyboardShortcut)shortcuts[0];
-    if (shortcut.getSecondKeyStroke() != null) {
-      return null;
-    }
-    return shortcut.getFirstKeyStroke();
+    return ShortcutUtil.getKeyStroke(shortcutSet);
   }
 
   @Nonnull

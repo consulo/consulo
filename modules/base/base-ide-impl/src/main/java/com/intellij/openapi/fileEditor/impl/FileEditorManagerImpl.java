@@ -15,6 +15,10 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
+import consulo.application.dumb.DumbAwareRunnable;
+import consulo.application.dumb.PossiblyDumbAware;
+import consulo.component.util.ActiveRunnable;
+import consulo.component.util.BusyObject;
 import consulo.module.content.ProjectTopics;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
@@ -69,13 +73,13 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.messages.impl.MessageListenerList;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.component.persist.PersistentStateComponentWithUIState;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

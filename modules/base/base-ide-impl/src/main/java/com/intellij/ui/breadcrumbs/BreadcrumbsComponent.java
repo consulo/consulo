@@ -16,7 +16,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import consulo.application.ui.UISettings;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Weighted;
 import com.intellij.ui.paint.RectanglePainter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBInsets;
+import consulo.application.ui.awt.JBInsets;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import org.jetbrains.annotations.NonNls;

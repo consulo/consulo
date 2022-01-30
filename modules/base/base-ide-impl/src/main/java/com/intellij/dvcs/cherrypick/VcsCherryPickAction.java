@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.cherrypick;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -62,7 +62,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
     e.getPresentation().setVisible(true);
 
     final VcsLog log = e.getData(VcsLogDataKeys.VCS_LOG);
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;

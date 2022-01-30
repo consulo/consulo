@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -21,7 +21,7 @@ import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vfs.LocalFileSystem;

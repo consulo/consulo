@@ -17,10 +17,13 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 /**
  * @author Vladimir Kondratyev

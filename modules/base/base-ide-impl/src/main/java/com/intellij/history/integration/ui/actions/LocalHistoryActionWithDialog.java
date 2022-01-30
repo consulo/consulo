@@ -17,14 +17,15 @@
 package com.intellij.history.integration.ui.actions;
 
 import com.intellij.history.integration.IdeaGateway;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 public abstract class LocalHistoryActionWithDialog extends LocalHistoryAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    showDialog(getEventProject(e), getGateway(), getFile(e), e);
+    showDialog(e == null ? null : e.getData(CommonDataKeys.PROJECT), getGateway(), getFile(e), e);
   }
 
   protected abstract void showDialog(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e);

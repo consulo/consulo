@@ -17,7 +17,7 @@
 package com.intellij.ui.tabs;
 
 import com.intellij.openapi.fileEditor.impl.EditorTabColorProvider;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.FileColorManager;

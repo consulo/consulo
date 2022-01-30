@@ -25,7 +25,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBDimension;
+import consulo.application.ui.awt.JBDimension;
 
 import javax.swing.*;
 import java.awt.*;

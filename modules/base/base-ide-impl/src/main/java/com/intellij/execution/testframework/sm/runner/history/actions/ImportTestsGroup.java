@@ -19,13 +19,15 @@ import com.intellij.execution.TestStateStorage;
 import com.intellij.execution.testframework.sm.TestHistoryConfiguration;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.AnSeparator;
+import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -52,7 +54,7 @@ public class
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return EMPTY_ARRAY;
     final Collection<String> filePaths = TestHistoryConfiguration.getInstance(project).getFiles();
     final File testHistoryRoot = TestStateStorage.getTestHistoryRoot(project);
@@ -80,6 +82,6 @@ public class
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.getProject() != null);
+    e.getPresentation().setEnabledAndVisible(e.getData(CommonDataKeys.PROJECT) != null);
   }
 }

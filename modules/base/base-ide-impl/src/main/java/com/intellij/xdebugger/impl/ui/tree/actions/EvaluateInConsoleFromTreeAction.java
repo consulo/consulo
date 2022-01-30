@@ -1,7 +1,7 @@
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
 import com.intellij.execution.console.ConsoleExecuteAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.xdebugger.impl.actions.handlers.XEvaluateInConsoleFromEditorActionHandler;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;

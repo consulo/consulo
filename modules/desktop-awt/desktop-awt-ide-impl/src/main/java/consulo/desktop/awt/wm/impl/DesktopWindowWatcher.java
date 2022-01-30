@@ -24,7 +24,7 @@ import com.intellij.openapi.wm.FocusWatcher;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.IdeFrameUtil;
 import org.jetbrains.annotations.NonNls;

@@ -27,7 +27,7 @@ import consulo.language.ast.LighterAST;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.indexing.*;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;

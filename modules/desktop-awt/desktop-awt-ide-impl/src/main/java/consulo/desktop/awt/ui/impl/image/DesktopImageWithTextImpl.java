@@ -15,11 +15,11 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBFont;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBFont;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
-import static com.intellij.util.ui.JBUI.ScaleType.OBJ_SCALE;
+import static consulo.application.ui.awt.JBUI.ScaleType.OBJ_SCALE;
 
 /**
  * @author VISTALL

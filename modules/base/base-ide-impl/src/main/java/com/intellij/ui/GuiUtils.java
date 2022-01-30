@@ -32,7 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.ui.annotation.RequiredUIAccess;

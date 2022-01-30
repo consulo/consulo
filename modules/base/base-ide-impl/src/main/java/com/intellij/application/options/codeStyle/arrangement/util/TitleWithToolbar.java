@@ -15,9 +15,9 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.util;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ui.GridBag;
 import javax.annotation.Nonnull;

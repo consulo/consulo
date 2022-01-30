@@ -25,7 +25,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.wm.impl.ContentManagerBase;
 import org.jetbrains.annotations.NonNls;
 

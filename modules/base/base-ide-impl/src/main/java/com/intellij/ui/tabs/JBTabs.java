@@ -15,10 +15,10 @@
  */
 package com.intellij.ui.tabs;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.dataContext.DataProvider;
 import consulo.util.concurrent.ActionCallback;
-import com.intellij.openapi.util.ActiveRunnable;
+import consulo.component.util.ActiveRunnable;
 import consulo.ui.ex.RelativePoint;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

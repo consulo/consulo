@@ -1,10 +1,10 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.JBValue;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.JBValue;
 
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;

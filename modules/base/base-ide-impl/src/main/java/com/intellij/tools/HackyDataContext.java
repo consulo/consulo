@@ -17,6 +17,7 @@ package com.intellij.tools;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

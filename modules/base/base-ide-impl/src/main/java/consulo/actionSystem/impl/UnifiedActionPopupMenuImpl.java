@@ -16,8 +16,8 @@
 package consulo.actionSystem.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionPopupMenu;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;

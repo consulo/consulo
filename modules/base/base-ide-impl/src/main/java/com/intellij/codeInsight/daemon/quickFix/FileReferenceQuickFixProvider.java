@@ -29,7 +29,7 @@ import com.intellij.openapi.fileTypes.UnknownFileType;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;

@@ -26,7 +26,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.ProjectAndLibrariesScope;
 import com.intellij.psi.search.ProjectScopeImpl;
 import consulo.application.util.function.Processor;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;

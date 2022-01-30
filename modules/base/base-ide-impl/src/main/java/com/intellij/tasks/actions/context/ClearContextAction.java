@@ -16,7 +16,7 @@
 
 package com.intellij.tasks.actions.context;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.command.undo.GlobalUndoableAction;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import consulo.project.Project;

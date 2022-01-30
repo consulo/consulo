@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.keymap.impl;
 
-import com.intellij.openapi.actionSystem.KeyboardShortcut;
-import com.intellij.openapi.actionSystem.MouseShortcut;
-import com.intellij.openapi.actionSystem.Shortcut;
+import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.action.MouseShortcut;
+import consulo.ui.ex.action.Shortcut;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;

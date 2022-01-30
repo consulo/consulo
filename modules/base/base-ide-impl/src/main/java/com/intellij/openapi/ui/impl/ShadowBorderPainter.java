@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.ui.impl;
 
-import com.intellij.ui.Gray;
-import com.intellij.util.ui.ImageUtil;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.ImageUtil;
 import consulo.desktop.util.awt.graphics.GraphicsUtilities;
 import consulo.desktop.util.awt.graphics.ShadowRenderer;
 

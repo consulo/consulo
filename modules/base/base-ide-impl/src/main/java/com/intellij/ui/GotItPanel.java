@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.JBHtmlEditorKit;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import javax.swing.*;
 import java.awt.*;

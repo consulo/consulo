@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.execution.Location;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

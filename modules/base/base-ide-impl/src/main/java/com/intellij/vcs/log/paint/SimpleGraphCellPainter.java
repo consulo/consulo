@@ -17,7 +17,7 @@ package com.intellij.vcs.log.paint;
 
 import consulo.application.util.function.Condition;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.EdgePrintElement;
 import com.intellij.vcs.log.graph.NodePrintElement;

@@ -41,8 +41,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.treeWithCheckedNodes.SelectionManager;
 import com.intellij.util.treeWithCheckedNodes.TreeNodeState;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

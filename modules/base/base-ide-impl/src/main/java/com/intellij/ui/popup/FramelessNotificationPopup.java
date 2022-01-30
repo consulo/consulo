@@ -23,7 +23,7 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.ui.ListenerUtil;
 import com.intellij.ui.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -32,8 +32,8 @@ import com.intellij.ui.treeStructure.treetable.TreeTableModel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AbstractTableCellEditor;
 import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.logging.Logger;
 

@@ -21,14 +21,14 @@ import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.RetrievableIcon;
-import com.intellij.ui.paint.PaintUtil;
-import com.intellij.util.ImageLoader;
+import consulo.application.ui.awt.paint.PaintUtil;
+import consulo.application.ui.awt.internal.ImageLoader;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.RetinaImage;
-import com.intellij.util.ui.ImageUtil;
+import consulo.application.ui.awt.internal.RetinaImage;
+import consulo.application.ui.awt.ImageUtil;
 import com.intellij.util.ui.JBImageIcon;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.logging.Logger;
 import consulo.desktop.awt.ui.impl.image.DesktopLazyImageImpl;
@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static com.intellij.util.ui.JBUI.ScaleType.*;
+import static consulo.application.ui.awt.JBUI.ScaleType.*;
 
 /**
  * @author VISTALL

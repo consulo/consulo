@@ -16,7 +16,7 @@
 package com.intellij.application.options.codeStyle.arrangement.util;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.border.Border;

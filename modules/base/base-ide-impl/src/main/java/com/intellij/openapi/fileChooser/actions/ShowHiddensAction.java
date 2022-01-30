@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.fileChooser.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.fileChooser.FileSystemTree;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 
 /**
  * @author Vladimir Kondratyev

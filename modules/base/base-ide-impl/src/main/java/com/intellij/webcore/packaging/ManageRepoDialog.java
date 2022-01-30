@@ -27,7 +27,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.CatchingConsumer;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import javax.swing.*;
 import java.util.List;

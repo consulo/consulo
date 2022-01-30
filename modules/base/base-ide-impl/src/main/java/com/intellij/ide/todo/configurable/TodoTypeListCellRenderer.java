@@ -16,7 +16,7 @@
 
 package com.intellij.ide.todo.configurable;
 
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

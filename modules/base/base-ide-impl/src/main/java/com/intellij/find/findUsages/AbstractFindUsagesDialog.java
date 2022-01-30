@@ -26,8 +26,8 @@ import com.intellij.ui.SeparatorFactory;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.StateRestoringCheckBox;
 import com.intellij.usageView.UsageViewContentManager;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;

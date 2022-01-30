@@ -17,8 +17,8 @@
 package com.intellij.ide.todo.configurable;
 
 import com.intellij.psi.search.TodoPattern;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

@@ -2,7 +2,7 @@
 package com.intellij.util.ui;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

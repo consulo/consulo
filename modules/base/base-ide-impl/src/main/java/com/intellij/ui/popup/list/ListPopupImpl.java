@@ -31,8 +31,8 @@ import com.intellij.ui.popup.ClosableByLeftArrow;
 import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.ui.popup.NextStepHandler;
 import com.intellij.ui.popup.WizardPopup;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

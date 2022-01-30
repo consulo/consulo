@@ -17,12 +17,13 @@ import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.ui.PopupHandler;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

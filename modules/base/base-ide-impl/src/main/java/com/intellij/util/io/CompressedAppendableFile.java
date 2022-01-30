@@ -6,7 +6,7 @@ import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.CompressionUtil;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.SLRUMap;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataInputOutputUtil;

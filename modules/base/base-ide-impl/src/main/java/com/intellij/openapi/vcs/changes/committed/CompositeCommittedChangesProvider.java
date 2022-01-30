@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.AsynchConsumer;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

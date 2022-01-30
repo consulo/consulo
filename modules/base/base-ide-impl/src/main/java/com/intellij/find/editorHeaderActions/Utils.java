@@ -1,15 +1,15 @@
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.CustomShortcutSet;
-import com.intellij.openapi.actionSystem.Shortcut;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

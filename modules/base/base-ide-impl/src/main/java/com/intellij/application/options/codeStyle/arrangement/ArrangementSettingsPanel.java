@@ -35,6 +35,11 @@ import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.ShortcutSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

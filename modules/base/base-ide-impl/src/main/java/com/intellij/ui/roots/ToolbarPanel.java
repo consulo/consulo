@@ -15,10 +15,10 @@
  */
 package com.intellij.ui.roots;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbar;
 import com.intellij.ui.border.CustomLineBorder;
 
 import javax.swing.*;

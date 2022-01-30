@@ -40,6 +40,11 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.Presentation;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -142,7 +147,7 @@ public abstract class GotoActionBase extends AnAction {
       return Pair.create(query, 0);
     }
 
-    final Component focusOwner = IdeFocusManager.getInstance(getEventProject(e)).getFocusOwner();
+    final Component focusOwner = IdeFocusManager.getInstance(e == null ? null : e.getData(CommonDataKeys.PROJECT)).getFocusOwner();
     if (focusOwner instanceof JComponent) {
       final SpeedSearchSupply supply = SpeedSearchSupply.getSupply((JComponent)focusOwner);
       if (supply != null) {
@@ -308,7 +313,7 @@ public abstract class GotoActionBase extends AnAction {
   }
 
   protected void showInSearchEverywherePopup(@Nonnull String searchProviderID, @Nonnull AnActionEvent event, boolean useEditorSelection, boolean sendStatistics) {
-    Project project = event.getProject();
+    Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(project);
     FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_SEARCH_EVERYWHERE);

@@ -41,7 +41,7 @@ import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
@@ -53,7 +53,7 @@ import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.util.collection.primitive.ints.IntStack;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.util.dataholder.Key;
 

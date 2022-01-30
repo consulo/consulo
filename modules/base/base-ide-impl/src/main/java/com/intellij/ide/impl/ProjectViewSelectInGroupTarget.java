@@ -20,7 +20,7 @@ import com.intellij.ide.CompositeSelectInTarget;
 import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.projectView.ProjectView;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.ToolWindowId;
 

@@ -25,6 +25,7 @@ import consulo.language.Language;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.content.library.Library;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.application.util.function.Condition;
 import consulo.annotation.DeprecationInfo;

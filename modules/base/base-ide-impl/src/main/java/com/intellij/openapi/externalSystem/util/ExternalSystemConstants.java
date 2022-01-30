@@ -14,7 +14,7 @@
  */
 package com.intellij.openapi.externalSystem.util;
 
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

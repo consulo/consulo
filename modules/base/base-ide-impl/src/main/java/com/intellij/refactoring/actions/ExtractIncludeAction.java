@@ -19,7 +19,7 @@ package com.intellij.refactoring.actions;
 import com.intellij.ide.TitledHandler;
 import consulo.language.Language;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.refactoring.RefactoringActionHandler;

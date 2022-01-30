@@ -17,12 +17,12 @@ package com.intellij.diff.actions;
 
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.DiffRequest;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
-import consulo.project.DumbAware;
+import com.intellij.openapi.actionSystem.*;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -49,7 +49,7 @@ abstract class BaseShowDiffAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     DiffRequest request = getDiffRequest(e);
     if (request == null) return;
 

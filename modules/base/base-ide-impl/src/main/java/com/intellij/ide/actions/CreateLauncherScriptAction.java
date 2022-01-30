@@ -21,15 +21,16 @@ import com.intellij.execution.util.ExecUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
@@ -68,7 +69,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     if (!isAvailable()) return;
 
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     CreateLauncherScriptDialog dialog = new CreateLauncherScriptDialog(project);
     if (!dialog.showAndGet()) {
       return;

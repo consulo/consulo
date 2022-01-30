@@ -14,7 +14,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.document.FileDocumentManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.wm.ToolWindowId;
@@ -22,6 +22,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

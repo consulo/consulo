@@ -24,8 +24,11 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import consulo.project.Project;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 public class SearchBackAction extends AnAction implements DumbAware {
   public SearchBackAction() {

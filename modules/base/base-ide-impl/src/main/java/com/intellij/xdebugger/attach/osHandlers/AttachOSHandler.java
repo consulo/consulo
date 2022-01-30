@@ -3,7 +3,7 @@ package com.intellij.xdebugger.attach.osHandlers;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.xdebugger.attach.EnvironmentAwareHost;
 import com.intellij.xdebugger.attach.LocalAttachHost;

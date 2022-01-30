@@ -18,7 +18,7 @@ package com.intellij.execution.process.impl;
 import com.intellij.execution.process.OSProcessManager;
 import com.intellij.execution.process.RunnerWinProcess;
 import com.intellij.execution.process.UnixProcessManager;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 import org.jvnet.winp.WinProcess;

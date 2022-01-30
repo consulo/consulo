@@ -24,7 +24,7 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.util.DiffUserDataKeys;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.Editor;
@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
 public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
   @Nullable
   private static Editor getEditor(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return null;
 
     Editor editor = e.getData(CommonDataKeys.EDITOR);

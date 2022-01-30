@@ -19,8 +19,9 @@ package com.intellij.tasks.actions;
 import javax.annotation.Nullable;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import com.intellij.tasks.TaskManager;
 
@@ -54,7 +55,7 @@ public class OpenTaskInBrowserAction extends BaseTaskAction {
 
   @Nullable
   private static String getIssueUrl(AnActionEvent event) {
-    Project project = event.getProject();
+    Project project = event.getData(CommonDataKeys.PROJECT);
     return project == null ? null : TaskManager.getManager(project).getActiveTask().getIssueUrl();
   }
 }

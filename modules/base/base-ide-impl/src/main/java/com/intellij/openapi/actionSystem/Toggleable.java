@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.actionSystem;
 
+import consulo.ui.ex.action.Presentation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

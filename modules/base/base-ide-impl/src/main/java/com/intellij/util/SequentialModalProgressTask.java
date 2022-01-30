@@ -18,7 +18,7 @@ package com.intellij.util;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -23,12 +23,15 @@ import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.application.util.function.Condition;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.xdebugger.*;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
@@ -44,7 +47,7 @@ import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreePanel;
 import com.intellij.xdebugger.impl.ui.tree.nodes.EvaluatingExpressionRootNode;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -119,7 +122,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     new AnAction(){
       @Override
       public void update(AnActionEvent e) {
-        Project project = e.getProject();
+        Project project = e.getData(CommonDataKeys.PROJECT);
         e.getPresentation().setEnabled(project != null && LookupManager.getInstance(project).getActiveLookup() == null);
       }
 

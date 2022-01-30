@@ -15,7 +15,7 @@
  */
 package consulo.actionSystem.ex;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 
 /**
  * @author VISTALL

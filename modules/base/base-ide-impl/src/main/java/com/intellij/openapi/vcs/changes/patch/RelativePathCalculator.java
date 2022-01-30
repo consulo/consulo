@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.patch;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vcs.VcsBundle;
 import javax.annotation.Nonnull;
 

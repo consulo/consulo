@@ -22,6 +22,11 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.usages.impl.UsageViewImpl;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

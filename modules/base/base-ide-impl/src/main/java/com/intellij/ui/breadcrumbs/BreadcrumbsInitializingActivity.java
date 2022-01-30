@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 final class BreadcrumbsInitializingActivity implements IdeaStartupActivity.DumbAware {

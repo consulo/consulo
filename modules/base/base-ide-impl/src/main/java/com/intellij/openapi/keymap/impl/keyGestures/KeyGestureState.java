@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.keymap.impl.keyGestures;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.KeyboardGestureAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.KeyboardGestureAction;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

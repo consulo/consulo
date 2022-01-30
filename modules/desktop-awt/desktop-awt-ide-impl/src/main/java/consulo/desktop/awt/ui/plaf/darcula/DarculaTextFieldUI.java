@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.ui.ComponentUtil;
-import com.intellij.util.ui.JBInsets;
+import consulo.application.ui.awt.JBInsets;
 import com.intellij.util.ui.MacUIUtil;
 
 import javax.swing.*;

@@ -17,9 +17,10 @@ package com.intellij.compiler.actions;
 
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -64,15 +65,15 @@ public class BuildArtifactAction extends DumbAwareAction {
   private static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Clean artifact");
 
   @Override
-  public void update(AnActionEvent e) {
-    final Project project = getEventProject(e);
+  public void update(@Nonnull AnActionEvent e) {
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(project != null && !ArtifactUtil.getArtifactWithOutputPaths(project).isEmpty());
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = getEventProject(e);
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     final List<Artifact> artifacts = ArtifactUtil.getArtifactWithOutputPaths(project);
@@ -208,7 +209,7 @@ public class BuildArtifactAction extends DumbAwareAction {
             File file = pair.getFirst();
             if (!FileUtil.delete(file)) {
               NOTIFICATION_GROUP.createNotification("Cannot clean '" + pair.getSecond().getName() + "' artifact", "cannot delete '" + file.getAbsolutePath() + "'", NotificationType.ERROR, null)
-                      .notify(myProject);
+                      .notify((Project)myProject);
             }
             else {
               deleted.add(file);

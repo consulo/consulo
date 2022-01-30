@@ -20,7 +20,7 @@ import com.intellij.ui.FileColorManager;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;

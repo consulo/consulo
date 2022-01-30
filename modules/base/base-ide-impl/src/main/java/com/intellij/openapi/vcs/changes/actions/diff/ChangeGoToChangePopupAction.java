@@ -3,7 +3,8 @@ package com.intellij.openapi.vcs.changes.actions.diff;
 import com.intellij.diff.actions.impl.GoToChangePopupBuilder;
 import com.intellij.diff.chains.DiffRequestChain;
 import com.intellij.diff.chains.DiffRequestProducer;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -37,7 +38,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
   @Nonnull
   @Override
   protected JBPopup createPopup(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) project = ProjectManager.getInstance().getDefaultProject();
 
     Ref<JBPopup> popup = new Ref<JBPopup>();

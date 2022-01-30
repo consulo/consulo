@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import consulo.application.progress.ProgressIndicator;
@@ -31,8 +31,8 @@ import com.intellij.openapi.vcs.history.VcsRevisionDescription;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.text.DateFormatUtil;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

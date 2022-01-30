@@ -22,10 +22,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TransparentPanel;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

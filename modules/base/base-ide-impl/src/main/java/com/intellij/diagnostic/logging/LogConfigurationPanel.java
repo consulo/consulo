@@ -20,7 +20,7 @@ import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.execution.configurations.LogFileOptions;
 import com.intellij.execution.configurations.PredefinedLogFile;
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;

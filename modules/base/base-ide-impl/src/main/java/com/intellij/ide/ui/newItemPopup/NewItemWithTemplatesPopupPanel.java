@@ -4,9 +4,9 @@ package com.intellij.ide.ui.newItemPopup;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUIScale;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.TargetAWT;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

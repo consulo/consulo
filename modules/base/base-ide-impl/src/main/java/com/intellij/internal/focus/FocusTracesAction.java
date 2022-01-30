@@ -16,11 +16,14 @@
 package com.intellij.internal.focus;
 
 import com.intellij.openapi.actionSystem.*;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.impl.FocusManagerImpl;
 import com.intellij.openapi.wm.impl.FocusRequestInfo;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;

@@ -1,6 +1,6 @@
 package com.intellij.tasks.timeTracking;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.application.util.function.Condition;
 import consulo.project.ui.wm.ToolWindow;

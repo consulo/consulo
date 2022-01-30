@@ -16,13 +16,13 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.ide.HelpTooltip;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.Size;
 

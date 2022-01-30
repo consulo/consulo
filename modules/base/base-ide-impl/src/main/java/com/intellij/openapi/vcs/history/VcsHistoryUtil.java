@@ -38,7 +38,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.util.WaitForProgressToShow;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

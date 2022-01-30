@@ -16,8 +16,8 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.desktop.awt.ui.impl.image.canvas.DesktopCanvas2DImpl;
 import consulo.ui.image.Image;

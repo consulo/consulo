@@ -16,17 +16,18 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.ui.LafManager;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.project.ui.wm.ToolWindow;
@@ -34,8 +35,8 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.project.ui.wm.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
@@ -63,7 +64,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e){
     UISettings settings = UISettings.getInstance();
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
 
     setPresentationMode(project, !settings.PRESENTATION_MODE);
   }

@@ -10,8 +10,11 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Ref;
 import consulo.language.psi.PsiManager;
@@ -48,7 +51,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware
 	@Override
 	protected void gotoActionPerformed(final AnActionEvent e)
 	{
-		final Project project = e.getProject();
+      final Project project = e.getData(CommonDataKeys.PROJECT);
 		if(project == null)
 		{
 			return;
@@ -101,9 +104,9 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware
 		popup.setShowListForEmptyPattern(true);
 		popup.setSearchInAnyPlace(true);
 		popup.setAdText("<html>Press SHIFT to merge with current context<br/>" +
-				"Pressing " +
-				KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_QUICK_JAVADOC)) +
-				" would show task description and comments</html>");
+                        "Pressing " +
+                        KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_QUICK_JAVADOC)) +
+                        " would show task description and comments</html>");
 		popup.registerAction("shiftPressed", KeyStroke.getKeyStroke("shift pressed SHIFT"), new AbstractAction()
 		{
 			public void actionPerformed(ActionEvent e)

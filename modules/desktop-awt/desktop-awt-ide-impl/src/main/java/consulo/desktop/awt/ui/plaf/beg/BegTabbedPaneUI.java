@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.beg;
 
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.text.View;

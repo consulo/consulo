@@ -14,7 +14,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.language.psi.stub.StubIndexKey;
 import com.intellij.psi.stubs.StubUpdatingIndex;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;

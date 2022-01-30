@@ -28,6 +28,7 @@ import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.index.io.data.IOUtil;
+import consulo.util.lang.SystemProperties;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 

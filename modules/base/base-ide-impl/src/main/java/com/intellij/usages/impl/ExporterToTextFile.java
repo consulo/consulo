@@ -7,7 +7,7 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.TextChunk;
 import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageViewSettings;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.editor.ex;
 
 import com.intellij.codeInsight.daemon.GutterMark;
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorGutter;
 import com.intellij.openapi.editor.FoldRegion;

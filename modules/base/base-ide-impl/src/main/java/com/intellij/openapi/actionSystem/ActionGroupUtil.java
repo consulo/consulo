@@ -17,6 +17,8 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.ui.ex.action.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

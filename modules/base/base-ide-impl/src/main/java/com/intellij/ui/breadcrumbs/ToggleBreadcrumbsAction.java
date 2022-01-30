@@ -3,12 +3,12 @@ package com.intellij.ui.breadcrumbs;
 
 import consulo.application.ui.UISettings;
 import consulo.language.Language;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.Contract;

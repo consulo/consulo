@@ -37,6 +37,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

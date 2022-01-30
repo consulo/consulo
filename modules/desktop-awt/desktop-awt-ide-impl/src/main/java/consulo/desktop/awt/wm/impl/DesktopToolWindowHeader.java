@@ -30,12 +30,13 @@ import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.util.NotNullProducer;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.disposer.Disposable;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.wm.impl.ToolWindowManagerBase;
 

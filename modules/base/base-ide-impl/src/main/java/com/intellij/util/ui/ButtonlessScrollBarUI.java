@@ -15,10 +15,12 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.LightColors;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ui.plaf.ScrollBarUIConstants;
 
 import javax.swing.*;

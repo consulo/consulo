@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.disposer.Disposer;
 import com.intellij.ui.BalloonImpl;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

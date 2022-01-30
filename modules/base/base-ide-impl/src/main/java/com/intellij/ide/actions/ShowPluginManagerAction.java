@@ -19,7 +19,8 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.ide.plugins.PluginsConfigurable;
@@ -38,6 +39,6 @@ public class ShowPluginManagerAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    myShowSettingsUtilProvider.get().showSettingsDialog(e.getProject(), PluginsConfigurable.ID, null);
+    myShowSettingsUtilProvider.get().showSettingsDialog(e.getData(CommonDataKeys.PROJECT), PluginsConfigurable.ID, null);
   }
 }

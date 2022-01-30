@@ -14,7 +14,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemBase;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Consumer;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

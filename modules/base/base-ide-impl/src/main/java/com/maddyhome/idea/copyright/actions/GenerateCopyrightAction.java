@@ -29,6 +29,9 @@ import consulo.language.psi.PsiFile;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.ui.CopyrightProjectConfigurable;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import javax.annotation.Nullable;
 

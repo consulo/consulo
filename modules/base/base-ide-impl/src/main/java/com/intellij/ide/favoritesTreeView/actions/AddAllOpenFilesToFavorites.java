@@ -17,8 +17,9 @@
 package com.intellij.ide.favoritesTreeView.actions;
 
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -41,7 +42,7 @@ public class AddAllOpenFilesToFavorites extends AnAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
@@ -71,7 +72,7 @@ public class AddAllOpenFilesToFavorites extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;

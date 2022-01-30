@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 

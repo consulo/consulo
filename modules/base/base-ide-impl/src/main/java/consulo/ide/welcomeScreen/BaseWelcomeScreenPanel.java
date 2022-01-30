@@ -16,8 +16,8 @@
 package consulo.ide.welcomeScreen;
 
 import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 

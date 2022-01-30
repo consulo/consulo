@@ -7,7 +7,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.Consumer;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ValidableComponent;

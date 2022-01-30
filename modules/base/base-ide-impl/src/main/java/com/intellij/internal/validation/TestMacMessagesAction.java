@@ -15,10 +15,12 @@
  */
 package com.intellij.internal.validation;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -32,7 +34,7 @@ public class TestMacMessagesAction extends AnAction {
   static int num = 1;
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    new DialogWrapper(e.getProject()) {
+    new DialogWrapper(e.getData(CommonDataKeys.PROJECT)) {
       {
         setScalableSize(500, 500);
         setTitle("Dialog 1");
@@ -46,7 +48,7 @@ public class TestMacMessagesAction extends AnAction {
         button.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
-            new DialogWrapper(e.getProject()) {
+            new DialogWrapper(e.getData(CommonDataKeys.PROJECT)) {
               {
                 setScalableSize(400, 400);
                 setTitle("Dialog 2");

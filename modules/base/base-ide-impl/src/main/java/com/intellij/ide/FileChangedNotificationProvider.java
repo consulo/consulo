@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.util.io.FileAttributes;
 import com.intellij.openapi.vfs.LocalFileSystem;

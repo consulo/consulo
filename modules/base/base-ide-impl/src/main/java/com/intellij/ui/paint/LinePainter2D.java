@@ -2,11 +2,12 @@
 package com.intellij.ui.paint;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.paint.PaintUtil.ParityMode;
-import com.intellij.ui.paint.PaintUtil.RoundingMode;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.JBUI.ScaleContext;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.paint.PaintUtil;
+import consulo.application.ui.awt.paint.PaintUtil.ParityMode;
+import consulo.application.ui.awt.paint.PaintUtil.RoundingMode;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.JBUI.ScaleContext;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

@@ -16,7 +16,8 @@
 package com.intellij.vcs.log.ui.actions;
 
 import com.intellij.ide.actions.CloseTabToolbarAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
@@ -33,11 +34,11 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    if (e.getProject() == null) {
+    if (e.getData(CommonDataKeys.PROJECT) == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }
-    ContentManager contentManager = getContentManager(e.getProject());
+    ContentManager contentManager = getContentManager(e.getData(CommonDataKeys.PROJECT));
     if (contentManager == null || getTabbedContent(contentManager) == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
@@ -46,7 +47,7 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
   }
 
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     assert project != null;
 
     ContentManager contentManager = getContentManager(project);

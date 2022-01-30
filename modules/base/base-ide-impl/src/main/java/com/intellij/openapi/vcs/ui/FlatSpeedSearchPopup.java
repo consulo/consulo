@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.vcs.ui;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.EmptyAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.application.util.function.Condition;
 import com.intellij.ui.popup.PopupFactoryImpl;

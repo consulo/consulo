@@ -15,7 +15,8 @@
  */
 package consulo.sandboxPlugin.ide.action;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.internal.DefaultProjectFactory;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.options.impl.UnifiedShowSettingsUtil;
@@ -39,6 +40,6 @@ public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     UnifiedShowSettingsUtil unifiedShowSettingsUtil = new UnifiedShowSettingsUtil(myDefaultProjectFactory);
 
-    unifiedShowSettingsUtil.showSettingsDialog(e.getProject());
+    unifiedShowSettingsUtil.showSettingsDialog(e.getData(CommonDataKeys.PROJECT));
   }
 }

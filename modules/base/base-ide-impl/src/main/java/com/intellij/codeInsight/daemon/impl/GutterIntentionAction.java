@@ -15,6 +15,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.RelativePoint;
 import consulo.language.util.IncorrectOperationException;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

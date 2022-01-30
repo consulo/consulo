@@ -19,8 +19,12 @@ import com.intellij.find.EditorSearchSession;
 import com.intellij.find.FindManager;
 import com.intellij.find.FindModel;
 import com.intellij.openapi.actionSystem.*;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.ShortcutSet;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -36,7 +40,7 @@ import java.awt.event.KeyEvent;
 public class RestorePreviousSettingsAction extends AnAction implements ShortcutProvider, DumbAware {
   @Override
   public void update(AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
     e.getPresentation().setEnabled(project != null && search != null && !project.isDisposed() &&
                                    search.getTextInField().isEmpty() &&
@@ -46,7 +50,7 @@ public class RestorePreviousSettingsAction extends AnAction implements ShortcutP
   @Override
   public void actionPerformed(AnActionEvent e) {
     FindModel findModel = e.getRequiredData(EditorSearchSession.SESSION_KEY).getFindModel();
-    findModel.copyFrom(FindManager.getInstance(e.getProject()).getPreviousFindModel());
+    findModel.copyFrom(FindManager.getInstance(e.getData(CommonDataKeys.PROJECT)).getPreviousFindModel());
   }
 
   @Nullable

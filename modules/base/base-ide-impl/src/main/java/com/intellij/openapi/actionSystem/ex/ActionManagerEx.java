@@ -20,6 +20,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.container.plugin.PluginId;
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

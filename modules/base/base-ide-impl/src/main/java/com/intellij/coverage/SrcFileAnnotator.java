@@ -8,7 +8,7 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.history.FileRevisionTimestampComparator;
 import com.intellij.history.LocalHistory;
 import com.intellij.icons.AllIcons;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;

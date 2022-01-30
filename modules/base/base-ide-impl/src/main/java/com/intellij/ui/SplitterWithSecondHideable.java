@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.PseudoSplitter;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.vcs.changes.RefreshablePanel;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

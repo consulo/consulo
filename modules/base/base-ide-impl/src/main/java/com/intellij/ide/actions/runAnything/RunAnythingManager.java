@@ -3,7 +3,8 @@ package com.intellij.ide.actions.runAnything;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.BigPopupUI;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
@@ -12,8 +13,8 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ui.JBInsets;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.TargetAWT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -44,7 +45,7 @@ public class RunAnythingManager {
   public void show(@Nullable String searchText, boolean selectSearchText, @Nonnull AnActionEvent initEvent) {
     IdeEventQueue.getInstance().getPopupManager().closeAllPopups(false);
 
-    Project project = initEvent.getProject();
+    Project project = initEvent.getData(CommonDataKeys.PROJECT);
 
     myRunAnythingUI = createView(initEvent);
 

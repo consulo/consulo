@@ -18,6 +18,10 @@ package com.intellij.xdebugger.impl.actions;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.xdebugger.impl.DebuggerSupport;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -16,8 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nullable;

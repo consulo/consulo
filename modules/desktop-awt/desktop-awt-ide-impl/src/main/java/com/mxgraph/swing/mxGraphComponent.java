@@ -21,7 +21,7 @@ import com.mxgraph.util.*;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.*;
 import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;

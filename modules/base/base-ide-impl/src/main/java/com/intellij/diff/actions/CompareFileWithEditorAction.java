@@ -22,7 +22,7 @@ import com.intellij.diff.requests.ContentDiffRequest;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.Side;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -66,7 +66,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
 
   @Nullable
   private static VirtualFile getEditingFile(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return null;
 
     return FileEditorManagerEx.getInstanceEx(project).getCurrentFile();
@@ -79,7 +79,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
   @Nullable
   @Override
   protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
 
     VirtualFile selectedFile = getSelectedFile(e);
     VirtualFile currentFile = getEditingFile(e);

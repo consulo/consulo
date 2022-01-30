@@ -16,8 +16,8 @@
 package com.intellij.ide.navigationToolbar.ui;
 
 import com.intellij.ide.navigationToolbar.NavBarItem;
-import com.intellij.ui.Gray;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.UIUtil;
 
 import java.awt.*;
 

@@ -24,7 +24,7 @@ import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkTableImpl;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import consulo.content.bundle.PredefinedBundlesProvider;
 import consulo.content.bundle.SdkPointerManager;
 import consulo.logging.Logger;

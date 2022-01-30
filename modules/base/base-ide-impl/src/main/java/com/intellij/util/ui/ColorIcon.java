@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.ui.Gray;
+import consulo.application.ui.awt.Gray;
 import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;

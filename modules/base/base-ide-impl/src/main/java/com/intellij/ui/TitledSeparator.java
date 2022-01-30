@@ -17,8 +17,8 @@
 package com.intellij.ui;
 
 import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

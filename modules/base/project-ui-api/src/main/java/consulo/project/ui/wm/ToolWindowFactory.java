@@ -16,7 +16,7 @@
 
 package consulo.project.ui.wm;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 

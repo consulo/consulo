@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.ui.font.Font;
 import consulo.util.lang.BitUtil;
 

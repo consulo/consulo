@@ -17,11 +17,11 @@ package com.intellij.util.ui.tree;
 
 import consulo.application.util.function.Condition;
 import consulo.application.util.function.Conditions;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.SystemProperties;
-import com.intellij.util.ui.JBUI;
+import consulo.application.util.SystemInfo;
+import consulo.util.lang.SystemProperties;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

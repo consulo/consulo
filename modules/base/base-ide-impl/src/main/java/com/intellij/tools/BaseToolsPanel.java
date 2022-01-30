@@ -17,7 +17,7 @@
 package com.intellij.tools;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import consulo.project.ui.IdeFocusManager;

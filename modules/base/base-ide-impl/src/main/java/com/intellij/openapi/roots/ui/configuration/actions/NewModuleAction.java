@@ -16,13 +16,13 @@
 package com.intellij.openapi.roots.ui.configuration.actions;
 
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.VirtualFile;
@@ -46,7 +46,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = getEventProject(e);
+    final Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
@@ -87,6 +87,6 @@ public class NewModuleAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabled(e.getProject() != null);
+    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
   }
 }

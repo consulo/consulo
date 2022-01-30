@@ -26,6 +26,8 @@ import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.text.Matcher;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
 
 import javax.annotation.Nonnull;
 

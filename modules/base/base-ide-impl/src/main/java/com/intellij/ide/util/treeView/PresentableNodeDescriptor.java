@@ -19,7 +19,7 @@ import com.intellij.ide.projectView.PresentationData;
 import consulo.project.Project;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

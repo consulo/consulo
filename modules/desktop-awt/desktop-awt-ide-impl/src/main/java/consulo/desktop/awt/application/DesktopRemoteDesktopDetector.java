@@ -23,7 +23,7 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.sun.jna.platform.win32.User32;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

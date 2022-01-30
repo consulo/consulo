@@ -27,7 +27,7 @@ import consulo.configurable.ConfigurationException;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;

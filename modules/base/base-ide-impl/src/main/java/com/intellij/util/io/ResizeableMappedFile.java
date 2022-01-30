@@ -23,7 +23,7 @@ import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.Forceable;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

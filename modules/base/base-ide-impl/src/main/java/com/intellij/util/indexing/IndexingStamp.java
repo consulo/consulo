@@ -8,7 +8,7 @@ import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.language.psi.stub.StubIndexKey;
 import com.intellij.util.SmartList;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.index.io.ID;
 import consulo.index.io.data.DataInputOutputUtil;

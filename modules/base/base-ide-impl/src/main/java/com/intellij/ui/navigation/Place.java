@@ -16,8 +16,8 @@
 
 package com.intellij.ui.navigation;
 
-import com.intellij.util.ui.update.ComparableObject;
-import com.intellij.util.ui.update.ComparableObjectCheck;
+import consulo.component.util.ComparableObject;
+import consulo.component.util.ComparableObjectCheck;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

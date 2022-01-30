@@ -26,7 +26,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
@@ -36,6 +36,7 @@ import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

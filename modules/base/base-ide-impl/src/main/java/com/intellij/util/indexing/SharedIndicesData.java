@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.ID;
 import consulo.index.io.data.DataExternalizer;

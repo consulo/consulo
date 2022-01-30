@@ -18,10 +18,10 @@ package com.intellij.codeInsight.actions;
 
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupManager;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

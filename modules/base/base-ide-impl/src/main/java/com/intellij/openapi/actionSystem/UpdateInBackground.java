@@ -2,6 +2,9 @@
 package com.intellij.openapi.actionSystem;
 
 import consulo.application.progress.ProgressManager;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * Implement this in actions or action groups to flag that their {@link AnAction#update}, {@link ActionGroup#getChildren(AnActionEvent)}

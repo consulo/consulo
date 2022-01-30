@@ -1,6 +1,6 @@
 package com.intellij.vcs.log.graph;
 
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.paint.ColorGenerator;
 import javax.annotation.Nonnull;

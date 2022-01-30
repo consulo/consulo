@@ -17,12 +17,12 @@ package com.intellij.openapi.ui;
 
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.MacUIUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.awt.hacking.BasicComboBoxUIHacking;
 
 import javax.annotation.Nonnull;

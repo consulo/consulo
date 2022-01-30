@@ -23,6 +23,8 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsageView;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 import java.util.Collection;
 

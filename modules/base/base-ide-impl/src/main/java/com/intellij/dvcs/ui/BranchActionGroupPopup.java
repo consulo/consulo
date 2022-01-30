@@ -2,16 +2,18 @@
 package com.intellij.dvcs.ui;
 
 import com.intellij.icons.AllIcons;
+import consulo.application.ui.awt.JBColor;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
@@ -28,9 +30,9 @@ import com.intellij.ui.popup.WizardPopup;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.ListPopupModel;
 import com.intellij.util.FontUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import icons.DvcsImplIcons;
@@ -46,8 +48,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.intellij.util.ObjectUtils.assertNotNull;
-import static com.intellij.util.ui.UIUtil.DEFAULT_HGAP;
-import static com.intellij.util.ui.UIUtil.DEFAULT_VGAP;
+import static consulo.application.ui.awt.UIUtil.DEFAULT_HGAP;
+import static consulo.application.ui.awt.UIUtil.DEFAULT_VGAP;
 
 public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   private static final Key<ListPopupModel> POPUP_MODEL = Key.create("VcsPopupModel");

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.swt.wm.impl;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;

@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -16,7 +16,7 @@
 package com.intellij.ui.components;
 
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.StatusText;
 
 import javax.annotation.Nonnull;

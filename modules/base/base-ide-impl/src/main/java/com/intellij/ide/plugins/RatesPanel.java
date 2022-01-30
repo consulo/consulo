@@ -16,7 +16,7 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.icons.AllIcons;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

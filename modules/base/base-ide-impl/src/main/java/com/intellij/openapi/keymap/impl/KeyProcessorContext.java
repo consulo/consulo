@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.keymap.impl;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import com.intellij.reference.SoftReference;
 import javax.annotation.Nonnull;

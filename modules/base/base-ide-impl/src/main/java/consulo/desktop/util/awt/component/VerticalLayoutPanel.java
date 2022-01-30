@@ -17,7 +17,7 @@ package consulo.desktop.util.awt.component;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.components.JBPanel;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

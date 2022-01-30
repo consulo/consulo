@@ -15,6 +15,8 @@
  */
 package com.intellij.util.ui;
 
+import consulo.application.ui.awt.JBUI;
+
 import java.awt.*;
 
 /**

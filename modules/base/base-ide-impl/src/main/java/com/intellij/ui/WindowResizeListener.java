@@ -16,8 +16,8 @@
 
 package com.intellij.ui;
 
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

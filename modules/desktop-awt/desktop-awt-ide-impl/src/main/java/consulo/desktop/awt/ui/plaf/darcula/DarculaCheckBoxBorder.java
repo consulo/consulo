@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.ui.ComponentUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;

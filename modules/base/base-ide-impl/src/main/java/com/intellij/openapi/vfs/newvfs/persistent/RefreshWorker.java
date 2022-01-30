@@ -4,7 +4,7 @@ package com.intellij.openapi.vfs.newvfs.persistent;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.util.io.FileAttributes;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;

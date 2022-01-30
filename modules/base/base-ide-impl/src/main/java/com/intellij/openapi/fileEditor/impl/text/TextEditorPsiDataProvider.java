@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
 
-import static com.intellij.openapi.actionSystem.AnActionEvent.injectedId;
+import static consulo.ui.ex.action.AnActionEvent.injectedId;
 import static com.intellij.openapi.actionSystem.LangDataKeys.*;
 import static com.intellij.util.containers.ContainerUtil.addIfNotNull;
 

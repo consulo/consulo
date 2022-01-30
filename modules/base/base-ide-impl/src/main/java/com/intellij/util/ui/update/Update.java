@@ -15,6 +15,7 @@
  */
 package com.intellij.util.ui.update;
 
+import consulo.component.util.ComparableObject;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

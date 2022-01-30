@@ -2,6 +2,7 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
+import consulo.application.ui.awt.*;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
@@ -10,7 +11,6 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.DocumentAdapter;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.*;
 import consulo.disposer.Disposable;
@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.intellij.util.ui.JBUI.CurrentTheme.Validator.*;
+import static consulo.application.ui.awt.JBUI.CurrentTheme.Validator.*;
 
 public class ComponentValidator {
   private static final String PROPERTY_NAME = "JComponent.componentValidator";

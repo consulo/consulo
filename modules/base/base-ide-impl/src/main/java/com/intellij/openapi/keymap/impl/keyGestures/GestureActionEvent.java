@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.keymap.impl.keyGestures;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.AnActionEventVisitor;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.event.AnActionEventVisitor;
+import consulo.ui.ex.action.ActionManager;
 import javax.annotation.Nonnull;
 
 public class GestureActionEvent extends AnActionEvent {

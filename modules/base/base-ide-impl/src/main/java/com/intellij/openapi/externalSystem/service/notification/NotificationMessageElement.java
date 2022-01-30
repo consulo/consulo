@@ -20,11 +20,11 @@ import com.intellij.ide.errorTreeView.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.LoadingNode;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ui.JBHtmlEditorKit;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.ui.image.Image;
 

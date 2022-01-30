@@ -20,7 +20,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

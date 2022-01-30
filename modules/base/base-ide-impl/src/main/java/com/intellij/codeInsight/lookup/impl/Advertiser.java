@@ -3,12 +3,12 @@ package com.intellij.codeInsight.lookup.impl;
 
 import consulo.application.ApplicationManager;
 import com.intellij.ui.ClickListener;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

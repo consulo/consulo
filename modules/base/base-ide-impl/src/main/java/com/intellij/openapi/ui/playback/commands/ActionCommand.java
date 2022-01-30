@@ -15,8 +15,7 @@
  */
 package com.intellij.openapi.ui.playback.commands;
 
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.ui.playback.PlaybackContext;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TimedOutCallback;
@@ -24,6 +23,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.keymap.KeymapManager;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.IdeFocusManager;
+import consulo.ui.ex.action.*;
 import consulo.util.concurrent.ActionCallback;
 
 import javax.swing.*;

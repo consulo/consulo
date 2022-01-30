@@ -28,7 +28,7 @@ import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.SingleAlarm;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

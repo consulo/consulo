@@ -16,8 +16,9 @@
 package com.intellij.openapi.projectRoots.ui;
 
 import com.intellij.icons.AllIcons;
+import consulo.application.ui.awt.JBColor;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.IdeaFileChooser;
@@ -34,8 +35,8 @@ import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;

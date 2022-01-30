@@ -18,7 +18,7 @@ package com.intellij.ui.treeStructure.treetable;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.accessibility.ScreenReader;
 
 import javax.swing.*;

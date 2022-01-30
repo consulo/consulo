@@ -16,12 +16,12 @@
 
 package com.intellij.openapi.roots.ui.configuration.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
 

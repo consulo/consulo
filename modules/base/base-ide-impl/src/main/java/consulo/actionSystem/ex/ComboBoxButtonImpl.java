@@ -17,7 +17,7 @@ package consulo.actionSystem.ex;
 
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;

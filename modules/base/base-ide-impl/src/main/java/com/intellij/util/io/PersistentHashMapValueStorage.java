@@ -11,7 +11,7 @@ import com.intellij.openapi.util.ThreadLocalCachedByteArray;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import javax.annotation.Nonnull;
 
 import consulo.index.io.data.DataInputOutputUtil;

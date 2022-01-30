@@ -5,9 +5,9 @@ import consulo.desktop.awt.uiOld.Expandable;
 import com.intellij.ui.components.JBScrollBar;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Function;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

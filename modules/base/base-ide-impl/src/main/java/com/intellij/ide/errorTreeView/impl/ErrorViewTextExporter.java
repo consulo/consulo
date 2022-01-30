@@ -20,7 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.errorTreeView.ErrorTreeElement;
 import com.intellij.ide.errorTreeView.ErrorViewStructure;
 import com.intellij.ide.errorTreeView.NavigatableMessageElement;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;

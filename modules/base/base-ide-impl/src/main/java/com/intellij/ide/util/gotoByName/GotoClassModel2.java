@@ -22,7 +22,7 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.GotoClassContributor;
 import com.intellij.navigation.NavigationItem;
 import consulo.project.Project;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.language.psi.stub.FileBasedIndex;

@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
 import com.intellij.openapi.wm.ToolWindowId;
 import consulo.language.psi.PsiDirectory;

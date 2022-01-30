@@ -23,7 +23,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.project.Project;
@@ -44,7 +44,7 @@ import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
 import com.intellij.util.NotNullFunction;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

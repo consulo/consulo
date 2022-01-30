@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.desktop.awt.facade.ToSwingIconWrapper;
 import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopLibraryInnerImage;
 import consulo.ui.image.Image;

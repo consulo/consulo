@@ -15,8 +15,8 @@
  */
 package com.intellij.ide;
 
-import com.intellij.util.ui.update.ComparableObject;
-import com.intellij.util.ui.update.ComparableObjectCheck;
+import consulo.component.util.ComparableObject;
+import consulo.component.util.ComparableObjectCheck;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

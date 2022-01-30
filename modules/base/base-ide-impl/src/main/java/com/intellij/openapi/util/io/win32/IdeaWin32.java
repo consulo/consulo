@@ -16,7 +16,7 @@
 package com.intellij.openapi.util.io.win32;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.util.loader.NativeLibraryLoader;
 
 import javax.annotation.Nonnull;

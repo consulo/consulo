@@ -16,6 +16,8 @@
 package consulo.compiler.impl.resourceCompiler;
 
 import com.intellij.compiler.MalformedPatternException;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;

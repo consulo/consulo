@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ItemRemovable;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

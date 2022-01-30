@@ -29,8 +29,8 @@ import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.ToolbarDecorator;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.backgroundTaskByVfsChange.*;
 import javax.annotation.Nonnull;
 

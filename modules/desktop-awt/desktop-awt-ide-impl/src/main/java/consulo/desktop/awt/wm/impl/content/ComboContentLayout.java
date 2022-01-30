@@ -20,7 +20,7 @@ import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.event.ContentManagerEvent;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import java.awt.*;
 

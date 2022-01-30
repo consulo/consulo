@@ -39,6 +39,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
@@ -75,7 +76,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.AccessRule;
 import consulo.codeInsight.TargetElementUtil;
@@ -193,7 +194,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     Runnable searchEverywhere = mySearchEverywhereRunnable;

@@ -15,13 +15,13 @@
  */
 package com.intellij.internal.focus;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
-import consulo.project.DumbAware;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.dumb.DumbAware;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.UIUtil;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;

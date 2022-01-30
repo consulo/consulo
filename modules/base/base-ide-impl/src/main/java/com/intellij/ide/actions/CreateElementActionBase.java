@@ -17,7 +17,8 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeView;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.ui.InputValidator;
@@ -82,7 +83,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
       return;
     }
 
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
 
     final PsiDirectory dir = view.getOrChooseDirectory();
     if (dir == null) return;

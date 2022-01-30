@@ -22,8 +22,8 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
@@ -57,6 +57,6 @@ public class IgnoreUnversionedAction extends AnAction {
   }
 
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getProject() != null && !isEmpty(e.getData(UNVERSIONED_FILES_DATA_KEY)));
+    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null && !isEmpty(e.getData(UNVERSIONED_FILES_DATA_KEY)));
   }
 }

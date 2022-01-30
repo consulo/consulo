@@ -32,7 +32,7 @@ import com.intellij.openapi.vcs.changes.IgnoreSettingsType;
 import com.intellij.openapi.vcs.changes.IgnoredFileBean;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

@@ -19,12 +19,14 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.TreeExpander;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

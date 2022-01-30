@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Presentation;
-import consulo.project.DumbAware;
+import consulo.ui.ex.action.Presentation;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,7 +32,7 @@ public class VcsGroupsActionGroup extends DefaultActionGroup implements DumbAwar
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if(project != null) {
       presentation.setTextValue(ProjectLevelVcsManager.getInstance(project).getConsolidatedVcsName());
     }

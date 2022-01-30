@@ -18,7 +18,7 @@ package com.intellij.ui.components;
 import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.StatusText;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

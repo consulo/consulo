@@ -16,12 +16,12 @@
 package com.intellij.openapi.vcs.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.SearchTextField;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;

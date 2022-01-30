@@ -33,6 +33,9 @@ import consulo.project.ui.wm.content.Content;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.util.SmartList;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

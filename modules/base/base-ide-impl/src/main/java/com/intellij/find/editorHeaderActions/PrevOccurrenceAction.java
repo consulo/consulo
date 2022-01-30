@@ -16,10 +16,10 @@
 package com.intellij.find.editorHeaderActions;
 
 import com.intellij.find.SearchSession;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.actionSystem.KeyboardShortcut;
-import com.intellij.openapi.actionSystem.Shortcut;
+import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.action.Shortcut;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

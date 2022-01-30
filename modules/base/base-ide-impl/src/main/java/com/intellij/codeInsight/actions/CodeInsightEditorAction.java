@@ -15,7 +15,8 @@
  */
 package com.intellij.codeInsight.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
@@ -31,11 +32,11 @@ public class CodeInsightEditorAction {
 
   /**
    * Commit all PSI if there is editor and project in data context. Should be used in
-   * {@link com.intellij.openapi.actionSystem.AnAction#beforeActionPerformedUpdate(AnActionEvent)} implementations before calling super,
+   * {@link AnAction#beforeActionPerformedUpdate(AnActionEvent)} implementations before calling super,
    * if the action's {@code update} method should work with up-to-date PSI, and the action is invoked in editor.
    */
   public static void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     Editor hostEditor = e.getData(CommonDataKeys.HOST_EDITOR);
     if (project != null && hostEditor != null) {
       PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(hostEditor.getDocument());

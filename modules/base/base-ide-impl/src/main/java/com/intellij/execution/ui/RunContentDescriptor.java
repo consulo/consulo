@@ -21,7 +21,7 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.ide.HelpIdProvider;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

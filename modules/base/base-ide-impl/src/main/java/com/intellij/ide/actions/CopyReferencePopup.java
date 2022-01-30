@@ -8,6 +8,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.dataContext.DataContext;
@@ -15,10 +16,10 @@ import consulo.language.psi.PsiElement;
 import com.intellij.ui.ErrorLabel;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,7 +28,7 @@ import java.awt.*;
 
 import static com.intellij.openapi.actionSystem.CommonDataKeys.*;
 import static com.intellij.openapi.actionSystem.LangDataKeys.PSI_ELEMENT_ARRAY;
-import static com.intellij.util.ui.UIUtil.DEFAULT_HGAP;
+import static consulo.application.ui.awt.UIUtil.DEFAULT_HGAP;
 
 public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysPerformingActionGroup {
   private static final Logger LOG = Logger.getInstance(CopyReferencePopup.class);

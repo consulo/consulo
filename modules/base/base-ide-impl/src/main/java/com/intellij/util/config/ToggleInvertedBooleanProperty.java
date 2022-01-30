@@ -15,7 +15,7 @@
  */
 package com.intellij.util.config;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 
 public class ToggleInvertedBooleanProperty extends ToggleBooleanProperty {

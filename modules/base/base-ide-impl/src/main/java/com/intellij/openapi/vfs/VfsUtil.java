@@ -16,12 +16,13 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.application.WriteAction;
+import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Condition;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

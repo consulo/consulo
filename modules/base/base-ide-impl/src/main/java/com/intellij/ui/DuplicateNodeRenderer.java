@@ -16,6 +16,8 @@
 
 package com.intellij.ui;
 
+import consulo.application.ui.awt.Gray;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -16,14 +16,14 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.ImageLoader;
+import consulo.application.ui.awt.internal.ImageLoader;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.NonNls;
 

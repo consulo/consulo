@@ -19,7 +19,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.dataContext.DataProvider;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.content.Content;
@@ -27,7 +27,8 @@ import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import consulo.project.ui.wm.content.event.ContentManagerEvent;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

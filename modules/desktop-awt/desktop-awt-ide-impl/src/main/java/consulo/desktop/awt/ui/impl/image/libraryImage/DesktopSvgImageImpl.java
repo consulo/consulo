@@ -1,11 +1,11 @@
 package consulo.desktop.awt.ui.impl.image.libraryImage;
 
-import com.intellij.ui.paint.PaintUtil;
-import com.intellij.util.JBHiDPIScaledImage;
-import com.intellij.util.RetinaImage;
+import consulo.application.ui.awt.paint.PaintUtil;
+import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
+import consulo.application.ui.awt.internal.RetinaImage;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.ImageUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.ImageUtil;
+import consulo.application.ui.awt.JBUI;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGException;
 import org.imgscalr.Scalr;

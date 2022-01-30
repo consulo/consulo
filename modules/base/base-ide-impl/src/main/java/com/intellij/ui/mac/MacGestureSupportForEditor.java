@@ -29,6 +29,7 @@ import consulo.eawt.wrapper.GestureUtilitiesWrapper;
 import consulo.eawt.wrapper.event.PressureEventWrapper;
 import consulo.eawt.wrapper.event.PressureListenerWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 
 import javax.swing.*;
 import java.awt.*;

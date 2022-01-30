@@ -21,8 +21,11 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 public class NextSplitAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {

@@ -15,11 +15,16 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.component.util.ModificationTracker;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import com.intellij.util.CachedValueImpl;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.text;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.util.collection.HashingStrategy;
 
 import javax.annotation.Nonnull;

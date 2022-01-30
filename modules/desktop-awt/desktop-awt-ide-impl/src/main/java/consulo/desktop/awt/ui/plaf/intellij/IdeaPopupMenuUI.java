@@ -5,9 +5,9 @@ import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.SystemInfoRt;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.JBValue;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.JBValue;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

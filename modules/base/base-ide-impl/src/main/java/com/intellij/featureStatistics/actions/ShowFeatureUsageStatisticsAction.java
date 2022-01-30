@@ -15,17 +15,18 @@
  */
 package com.intellij.featureStatistics.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.project.DumbAware;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.application.dumb.DumbAware;
 
 public class ShowFeatureUsageStatisticsAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    new ShowFeatureUsageStatisticsDialog(getEventProject(e)).show();
+    new ShowFeatureUsageStatisticsDialog(e == null ? null : e.getData(CommonDataKeys.PROJECT)).show();
   }
 
   public void update(AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabled(getEventProject(e) != null);
+    e.getPresentation().setEnabled((e == null ? null : e.getData(CommonDataKeys.PROJECT)) != null);
   }
 }

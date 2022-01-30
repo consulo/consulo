@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.swing.*;
 import java.io.File;

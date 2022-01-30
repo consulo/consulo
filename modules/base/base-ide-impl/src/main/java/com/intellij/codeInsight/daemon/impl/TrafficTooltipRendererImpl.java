@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.impl.TrafficTooltipRenderer;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
-import com.intellij.util.ui.update.ComparableObject;
+import consulo.component.util.ComparableObject;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

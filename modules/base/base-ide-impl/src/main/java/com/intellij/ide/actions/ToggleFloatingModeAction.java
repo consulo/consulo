@@ -17,11 +17,13 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowType;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 public class ToggleFloatingModeAction extends ToggleAction implements DumbAware {
 

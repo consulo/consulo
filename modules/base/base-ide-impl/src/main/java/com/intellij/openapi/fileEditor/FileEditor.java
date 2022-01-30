@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.util.dataholder.UserDataHolder;

@@ -18,8 +18,8 @@ package com.intellij.profile.codeInspection.ui.header;
 import com.intellij.openapi.ui.ex.MultiLineLabel;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.ClickListener;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

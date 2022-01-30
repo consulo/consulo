@@ -2,7 +2,7 @@ package com.intellij.find.editorHeaderActions;
 
 import com.intellij.find.EditorSearchSession;
 import com.intellij.find.SearchSession;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import javax.annotation.Nonnull;
 
 public class ToggleSelectionOnlyAction extends EditorHeaderToggleAction {

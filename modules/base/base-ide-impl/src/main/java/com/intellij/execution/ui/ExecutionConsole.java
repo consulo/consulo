@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.ui;
 
-import com.intellij.openapi.ui.ComponentContainer;
+import consulo.ui.ex.ComponentContainer;
 import org.jetbrains.annotations.NonNls;
 
 /**

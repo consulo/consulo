@@ -2,6 +2,8 @@
 package com.intellij.ide.actions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
@@ -24,9 +26,10 @@ import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
@@ -50,7 +53,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.popup.PopupUpdateProcessorBase;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.Alarm;
@@ -58,9 +61,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.StatusText;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.localize.LocalizeValue;
@@ -105,13 +108,13 @@ public class Switcher extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getProject() != null);
+    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     SwitcherPanel switcher = SWITCHER_KEY.get(project);
@@ -153,7 +156,7 @@ public class Switcher extends AnAction implements DumbAware {
 
   @Nullable
   public static SwitcherPanel createAndShowSwitcher(@Nonnull AnActionEvent e, @Nonnull String title, @Nonnull String actionId, boolean onlyEdited, boolean pinned) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return null;
     SwitcherPanel switcher = SWITCHER_KEY.get(project);
     if (switcher != null) {
@@ -186,7 +189,7 @@ public class Switcher extends AnAction implements DumbAware {
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       SwitcherPanel switcherPanel = SWITCHER_KEY.get(project);
       if (switcherPanel != null) {
         switcherPanel.toggleShowEditedFiles();
@@ -196,7 +199,7 @@ public class Switcher extends AnAction implements DumbAware {
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       e.getPresentation().setEnabledAndVisible(SWITCHER_KEY.get(project) != null);
     }
 

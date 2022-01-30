@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 

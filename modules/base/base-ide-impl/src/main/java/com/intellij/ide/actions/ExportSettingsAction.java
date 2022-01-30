@@ -19,20 +19,21 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import consulo.configurable.OptionsBundle;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -123,7 +124,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
         ZipUtil.addFileToZip(output, magicFile, ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER, writtenItemRelativePaths, null);
       }
       ShowFilePathAction
-              .showDialog(getEventProject(e), IdeBundle.message("message.settings.exported.successfully"), IdeBundle.message("title.export.successful"),
+              .showDialog(e == null ? null : e.getData(CommonDataKeys.PROJECT), IdeBundle.message("message.settings.exported.successfully"), IdeBundle.message("title.export.successful"),
                           saveFile, null);
     }
     catch (IOException e1) {

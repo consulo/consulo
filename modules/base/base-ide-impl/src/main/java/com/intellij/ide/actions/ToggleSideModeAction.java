@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import consulo.project.ui.wm.ToolWindow;
 
 public class ToggleSideModeAction extends BaseToolWindowToggleAction {

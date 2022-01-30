@@ -48,6 +48,10 @@ import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.ide.script.IdeScriptEngine;
@@ -74,7 +78,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
   @Override
   public void update(AnActionEvent e) {
     IdeScriptEngineManager manager = IdeScriptEngineManager.getInstance();
-    e.getPresentation().setVisible(e.getProject() != null);
+    e.getPresentation().setVisible(e.getData(CommonDataKeys.PROJECT) != null);
     e.getPresentation().setEnabled(manager.isInitialized() && !manager.getLanguages().isEmpty());
   }
 
@@ -98,7 +102,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
   }
 
   protected void runConsole(@Nonnull AnActionEvent e, @Nonnull String language) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     List<String> extensions = IdeScriptEngineManager.getInstance().getFileExtensions(language);
@@ -247,7 +251,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
       VirtualFile virtualFile = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
       e.getPresentation().setEnabledAndVisible(project != null && editor != null && virtualFile != null);
@@ -255,7 +259,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
       VirtualFile virtualFile = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
       if (project == null || editor == null || virtualFile == null) return;

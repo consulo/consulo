@@ -24,7 +24,7 @@ import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import javax.annotation.Nonnull;
 

@@ -15,8 +15,9 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ui.ex.action.CustomShortcutSet;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
@@ -67,7 +68,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
       return;
     }
 
-    final CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(e.getProject()).getCompositeElementTypes();
+    final CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(e.getData(CommonDataKeys.PROJECT)).getCompositeElementTypes();
     final List<PackagingElement<?>> selected = selection.getElements();
     if (types.length == 1) {
       surroundWith(types[0], parent, selected, treeComponent);

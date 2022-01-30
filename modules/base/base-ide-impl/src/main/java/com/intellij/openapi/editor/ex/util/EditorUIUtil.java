@@ -19,9 +19,9 @@ import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.util.ui.MacUIUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import java.awt.*;
 

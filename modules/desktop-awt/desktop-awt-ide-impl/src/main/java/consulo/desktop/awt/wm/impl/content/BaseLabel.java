@@ -18,10 +18,10 @@ package consulo.desktop.awt.wm.impl.content;
 import consulo.dataContext.DataManager;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowDataKeys;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import consulo.project.ui.wm.content.Content;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 
 import javax.accessibility.AccessibleContext;

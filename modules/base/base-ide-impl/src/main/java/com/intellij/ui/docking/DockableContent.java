@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.docking;
 
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

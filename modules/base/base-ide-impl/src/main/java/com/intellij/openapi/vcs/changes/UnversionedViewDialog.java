@@ -16,13 +16,14 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.actionSystem.impl.Utils;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesListView;
+import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

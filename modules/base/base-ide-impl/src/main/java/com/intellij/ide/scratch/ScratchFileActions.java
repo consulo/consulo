@@ -24,6 +24,8 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import consulo.language.psi.PsiUtilCore;
@@ -71,7 +73,7 @@ public class ScratchFileActions {
     public void update(@Nonnull AnActionEvent e) {
       getTemplatePresentation().setText(myActionText.getValue());
 
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       String place = e.getPlace();
       boolean enabled = project != null && (e.isFromActionToolbar() || ActionPlaces.isMainMenuOrActionSearch(place) || ActionPlaces.isPopupPlace(place) && e.getData(LangDataKeys.IDE_VIEW) != null);
 
@@ -81,7 +83,7 @@ public class ScratchFileActions {
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
 
       ScratchFileCreationHelper.Context context = createContext(e, project);
@@ -111,13 +113,13 @@ public class ScratchFileActions {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      boolean enabled = e.getProject() != null && Registry.intValue("ide.scratch.buffers") > 0;
+      boolean enabled = e.getData(CommonDataKeys.PROJECT) != null && Registry.intValue("ide.scratch.buffers") > 0;
       e.getPresentation().setEnabledAndVisible(enabled);
     }
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
       ScratchFileCreationHelper.Context context = createContext(e, project);
       context.filePrefix = "buffer";
@@ -210,7 +212,7 @@ public class ScratchFileActions {
   public static class LanguageAction extends DumbAwareAction {
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       JBIterable<VirtualFile> files = JBIterable.of(e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY));
       if (project == null || files.isEmpty()) {
         e.getPresentation().setEnabledAndVisible(false);
@@ -235,7 +237,7 @@ public class ScratchFileActions {
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       JBIterable<VirtualFile> files = JBIterable.of(e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)).
               filter(fileFilter(project));
       if (project == null || files.isEmpty()) return;

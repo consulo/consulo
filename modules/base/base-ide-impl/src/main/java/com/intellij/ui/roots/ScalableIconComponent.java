@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.roots;
 
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

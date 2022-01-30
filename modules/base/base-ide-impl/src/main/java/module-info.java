@@ -1,3 +1,5 @@
+import consulo.application.ui.awt.internal.TargetAWTFacade;
+
 /**
  * @author VISTALL
  * @since 13/01/2022
@@ -111,7 +113,7 @@ open module consulo.ide.impl {
   requires transitive kava.beans;
   requires transitive org.slf4j;
 
-  uses consulo.awt.TargetAWTFacade;
+  uses TargetAWTFacade;
 
   provides consulo.ui.image.IconLibraryDescriptor with consulo.ui.ex.impl.LightIconLibraryDescriptor, consulo.ui.ex.impl.DarkIconLibraryDescriptor;
 

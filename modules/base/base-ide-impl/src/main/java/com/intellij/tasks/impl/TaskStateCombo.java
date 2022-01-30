@@ -23,7 +23,7 @@ import com.intellij.tasks.impl.TaskUiUtil.ComboBoxUpdater;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 /**
  * @author Mikhail Golubev

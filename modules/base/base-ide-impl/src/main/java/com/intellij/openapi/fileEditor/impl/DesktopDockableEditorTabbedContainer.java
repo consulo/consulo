@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import consulo.application.Application;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;

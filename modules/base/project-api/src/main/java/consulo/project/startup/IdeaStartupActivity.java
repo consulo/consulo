@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * <p>Runs an activity on project open.</p>
  *
- * <p>If the activity implements {@link consulo.project.DumbAware} interface, e.g. {@link DumbAware}, it will be started in a pooled thread
+ * <p>If the activity implements {@link consulo.application.dumb.DumbAware} interface, e.g. {@link DumbAware}, it will be started in a pooled thread
  * under 'Loading Project' dialog, otherwise it will be started in the dispatch thread after the initialization.</p>
  *
  * @author Dmitry Avdeev
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 @Deprecated
 @DeprecationInfo("Use consulo.project.startup.StartupActivity")
 public interface IdeaStartupActivity extends StartupActivity {
-  interface DumbAware extends IdeaStartupActivity, consulo.project.DumbAware {
+  interface DumbAware extends IdeaStartupActivity, consulo.application.dumb.DumbAware {
   }
 
   interface Background extends IdeaStartupActivity, StartupActivity.Background {

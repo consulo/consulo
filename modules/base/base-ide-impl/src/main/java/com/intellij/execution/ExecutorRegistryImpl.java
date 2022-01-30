@@ -34,13 +34,17 @@ import java.util.HashMap;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import jakarta.inject.Inject;
@@ -208,7 +212,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
     @Override
     public void update(@Nonnull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
-      final Project project = e.getProject();
+      final Project project = e.getData(CommonDataKeys.PROJECT);
 
       if (project == null || project.isDisposed()) {
         presentation.setEnabledAndVisible(false);
@@ -284,7 +288,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull final AnActionEvent e) {
-      final Project project = e.getProject();
+      final Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null || project.isDisposed()) {
         return;
       }

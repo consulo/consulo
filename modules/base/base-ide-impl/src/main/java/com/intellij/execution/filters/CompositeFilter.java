@@ -20,7 +20,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.document.util.TextRange;

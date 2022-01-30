@@ -23,9 +23,10 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.*;
@@ -43,8 +44,8 @@ import com.intellij.util.ObjectUtils;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -535,7 +536,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       };
       ScopeDescriptor selection = getSelectedScope();
       step.setDefaultOptionIndex(ContainerUtil.indexOf(items, o -> Comparing.equal(o.getDisplayName(), selection.getDisplayName())));
-      ListPopupImpl popup = new ListPopupImpl(e.getProject(), step);
+      ListPopupImpl popup = new ListPopupImpl(e.getData(CommonDataKeys.PROJECT), step);
       popup.setMaxRowCount(10);
       //noinspection unchecked
       popup.getList().setCellRenderer(renderer);

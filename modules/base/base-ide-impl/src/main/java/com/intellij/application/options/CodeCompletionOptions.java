@@ -16,7 +16,7 @@
 
 package com.intellij.application.options;
 
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;

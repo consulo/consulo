@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.openapi.actionSystem.TimerListener;
+import consulo.ui.ex.action.TimerListener;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -11,7 +11,7 @@ import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.util.Comparing;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import javax.annotation.Nonnull;

@@ -2,8 +2,8 @@
 package com.intellij.util.io;
 
 import consulo.index.io.Forceable;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.SystemProperties;
+import consulo.application.util.SystemInfo;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.impl.map.LinkedHashMap;

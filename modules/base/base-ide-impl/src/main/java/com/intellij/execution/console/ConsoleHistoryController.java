@@ -61,9 +61,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

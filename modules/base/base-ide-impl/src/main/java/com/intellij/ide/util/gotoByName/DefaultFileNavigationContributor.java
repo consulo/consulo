@@ -17,7 +17,7 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.NavigationItem;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.ProjectCoreUtil;
 import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiFileSystemItem;

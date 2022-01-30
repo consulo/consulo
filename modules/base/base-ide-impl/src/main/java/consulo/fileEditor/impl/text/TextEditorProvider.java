@@ -25,7 +25,7 @@ import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;

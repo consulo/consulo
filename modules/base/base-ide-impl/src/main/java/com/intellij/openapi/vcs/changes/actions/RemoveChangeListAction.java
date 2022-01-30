@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.actions;
 
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
@@ -28,6 +28,10 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;
@@ -38,7 +42,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    boolean visible = canRemoveChangeLists(e.getProject(), changeLists);
+    boolean visible = canRemoveChangeLists(e.getData(CommonDataKeys.PROJECT), changeLists);
 
     Presentation presentation = e.getPresentation();
     presentation.setEnabled(visible);

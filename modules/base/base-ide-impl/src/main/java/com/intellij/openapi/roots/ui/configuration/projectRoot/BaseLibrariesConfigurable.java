@@ -16,8 +16,8 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

@@ -25,6 +25,8 @@ import consulo.util.nodep.JavaVersion;
  * @since 12.0
  */
 @SuppressWarnings({"HardCodedStringLiteral", "UtilityClassWithoutPrivateConstructor"})
+@Deprecated
+@DeprecationInfo("Use SystemInfo or Platform#current()")
 public class SystemInfoRt {
   public static final String OS_NAME = System.getProperty("os.name");
   public static final String OS_VERSION = System.getProperty("os.version").toLowerCase();

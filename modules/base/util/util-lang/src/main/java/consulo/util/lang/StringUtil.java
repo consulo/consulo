@@ -27,6 +27,48 @@ import java.util.function.Function;
  * Based on IDEA code
  */
 public class StringUtil {
+  private static final String[] MN_QUOTED = {"&&", "__"};
+  private static final String[] MN_CHARS = {"&", "_"};
+
+  private static boolean isQuoteAt(@Nonnull String s, int ind) {
+    char ch = s.charAt(ind);
+    return ch == '\'' || ch == '\"';
+  }
+
+  @Contract(pure = true)
+  public static boolean isQuotedString(@Nonnull String s) {
+    return s.length() > 1 && isQuoteAt(s, 0) && s.charAt(0) == s.charAt(s.length() - 1);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String unquoteString(@Nonnull String s) {
+    if (isQuotedString(s)) {
+      return s.substring(1, s.length() - 1);
+    }
+    return s;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String unquoteString(@Nonnull String s, char quotationChar) {
+    if (s.length() > 1 && quotationChar == s.charAt(0) && quotationChar == s.charAt(s.length() - 1)) {
+      return s.substring(1, s.length() - 1);
+    }
+    return s;
+  }
+
+  @Contract(value = "null -> null; !null -> !null", pure = true)
+  public static String escapeMnemonics(@Nullable String text) {
+    if (text == null) return null;
+    return replace(text, MN_CHARS, MN_QUOTED);
+  }
+
+  @Contract(pure = true)
+  public static boolean containsIgnoreCase(@Nonnull String where, @Nonnull String what) {
+    return indexOfIgnoreCase(where, what, 0) >= 0;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static String first(@Nonnull String text, final int maxLength, final boolean appendEllipsis) {
@@ -679,6 +721,40 @@ public class StringUtil {
   @Contract(pure = true)
   public static String replace( @Nonnull String text,  @Nonnull String oldS,  @Nonnull String newS) {
     return replace(text, oldS, newS, false);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String replace(@Nonnull String text, @Nonnull String[] from, @Nonnull String[] to) {
+    return replace(text, Arrays.asList(from), Arrays.asList(to));
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String replace(@Nonnull String text, @Nonnull List<String> from, @Nonnull List<String> to) {
+    assert from.size() == to.size();
+    final StringBuilder result = new StringBuilder(text.length());
+    replace:
+    for (int i = 0; i < text.length(); i++) {
+      for (int j = 0; j < from.size(); j += 1) {
+        String toReplace = from.get(j);
+        String replaceWith = to.get(j);
+
+        final int len = toReplace.length();
+        if (text.regionMatches(i, toReplace, 0, len)) {
+          result.append(replaceWith);
+          i += len - 1;
+          continue replace;
+        }
+      }
+      result.append(text.charAt(i));
+    }
+    return result.toString();
+  }
+
+  @Contract(value = "null -> null; !null->!null", pure = true)
+  public static String internEmptyString(String s) {
+    return s == null ? null : s.isEmpty() ? "" : s;
   }
 
   @Nonnull

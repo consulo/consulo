@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.ColorProvider;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,7 +16,7 @@
 package consulo.ui.web.internal.ex;
 
 import com.intellij.codeInsight.daemon.GutterMark;
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.editor.EditorGutterAction;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.TextAnnotationGutterProvider;

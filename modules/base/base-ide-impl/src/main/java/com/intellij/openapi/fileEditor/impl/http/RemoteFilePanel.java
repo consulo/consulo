@@ -16,12 +16,12 @@
 package com.intellij.openapi.fileEditor.impl.http;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.application.ApplicationManager;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -34,7 +34,7 @@ import com.intellij.openapi.vfs.impl.http.RemoteFileInfo;
 import com.intellij.openapi.vfs.impl.http.RemoteFileState;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.net.HttpProxyConfigurable;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.fileEditor.impl.text.TextEditorProvider;

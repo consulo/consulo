@@ -17,7 +17,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.ide.util.treeView.smartTree.Filter;
-import com.intellij.openapi.actionSystem.Shortcut;
+import consulo.ui.ex.action.Shortcut;
 
 /**
  * @author yole

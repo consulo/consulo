@@ -19,7 +19,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.scope.SearchScope;
 import com.intellij.ui.SimpleListCellRenderer;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.Functions;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;

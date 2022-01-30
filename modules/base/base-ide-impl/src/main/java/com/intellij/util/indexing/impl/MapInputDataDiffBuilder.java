@@ -16,7 +16,7 @@
 package com.intellij.util.indexing.impl;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.indexing.StorageException;
 import consulo.logging.Logger;
 

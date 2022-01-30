@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl.content;
 
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.desktop.awt.ui.plaf.darcula.LafIconLookup;
 
 import javax.swing.*;

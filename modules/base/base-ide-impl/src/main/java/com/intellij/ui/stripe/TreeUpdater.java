@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.stripe;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 
 import javax.swing.*;

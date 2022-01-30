@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log;
 
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 
 import java.awt.*;
 

@@ -15,7 +15,8 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
@@ -28,7 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 public class EditSourceInNewWindowAction extends DumbAwareAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final FileEditorManager manager = FileEditorManager.getInstance(getEventProject(e));
+    final FileEditorManager manager = FileEditorManager.getInstance(e == null ? null : e.getData(CommonDataKeys.PROJECT));
     ((FileEditorManagerImpl)manager).openFileInNewWindow(getVirtualFiles(e)[0]);
   }
 
@@ -42,6 +43,6 @@ public class EditSourceInNewWindowAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(getEventProject(e) != null && getVirtualFiles(e).length == 1);
+    e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(CommonDataKeys.PROJECT)) != null && getVirtualFiles(e).length == 1);
   }
 }

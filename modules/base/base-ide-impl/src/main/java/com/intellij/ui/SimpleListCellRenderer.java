@@ -4,7 +4,7 @@ package com.intellij.ui;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Function;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.awt.hacking.DefaultLookupHacking;
 
 import javax.annotation.Nonnull;

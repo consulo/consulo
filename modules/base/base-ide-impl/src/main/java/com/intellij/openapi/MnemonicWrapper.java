@@ -3,9 +3,9 @@ package com.intellij.openapi;
 
 import consulo.application.ui.UISettings;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

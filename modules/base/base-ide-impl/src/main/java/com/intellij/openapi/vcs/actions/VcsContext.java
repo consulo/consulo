@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.PlaceProvider;
+import consulo.ui.ex.PlaceProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

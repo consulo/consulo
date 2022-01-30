@@ -26,7 +26,7 @@ import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.ui.ValidableComponent;
 import consulo.ui.annotation.RequiredUIAccess;

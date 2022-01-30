@@ -15,20 +15,21 @@
  */
 package consulo.ide.newProject.actions;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.application.WriteAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.ui.NewProjectDialog;
@@ -139,7 +140,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     NewProjectDialog dialog = new NewProjectDialog(project, null);
 
     if (dialog.showAndGet()) {

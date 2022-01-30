@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.diff.impl.dir.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
-import com.intellij.openapi.actionSystem.ShortcutSet;
+import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
 import javax.annotation.Nullable;

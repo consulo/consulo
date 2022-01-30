@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.impl.layout;
 
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;

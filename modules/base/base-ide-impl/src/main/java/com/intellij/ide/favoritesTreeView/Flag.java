@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 
 import java.awt.*;
 

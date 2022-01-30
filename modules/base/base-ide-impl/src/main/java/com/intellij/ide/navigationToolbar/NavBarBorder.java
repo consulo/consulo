@@ -16,8 +16,8 @@
 package com.intellij.ide.navigationToolbar;
 
 import consulo.application.ui.UISettings;
-import com.intellij.ui.Gray;
-import com.intellij.util.ui.JBInsets;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBInsets;
 
 import javax.swing.border.Border;
 import java.awt.*;

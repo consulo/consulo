@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import consulo.ui.ex.action.AnAction;
+
 import javax.annotation.Nonnull;
 
 /**

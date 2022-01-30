@@ -21,7 +21,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsParameters;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsParametersImpl;
 import javax.annotation.Nonnull;

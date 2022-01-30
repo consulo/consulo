@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.container.plugin.PluginDescriptor;

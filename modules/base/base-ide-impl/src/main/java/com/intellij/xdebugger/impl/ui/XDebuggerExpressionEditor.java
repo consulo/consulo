@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.EditorTextField;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.EvaluationMode;

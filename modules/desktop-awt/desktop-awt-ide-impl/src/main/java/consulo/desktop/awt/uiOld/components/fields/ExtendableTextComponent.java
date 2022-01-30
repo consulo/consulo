@@ -5,11 +5,10 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
 
-import static com.intellij.util.ui.JBUI.scale;
+import static consulo.application.ui.awt.JBUI.scale;
 
 /**
  * @author Konstantin Bulenkov

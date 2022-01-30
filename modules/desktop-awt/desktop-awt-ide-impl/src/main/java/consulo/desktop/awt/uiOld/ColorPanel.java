@@ -19,9 +19,8 @@ import com.intellij.ui.ColorChooser;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.RelativeFont;
 import com.intellij.ui.UIBundle;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
-import consulo.annotation.DeprecationInfo;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.JBUI;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

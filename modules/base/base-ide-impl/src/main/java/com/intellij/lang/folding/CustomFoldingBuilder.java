@@ -17,7 +17,7 @@ package com.intellij.lang.folding;
 
 import consulo.language.ast.ASTNode;
 import consulo.document.Document;
-import consulo.project.PossiblyDumbAware;
+import consulo.application.dumb.PossiblyDumbAware;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;

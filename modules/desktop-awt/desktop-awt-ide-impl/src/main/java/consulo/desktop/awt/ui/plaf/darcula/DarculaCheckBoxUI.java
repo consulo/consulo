@@ -2,9 +2,9 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.ui.ComponentUtil;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.ui.JBInsets;
+import consulo.application.ui.awt.JBInsets;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.ThreeStateCheckBox;
 
@@ -20,7 +20,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeListener;
 
-import static com.intellij.util.ui.JBUI.scale;
+import static consulo.application.ui.awt.JBUI.scale;
 
 /**
  * @author Konstantin Bulenkov

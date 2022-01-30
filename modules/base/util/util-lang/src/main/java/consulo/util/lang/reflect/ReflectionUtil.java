@@ -16,6 +16,7 @@
 package consulo.util.lang.reflect;
 
 import consulo.util.lang.ref.SimpleReference;
+import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +105,28 @@ public class ReflectionUtil {
     if (superclass != null) {
       processClasses(superclass, classConsumer, processed);
     }
+  }
+
+  @Nullable
+  public static Class getMethodDeclaringClass(@Nonnull Class<?> instanceClass, @NonNls @Nonnull String methodName, @Nonnull Class... parameters) {
+    Method method = getMethod(instanceClass, methodName, parameters);
+    return method == null ? null : method.getDeclaringClass();
+  }
+
+  @Nullable
+  public static Method getMethod(@Nonnull Class aClass, @NonNls @Nonnull String name, @Nonnull Class... parameters) {
+    return findMethod(getClassPublicMethods(aClass, false), name, parameters);
+  }
+
+  @Nullable
+  public static Method findMethod(@Nonnull Collection<Method> methods, @NonNls @Nonnull String name, @Nonnull Class... parameters) {
+    for (final Method method : methods) {
+      if (name.equals(method.getName()) && Arrays.equals(parameters, method.getParameterTypes())) {
+        method.setAccessible(true);
+        return method;
+      }
+    }
+    return null;
   }
 
   @Nonnull

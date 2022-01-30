@@ -23,7 +23,7 @@ import consulo.fileChooser.FileChooserFactory;
 import consulo.project.Project;
 import com.intellij.ui.TextAccessor;
 import com.intellij.ui.components.JBTextField;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

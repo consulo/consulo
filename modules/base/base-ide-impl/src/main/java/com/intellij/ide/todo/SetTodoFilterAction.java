@@ -25,6 +25,7 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Consumer;
+import consulo.ui.ex.action.*;
 
 import javax.swing.*;
 

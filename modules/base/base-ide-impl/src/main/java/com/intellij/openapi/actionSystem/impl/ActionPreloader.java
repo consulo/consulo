@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;

@@ -16,9 +16,9 @@
 
 package com.intellij.ide.hierarchy;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.application.ApplicationManager;
 import consulo.localize.LocalizeValue;

@@ -16,6 +16,7 @@
 
 package com.intellij.util.ui;
 
+import consulo.application.ui.awt.JBUI;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -26,7 +27,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.intellij.util.ui.JBUI.ScaleType.PIX_SCALE;
+import static consulo.application.ui.awt.JBUI.ScaleType.PIX_SCALE;
 
 /**
  * @author max

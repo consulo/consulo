@@ -13,7 +13,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import consulo.application.util.registry.Registry;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;

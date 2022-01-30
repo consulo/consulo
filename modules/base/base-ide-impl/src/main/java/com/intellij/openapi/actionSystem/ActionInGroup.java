@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+
 public class ActionInGroup {
 
   private final DefaultActionGroup myGroup;

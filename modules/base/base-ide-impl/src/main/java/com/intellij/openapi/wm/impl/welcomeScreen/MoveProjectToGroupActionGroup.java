@@ -17,10 +17,10 @@ package com.intellij.openapi.wm.impl.welcomeScreen;
 
 import com.intellij.ide.ProjectGroup;
 import com.intellij.ide.RecentProjectsManager;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.AnSeparator;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 

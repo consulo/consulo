@@ -16,6 +16,7 @@
 package consulo.ui.plaf;
 
 import com.intellij.util.ui.RegionPainter;
+import consulo.application.ui.awt.UIUtil;
 import consulo.util.dataholder.Key;
 
 import javax.swing.*;
@@ -30,7 +31,7 @@ public interface ScrollBarUIConstants {
    * This key defines a region painter, which is used by the custom ScrollBarUI
    * to draw additional paintings (i.e. error stripes) on the scrollbar's track.
    *
-   * @see com.intellij.util.ui.UIUtil#putClientProperty
+   * @see UIUtil#putClientProperty
    */
   Key<RegionPainter<Object>> TRACK = Key.create("JB_SCROLL_BAR_TRACK");
 

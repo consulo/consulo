@@ -18,11 +18,11 @@ package com.intellij.openapi.actionSystem.impl;
 import com.intellij.openapi.actionSystem.ActionButtonComponent;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
-import com.intellij.ui.Gray;
+import consulo.application.ui.awt.Gray;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

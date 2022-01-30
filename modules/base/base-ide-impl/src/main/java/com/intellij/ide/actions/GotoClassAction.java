@@ -22,12 +22,16 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.playback.commands.ActionCommand;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import consulo.language.psi.PsiDocumentManager;
@@ -56,7 +60,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     boolean dumb = DumbService.isDumb(project);
@@ -90,7 +94,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.class");

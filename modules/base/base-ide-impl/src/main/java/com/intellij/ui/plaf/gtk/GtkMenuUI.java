@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.plaf.gtk;
 
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.MenuItemUI;

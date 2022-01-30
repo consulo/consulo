@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.wm.ex;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowType;
 import consulo.ui.annotation.RequiredUIAccess;

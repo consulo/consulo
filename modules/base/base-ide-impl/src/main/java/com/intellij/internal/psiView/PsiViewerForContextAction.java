@@ -3,9 +3,11 @@ package com.intellij.internal.psiView;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import com.intellij.openapi.editor.Editor;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * Created by IntelliJ IDEA.

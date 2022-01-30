@@ -2,13 +2,13 @@
 package com.intellij.ui.components;
 
 import consulo.application.Application;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.wm.IdeGlassPane.TopComponent;
 import com.intellij.ui.ComponentUtil;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.ui.scroll.TouchScrollUtil;
 import com.intellij.util.ui.RegionPainter;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ui.plaf.ScrollBarUIConstants;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;

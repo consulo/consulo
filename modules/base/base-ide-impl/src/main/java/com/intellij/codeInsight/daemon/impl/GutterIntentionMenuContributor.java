@@ -2,8 +2,8 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.execution.lineMarker.LineMarkerActionWrapper;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

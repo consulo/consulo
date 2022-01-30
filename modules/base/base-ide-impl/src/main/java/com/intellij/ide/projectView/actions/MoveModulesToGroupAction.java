@@ -31,6 +31,9 @@ import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import javax.annotation.Nullable;
 

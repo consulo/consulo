@@ -18,13 +18,13 @@ package com.intellij.diff.impl;
 import com.intellij.diff.DiffDialogHints;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.WindowWrapper;
 import com.intellij.openapi.ui.WindowWrapperBuilder;
-import com.intellij.util.ImageLoader;
+import consulo.application.ui.awt.internal.ImageLoader;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;

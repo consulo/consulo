@@ -15,7 +15,7 @@
  */
 package com.intellij.execution;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import javax.annotation.Nonnull;
 
 public enum FilePathSeparator {

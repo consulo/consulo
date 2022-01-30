@@ -21,6 +21,8 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 public class CompileDirtyAction extends CompileActionBase {
 

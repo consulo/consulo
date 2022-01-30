@@ -15,6 +15,9 @@
  */
 package com.intellij.util.ui;
 
+import consulo.application.ui.awt.ImageUtil;
+import consulo.application.ui.awt.UIUtil;
+
 import javax.annotation.Nullable;
 
 import java.awt.AlphaComposite;

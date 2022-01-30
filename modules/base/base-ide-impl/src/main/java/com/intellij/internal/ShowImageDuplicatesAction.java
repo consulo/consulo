@@ -15,8 +15,9 @@
  */
 package com.intellij.internal;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -38,7 +39,7 @@ public class ShowImageDuplicatesAction extends AnAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = getEventProject(e);
+    final Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
     assert project != null;
     ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
       @Override
@@ -131,7 +132,7 @@ public class ShowImageDuplicatesAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(getEventProject(e) != null);
+    e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(CommonDataKeys.PROJECT)) != null);
   }
 
   public static byte[] createChecksum(InputStream fis) throws Exception {

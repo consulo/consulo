@@ -17,7 +17,7 @@ package com.intellij.execution.process;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import javax.annotation.Nonnull;
 
 public class RunnerWinProcess extends ProcessWrapper {

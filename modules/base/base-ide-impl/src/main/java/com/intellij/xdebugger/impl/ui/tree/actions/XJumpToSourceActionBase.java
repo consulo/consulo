@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.xdebugger.XSourcePosition;

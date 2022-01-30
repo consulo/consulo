@@ -2,7 +2,7 @@
 package com.intellij.build.events;
 
 import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

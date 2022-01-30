@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.keymap;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.application.util.function.Condition;

@@ -2,13 +2,13 @@
 package com.intellij.openapi.vcs.ui;
 
 import com.intellij.ui.ErrorLabel;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.ui.popup.list.IconListPopupRenderer;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
-import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 

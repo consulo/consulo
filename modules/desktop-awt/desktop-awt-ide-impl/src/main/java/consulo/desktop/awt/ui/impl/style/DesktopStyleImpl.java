@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl.style;
 
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.LightColors;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.desktop.util.awt.MorphValue;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;

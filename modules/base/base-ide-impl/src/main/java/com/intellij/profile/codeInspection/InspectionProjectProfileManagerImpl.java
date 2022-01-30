@@ -23,7 +23,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import consulo.project.DumbAwareRunnable;
+import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.component.persist.InvalidDataException;
@@ -33,7 +33,7 @@ import com.intellij.profile.Profile;
 import com.intellij.profile.ProfileEx;
 import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

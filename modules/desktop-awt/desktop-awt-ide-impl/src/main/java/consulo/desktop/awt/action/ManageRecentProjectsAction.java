@@ -17,7 +17,7 @@ package consulo.desktop.awt.action;
 
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
@@ -57,7 +57,7 @@ public class ManageRecentProjectsAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     boolean enable = false;
     if (project != null) {
       enable = RecentProjectsManager.getInstance().getRecentProjectsActions(false).length > 0;

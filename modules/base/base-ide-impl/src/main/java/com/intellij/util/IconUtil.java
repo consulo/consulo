@@ -18,10 +18,11 @@ package com.intellij.util;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.util.ScalableIcon;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.*;
 import com.intellij.util.ui.*;
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
+import consulo.application.ui.awt.internal.RetinaImage;
 import consulo.logging.Logger;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
@@ -32,7 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static com.intellij.util.ui.JBUI.ScaleType.USR_SCALE;
+import static consulo.application.ui.awt.JBUI.ScaleType.USR_SCALE;
 
 /**
  * @author max

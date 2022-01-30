@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;

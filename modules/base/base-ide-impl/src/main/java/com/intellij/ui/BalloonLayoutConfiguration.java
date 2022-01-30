@@ -18,9 +18,9 @@ package com.intellij.ui;
 import com.intellij.icons.AllIcons;
 import com.intellij.notification.Notification;
 import com.intellij.notification.impl.NotificationsManagerImpl;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.ui.JBDimension;
-import com.intellij.util.ui.JBUI;
+import consulo.application.util.SystemInfo;
+import consulo.application.ui.awt.JBDimension;
+import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

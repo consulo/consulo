@@ -17,9 +17,9 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionToolbar;
+import consulo.ui.ex.action.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
@@ -36,7 +36,7 @@ import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.MutableCollectionComboBoxModel;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.disposer.Disposable;
 import consulo.roots.ui.configuration.ModulesConfigurator;

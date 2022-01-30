@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.patch;
 
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsOutgoingChangesProvider;

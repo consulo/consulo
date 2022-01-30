@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.project.ui.wm.content.Content;
 import com.intellij.util.Alarm;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import javax.swing.*;
 import java.awt.*;

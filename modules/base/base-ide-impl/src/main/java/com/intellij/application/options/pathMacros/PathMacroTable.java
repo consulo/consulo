@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.table.JBTable;
 import consulo.application.options.PathMacrosService;
 import consulo.logging.Logger;

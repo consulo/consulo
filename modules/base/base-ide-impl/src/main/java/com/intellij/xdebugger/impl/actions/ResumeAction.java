@@ -17,8 +17,9 @@ package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.execution.actions.ChooseDebugConfigurationPopupAction;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.project.DumbAware;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.xdebugger.XDebugSession;
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
 public class ResumeAction extends XDebuggerActionBase implements DumbAware {
   @Override
   protected boolean isEnabled(AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return false;
 
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
@@ -45,7 +46,7 @@ public class ResumeAction extends XDebuggerActionBase implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
     if (!performWithHandler(e)) {
-      Project project = getEventProject(e);
+      Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
       if (project != null && !DumbService.isDumb(project)) {
         new ChooseDebugConfigurationPopupAction().actionPerformed(e);
       }

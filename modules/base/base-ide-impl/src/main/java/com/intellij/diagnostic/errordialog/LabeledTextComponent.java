@@ -4,7 +4,7 @@ import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

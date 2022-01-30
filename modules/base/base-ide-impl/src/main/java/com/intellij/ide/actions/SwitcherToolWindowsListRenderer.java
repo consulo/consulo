@@ -2,13 +2,15 @@
 package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.ShortcutSet;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindow;
 import com.intellij.ui.*;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

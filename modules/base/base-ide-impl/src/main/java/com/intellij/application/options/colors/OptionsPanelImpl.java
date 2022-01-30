@@ -21,11 +21,11 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.Settings;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

@@ -16,12 +16,12 @@
 package consulo.backgroundTaskByVfsChange.ui;
 
 import com.intellij.openapi.fileEditor.FileEditor;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.Gray;
+import consulo.application.ui.awt.Gray;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;

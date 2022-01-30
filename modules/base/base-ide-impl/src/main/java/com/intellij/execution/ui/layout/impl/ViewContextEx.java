@@ -18,7 +18,7 @@ package com.intellij.execution.ui.layout.impl;
 
 import com.intellij.execution.ui.layout.GridCell;
 import com.intellij.execution.ui.layout.ViewContext;
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.util.concurrent.AsyncResult;
 
 public interface ViewContextEx extends ViewContext {

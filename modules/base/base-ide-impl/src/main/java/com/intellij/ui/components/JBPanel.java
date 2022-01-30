@@ -15,8 +15,8 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.util.ui.JBFont;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBFont;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.components.JBComponent;
 
 import javax.annotation.Nullable;

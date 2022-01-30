@@ -3,7 +3,7 @@ package com.intellij.util;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiPlainTextFile;import consulo.annotation.access.RequiredReadAction;

@@ -21,7 +21,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.PowerSaveMode;
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.keymap.KeymapUtil;

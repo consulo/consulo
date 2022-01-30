@@ -15,13 +15,13 @@
  */
 package consulo.project.ui.wm.content;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.util.BusyObject;
+import consulo.component.util.BusyObject;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.project.ui.wm.content.event.ContentManagerListener;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

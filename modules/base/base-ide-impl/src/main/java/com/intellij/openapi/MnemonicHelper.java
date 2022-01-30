@@ -2,16 +2,16 @@
 package com.intellij.openapi;
 
 import com.intellij.openapi.actionSystem.ActionButtonComponent;
-import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.ComponentTreeWatcher;
 import com.intellij.ui.components.JBOptionButton;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.DialogUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import consulo.desktop.awt.uiOld.LayeredIcon;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

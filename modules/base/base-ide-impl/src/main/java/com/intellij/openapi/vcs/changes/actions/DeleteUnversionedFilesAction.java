@@ -23,8 +23,8 @@
 package com.intellij.openapi.vcs.changes.actions;
 
 import com.intellij.ide.DeleteProvider;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.util.IconUtil;
 

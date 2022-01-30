@@ -30,9 +30,9 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBInsets;
+import consulo.application.ui.awt.JBInsets;
 import com.intellij.util.ui.MacUIUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

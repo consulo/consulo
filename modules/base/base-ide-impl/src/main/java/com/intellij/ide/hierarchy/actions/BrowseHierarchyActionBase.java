@@ -39,6 +39,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 import java.awt.*;
 import java.util.List;
@@ -58,7 +60,7 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
   @Override
   public final void actionPerformed(@Nonnull final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     PsiDocumentManager.getInstance(project).commitAllDocuments(); // prevents problems with smart pointers creation

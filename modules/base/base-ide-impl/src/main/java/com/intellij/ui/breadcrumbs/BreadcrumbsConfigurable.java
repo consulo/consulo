@@ -13,9 +13,9 @@ import com.intellij.openapi.options.colors.pages.GeneralColorsPage;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.VerticalLayout;
-import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUIScale;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

@@ -16,7 +16,7 @@
 
 package com.intellij.tasks.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import com.intellij.tasks.Comment;
 import com.intellij.tasks.LocalTask;

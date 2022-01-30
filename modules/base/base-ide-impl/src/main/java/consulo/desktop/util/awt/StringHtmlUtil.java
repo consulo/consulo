@@ -16,7 +16,7 @@
 package consulo.desktop.util.awt;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

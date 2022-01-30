@@ -11,7 +11,7 @@ import consulo.language.psi.PsiElement;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.JBIterable;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;

@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.util.ColorValueUtil;
 import org.jetbrains.annotations.NonNls;

@@ -28,6 +28,8 @@ import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiFile;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 public class CodeInspectionOnEditorAction extends AnAction {
   @Override

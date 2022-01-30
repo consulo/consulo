@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.components.panels;
 
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

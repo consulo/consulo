@@ -24,7 +24,7 @@ import consulo.application.util.function.Condition;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.util.containers.TransferToEDTQueue;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

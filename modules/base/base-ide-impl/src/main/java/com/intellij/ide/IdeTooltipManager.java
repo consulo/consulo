@@ -2,10 +2,11 @@
 package com.intellij.ide;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.application.ui.awt.*;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.EditorColorKey;
@@ -24,10 +25,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.*;
-import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.color.ColorValue;

@@ -15,10 +15,10 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionPopupMenu;
+import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.application.ApplicationManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -21,7 +21,7 @@ import com.intellij.execution.testframework.sm.runner.SMTRunnerNodeDescriptor;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -11,14 +11,18 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import consulo.application.Application;
-import com.intellij.openapi.keymap.MacKeymapUtil;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.util.MacKeymapUtil;
 import com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.FontUtil;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -70,10 +74,10 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
       }
     }
 
-    if (e.getProject() != null) {
+    if (e.getData(CommonDataKeys.PROJECT) != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_RUN_ANYTHING);
 
-      RunAnythingManager runAnythingManager = RunAnythingManager.getInstance(e.getProject());
+      RunAnythingManager runAnythingManager = RunAnythingManager.getInstance(e.getData(CommonDataKeys.PROJECT));
       String text = GotoActionBase.getInitialTextForNavigation(e);
       runAnythingManager.show(text, e);
     }

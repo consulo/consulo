@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.Gray;
+import consulo.application.ui.awt.Gray;
 import com.intellij.util.ui.MacUIUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

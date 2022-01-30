@@ -17,9 +17,9 @@ package com.intellij.openapi.vcs.checkin;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.todo.*;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionPopupMenu;
+import consulo.ui.ex.action.ActionPopupMenu;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
@@ -57,7 +57,7 @@ import java.util.Collection;
 
 import static consulo.application.CommonBundle.getCancelButtonText;
 import static com.intellij.openapi.ui.Messages.*;
-import static com.intellij.util.ui.UIUtil.getWarningIcon;
+import static consulo.application.ui.awt.UIUtil.getWarningIcon;
 
 /**
  * @author irengrig

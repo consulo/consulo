@@ -7,12 +7,13 @@ import com.intellij.ide.*;
 import com.intellij.ide.ui.PopupLocationTracker;
 import com.intellij.ide.ui.ScreenAreaConsumer;
 import com.intellij.openapi.MnemonicHelper;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.application.ui.awt.*;
+import consulo.application.util.SystemInfo;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.ApplicationManager;
-import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.document.util.UnfairTextRange;
 import consulo.logging.Logger;
@@ -30,7 +31,6 @@ import com.intellij.openapi.wm.WeakFocusStackManager;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtils;
@@ -60,7 +60,7 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import static com.intellij.util.ui.UIUtil.useSafely;
+import static consulo.application.ui.awt.UIUtil.useSafely;
 
 public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 

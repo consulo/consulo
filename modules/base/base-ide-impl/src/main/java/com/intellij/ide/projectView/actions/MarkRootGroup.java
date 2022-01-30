@@ -17,7 +17,11 @@ package com.intellij.ide.projectView.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.module.Module;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

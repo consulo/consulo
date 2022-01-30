@@ -16,11 +16,11 @@
 package consulo.desktop.awt.wm.impl.content;
 
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.ui.Gray;
+import consulo.application.ui.awt.Gray;
 import consulo.project.ui.wm.content.Content;
 import com.intellij.ui.popup.PopupState;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 
 import javax.accessibility.AccessibleAction;

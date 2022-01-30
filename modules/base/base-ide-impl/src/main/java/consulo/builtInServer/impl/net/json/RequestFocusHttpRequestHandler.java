@@ -18,7 +18,7 @@ package consulo.builtInServer.impl.net.json;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.util.BitUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.builtInServer.json.JsonGetRequestHandler;
 
 import javax.annotation.Nonnull;

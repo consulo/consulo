@@ -13,7 +13,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.NonBlockingReadAction;
 import consulo.application.constraint.ExpirableConstrainedExecution;

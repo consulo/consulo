@@ -15,9 +15,9 @@
  */
 package com.intellij.xdebugger.impl.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 
 /**

@@ -5,6 +5,7 @@ import com.intellij.ide.actions.runAnything.RunAnythingContext;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
+import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import com.intellij.util.text.Matcher;
 import consulo.ui.image.Image;
@@ -57,7 +58,7 @@ public interface RunAnythingProvider<V> {
   /**
    * Finds matching value by input {@code pattern}.
    * <p>
-   * E.g. if input "open #projectName" an action {@link com.intellij.openapi.actionSystem.AnAction} "Open recent project #projectName" is returned,
+   * E.g. if input "open #projectName" an action {@link AnAction} "Open recent project #projectName" is returned,
    * for "ruby test.rb" an existing run configuration with the name "ruby test.rb" is find.
    *
    * @param dataContext use it to fetch project, module, working directory

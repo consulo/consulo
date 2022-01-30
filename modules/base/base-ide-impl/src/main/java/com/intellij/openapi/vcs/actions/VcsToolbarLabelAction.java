@@ -1,8 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.ex.ToolbarLabelAction;
 import consulo.project.Project;
@@ -20,7 +21,7 @@ public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomC
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     e.getPresentation().setVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
     e.getPresentation().setTextValue(getConsolidatedVcsName(project));
   }

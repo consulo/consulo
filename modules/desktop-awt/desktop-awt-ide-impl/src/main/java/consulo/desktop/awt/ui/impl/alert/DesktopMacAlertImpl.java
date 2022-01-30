@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.impl.alert;
 
 import consulo.desktop.awt.uiOld.messages.SheetMessage;
 import consulo.desktop.awt.uiOld.messages.SheetMessageUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;

@@ -18,7 +18,7 @@ package com.intellij.vcs;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import com.intellij.openapi.vcs.update.UpdateInfoTree;

@@ -6,7 +6,7 @@ import com.intellij.execution.process.ProcessIOExecutorService;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;

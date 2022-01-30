@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions.searcheverywhere;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import javax.annotation.Nonnull;
 
 public interface SearchEverywhereContributorFactory<Item> {

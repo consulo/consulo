@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.ui.update.ComparableObject;
+import consulo.component.util.ComparableObject;
 
 /**
  * Created by IntelliJ IDEA.

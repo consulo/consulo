@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.application.ui.WholeWestDialogWrapper;
 import consulo.container.plugin.PluginDescriptor;

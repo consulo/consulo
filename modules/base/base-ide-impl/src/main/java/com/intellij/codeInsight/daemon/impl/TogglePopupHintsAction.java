@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -57,7 +57,7 @@ public class TogglePopupHintsAction extends AnAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     PsiFile psiFile = getTargetFile(e.getDataContext());
     LOG.assertTrue(psiFile != null);
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     LOG.assertTrue(project != null);
     DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
     codeAnalyzer.setImportHintsEnabled(psiFile, !codeAnalyzer.isImportHintsEnabled(psiFile));

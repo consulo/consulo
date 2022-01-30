@@ -16,8 +16,8 @@
 package com.intellij.application.options.codeStyle.arrangement.action;
 
 import com.intellij.codeInsight.actions.RearrangeCodeProcessor;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
@@ -48,7 +48,7 @@ public class RearrangeCodeAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }

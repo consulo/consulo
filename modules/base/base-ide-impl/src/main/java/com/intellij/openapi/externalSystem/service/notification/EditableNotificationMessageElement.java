@@ -23,7 +23,10 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPopupMenu;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -20,7 +20,7 @@ import com.intellij.ide.plugins.AvailablePluginsManagerMain;
 import com.intellij.ide.plugins.InstalledPluginsManagerMain;
 import com.intellij.ide.plugins.PluginInstallUtil;
 import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.ui.Messages;

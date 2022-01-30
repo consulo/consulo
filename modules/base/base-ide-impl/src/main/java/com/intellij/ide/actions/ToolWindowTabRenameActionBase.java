@@ -15,7 +15,8 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.ui.ex.popup.Balloon;
@@ -29,7 +30,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
 import consulo.project.ui.wm.content.Content;
 import com.intellij.util.BooleanFunction;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
@@ -56,7 +57,7 @@ public class ToolWindowTabRenameActionBase extends ToolWindowContextMenuActionBa
   @Override
   public void update(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
     String id = toolWindow.getId();
-    e.getPresentation().setEnabledAndVisible(e.getProject() != null && myToolWindowId.equals(id) && content != null);
+    e.getPresentation().setEnabledAndVisible(e.getData(CommonDataKeys.PROJECT) != null && myToolWindowId.equals(id) && content != null);
   }
 
   @Override

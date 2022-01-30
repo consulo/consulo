@@ -19,13 +19,17 @@ import com.intellij.icons.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.debugger.UiDebuggerExtension;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Shortcut;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

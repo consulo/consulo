@@ -17,12 +17,12 @@ package com.intellij.ide.plugins;
 
 import com.intellij.icons.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.ClickListener;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

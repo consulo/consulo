@@ -16,10 +16,10 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.TreeExpander;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.Presentation;
-import consulo.project.DumbAware;
+import consulo.ui.ex.action.Presentation;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 

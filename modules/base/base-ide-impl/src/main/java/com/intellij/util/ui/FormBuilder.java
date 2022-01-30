@@ -20,6 +20,8 @@
 package com.intellij.util.ui;
 
 import com.intellij.ui.components.JBLabel;
+import consulo.application.ui.awt.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,8 +29,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-import static com.intellij.util.ui.UIUtil.DEFAULT_HGAP;
-import static com.intellij.util.ui.UIUtil.DEFAULT_VGAP;
+import static consulo.application.ui.awt.UIUtil.DEFAULT_HGAP;
+import static consulo.application.ui.awt.UIUtil.DEFAULT_VGAP;
 import static java.awt.GridBagConstraints.*;
 
 public class FormBuilder {

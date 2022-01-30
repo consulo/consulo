@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.navigation;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 
 import javax.swing.*;
 

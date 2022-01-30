@@ -18,7 +18,7 @@ package com.intellij.execution.ui;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.process.ProcessHandler;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import javax.annotation.Nonnull;
 
 public interface ConsoleView extends ExecutionConsole {

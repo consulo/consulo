@@ -15,8 +15,8 @@
  */
 package consulo.ui.web.internal;
 
-import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWTFacade;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.internal.TargetAWTFacade;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size;
 import consulo.ui.color.ColorValue;

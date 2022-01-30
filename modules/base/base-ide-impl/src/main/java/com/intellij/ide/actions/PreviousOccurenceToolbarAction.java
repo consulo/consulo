@@ -17,7 +17,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.OccurenceNavigator;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 

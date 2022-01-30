@@ -16,15 +16,15 @@
 package consulo.desktop.awt.ui.dialog;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.impl.ButtonToolbarImpl;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.platform.Platform;
 import consulo.ui.Component;
 import consulo.ui.Size;

@@ -23,6 +23,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +87,7 @@ public class BreakpointEditor {
       @Override
       public void update(AnActionEvent e) {
         super.update(e);
-        boolean lookup = LookupManager.getInstance(getEventProject(e)).getActiveLookup() != null;
+        boolean lookup = LookupManager.getInstance(e == null ? null : e.getData(CommonDataKeys.PROJECT)).getActiveLookup() != null;
         Editor editor = e.getData(CommonDataKeys.EDITOR);
         e.getPresentation().setEnabled(!lookup && (editor == null || StringUtil.isEmpty(editor.getSelectionModel().getSelectedText())) );
       }

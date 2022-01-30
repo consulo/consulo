@@ -10,7 +10,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.EditorTextField;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;

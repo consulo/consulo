@@ -23,7 +23,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

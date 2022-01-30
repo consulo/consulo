@@ -15,10 +15,10 @@
  */
 package com.intellij.codeInsight.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Caret;
@@ -47,7 +47,7 @@ import javax.annotation.Nonnull;
 public abstract class MultiCaretCodeInsightAction extends AnAction {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
@@ -77,7 +77,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
   public void update(@Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
 
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;

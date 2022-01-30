@@ -3,7 +3,7 @@ package com.intellij.diagnostic;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.AnimatedIcon.Blinking;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;

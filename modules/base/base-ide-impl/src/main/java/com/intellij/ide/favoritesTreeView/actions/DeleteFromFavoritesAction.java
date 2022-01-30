@@ -20,10 +20,11 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.favoritesTreeView.*;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.ui.CommonActionsPanel;
 import com.intellij.util.IconUtil;
@@ -50,7 +51,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     FavoritesViewTreeBuilder builder = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
     if (project == null || builder == null) {
       return;
@@ -97,7 +98,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setText(getTemplatePresentation().getText());
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     FavoritesViewTreeBuilder builder = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
     if (project == null || builder == null) {
       e.getPresentation().setEnabled(false);

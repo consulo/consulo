@@ -4,14 +4,14 @@ package consulo.desktop.awt.ui.plaf.beg;
 import consulo.application.ui.UISettings;
 import consulo.desktop.awt.ui.plaf.intellij.IdeaPopupMenuUI;
 import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;
 import com.intellij.ui.paint.LinePainter2D;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;

@@ -15,11 +15,12 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.Application;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ide.plugins.whatsNew.WhatsNewVirtualFile;
 import consulo.localize.LocalizeValue;
@@ -43,7 +44,7 @@ public class WhatsNewAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if(project == null) {
       return;
     }
@@ -56,7 +57,7 @@ public class WhatsNewAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setVisible(e.getProject() != null);
+    e.getPresentation().setVisible(e.getData(CommonDataKeys.PROJECT) != null);
     e.getPresentation().setTextValue(IdeLocalize.whatsnewActionCustomText(myApplication.getName()));
     e.getPresentation().setDescriptionValue(IdeLocalize.whatsnewActionCustomDescription(myApplication.getName()));
   }

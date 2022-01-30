@@ -13,6 +13,10 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +29,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
   @Override
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    Project project = e != null ? e.getProject() : null;
+    Project project = e != null ? e.getData(CommonDataKeys.PROJECT) : null;
     if (project == null) return AnAction.EMPTY_ARRAY;
 
     StatusBarWidgetsManager manager = StatusBarWidgetsManager.getInstance(project);
@@ -46,7 +50,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) {
         e.getPresentation().setEnabledAndVisible(false);
         return;
@@ -99,7 +103,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
 
     @Nullable
     private static StatusBarWidgetFactory getFactory(@Nonnull AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       String hoveredWidgetId = e.getData(StatusBarEx.HOVERED_WIDGET_ID);
       StatusBar statusBar = e.getData(PlatformDataKeys.STATUS_BAR);
       if (project != null && hoveredWidgetId != null && statusBar != null) {

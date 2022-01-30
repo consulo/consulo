@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.plaf;
 
 import com.intellij.openapi.util.NotNullLazyValue;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

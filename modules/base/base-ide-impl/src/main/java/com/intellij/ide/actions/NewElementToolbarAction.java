@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 
 import consulo.dataContext.DataManager;
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;

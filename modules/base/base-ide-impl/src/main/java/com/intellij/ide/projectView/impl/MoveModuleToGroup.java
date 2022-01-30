@@ -26,6 +26,8 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

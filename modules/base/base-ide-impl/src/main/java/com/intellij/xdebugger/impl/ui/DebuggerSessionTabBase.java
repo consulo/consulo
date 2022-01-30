@@ -29,13 +29,13 @@ import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.layout.LayoutAttractionPolicy;
 import com.intellij.execution.ui.layout.LayoutViewOptions;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.ui.wm.content.Content;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
 import consulo.platform.base.icon.PlatformIconGroup;
 

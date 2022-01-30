@@ -22,9 +22,12 @@ import com.intellij.openapi.editor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.UIBundle;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;

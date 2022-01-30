@@ -20,7 +20,7 @@ import consulo.application.ui.event.UISettingsListener;
 import com.intellij.openapi.application.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.BuildNumber;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;
 import com.intellij.ui.CustomProtocolHandler;

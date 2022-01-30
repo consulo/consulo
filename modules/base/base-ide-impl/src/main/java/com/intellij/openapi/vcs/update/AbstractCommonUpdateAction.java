@@ -21,7 +21,7 @@ import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.errorTreeView.HotfixData;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.UpdateInBackground;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;

@@ -2,8 +2,8 @@
 package com.intellij.ui.tree.ui;
 
 import com.intellij.ui.render.LabelBasedRenderer;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

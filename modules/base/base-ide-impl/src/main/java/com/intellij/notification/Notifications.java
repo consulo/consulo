@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.util.Alarm;
 import consulo.component.messagebus.Topic;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;

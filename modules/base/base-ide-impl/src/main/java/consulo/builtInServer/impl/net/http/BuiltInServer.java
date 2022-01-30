@@ -20,7 +20,7 @@ import consulo.logging.Logger;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.NotNullProducer;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

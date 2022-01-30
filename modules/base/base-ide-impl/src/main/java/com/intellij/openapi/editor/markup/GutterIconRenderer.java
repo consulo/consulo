@@ -16,10 +16,10 @@
 package com.intellij.openapi.editor.markup;
 
 import com.intellij.codeInsight.daemon.GutterMark;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnAction;
-import consulo.project.DumbAware;
-import consulo.project.PossiblyDumbAware;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.application.dumb.DumbAware;
+import consulo.application.dumb.PossiblyDumbAware;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package com.intellij.execution;
 
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 
 import javax.annotation.Nonnull;
 

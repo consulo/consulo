@@ -46,7 +46,7 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayCharSequence;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.vcsUtil.FilesProgress;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Condition;

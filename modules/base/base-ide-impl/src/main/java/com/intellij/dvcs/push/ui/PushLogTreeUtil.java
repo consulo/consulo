@@ -16,7 +16,7 @@
 package com.intellij.dvcs.push.ui;
 
 import com.intellij.ui.CheckboxTree;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -19,7 +19,8 @@ import com.intellij.diff.fragments.LineFragment;
 import com.intellij.diff.util.*;
 import com.intellij.diff.util.DiffUtil.UpdatedLineRange;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
@@ -189,7 +190,7 @@ public class UnifiedDiffChange {
         if (myViewer.isStateIsOutOfDate()) return;
         if (!myViewer.isEditable(sourceSide.other(), true)) return;
 
-        final Project project = e.getProject();
+        final Project project = e.getData(CommonDataKeys.PROJECT);
         final Document document = myViewer.getDocument(sourceSide.other());
 
         DiffUtil.executeWriteCommand(document, project, "Replace change", () -> {

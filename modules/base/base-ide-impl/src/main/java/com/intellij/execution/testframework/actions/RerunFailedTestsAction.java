@@ -18,9 +18,10 @@ package com.intellij.execution.testframework.actions;
 import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -42,7 +43,7 @@ public class RerunFailedTestsAction extends AnAction {
   }
 
   private static boolean getAction(@Nonnull AnActionEvent e, boolean execute) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return false;
     }

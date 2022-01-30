@@ -17,6 +17,7 @@
 package com.intellij.ide.projectView.impl;
 
 import consulo.component.persist.WriteExternalException;
+import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.language.psi.*;
@@ -61,7 +62,7 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.ui.Messages;
@@ -77,6 +78,7 @@ import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowContentUiType;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
@@ -97,7 +99,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.io.URLUtil;
 import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.projectView.ProjectViewEx;
@@ -658,7 +660,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       @RequiredUIAccess
       public void update(AnActionEvent e) {
         super.update(e);
-        Project project = e.getProject();
+        Project project = e.getData(CommonDataKeys.PROJECT);
         assert project != null;
         final Presentation presentation = e.getPresentation();
         if (!PsiPackageSupportProviders.isPackageSupported(project)) {
@@ -688,7 +690,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       @Override
       public void update(AnActionEvent e) {
         super.update(e);
-        Project project = e.getProject();
+        Project project = e.getData(CommonDataKeys.PROJECT);
         assert project != null;
         final Presentation presentation = e.getPresentation();
         if (!PsiPackageSupportProviders.isPackageSupported(project)) {
@@ -1679,7 +1681,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     public void update(AnActionEvent e) {
       super.update(e);
       final Presentation presentation = e.getPresentation();
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       assert project != null;
       if (!PsiPackageSupportProviders.isPackageSupported(project)) {
         presentation.setVisible(false);

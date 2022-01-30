@@ -18,10 +18,10 @@ package com.intellij.ide.actionMacro.actions;
 import com.intellij.ide.actionMacro.ActionMacro;
 import com.intellij.ide.actionMacro.ActionMacroManager;
 import com.intellij.ide.actionMacro.EditMacrosDialog;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 
 /**
  * Created by IntelliJ IDEA.

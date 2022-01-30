@@ -17,6 +17,7 @@
 package com.intellij.ide.ui.search;
 
 import com.intellij.application.options.SkipSelfSearchComponent;
+import consulo.application.ui.awt.JBColor;
 import consulo.configurable.Configurable;
 import com.intellij.openapi.options.MasterDetails;
 import consulo.configurable.SearchableConfigurable;
@@ -31,7 +32,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ide.base.BaseShowSettingsUtil;
 import org.jetbrains.annotations.NonNls;
 

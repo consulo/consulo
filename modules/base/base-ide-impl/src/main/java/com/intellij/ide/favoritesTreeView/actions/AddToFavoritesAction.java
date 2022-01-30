@@ -30,6 +30,8 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -100,7 +102,7 @@ public class AddToFavoritesAction extends AnAction {
 
   public static boolean canCreateNodes(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    if (e.getProject() == null) {
+    if (e.getData(CommonDataKeys.PROJECT) == null) {
       return false;
     }
     if (e.getPlace().equals(ActionPlaces.FAVORITES_VIEW_POPUP)

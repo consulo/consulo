@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.completion.actions;
 
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 
 public class ClassNameCompletionAction extends BaseCodeCompletionAction{
 

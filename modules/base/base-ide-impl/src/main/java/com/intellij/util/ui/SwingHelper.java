@@ -16,6 +16,8 @@
 package com.intellij.util.ui;
 
 import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.application.ui.awt.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

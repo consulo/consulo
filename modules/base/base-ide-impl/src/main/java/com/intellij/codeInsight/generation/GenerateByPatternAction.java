@@ -15,8 +15,9 @@
  */
 package com.intellij.codeInsight.generation;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.component.extension.Extensions;
 import com.intellij.util.ArrayUtil;
 
@@ -44,7 +45,7 @@ public class GenerateByPatternAction extends AnAction {
         patterns = ArrayUtil.mergeArrays(patterns, extension.getDescriptors());
       }
     }
-    GenerateByPatternDialog dialog = new GenerateByPatternDialog(e.getProject(), patterns, e.getDataContext());
+    GenerateByPatternDialog dialog = new GenerateByPatternDialog(e.getData(CommonDataKeys.PROJECT), patterns, e.getDataContext());
     dialog.show();
     if (dialog.isOK()) {
       dialog.getSelectedDescriptor().actionPerformed(e.getDataContext());

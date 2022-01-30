@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 
 import consulo.configurable.Configurable;
 import com.intellij.ui.DocumentAdapter;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

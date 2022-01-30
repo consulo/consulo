@@ -40,6 +40,7 @@ import com.intellij.util.xmlb.annotations.Tag;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;

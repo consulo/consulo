@@ -16,7 +16,6 @@
 package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.actions.SettingsEntryPointActionProvider;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.dataContext.DataContext;
@@ -25,6 +24,10 @@ import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 

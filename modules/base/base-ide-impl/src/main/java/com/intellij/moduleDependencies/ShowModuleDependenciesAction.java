@@ -29,6 +29,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentFactory;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +39,7 @@ import java.awt.*;
  * User: anna
  * Date: Feb 9, 2005
  */
-public class ShowModuleDependenciesAction extends AnAction{
+public class ShowModuleDependenciesAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();

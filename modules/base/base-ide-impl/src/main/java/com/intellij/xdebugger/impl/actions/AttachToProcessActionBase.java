@@ -7,8 +7,9 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.application.progress.PerformInBackgroundOption;
@@ -72,7 +73,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
 
-    Project project = getEventProject(e);
+    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
     int attachDebuggerProvidersNumber = myAttachProvidersSupplier.get().size();
     boolean enabled = project != null && attachDebuggerProvidersNumber > 0;
     e.getPresentation().setEnabledAndVisible(enabled);
@@ -81,7 +82,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = getEventProject(e);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
 

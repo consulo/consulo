@@ -16,6 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.ActionGroup;
 
 /**
  * Markup interface to ignore the visible children count and always call "actionPerformed".

@@ -2,7 +2,7 @@
 package com.intellij.execution.impl;
 
 import consulo.application.ui.UISettings;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 
 public class ConsoleBuffer {
   public static boolean useCycleBuffer() {

@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.fileChooser.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.fileChooser.FileSystemTree;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
 
 public abstract class FileChooserAction extends AnAction implements DumbAware {

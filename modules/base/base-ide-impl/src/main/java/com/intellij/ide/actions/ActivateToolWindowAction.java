@@ -27,6 +27,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
@@ -75,7 +76,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = getEventProject(e);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     Presentation presentation = e.getPresentation();
     if (project == null || project.isDisposed()) {
       presentation.setEnabledAndVisible(false);
@@ -107,7 +108,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = getEventProject(e);
+    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
     if (windowManager.isEditorComponentActive() || !myToolWindowId.equals(windowManager.getActiveToolWindowId())) {

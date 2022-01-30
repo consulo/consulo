@@ -19,7 +19,7 @@ import com.intellij.dvcs.DvcsUtil;
 import com.intellij.dvcs.push.ui.VcsPushDialog;
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.VcsRepositoryManager;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -61,7 +61,7 @@ public class VcsPushAction extends DumbAwareAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabledAndVisible(project != null && !ServiceManager.getService(project, VcsRepositoryManager.class).getRepositories().isEmpty());
   }
 }

@@ -3,7 +3,8 @@ package com.intellij.util.ui;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdePopupManager;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
+import consulo.application.ui.awt.UIUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.util.Consumer;

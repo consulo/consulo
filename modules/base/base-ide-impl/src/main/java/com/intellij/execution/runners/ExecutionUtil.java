@@ -33,7 +33,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.content.Content;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.execution.ExecutionDataKeys;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;

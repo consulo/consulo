@@ -33,6 +33,10 @@ import com.intellij.tasks.impl.TaskManagerImpl;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
@@ -55,7 +59,7 @@ public class SwitchTaskAction extends BaseTaskAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     assert project != null;
     ListPopupImpl popup = createPopup(dataContext, null, true);
     popup.showCenteredInCurrentWindow(project);

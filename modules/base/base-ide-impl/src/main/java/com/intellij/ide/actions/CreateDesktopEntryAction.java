@@ -21,8 +21,9 @@ import com.intellij.execution.util.ExecUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
@@ -32,7 +33,7 @@ import consulo.application.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
@@ -69,7 +70,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull final AnActionEvent event) {
     if (!isAvailable()) return;
 
-    final Project project = event.getProject();
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     final CreateDesktopEntryDialog dialog = new CreateDesktopEntryDialog(project);
     if (!dialog.showAndGet()) {
       return;

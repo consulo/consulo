@@ -58,7 +58,7 @@ import com.intellij.ui.SeparatorFactory;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBHtmlEditorKit;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

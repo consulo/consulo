@@ -4,7 +4,7 @@ import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

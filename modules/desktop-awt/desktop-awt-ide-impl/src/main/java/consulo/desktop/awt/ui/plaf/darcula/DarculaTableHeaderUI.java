@@ -3,9 +3,9 @@ package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.JBValue;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.JBValue;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

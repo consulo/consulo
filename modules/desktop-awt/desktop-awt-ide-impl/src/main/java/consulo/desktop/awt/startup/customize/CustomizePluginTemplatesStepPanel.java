@@ -16,11 +16,11 @@
 package consulo.desktop.awt.startup.customize;
 
 import com.intellij.openapi.ui.ex.MultiLineLabel;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;

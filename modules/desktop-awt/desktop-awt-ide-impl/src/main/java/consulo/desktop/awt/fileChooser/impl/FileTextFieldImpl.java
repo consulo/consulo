@@ -3,7 +3,7 @@ package consulo.desktop.awt.fileChooser.impl;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.FileTextField;
 import com.intellij.openapi.keymap.Keymap;

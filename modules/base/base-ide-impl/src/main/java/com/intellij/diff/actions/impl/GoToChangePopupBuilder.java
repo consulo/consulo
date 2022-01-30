@@ -17,8 +17,9 @@ package com.intellij.diff.actions.impl;
 
 import com.intellij.diff.chains.DiffRequestChain;
 import com.intellij.diff.chains.DiffRequestProducer;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -95,7 +96,7 @@ public class GoToChangePopupBuilder {
     @Nonnull
     @Override
     protected JBPopup createPopup(@Nonnull AnActionEvent e) {
-      return JBPopupFactory.getInstance().createListPopup(new MyListPopupStep(e.getProject()));
+      return JBPopupFactory.getInstance().createListPopup(new MyListPopupStep(e.getData(CommonDataKeys.PROJECT)));
     }
 
     private class MyListPopupStep extends BaseListPopupStep<DiffRequestProducer> {

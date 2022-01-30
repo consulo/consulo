@@ -21,7 +21,7 @@ import com.intellij.diff.tools.util.base.DiffPanelBase;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.util.ui.AsyncProcessIcon;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

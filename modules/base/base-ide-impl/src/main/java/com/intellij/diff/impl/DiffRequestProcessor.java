@@ -41,10 +41,11 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -54,8 +55,8 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;
 import consulo.ide.base.BaseDataManager;
 import consulo.logging.Logger;
@@ -551,10 +552,10 @@ public abstract class DiffRequestProcessor implements Disposable {
     @Override
     public void actionPerformed(AnActionEvent e) {
       try {
-        ExternalDiffTool.showRequest(e.getProject(), myActiveRequest);
+        ExternalDiffTool.showRequest(e.getData(CommonDataKeys.PROJECT), myActiveRequest);
       }
       catch (Throwable ex) {
-        Messages.showErrorDialog(e.getProject(), ex.getMessage(), "Can't Show Diff In External Tool");
+        Messages.showErrorDialog(e.getData(CommonDataKeys.PROJECT), ex.getMessage(), "Can't Show Diff In External Tool");
       }
     }
   }

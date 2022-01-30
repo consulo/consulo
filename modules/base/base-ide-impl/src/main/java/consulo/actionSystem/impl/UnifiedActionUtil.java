@@ -22,6 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.MenuSeparator;
+import consulo.ui.ex.action.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

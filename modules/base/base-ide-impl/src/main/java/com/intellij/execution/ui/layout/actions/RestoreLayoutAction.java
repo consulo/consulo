@@ -20,7 +20,7 @@
  */
 package com.intellij.execution.ui.layout.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 
 public class RestoreLayoutAction extends DumbAwareAction {

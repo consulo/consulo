@@ -2,7 +2,8 @@
 package com.intellij.ide.actions.searcheverywhere;
 
 import com.intellij.ide.actions.GotoActionBase;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -16,9 +17,9 @@ import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.SearchTextField;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.TextBox;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -61,7 +62,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
       throw new IllegalStateException("Method should cannot be called whe popup is shown");
     }
 
-    Project project = initEvent.getProject();
+    Project project = initEvent.getData(CommonDataKeys.PROJECT);
     Component contextComponent = initEvent.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     List<SearchEverywhereContributor<?>> serviceContributors = Collections.EMPTY_LIST;
     Arrays.asList(//new TopHitSEContributor(project, contextComponent, s -> mySearchEverywhereUI.getSearchField().setValue(s)),

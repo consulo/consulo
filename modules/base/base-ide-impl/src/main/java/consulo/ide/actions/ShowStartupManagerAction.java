@@ -15,7 +15,7 @@
  */
 package consulo.ide.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.startup.customize.StartupCustomizeManager;
 import consulo.ui.annotation.RequiredUIAccess;

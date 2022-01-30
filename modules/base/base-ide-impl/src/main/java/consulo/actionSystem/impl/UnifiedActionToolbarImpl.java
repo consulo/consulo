@@ -15,9 +15,9 @@
  */
 package consulo.actionSystem.impl;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import consulo.ui.Component;
 import consulo.ui.Size;

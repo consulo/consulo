@@ -23,16 +23,52 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
   private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
 
   private static final int MAX_FILE_IO_ATTEMPTS = 10;
   private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
+
+
+  @Nonnull
+  public static List<String> loadLines(@Nonnull File file) throws IOException {
+    return loadLines(file.getPath());
+  }
+
+  @Nonnull
+  public static List<String> loadLines(@Nonnull File file, @Nullable String encoding) throws IOException {
+    return loadLines(file.getPath(), encoding);
+  }
+
+  @Nonnull
+  public static List<String> loadLines(@Nonnull String path) throws IOException {
+    return loadLines(path, null);
+  }
+
+  @Nonnull
+  public static List<String> loadLines(@Nonnull String path, @Nullable String encoding) throws IOException {
+    try (InputStream stream = new FileInputStream(path)) {
+      try (BufferedReader reader = new BufferedReader(encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding))) {
+        return loadLines(reader);
+      }
+    }
+  }
+
+  @Nonnull
+  public static List<String> loadLines(@Nonnull BufferedReader reader) throws IOException {
+    List<String> lines = new ArrayList<>();
+    String line;
+    while ((line = reader.readLine()) != null) {
+      lines.add(line);
+    }
+    return lines;
+  }
 
   /**
    * @param file file or directory to delete

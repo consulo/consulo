@@ -19,9 +19,9 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -3,6 +3,7 @@ package com.intellij.psi.codeStyle.statusbar;
 
 import com.intellij.application.options.CodeStyleSchemesConfigurable;
 import com.intellij.application.options.codeStyle.OtherFileTypesCodeStyleConfigurable;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.configurable.Configurable;
@@ -55,7 +56,7 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
       Configurable configurable = findCodeStyleConfigurableId(psiFile.getProject(), langName);
       if (configurable instanceof CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper) {
         ShowSettingsUtil.getInstance()
-                .editConfigurable(event.getProject(), configurable, () -> ((CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper)configurable).selectTab(ApplicationBundle.message("title.tabs.and.indents")));
+                .editConfigurable(event.getData(CommonDataKeys.PROJECT), configurable, () -> ((CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper)configurable).selectTab(ApplicationBundle.message("title.tabs.and.indents")));
       }
     });
   }

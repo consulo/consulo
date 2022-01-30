@@ -17,9 +17,9 @@ package consulo.desktop.awt.facade;
 
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.BitUtil;
-import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWT;
-import consulo.awt.TargetAWTFacade;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.TargetAWT;
+import consulo.application.ui.awt.internal.TargetAWTFacade;
 import consulo.container.StartupError;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.logging.Logger;

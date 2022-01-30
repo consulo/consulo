@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.Toggleable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;

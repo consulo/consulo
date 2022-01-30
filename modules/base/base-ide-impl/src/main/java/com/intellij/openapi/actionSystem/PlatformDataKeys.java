@@ -19,6 +19,7 @@ import com.intellij.ide.*;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindow;

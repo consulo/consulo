@@ -18,8 +18,8 @@ package com.intellij.openapi.diff.impl.dir;
 import com.intellij.ide.diff.DirDiffOperation;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.border.Border;

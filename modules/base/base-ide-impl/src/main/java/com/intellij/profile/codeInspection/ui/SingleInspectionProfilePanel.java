@@ -68,8 +68,9 @@ import com.intellij.util.Function;
 import com.intellij.util.config.StorageAccessors;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.action.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -557,7 +558,7 @@ public class SingleInspectionProfilePanel extends JPanel {
 
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
-        mySelectedProfile.resetToEmpty(e.getProject());
+        mySelectedProfile.resetToEmpty(e.getData(CommonDataKeys.PROJECT));
         loadDescriptorsConfigs(false);
         postProcessModification();
       }

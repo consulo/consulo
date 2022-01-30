@@ -17,6 +17,8 @@ package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
+import consulo.ui.ex.action.ActionManager;
+
 import javax.annotation.Nonnull;
 
 /**

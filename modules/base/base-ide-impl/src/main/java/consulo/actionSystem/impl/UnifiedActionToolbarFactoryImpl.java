@@ -15,8 +15,8 @@
  */
 package consulo.actionSystem.impl;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionToolbar;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionToolbar;
 import consulo.actionSystem.ActionToolbarFactory;
 import jakarta.inject.Singleton;
 

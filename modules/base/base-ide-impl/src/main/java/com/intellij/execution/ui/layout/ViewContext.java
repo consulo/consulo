@@ -17,10 +17,10 @@
 package com.intellij.execution.ui.layout;
 
 import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
-import com.intellij.openapi.util.ActiveRunnable;
+import consulo.component.util.ActiveRunnable;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;

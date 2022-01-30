@@ -15,11 +15,11 @@
  */
 package consulo.desktop.awt.container.impl;
 
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.SystemProperties;
+import consulo.application.util.SystemInfo;
+import consulo.application.ui.awt.JBUIScale;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.ui.JBHtmlEditorKit;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.logging.Logger;
 

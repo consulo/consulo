@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.filters;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui.components;
 
-import com.intellij.util.ui.JBFont;
+import consulo.application.ui.awt.JBFont;
 
 import javax.swing.border.Border;
 

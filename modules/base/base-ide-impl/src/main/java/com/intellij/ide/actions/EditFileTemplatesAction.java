@@ -17,8 +17,8 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 
 public class EditFileTemplatesAction extends AnAction{

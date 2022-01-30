@@ -15,7 +15,7 @@
  */
 package com.intellij.notification.impl.ui;
 
-import com.intellij.ui.Gray;
+import consulo.application.ui.awt.Gray;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicToggleButtonUI;

@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.richcopy.model.ColorRegistry;
 import com.intellij.openapi.editor.richcopy.model.FontNameRegistry;
 import com.intellij.openapi.editor.richcopy.model.MarkupHandler;
 import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
-import com.intellij.openapi.util.SystemInfo;
-import consulo.awt.TargetAWT;
+import consulo.application.util.SystemInfo;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 

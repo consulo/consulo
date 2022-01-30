@@ -19,7 +19,7 @@ import com.intellij.ide.IdeTooltipManager;
 import com.intellij.openapi.editor.Editor;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

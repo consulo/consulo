@@ -16,12 +16,14 @@
 package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -79,6 +81,6 @@ final class ShowLibraryFramesAction extends ToggleAction {
   public void setSelected(AnActionEvent e, boolean enabled) {
     myShouldShow = !enabled;
     XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setShowLibraryStackFrames(myShouldShow);
-    XDebuggerUtilImpl.rebuildAllSessionsViews(e.getProject());
+    XDebuggerUtilImpl.rebuildAllSessionsViews(e.getData(CommonDataKeys.PROJECT));
   }
 }

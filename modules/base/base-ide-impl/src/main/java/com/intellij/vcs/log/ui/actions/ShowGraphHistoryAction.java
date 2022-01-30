@@ -15,9 +15,9 @@
  */
 package com.intellij.vcs.log.ui.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
@@ -36,7 +36,7 @@ public class ShowGraphHistoryAction extends DumbAwareAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     assert project != null;
     VirtualFile file = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
     VcsLogManager logManager = VcsProjectLog.getInstance(project).getLogManager();
@@ -53,7 +53,7 @@ public class ShowGraphHistoryAction extends DumbAwareAction {
     }
     else {
       VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       if (file == null || project == null) {
         presentation.setEnabledAndVisible(false);
       }

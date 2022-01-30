@@ -39,7 +39,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.FormBuilder;
 import javax.annotation.Nonnull;

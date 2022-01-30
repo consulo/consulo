@@ -23,8 +23,8 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.ui.JBSwingUtilities;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.util.collection.primitive.ints.IntStack;
 
 import javax.annotation.Nonnull;

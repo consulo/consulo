@@ -18,6 +18,8 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.actionSystem.impl.Utils;
+import consulo.ui.ex.action.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

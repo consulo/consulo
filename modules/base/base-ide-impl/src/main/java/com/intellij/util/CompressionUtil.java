@@ -20,6 +20,7 @@ import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.DataOutputStream;
 import com.intellij.util.text.StringFactory;
+import consulo.util.lang.SystemProperties;
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
 import net.jpountz.lz4.LZ4FastDecompressor;

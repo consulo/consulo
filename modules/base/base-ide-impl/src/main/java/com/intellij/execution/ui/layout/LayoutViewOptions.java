@@ -16,8 +16,8 @@
 
 package com.intellij.execution.ui.layout;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
 import consulo.project.ui.wm.content.Content;
 import javax.annotation.Nonnull;
 

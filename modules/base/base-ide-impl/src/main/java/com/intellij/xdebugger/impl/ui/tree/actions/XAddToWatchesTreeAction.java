@@ -15,7 +15,8 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -51,7 +52,7 @@ public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
 
   private static XWatchesView getWatchesView(@Nonnull AnActionEvent e) {
     XWatchesView view = e.getData(XWatchesView.DATA_KEY);
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (view == null && project != null) {
       XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
       if (session != null) {

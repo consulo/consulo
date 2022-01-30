@@ -17,10 +17,11 @@
 package com.intellij.ui;
 
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUIScale;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

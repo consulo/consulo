@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;

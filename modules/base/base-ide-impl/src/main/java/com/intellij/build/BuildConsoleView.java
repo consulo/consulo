@@ -15,7 +15,7 @@
  */
 package com.intellij.build;
 
-import com.intellij.openapi.ui.ComponentContainer;
+import consulo.ui.ex.ComponentContainer;
 
 /**
  * @author Vladislav.Soroka

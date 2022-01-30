@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.changes.ui.FilePathChangesTreeList;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

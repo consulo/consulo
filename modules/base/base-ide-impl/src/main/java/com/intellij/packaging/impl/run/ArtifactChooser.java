@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.ElementsChooser;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

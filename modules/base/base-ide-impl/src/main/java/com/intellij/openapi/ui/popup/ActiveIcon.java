@@ -17,7 +17,7 @@
 package com.intellij.openapi.ui.popup;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

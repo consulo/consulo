@@ -15,7 +15,7 @@
  */
 package com.intellij.util.config;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
 
 public class DumbAwareToggleBooleanProperty extends ToggleBooleanProperty implements DumbAware {

@@ -15,8 +15,9 @@
  */
 package consulo.internal.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.popup.Balloon;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.GotItMessage;
@@ -32,7 +33,7 @@ public class ShowGotItMessageAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     GotItMessage.createMessage("Test", "Test Message")
-            .setDisposable(e.getProject())
-            .show(new RelativePoint(WindowManager.getInstance().getFrame(e.getProject()), new Point(0, 0)), Balloon.Position.above);
+            .setDisposable(e.getData(CommonDataKeys.PROJECT))
+            .show(new RelativePoint(WindowManager.getInstance().getFrame(e.getData(CommonDataKeys.PROJECT)), new Point(0, 0)), Balloon.Position.above);
   }
 }

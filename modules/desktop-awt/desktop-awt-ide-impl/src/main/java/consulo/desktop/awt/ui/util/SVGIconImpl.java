@@ -38,8 +38,8 @@ package consulo.desktop.awt.ui.util;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.ImageUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.ImageUtil;
+import consulo.application.ui.awt.JBUI;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGException;

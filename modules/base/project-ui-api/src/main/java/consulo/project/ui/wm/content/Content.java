@@ -15,12 +15,13 @@
  */
 package consulo.project.ui.wm.content;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.ui.ComponentContainer;
-import com.intellij.openapi.util.BusyObject;
 import consulo.application.util.function.Computable;
+import consulo.component.util.BusyObject;
 import consulo.disposer.Disposable;
+import consulo.project.ui.wm.AlertIcon;
 import consulo.ui.Component;
+import consulo.ui.ex.ComponentContainer;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;

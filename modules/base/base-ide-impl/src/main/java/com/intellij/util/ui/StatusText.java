@@ -7,9 +7,10 @@ import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBViewport;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.UILocalize;
 

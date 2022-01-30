@@ -18,7 +18,7 @@ import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.execution.testframework.ToggleModelAction;
 import com.intellij.icons.AllIcons;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

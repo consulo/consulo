@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ui.awt.JBColor;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

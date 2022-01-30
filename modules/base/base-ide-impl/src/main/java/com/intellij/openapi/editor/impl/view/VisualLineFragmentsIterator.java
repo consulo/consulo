@@ -9,8 +9,8 @@ import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
-import com.intellij.ui.paint.PaintUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.paint.PaintUtil;
+import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

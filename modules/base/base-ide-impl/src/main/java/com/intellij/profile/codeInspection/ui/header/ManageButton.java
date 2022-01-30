@@ -15,12 +15,12 @@
  */
 package com.intellij.profile.codeInspection.ui.header;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -15,8 +15,10 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;

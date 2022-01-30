@@ -21,6 +21,10 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -74,13 +78,13 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
 
     @Override
     public boolean isSelected(AnActionEvent e) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       return project != null && AutoTestManager.getInstance(project).getDelay() == myDelay;
     }
 
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       if (project != null) {
         AutoTestManager.getInstance(project).setDelay(myDelay);
       }

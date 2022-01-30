@@ -15,7 +15,7 @@
  */
 package com.intellij.designer;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

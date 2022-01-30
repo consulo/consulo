@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.mac;
 
-import com.intellij.openapi.actionSystem.PressureShortcut;
+import consulo.ui.ex.action.PressureShortcut;
 import com.intellij.openapi.keymap.impl.ui.MouseShortcutPanel;
 import consulo.eawt.wrapper.GestureUtilitiesWrapper;
 import consulo.eawt.wrapper.event.PressureEventWrapper;

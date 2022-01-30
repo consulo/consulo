@@ -5,7 +5,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.application.progress.ProcessCanceledException;
-import com.intellij.util.SmartFMap;
+import consulo.util.collection.SmartFMap;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.messagebus.MessageHandler;
 import consulo.component.messagebus.Topic;

@@ -22,14 +22,14 @@ import com.intellij.execution.impl.ExecutionManagerImpl;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,7 +69,7 @@ public class FakeRerunAction extends AnAction implements DumbAware {
   protected ExecutionEnvironment getEnvironment(@Nonnull AnActionEvent event) {
     ExecutionEnvironment environment = event.getData(LangDataKeys.EXECUTION_ENVIRONMENT);
     if (environment == null) {
-      Project project = event.getProject();
+      Project project = event.getData(CommonDataKeys.PROJECT);
       RunContentDescriptor contentDescriptor = project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
       if (contentDescriptor != null) {
         JComponent component = contentDescriptor.getComponent();

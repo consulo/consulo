@@ -21,7 +21,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.application.progress.ProcessCanceledException;
-import consulo.project.DumbAwareRunnable;
+import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.application.util.function.Condition;

@@ -15,13 +15,13 @@
  */
 package consulo.desktop.awt.ui.plaf.mac;
 
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.LightColors;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.RegionPainter;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ui.plaf.ScrollBarUIConstants;
 
 import javax.swing.*;

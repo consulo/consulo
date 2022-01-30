@@ -6,6 +6,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.*;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

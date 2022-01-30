@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.navigationToolbar.ui;
 
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 /**
  * @author Konstantin Bulenkov

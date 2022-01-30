@@ -13,7 +13,7 @@ import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
-import consulo.project.PossiblyDumbAware;
+import consulo.application.dumb.PossiblyDumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.PomTargetPsiElement;

@@ -7,9 +7,9 @@ import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.util.PopupState;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.Consumer;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -8,8 +8,8 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.AsyncProcessIcon;
-import com.intellij.util.ui.ImageUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.ImageUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 

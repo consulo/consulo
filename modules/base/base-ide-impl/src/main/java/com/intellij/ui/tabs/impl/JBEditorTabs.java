@@ -16,7 +16,7 @@
 package com.intellij.ui.tabs.impl;
 
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.project.Project;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.tabs.impl.singleRow.CompressibleSingleRowLayout;

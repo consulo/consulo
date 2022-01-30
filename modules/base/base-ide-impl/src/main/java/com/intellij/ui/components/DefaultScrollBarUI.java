@@ -3,9 +3,11 @@ package com.intellij.ui.components;
 
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.components.JBScrollPane.Alignment;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.MathUtil;
 import com.intellij.util.ui.*;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.UIUtil;
 import consulo.util.dataholder.Key;
 
 import javax.swing.Timer;

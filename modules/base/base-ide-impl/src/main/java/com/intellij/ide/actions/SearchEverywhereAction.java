@@ -25,10 +25,11 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.keymap.MacKeymapUtil;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.MacKeymapUtil;
 import com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
-import consulo.project.DumbAware;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.dumb.DumbAware;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 
 import javax.annotation.Nonnull;
@@ -85,10 +86,10 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   }
 
   public void actionPerformed(AnActionEvent e, MouseEvent me) {
-    if (Registry.is("new.search.everywhere") && e.getProject() != null) {
+    if (Registry.is("new.search.everywhere") && e.getData(CommonDataKeys.PROJECT) != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_SEARCH_EVERYWHERE);
 
-      SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(e.getProject());
+      SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(e.getData(CommonDataKeys.PROJECT));
       String searchProviderID = SearchEverywhereManagerImpl.ALL_CONTRIBUTORS_GROUP_ID;
       if (seManager.isShown()) {
         if (searchProviderID.equals(seManager.getSelectedContributorID())) {

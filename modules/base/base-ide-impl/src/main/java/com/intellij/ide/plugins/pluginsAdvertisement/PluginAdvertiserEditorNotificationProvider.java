@@ -23,7 +23,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import consulo.virtualFileSystem.VirtualFile;

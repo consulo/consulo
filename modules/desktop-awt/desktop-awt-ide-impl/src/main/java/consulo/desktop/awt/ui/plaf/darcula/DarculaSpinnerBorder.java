@@ -2,8 +2,8 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.openapi.ui.ErrorBorderCapable;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.MacUIUtil;
 
 import javax.swing.*;

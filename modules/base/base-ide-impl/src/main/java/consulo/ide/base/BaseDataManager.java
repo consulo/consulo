@@ -23,6 +23,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.concurrent.AsyncResult;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;

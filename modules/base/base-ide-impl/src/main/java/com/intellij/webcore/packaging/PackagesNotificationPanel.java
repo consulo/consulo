@@ -5,7 +5,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.util.ui.SwingHelper;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

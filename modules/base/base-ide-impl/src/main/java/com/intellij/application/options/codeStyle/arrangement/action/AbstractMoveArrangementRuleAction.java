@@ -17,8 +17,8 @@ package com.intellij.application.options.codeStyle.arrangement.action;
 
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesModel;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.project.DumbAware;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.dumb.DumbAware;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

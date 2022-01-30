@@ -25,10 +25,10 @@ import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.ui.HintHint;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 

@@ -16,13 +16,16 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.mac.MacMainFrameDecorator;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import javax.swing.*;
 import java.awt.*;

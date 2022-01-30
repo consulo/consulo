@@ -16,12 +16,17 @@
 package com.intellij.ui.content.tabs;
 
 import com.intellij.openapi.actionSystem.*;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.ShadowAction;
 import consulo.disposer.Disposer;
 import com.intellij.ui.UIBundle;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+
 import javax.annotation.Nonnull;
 
 public abstract class TabbedContentAction extends AnAction implements DumbAware {

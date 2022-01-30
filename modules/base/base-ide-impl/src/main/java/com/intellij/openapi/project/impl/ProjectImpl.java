@@ -25,7 +25,7 @@ import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.DumbAwareRunnable;
+import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;

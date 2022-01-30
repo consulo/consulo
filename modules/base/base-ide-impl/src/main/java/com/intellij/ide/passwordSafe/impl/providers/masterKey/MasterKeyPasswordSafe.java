@@ -25,7 +25,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import javax.annotation.Nullable;
 
 import java.io.UnsupportedEncodingException;

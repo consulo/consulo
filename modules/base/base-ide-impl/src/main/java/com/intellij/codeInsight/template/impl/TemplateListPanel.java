@@ -41,6 +41,8 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnActionEvent;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

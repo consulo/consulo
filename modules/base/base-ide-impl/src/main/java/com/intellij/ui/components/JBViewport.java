@@ -3,11 +3,13 @@ package com.intellij.ui.components;
 
 import com.intellij.notification.Notification;
 import com.intellij.openapi.ui.TypingTarget;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.UIUtil;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.components.JBScrollPane.Alignment;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -24,7 +26,7 @@ import java.awt.*;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 
-import static com.intellij.util.ui.JBUI.emptyInsets;
+import static consulo.application.ui.awt.JBUI.emptyInsets;
 
 public class JBViewport extends JViewport implements ZoomableViewport {
   public static final Key<Boolean> FORCE_VISIBLE_ROW_COUNT_KEY = Key.create("forceVisibleRowCount");

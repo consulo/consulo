@@ -1,7 +1,7 @@
 package com.intellij.openapi.externalSystem.model.settings;
 
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import javax.annotation.Nonnull;
 
 import java.io.Serializable;

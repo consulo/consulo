@@ -21,7 +21,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.GotoNextErrorHandler;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 

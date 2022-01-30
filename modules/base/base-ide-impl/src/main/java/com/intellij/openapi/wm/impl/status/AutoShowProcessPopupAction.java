@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.application.util.registry.Registry;
 

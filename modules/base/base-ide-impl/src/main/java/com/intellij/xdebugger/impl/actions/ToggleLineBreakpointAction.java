@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.actions;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import javax.annotation.Nonnull;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 

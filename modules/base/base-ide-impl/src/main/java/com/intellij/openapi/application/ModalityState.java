@@ -17,6 +17,7 @@ package com.intellij.openapi.application;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.ui.awt.UIUtil;
 import consulo.project.DumbService;
 
 import javax.annotation.Nonnull;
@@ -44,7 +45,7 @@ import java.awt.*;
  * in many cases leave no trace of itself.<p/>
  * <p>
  * For these reasons, it's strongly advised to use {@link Application#invokeLater} everywhere.
- * {@link javax.swing.SwingUtilities#invokeLater(Runnable)}, {@link #any()} and {@link com.intellij.util.ui.UIUtil} convenience methods may be used in the
+ * {@link javax.swing.SwingUtilities#invokeLater(Runnable)}, {@link #any()} and {@link UIUtil} convenience methods may be used in the
  * purely UI-related code, but not with anything that deals with PSI or VFS.
  */
 public abstract class ModalityState implements consulo.ui.ModalityState {

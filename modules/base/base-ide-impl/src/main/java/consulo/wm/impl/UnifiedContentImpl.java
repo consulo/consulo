@@ -16,12 +16,12 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.util.BusyObject;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.component.util.BusyObject;
 import consulo.application.util.function.Computable;
-import com.intellij.ui.content.AlertIcon;
+import consulo.project.ui.wm.AlertIcon;
 import consulo.project.ui.wm.content.ContentManager;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;

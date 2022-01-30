@@ -22,6 +22,10 @@ import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
 import com.intellij.ui.IdeBorderFactory;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.ShortcutSet;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

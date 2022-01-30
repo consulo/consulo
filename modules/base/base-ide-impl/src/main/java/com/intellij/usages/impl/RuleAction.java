@@ -15,10 +15,10 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.rules.UsageFilteringRuleProvider;

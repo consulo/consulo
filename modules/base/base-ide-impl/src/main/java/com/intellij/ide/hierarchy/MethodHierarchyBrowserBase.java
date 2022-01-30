@@ -24,6 +24,8 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

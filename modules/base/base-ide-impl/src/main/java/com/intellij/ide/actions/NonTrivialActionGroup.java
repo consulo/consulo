@@ -16,10 +16,10 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.ActionGroupUtil;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 
 /**
  * This group hides itself when there's no enabled and visible child.

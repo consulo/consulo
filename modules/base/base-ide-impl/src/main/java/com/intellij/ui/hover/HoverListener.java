@@ -3,7 +3,7 @@ package com.intellij.ui.hover;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

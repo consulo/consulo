@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui.plaf.windows;
 
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.JBValue;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.JBValue;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaTextBorder;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaUIUtil;
 

@@ -15,7 +15,7 @@
  */
 package consulo.project.startup;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.UIAccess;

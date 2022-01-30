@@ -15,7 +15,7 @@
  */
 package consulo.desktop.container.impl;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotation.DeprecationInfo;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.*;
 
-import static com.intellij.util.SystemProperties.getUserHome;
+import static consulo.util.lang.SystemProperties.getUserHome;
 
 /**
  * @author VISTALL

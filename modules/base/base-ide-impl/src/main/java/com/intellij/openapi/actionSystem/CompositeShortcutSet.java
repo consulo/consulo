@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.action.ShortcutSet;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

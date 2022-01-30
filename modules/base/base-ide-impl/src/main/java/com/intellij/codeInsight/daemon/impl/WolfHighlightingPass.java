@@ -20,7 +20,7 @@ import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.problems.WolfTheProblemSolverImpl;
 import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;

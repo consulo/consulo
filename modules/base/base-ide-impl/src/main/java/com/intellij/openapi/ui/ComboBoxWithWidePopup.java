@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.util.SystemInfo;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

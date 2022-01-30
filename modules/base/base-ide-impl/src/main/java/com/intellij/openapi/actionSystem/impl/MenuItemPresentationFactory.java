@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.Presentation;
 
 /**
  * @author Roman.Chernyatchik

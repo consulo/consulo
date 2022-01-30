@@ -38,9 +38,13 @@ import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.DumbAware;
-import consulo.awt.TargetAWT;
+import consulo.application.dumb.DumbAware;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.disposer.Disposable;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.util.dataholder.Key;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.dataholder.UserDataHolder;
@@ -559,7 +563,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
       if (!isEditable(myModifiedSide)) return;
 
       String title = e.getPresentation().getText() + " selected changes";
-      DiffUtil.executeWriteCommand(getEditor(myModifiedSide).getDocument(), e.getProject(), title, () -> {
+      DiffUtil.executeWriteCommand(getEditor(myModifiedSide).getDocument(), e.getData(CommonDataKeys.PROJECT), title, () -> {
         apply(selectedChanges);
       });
     }

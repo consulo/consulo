@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.EventListener;
 
-import static com.intellij.util.ui.UIUtil.uiTraverser;
+import static consulo.application.ui.awt.UIUtil.uiTraverser;
 
 /**
  * Pushes events down the UI components hierarchy.

@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 
 import javax.annotation.Nonnull;

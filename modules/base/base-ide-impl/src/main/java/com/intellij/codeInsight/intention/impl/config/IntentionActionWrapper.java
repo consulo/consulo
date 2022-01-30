@@ -20,7 +20,7 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionBean;
 import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
-import com.intellij.openapi.actionSystem.ShortcutSet;
+import consulo.ui.ex.action.ShortcutSet;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;

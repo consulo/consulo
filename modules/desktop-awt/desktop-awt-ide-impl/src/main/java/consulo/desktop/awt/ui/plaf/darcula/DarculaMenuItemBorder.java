@@ -1,6 +1,6 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import javax.swing.plaf.BorderUIResource;
 

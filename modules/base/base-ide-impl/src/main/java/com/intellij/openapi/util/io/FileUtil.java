@@ -16,7 +16,7 @@
 package com.intellij.openapi.util.io;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
@@ -28,6 +28,7 @@ import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.io.FileAttributes;
+import consulo.util.lang.SystemProperties;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;

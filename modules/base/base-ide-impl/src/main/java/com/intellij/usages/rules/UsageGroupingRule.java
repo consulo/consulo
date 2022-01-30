@@ -19,7 +19,7 @@ import com.intellij.usages.Usage;
 import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageTarget;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

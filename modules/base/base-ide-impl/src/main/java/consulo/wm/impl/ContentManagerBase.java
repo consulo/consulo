@@ -15,7 +15,9 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.component.util.ActiveRunnable;
+import consulo.component.util.BusyObject;
+import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;

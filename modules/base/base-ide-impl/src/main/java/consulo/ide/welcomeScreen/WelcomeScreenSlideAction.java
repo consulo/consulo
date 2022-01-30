@@ -15,7 +15,7 @@
  */
 package consulo.ide.welcomeScreen;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
@@ -24,6 +23,7 @@ import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
+import consulo.ui.ex.action.*;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

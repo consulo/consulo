@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl.base;
 
-import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.impl.BorderInfo;

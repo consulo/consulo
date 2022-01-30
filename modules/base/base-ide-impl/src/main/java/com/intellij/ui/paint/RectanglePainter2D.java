@@ -4,8 +4,10 @@ package com.intellij.ui.paint;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.paint.LinePainter2D.Align;
 import com.intellij.ui.paint.LinePainter2D.StrokeType;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.JBUI.ScaleContext;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.JBUI.ScaleContext;
+import consulo.application.ui.awt.paint.PaintUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -15,7 +17,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.EnumSet;
 
-import static com.intellij.ui.paint.PaintUtil.alignToInt;
+import static consulo.application.ui.awt.paint.PaintUtil.alignToInt;
 
 /**
  * Draws or fills a rectangle with a stroke defined by {@link StrokeType}. The size of the rectangle is exactly

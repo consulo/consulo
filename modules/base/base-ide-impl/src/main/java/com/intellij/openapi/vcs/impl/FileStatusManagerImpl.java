@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.FileDocumentManager;
-import consulo.project.DumbAwareRunnable;
+import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.vcs.FileStatus;

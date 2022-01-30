@@ -8,10 +8,10 @@ import consulo.project.ProjectManager;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.JBRectangle;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.accessibility.AccessibleAction;

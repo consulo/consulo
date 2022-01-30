@@ -21,6 +21,9 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
@@ -36,7 +39,7 @@ public class AssociateFileTypeAction extends AnAction {
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     boolean haveSmthToDo;
     if (project == null || file == null || file.isDirectory()) {
       haveSmthToDo = false;

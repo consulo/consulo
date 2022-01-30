@@ -20,7 +20,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 
 import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Inject;

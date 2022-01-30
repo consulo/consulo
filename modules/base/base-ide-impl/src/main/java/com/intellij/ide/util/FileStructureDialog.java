@@ -40,6 +40,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
 import consulo.virtualFileSystem.VirtualFile;
@@ -286,7 +287,7 @@ public class FileStructureDialog extends DialogWrapper {
     if (text == null) return;
 
     Shortcut[] shortcuts = action instanceof FileStructureFilter ?
-                          ((FileStructureFilter)action).getShortcut() : ((FileStructureNodeProvider)action).getShortcut();
+                           ((FileStructureFilter)action).getShortcut() : ((FileStructureNodeProvider)action).getShortcut();
 
 
     final JCheckBox chkFilter = new JCheckBox();

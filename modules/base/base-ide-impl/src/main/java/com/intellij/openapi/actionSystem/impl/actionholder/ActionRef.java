@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.actionSystem.impl.actionholder;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
 
 public abstract class ActionRef<T extends AnAction> {
   private static ActionManager ourManager;

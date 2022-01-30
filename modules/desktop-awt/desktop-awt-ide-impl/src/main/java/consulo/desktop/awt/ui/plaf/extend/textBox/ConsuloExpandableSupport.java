@@ -21,8 +21,8 @@ import com.intellij.ui.ScrollPaneFactory;
 import consulo.desktop.awt.uiOld.components.fields.ExpandableSupport;
 import consulo.desktop.awt.uiOld.components.fields.IntelliJExpandableSupport;
 import com.intellij.util.Function;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

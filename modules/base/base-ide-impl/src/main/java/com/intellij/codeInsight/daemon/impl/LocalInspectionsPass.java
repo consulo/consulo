@@ -61,7 +61,7 @@ import com.intellij.util.Function;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.TransferToEDTQueue;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;

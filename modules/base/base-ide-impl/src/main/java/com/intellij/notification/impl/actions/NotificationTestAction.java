@@ -17,11 +17,12 @@ package com.intellij.notification.impl.actions;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.*;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
@@ -54,7 +55,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
-    new NotificationDialog(event.getProject()).show();
+    new NotificationDialog(event.getData(CommonDataKeys.PROJECT)).show();
   }
 
   private static final class NotificationDialog extends DialogWrapper {

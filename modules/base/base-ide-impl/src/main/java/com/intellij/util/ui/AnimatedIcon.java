@@ -18,7 +18,8 @@ package com.intellij.util.ui;
 
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;

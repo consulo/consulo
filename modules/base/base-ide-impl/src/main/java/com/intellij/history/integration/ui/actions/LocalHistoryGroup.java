@@ -18,9 +18,9 @@ package com.intellij.history.integration.ui.actions;
 
 import com.intellij.ide.actions.NonTrivialActionGroup;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
@@ -28,7 +28,7 @@ import consulo.language.psi.PsiElement;
 public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAware {
   @Override
   public void update(AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
     PsiElement element = e.getData(CommonDataKeys.PSI_ELEMENT);
     if (project == null || ActionPlaces.isPopupPlace(e.getPlace()) && (file != null && !file.isInLocalFileSystem() || file == null && element != null)) {

@@ -26,7 +26,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.eap.EarlyAccessProgramManager;

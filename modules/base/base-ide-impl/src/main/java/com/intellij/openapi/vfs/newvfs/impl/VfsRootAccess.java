@@ -18,7 +18,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;

@@ -20,7 +20,7 @@
  */
 package com.intellij.packageDependencies.ui;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;

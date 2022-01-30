@@ -16,8 +16,8 @@
 package com.intellij.usages.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.project.Project;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.UsageView;

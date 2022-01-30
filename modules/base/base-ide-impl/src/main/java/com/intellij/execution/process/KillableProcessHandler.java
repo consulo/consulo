@@ -20,7 +20,7 @@ import com.intellij.execution.KillableProcess;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

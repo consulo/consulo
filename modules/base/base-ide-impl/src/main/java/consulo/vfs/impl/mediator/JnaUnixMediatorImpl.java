@@ -15,10 +15,10 @@
  */
 package consulo.vfs.impl.mediator;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileSystemUtil;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;

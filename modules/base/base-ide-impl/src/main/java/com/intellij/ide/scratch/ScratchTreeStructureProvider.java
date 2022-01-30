@@ -18,7 +18,7 @@ import consulo.application.ReadAction;
 import consulo.language.file.LanguageFileType;
 import consulo.application.progress.ProgressManager;
 import consulo.language.psi.*;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;

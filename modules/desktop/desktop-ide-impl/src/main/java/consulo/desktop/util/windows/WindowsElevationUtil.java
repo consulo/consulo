@@ -1,7 +1,7 @@
 package consulo.desktop.util.windows;
 
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.sun.jna.Structure;
 import com.sun.jna.platform.win32.*;
 import com.sun.jna.ptr.IntByReference;

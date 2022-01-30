@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Alarm;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.ui.annotation.RequiredUIAccess;

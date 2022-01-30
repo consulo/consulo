@@ -3,7 +3,7 @@ package com.intellij.application.options.codeStyle.excludedFiles;
 
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import javax.swing.*;
 import java.awt.*;

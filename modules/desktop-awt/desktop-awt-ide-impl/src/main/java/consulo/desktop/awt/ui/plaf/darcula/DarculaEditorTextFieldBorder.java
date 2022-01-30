@@ -7,10 +7,10 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListener;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.EditorTextField;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.MacUIUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -42,7 +42,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.ui.docking.DockManager;
 import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

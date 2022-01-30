@@ -15,7 +15,7 @@
  */
 package com.intellij.usages;
 
-import com.intellij.openapi.actionSystem.KeyboardShortcut;
+import consulo.ui.ex.action.KeyboardShortcut;
 import javax.annotation.Nonnull;
 
 public interface ConfigurableUsageTarget extends UsageTarget {

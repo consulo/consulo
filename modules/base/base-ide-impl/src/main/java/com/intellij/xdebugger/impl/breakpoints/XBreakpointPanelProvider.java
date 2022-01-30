@@ -15,9 +15,10 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.document.Document;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
@@ -170,7 +171,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-      myType.addBreakpoint(getEventProject(e), null);
+      myType.addBreakpoint(e == null ? null : e.getData(CommonDataKeys.PROJECT), null);
     }
   }
 }

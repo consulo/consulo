@@ -22,6 +22,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.component.util.BusyObject;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.virtualFileSystem.VirtualFile;

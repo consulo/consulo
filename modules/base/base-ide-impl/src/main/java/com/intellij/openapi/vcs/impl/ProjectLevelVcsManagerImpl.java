@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.impl;
 
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

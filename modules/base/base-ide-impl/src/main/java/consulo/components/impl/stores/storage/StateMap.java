@@ -21,7 +21,7 @@ import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.io.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.logging.Logger;
 import net.jpountz.lz4.LZ4BlockInputStream;

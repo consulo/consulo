@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.ContainerUtil;

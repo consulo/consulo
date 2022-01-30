@@ -20,7 +20,7 @@ import com.intellij.find.FindBundle;
 import com.intellij.find.FindModel;
 import com.intellij.find.SearchSession;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import javax.annotation.Nonnull;
 
 public class TogglePreserveCaseAction extends EditorHeaderToggleAction implements Embeddable {

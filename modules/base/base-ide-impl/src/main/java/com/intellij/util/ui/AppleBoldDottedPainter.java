@@ -15,6 +15,8 @@
  */
 package com.intellij.util.ui;
 
+import consulo.application.ui.awt.UIUtil;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;

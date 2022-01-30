@@ -17,6 +17,9 @@
 package com.intellij.analysis;
 
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;
@@ -56,7 +59,7 @@ public abstract class BaseAnalysisAction extends AnAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     final DataContext dataContext = event.getDataContext();
-    final Project project = event.getProject();
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     final boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
     presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
   }

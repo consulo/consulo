@@ -19,8 +19,8 @@ package consulo.desktop.awt.tipOfDay;
 import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

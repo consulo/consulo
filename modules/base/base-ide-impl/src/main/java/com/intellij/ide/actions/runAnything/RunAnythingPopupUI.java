@@ -36,9 +36,10 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
+import consulo.ui.ex.action.*;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.ColoredListCellRenderer;
@@ -48,9 +49,9 @@ import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.event.FocusEvent;
@@ -825,7 +826,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
   }
 
   public RunAnythingPopupUI(@Nonnull AnActionEvent actionEvent) {
-    super(actionEvent.getProject());
+    super(actionEvent.getData(CommonDataKeys.PROJECT));
 
     myActionEvent = actionEvent;
 

@@ -15,6 +15,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.project.ui.wm.*;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.popup.ListPopup;

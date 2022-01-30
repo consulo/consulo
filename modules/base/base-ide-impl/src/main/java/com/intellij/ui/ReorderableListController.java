@@ -23,6 +23,9 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

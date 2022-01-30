@@ -2,13 +2,14 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.text.TextWithMnemonic;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
 import consulo.ide.base.BaseDataManager;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

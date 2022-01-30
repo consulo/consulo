@@ -17,7 +17,7 @@
 package com.intellij.ui;
 
 import com.intellij.codeInsight.hint.HintManager;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;

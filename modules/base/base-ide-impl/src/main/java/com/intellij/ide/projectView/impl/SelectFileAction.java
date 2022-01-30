@@ -16,7 +16,8 @@
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -36,7 +37,7 @@ public class SelectFileAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if(project == null) {
       return;
     }

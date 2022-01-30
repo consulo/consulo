@@ -28,14 +28,15 @@ import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.util.text.TextWithMnemonic;
+import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PausesStat;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
@@ -101,7 +102,7 @@ public class ActionUtil {
         actionNames.add(s);
       }
 
-      final Project _project = event.getProject();
+      final Project _project = event.getData(CommonDataKeys.PROJECT);
       if (_project != null && project == null) {
         project = _project;
       }
@@ -155,7 +156,7 @@ public class ActionUtil {
   public static boolean performDumbAwareUpdate(boolean isInModalContext, @Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed) {
     final Presentation presentation = e.getPresentation();
     final Boolean wasEnabledBefore = (Boolean)presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
-    final boolean dumbMode = isDumbMode(e.getProject());
+    final boolean dumbMode = isDumbMode(e.getData(CommonDataKeys.PROJECT));
     if (wasEnabledBefore != null && !dumbMode) {
       presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, null);
       presentation.setEnabled(wasEnabledBefore.booleanValue());
@@ -289,7 +290,7 @@ public class ActionUtil {
   public static boolean lastUpdateAndCheckDumb(AnAction action, AnActionEvent e, boolean visibilityMatters) {
     performDumbAwareUpdate(false, action, e, true);
 
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null && DumbService.getInstance(project).isDumb() && !action.isDumbAware()) {
       if (Boolean.FALSE.equals(e.getPresentation().getClientProperty(WOULD_BE_ENABLED_IF_NOT_DUMB_MODE))) {
         return false;

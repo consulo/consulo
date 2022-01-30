@@ -4,8 +4,9 @@ package com.intellij.execution.actions;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
@@ -34,13 +35,13 @@ import java.util.List;
 public class StopBackgroundProcessesAction extends DumbAwareAction implements AnAction.TransparentUpdate {
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(!getCancellableProcesses(e.getProject()).isEmpty());
+    e.getPresentation().setEnabled(!getCancellableProcesses(e.getData(CommonDataKeys.PROJECT)).isEmpty());
   }
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     List<StopAction.HandlerItem> handlerItems = getItemsList(getCancellableProcesses(project));
 
     if (handlerItems.isEmpty()) {

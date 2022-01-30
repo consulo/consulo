@@ -16,8 +16,8 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.color.ColorValue;
 

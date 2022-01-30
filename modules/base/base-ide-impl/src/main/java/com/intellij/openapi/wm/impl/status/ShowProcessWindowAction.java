@@ -16,9 +16,9 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import consulo.ui.annotation.RequiredUIAccess;

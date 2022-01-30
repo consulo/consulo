@@ -1,10 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.*;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

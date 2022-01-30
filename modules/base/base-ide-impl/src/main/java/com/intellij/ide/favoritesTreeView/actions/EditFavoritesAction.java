@@ -19,8 +19,9 @@ import com.intellij.ide.favoritesTreeView.FavoritesListProvider;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import com.intellij.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import com.intellij.ide.favoritesTreeView.FavoritesViewTreeBuilder;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.ui.CommonActionsPanel;
 
@@ -32,7 +33,7 @@ import java.util.Set;
 public class EditFavoritesAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     FavoritesViewTreeBuilder treeBuilder = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
     String listName = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     if (project == null || treeBuilder == null || listName == null) {
@@ -53,7 +54,7 @@ public class EditFavoritesAction extends AnAction {
     e.getPresentation().setText(CommonActionsPanel.Buttons.EDIT.getText());
     e.getPresentation().setIcon(CommonActionsPanel.Buttons.EDIT.getIcon());
     e.getPresentation().setEnabled(true);
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     FavoritesViewTreeBuilder treeBuilder = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
     String listName = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     if (project == null || treeBuilder == null || listName == null) {

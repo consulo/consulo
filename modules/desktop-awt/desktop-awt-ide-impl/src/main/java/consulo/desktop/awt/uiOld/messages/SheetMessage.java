@@ -17,13 +17,13 @@ package consulo.desktop.awt.uiOld.messages;
 
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
+import consulo.application.util.SystemInfo;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.Animator;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.eawt.wrapper.FullScreenUtilitiesWrapper;
 import consulo.logging.Logger;

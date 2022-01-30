@@ -36,7 +36,7 @@ import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ComponentTreeEventDispatcher;
 import com.intellij.util.io.URLUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;

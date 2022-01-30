@@ -21,13 +21,13 @@ import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.tree.LeafState;
-import com.intellij.util.ui.UIUtil;
-import com.intellij.util.ui.update.ComparableObject;
-import com.intellij.util.ui.update.ComparableObjectCheck;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.component.util.ComparableObject;
+import consulo.component.util.ComparableObjectCheck;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 

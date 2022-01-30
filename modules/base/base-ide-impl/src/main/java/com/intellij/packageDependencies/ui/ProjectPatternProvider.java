@@ -22,8 +22,9 @@ package com.intellij.packageDependencies.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.project.Project;
 import consulo.module.content.ProjectRootManager;
@@ -149,7 +150,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     @RequiredUIAccess
     public void update(final AnActionEvent e) {
       super.update(e);
-      Project eventProject = getEventProject(e);
+      Project eventProject = e.getData(CommonDataKeys.PROJECT);
       if(eventProject == null) {
         return;
       }

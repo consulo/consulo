@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.impl.style;
 import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ui.AntialiasingType;
 import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;

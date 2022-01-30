@@ -36,7 +36,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.UIBundle;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

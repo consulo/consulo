@@ -52,6 +52,7 @@
     <module>modules/base/component-api</module>
     <module>modules/base/application-api</module>
     <module>modules/base/application-content-api</module>
+    <module>modules/base/application-ui-api</module>
     <module>modules/base/configurable-api</module>
     <module>modules/base/disposer-api</module>
     <module>modules/base/disposer-impl</module>

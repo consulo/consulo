@@ -4,7 +4,7 @@ package com.intellij.ui;
 import com.intellij.Patches;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBInsets;
+import consulo.application.ui.awt.JBInsets;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

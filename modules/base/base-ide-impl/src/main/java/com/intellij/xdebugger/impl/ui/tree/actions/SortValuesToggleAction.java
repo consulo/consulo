@@ -15,13 +15,15 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import javax.annotation.Nonnull;
+
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**
@@ -45,6 +47,6 @@ public class SortValuesToggleAction extends ToggleAction implements DumbAware {
   @Override
   public void setSelected(AnActionEvent e, boolean state) {
     XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setSortValues(state);
-    XDebuggerUtilImpl.rebuildAllSessionsViews(e.getProject());
+    XDebuggerUtilImpl.rebuildAllSessionsViews(e.getData(CommonDataKeys.PROJECT));
   }
 }

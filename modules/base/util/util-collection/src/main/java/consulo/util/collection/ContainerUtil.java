@@ -31,6 +31,49 @@ import java.util.function.Predicate;
  * Based on IDEA code
  */
 public class ContainerUtil {
+  /**
+   * @return read-only list consisting of the elements from the iterable converted by mapping
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> List<V> map(@Nonnull Iterable<? extends T> iterable, @Nonnull Function<T, V> mapping) {
+    List<V> result = new ArrayList<V>();
+    for (T t : iterable) {
+      result.add(mapping.apply(t));
+    }
+    return result.isEmpty() ? List.of() : result;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> V[] map(@Nonnull T[] arr, @Nonnull Function<T, V> mapping, @Nonnull V[] emptyArray) {
+    if (arr.length == 0) {
+      assert emptyArray.length == 0 : "You must pass an empty array";
+      return emptyArray;
+    }
+
+    List<V> result = new ArrayList<V>(arr.length);
+    for (T t : arr) {
+      result.add(mapping.apply(t));
+    }
+    return result.toArray(emptyArray);
+  }
+
+
+  /**
+   * @return read-only list consisting of the elements from the iterable converted by mapping
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> List<V> map(@Nonnull Collection<? extends T> iterable, @Nonnull Function<T, V> mapping) {
+    if (iterable.isEmpty()) return List.of();
+    List<V> result = new ArrayList<V>(iterable.size());
+    for (T t : iterable) {
+      result.add(mapping.apply(t));
+    }
+    return result;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <T> Set<T> newConcurrentSet() {

@@ -15,8 +15,8 @@
  */
 package com.intellij.dvcs.ui;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import consulo.project.DumbAware;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageState;
 import icons.DvcsImplIcons;

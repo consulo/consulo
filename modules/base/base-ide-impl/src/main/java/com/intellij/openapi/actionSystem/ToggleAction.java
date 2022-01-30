@@ -2,6 +2,9 @@
 package com.intellij.openapi.actionSystem;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 

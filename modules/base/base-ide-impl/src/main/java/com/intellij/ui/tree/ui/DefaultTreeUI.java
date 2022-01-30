@@ -13,7 +13,7 @@ import com.intellij.ui.render.RenderingUtil;
 import com.intellij.ui.tree.AsyncTreeModel;
 import com.intellij.ui.tree.TreePathBackgroundSupplier;
 import com.intellij.util.ui.MouseEventAdapter;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.Sets;
@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 import static consulo.application.ApplicationManager.getApplication;
-import static com.intellij.openapi.util.SystemInfo.isMac;
+import static consulo.application.util.SystemInfo.isMac;
 import static consulo.application.util.registry.Registry.is;
 import static com.intellij.ui.paint.RectanglePainter.DRAW;
 import static com.intellij.util.EditSourceOnDoubleClickHandler.isExpandPreferable;

@@ -18,6 +18,9 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import javax.annotation.Nonnull;
 

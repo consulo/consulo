@@ -15,6 +15,7 @@
  */
 package consulo.desktop.util.windows.defender;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.CommonBundle;
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.ide.BrowserUtil;
@@ -22,11 +23,11 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
@@ -45,7 +46,7 @@ public class WindowsDefenderFixAction extends NotificationAction {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-    int rc = Messages.showDialog(e.getProject(), DiagnosticBundle
+    int rc = Messages.showDialog(e.getData(CommonDataKeys.PROJECT), DiagnosticBundle
                                          .message("virus.scanning.fix.explanation", ApplicationNamesInfo.getInstance().getFullProductName(), WindowsDefenderChecker.getInstance().getConfigurationInstructionsUrl()),
                                  DiagnosticBundle.message("virus.scanning.fix.title"),
                                  new String[]{DiagnosticBundle.message("virus.scanning.fix.automatically"), DiagnosticBundle.message("virus.scanning.fix.manually"),
@@ -55,9 +56,10 @@ public class WindowsDefenderFixAction extends NotificationAction {
       case Messages.OK:
         notification.expire();
         ApplicationManager.getApplication().executeOnPooledThread(() -> {
-          if (WindowsDefenderChecker.getInstance().runExcludePathsCommand(e.getProject(), myPaths)) {
+          if (WindowsDefenderChecker.getInstance().runExcludePathsCommand(e.getData(CommonDataKeys.PROJECT), myPaths)) {
             UIUtil.invokeLaterIfNeeded(() -> {
-              Notifications.Bus.notifyAndHide(new Notification("System Health", "", DiagnosticBundle.message("virus.scanning.fix.success.notification"), NotificationType.INFORMATION), e.getProject());
+              Notifications.Bus.notifyAndHide(new Notification("System Health", "", DiagnosticBundle.message("virus.scanning.fix.success.notification"), NotificationType.INFORMATION),
+                                              e.getData(CommonDataKeys.PROJECT));
             });
           }
         });

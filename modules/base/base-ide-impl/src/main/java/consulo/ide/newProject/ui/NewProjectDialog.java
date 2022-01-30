@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;

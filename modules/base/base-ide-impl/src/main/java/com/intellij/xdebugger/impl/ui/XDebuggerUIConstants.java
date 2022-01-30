@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ui.DarculaColors;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.DarculaColors;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.XDebuggerBundle;
 import consulo.ui.image.Image;

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.util.awt.migration;
 
+import consulo.application.ui.awt.UIUtil;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -26,7 +27,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-05-11
  * <p/>
- * JB guys love creating components via extending, and searching them via {@link com.intellij.util.ui.UIUtil#findComponentOfType(javax.swing.JComponent, Class)}
+ * JB guys love creating components via extending, and searching them via {@link UIUtil#findComponentOfType(javax.swing.JComponent, Class)}
  * But when we using cross-ui, we can't extend UI component
  * <p/>
  * This impementation is AWT specific, but cant be converted to UI without any problems

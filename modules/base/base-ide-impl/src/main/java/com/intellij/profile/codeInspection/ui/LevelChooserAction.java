@@ -24,10 +24,12 @@ import com.intellij.codeInspection.ex.SeverityEditorDialog;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.profile.codeInspection.SeverityProvider;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -66,7 +68,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull final AnActionEvent e) {
-        final SeverityEditorDialog dlg = new SeverityEditorDialog(e.getProject(), myChosen, mySeverityRegistrar);
+        final SeverityEditorDialog dlg = new SeverityEditorDialog(e.getData(CommonDataKeys.PROJECT), myChosen, mySeverityRegistrar);
         if (dlg.showAndGet()) {
           final HighlightInfoType type = dlg.getSelectedType();
           if (type != null) {

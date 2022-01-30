@@ -19,7 +19,7 @@ import com.intellij.ide.UiActivity;
 import com.intellij.ide.UiActivityMonitor;
 import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
-import com.intellij.openapi.util.BusyObject;
+import consulo.component.util.BusyObject;
 
 import javax.annotation.Nonnull;
 

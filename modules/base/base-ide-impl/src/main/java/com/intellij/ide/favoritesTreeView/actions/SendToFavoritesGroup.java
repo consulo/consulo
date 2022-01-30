@@ -23,6 +23,11 @@ import com.intellij.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -72,7 +77,7 @@ public class SendToFavoritesGroup extends ActionGroup {
     @Override
     public void actionPerformed(AnActionEvent e) {
       final DataContext dataContext = e.getDataContext();
-      Project project = e.getProject();
+      Project project = e.getData(CommonDataKeys.PROJECT);
       FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
       String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
 

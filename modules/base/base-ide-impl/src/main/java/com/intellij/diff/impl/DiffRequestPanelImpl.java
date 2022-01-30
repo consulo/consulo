@@ -23,7 +23,7 @@ import com.intellij.diff.util.DiffUserDataKeysEx;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 

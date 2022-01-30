@@ -19,7 +19,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.content.*;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
@@ -29,6 +29,8 @@ import consulo.project.ui.wm.content.ContentFactory;
 import consulo.project.ui.wm.content.ContentManager;
 import consulo.project.ui.wm.content.event.ContentManagerEvent;
 import consulo.ui.Rectangle2D;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

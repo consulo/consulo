@@ -17,8 +17,8 @@ package com.intellij.openapi.actionSystem.impl;
 
 import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionPopupMenu;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.dataContext.DataContext;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationActivationListener;
@@ -29,9 +29,9 @@ import com.intellij.openapi.util.Getter;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.ui.ComponentUtil;
 import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 
 import javax.annotation.Nonnull;

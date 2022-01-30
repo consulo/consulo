@@ -15,11 +15,11 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.JBColor;
+import consulo.application.util.SystemInfo;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;

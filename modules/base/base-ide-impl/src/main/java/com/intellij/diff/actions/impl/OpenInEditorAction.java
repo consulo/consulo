@@ -21,9 +21,10 @@ import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.ide.actions.EditSourceAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
@@ -56,7 +57,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
       e.getPresentation().setEnabled(false);
     }
 
-    if (e.getProject() == null) {
+    if (e.getData(CommonDataKeys.PROJECT) == null) {
       e.getPresentation().setVisible(true);
       e.getPresentation().setEnabled(false);
       return;
@@ -74,7 +75,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     Navigatable[] navigatables = e.getData(DiffDataKeys.NAVIGATABLE_ARRAY);

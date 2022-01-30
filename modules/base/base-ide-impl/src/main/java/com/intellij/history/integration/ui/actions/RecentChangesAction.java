@@ -17,11 +17,12 @@
 package com.intellij.history.integration.ui.actions;
 
 import com.intellij.history.integration.ui.views.RecentChangesPopup;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 
 public class RecentChangesAction extends LocalHistoryAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    new RecentChangesPopup(getEventProject(e), getGateway(), getVcs()).show();
+    new RecentChangesPopup(e == null ? null : e.getData(CommonDataKeys.PROJECT), getGateway(), getVcs()).show();
   }
 }

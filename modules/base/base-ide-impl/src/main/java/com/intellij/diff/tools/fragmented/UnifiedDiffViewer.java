@@ -50,10 +50,14 @@ import com.intellij.openapi.editor.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.pom.Navigatable;
@@ -703,7 +707,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       if (isStateIsOutOfDate()) return;
 
       String title = e.getPresentation().getText() + " selected changes";
-      DiffUtil.executeWriteCommand(getDocument(myModifiedSide), e.getProject(), title, () -> {
+      DiffUtil.executeWriteCommand(getDocument(myModifiedSide), e.getData(CommonDataKeys.PROJECT), title, () -> {
         // state is invalidated during apply(), but changes are in reverse order, so they should not conflict with each other
         apply(selectedChanges);
         scheduleRediff();

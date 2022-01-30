@@ -15,8 +15,8 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.util;
 
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -22,10 +22,13 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
@@ -49,7 +52,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
     if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
       return;
@@ -79,7 +82,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
     Presentation presentation = e.getPresentation();
     presentation.setText(IdeBundle.message("goto.custom.region.menu.item"));
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
-    final Project project = e.getProject();
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     boolean isAvailable = editor != null && project != null;
     presentation.setEnabled(isAvailable);
     presentation.setVisible(isAvailable);

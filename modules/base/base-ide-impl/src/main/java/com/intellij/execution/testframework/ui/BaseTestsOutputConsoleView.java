@@ -24,7 +24,7 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.ObservableConsoleView;
 import com.intellij.ide.HelpIdProvider;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 

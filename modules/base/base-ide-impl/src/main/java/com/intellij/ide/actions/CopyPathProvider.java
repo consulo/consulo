@@ -24,6 +24,7 @@ import consulo.document.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -44,7 +45,7 @@ public class CopyPathProvider extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = getEventProject(e);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     DataContext dataContext = e.getDataContext();
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
 
@@ -81,7 +82,7 @@ public class CopyPathProvider extends DumbAwareAction {
 
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
 
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
 
     e.getPresentation().setEnabledAndVisible(project != null && getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext) != null);
   }

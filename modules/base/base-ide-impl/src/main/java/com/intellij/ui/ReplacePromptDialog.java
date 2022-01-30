@@ -17,10 +17,11 @@
 package com.intellij.ui;
 
 import com.intellij.find.FindManager;
+import consulo.application.ui.awt.JBColor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

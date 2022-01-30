@@ -16,7 +16,7 @@
 package com.intellij.find.editorHeaderActions;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.ShortcutSet;
+import consulo.ui.ex.action.ShortcutSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

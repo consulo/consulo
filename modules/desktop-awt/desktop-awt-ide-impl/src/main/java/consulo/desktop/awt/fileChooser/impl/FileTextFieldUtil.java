@@ -3,7 +3,7 @@ package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.application.ReadAction;
 import consulo.desktop.awt.fileChooser.impl.FileLookup.Finder;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;

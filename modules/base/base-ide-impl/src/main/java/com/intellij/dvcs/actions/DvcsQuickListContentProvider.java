@@ -15,11 +15,14 @@
  */
 package com.intellij.dvcs.actions;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.actions.VcsQuickListContentProvider;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnSeparator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

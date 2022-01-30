@@ -15,8 +15,9 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import consulo.virtualFileSystem.VirtualFile;
@@ -82,7 +83,7 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
               if (file != null) {
                 final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
                 if (archiveRoot != null) {
-                  extracted.add(PackagingElementFactory.getInstance(e.getProject()).createExtractedDirectory(archiveRoot));
+                  extracted.add(PackagingElementFactory.getInstance(e.getData(CommonDataKeys.PROJECT)).createExtractedDirectory(archiveRoot));
                 }
               }
             }

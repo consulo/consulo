@@ -27,6 +27,7 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
+import consulo.ui.ex.action.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ListModel;

@@ -23,7 +23,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

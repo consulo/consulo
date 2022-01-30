@@ -6,7 +6,7 @@ import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.containers.ComparatorUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

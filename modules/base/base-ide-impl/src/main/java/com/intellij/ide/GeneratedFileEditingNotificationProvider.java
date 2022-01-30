@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.fileEditor.FileEditor;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;

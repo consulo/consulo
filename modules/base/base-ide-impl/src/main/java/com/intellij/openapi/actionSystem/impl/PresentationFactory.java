@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
 import javax.annotation.Nonnull;

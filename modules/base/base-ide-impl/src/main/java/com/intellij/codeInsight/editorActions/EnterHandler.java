@@ -15,7 +15,7 @@ import com.intellij.lang.documentation.DocumentationProvider;
 import consulo.language.lexer.Lexer;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.DataContextWrapper;
+import consulo.dataContext.DataContextWrapper;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;

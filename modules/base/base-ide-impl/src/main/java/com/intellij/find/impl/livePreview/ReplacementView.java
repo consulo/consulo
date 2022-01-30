@@ -16,8 +16,8 @@
 package com.intellij.find.impl.livePreview;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.components.JBLabel;
 
 import javax.annotation.Nonnull;

@@ -22,7 +22,8 @@ import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
@@ -48,7 +49,7 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    DiffManager.getInstance().showDiff(e.getProject(), createDiffData());
+    DiffManager.getInstance().showDiff(e.getData(CommonDataKeys.PROJECT), createDiffData());
   }
 
   private DiffRequest createDiffData() {

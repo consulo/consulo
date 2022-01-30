@@ -4,7 +4,7 @@ package com.intellij.ide.ui;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.application.util.registry.Registry;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

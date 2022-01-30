@@ -3,7 +3,7 @@ package com.intellij.ui.scroll;
 
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

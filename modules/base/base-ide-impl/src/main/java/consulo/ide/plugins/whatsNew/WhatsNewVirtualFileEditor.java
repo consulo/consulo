@@ -31,7 +31,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.text.JBDateFormat;
 import com.intellij.util.ui.JBHtmlEditorKit;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;

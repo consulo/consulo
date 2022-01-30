@@ -6,8 +6,8 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.ComponentWithEmptyText;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.StatusText;
 import javax.annotation.Nonnull;
 

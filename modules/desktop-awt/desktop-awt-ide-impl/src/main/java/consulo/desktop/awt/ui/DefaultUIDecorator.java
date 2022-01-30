@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.ui.ColorUtil;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.ui.decorator.SwingUIDecorator;

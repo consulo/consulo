@@ -14,7 +14,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.UsageSearchContext;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.indexing.*;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.InlineKeyDescriptor;

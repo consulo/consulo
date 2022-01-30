@@ -29,7 +29,7 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import consulo.language.util.IncorrectOperationException;
 import consulo.component.messagebus.Topic;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

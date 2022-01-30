@@ -16,7 +16,7 @@
 package com.intellij.util.indexing.impl;
 
 import consulo.logging.Logger;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import consulo.index.io.IndexId;
 
 public class DebugAssertions {

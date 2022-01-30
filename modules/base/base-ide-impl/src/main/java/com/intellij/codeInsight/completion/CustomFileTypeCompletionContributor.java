@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.psi.CustomHighlighterTokenType;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;

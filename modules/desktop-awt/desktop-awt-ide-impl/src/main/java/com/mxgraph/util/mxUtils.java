@@ -4,7 +4,7 @@
  */
 package com.mxgraph.util;
 
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.mxgraph.io.mxCodecRegistry;
 import com.mxgraph.model.mxCellPath;
 import com.mxgraph.model.mxICell;

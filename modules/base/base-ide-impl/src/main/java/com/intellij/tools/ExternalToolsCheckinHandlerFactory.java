@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

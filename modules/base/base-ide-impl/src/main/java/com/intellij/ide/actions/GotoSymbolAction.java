@@ -4,11 +4,12 @@ package com.intellij.ide.actions;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.actions.searcheverywhere.SymbolSearchEverywhereContributor;
 import com.intellij.ide.util.gotoByName.*;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.language.Language;
 import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
@@ -19,7 +20,7 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     boolean dumb = DumbService.isDumb(project);
@@ -45,7 +46,7 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.symbol");
 
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     GotoSymbolModel2 model = new GotoSymbolModel2(project);

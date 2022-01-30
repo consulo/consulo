@@ -10,10 +10,11 @@ import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
 import com.intellij.ide.util.gotoByName.GotoClassModel2;
 import com.intellij.ide.util.gotoByName.GotoClassSymbolConfiguration;
 import com.intellij.lang.DependentLanguage;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -185,7 +186,7 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
     @Nonnull
     @Override
     public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
-      return new ClassSearchEverywhereContributor(initEvent.getProject(), GotoActionBase.getPsiContext(initEvent));
+      return new ClassSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), GotoActionBase.getPsiContext(initEvent));
     }
   }
 

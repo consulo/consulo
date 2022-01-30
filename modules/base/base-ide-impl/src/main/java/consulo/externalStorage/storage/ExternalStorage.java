@@ -16,7 +16,7 @@
 package consulo.externalStorage.storage;
 
 import consulo.component.persist.RoamingType;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.container.boot.ContainerPathManager;

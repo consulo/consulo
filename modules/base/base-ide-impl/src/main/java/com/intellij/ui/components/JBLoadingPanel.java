@@ -21,7 +21,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AsyncProcessIcon;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

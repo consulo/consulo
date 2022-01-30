@@ -15,7 +15,8 @@
  */
 package com.intellij.diagnostic;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import consulo.logging.Logger;
@@ -40,7 +41,7 @@ public class DropAnErrorAction extends DumbAwareAction {
     bar.fireNotificationPopup(new JLabel("<html><body><br><b>       Notifier      </b><br><br></body></html>"));
     */
 
-    ArtifactManager.getInstance(e.getProject());
+    ArtifactManager.getInstance(e.getData(CommonDataKeys.PROJECT));
     Logger.getInstance("test").error("Test");
   }
 }

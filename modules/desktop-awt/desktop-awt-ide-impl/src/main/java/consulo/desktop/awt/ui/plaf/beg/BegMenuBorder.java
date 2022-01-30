@@ -16,7 +16,7 @@
  */
 package consulo.desktop.awt.ui.plaf.beg;
 
-import com.intellij.util.ui.JBInsets;
+import consulo.application.ui.awt.JBInsets;
 
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;

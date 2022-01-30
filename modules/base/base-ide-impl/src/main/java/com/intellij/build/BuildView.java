@@ -27,6 +27,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionDataKeys;
+import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 

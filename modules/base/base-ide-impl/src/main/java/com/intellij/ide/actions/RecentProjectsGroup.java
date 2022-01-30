@@ -17,12 +17,12 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.RecentProjectsManagerBase;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
-import consulo.project.DumbAware;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.application.dumb.DumbAware;
+import consulo.application.util.SystemInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

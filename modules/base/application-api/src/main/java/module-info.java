@@ -17,12 +17,11 @@ module consulo.application.api {
   requires java.desktop;
 
   exports consulo.application;
+  exports consulo.application.dumb;
   exports consulo.application.event;
   exports consulo.application.constraint;
   exports consulo.application.extension;
   exports consulo.application.progress;
-  exports consulo.application.ui.wm;
-  exports consulo.application.ui;
 
   // TODO [VISTALL] impl package
   exports consulo.application.internal;

@@ -3,9 +3,9 @@ package com.intellij.vcs.log.ui;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColorUtil;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

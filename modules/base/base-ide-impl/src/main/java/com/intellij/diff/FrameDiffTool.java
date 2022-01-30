@@ -17,7 +17,7 @@ package com.intellij.diff;
 
 import com.intellij.diff.requests.DiffRequest;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import javax.annotation.Nonnull;
 
 import consulo.ui.annotation.RequiredUIAccess;

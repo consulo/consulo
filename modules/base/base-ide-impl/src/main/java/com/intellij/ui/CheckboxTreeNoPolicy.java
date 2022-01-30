@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.ThreeStateCheckBox;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,14 +15,15 @@
  */
 package com.intellij.openapi.keymap.impl.keyGestures;
 
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.keymap.impl.ActionProcessor;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeyState;
 import consulo.application.util.registry.Registry;
-import com.intellij.util.SystemProperties;
-import com.intellij.util.ui.UIUtil;
+import consulo.util.lang.SystemProperties;
+import consulo.application.ui.awt.UIUtil;
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.event.AnActionEventVisitor;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

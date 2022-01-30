@@ -18,11 +18,11 @@ package com.intellij.ide.structureView.newStructureView;
 
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.TreeAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 
 public class TreeActionWrapper extends ToggleAction implements DumbAware {
   private final TreeAction myAction;

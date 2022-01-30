@@ -4,7 +4,7 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.localize.LocalizeValue;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

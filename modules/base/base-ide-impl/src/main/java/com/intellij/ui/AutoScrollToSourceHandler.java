@@ -18,14 +18,14 @@ package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.vfs.PersistentFSConstants;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;

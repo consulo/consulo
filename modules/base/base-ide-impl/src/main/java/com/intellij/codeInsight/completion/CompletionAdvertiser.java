@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import consulo.language.util.ProcessingContext;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import javax.annotation.Nonnull;
 

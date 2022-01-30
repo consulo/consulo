@@ -26,7 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.TextTransferable;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.application.ui.WholeWestDialogWrapper;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;

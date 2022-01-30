@@ -16,10 +16,12 @@ import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.BaseButtonBehavior;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import consulo.dataContext.DataContext;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageState;
 

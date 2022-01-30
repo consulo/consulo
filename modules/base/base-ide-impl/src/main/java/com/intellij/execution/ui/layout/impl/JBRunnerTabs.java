@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.ui.layout.impl;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
 import consulo.project.Project;
 import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.RelativePoint;

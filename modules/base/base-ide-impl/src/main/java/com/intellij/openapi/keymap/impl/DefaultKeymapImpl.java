@@ -16,11 +16,11 @@
 package com.intellij.openapi.keymap.impl;
 
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.actionSystem.MouseShortcut;
+import consulo.ui.ex.action.MouseShortcut;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import org.jdom.Element;
 
 import java.awt.event.MouseEvent;

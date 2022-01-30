@@ -5,6 +5,7 @@ import consulo.util.nodep.text.StringUtilRt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A class representing a version of some Java platform - e.g. the runtime the class is loaded into, or some installed JRE.
@@ -150,20 +151,16 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     return current;
   }
 
-  /**
-   * Attempts to use Runtime.version() method available since Java 9.
-   */
-  @SuppressWarnings("JavaReflectionMemberAccess")
   private static JavaVersion rtVersion() {
     try {
-      Object version = Runtime.class.getMethod("version").invoke(null);
-      int major = (Integer)version.getClass().getMethod("major").invoke(version);
-      int minor = (Integer)version.getClass().getMethod("minor").invoke(version);
-      int security = (Integer)version.getClass().getMethod("security").invoke(version);
-      Object buildOpt = version.getClass().getMethod("build").invoke(version);
-      int build = (Integer)buildOpt.getClass().getMethod("orElse", Object.class).invoke(buildOpt, Integer.valueOf(0));
-      Object preOpt = version.getClass().getMethod("pre").invoke(version);
-      boolean ea = (Boolean)preOpt.getClass().getMethod("isPresent").invoke(preOpt);
+      Runtime.Version version = Runtime.version();
+      int major = version.major();
+      int minor = version.minor();
+      int security = version.security();
+      Optional<Integer> buildOpt = version.build();
+      int build = buildOpt.orElse(0);
+      Optional<String> preOpt = version.pre();
+      boolean ea = preOpt.isPresent();
       return new JavaVersion(major, minor, security, build, ea);
     }
     catch (Throwable ignored) {

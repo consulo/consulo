@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.text.StringTokenizer;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

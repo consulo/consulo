@@ -3,10 +3,10 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.progress.util.PotemkinProgress;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.util.FieldAccessor;
 import com.intellij.util.MethodInvocator;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.awt.hacking.AWTAccessorHacking;
 import org.intellij.lang.annotations.JdkConstants;
 

@@ -2,7 +2,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;

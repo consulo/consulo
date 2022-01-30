@@ -16,16 +16,16 @@
 package com.intellij.ui.tabs;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.IconDeferrer;
-import com.intellij.ui.PlaceProvider;
+import consulo.ui.ex.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.ui.content.AlertIcon;
-import consulo.awt.TargetAWT;
+import consulo.project.ui.wm.AlertIcon;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SoftReference;
 import kava.beans.PropertyChangeSupport;

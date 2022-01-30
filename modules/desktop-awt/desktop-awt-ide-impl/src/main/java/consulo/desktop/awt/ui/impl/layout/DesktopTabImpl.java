@@ -16,11 +16,11 @@
 package consulo.desktop.awt.ui.impl.layout;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.ui.tabs.TabInfo;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextItemPresentation;

@@ -27,7 +27,7 @@ import com.intellij.ui.BalloonLayoutData;
 import consulo.desktop.awt.wm.impl.IdeRootPane;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBInsets;
+import consulo.application.ui.awt.JBInsets;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

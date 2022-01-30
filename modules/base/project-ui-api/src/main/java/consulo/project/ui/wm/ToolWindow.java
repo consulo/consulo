@@ -16,11 +16,13 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.component.util.BusyObject;
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.content.ContentManager;
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 

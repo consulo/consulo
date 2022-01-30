@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import consulo.desktop.awt.uiOld.RowIcon;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

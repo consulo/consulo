@@ -2,7 +2,7 @@
 package com.intellij.openapi.application;
 
 import consulo.project.DumbService;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;

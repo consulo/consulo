@@ -22,9 +22,9 @@ import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Ref;
 import com.intellij.reference.SoftReference;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.ValidableComponent;
 

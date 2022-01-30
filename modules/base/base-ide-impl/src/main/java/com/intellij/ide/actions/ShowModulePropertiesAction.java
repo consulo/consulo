@@ -20,6 +20,8 @@ import consulo.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -29,7 +31,7 @@ import javax.annotation.Nonnull;
  * @author Eugene Zhuravlev
  *         Date: Feb 8, 2004
  */
-public class ShowModulePropertiesAction extends AnAction{
+public class ShowModulePropertiesAction extends AnAction {
   private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
 
   @Inject

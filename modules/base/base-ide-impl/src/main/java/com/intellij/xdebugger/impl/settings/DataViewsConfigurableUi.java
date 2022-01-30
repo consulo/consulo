@@ -20,7 +20,7 @@ import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.border.IdeaTitledBorder;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
 import javax.annotation.Nonnull;
 

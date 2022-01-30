@@ -19,7 +19,8 @@ import com.intellij.diff.fragments.DiffFragment;
 import com.intellij.diff.fragments.LineFragment;
 import com.intellij.diff.util.*;
 import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -308,7 +309,7 @@ public class SimpleDiffChange {
       @Override
       protected void performAction(AnActionEvent e) {
         if (!myIsValid) return;
-        final Project project = e.getProject();
+        final Project project = e.getData(CommonDataKeys.PROJECT);
         final Document document = myViewer.getEditor(sourceSide.other()).getDocument();
         DiffUtil.executeWriteCommand(document, project, "Replace change", perform);
       }

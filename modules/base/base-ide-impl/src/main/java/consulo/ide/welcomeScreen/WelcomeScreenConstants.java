@@ -15,8 +15,8 @@
  */
 package consulo.ide.welcomeScreen;
 
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
 
 import java.awt.*;
 

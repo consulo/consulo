@@ -3,6 +3,8 @@ package com.intellij.util.net.ssl;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.FormBuilder;
+import consulo.application.ui.awt.JBColor;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

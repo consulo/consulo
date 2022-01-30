@@ -15,6 +15,7 @@
  */
 package consulo.project;
 
+import consulo.application.dumb.DumbAware;
 import consulo.application.util.function.Computable;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;

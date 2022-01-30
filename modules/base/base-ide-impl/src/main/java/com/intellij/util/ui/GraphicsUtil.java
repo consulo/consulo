@@ -16,6 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.openapi.ui.GraphicsConfig;
+import consulo.application.ui.awt.UIUtil;
 import consulo.awt.hacking.JComponentHacking;
 import consulo.desktop.util.awt.DesktopAntialiasingType;
 import consulo.ui.AntialiasingType;

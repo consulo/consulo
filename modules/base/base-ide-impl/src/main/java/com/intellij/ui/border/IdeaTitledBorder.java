@@ -17,8 +17,8 @@ package com.intellij.ui.border;
 
 import com.intellij.ui.TitledSeparator;
 import com.intellij.util.ui.DialogUtil;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.filters;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

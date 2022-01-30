@@ -17,14 +17,14 @@ package consulo.desktop.awt.uiOld;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.ui.ex.popup.Balloon;
-import com.intellij.ui.Gray;
+import consulo.application.ui.awt.Gray;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon.impl.analysis;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

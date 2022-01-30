@@ -18,11 +18,15 @@ import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ShortcutSet;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.WindowManager;
 import consulo.application.util.function.Processor;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -208,7 +212,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
     @Nonnull
     @Override
     public SearchEverywhereContributor<GotoActionModel.MatchedValue> createContributor(@Nonnull AnActionEvent initEvent) {
-      return new ActionSearchEverywhereContributor(initEvent.getProject(), initEvent.getData(PlatformDataKeys.CONTEXT_COMPONENT), initEvent.getData(CommonDataKeys.EDITOR));
+      return new ActionSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), initEvent.getData(PlatformDataKeys.CONTEXT_COMPONENT), initEvent.getData(CommonDataKeys.EDITOR));
     }
   }
 }

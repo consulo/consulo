@@ -15,7 +15,7 @@
  */
 package com.intellij.vcsUtil;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * Created with IntelliJ IDEA.

@@ -19,10 +19,10 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
-import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.application.util.function.Condition;
 import consulo.component.util.Iconable;
 import consulo.configurable.ConfigurationException;

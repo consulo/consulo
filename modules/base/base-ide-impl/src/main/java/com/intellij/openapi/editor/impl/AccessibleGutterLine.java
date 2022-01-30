@@ -15,11 +15,15 @@ import com.intellij.openapi.editor.markup.LineMarkerRenderer;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.paint.LinePainter2D;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.accessibility.SimpleAccessible;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.action.ShortcutSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

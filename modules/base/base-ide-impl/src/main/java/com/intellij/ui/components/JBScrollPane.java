@@ -3,7 +3,7 @@ package com.intellij.ui.components;
 
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.scroll.LatchingScroll;
@@ -13,6 +13,8 @@ import com.intellij.ui.scroll.TouchScrollUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.*;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.UIUtil;
 import consulo.awt.hacking.BasicScrollPaneUIHacking;
 import consulo.util.dataholder.Key;
 
@@ -32,7 +34,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.function.Supplier;
 
-import static com.intellij.util.ui.JBUI.emptyInsets;
+import static consulo.application.ui.awt.JBUI.emptyInsets;
 
 public class JBScrollPane extends JScrollPane {
 

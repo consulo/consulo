@@ -17,7 +17,6 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import consulo.module.Module;
@@ -38,6 +37,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -23,7 +23,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.application.progress.ProcessCanceledException;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;

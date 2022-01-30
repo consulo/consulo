@@ -19,7 +19,7 @@ import com.intellij.xdebugger.impl.actions.DebuggerToggleActionHandler;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XDebugSession;
 import consulo.project.Project;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import javax.annotation.Nonnull;
 
 /**

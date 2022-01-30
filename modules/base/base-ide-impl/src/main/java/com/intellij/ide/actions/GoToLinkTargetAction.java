@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
@@ -28,14 +28,14 @@ import consulo.language.psi.PsiManager;
 public class GoToLinkTargetAction extends DumbAwareAction {
   @Override
   public void update(AnActionEvent e) {
-    Project project = getEventProject(e);
+    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
     VirtualFile file = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
     e.getPresentation().setEnabledAndVisible(project != null && file != null && file.is(VFileProperty.SYMLINK));
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = getEventProject(e);
+    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
     VirtualFile file = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
     if (project != null && file != null && file.is(VFileProperty.SYMLINK)) {
       VirtualFile target = file.getCanonicalFile();

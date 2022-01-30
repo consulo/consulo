@@ -16,7 +16,7 @@
 package com.intellij.ui.stripe;
 
 import com.intellij.util.ui.RegionPainter;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.TargetAWT;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -17,6 +17,9 @@ package com.intellij.vcs.log.ui.filter;
 
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.ui.FlatSpeedSearchPopup;

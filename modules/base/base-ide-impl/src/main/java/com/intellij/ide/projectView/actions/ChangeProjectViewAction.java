@@ -21,6 +21,9 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.openapi.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 public final class ChangeProjectViewAction extends AnAction {
   @Override

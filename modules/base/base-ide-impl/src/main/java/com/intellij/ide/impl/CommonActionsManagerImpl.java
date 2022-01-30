@@ -18,7 +18,7 @@ package com.intellij.ide.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.*;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import consulo.project.Project;
 import com.intellij.ui.AutoScrollToSourceHandler;
 

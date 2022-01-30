@@ -79,7 +79,7 @@ import com.intellij.ui.content.*;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashMap;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;

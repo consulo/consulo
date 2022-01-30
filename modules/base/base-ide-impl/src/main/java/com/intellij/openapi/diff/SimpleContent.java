@@ -24,7 +24,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.LineSeparator;
-import com.intellij.util.SystemProperties;
+import consulo.util.lang.SystemProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

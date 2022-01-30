@@ -15,10 +15,10 @@
  */
 package com.intellij.diff.actions.impl;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 
 public abstract class PrevDifferenceAction extends AnAction implements DumbAware {
   public PrevDifferenceAction() {

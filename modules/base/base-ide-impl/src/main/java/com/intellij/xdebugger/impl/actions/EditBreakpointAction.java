@@ -16,12 +16,13 @@
 package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.xdebugger.impl.DebuggerSupport;
+
 import javax.annotation.Nonnull;
 
 public class EditBreakpointAction extends XDebuggerActionBase {
@@ -42,7 +43,7 @@ public class EditBreakpointAction extends XDebuggerActionBase {
     public void actionPerformed(AnActionEvent e) {
       final Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
       if (editor == null) return;
-      myDebuggerSupport.getEditBreakpointAction().editBreakpoint(getEventProject(e), editor, myBreakpoint, myRenderer);
+      myDebuggerSupport.getEditBreakpointAction().editBreakpoint(e.getData(CommonDataKeys.PROJECT), editor, myBreakpoint, myRenderer);
     }
   }
 

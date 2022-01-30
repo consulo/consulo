@@ -17,11 +17,11 @@ package com.intellij.ide.actions;
 
 import consulo.application.CommonBundle;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.actionSystem.Presentation;
-import consulo.project.DumbAware;
+import consulo.ui.ex.action.Presentation;
+import consulo.application.dumb.DumbAware;
 
 public abstract class CloseTabToolbarAction extends AnAction implements DumbAware {
   public CloseTabToolbarAction() {

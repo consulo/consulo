@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
@@ -50,6 +50,6 @@ public class GoToHashOrRefAction extends DumbAwareAction {
   public void update(AnActionEvent e) {
     VcsLog log = e.getData(VcsLogDataKeys.VCS_LOG);
     VcsLogUi logUi = e.getData(VcsLogDataKeys.VCS_LOG_UI);
-    e.getPresentation().setEnabledAndVisible(e.getProject() != null && log != null && logUi != null);
+    e.getPresentation().setEnabledAndVisible(e.getData(CommonDataKeys.PROJECT) != null && log != null && logUi != null);
   }
 }

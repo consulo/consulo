@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
-import static com.intellij.openapi.util.SystemInfo.isMac;
+import static consulo.application.util.SystemInfo.isMac;
 import static com.intellij.ui.components.JBScrollPane.IGNORE_SCROLLBAR_IN_INSETS;
 
 public final class RenderingHelper {

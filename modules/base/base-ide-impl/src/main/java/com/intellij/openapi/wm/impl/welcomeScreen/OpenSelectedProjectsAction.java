@@ -18,9 +18,9 @@ package com.intellij.openapi.wm.impl.welcomeScreen;
 import com.intellij.ide.ProjectGroupActionGroup;
 import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import javax.annotation.Nonnull;
 
 import java.awt.event.InputEvent;

@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.content.Content;
@@ -81,7 +82,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
   }
 
   protected Handler getHandler(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     EditorWindow currentWindow = e.getData(EditorWindow.DATA_KEY);
 
     Content content = currentWindow != null ? null : getContentFromEvent(e);

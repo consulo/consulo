@@ -15,7 +15,7 @@
  */
 package consulo.vcs.changes.ui;
 
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentI;

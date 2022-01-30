@@ -17,11 +17,11 @@ package com.intellij.ui.components;
 
 import com.intellij.ui.AnchorableComponent;
 import com.intellij.ui.ColorUtil;
-import com.intellij.util.SystemProperties;
-import com.intellij.util.ui.JBFont;
+import consulo.util.lang.SystemProperties;
+import consulo.application.ui.awt.JBFont;
 import com.intellij.util.ui.JBHtmlEditorKit;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;

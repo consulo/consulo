@@ -32,19 +32,20 @@ import com.intellij.openapi.ui.playback.PlaybackContext;
 import com.intellij.openapi.ui.playback.PlaybackRunner;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
+import consulo.ui.ex.action.*;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.ui.JBColor;
+import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 import com.intellij.ui.debugger.extensions.UiScriptFileType;
 import com.intellij.util.WaitFor;
-import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.TargetAWT;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.desktop.awt.wm.impl.DesktopIdeFrameImpl;
 import consulo.logging.Logger;
@@ -189,7 +190,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     @Override
     public void actionPerformed(AnActionEvent e) {
       if (pathToFile() == null) {
-        VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, getEventProject(e), null);
+        VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e == null ? null : e.getData(CommonDataKeys.PROJECT), null);
         if (selectedFile != null) {
           myState.currentScript = selectedFile.getPresentableUrl();
           myCurrentScript.setText(myState.currentScript);
@@ -231,7 +232,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-      VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, getEventProject(e), pathToFile());
+      VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e == null ? null : e.getData(CommonDataKeys.PROJECT), pathToFile());
       if (selectedFile != null) {
         myState.currentScript = selectedFile.getPresentableUrl();
         loadFrom(selectedFile);

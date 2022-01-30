@@ -28,6 +28,7 @@ import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
 import consulo.project.ui.wm.content.event.ContentManagerEvent;
 import consulo.project.ui.wm.content.event.ContentManagerListener;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.*;
 import consulo.project.ui.wm.ToolWindowContentUiType;

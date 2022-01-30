@@ -22,8 +22,8 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.vcs.actions.AbstractVcsAction;
 import com.intellij.openapi.vcs.actions.VcsContext;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;

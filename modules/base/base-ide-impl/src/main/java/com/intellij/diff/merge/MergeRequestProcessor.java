@@ -32,12 +32,13 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 import consulo.ide.base.BaseDataManager;
 import consulo.ui.annotation.RequiredUIAccess;
 

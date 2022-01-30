@@ -53,6 +53,8 @@ import com.intellij.util.Function;
 import com.intellij.util.PatternUtil;
 import consulo.application.util.function.Processor;
 import consulo.content.base.SourcesOrderRootType;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileProvider;

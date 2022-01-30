@@ -3,8 +3,8 @@ package consulo.desktop.awt.uiOld.components.fields;
 
 import com.intellij.icons.AllIcons;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.ui.UIBundle;

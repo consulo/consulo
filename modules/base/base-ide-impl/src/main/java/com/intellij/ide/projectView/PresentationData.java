@@ -23,8 +23,8 @@ import com.intellij.navigation.LocationPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.update.ComparableObject;
-import com.intellij.util.ui.update.ComparableObjectCheck;
+import consulo.component.util.ComparableObject;
+import consulo.component.util.ComparableObjectCheck;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 

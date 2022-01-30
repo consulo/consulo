@@ -16,10 +16,10 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.SaveAndSyncHandler;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.document.FileDocumentManager;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 public class SynchronizeAction extends AnAction implements DumbAware {

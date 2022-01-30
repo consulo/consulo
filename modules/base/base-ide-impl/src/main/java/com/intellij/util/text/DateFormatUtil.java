@@ -18,7 +18,7 @@ package com.intellij.util.text;
 import consulo.application.CommonBundle;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Clock;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;

@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.data.index;
 
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.Change;

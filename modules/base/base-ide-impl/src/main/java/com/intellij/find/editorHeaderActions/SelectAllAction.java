@@ -19,6 +19,7 @@ import com.intellij.find.EditorSearchSession;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.action.*;
 
 import javax.annotation.Nullable;
 import java.util.List;

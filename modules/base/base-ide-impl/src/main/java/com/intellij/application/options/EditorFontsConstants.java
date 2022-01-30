@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options;
 
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 /**
  * @author Konstantin Bulenkov

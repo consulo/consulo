@@ -4,13 +4,11 @@ package consulo.desktop.awt.ui.plaf.darcula;
 import com.intellij.icons.AllIcons;
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.scale.JBUIScale;
+import consulo.application.ui.awt.*;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.*;
-import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

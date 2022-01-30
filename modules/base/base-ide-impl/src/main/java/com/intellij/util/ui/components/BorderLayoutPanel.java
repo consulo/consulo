@@ -16,7 +16,7 @@
 package com.intellij.util.ui.components;
 
 import com.intellij.ui.components.JBPanel;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 
 import java.awt.*;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.markup;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.ui.GridBag;
 import consulo.ui.image.Image;

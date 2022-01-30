@@ -9,8 +9,13 @@ module consulo.ui.ex.api {
   requires transitive consulo.application.api;
   requires transitive consulo.ui.api;
   requires transitive consulo.datacontext.api;
+  requires transitive kava.beans;
 
   exports consulo.ui.ex;
   exports consulo.ui.ex.popup;
   exports consulo.ui.ex.popup.event;
+  exports consulo.ui.ex.action;
+  exports consulo.ui.ex.action.event;
+  exports consulo.ui.ex.action.util;
+  exports consulo.ui.ex.util;
 }

@@ -19,9 +19,11 @@ package com.intellij.ide.actions;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 

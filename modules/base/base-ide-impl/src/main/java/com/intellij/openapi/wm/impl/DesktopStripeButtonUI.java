@@ -3,11 +3,11 @@ package com.intellij.openapi.wm.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.project.ui.wm.ToolWindowAnchor;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.Gray;
+import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.JBUIScale;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

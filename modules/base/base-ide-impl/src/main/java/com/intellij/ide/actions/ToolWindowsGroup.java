@@ -16,10 +16,15 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
-import consulo.project.DumbAware;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -53,12 +58,12 @@ public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(getEventProject(e) != null);
+    e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(CommonDataKeys.PROJECT)) != null);
   }
 
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    Project project = getEventProject(e);
+    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
     if (project == null) return EMPTY_ARRAY;
     List<ActivateToolWindowAction> result = getToolWindowActions(project, false);
     return result.toArray(new AnAction[result.size()]);

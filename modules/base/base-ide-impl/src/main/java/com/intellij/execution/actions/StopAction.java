@@ -23,6 +23,9 @@ import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.SmartList;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
@@ -100,7 +103,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     List<RunContentDescriptor> stoppableDescriptors = getActiveStoppableDescriptors(dataContext);
     int stopCount = stoppableDescriptors.size();
     if (isPlaceGlobal(e)) {

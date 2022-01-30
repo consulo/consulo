@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -43,7 +44,7 @@ public class ShowAddPackagingElementPopupAction extends DumbAwareAction {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DefaultActionGroup group = new DefaultActionGroup();
-    for (PackagingElementType type : PackagingElementFactory.getInstance(e.getProject()).getAllElementTypes()) {
+    for (PackagingElementType type : PackagingElementFactory.getInstance(e.getData(CommonDataKeys.PROJECT)).getAllElementTypes()) {
       group.add(new AddNewPackagingElementAction((PackagingElementType<?>)type, myArtifactEditor));
     }
     final DataContext dataContext = e.getDataContext();

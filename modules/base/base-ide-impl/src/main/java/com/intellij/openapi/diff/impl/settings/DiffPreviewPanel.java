@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.project.Project;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.TestOnly;
 

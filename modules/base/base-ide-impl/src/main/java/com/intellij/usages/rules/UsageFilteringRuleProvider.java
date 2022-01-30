@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.rules;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import com.intellij.usages.UsageView;

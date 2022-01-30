@@ -3,9 +3,9 @@ package consulo.desktop.awt.ui.plaf.windows;
 
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
+import consulo.application.ui.awt.JBUIScale;
+import consulo.application.ui.awt.JBInsets;
+import consulo.application.ui.awt.JBUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaEditorTextFieldBorder;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaUIUtil;
 import consulo.desktop.awt.ui.plaf.darcula.TextFieldWithPopupHandlerUI;

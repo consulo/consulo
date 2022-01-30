@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.keymap.impl;
 
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.keymap.Keymap;
@@ -25,12 +24,13 @@ import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.KeyStrokeAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

@@ -5,7 +5,7 @@ package com.intellij.openapi.vfs.encoding;
 import com.intellij.ide.IdeBundle;
 import com.intellij.lang.LangBundle;
 import com.intellij.lang.PerFileMappingsEx;
-import com.intellij.openapi.actionSystem.ActionGroup;
+import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

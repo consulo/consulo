@@ -23,6 +23,9 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.OpenSourceUtil;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.actionSystem.ActionManager;
+import consulo.ui.ex.action.ActionManager;
 import consulo.project.Project;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.tabs.*;

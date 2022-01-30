@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem.impl.actionholder;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import consulo.ui.ex.action.AnAction;
 
 class SimpleActionRef<T extends AnAction> extends ActionRef<T> {
   private T myAction;

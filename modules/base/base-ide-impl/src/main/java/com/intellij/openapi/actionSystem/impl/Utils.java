@@ -9,9 +9,10 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.util.concurrent.CancellablePromise;
 
 import javax.annotation.Nonnull;

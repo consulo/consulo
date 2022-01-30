@@ -22,7 +22,7 @@ package com.intellij.codeInspection;
 
 import com.intellij.codeInspection.reference.RefElement;
 import consulo.util.dataholder.Key;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
 
 public abstract class HTMLComposer {
