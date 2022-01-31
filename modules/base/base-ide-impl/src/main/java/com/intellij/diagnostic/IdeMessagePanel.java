@@ -10,7 +10,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.project.ui.wm.IconLikeCustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;

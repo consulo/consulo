@@ -31,7 +31,7 @@ import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ArrayListSet;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.ValueGroup;

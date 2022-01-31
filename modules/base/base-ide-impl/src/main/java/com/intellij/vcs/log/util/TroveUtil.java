@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.util;
 
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;

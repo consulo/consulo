@@ -15,10 +15,12 @@
  */
 package com.intellij.util.containers;
 
-import consulo.application.util.function.Condition;
+import consulo.util.collection.JBIterator;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
 import com.intellij.util.Functions;
+import consulo.util.collection.JBIterable;
 import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;

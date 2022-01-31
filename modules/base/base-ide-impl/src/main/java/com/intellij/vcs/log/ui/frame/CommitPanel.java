@@ -17,14 +17,14 @@ package com.intellij.vcs.log.ui.frame;
 
 import consulo.application.ui.awt.*;
 import consulo.project.Project;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import com.intellij.openapi.vcs.ui.FontUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.ColorUtil;
-import com.intellij.ui.components.JBPanel;
+import consulo.application.ui.awt.ColorUtil;
+import consulo.application.ui.awt.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;

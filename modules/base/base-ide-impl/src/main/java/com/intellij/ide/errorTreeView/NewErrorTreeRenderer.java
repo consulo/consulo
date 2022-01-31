@@ -24,7 +24,7 @@ import com.intellij.ui.MultilineTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ArrayUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

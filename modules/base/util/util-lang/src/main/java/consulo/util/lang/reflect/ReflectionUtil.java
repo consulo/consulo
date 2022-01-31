@@ -36,6 +36,34 @@ public class ReflectionUtil {
     return ancestor == descendant || ancestor.isAssignableFrom(descendant);
   }
 
+  @Nullable
+  public static Class getGrandCallerClass() {
+    int stackFrameCount = 3;
+    Class callerClass = findCallerClass(stackFrameCount);
+    while (callerClass != null && callerClass.getClassLoader() == null) { // looks like a system class
+      callerClass = findCallerClass(++stackFrameCount);
+    }
+    if (callerClass == null) {
+      callerClass = findCallerClass(2);
+    }
+    return callerClass;
+  }
+
+  public static <T> T getField(@Nonnull Class objectClass, @Nullable Object object, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName) {
+    try {
+      final Field field = findAssignableField(objectClass, fieldType, fieldName);
+      return (T)field.get(object);
+    }
+    catch (NoSuchFieldException e) {
+      LOG.debug(e.getMessage(), e);
+      return null;
+    }
+    catch (IllegalAccessException e) {
+      LOG.debug(e.getMessage(), e);
+      return null;
+    }
+  }
+
   public static <T> T getStaticFieldValue(@Nonnull Class objectClass, @Nullable Class<T> fieldType, @Nonnull String fieldName) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);

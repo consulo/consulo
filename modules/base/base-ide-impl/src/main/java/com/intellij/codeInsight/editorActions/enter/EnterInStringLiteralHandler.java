@@ -31,7 +31,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

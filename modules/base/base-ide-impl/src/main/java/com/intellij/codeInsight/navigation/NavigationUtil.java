@@ -43,7 +43,7 @@ import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

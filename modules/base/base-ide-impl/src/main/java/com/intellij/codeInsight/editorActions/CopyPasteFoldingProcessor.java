@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import consulo.document.RangeMarker;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 

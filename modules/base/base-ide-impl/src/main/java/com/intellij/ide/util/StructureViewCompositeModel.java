@@ -27,7 +27,7 @@ import com.intellij.navigation.ItemPresentation;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.Editor;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 

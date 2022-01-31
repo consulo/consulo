@@ -30,7 +30,7 @@ import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.Alarm;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.ui.Rectangle2D;

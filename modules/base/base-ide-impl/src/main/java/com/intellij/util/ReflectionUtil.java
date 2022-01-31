@@ -17,11 +17,11 @@
 package com.intellij.util;
 
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.DifferenceFilter;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.JBIterable;
-import com.intellij.util.containers.JBTreeTraverser;
+import consulo.util.collection.JBIterable;
+import consulo.util.collection.JBTreeTraverser;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;

@@ -23,7 +23,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;

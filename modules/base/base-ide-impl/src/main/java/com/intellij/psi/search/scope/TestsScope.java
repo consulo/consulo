@@ -23,7 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
-import com.intellij.ui.Colored;
+import consulo.application.ui.awt.Colored;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

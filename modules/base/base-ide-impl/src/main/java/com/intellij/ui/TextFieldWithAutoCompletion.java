@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.ex.FocusChangeListener;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.image.Image;
 

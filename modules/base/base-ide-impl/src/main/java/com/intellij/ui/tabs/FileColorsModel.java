@@ -13,7 +13,7 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.psi.search.scope.packageSet.PackageSetBase;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 

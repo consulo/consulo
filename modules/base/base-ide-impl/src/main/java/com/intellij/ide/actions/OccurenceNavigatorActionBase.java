@@ -29,7 +29,7 @@ import com.intellij.pom.Navigatable;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.content.ContentManagerUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

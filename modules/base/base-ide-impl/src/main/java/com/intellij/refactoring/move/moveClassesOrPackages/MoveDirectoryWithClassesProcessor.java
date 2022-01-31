@@ -24,7 +24,7 @@ import consulo.application.CommonBundle;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

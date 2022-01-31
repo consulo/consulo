@@ -27,7 +27,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.ui.mac.foundation.Foundation;
+import consulo.application.util.mac.foundation.Foundation;
 
 import consulo.application.util.SystemInfo;
 import jakarta.inject.Singleton;

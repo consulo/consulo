@@ -24,7 +24,7 @@
  */
 package consulo.desktop.util.awt.html;
 
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;
 
 import javax.swing.event.DocumentEvent;

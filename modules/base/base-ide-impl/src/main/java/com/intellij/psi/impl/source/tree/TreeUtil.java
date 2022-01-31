@@ -21,7 +21,7 @@ import consulo.language.lexer.Lexer;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.DebugUtil;

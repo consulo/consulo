@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.application.util.function.Processor;
 
 /**

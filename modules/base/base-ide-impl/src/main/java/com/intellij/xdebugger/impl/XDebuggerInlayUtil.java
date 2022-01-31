@@ -30,7 +30,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;

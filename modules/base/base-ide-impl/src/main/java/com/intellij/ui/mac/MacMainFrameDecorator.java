@@ -24,8 +24,8 @@ import consulo.application.util.SystemInfo;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;
 import com.intellij.ui.CustomProtocolHandler;
-import com.intellij.ui.mac.foundation.Foundation;
-import com.intellij.ui.mac.foundation.ID;
+import consulo.application.util.mac.foundation.Foundation;
+import consulo.application.util.mac.foundation.ID;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.Function;
@@ -45,7 +45,7 @@ import java.util.EventListener;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.intellij.ui.mac.foundation.Foundation.invoke;
+import static consulo.application.util.mac.foundation.Foundation.invoke;
 
 /**
  * User: spLeaner

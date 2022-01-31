@@ -12,7 +12,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ThreadLocalCachedValue;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;

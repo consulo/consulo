@@ -7,7 +7,7 @@ import com.intellij.openapi.command.*;
 import consulo.document.Document;
 import consulo.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBus;

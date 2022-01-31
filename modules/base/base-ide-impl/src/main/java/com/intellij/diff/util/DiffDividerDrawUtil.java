@@ -18,9 +18,9 @@ package com.intellij.diff.util;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.util.ui.GraphicsUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.application.ui.awt.GraphicsConfig;
+import consulo.application.ui.awt.GraphicsUtil;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

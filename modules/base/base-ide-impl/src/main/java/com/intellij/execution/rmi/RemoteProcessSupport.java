@@ -31,7 +31,7 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import consulo.application.progress.ProgressManager;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;

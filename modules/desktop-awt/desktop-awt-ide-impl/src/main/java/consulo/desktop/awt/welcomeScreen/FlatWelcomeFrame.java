@@ -32,7 +32,7 @@ import com.intellij.ui.ScreenUtil;
 import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.application.impl.FrameTitleUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.start.WelcomeFrameManager;

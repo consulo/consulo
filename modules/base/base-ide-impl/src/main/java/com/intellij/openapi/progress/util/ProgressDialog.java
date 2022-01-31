@@ -19,7 +19,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Alarm;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 

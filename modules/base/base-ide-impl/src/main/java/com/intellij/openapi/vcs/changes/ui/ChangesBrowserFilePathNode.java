@@ -26,7 +26,7 @@ import com.intellij.ui.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;
 
-import static com.intellij.util.FontUtil.spaceAndThinSpace;
+import static consulo.application.ui.awt.FontUtil.spaceAndThinSpace;
 
 /**
  * @author yole

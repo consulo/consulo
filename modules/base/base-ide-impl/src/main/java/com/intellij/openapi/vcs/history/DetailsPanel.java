@@ -27,7 +27,7 @@ import consulo.application.ui.awt.JBColor;
 import com.intellij.util.ui.HtmlPanel;
 import com.intellij.util.ui.StatusText;
 import consulo.application.ui.awt.UIUtil;
-import consulo.desktop.util.awt.StringHtmlUtil;
+import consulo.application.ui.awt.StringHtmlUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

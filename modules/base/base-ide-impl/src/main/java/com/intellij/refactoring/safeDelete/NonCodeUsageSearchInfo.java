@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.safeDelete;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiElement;
 
 import java.util.Collection;

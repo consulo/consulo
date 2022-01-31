@@ -19,7 +19,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.content.library.Library;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.DependencyScope;

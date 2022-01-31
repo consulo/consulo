@@ -18,7 +18,7 @@ package com.intellij.refactoring.changeSignature;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.CheckedTreeNode;

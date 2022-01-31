@@ -14,7 +14,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.application.progress.ProgressManager;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

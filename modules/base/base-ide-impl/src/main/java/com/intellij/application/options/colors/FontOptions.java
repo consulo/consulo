@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.colors.FontPreferences;
 import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FontComboBox;
 import com.intellij.ui.FontInfoRenderer;
@@ -38,7 +38,7 @@ import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.EventDispatcher;
 import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;

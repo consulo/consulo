@@ -20,7 +20,7 @@ import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;

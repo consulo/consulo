@@ -23,7 +23,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PairFunction;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

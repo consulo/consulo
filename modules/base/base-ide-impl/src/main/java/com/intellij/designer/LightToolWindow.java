@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.application.ui.awt.SideBorder;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import consulo.application.util.SystemInfo;

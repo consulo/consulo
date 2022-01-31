@@ -23,7 +23,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.actionSystem.ex.ComboBoxButton;

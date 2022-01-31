@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.util;
 
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ScalableIcon;
+import consulo.application.ui.awt.ScalableIcon;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.RetrievableIcon;
@@ -29,7 +29,7 @@ import consulo.application.ui.awt.ImageUtil;
 import com.intellij.util.ui.JBImageIcon;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.desktop.util.awt.UIModificationTracker;
+import consulo.application.ui.awt.UIModificationTracker;
 import consulo.logging.Logger;
 import consulo.desktop.awt.ui.impl.image.DesktopLazyImageImpl;
 import consulo.ui.style.StyleManager;

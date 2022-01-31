@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.committed;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.*;

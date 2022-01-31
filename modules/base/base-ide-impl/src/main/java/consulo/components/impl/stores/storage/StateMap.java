@@ -17,7 +17,7 @@ package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.io.CharsetToolkit;
 import com.intellij.util.ArrayUtil;

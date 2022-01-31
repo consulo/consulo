@@ -24,7 +24,7 @@ import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.CollectConsumer;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import com.intellij.util.text.Matcher;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

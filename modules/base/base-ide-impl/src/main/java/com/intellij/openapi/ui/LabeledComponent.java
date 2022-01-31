@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.PanelWithAnchor;
+import consulo.application.ui.awt.PanelWithAnchor;
 import com.intellij.ui.components.JBLabel;
 import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;

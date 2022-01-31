@@ -28,7 +28,7 @@ import com.intellij.util.ui.BaseButtonBehavior;
 import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

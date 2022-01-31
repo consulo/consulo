@@ -20,7 +20,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.Function;
 import com.intellij.util.execution.ParametersListUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.ValueComponent;

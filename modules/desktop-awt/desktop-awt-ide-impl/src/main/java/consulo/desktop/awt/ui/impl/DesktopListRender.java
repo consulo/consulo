@@ -15,11 +15,11 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
+import consulo.application.ui.awt.DesktopAntialiasingTypeUtil;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.desktop.util.awt.DesktopAntialiasingType;
+import consulo.application.ui.awt.DesktopAntialiasingType;
 import consulo.ui.AntialiasingType;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TextItemRender;

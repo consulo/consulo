@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.intellij.util.FontUtil.spaceAndThinSpace;
+import static consulo.application.ui.awt.FontUtil.spaceAndThinSpace;
 
 /**
  * @author yole

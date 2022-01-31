@@ -17,8 +17,8 @@ package consulo.desktop.awt.wm.impl;
 
 import com.intellij.jna.JnaLoader;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.ui.mac.foundation.Foundation;
-import com.intellij.ui.mac.foundation.ID;
+import consulo.application.util.mac.foundation.Foundation;
+import consulo.application.util.mac.foundation.ID;
 import com.sun.jna.Callback;
 import consulo.logging.Logger;
 

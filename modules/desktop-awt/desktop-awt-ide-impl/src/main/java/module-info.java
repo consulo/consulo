@@ -1,4 +1,4 @@
-import consulo.application.ui.awt.internal.TargetAWTFacade;
+import consulo.ui.ex.awt.internal.TargetAWTFacade;
 import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
 
 /**

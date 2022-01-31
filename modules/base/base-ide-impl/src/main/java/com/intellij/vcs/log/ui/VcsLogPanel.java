@@ -17,7 +17,7 @@ package com.intellij.vcs.log.ui;
 
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
-import com.intellij.ui.components.JBPanel;
+import consulo.application.ui.awt.JBPanel;
 import com.intellij.vcs.log.impl.VcsLogManager;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

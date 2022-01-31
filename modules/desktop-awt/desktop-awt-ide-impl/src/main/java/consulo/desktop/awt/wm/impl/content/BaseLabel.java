@@ -21,7 +21,7 @@ import consulo.project.ui.wm.ToolWindowDataKeys;
 import consulo.application.ui.awt.JBColor;
 import consulo.project.ui.wm.content.Content;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 
 import javax.accessibility.AccessibleContext;

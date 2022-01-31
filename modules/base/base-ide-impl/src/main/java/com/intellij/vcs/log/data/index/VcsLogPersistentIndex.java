@@ -22,7 +22,7 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.IntInlineKeyDescriptor;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;

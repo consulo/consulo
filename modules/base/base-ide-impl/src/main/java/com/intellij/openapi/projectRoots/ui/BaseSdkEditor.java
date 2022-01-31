@@ -30,7 +30,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;

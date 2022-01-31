@@ -16,7 +16,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.BooleanGetter;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

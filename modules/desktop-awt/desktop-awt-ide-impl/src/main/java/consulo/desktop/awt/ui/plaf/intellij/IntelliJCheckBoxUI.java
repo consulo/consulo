@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.intellij;
 
 import consulo.application.ui.awt.JBUIScale;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.JBUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaCheckBoxUI;
 

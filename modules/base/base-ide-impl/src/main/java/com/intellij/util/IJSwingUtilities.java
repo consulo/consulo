@@ -24,7 +24,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.ui.JBSwingUtilities;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.util.collection.primitive.ints.IntStack;
 
 import javax.annotation.Nonnull;

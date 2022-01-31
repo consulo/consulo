@@ -14,7 +14,7 @@ import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
 import consulo.project.ui.wm.content.event.ContentManagerEvent;
 import com.intellij.ui.content.TabbedContent;
-import com.intellij.ui.paint.LinePainter2D;
+import consulo.application.ui.awt.LinePainter2D;
 import com.intellij.ui.tabs.impl.singleRow.MoreTabsIcon;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.BaseButtonBehavior;

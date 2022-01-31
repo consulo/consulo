@@ -19,7 +19,7 @@ import consulo.index.io.data.DataExternalizer;
 import consulo.language.psi.stub.*;
 import consulo.project.Project;
 import consulo.component.util.ModificationTracker;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.index.io.data.DataInputOutputUtil;

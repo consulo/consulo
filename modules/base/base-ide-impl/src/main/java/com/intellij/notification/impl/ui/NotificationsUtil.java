@@ -22,7 +22,7 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;
 import consulo.application.ui.awt.JBUIScale;
 import com.intellij.xml.util.XmlStringUtil;

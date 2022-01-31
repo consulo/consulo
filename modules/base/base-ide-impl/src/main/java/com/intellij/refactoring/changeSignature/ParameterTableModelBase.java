@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
+import consulo.application.ui.awt.ColorUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import com.intellij.psi.PsiCodeFragment;

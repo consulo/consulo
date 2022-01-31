@@ -3,6 +3,7 @@ package com.intellij.ui.mac.foundation;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
+import consulo.application.util.mac.foundation.ID;
 import consulo.application.util.registry.Registry;
 import com.sun.jna.Pointer;
 import consulo.disposer.Disposable;
@@ -19,7 +20,7 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.intellij.ui.mac.foundation.Foundation.*;
+import static consulo.application.util.mac.foundation.Foundation.*;
 
 /**
  * @author pegov

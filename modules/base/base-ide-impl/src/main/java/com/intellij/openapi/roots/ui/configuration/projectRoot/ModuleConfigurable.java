@@ -37,7 +37,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.MutableCollectionComboBoxModel;
 import consulo.application.ui.awt.JBUI;
-import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.application.ui.awt.BorderLayoutPanel;
 import consulo.disposer.Disposable;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;

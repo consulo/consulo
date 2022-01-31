@@ -36,7 +36,7 @@ import com.intellij.openapi.ui.AbstractPainter;
 import com.intellij.openapi.ui.DetailsComponent;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.ui.NullableComponent;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Conditions;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;

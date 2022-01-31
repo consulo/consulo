@@ -38,7 +38,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

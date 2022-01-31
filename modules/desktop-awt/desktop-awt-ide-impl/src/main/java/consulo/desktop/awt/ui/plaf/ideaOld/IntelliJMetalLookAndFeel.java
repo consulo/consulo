@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredSideBorder;
 import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.awt.ui.plaf.LafManagerImplUtil;
 import consulo.desktop.awt.ui.plaf.beg.*;
 import consulo.platform.base.icon.PlatformIconGroup;

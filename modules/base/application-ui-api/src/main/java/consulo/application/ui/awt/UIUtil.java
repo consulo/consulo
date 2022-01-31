@@ -15,31 +15,34 @@
  */
 package consulo.application.ui.awt;
 
-import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.mac.foundation.Foundation;
-import com.intellij.ui.paint.LinePainter2D;
-import com.intellij.ui.paint.PaintUtil;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.JBIterable;
-import com.intellij.util.containers.JBTreeTraverser;
-import com.sun.imageio.plugins.common.ImageUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ui.awt.internal.JreHiDpiUtil;
-import consulo.application.util.function.*;
+import consulo.application.ui.awt.internal.*;
+import consulo.application.ui.awt.paint.PaintUtil;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableRunnable;
+import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.registry.Registry;
 import consulo.component.util.localize.BundleBase;
-import consulo.desktop.awt.util.DarkThemeCalculator;
-import consulo.desktop.util.awt.MorphColor;
-import consulo.desktop.util.awt.StringHtmlUtil;
-import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.image.ImageKey;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.JBIterable;
+import consulo.util.collection.JBTreeTraverser;
 import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.Couple;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
@@ -79,21 +82,18 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.sql.Ref;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.regex.Pattern;
 
 /**
  * @author max
  */
-@SuppressWarnings("StaticMethodOnlyUsedInOneClass")
+@SuppressWarnings("ALL")
 public class UIUtil {
   @Deprecated
   @DeprecationInfo("StyleManager.get().getCurrentStyle().isDark(), and don't call this method inside swing paint code")
@@ -105,7 +105,7 @@ public class UIUtil {
   private static final Function<Component, Iterable<Component>> COMPONENT_CHILDREN = new Function<Component, Iterable<Component>>() {
     @Nonnull
     @Override
-    public JBIterable<Component> fun(@Nonnull Component c) {
+    public JBIterable<Component> apply(@Nonnull Component c) {
       JBIterable<Component> result;
       if (c instanceof JMenu) {
         result = JBIterable.of(((JMenu)c).getMenuComponents());
@@ -131,9 +131,9 @@ public class UIUtil {
     }
   };
 
-  private static final Function.Mono<Component> COMPONENT_PARENT = new Function.Mono<Component>() {
+  private static final Function<Component, Component> COMPONENT_PARENT = new Function<Component, Component>() {
     @Override
-    public Component fun(Component c) {
+    public Component apply(Component c) {
       return c.getParent();
     }
   };
@@ -168,24 +168,19 @@ public class UIUtil {
     }
   };
 
-  private static final AtomicNotNullLazyValue<Boolean> X_RENDER_ACTIVE = new AtomicNotNullLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      if (!SystemInfo.isXWindow) {
-        return false;
-      }
-      try {
-        final Class<?> clazz = ClassLoader.getSystemClassLoader().loadClass("sun.awt.X11GraphicsEnvironment");
-        final Method method = clazz.getMethod("isXRenderAvailable");
-        return (Boolean)method.invoke(null);
-      }
-      catch (Throwable e) {
-        return false;
-      }
+  private static final Supplier<Boolean> X_RENDER_ACTIVE = LazyValue.atomicNotNull(() -> {
+    if (!SystemInfo.isXWindow) {
+      return false;
     }
-  };
-
+    try {
+      final Class<?> clazz = ClassLoader.getSystemClassLoader().loadClass("sun.awt.X11GraphicsEnvironment");
+      final Method method = clazz.getMethod("isXRenderAvailable");
+      return (Boolean)method.invoke(null);
+    }
+    catch (Throwable e) {
+      return false;
+    }
+  });
 
   public static final String CHECKBOX_ROLLOVER_PROPERTY = "JCheckBox.rollOver.rectangle";
   public static final String CHECKBOX_PRESSED_PROPERTY = "JCheckBox.pressed.rectangle";
@@ -550,7 +545,7 @@ public class UIUtil {
    * @return the property value from the specified component or {@code null}
    */
   public static <T> T getClientProperty(Object component, @Nonnull Class<T> type) {
-    return ObjectUtils.tryCast(getClientProperty(component, (Object)type), type);
+    return ObjectUtil.tryCast(getClientProperty(component, (Object)type), type);
   }
 
   /**
@@ -904,10 +899,10 @@ public class UIUtil {
   }
 
   public static Color getTreeTextForeground() {
-    return MorphColor.of(new NotNullProducer<Color>() {
+    return MorphColor.of(new Supplier<Color>() {
       @Nonnull
       @Override
-      public Color produce() {
+      public Color get() {
         return UIManager.getColor("Tree.textForeground");
       }
     });
@@ -1266,10 +1261,9 @@ public class UIUtil {
   }
 
   public static Color getSeparatorForeground() {
-    return MorphColor.of(new NotNullProducer<Color>() {
-      @Nonnull
+    return MorphColor.of(new Supplier<Color>() {
       @Override
-      public Color produce() {
+      public Color get() {
         return UIManager.getColor("Separator.foreground");
       }
     });
@@ -1861,7 +1855,7 @@ public class UIUtil {
       drawLine(g, startX, lineY + 2, endX, lineY + 2);
     }
 
-    AppleBoldDottedPainter painter = AppleBoldDottedPainter.forColor(ObjectUtils.notNull(fgColor, oldColor));
+    AppleBoldDottedPainter painter = AppleBoldDottedPainter.forColor(ObjectUtil.notNull(fgColor, oldColor));
     painter.paint(g, startX, endX, lineY);
   }
 
@@ -2073,7 +2067,7 @@ public class UIUtil {
     final double _scale = scale;
     Function<Integer, Integer> size = new Function<Integer, Integer>() {
       @Override
-      public Integer fun(Integer size) {
+      public Integer apply(Integer size) {
         return (int)Math.round(size * _scale);
       }
     };
@@ -2082,17 +2076,17 @@ public class UIUtil {
         image = op.filter((BufferedImage)image, null);
       }
       if (invG != null && hasDstSize) {
-        dw = size.fun(dw);
-        dh = size.fun(dh);
+        dw = size.apply(dw);
+        dh = size.apply(dh);
       }
       if (srcBounds != null) {
-        int sx = size.fun(srcBounds.x);
-        int sy = size.fun(srcBounds.y);
-        int sw = srcBounds.width >= 0 ? size.fun(srcBounds.width) : size.fun(userWidth) - sx;
-        int sh = srcBounds.height >= 0 ? size.fun(srcBounds.height) : size.fun(userHeight) - sy;
+        int sx = size.apply(srcBounds.x);
+        int sy = size.apply(srcBounds.y);
+        int sw = srcBounds.width >= 0 ? size.apply(srcBounds.width) : size.apply(userWidth) - sx;
+        int sh = srcBounds.height >= 0 ? size.apply(srcBounds.height) : size.apply(userHeight) - sy;
         if (!hasDstSize) {
-          dw = size.fun(userWidth);
-          dh = size.fun(userHeight);
+          dw = size.apply(userWidth);
+          dh = size.apply(userHeight);
         }
         g.drawImage(image, dx, dy, dx + dw, dy + dh, sx, sy, sx + sw, sy + sh, observer);
       }
@@ -2127,7 +2121,7 @@ public class UIUtil {
    */
   public static void paintWithXorOnRetina(@Nonnull Dimension size, @Nonnull Graphics g, boolean useRetinaCondition, Consumer<Graphics2D> paintRoutine) {
     if (!useRetinaCondition || !isRetina() || Registry.is("ide.mac.retina.disableDrawingFix", false)) {
-      paintRoutine.consume((Graphics2D)g);
+      paintRoutine.accept((Graphics2D)g);
     }
     else {
       Rectangle rect = g.getClipBounds();
@@ -2141,7 +2135,7 @@ public class UIUtil {
       imageGraphics.translate(-rect.x, -rect.y);
       imageGraphics.setClip(rect.x, rect.y, rect.width, rect.height);
 
-      paintRoutine.consume(imageGraphics);
+      paintRoutine.accept(imageGraphics);
       image.flush();
       imageGraphics.dispose();
 
@@ -2159,7 +2153,7 @@ public class UIUtil {
    * @param g target graphics container
    */
   public static void setupComposite(@Nonnull Graphics2D g) {
-    g.setComposite(X_RENDER_ACTIVE.getValue() ? AlphaComposite.SrcOver : AlphaComposite.Src);
+    g.setComposite(X_RENDER_ACTIVE.get() ? AlphaComposite.SrcOver : AlphaComposite.Src);
   }
 
   @TestOnly
@@ -2641,7 +2635,7 @@ public class UIUtil {
   }
 
   public static <T> T invokeAndWaitIfNeeded(@Nonnull final Computable<T> computable) {
-    final Ref<T> result = Ref.create();
+    final SimpleReference<T> result = SimpleReference.create();
     invokeAndWaitIfNeeded(new Runnable() {
       @Override
       public void run() {
@@ -2656,7 +2650,7 @@ public class UIUtil {
       runnable.run();
     }
     else {
-      final Ref<Throwable> ref = new Ref<Throwable>();
+      final SimpleReference<Throwable> ref = new SimpleReference<Throwable>();
       SwingUtilities.invokeAndWait(new Runnable() {
         @Override
         public void run() {
@@ -2985,13 +2979,13 @@ public class UIUtil {
     /**
      * _position(block width, block height) => (x, y) of the block
      */
-    public void draw(@Nonnull final Graphics g, final PairFunction<Integer, Integer, Couple<Integer>> _position) {
+    public void draw(@Nonnull final Graphics g, final BiFunction<Integer, Integer, Couple<Integer>> _position) {
       final int[] maxWidth = {0};
       final int[] height = {0};
       final int[] maxBulletWidth = {0};
-      ContainerUtil.process(myLines, new Processor<Pair<String, LineInfo>>() {
+      ContainerUtil.process(myLines, new Predicate<Pair<String, LineInfo>>() {
         @Override
-        public boolean process(final Pair<String, LineInfo> pair) {
+        public boolean test(final Pair<String, LineInfo> pair) {
           final LineInfo info = pair.getSecond();
           Font old = null;
           if (info.smaller) {
@@ -3015,13 +3009,13 @@ public class UIUtil {
         }
       });
 
-      final Pair<Integer, Integer> position = _position.fun(maxWidth[0] + 20, height[0]);
+      final Pair<Integer, Integer> position = _position.apply(maxWidth[0] + 20, height[0]);
       assert position != null;
 
       final int[] yOffset = {position.getSecond()};
-      ContainerUtil.process(myLines, new Processor<Pair<String, LineInfo>>() {
+      ContainerUtil.process(myLines, new Predicate<Pair<String, LineInfo>>() {
         @Override
-        public boolean process(final Pair<String, LineInfo> pair) {
+        public boolean test(final Pair<String, LineInfo> pair) {
           final LineInfo info = pair.getSecond();
           String text = pair.first;
           String shortcut = "";
@@ -3549,7 +3543,7 @@ public class UIUtil {
   public static void useSafely(@Nonnull Graphics originGraphics, @Nonnull Consumer<? super Graphics2D> drawingConsumer) {
     Graphics2D graphics = (Graphics2D)originGraphics.create();
     try {
-      drawingConsumer.consume(graphics);
+      drawingConsumer.accept(graphics);
     }
     finally {
       graphics.dispose();

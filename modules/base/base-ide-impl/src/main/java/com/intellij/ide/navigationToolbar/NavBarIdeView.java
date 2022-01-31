@@ -7,7 +7,7 @@ import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import com.intellij.pom.Navigatable;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 
 import java.util.List;
 

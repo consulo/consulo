@@ -20,7 +20,7 @@
 package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;

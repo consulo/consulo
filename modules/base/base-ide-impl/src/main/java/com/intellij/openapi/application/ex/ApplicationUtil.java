@@ -18,7 +18,7 @@ package com.intellij.openapi.application.ex;
 import consulo.application.EdtReplacementThread;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.concurrency.Semaphore;
 import consulo.application.ui.awt.UIUtil;

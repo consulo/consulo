@@ -10,7 +10,7 @@ import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ProperTextRange;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.AbstractFileViewProvider;
 import com.intellij.psi.impl.source.PsiFileImpl;

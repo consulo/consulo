@@ -32,7 +32,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.primitive.ints.IntList;

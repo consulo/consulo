@@ -14,7 +14,7 @@
 package com.intellij.execution.process;
 
 import com.intellij.jna.JnaLoader;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import com.sun.jna.Library;

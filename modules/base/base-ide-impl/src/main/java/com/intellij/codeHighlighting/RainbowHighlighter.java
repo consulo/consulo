@@ -29,7 +29,7 @@ import com.intellij.openapi.options.SchemeMetaInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;

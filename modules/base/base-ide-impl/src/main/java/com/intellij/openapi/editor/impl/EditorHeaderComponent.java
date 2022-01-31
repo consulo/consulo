@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.awt.JBColor;
-import com.intellij.ui.border.CustomLineBorder;
+import consulo.application.ui.awt.CustomLineBorder;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -27,7 +27,7 @@ import com.intellij.openapi.ui.ShadowAction;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;

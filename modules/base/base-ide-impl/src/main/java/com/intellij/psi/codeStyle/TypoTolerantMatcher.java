@@ -2,7 +2,7 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.util.function.Processor;

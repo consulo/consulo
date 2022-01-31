@@ -76,7 +76,7 @@ import consulo.content.library.LibraryTable;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;

@@ -15,12 +15,12 @@
  */
 package com.intellij.vcs.log.ui.render;
 
-import com.intellij.openapi.ui.GraphicsConfig;
+import consulo.application.ui.awt.GraphicsConfig;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.vcs.log.VcsLogRefManager;

@@ -31,7 +31,7 @@ import com.intellij.ui.ComponentUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 
 import javax.annotation.Nonnull;

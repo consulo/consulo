@@ -22,7 +22,7 @@ import consulo.desktop.awt.uiOld.components.fields.ExtendableTextField;
 import com.intellij.ui.roots.ScalableIconComponent;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextBoxWithExtensions;

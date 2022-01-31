@@ -20,7 +20,7 @@ import com.intellij.concurrency.JobScheduler;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ScrollPaneFactory;

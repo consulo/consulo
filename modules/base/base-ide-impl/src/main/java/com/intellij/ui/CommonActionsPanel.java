@@ -22,7 +22,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.MacUIUtil;
+import consulo.application.ui.awt.MacUIUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;

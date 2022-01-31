@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
 import consulo.application.ui.awt.Gray;
-import com.intellij.util.ui.MacUIUtil;
+import consulo.application.ui.awt.MacUIUtil;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nullable;
 

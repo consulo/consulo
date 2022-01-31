@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.util.netty;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.builtInServer.impl.net.http.NettyUtil;
 import consulo.util.concurrent.AsyncResult;
 import io.netty.bootstrap.Bootstrap;

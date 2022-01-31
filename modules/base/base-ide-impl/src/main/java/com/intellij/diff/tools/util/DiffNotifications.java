@@ -20,7 +20,7 @@ import com.intellij.diff.util.TextDiffType;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.HyperlinkLabel;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

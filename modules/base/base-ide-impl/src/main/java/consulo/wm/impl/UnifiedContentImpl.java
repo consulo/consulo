@@ -21,7 +21,7 @@ import consulo.component.util.BusyObject;
 import consulo.application.util.function.Computable;
 import consulo.project.ui.wm.AlertIcon;
 import consulo.project.ui.wm.content.ContentManager;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;

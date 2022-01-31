@@ -16,8 +16,8 @@
 
 package com.intellij.patterns.compiler;
 
-import consulo.application.util.function.Condition;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.patterns.ElementPattern;

@@ -32,7 +32,7 @@ import consulo.application.progress.Task;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.CodeSmellDetector;

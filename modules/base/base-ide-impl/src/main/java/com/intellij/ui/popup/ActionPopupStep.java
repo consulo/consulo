@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.ui.popup.*;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.util.TextWithMnemonic;
 import com.intellij.util.ObjectUtils;

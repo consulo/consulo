@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;

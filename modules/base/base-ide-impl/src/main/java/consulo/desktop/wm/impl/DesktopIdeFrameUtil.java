@@ -17,7 +17,7 @@ package consulo.desktop.wm.impl;
 
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nullable;
 import java.awt.*;

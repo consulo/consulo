@@ -18,7 +18,7 @@ package com.intellij.vcs.log.ui.frame;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.util.NotNullComputable;
-import com.intellij.ui.components.JBPanel;
+import consulo.application.ui.awt.JBPanel;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.AsyncProcessIcon;
 import consulo.disposer.Disposer;

@@ -3,14 +3,14 @@ package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent.Extension;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.TestOnly;
 

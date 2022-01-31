@@ -17,11 +17,11 @@ package com.intellij.ui.treeStructure;
 
 import com.intellij.ide.util.treeView.*;
 import consulo.application.ReadAction;
-import com.intellij.openapi.ui.GraphicsConfig;
+import consulo.application.ui.awt.GraphicsConfig;
 import com.intellij.openapi.ui.Queryable;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.util.function.Condition;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 import consulo.application.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.ui.tree.TreePathBackgroundSupplier;

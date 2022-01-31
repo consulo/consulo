@@ -16,7 +16,7 @@ import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.Function;
@@ -24,7 +24,7 @@ import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static com.intellij.util.FontUtil.spaceAndThinSpace;
+import static consulo.application.ui.awt.FontUtil.spaceAndThinSpace;
 
 public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
   public static final Object IGNORED_FILES_TAG = new Tag("changes.nodetitle.ignored.files");

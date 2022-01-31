@@ -22,7 +22,7 @@ import com.intellij.diff.merge.MergeTool;
 import com.intellij.openapi.diff.DiffNavigationContext;
 import com.intellij.openapi.editor.LogicalPosition;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Couple;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;

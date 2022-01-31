@@ -20,7 +20,7 @@
 package com.intellij.util.io.zip;
 
 
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

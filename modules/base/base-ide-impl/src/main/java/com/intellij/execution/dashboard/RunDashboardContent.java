@@ -19,6 +19,7 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.dashboard.tree.DashboardGrouper;
 import com.intellij.execution.dashboard.tree.RunDashboardTreeStructure;
 import com.intellij.ide.CommonActionsManager;
+import consulo.application.ui.awt.SideBorder;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.TreeExpander;

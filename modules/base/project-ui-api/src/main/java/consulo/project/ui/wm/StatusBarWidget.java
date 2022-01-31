@@ -15,6 +15,7 @@
  */
 package consulo.project.ui.wm;
 
+import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.ListPopup;

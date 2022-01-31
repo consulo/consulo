@@ -20,7 +20,7 @@ import com.intellij.dvcs.repo.Repository;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsTaskHandler;
 import com.intellij.util.Function;

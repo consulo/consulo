@@ -17,6 +17,7 @@ package com.intellij.openapi.ui;
 
 import consulo.application.CommonBundle;
 import com.intellij.openapi.actionSystem.*;
+import consulo.application.ui.awt.SideBorder;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.MasterDetails;
@@ -28,8 +29,8 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.function.Condition;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;

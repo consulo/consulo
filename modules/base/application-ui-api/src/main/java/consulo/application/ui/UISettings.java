@@ -23,14 +23,18 @@ import com.intellij.util.xmlb.annotations.Transient;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.ui.awt.*;
 import consulo.application.ui.event.UISettingsListener;
+import consulo.application.util.SystemInfo;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.ui.AntialiasingType;
+import consulo.ui.ex.ColorBlindness;
 import consulo.util.lang.Pair;
+import consulo.util.lang.SystemProperties;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
@@ -38,8 +42,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-
-import static com.intellij.util.ui.UIUtil.isValidFont;
 
 @Singleton
 @State(name = "UISettings", storages = @Storage("ui.lnf.xml"))

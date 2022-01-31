@@ -43,7 +43,7 @@ import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.sun.jna.platform.WindowUtils;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

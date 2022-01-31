@@ -18,10 +18,10 @@ package consulo.desktop.awt.facade;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.BitUtil;
 import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.TargetAWT;
-import consulo.application.ui.awt.internal.TargetAWTFacade;
+import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.internal.TargetAWTFacade;
 import consulo.container.StartupError;
-import consulo.desktop.util.awt.MorphColor;
+import consulo.application.ui.awt.MorphColor;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.Window;
@@ -289,9 +289,9 @@ public class DesktopAwtTargetAWTImpl implements TargetAWTFacade {
   }
 
   @Override
-  public java.awt.Image toImage(@Nonnull ImageKey key, @Nullable JBUI.ScaleContext ctx) {
+  public java.awt.Image toImage(@Nonnull ImageKey key, @Nullable Object ctx) {
     DesktopImageKeyImpl desktopImageKey = (DesktopImageKeyImpl)key;
-    return desktopImageKey.toAWTImage(ctx);
+    return desktopImageKey.toAWTImage((JBUI.ScaleContext)ctx);
   }
 
   @Override

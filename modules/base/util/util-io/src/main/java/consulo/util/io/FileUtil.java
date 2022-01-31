@@ -35,6 +35,26 @@ public class FileUtil {
   private static final int MAX_FILE_IO_ATTEMPTS = 10;
   private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
 
+  @Nonnull
+  public static String getExtension(@Nonnull String fileName) {
+    int index = fileName.lastIndexOf('.');
+    if (index < 0) return "";
+    return fileName.substring(index + 1);
+  }
+
+  @Nonnull
+  public static CharSequence getExtension(@Nonnull CharSequence fileName) {
+    return getExtension(fileName, "");
+  }
+
+  @Contract("_,!null -> !null")
+  public static CharSequence getExtension(@Nonnull CharSequence fileName, @Nullable String defaultValue) {
+    int index = StringUtil.lastIndexOf(fileName, '.', 0, fileName.length());
+    if (index < 0) {
+      return defaultValue;
+    }
+    return fileName.subSequence(index + 1, fileName.length());
+  }
 
   @Nonnull
   public static List<String> loadLines(@Nonnull File file) throws IOException {

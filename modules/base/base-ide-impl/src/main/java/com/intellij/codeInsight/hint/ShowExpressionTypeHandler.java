@@ -19,7 +19,7 @@ import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.IntroduceTargetChooser;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeInsight.TargetElementUtil;

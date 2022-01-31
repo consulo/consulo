@@ -9,7 +9,7 @@ import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.EditorTextField;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
-import com.intellij.util.ui.MacUIUtil;
+import consulo.application.ui.awt.MacUIUtil;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 

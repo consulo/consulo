@@ -43,7 +43,7 @@ import consulo.language.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
-import com.intellij.ui.border.CustomLineBorder;
+import consulo.application.ui.awt.CustomLineBorder;
 import com.intellij.util.Alarm;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.LocalTimeCounter;

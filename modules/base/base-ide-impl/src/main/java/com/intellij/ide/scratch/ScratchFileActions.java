@@ -19,7 +19,7 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
@@ -30,7 +30,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.*;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.NonNls;
@@ -41,8 +41,8 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static consulo.application.util.function.Conditions.not;
-import static consulo.application.util.function.Conditions.notNull;
+import static consulo.util.lang.function.Conditions.not;
+import static consulo.util.lang.function.Conditions.notNull;
 
 /**
  * @author ignatov

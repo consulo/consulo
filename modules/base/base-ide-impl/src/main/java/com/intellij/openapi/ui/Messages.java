@@ -38,7 +38,7 @@ import com.intellij.util.Function;
 import com.intellij.util.PairFunction;
 import com.intellij.util.execution.ParametersListUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.MagicConstant;

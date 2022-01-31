@@ -5,6 +5,8 @@
 module consulo.project.ui.api {
   // todo obsolete dep
   requires java.desktop;
+
+  requires transitive consulo.application.ui.api;
   requires transitive consulo.project.api;
   requires transitive consulo.ui.ex.api;
   requires transitive kava.beans;

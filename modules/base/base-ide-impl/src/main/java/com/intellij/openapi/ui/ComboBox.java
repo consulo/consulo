@@ -21,7 +21,7 @@ import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.ui.MacUIUtil;
+import consulo.application.ui.awt.MacUIUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.awt.hacking.BasicComboBoxUIHacking;
 

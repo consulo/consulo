@@ -21,7 +21,7 @@ import consulo.language.Language;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;

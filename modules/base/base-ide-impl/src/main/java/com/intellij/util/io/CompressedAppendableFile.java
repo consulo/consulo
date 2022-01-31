@@ -2,7 +2,7 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.util.LowMemoryWatcher;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.CompressionUtil;

@@ -20,7 +20,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

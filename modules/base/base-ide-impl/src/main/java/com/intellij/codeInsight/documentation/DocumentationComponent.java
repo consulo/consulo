@@ -41,6 +41,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.util.PopupUtil;

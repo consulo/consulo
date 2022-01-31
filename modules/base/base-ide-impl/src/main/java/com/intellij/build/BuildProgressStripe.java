@@ -2,7 +2,7 @@
 package com.intellij.build;
 
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.ui.components.JBPanel;
+import consulo.application.ui.awt.JBPanel;
 import com.intellij.ui.components.ProgressBarLoadingDecorator;
 import consulo.disposer.Disposable;
 

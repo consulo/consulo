@@ -46,7 +46,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.PathMacroManager;
 import consulo.application.progress.*;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.document.Document;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import consulo.language.psi.*;

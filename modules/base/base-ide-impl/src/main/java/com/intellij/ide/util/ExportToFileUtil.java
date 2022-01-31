@@ -37,7 +37,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.WindowManager;
 import consulo.util.lang.SystemProperties;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 

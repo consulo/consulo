@@ -29,7 +29,7 @@ import consulo.project.ui.wm.StatusBar;
 import com.intellij.ui.plaf.gtk.GtkMenuUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;

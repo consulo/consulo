@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import consulo.application.ui.awt.ColorUtil;
+
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.font.FontRenderContext;

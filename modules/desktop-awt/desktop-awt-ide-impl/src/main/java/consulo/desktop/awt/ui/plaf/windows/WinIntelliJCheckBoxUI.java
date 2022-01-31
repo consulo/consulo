@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.windows;
 
 import consulo.application.ui.awt.JBUIScale;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

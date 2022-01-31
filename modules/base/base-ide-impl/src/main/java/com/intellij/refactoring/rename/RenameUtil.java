@@ -18,7 +18,7 @@ package com.intellij.refactoring.rename;
 
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.ide.actions.CopyReferenceAction;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.language.Language;
 import com.intellij.lang.LanguageNamesValidation;
 import consulo.application.ApplicationManager;

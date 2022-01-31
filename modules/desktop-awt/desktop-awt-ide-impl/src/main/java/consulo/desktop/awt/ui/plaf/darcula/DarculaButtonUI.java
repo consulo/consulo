@@ -8,7 +8,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.*;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.ui.*;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

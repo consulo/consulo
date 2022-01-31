@@ -23,7 +23,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
 import consulo.application.ui.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.NonNls;
 

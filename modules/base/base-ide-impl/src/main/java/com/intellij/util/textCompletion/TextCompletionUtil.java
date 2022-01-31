@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.ex.FocusChangeListener;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.DumbService;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
 import com.intellij.ui.LanguageTextField;

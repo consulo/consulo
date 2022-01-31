@@ -26,7 +26,7 @@ import com.intellij.openapi.help.HelpManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableViewSpeedSearch;
 import com.intellij.ui.table.TableView;

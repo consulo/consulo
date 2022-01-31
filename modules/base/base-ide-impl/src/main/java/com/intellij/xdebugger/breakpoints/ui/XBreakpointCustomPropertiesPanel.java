@@ -18,7 +18,7 @@ package com.intellij.xdebugger.breakpoints.ui;
 import consulo.disposer.Disposable;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;

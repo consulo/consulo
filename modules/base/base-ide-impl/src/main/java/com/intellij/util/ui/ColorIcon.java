@@ -15,6 +15,7 @@
  */
 package com.intellij.util.ui;
 
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.Gray;
 import consulo.annotation.DeprecationInfo;
 

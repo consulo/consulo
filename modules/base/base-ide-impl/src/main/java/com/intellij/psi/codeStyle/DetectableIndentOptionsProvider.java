@@ -27,7 +27,7 @@ import consulo.language.psi.PsiCompiledFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

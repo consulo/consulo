@@ -41,6 +41,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.application.ui.awt.SideBorder;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;

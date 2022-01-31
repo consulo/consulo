@@ -6,7 +6,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.application.util.function.ThrowableRunnable;
 import consulo.disposer.Disposer;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.util.io.FileAttributes;

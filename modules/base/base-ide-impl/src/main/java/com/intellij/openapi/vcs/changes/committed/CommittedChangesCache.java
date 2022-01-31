@@ -28,7 +28,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;

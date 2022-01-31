@@ -40,7 +40,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;

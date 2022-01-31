@@ -2,7 +2,7 @@ package com.intellij.vcs.log.ui;
 
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;

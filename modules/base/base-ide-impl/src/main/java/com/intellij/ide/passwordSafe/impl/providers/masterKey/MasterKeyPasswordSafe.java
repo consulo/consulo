@@ -24,7 +24,7 @@ import com.intellij.ide.passwordSafe.impl.providers.masterKey.windows.WindowsCry
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.application.util.SystemInfo;
 import javax.annotation.Nullable;
 

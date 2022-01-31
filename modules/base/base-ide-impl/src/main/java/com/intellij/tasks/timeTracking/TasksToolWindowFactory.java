@@ -2,7 +2,7 @@ package com.intellij.tasks.timeTracking;
 
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowFactory;

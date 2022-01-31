@@ -40,7 +40,7 @@ import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.border.CustomLineBorder;
+import consulo.application.ui.awt.CustomLineBorder;
 import com.intellij.ui.roots.ToolbarPanel;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;

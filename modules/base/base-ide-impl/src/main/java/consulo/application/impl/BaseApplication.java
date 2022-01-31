@@ -50,7 +50,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import com.intellij.util.ui.EDT;
+import consulo.application.ui.awt.internal.EDT;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessToken;
 import consulo.application.Application;

@@ -15,9 +15,8 @@
  */
 package consulo.project.ui.wm;
 
-import consulo.awt.TargetAWT;
-import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.Component;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

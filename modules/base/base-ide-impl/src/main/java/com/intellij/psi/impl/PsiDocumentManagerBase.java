@@ -30,6 +30,7 @@ import consulo.language.content.FileIndexFacade;
 import com.intellij.openapi.util.*;
 import consulo.document.util.TextRange;
 import consulo.util.lang.SystemProperties;
+import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.impl.FileManager;

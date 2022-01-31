@@ -24,6 +24,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.WriteExternalException;
 import consulo.logging.Logger;
+import consulo.util.lang.ref.Ref;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

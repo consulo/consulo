@@ -3,9 +3,9 @@ package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.ui.ComponentUtil;
 import consulo.application.ui.awt.JBUIScale;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.JBInsets;
-import com.intellij.util.ui.MacUIUtil;
+import consulo.application.ui.awt.MacUIUtil;
 import com.intellij.util.ui.ThreeStateCheckBox;
 
 import javax.annotation.Nullable;

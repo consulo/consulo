@@ -20,7 +20,7 @@ import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.usageView.UsageInfo;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;

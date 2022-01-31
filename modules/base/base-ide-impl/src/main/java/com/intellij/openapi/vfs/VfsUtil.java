@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;

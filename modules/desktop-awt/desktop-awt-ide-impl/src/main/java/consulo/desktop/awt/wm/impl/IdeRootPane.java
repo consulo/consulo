@@ -37,7 +37,7 @@ import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
-import com.intellij.ui.components.JBPanel;
+import consulo.application.ui.awt.JBPanel;
 import consulo.application.ui.awt.JBUI;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.disposer.Disposable;

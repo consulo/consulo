@@ -2,6 +2,7 @@
 package com.intellij.ide;
 
 import com.intellij.codeInsight.hint.HintUtil;
+import consulo.application.ui.awt.Html;
 import consulo.application.ui.awt.*;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -13,11 +14,12 @@ import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.application.util.registry.RegistryValueListener;

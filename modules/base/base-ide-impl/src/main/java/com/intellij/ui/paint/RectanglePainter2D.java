@@ -2,8 +2,9 @@
 package com.intellij.ui.paint;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.paint.LinePainter2D.Align;
-import com.intellij.ui.paint.LinePainter2D.StrokeType;
+import consulo.application.ui.awt.LinePainter2D;
+import consulo.application.ui.awt.LinePainter2D.Align;
+import consulo.application.ui.awt.LinePainter2D.StrokeType;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.JBUI.ScaleContext;
 import consulo.application.ui.awt.paint.PaintUtil;

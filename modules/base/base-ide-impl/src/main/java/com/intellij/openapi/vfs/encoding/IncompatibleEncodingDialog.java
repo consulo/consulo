@@ -4,12 +4,12 @@ package com.intellij.openapi.vfs.encoding;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

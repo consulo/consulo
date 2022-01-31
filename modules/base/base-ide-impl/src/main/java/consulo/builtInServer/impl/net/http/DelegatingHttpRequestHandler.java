@@ -3,7 +3,7 @@ package consulo.builtInServer.impl.net.http;
 import consulo.application.Application;
 import com.intellij.openapi.util.ThrowableNotNullFunction;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.builtInServer.http.HttpRequestHandler;
 import consulo.builtInServer.http.Responses;
 import consulo.builtInServer.http.util.HttpRequestUtil;

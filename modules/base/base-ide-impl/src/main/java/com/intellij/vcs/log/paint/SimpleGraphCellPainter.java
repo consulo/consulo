@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.paint;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.containers.ContainerUtil;

@@ -25,7 +25,7 @@ import consulo.language.ast.IFileElementType;
 import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.TreeTraversal;
+import consulo.util.collection.TreeTraversal;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

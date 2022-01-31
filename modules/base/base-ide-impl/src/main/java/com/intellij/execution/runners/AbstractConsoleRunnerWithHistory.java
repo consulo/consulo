@@ -29,7 +29,7 @@ import com.intellij.ide.CommonActionsManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import consulo.application.ui.awt.JBColor;
-import com.intellij.ui.SideBorder;
+import consulo.application.ui.awt.SideBorder;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.action.ActionManager;

@@ -4,7 +4,7 @@ package com.intellij.openapi.ui;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.util.MathUtil;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.JBUI;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;

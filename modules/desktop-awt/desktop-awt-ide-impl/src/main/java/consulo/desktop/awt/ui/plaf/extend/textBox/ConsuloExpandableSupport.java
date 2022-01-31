@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.extend.textBox;
 
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import consulo.desktop.awt.uiOld.Expandable;
 import com.intellij.ui.ScrollPaneFactory;
 import consulo.desktop.awt.uiOld.components.fields.ExpandableSupport;

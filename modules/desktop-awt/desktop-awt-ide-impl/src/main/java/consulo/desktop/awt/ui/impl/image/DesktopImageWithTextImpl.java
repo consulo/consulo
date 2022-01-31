@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import consulo.application.ui.awt.JBColor;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.JBFont;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

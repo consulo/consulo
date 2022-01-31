@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.data;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.vcs.log.CommitId;
 import com.intellij.vcs.log.Hash;

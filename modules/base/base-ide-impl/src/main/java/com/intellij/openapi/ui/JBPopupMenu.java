@@ -2,13 +2,13 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScreenUtil;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import com.intellij.util.ui.TimerUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

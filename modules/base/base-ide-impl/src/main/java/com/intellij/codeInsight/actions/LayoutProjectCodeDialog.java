@@ -27,7 +27,7 @@ import com.intellij.openapi.help.HelpManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.language.psi.scope.SearchScope;
 import com.intellij.ui.IdeBorderFactory;

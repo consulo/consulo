@@ -35,7 +35,7 @@ import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.pom.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

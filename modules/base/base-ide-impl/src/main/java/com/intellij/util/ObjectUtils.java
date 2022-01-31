@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.util.containers.Convertor;
 import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.Contract;

@@ -26,7 +26,7 @@ import consulo.application.util.function.Processor;
 import com.intellij.util.ReflectionUtil;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ClassMap;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;

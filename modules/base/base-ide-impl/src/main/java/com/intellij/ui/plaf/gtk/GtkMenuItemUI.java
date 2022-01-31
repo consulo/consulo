@@ -16,7 +16,7 @@
 package com.intellij.ui.plaf.gtk;
 
 import com.intellij.openapi.actionSystem.impl.ActionMenuItem;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;

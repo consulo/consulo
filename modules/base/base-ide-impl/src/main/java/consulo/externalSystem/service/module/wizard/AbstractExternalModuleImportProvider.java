@@ -44,7 +44,7 @@ import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.project.startup.StartupManager;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

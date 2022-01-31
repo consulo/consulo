@@ -6,7 +6,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.ComponentUtil;
-import com.intellij.ui.mac.foundation.ID;
+import consulo.application.util.mac.foundation.ID;
 import com.intellij.util.Alarm;
 import com.intellij.util.NotNullProducer;
 import consulo.application.ui.awt.UIUtil;
@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.intellij.ui.mac.foundation.Foundation.*;
+import static consulo.application.util.mac.foundation.Foundation.*;
 
 final class MacScrollBarUI extends DefaultScrollBarUI {
   private static final List<Reference<MacScrollBarUI>> UI = new ArrayList<>();

@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.application.ui.awt.ColorUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -25,7 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.PairFunction;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.application.ui.awt.EmptyIcon;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

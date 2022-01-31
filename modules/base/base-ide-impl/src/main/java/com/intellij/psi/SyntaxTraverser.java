@@ -1,18 +1,17 @@
 package com.intellij.psi;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.LighterASTTokenNode;
 import consulo.language.parser.PsiBuilder;
-import com.intellij.openapi.util.*;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IFileElementType;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FilteredTraverserBase;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.FilteredTraverserBase;
+import consulo.util.collection.JBIterable;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.document.util.TextRange;
 import consulo.language.ast.TokenType;
@@ -21,6 +20,7 @@ import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ThreadLocalCachedValue;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import static consulo.application.util.function.Conditions.compose;
+import static consulo.util.lang.function.Conditions.compose;
 
 /**
  * @author gregsh

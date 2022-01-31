@@ -6,7 +6,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

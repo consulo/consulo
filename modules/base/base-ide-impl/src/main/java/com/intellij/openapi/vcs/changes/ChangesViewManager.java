@@ -28,6 +28,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.SideBorder;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.document.FileDocumentManager;

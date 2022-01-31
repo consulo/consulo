@@ -3,13 +3,13 @@ package consulo.desktop.awt.ui.plaf.beg;
 
 import consulo.application.ui.UISettings;
 import consulo.desktop.awt.ui.plaf.intellij.IdeaPopupMenuUI;
-import com.intellij.openapi.ui.GraphicsConfig;
+import consulo.application.ui.awt.GraphicsConfig;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;
-import com.intellij.ui.paint.LinePainter2D;
+import consulo.application.ui.awt.LinePainter2D;
 import consulo.application.ui.awt.JBUIScale;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.Nls;

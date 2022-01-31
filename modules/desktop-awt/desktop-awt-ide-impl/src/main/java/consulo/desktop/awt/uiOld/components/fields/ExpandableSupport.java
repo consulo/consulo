@@ -11,7 +11,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent.Extension;
 import com.intellij.util.Function;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

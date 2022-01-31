@@ -9,7 +9,7 @@ import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.JBUI.ScaleContext;
 import consulo.application.ui.awt.JBUI.ScaleContextAware;
 import consulo.application.ui.awt.JBUI.ScaleContextSupport;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

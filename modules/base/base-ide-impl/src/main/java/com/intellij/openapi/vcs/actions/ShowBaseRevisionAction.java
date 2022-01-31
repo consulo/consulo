@@ -32,7 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

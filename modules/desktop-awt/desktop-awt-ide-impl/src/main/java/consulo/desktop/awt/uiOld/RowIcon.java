@@ -16,7 +16,7 @@
 
 package consulo.desktop.awt.uiOld;
 
-import com.intellij.openapi.util.ScalableIcon;
+import consulo.application.ui.awt.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBUI;

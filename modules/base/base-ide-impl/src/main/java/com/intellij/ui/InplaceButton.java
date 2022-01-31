@@ -19,10 +19,10 @@ import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.openapi.util.Pass;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.BaseButtonBehavior;
-import com.intellij.util.ui.CenteredIcon;
+import consulo.application.ui.awt.CenteredIcon;
 import com.intellij.util.ui.TimedDeadzone;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.accessibility.*;

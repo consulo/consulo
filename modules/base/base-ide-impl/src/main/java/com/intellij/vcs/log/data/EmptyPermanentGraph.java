@@ -15,8 +15,8 @@
  */
 package com.intellij.vcs.log.data;
 
-import consulo.application.util.function.Condition;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 import com.intellij.vcs.log.graph.GraphCommit;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.graph.VisibleGraph;

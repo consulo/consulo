@@ -11,7 +11,7 @@ import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.ui.speedSearch.ListWithFilter;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.disposer.Disposable;

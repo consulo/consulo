@@ -28,7 +28,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.application.util.function.Computable;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;

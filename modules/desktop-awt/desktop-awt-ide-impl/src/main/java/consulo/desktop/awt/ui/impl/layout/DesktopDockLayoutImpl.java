@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;

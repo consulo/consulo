@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl.taskBar;
 
 import consulo.application.ui.awt.ImageUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;

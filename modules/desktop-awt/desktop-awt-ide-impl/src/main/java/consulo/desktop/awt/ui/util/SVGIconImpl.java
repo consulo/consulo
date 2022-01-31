@@ -36,8 +36,8 @@
 
 package consulo.desktop.awt.ui.util;
 
-import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsConfig;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.ImageUtil;
 import consulo.application.ui.awt.JBUI;
 import com.kitfox.svg.SVGCache;

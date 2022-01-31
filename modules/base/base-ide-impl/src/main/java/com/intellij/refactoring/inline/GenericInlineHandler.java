@@ -26,7 +26,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;

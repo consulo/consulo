@@ -19,7 +19,7 @@ import com.intellij.ui.SearchTextField;
 import consulo.ui.ex.RelativePoint;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.TextBox;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

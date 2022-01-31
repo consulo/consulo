@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.Button;
 import consulo.ui.ComboBox;

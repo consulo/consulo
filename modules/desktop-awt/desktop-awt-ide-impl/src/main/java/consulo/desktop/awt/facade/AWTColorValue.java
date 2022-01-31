@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.facade;
 
-import consulo.desktop.util.awt.UIModificationTracker;
+import consulo.application.ui.awt.UIModificationTracker;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 

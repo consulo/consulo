@@ -2,7 +2,7 @@
 package com.intellij.psi.stubs;
 
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.*;

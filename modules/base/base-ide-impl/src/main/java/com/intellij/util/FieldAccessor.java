@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

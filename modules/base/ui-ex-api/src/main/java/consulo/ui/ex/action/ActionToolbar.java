@@ -16,15 +16,12 @@
 package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
 import consulo.dataContext.DataContext;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.image.Image;
 import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;

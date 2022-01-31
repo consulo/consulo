@@ -15,12 +15,11 @@
  */
 package consulo.desktop.swt.ui.impl;
 
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.internal.TargetAWTFacade;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.ui.ex.awt.internal.TargetAWTFacade;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 
@@ -149,7 +148,7 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
   }
 
   @Override
-  public java.awt.Image toImage(@Nonnull ImageKey key, JBUI.ScaleContext ctx) {
+  public java.awt.Image toImage(@Nonnull ImageKey key, Object ctx) {
     throw new UnsupportedOperationException();
   }
 }

@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.vcs.changes.RefreshablePanel;
 import com.intellij.ui.components.JBLabel;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

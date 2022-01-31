@@ -5,7 +5,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.navigationToolbar.NavBarItem;
 import com.intellij.ide.navigationToolbar.NavBarPanel;
 import consulo.application.ui.UISettings;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;
 import consulo.application.ui.awt.paint.PaintUtil;
@@ -13,7 +13,7 @@ import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

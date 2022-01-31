@@ -134,8 +134,6 @@
     <extensionPoint name="undoProvider" interface="com.intellij.openapi.command.impl.UndoProvider"/>
     <extensionPoint name="projectUndoProvider" interface="com.intellij.openapi.command.impl.UndoProvider" area="PROJECT"/>
 
-    <extensionPoint name="cachedValuesFactory" interface="com.intellij.util.CachedValuesFactory" area="PROJECT"/>
-
     <extensionPoint name="syntaxHighlighter"
                     beanClass="consulo.component.extension.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighter"/>
@@ -193,7 +191,7 @@
 
     <extensionPoint name="toolWindow" beanClass="com.intellij.openapi.wm.ToolWindowEP">
       <with attribute="factoryClass" implements="consulo.project.ui.wm.ToolWindowFactory"/>
-      <with attribute="conditionClass" implements="consulo.application.util.function.Condition"/>
+      <with attribute="conditionClass" implements="consulo.util.lang.function.Condition"/>
     </extensionPoint>
 
     <extensionPoint name="productivityFeaturesProvider" interface="com.intellij.featureStatistics.ProductivityFeaturesProvider"/>
@@ -397,7 +395,7 @@
     <extensionPoint name="extendWordSelectionHandler"
                     interface="com.intellij.codeInsight.editorActions.ExtendWordSelectionHandler"/>
     <extensionPoint name="basicWordSelectionFilter"
-                    interface="consulo.application.util.function.Condition"/>
+                    interface="consulo.util.lang.function.Condition"/>
     <extensionPoint name="typedHandler"
                     interface="com.intellij.codeInsight.editorActions.TypedHandlerDelegate"/>
     <extensionPoint name="selectionDequotingFilter"
@@ -845,7 +843,7 @@
 
     <extensionPoint name="highlightRangeExtension" interface="com.intellij.codeInsight.daemon.impl.HighlightRangeExtension"/>
 
-    <extensionPoint name="elementsToHighlightFilter" interface="consulo.application.util.function.Condition"/>
+    <extensionPoint name="elementsToHighlightFilter" interface="consulo.util.lang.function.Condition"/>
 
     <extensionPoint name="sdkType" interface="consulo.content.bundle.SdkType"/>
     <extensionPoint name="predefinedBundlesProvider" interface="consulo.content.bundle.PredefinedBundlesProvider"/>
@@ -891,7 +889,7 @@
     <extensionPoint name="moveFileHandler" interface="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler"/>
     <extensionPoint name="automaticRenamerFactory" interface="com.intellij.refactoring.rename.naming.AutomaticRenamerFactory"/>
     <extensionPoint name="nameSuggestionProvider" interface="com.intellij.refactoring.rename.NameSuggestionProvider"/>
-    <extensionPoint name="vetoRenameCondition" interface="consulo.application.util.function.Condition"/>
+    <extensionPoint name="vetoRenameCondition" interface="consulo.util.lang.function.Condition"/>
 
     <extensionPoint name="rename.inplace.resolveSnapshotProvider"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -1077,7 +1075,7 @@
                     interface="com.intellij.refactoring.listeners.RefactoringElementListenerProvider"
                     area="PROJECT"/>
 
-    <extensionPoint name="problemFileHighlightFilter" interface="consulo.application.util.function.Condition" area="PROJECT"/>
+    <extensionPoint name="problemFileHighlightFilter" interface="consulo.util.lang.function.Condition" area="PROJECT"/>
 
     <extensionPoint name="problemHighlightFilter" interface="com.intellij.codeInsight.daemon.ProblemHighlightFilter"/>
 

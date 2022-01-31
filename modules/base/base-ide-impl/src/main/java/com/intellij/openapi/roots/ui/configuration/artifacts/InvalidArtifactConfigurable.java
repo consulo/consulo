@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.ui.ex.MultiLineLabel;
 import com.intellij.packaging.impl.artifacts.InvalidArtifact;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.swing.*;
 

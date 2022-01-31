@@ -6,7 +6,7 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.ui.SimpleListCellRenderer;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

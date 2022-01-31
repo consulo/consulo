@@ -9,7 +9,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.MessageType;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;

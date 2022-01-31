@@ -17,7 +17,7 @@ package com.intellij.execution.console;
 
 import com.intellij.execution.process.BaseOSProcessHandler;
 import com.intellij.execution.process.ProcessHandler;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

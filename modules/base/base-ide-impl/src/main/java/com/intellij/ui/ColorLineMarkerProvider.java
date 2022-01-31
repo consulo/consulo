@@ -29,7 +29,7 @@ import com.intellij.util.FunctionUtil;
 import consulo.language.editor.ElementColorProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.color.ColorValue;

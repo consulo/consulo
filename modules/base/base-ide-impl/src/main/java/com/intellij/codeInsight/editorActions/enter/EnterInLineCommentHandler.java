@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;

@@ -25,7 +25,7 @@ import consulo.ui.ex.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.project.ui.wm.AlertIcon;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SoftReference;
 import kava.beans.PropertyChangeSupport;

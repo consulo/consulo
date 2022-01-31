@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;

@@ -28,7 +28,7 @@ import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTr
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.ImageEffects;

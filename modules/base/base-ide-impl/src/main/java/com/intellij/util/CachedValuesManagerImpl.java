@@ -2,11 +2,10 @@
 package com.intellij.util;
 
 import consulo.language.ast.ASTNode;
-import consulo.language.psi.util.*;
-import consulo.project.Project;
-import com.intellij.openapi.util.Getter;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.*;
+import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
@@ -14,11 +13,12 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Supplier;
 
 /**
  * @author ven
@@ -34,9 +34,9 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
   private final CachedValuesFactory myFactory;
 
   @Inject
-  public CachedValuesManagerImpl(Project project, CachedValuesFactory factory) {
+  public CachedValuesManagerImpl(@Nonnull Project project, @Nonnull CachedValuesFactory factory) {
     myProject = project;
-    myFactory = factory == null ? new DefaultCachedValuesFactory(project) : factory;
+    myFactory = factory;
   }
 
   @Override
@@ -58,7 +58,7 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
   <T> T getCachedValue(@Nonnull UserDataHolder dataHolder, @Nonnull Key<CachedValue<T>> key, @Nonnull CachedValueProvider<T> provider, boolean trackValue) {
     CachedValue<T> value = dataHolder.getUserData(key);
     if (value instanceof CachedValueBase && ((CachedValueBase<?>)value).isFromMyProject(myProject)) {
-      Getter<T> data = value.getUpToDateOrNull();
+      Supplier<T> data = value.getUpToDateOrNull();
       if (data != null) {
         return data.get();
       }

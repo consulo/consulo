@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;

@@ -1,7 +1,7 @@
 package com.intellij.util.net.ssl;
 
 import com.intellij.icons.AllIcons;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ObjectLongHashMap;
-import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.application.ui.awt.BorderLayoutPanel;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XSourcePosition;

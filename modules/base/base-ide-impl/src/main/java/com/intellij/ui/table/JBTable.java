@@ -16,6 +16,7 @@
 package com.intellij.ui.table;
 
 import consulo.application.ApplicationManager;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.project.util.ExpirableRunnable;
 import consulo.project.ui.IdeFocusManager;

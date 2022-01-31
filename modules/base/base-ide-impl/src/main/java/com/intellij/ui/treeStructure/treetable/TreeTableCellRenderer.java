@@ -16,7 +16,7 @@
 package com.intellij.ui.treeStructure.treetable;
 
 import com.intellij.ui.components.panels.OpaquePanel;
-import com.intellij.util.ui.ClientPropertyHolder;
+import consulo.application.ui.awt.ClientPropertyHolder;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
 

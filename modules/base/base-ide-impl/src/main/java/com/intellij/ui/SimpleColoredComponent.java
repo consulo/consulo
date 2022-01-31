@@ -25,6 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.*;
 import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;

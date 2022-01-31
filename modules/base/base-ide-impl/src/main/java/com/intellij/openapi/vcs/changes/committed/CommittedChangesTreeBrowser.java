@@ -6,6 +6,7 @@ import com.intellij.ide.TreeExpander;
 import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
 import com.intellij.ide.util.treeView.TreeState;
+import consulo.application.ui.awt.SideBorder;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;

@@ -39,7 +39,7 @@ import consulo.language.ast.IElementType;
 import com.intellij.util.Alarm;
 import com.intellij.util.EventDispatcher;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import org.intellij.lang.annotations.JdkConstants;

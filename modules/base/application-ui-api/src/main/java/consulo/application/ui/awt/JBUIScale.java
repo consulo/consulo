@@ -15,17 +15,14 @@
  */
 package consulo.application.ui.awt;
 
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.JreHiDpiUtil;
-import com.intellij.util.LazyInitializer;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.SystemProperties;
-import com.intellij.util.ui.DetectRetinaKit;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.awt.internal.DetectRetinaKit;
 import consulo.application.ui.awt.internal.JreHiDpiUtil;
+import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
+import consulo.util.lang.SystemProperties;
+import consulo.util.lang.lazy.LazyValue;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -33,12 +30,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Supplier;
 
 /**
  * part of JBUI
  */
 public class JBUIScale {
-  private static AtomicNotNullLazyValue<Pair<String, Integer>> ourSystemFontValue = AtomicNotNullLazyValue.createValue(JBUIScale::calcSystemFontData);
+  private static Supplier<Pair<String, Integer>> ourSystemFontValue = LazyValue.atomicNotNull(JBUIScale::calcSystemFontData);
   private static final float DISCRETE_SCALE_RESOLUTION = 0.25f;
   private static final PropertyChangeSupport PCS = new PropertyChangeSupport(new JBUIScale());
   public static final String USER_SCALE_FACTOR_PROPERTY = "JBUIScale.userScaleFactor";
@@ -105,78 +103,84 @@ public class JBUIScale {
   /**
    * The system scale factor, corresponding to the default monitor device.
    */
-  private static final LazyInitializer.NotNullValue<Float> SYSTEM_SCALE_FACTOR = new LazyInitializer.NotNullValue<Float>() {
-    @Nonnull
-    @Override
-    public Float initialize() {
-      if (!SystemProperties.getBooleanProperty("hidpi", true)) {
-        return 1f;
-      }
-      if (JreHiDpiUtil.isJreHiDPIEnabled()) {
-        GraphicsDevice gd = null;
-        try {
-          gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        }
-        catch (HeadlessException ignore) {
-        }
-        if (gd != null && gd.getDefaultConfiguration() != null) {
-          return sysScale(gd.getDefaultConfiguration());
-        }
-        return 1f;
-      }
-      Pair<String, Integer> fdata = JBUIScale.getSystemFontData();
+  private static final Supplier<Float> SYSTEM_SCALE_FACTOR = LazyValue.notNull(() -> {
+    float scale = getSystemScaleFactor();
+    log().info("System scale factor: " + scale + " (" + (JreHiDpiUtil.isJreHiDPIEnabled() ? "JRE" : "IDE") + "-managed HiDPI)");
+    return scale;
+  });
 
-      int size = fdata.getSecond();
-      return getFontScale(size);
+  private static float getSystemScaleFactor() {
+    if (!SystemProperties.getBooleanProperty("hidpi", true)) {
+      return 1f;
     }
+    if (JreHiDpiUtil.isJreHiDPIEnabled()) {
+      GraphicsDevice gd = null;
+      try {
+        gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+      }
+      catch (HeadlessException ignore) {
+      }
+      if (gd != null && gd.getDefaultConfiguration() != null) {
+        return sysScale(gd.getDefaultConfiguration());
+      }
+      return 1f;
+    }
+    Pair<String, Integer> fdata = JBUIScale.getSystemFontData();
 
-    @Override
-    protected void onInitialized(@Nonnull Float scale) {
-      log().info("System scale factor: " + scale + " (" + (JreHiDpiUtil.isJreHiDPIEnabled() ? "JRE" : "IDE") + "-managed HiDPI)");
-    }
-  };
+    int size = fdata.getSecond();
+    return getFontScale(size);
+  }
 
   /**
    * For internal usage.
    */
-  public static final LazyInitializer.NullableValue<Float> DEBUG_USER_SCALE_FACTOR = new LazyInitializer.NullableValue<Float>() {
-    @Nullable
-    @Override
-    public Float initialize() {
-      String prop = System.getProperty("ide.ui.scale");
-      if (prop != null) {
-        try {
-          return Float.parseFloat(prop);
-        }
-        catch (NumberFormatException e) {
-          log().error("ide.ui.scale system property is not a float value: " + prop);
-        }
+  public static final Supplier<Float> DEBUG_USER_SCALE_FACTOR = LazyValue.nullable(() -> {
+    Float factor = getDebugUserScaleFactor();
+    if (factor != null) setUserScaleFactor(ObjectUtil.notNull(factor));
+    return factor;
+  });
+
+  private static Float getDebugUserScaleFactor() {
+    String prop = System.getProperty("ide.ui.scale");
+    if (prop != null) {
+      try {
+        return Float.parseFloat(prop);
       }
-      else if (Boolean.valueOf("ide.ui.scale.override")) {
-        return 1f;
+      catch (NumberFormatException e) {
+        log().error("ide.ui.scale system property is not a float value: " + prop);
       }
-      return null;
+    }
+    else if (Boolean.valueOf("ide.ui.scale.override")) {
+      return 1f;
+    }
+    return null;
+  }
+
+  private static class UserScaleFactor {
+    private static Float ourValue;
+
+    static float get() {
+      if (ourValue == null) {
+        ourValue = getUserScaleFactor();
+      }
+
+      return ourValue;
     }
 
-    @Override
-    protected void onInitialized(@Nullable Float scale) {
-      if (isNotNull()) setUserScaleFactor(ObjectUtil.notNull(scale));
+    static void set(float value) {
+      ourValue = value;
     }
-  };
-
+  }
   /**
    * The user scale factor, see {@link ScaleType#USR_SCALE}.
    */
-  /**
-   * The user scale factor, see {@link ScaleType#USR_SCALE}.
-   */
-  private static final LazyInitializer.MutableNotNullValue<Float> userScaleFactor = new LazyInitializer.MutableNotNullValue<>(() -> {
+  private static float getUserScaleFactor() {
     Float factor = DEBUG_USER_SCALE_FACTOR.get();
     if (factor != null) {
       return factor;
     }
     return computeUserScaleFactor(JreHiDpiUtil.isJreHiDPIEnabled() ? 1f : SYSTEM_SCALE_FACTOR.get());
-  });
+  }
 
   private static float computeUserScaleFactor(float scale) {
     if (!SystemProperties.getBooleanProperty("hidpi", true)) {
@@ -201,7 +205,7 @@ public class JBUIScale {
 
   @Nonnull
   public static Pair<String, Integer> getSystemFontData() {
-    return ourSystemFontValue.getValue();
+    return ourSystemFontValue.get();
   }
 
   private static float getScreenScale() {
@@ -231,11 +235,11 @@ public class JBUIScale {
   }
 
   public static int scale(int pixels) {
-    return Math.round(userScaleFactor.get() * pixels);
+    return Math.round(UserScaleFactor.get() * pixels);
   }
 
   public static float scale(float pixels) {
-    return pixels * userScaleFactor.get();
+    return pixels * UserScaleFactor.get();
   }
 
   /**
@@ -250,7 +254,7 @@ public class JBUIScale {
    * @return the result
    */
   public static float setUserScaleFactor(float scale) {
-    if (DEBUG_USER_SCALE_FACTOR.isNotNull()) {
+    if (DEBUG_USER_SCALE_FACTOR.get() == null) {
       float debugScale = ObjectUtil.notNull(DEBUG_USER_SCALE_FACTOR.get());
       if (scale == debugScale) {
         setUserScaleFactorProperty(debugScale); // set the debug value as is, or otherwise ignore
@@ -279,10 +283,11 @@ public class JBUIScale {
   }
 
   private static void setUserScaleFactorProperty(float scale) {
-    if (userScaleFactor.get() == scale) return;
-    userScaleFactor.set(scale);
-    PCS.firePropertyChange(USER_SCALE_FACTOR_PROPERTY, userScaleFactor, scale);
-    log().info("User scale factor: " + userScaleFactor);
+    if (UserScaleFactor.get() == scale) return;
+    Float oldValue = UserScaleFactor.get();
+    UserScaleFactor.set(scale);
+    PCS.firePropertyChange(USER_SCALE_FACTOR_PROPERTY, oldValue, scale);
+    log().info("User scale factor: " + UserScaleFactor.get());
   }
 
   /**
@@ -333,8 +338,8 @@ public class JBUIScale {
   }
 
   public static int scaleFontSize(float fontSize) {
-    if (userScaleFactor.get() == 1.25f) return (int)(fontSize * 1.34f);
-    if (userScaleFactor.get() == 1.75f) return (int)(fontSize * 1.67f);
+    if (UserScaleFactor.get() == 1.25f) return (int)(fontSize * 1.34f);
+    if (UserScaleFactor.get() == 1.75f) return (int)(fontSize * 1.67f);
     return (int)scale(fontSize);
   }
 

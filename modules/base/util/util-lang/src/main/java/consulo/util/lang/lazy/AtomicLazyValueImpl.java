@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  class AtomicLazyValueImpl<T> implements LazyValue<T> {
   private final Supplier<T> myFactory;
 
-  private T myValue;
+  protected volatile T myValue;
 
   AtomicLazyValueImpl(Supplier<T> factory) {
     myFactory = factory;

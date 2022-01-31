@@ -23,7 +23,7 @@ import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.ArrayUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.util.awt.graphics.GraphicsUtilities;
 import consulo.desktop.util.awt.graphics.ShadowRenderer;
 import consulo.logging.Logger;

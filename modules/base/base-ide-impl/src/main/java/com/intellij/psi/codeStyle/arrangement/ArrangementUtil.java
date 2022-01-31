@@ -18,7 +18,7 @@ package com.intellij.psi.codeStyle.arrangement;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import consulo.language.Language;
 import consulo.document.Document;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.arrangement.match.*;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;

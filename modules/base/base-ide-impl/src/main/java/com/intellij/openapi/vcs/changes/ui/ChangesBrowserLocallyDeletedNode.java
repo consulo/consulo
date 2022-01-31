@@ -21,13 +21,13 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.changes.LocallyDeletedChange;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.ui.SimpleTextAttributes;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.intellij.util.FontUtil.spaceAndThinSpace;
+import static consulo.application.ui.awt.FontUtil.spaceAndThinSpace;
 
 public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<LocallyDeletedChange>
         implements TreeLinkMouseListener.HaveTooltip {

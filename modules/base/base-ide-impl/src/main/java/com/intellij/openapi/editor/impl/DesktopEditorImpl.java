@@ -57,6 +57,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.MouseShortcut;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPane;

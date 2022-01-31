@@ -19,7 +19,7 @@ package com.intellij.vcs.log.graph.impl.facade;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;

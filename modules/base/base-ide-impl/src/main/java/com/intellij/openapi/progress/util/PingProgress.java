@@ -17,7 +17,7 @@ package com.intellij.openapi.progress.util;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import com.intellij.util.ui.EDT;
+import consulo.application.ui.awt.internal.EDT;
 
 /**
  * An interface that can be implemented by the ProgressIndicator to be called from CheckCanceledHook interface.

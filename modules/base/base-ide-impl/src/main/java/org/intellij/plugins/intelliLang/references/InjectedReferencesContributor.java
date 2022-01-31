@@ -15,7 +15,7 @@
  */
 package org.intellij.plugins.intelliLang.references;
 
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.*;

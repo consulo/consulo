@@ -24,7 +24,7 @@ import consulo.application.progress.ProcessCanceledException;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;

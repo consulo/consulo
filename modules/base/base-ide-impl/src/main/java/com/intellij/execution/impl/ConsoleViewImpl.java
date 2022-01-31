@@ -62,7 +62,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.SideBorder;
+import consulo.application.ui.awt.SideBorder;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
@@ -76,6 +76,7 @@ import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.*;
 
 import javax.annotation.Nonnull;

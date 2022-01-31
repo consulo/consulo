@@ -18,7 +18,7 @@ package com.intellij.codeInsight.problems;
 
 import consulo.disposer.Disposable;
 import consulo.module.Module;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.Problem;
 import com.intellij.problems.WolfTheProblemSolver;

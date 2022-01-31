@@ -16,10 +16,10 @@
 package consulo.desktop.awt.ui;
 
 import consulo.application.util.SystemInfo;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBUI;
-import consulo.desktop.util.awt.MorphColor;
-import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
+import consulo.application.ui.awt.MorphColor;
+import consulo.application.ui.awt.BuildInLookAndFeel;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.style.StyleManager;
 

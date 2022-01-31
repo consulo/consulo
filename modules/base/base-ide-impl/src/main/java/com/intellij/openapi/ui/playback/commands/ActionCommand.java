@@ -17,7 +17,7 @@ package com.intellij.openapi.ui.playback.commands;
 
 import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.ui.playback.PlaybackContext;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.TimedOutCallback;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.keymap.KeymapManager;

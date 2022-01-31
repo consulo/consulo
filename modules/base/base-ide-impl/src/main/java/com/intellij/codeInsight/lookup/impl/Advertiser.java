@@ -8,7 +8,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

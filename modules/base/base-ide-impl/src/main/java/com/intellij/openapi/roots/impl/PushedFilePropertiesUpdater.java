@@ -2,7 +2,7 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

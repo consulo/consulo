@@ -23,7 +23,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.component.util.Iconable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
@@ -36,6 +36,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

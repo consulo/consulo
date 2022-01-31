@@ -31,7 +31,7 @@ import consulo.content.FileIndex;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.content.TestSourcesFilter;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vfs.VfsUtilCore;

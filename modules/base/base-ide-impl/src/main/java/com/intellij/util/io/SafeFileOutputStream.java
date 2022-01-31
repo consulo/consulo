@@ -2,7 +2,7 @@
 package com.intellij.util.io;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.logging.Logger;

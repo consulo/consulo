@@ -25,7 +25,7 @@ import consulo.component.persist.Storage;
 import consulo.language.template.TemplateLanguage;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.FilePropertyPusher;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import jakarta.inject.Inject;

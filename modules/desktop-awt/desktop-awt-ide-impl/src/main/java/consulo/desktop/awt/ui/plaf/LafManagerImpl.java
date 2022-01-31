@@ -49,7 +49,6 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.ComponentUtil;
-import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScreenUtil;
 import consulo.project.ui.wm.content.Content;
 import consulo.desktop.awt.ui.plaf.beg.BegMenuItemUI;
@@ -61,7 +60,7 @@ import com.intellij.util.ReflectionUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.desktop.awt.ui.LookAndFeelProvider;
-import consulo.desktop.util.awt.UIModificationTracker;
+import consulo.application.ui.awt.UIModificationTracker;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.eap.EarlyAccessProgramManager;
@@ -358,8 +357,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     UIManager.LookAndFeelInfo lookAndFeelInfo = style.getLookAndFeelInfo();
 
     try {
-      JBColor.resetDark();
-
       UIModificationTracker.getInstance().incModificationCount();
 
       ClassLoader targetClassLoader = null;

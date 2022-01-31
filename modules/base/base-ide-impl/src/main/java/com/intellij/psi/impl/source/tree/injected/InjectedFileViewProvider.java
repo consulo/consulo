@@ -6,7 +6,7 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.document.Document;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

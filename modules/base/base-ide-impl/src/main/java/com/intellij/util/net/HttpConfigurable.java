@@ -42,6 +42,7 @@ import com.intellij.util.xmlb.annotations.Transient;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.util.lang.ref.Ref;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 

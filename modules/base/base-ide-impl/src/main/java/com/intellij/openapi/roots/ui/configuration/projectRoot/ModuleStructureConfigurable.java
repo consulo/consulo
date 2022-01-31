@@ -44,7 +44,7 @@ import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.Comparing;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.moduleImport.ModuleImportProviders;

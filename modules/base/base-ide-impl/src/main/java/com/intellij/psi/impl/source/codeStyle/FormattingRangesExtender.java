@@ -3,7 +3,7 @@ package com.intellij.psi.impl.source.codeStyle;
 
 import consulo.language.ast.ASTNode;
 import consulo.document.Document;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;

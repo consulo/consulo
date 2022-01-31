@@ -29,7 +29,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.action.*;

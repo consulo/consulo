@@ -3,12 +3,12 @@ package com.intellij.diagnostic;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.AnimatedIcon.Blinking;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static com.intellij.util.ui.EmptyIcon.ICON_16;
+import static consulo.application.ui.awt.EmptyIcon.ICON_16;
 
 class IdeErrorsIcon extends JLabel {
   private final boolean myEnableBlink;

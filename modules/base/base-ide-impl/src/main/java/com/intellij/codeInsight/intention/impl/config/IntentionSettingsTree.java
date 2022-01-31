@@ -20,7 +20,7 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.ide.ui.search.SearchUtil;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import com.intellij.ui.*;

@@ -20,13 +20,13 @@ import com.intellij.openapi.application.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.ui.mac.foundation.Foundation;
-import com.intellij.ui.mac.foundation.ID;
+import consulo.application.util.mac.foundation.Foundation;
+import consulo.application.util.mac.foundation.ID;
 import consulo.component.messagebus.MessageBusConnection;
 import javax.annotation.Nonnull;
 
-import static com.intellij.ui.mac.foundation.Foundation.invoke;
-import static com.intellij.ui.mac.foundation.Foundation.nsString;
+import static consulo.application.util.mac.foundation.Foundation.invoke;
+import static consulo.application.util.mac.foundation.Foundation.nsString;
 
 /**
  * @author Dennis.Ushakov

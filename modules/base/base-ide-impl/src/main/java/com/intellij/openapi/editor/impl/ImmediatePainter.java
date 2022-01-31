@@ -25,7 +25,7 @@ import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.ImageUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.awt.hacking.SunVolatileImageHacking;
 import consulo.disposer.Disposer;
 import consulo.document.Document;

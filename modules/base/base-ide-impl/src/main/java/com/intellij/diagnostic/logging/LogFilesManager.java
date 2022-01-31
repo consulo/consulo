@@ -18,8 +18,8 @@ package com.intellij.diagnostic.logging;
 import com.intellij.execution.configurations.LogFileOptions;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.process.ProcessHandler;
-import consulo.application.util.function.Condition;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

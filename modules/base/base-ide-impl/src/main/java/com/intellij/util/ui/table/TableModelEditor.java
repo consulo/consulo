@@ -18,7 +18,7 @@ package com.intellij.util.ui.table;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;

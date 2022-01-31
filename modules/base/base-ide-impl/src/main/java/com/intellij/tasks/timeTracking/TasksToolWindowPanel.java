@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskListenerAdapter;
 import com.intellij.tasks.TaskManager;

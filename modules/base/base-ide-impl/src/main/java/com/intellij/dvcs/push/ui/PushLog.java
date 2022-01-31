@@ -21,7 +21,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Splitter;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -16,8 +16,8 @@ import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.components.BorderLayoutPanel;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.application.ui.awt.BorderLayoutPanel;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.border.BorderStyle;
 

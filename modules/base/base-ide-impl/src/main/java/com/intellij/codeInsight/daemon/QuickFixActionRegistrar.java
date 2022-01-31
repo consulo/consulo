@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
 
 public interface QuickFixActionRegistrar {

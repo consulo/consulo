@@ -22,7 +22,7 @@ import com.intellij.openapi.options.ConfigurableEP;
 import consulo.configurable.ConfigurableProvider;
 import consulo.configurable.OptionalConfigurable;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

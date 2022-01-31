@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.EditorDropHandler;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 

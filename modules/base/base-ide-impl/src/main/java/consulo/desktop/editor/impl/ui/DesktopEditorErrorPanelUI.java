@@ -25,7 +25,7 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.editor.impl.DesktopEditorErrorPanel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;

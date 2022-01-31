@@ -1,22 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.ui.awt;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ScalableIcon;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.ColorUtil;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.JreHiDpiUtil;
-import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.Function;
-import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.application.ui.awt.internal.JreHiDpiUtil;
-import consulo.desktop.util.awt.component.VerticalLayoutPanel;
+import consulo.application.util.SystemInfo;
+import consulo.util.lang.Pair;
 import kava.beans.PropertyChangeListener;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -28,6 +18,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import static consulo.application.ui.awt.JBUI.ScaleType.*;
 
@@ -1492,7 +1483,7 @@ public class JBUI {
         Pair<Double, D> data = myData.get();
         double scale = ctx.getScale(PIX_SCALE);
         if (data == null || Double.compare(scale, data.first) != 0) {
-          myData.set(data = Pair.create(scale, myDataProvider.fun(ctx)));
+          myData.set(data = Pair.create(scale, myDataProvider.apply(ctx)));
         }
         return data.second;
       }

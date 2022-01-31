@@ -64,7 +64,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.actionSystem.impl.ActionButtonUI;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
 import consulo.ui.Size;

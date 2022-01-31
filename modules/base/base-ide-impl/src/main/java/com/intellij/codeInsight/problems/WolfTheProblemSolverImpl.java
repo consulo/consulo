@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

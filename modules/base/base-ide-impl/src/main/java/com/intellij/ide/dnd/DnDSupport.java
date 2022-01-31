@@ -18,7 +18,7 @@ package com.intellij.ide.dnd;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.util.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.CheckoutProvider;
 import com.intellij.openapi.vcs.VcsKey;

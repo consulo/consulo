@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions.wordSelection;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;

@@ -36,7 +36,7 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.PairFunction;
 import consulo.application.util.function.ThrowableRunnable;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.util.ui.ToolwindowPaintUtil;
 import javax.annotation.Nonnull;

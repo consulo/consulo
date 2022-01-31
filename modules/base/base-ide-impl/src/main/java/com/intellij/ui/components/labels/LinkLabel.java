@@ -11,7 +11,7 @@ import com.intellij.util.ui.JBRectangle;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.accessibility.AccessibleAction;

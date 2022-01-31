@@ -1,6 +1,6 @@
 package com.intellij.util;
 
-import com.intellij.openapi.util.ScalableIcon;
+import consulo.application.ui.awt.ScalableIcon;
 import consulo.application.ui.awt.JBUI;
 
 import javax.annotation.Nonnull;

@@ -11,7 +11,7 @@ import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.startup.IdeaStartupActivity;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.vcs.VcsBundle;
 import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.concurrency.QueueProcessor;

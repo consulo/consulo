@@ -15,8 +15,8 @@
  */
 package com.intellij.util.ui.tree;
 
-import consulo.application.util.function.Condition;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 import consulo.application.util.SystemInfo;
 import consulo.util.lang.SystemProperties;
 import consulo.application.ui.awt.JBUI;

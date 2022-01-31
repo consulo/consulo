@@ -27,7 +27,7 @@ import com.intellij.ui.tree.LeafState;
 import consulo.application.ui.awt.UIUtil;
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 

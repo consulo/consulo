@@ -32,6 +32,7 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.*;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.Navigatable;
 import consulo.language.psi.PsiElement;

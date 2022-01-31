@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.ui.speedSearch.FilteringListModel;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;

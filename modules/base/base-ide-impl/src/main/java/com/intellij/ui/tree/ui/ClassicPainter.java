@@ -3,7 +3,7 @@ package com.intellij.ui.tree.ui;
 
 import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
-import com.intellij.ui.paint.LinePainter2D;
+import consulo.application.ui.awt.LinePainter2D;
 import consulo.application.ui.awt.paint.PaintUtil;
 import consulo.application.ui.awt.JBUIScale;
 import javax.annotation.Nonnull;

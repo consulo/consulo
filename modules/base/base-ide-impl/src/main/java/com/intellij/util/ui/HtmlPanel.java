@@ -17,7 +17,7 @@ package com.intellij.util.ui;
 
 import com.intellij.ui.BrowserHyperlinkListener;
 import consulo.application.ui.awt.UIUtil;
-import consulo.desktop.util.awt.StringHtmlUtil;
+import consulo.application.ui.awt.StringHtmlUtil;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;

@@ -25,7 +25,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nullable;
 

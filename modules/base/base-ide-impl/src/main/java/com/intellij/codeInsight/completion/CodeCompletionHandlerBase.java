@@ -35,7 +35,7 @@ import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

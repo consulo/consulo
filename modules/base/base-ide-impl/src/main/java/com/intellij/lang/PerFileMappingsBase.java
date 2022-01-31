@@ -25,7 +25,7 @@ import consulo.language.psi.PsiDocumentManager;
 import com.intellij.reference.SoftReference;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;

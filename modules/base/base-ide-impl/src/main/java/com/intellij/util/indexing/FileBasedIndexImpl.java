@@ -41,6 +41,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.*;
 import consulo.util.collection.SmartFMap;
 import consulo.util.lang.SystemProperties;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;

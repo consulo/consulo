@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.ComponentValidator;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.reference.SoftReference;
 import consulo.ui.ex.RelativePoint;
 import consulo.application.ui.awt.JBUIScale;

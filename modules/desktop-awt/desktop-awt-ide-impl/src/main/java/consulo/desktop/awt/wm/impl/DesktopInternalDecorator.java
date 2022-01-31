@@ -36,7 +36,7 @@ import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import consulo.project.ui.wm.content.Content;
-import com.intellij.ui.paint.LinePainter2D;
+import consulo.application.ui.awt.LinePainter2D;
 import com.intellij.util.EventDispatcher;
 import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;

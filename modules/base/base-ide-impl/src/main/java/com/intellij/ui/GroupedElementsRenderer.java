@@ -6,7 +6,7 @@ import com.intellij.ui.components.panels.OpaquePanel;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

@@ -27,7 +27,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.logging.Logger;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.*;

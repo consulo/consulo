@@ -12,6 +12,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.command.CommandProcessor;
+import consulo.application.ui.awt.SideBorder;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.language.psi.*;

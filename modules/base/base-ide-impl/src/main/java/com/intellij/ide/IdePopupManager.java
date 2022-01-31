@@ -10,7 +10,7 @@ import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.project.ui.wm.IdeFrameUtil;
 import javax.annotation.Nonnull;
 

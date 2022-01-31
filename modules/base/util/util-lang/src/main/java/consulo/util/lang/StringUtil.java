@@ -30,6 +30,25 @@ public class StringUtil {
   private static final String[] MN_QUOTED = {"&&", "__"};
   private static final String[] MN_CHARS = {"&", "_"};
 
+  @NonNls
+  private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
+  @NonNls
+  private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
+
+  @Contract(value = "null -> false", pure = true)
+  public static boolean isNotEmpty(@Nullable String s) {
+    return s != null && !s.isEmpty();
+  }
+
+  /**
+   * @return {@code text} with some characters replaced with standard XML entities, e.g. '<' replaced with '{@code &lt;}'
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeXmlEntities(@Nonnull String text) {
+    return replace(text, REPLACES_DISP, REPLACES_REFS);
+  }
+
   private static boolean isQuoteAt(@Nonnull String s, int ind) {
     char ch = s.charAt(ind);
     return ch == '\'' || ch == '\"';

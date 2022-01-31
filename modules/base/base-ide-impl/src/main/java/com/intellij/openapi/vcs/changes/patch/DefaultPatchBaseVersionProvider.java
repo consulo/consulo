@@ -25,7 +25,7 @@ package com.intellij.openapi.vcs.changes.patch;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.diff.DiffProvider;

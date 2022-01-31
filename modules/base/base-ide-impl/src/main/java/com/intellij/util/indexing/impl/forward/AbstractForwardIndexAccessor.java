@@ -2,7 +2,7 @@
 package com.intellij.util.indexing.impl.forward;
 
 import com.intellij.openapi.util.ThreadLocalCachedByteArray;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.indexing.impl.InputData;
 import com.intellij.util.indexing.impl.InputDataDiffBuilder;

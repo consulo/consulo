@@ -23,7 +23,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.BalloonLayout;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

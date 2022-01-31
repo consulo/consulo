@@ -32,7 +32,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

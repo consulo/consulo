@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 

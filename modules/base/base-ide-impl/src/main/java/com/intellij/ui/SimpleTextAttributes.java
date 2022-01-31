@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;

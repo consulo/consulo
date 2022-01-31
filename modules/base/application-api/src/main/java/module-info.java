@@ -16,6 +16,9 @@ module consulo.application.api {
   // TODO [VISTALL] remove this dependency when we will ready. obsolete dep
   requires java.desktop;
 
+  requires com.sun.jna;
+  requires com.sun.jna.platform;
+
   exports consulo.application;
   exports consulo.application.dumb;
   exports consulo.application.event;
@@ -27,6 +30,9 @@ module consulo.application.api {
   exports consulo.application.internal;
   exports consulo.application.internal.concurrency;
 
+  exports consulo.application.util.mac.foundation;
+
+  exports consulo.application.util;
   exports consulo.application.util.function;
   exports consulo.application.util.registry;
 }

@@ -47,7 +47,7 @@ import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

@@ -28,7 +28,7 @@ import com.intellij.ui.HintHint;
 import consulo.application.ui.awt.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 

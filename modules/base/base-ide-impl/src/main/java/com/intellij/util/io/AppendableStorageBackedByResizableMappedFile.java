@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.application.util.function.Processor;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataInputOutputUtil;

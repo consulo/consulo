@@ -48,6 +48,16 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna-jpms</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna-platform-jpms</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>jakarta.inject-api</artifactId>
     </dependency>

@@ -44,7 +44,7 @@ import com.intellij.tasks.TaskRepository;
 import com.intellij.tasks.impl.BaseRepository;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.EditorTextField;
-import com.intellij.ui.PanelWithAnchor;
+import consulo.application.ui.awt.PanelWithAnchor;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTabbedPane;

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.treeWithCheckedNodes;
 
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vcs.impl.CollectionsDelta;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

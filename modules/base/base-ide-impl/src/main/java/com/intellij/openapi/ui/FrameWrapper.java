@@ -32,7 +32,7 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.ImageUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;

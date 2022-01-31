@@ -4,7 +4,7 @@ package com.intellij.util.ui;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.application.ui.awt.UIUtil;
 import consulo.desktop.util.awt.html.ColoredHRuleView;
 import consulo.logging.Logger;

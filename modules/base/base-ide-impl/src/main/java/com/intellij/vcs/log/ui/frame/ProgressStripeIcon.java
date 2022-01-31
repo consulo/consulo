@@ -15,13 +15,13 @@
  */
 package com.intellij.vcs.log.ui.frame;
 
-import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.GraphicsConfig;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AsyncProcessIcon;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.image.Image;

@@ -4,7 +4,7 @@ package consulo.desktop.awt.ui.plaf.darcula;
 import consulo.application.util.SystemInfo;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
-import com.intellij.util.ui.MacUIUtil;
+import consulo.application.ui.awt.MacUIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

@@ -38,7 +38,7 @@ import consulo.content.library.Library;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

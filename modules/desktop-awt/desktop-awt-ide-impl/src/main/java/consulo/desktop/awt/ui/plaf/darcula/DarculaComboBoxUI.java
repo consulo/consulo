@@ -17,7 +17,7 @@ import com.intellij.util.ObjectUtils;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

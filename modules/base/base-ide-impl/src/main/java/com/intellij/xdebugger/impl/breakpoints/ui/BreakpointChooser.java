@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.popup.util.*;

@@ -41,7 +41,7 @@ import com.intellij.ui.HintListener;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.LightweightHint;
 import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;

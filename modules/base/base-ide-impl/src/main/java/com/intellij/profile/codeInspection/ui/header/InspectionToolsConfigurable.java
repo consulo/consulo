@@ -62,7 +62,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.SmartHashSet;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

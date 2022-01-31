@@ -17,7 +17,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.ide.projectView.PresentationData;
 import consulo.project.Project;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;

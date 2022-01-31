@@ -17,13 +17,14 @@ package com.intellij.util;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.NotWorkingIconLoader;
-import com.intellij.openapi.util.ScalableIcon;
+import consulo.application.ui.awt.ScalableIcon;
 import consulo.application.ui.awt.*;
 import com.intellij.util.ui.*;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
 import consulo.application.ui.awt.internal.RetinaImage;
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 

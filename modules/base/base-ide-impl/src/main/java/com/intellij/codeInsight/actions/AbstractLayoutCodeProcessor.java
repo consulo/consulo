@@ -25,7 +25,7 @@ import com.intellij.openapi.project.*;
 import consulo.project.content.GeneratedSourcesFilter;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ex.MessagesEx;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;

@@ -20,7 +20,7 @@ import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.BidirectionalMap;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.JBColor;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

@@ -20,7 +20,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.lang.LanguageFormatting;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;

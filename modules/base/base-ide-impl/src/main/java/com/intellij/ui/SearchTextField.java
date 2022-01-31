@@ -31,7 +31,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

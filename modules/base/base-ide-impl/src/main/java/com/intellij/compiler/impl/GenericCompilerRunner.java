@@ -26,7 +26,7 @@ import com.intellij.openapi.compiler.generic.*;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.ExceptionUtil;
 import consulo.application.util.function.Processor;

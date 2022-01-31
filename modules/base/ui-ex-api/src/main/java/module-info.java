@@ -18,4 +18,9 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.action.event;
   exports consulo.ui.ex.action.util;
   exports consulo.ui.ex.util;
+
+  exports consulo.ui.ex.awt;
+  exports consulo.ui.ex.awt.internal;
+
+  uses consulo.ui.ex.awt.internal.TargetAWTFacade;
 }

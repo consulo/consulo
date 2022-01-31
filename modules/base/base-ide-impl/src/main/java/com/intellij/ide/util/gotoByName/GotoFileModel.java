@@ -22,7 +22,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.IdeUICustomization;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

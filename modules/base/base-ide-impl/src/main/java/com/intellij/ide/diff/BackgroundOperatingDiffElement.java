@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.diff;
 
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 
 /**
  * @author lene

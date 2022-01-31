@@ -32,7 +32,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListSeparator;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Conditions;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.ErrorLabel;
 import com.intellij.ui.popup.ActionPopupStep;

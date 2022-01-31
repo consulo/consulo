@@ -28,7 +28,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.util.Function;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;

@@ -2,7 +2,7 @@
 package com.intellij.psi.stubs;
 
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.StreamUtil;
 import consulo.language.ast.IElementType;
 import com.intellij.util.ArrayUtilRt;

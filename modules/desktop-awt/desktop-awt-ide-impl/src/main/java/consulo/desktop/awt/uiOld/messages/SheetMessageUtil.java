@@ -20,7 +20,7 @@ import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.impl.ModalityHelper;
 import com.intellij.ui.mac.foundation.MacUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;

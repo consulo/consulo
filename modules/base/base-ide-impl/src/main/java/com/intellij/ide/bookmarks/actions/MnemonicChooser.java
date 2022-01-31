@@ -24,13 +24,13 @@ import com.intellij.ui.ClickListener;
 import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.LightColors;
-import com.intellij.ui.border.CustomLineBorder;
+import consulo.application.ui.awt.CustomLineBorder;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.components.BorderLayoutPanel;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.application.ui.awt.BorderLayoutPanel;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;

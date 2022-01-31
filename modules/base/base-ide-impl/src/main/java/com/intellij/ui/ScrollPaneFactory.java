@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 
 import com.intellij.ui.components.JBScrollPane;
+import consulo.application.ui.awt.SideBorder;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;

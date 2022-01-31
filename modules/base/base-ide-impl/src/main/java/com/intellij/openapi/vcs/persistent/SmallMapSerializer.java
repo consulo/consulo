@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.persistent;
 
 import consulo.index.io.Forceable;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataOutputStream;

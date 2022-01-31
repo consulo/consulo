@@ -23,7 +23,7 @@ import consulo.language.psi.scope.ProjectScope;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
-import com.intellij.ui.Colored;
+import consulo.application.ui.awt.Colored;
 import com.intellij.util.ArrayUtil;
 
 import javax.annotation.Nonnull;

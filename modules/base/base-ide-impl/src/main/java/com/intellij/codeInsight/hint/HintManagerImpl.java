@@ -35,7 +35,7 @@ import com.intellij.util.BitUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.TimerUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;

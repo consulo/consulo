@@ -12,7 +12,7 @@ import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Conditions;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -20,7 +20,7 @@ import com.intellij.refactoring.copy.CopyHandler;
 import com.intellij.refactoring.move.MoveCallback;
 import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

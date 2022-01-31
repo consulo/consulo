@@ -20,7 +20,7 @@ import consulo.application.*;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.ArrayUtil;

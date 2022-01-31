@@ -20,7 +20,7 @@ import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;

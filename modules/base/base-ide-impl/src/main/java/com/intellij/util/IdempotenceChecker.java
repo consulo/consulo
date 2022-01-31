@@ -13,7 +13,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.ResolveResult;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import consulo.disposer.Disposable;
 import consulo.language.psi.util.CachedValue;
 import org.jetbrains.annotations.Contract;

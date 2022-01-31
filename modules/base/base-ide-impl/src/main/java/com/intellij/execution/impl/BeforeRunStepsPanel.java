@@ -28,7 +28,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Conditions;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.CollectionListModel;

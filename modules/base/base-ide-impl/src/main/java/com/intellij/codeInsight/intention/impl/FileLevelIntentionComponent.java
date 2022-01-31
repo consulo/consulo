@@ -22,7 +22,7 @@ import com.intellij.ui.ClickListener;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.LightColors;
 import consulo.ui.ex.RelativePoint;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

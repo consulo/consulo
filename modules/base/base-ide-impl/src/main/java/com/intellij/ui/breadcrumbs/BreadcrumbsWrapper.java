@@ -4,7 +4,7 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import consulo.application.ui.UISettings;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

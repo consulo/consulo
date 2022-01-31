@@ -3,7 +3,7 @@ package consulo.desktop.awt.ui.impl.image.libraryImage;
 import consulo.application.ui.awt.paint.PaintUtil;
 import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
 import consulo.application.ui.awt.internal.RetinaImage;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.ImageUtil;
 import consulo.application.ui.awt.JBUI;
 import com.kitfox.svg.SVGDiagram;

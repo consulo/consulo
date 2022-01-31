@@ -34,7 +34,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProject
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NonEmptyInputValidator;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;

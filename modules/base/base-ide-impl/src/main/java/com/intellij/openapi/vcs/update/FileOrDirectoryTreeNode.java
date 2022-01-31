@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.disposer.Disposer;

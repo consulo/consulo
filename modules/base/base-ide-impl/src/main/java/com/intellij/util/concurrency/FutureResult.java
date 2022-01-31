@@ -1,7 +1,7 @@
 package com.intellij.util.concurrency;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.*;

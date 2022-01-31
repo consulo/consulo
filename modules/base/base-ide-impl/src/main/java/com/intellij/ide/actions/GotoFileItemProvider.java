@@ -9,7 +9,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
@@ -28,7 +28,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import com.intellij.util.indexing.FindSymbolParameters;
 import consulo.logging.Logger;
 

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;

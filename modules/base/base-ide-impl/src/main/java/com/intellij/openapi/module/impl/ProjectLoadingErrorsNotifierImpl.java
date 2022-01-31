@@ -27,7 +27,7 @@ import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.startup.StartupManager;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;

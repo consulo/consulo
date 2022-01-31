@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.application.util.SystemInfo;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.IdeBorderFactory;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

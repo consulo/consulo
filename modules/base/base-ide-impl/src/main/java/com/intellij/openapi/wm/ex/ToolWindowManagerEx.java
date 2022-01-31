@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.ex;
 
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowEP;
 import consulo.project.ui.wm.ToolWindowManager;

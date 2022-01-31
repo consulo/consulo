@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.EmptyAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.popup.ListPopupStep;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.ui.popup.WizardPopup;
 import javax.annotation.Nonnull;

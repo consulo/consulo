@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.roots;
 
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vfs.LocalFileSystem;

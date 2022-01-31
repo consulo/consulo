@@ -33,7 +33,7 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

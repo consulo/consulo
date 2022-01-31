@@ -18,7 +18,7 @@ package com.intellij.util;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import consulo.project.ui.wm.content.Content;

@@ -33,7 +33,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Queryable;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.application.util.registry.Registry;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;

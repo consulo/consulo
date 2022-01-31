@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.dualView;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.ui.HighlightableCellRenderer;
 import com.intellij.ui.table.ItemsProvider;
 import com.intellij.ui.table.SelectionProvider;

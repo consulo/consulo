@@ -37,11 +37,11 @@ import com.intellij.openapi.progress.DumbProgressIndicator;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus;
 import com.intellij.openapi.vcs.ex.LineStatusMarkerRenderer;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

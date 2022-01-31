@@ -16,7 +16,7 @@
 package com.intellij.ui.components;
 
 import com.intellij.openapi.ui.LoadingDecorator;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;

@@ -52,7 +52,7 @@ import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.IconUtil;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.UIAccess;

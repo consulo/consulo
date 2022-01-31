@@ -34,7 +34,7 @@ import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.component.persist.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ComponentTreeEventDispatcher;
+import consulo.application.ui.awt.ComponentTreeEventDispatcher;
 import com.intellij.util.io.URLUtil;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;

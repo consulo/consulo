@@ -20,12 +20,12 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TransparentPanel;
-import com.intellij.util.containers.JBIterable;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.util.collection.JBIterable;
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

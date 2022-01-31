@@ -1,9 +1,9 @@
 package consulo.desktop.awt.ui.impl.image.canvas;
 
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxLightweightLabel;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;

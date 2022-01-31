@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.util.ThreadLocalCachedByteArray;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.DataOutputStream;
 import com.intellij.util.text.StringFactory;

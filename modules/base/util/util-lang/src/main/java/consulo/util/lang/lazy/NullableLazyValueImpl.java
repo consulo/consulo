@@ -25,9 +25,10 @@ import java.util.function.Supplier;
 class NullableLazyValueImpl<T> implements LazyValue<T> {
   private final Supplier<T> myFactory;
 
-  private boolean myComputed;
+  protected boolean myComputed;
+
   @Nullable
-  private T myValue;
+  protected volatile T myValue;
 
   NullableLazyValueImpl(Supplier<T> factory) {
     myFactory = factory;

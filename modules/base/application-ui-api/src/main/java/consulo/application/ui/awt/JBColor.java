@@ -15,14 +15,10 @@
  */
 package consulo.application.ui.awt;
 
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.util.NotNullProducer;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -91,14 +87,6 @@ public class JBColor extends Color {
     return null;
   }
 
-  private static ClearableLazyValue<Boolean> ourDarkValue = new ClearableLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return UIUtil.isUnderDarkTheme();
-    }
-  };
-
   private final Color darkColor;
   private final Supplier<Color> func;
 
@@ -117,11 +105,6 @@ public class JBColor extends Color {
     darkColor = null;
     func = function;
   }
-
-  public static void resetDark() {
-    ourDarkValue.drop();
-  }
-
   Color getDarkVariant() {
     return darkColor;
   }
@@ -131,7 +114,7 @@ public class JBColor extends Color {
       return func.get();
     }
     else {
-      return ourDarkValue.get() ? getDarkVariant() : this;
+      return UIUtil.isUnderDarkTheme() ? getDarkVariant() : this;
     }
   }
 

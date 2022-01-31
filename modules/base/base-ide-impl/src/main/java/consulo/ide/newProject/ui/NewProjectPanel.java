@@ -21,7 +21,7 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.JBCardLayout;

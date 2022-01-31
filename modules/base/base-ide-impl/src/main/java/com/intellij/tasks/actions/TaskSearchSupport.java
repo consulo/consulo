@@ -23,7 +23,7 @@ import java.util.StringTokenizer;
 import javax.annotation.Nonnull;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;

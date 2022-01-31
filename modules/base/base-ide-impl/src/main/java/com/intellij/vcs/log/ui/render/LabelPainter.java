@@ -30,17 +30,17 @@ package com.intellij.vcs.log.ui.render;
  * limitations under the License.
  */
 
-import com.intellij.openapi.ui.GraphicsConfig;
+import consulo.application.ui.awt.GraphicsConfig;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.vcs.log.RefGroup;

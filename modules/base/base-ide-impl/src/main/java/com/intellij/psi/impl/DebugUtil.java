@@ -22,7 +22,7 @@ import com.intellij.lang.impl.PsiBuilderImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.function.ThrowableRunnable;
 import consulo.language.ast.TokenType;

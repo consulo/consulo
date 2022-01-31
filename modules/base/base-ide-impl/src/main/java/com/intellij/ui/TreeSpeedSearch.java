@@ -11,7 +11,7 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
 

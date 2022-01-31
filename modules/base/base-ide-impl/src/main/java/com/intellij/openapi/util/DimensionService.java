@@ -15,7 +15,7 @@ import com.intellij.ui.ScreenUtil;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.objects.ObjectIntMap;

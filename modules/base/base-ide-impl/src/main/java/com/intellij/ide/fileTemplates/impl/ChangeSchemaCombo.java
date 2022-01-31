@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

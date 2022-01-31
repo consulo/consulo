@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing;
 
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.language.psi.scope.GlobalSearchScope;

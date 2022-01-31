@@ -14,7 +14,7 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

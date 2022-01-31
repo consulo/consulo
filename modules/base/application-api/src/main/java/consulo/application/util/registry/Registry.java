@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo(value = "Use `EarlyAccessProgramDescriptor` or `PropertiesComponent`")
 public class Registry {
-  private static final String REGISTRY_BUNDLE = "misc.registry";
+  private static final String REGISTRY_BUNDLE = "consulo.application.registry";
 
   // copy jvm properties, disable override in runtime
   private static final Properties ourJvmProperties = new Properties(System.getProperties());

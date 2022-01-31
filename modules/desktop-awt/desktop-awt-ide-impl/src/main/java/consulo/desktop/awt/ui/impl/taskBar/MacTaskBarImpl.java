@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.impl.taskBar;
 
 import com.intellij.icons.AllIcons;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;

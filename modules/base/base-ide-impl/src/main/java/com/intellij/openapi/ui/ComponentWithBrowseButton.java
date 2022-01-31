@@ -33,7 +33,7 @@ import com.intellij.ui.GuiUtils;
 import com.intellij.ui.UIBundle;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

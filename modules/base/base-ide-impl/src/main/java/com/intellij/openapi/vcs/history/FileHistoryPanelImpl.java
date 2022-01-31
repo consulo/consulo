@@ -26,6 +26,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.SideBorder;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

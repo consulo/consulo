@@ -22,7 +22,7 @@ package com.intellij.psi.stubs;
 import consulo.language.psi.stub.StubIndex;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.util.lang.ThreadLocalCachedValue;
-import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.DigestUtil;

@@ -49,7 +49,7 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.GridBag;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;

@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.FileColorManager;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.containers.ContainerUtil;

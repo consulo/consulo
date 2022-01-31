@@ -1,7 +1,7 @@
 package com.intellij.util.ui.table;
 
 import consulo.component.util.Iconable;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -22,7 +22,7 @@ import consulo.compiler.make.DependencyCacheEP;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;

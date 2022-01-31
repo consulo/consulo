@@ -21,7 +21,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.ui.awt.JBColor;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.ui.border.CustomLineBorder;
+import consulo.application.ui.awt.CustomLineBorder;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.MovablePopup;
 import com.intellij.util.Alarm;
@@ -29,7 +29,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.MouseEventHandler;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 

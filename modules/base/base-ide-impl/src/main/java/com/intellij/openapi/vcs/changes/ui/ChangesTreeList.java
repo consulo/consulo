@@ -29,7 +29,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

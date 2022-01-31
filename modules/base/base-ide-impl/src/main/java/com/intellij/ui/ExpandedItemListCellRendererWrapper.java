@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
-import com.intellij.util.ui.GraphicsUtil;
+import consulo.application.ui.awt.DesktopAntialiasingTypeUtil;
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 

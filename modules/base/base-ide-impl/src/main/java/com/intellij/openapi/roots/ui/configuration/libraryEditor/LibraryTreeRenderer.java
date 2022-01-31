@@ -19,7 +19,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

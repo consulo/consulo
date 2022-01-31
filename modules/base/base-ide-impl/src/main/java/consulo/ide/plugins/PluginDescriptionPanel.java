@@ -30,7 +30,7 @@ import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.*;
-import consulo.desktop.util.awt.MorphColor;
+import consulo.application.ui.awt.MorphColor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;

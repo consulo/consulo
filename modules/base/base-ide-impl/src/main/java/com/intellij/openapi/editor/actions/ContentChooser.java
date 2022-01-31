@@ -36,7 +36,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

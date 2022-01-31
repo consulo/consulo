@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.frame;
 
-import com.intellij.ui.ColorUtil;
+import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ObjectUtils;

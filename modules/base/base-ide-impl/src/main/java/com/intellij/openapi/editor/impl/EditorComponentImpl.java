@@ -55,7 +55,7 @@ import consulo.application.ui.awt.paint.PaintUtil;
 import com.intellij.util.ui.JBSwingUtilities;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.concurrent.ActionCallback;

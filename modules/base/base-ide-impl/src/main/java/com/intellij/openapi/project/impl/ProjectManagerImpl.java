@@ -54,7 +54,7 @@ import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.components.impl.stores.ProjectStorageUtil;

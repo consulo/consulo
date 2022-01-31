@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Factory;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import com.intellij.ui.SimpleColoredText;

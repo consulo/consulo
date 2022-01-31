@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;

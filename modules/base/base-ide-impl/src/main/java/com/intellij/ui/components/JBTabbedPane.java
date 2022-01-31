@@ -19,7 +19,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.ScreenUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;

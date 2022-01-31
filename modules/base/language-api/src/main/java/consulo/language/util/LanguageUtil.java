@@ -19,7 +19,7 @@ package consulo.language.util;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.JBIterable;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.language.InjectableLanguage;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;

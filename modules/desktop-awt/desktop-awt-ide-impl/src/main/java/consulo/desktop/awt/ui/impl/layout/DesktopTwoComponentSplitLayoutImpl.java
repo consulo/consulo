@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.impl.layout;
 
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.OnePixelSplitter;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -3,6 +3,8 @@ package consulo.application.ui.awt.internal;
 
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.UIUtil;
+import consulo.application.util.SystemInfo;
+import consulo.awt.hacking.GraphicsEnvironmentHacking;
 import consulo.util.lang.SystemProperties;
 import org.jetbrains.annotations.TestOnly;
 

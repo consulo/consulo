@@ -6,7 +6,7 @@ import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.JBValue;
-import com.intellij.util.ui.MacUIUtil;
+import consulo.application.ui.awt.MacUIUtil;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.table.JBTableRowEditor;
 

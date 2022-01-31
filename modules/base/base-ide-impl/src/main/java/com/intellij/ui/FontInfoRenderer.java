@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ide.ui.DesktopAntialiasingTypeUtil;
+import consulo.application.ui.awt.DesktopAntialiasingTypeUtil;
 import com.intellij.util.ui.FontInfo;
 import javax.annotation.Nonnull;
 

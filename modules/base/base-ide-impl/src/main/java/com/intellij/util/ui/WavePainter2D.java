@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.ui;
 
+import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.UIUtil;
 
 import java.awt.*;

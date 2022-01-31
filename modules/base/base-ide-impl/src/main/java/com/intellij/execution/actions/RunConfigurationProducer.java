@@ -25,7 +25,7 @@ import com.intellij.execution.configurations.RunConfiguration;
 import consulo.logging.Logger;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;

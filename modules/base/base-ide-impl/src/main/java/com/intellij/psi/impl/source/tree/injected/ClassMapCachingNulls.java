@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.JBIterable;
+import consulo.util.collection.JBIterable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

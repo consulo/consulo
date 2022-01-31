@@ -4,7 +4,7 @@ package consulo.language.psi.stub;
 import com.intellij.util.SystemProperties;
 import consulo.application.ReadAction;
 import consulo.application.internal.PerApplicationInstance;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;

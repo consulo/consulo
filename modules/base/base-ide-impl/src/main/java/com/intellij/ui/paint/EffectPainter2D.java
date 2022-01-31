@@ -2,6 +2,7 @@
 package com.intellij.ui.paint;
 
 import consulo.application.ui.UISettings;
+import consulo.application.ui.awt.LinePainter2D;
 import consulo.application.ui.awt.paint.PaintUtil;
 import consulo.application.util.registry.Registry;
 import consulo.application.ui.awt.paint.PaintUtil.RoundingMode;

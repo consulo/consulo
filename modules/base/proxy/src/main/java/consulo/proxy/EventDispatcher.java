@@ -74,7 +74,7 @@ public class EventDispatcher<T extends EventListener> {
   }
 
   @Nonnull
-  static <T> T createMulticaster(@Nonnull Class<T> listenerClass, @Nullable final Map<String, Object> methodReturnValues, final Supplier<? extends Iterable<T>> listeners) {
+  public static <T> T createMulticaster(@Nonnull Class<T> listenerClass, @Nullable final Map<String, Object> methodReturnValues, final Supplier<? extends Iterable<T>> listeners) {
     LOG.assertTrue(listenerClass.isInterface(), "listenerClass must be an interface");
     InvocationHandler handler = (proxy, method, args) -> {
       String methodName = method.getName();

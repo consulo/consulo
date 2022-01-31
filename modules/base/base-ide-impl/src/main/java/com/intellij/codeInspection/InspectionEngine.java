@@ -29,7 +29,7 @@ import consulo.language.Language;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Conditions;
+import consulo.util.lang.function.Conditions;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;

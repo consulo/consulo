@@ -15,6 +15,7 @@
  */
 package com.intellij.util.ui;
 
+import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.util.SystemInfo;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.application.ui.awt.JBUI;

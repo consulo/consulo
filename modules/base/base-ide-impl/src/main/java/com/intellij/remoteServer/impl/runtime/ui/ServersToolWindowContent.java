@@ -31,7 +31,7 @@ import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.SideBorder;
+import consulo.application.ui.awt.SideBorder;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.treeStructure.Tree;
 import consulo.application.ui.awt.UIUtil;

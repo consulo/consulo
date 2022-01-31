@@ -1,4 +1,4 @@
-import consulo.application.ui.awt.internal.TargetAWTFacade;
+import consulo.ui.ex.awt.internal.TargetAWTFacade;
 
 /**
  * @author VISTALL

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.codeInsight.completion.CompletionLookupArranger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import com.intellij.psi.ForceableComparable;
 import consulo.language.util.ProcessingContext;
 import javax.annotation.Nonnull;

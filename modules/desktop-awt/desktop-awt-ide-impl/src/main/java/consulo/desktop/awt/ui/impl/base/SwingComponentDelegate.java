@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.impl.base;
 
 import consulo.application.ui.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.awt.facade.ToSwingComponentWrapper;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;

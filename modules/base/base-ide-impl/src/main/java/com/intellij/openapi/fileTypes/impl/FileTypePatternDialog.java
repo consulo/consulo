@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.TemplateLanguageFileType;
 import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

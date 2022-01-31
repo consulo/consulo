@@ -18,7 +18,7 @@ package com.intellij.compiler.impl;
 import com.intellij.compiler.ProblemsView;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import consulo.project.Project;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
 import consulo.project.ui.wm.ToolWindow;
 import com.intellij.pom.Navigatable;

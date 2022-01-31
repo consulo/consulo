@@ -21,7 +21,7 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkTypeId;
 import com.intellij.openapi.ui.MasterDetailsComponent;
-import consulo.application.util.function.Condition;
+import consulo.util.lang.function.Condition;
 import com.intellij.util.Consumer;
 
 import javax.annotation.Nullable;

@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

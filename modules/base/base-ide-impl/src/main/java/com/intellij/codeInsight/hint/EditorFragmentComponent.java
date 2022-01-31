@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.hint;
 
 import consulo.application.ApplicationManager;
-import consulo.application.ui.awt.TargetAWT;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

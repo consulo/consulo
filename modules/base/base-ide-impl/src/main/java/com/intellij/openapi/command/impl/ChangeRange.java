@@ -20,7 +20,7 @@ import com.intellij.history.core.LocalHistoryFacade;
 import com.intellij.history.core.changes.Change;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.revertion.UndoChangeRevertingVisitor;
-import com.intellij.openapi.util.Ref;
+import consulo.util.lang.ref.Ref;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
