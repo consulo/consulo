@@ -6,7 +6,7 @@ import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

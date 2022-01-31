@@ -30,7 +30,7 @@ import com.intellij.packaging.impl.elements.ModuleOutputPackagingElement;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import jakarta.inject.Inject;
 

@@ -15,15 +15,104 @@
  */
 package consulo.virtualFileSystem.util;
 
+import consulo.logging.Logger;
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileFilter;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
  * @since 17/01/2022
  */
 public final class VirtualFileUtil {
+  private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);
+
+  public static boolean iterateChildrenRecursively(@Nonnull final VirtualFile root, @Nullable final VirtualFileFilter filter, @Nonnull final Predicate<VirtualFile> iterator) {
+    final VirtualFileVisitor.Result result = visitChildrenRecursively(root, new VirtualFileVisitor() {
+      @Nonnull
+      @Override
+      public Result visitFileEx(@Nonnull VirtualFile file) {
+        if (filter != null && !filter.accept(file)) return SKIP_CHILDREN;
+        if (!iterator.test(file)) return skipTo(root);
+        return CONTINUE;
+      }
+    });
+    return !Comparing.equal(result.skipToParent, root);
+  }
+
+  @SuppressWarnings({"UnsafeVfsRecursion", "Duplicates"})
+  @Nonnull
+  public static VirtualFileVisitor.Result visitChildrenRecursively(@Nonnull VirtualFile file, @Nonnull VirtualFileVisitor<?> visitor) throws VirtualFileVisitor.VisitorException {
+    boolean pushed = false;
+    try {
+      final boolean visited = visitor.allowVisitFile(file);
+      if (visited) {
+        VirtualFileVisitor.Result result = visitor.visitFileEx(file);
+        if (result.skipChildren) return result;
+      }
+
+      Iterable<VirtualFile> childrenIterable = null;
+      VirtualFile[] children = null;
+
+      try {
+        if (file.isValid() && visitor.allowVisitChildren(file) && !visitor.depthLimitReached()) {
+          childrenIterable = visitor.getChildrenIterable(file);
+          if (childrenIterable == null) {
+            children = file.getChildren();
+          }
+        }
+      }
+      catch (InvalidVirtualFileAccessException e) {
+        LOG.info("Ignoring: " + e.getMessage());
+        return VirtualFileVisitor.CONTINUE;
+      }
+
+      if (childrenIterable != null) {
+        visitor.saveValue();
+        pushed = true;
+        for (VirtualFile child : childrenIterable) {
+          VirtualFileVisitor.Result result = visitChildrenRecursively(child, visitor);
+          if (result.skipToParent != null && !Comparing.equal(result.skipToParent, child)) return result;
+        }
+      }
+      else if (children != null && children.length != 0) {
+        visitor.saveValue();
+        pushed = true;
+        for (VirtualFile child : children) {
+          VirtualFileVisitor.Result result = visitChildrenRecursively(child, visitor);
+          if (result.skipToParent != null && !Comparing.equal(result.skipToParent, child)) return result;
+        }
+      }
+
+      if (visited) {
+        visitor.afterChildrenVisited(file);
+      }
+
+      return VirtualFileVisitor.CONTINUE;
+    }
+    finally {
+      visitor.restoreValue(pushed);
+    }
+  }
+
+  public static <E extends Exception> VirtualFileVisitor.Result visitChildrenRecursively(@Nonnull VirtualFile file, @Nonnull VirtualFileVisitor visitor, @Nonnull Class<E> eClass) throws E {
+    try {
+      return visitChildrenRecursively(file, visitor);
+    }
+    catch (VirtualFileVisitor.VisitorException e) {
+      final Throwable cause = e.getCause();
+      if (eClass.isInstance(cause)) {
+        throw eClass.cast(cause);
+      }
+      throw e;
+    }
+  }
+
   /**
    * Checks whether the <code>ancestor {@link VirtualFile}</code> is parent of <code>file
    * {@link VirtualFile}</code>.

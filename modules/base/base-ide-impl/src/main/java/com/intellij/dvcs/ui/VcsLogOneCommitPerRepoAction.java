@@ -19,7 +19,7 @@ import com.intellij.dvcs.repo.Repository;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import javax.annotation.Nonnull;
 

@@ -19,7 +19,7 @@ package com.intellij.codeInsight.template.macro;
 import com.intellij.codeInsight.template.Macro;
 import consulo.component.extension.Extensions;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.Collection;

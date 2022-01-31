@@ -33,7 +33,7 @@ import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.io.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;

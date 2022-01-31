@@ -23,7 +23,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.tree.*;
 import com.intellij.ui.tree.project.ProjectFileNodeUpdater;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;

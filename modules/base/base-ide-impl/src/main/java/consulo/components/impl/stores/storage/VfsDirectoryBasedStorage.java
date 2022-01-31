@@ -27,7 +27,7 @@ import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.containers.Interner;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import consulo.application.options.PathMacrosService;
 import consulo.components.impl.stores.DefaultStateSerializer;
 import consulo.components.impl.stores.ReadOnlyModificationException;

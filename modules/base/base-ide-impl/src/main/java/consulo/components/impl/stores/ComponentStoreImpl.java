@@ -24,7 +24,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import consulo.component.messagebus.MessageBus;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;

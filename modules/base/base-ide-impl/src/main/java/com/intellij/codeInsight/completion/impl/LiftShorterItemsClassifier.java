@@ -24,7 +24,7 @@ import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.containers.FlatteningIterator;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.ui.tree;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.xdebugger.XNamedTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;

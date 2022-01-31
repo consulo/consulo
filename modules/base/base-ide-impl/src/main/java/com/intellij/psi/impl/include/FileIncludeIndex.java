@@ -11,7 +11,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.indexing.*;
 import consulo.index.io.data.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;

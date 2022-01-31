@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.settings;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.AbstractCollection;

@@ -43,7 +43,7 @@ import com.intellij.openapi.vcs.changes.ui.RollbackChangesDialog;
 import com.intellij.openapi.vcs.changes.ui.RollbackWorker;
 import com.intellij.util.Consumer;
 import com.intellij.util.PathUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayCharSequence;
 import consulo.application.ui.awt.UIUtil;

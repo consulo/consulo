@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
 import consulo.component.persist.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

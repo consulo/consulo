@@ -19,7 +19,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;

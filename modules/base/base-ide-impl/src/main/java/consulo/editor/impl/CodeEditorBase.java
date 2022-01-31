@@ -40,7 +40,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.application.util.function.Processor;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;

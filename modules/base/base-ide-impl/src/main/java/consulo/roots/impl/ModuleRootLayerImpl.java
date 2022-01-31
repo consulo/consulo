@@ -20,7 +20,7 @@ import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeat
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.function.Processor;

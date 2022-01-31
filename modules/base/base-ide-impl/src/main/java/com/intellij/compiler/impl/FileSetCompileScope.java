@@ -23,7 +23,7 @@ import consulo.module.Module;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import javax.annotation.Nonnull;
 
 import java.util.*;

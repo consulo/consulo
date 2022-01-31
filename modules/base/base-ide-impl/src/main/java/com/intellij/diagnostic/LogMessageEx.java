@@ -17,7 +17,7 @@ package com.intellij.diagnostic;
 
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;

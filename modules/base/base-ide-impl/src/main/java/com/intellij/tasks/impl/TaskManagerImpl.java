@@ -48,7 +48,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.io.HttpRequests;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.xmlb.XmlSerializationException;

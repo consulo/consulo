@@ -34,7 +34,7 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.Consumer;
 import consulo.language.util.ProcessingContext;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeInsight.completion.CompletionProvider;

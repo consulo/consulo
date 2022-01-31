@@ -22,7 +22,7 @@ import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.content.TabbedContent;
 import com.intellij.util.ContentUtilEx;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;

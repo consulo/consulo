@@ -75,8 +75,8 @@ import com.intellij.util.Function;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
-import com.intellij.util.containers.OrderedSet;
+import consulo.util.collection.MultiMap;
+import consulo.util.collection.OrderedSet;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.util.function.Computable;
@@ -101,6 +101,7 @@ import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

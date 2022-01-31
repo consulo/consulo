@@ -38,7 +38,7 @@ import consulo.language.psi.PsiRecursiveVisitor;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

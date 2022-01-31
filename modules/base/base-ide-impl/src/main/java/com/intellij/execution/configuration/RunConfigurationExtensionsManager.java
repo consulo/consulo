@@ -27,7 +27,7 @@ import com.intellij.openapi.options.SettingsEditorGroup;
 import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.component.persist.WriteExternalException;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;

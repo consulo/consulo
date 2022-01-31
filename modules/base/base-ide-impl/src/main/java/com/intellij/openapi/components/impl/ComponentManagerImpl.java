@@ -26,7 +26,7 @@ import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.messages.impl.MessageBusFactory;
 import com.intellij.util.messages.impl.MessageBusImpl;
 import consulo.application.ApplicationProperties;

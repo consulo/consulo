@@ -15,7 +15,7 @@ import consulo.virtualFileSystem.event.*;
 import com.intellij.psi.*;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.concurrency.Invoker;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import consulo.component.messagebus.MessageBusConnection;
 
 import javax.annotation.Nonnull;

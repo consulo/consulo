@@ -20,7 +20,7 @@ import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

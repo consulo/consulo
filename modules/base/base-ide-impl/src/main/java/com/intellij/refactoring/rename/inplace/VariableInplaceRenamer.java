@@ -43,7 +43,7 @@ import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.refactoring.util.TextOccurrencesUtil;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.PairProcessor;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.component.extension.Extensions;
 import consulo.container.plugin.PluginIds;
 import consulo.editor.internal.EditorInternal;

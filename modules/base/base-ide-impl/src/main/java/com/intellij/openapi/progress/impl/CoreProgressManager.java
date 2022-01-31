@@ -16,7 +16,7 @@ import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.*;

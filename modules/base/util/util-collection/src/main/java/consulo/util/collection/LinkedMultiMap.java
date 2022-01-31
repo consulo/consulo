@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.intellij.util.containers;
+package consulo.util.collection;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,13 +25,15 @@ import java.util.Map;
  * @author Evgeny Gerashchenko
  */
 public class LinkedMultiMap<K, V> extends MultiMap<K, V> {
+    @Nonnull
     @Override
     protected Map<K, Collection<V>> createMap() {
-        return new LinkedHashMap<K, Collection<V>>();
+        return new LinkedHashMap<>();
     }
 
+    @Nonnull
     @Override
     protected Map<K, Collection<V>> createMap(int initialCapacity, float loadFactor) {
-        return new LinkedHashMap<K, Collection<V>>(initialCapacity, loadFactor);
+        return new LinkedHashMap<>(initialCapacity, loadFactor);
     }
 }

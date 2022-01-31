@@ -15,7 +15,7 @@ import com.intellij.reference.SoftReference;
 import com.intellij.ui.tree.TreeVisitor;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.application.ui.awt.UIUtil;

@@ -32,7 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Functions;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntMaps;

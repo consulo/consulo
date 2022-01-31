@@ -39,7 +39,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;

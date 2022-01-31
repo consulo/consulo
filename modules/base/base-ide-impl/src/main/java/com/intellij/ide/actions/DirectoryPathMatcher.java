@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import consulo.language.psi.scope.GlobalSearchScope;

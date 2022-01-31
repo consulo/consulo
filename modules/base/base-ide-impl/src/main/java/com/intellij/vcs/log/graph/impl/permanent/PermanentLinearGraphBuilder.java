@@ -17,7 +17,7 @@
 package com.intellij.vcs.log.graph.impl.permanent;
 
 import com.intellij.util.NotNullFunction;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.GraphCommit;
 import com.intellij.vcs.log.graph.utils.Flags;

@@ -12,7 +12,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.IdFilter;
 import consulo.util.collection.ArrayUtil;

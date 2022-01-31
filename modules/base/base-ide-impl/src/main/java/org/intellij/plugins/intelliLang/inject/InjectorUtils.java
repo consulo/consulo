@@ -38,7 +38,7 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.psi.injection.LanguageInjectionSupport;
 import consulo.psi.injection.LanguageSupportCache;

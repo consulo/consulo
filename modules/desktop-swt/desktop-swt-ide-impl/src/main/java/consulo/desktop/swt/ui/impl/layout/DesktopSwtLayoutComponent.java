@@ -15,7 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl.layout;
 
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

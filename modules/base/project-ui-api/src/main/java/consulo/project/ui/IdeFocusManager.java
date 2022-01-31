@@ -16,6 +16,7 @@
 package consulo.project.ui;
 
 import consulo.application.Application;
+import consulo.application.ui.awt.UIUtil;
 import consulo.application.ui.wm.FocusRequestor;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
@@ -24,6 +25,7 @@ import consulo.project.ui.wm.internal.ApplicationIdeFocusManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.project.util.ExpirableRunnable;
 import consulo.ui.ModalityState;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 

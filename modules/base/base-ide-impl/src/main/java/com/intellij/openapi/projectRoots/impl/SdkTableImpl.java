@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBusConnection;

@@ -44,6 +44,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.util.Comparing;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.Segment;
 import consulo.application.util.SystemInfo;

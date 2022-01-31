@@ -31,7 +31,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.io.URLUtil;
 import consulo.component.util.text.UniqueNameGenerator;

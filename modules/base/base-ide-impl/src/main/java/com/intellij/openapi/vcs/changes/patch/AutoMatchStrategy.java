@@ -19,7 +19,7 @@ import com.intellij.openapi.diff.impl.patch.TextFilePatch;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nullable;
 
 import java.util.Collection;

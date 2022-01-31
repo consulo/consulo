@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.WriteExternalException;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.text.StringTokenizer;
 import com.intellij.util.xmlb.Converter;
 import com.intellij.util.xmlb.annotations.Tag;

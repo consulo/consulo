@@ -15,7 +15,7 @@ import com.intellij.openapi.vcs.impl.VcsInitObject;
 import com.intellij.openapi.vcs.impl.VcsStartupActivity;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.util.Alarm;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
@@ -31,7 +31,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import static com.intellij.openapi.vfs.VirtualFileVisitor.*;
+import static consulo.virtualFileSystem.util.VirtualFileVisitor.*;
 
 @Singleton
 public final class VcsRootScanner implements Disposable {

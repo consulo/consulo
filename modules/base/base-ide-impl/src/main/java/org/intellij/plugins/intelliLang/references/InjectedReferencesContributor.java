@@ -23,7 +23,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.impl.source.tree.injected.InjectedReferenceVisitor;
 import com.intellij.psi.injection.ReferenceInjector;
 import consulo.language.util.ProcessingContext;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.PsiReference;

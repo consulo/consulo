@@ -24,7 +24,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.component.persist.PersistentStateComponent;

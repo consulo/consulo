@@ -41,7 +41,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.application.util.function.Processor;
 import jakarta.inject.Singleton;
 

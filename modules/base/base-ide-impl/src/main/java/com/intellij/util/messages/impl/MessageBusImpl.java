@@ -10,7 +10,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.lang.CompoundRuntimeException;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;

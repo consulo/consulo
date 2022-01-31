@@ -29,7 +29,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashSet;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

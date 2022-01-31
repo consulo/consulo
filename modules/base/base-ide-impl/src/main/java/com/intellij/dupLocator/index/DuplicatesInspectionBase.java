@@ -41,7 +41,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.tree.ILightStubFileElementType;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.util.collection.primitive.ints.IntList;
 import gnu.trove.TIntIntHashMap;

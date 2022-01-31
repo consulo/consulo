@@ -21,7 +21,7 @@ import consulo.language.psi.util.ParameterizedCachedValue;
 import consulo.language.psi.util.ParameterizedCachedValueProvider;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.intellij.util.containers;
+package consulo.util.collection;
 
-import com.intellij.util.SmartList;
-import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.Maps;
+import consulo.util.collection.impl.EmptyIterator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -284,7 +282,7 @@ public class MultiMap<K, V> implements Serializable {
       @Nonnull
       @Override
       protected Collection<V> createCollection() {
-        return ContainerUtil.newLinkedHashSet();
+        return new LinkedHashSet<V>();
       }
     };
   }

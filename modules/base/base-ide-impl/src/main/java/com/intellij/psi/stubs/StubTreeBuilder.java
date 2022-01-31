@@ -31,7 +31,7 @@ import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import consulo.language.ast.IElementType;
 import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.IndexingDataKeys;

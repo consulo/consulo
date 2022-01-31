@@ -19,7 +19,7 @@ import com.intellij.openapi.compiler.generic.VirtualFileCompileItem;
 import com.intellij.compiler.impl.packagingCompiler.DestinationInfo;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.index.io.data.DataExternalizer;
 import javax.annotation.Nonnull;
 

@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;
 import consulo.application.ui.awt.CustomLineBorder;
 import com.intellij.ui.table.TableView;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.ElementProducer;
 import consulo.application.ui.awt.SideBorder;

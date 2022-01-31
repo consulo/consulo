@@ -18,7 +18,7 @@ package com.intellij.codeInsight.controlflow.impl;
 import com.intellij.codeInsight.controlflow.ControlFlowBuilder;
 import com.intellij.codeInsight.controlflow.Instruction;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

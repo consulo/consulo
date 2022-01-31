@@ -29,7 +29,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.io.CharsetToolkit;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import com.intellij.openapi.vfs.impl.LightFilePointer;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;

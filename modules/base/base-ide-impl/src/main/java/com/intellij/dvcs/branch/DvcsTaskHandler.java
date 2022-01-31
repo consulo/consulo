@@ -27,7 +27,7 @@ import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

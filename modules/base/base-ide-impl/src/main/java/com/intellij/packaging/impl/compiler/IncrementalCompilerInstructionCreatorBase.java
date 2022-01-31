@@ -21,7 +21,7 @@ import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
 import com.intellij.packaging.elements.PackagingFileFilter;
 import javax.annotation.Nonnull;

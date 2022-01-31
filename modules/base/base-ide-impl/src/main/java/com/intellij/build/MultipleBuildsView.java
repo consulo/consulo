@@ -23,7 +23,7 @@ import com.intellij.ui.components.JBList;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentFactory;
 import com.intellij.util.Alarm;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBUI;

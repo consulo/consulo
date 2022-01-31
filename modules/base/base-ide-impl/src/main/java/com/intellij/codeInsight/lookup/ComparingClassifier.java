@@ -18,7 +18,7 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
 import consulo.language.util.ProcessingContext;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FlatteningIterator;
 import javax.annotation.Nonnull;

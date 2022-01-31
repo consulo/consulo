@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.disposer.Disposable;

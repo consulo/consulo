@@ -8,7 +8,7 @@ import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.PrioritizedInternalDocumentListener;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import com.intellij.openapi.util.Getter;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

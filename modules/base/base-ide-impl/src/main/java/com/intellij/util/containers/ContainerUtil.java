@@ -17,12 +17,12 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.*;
 import com.intellij.util.*;
+import com.intellij.util.ArrayFactory;
+import com.intellij.util.ArrayUtil;
+import consulo.util.collection.*;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.application.util.function.Processor;
-import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.Maps;
-import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

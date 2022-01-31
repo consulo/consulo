@@ -60,7 +60,7 @@ import com.intellij.util.ObjectUtils;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.concurrency.Invoker;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.disposer.Disposable;

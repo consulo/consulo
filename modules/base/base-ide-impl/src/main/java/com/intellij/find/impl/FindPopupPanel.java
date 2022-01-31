@@ -49,6 +49,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
+import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.VfsPresentationUtil;
 import consulo.project.ui.IdeFocusManager;

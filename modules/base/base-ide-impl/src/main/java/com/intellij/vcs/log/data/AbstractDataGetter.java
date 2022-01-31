@@ -11,7 +11,7 @@ import com.intellij.openapi.vcs.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.vcs.log.CommitId;
 import com.intellij.vcs.log.VcsLogProvider;

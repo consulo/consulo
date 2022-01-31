@@ -46,7 +46,7 @@ import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewUtil;
 import com.intellij.util.Function;
 import consulo.language.util.IncorrectOperationException;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

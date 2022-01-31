@@ -11,7 +11,7 @@ import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesUtil;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.Function;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

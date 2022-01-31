@@ -22,7 +22,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;

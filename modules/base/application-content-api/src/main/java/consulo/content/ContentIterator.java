@@ -17,12 +17,15 @@ package consulo.content;
 
 import consulo.virtualFileSystem.VirtualFile;
 
+import java.util.function.Predicate;
+
 /**
  * Interface which can be used to receive the contents of a project.
  *
  * @see FileIndex#iterateContent(ContentIterator)
  */
-public interface ContentIterator {
+@FunctionalInterface
+public interface ContentIterator extends Predicate<VirtualFile> {
   /**
    * Processes the specified file or directory.
    *
@@ -30,4 +33,9 @@ public interface ContentIterator {
    * @return false if files processing should be stopped, true if it should be continued.
    */
   boolean processFile(VirtualFile fileOrDir);
+
+  @Override
+  default boolean test(VirtualFile fileOrDir) {
+    return processFile(fileOrDir);
+  }
 }

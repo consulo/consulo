@@ -45,7 +45,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopesCore;
 import consulo.language.psi.scope.LocalSearchScope;

@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.style.ComponentColors;

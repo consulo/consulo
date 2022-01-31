@@ -21,7 +21,7 @@ import com.intellij.history.core.Paths;
 import com.intellij.history.core.StreamUtil;
 import com.intellij.history.core.revisions.Difference;
 import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

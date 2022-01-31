@@ -23,7 +23,7 @@ import com.intellij.ui.SpeedSearchComparator;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;

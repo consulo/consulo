@@ -40,7 +40,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.util.ExceptionUtil;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.SequentialTask;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;

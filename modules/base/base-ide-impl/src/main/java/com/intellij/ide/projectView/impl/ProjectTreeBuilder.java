@@ -38,7 +38,7 @@ import com.intellij.problems.ProblemListener;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import com.intellij.util.Alarm;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
 

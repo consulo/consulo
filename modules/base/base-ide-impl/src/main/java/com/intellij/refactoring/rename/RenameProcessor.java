@@ -51,7 +51,7 @@ import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewUtil;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.AccessRule;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

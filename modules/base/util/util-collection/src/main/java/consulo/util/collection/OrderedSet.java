@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.containers;
-
-import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.Sets;
+package consulo.util.collection;
 
 import javax.annotation.Nonnull;
 import java.util.*;

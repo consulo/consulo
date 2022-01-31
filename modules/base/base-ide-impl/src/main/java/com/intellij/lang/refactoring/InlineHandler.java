@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.language.Language;
 
 import javax.annotation.Nonnull;

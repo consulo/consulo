@@ -37,6 +37,7 @@ import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.SimpleTextAttributes;

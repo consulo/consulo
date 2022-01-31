@@ -19,7 +19,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.util.TroveUtil;

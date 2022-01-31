@@ -4,7 +4,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.MultiValuesMap;
 import consulo.util.lang.ref.Ref;
 import com.intellij.util.Alarm;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.io.socketConnection.*;
 import consulo.logging.Logger;
 import gnu.trove.TIntObjectHashMap;

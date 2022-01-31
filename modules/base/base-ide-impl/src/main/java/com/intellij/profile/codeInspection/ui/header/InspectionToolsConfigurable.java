@@ -61,7 +61,7 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import consulo.util.lang.SystemProperties;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

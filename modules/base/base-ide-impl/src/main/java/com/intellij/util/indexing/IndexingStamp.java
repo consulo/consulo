@@ -3,11 +3,11 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
+import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.language.psi.stub.StubIndexKey;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.index.io.ID;

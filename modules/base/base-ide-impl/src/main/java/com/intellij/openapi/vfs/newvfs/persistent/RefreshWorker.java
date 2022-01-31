@@ -7,7 +7,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.util.io.FileAttributes;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
+import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import consulo.virtualFileSystem.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;

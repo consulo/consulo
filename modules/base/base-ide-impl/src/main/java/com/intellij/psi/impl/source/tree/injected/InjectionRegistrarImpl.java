@@ -32,7 +32,7 @@ import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.injection.ReferenceInjector;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PathUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;

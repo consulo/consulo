@@ -46,7 +46,7 @@ import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileUrlChangeAdapter;
 import consulo.language.psi.PsiDocumentManager;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.BidirectionalMap;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;

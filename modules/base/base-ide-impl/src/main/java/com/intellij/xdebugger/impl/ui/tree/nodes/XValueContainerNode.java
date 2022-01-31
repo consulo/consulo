@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SortedList;
 import com.intellij.xdebugger.evaluation.InlineDebuggerHelper;

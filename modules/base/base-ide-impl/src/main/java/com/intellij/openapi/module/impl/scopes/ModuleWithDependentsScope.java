@@ -28,7 +28,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.ProjectScope;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.containers.Queue;
 import org.jetbrains.annotations.NonNls;
 

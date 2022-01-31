@@ -48,7 +48,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageInfoFactory;
 import consulo.language.util.IncorrectOperationException;
 import java.util.HashMap;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 

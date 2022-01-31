@@ -15,15 +15,15 @@
  */
 package consulo.language;
 
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.util.containers.MultiMap;
 import consulo.annotation.UsedInPlugin;
 import consulo.language.file.LanguageFileType;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionDefines;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  * The base class for all programming language support implementations. Specific language implementations should inherit from this class
@@ -54,7 +55,7 @@ public abstract class Language extends UserDataHolderBase {
     }
   };
 
-  private static final NotNullLazyValue<MultiMap<String, LanguageVersion>> ourRegisteredMimeTypesValue = NotNullLazyValue.createValue(() -> {
+  private static final Supplier<MultiMap<String, LanguageVersion>> ourRegisteredMimeTypesValue = LazyValue.notNull(() -> {
     MultiMap<String, LanguageVersion> mimeTypesMap = new MultiMap<>();
 
     Collection<Language> registeredLanguages = getRegisteredLanguages();
@@ -82,7 +83,7 @@ public abstract class Language extends UserDataHolderBase {
   private final String myID;
   private final String[] myMimeTypes;
 
-  private NotNullLazyValue<LanguageVersion[]> myVersions = NotNullLazyValue.createValue(() -> {
+  private Supplier<LanguageVersion[]> myVersions = LazyValue.notNull(() -> {
     LanguageVersion[] versions = findVersions();
     if (versions.length == 0) {
       throw new IllegalArgumentException("Language version is empty for language: " + Language.this);
@@ -152,7 +153,7 @@ public abstract class Language extends UserDataHolderBase {
       return Collections.emptyList();
     }
 
-    Collection<LanguageVersion> versions = ourRegisteredMimeTypesValue.getValue().get(mimeType);
+    Collection<LanguageVersion> versions = ourRegisteredMimeTypesValue.get().get(mimeType);
     Set<Language> languages = new HashSet<>();
     for (LanguageVersion version : versions) {
       languages.add(version.getLanguage());
@@ -163,7 +164,7 @@ public abstract class Language extends UserDataHolderBase {
   @Nonnull
   @UsedInPlugin
   public static Collection<LanguageVersion> findVersionsByMimeType(@Nullable String mimeType) {
-    MultiMap<String, LanguageVersion> map = ourRegisteredMimeTypesValue.getValue();
+    MultiMap<String, LanguageVersion> map = ourRegisteredMimeTypesValue.get();
     return Collections.unmodifiableCollection(map.get(mimeType));
   }
 
@@ -266,7 +267,7 @@ public abstract class Language extends UserDataHolderBase {
 
   @Nonnull
   public final LanguageVersion[] getVersions() {
-    return myVersions.getValue();
+    return myVersions.get();
   }
 
   @Nullable

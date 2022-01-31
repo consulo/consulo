@@ -5,7 +5,7 @@ import com.intellij.ide.caches.FileContent;
 import consulo.logging.Logger;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
+import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.virtualFileSystem.VFileProperty;

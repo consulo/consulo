@@ -23,7 +23,7 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.RunContentDescriptor;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.util.Consumer;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

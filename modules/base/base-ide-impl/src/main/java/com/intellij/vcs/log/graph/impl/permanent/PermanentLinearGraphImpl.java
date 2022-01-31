@@ -16,7 +16,7 @@
 
 package com.intellij.vcs.log.graph.impl.permanent;
 
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.vcs.log.graph.api.EdgeFilter;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;

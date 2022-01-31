@@ -39,7 +39,7 @@ import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentFactory;
 import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.docking.DockManager;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;

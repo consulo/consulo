@@ -16,7 +16,6 @@
 package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
-import com.intellij.util.containers.ImmutableUserMap;
 
 /**
  * @author peter

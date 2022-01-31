@@ -24,7 +24,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

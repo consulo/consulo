@@ -1,10 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.stub;
 
-import com.intellij.util.SystemProperties;
 import consulo.application.ReadAction;
 import consulo.application.internal.PerApplicationInstance;
-import consulo.util.lang.function.Condition;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
@@ -13,12 +12,16 @@ import consulo.index.io.ID;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.util.IncorrectOperationException;
 import consulo.module.content.ProjectFileIndex;
-import consulo.application.progress.ProgressIndicator;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
+import consulo.util.lang.SystemProperties;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -176,7 +179,7 @@ public abstract class FileBasedIndex {
       return;
     }
 
-    VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor<Void>() {
+    VirtualFileUtil.visitChildrenRecursively(root, new VirtualFileVisitor<Void>() {
       @Override
       public boolean visitFile(@Nonnull VirtualFile file) {
         if (!acceptsFile(file)) return false;

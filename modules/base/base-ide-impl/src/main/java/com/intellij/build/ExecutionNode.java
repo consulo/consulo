@@ -11,7 +11,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.AnimatedIcon;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;

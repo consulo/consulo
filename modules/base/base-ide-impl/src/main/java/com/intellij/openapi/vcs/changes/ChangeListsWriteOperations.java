@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 
 public interface ChangeListsWriteOperations {
   @Nullable

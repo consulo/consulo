@@ -36,7 +36,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.impl.SystemDock;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;

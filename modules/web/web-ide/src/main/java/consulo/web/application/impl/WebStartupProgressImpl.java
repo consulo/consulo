@@ -16,7 +16,7 @@
 package consulo.web.application.impl;
 
 import com.intellij.ide.StartupProgress;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 
 import java.util.List;

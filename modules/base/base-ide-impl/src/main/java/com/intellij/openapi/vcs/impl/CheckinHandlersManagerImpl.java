@@ -20,8 +20,8 @@ import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vcs.checkin.BaseCheckinHandlerFactory;
 import com.intellij.openapi.vcs.checkin.CheckinHandlerFactory;
 import com.intellij.openapi.vcs.checkin.VcsCheckinHandlerFactory;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.SmartList;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;

@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.frame;
 
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

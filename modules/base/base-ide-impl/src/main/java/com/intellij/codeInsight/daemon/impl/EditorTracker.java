@@ -8,7 +8,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.Window;

@@ -39,7 +39,7 @@ import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.usageView.UsageInfo;
 import java.util.HashMap;
 
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nullable;
 import java.util.*;

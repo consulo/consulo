@@ -10,7 +10,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

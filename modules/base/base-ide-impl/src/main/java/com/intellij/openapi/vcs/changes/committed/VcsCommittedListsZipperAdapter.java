@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 
 import java.util.ArrayList;
 import java.util.Collection;

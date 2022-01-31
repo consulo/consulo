@@ -17,7 +17,7 @@ package com.intellij.ide.browsers.firefox;
 
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.SystemProperties;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;

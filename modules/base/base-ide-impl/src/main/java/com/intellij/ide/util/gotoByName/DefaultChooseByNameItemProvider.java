@@ -25,6 +25,7 @@ import com.intellij.util.containers.FList;
 import com.intellij.util.indexing.FindSymbolParameters;
 import consulo.language.psi.stub.IdFilter;
 import consulo.logging.Logger;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

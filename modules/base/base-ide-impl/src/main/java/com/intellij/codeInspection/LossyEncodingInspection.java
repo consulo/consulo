@@ -44,7 +44,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;

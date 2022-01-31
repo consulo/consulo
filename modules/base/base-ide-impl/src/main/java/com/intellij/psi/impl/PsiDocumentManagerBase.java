@@ -29,6 +29,7 @@ import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import com.intellij.openapi.util.*;
 import consulo.document.util.TextRange;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;

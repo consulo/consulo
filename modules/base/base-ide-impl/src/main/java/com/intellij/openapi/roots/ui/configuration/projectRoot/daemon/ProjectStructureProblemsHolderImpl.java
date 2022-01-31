@@ -1,6 +1,6 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.xml.util.XmlStringUtil;
 import javax.annotation.Nonnull;

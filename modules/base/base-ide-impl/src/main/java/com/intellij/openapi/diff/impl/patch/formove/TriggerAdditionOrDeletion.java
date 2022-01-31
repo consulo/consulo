@@ -29,7 +29,7 @@ import com.intellij.util.ObjectUtils;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

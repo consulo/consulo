@@ -28,7 +28,7 @@ import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.text.JBDateFormat;
 import com.intellij.util.ui.JBHtmlEditorKit;
 import consulo.application.ui.awt.UIUtil;

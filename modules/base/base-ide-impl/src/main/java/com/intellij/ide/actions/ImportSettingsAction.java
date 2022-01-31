@@ -33,7 +33,7 @@ import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.io.ZipUtil;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.container.boot.ContainerPathManager;

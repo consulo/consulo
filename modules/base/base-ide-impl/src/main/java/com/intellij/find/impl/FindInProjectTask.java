@@ -51,6 +51,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

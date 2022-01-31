@@ -52,7 +52,7 @@ import com.intellij.util.*;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.component.messagebus.Topic;

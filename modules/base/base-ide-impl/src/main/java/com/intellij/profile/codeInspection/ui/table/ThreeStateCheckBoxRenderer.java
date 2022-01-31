@@ -16,7 +16,7 @@
 package com.intellij.profile.codeInspection.ui.table;
 
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionsConfigTreeTable;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.ThreeStateCheckBox;
 import consulo.application.ui.awt.UIUtil;

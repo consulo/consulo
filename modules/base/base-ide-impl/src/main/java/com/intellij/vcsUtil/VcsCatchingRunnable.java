@@ -17,7 +17,7 @@ package com.intellij.vcsUtil;
 
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vcs.VcsException;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 
 import java.util.List;
 

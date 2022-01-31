@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.OrderedSet;
+import consulo.util.collection.OrderedSet;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;

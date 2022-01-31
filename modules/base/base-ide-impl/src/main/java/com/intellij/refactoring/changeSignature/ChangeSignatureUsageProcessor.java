@@ -20,7 +20,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.rename.ResolveSnapshotProvider;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 
 import java.util.List;

@@ -35,7 +35,7 @@ import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.intellij.util.Function;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

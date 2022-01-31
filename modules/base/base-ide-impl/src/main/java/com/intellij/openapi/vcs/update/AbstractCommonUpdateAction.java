@@ -45,7 +45,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.util.WaitForProgressToShow;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.ui.OptionsDialog;
 import com.intellij.vcs.ViewUpdateInfoNotification;
 import com.intellij.vcsUtil.VcsUtil;

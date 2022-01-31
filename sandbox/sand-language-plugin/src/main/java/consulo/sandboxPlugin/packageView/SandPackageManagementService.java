@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.packageView;
 
 import com.intellij.util.CatchingConsumer;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.webcore.packaging.InstalledPackage;
 import com.intellij.webcore.packaging.PackageManagementServiceEx;
 import com.intellij.webcore.packaging.RepoPackage;

@@ -39,7 +39,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.xmlb.annotations.Property;

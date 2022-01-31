@@ -17,6 +17,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.ConcurrencyUtil;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

@@ -22,7 +22,7 @@ import consulo.module.Module;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import jakarta.inject.Singleton;

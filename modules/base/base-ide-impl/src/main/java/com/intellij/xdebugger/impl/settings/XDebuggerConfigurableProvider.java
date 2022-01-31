@@ -1,7 +1,7 @@
 package com.intellij.xdebugger.impl.settings;
 
 import consulo.configurable.Configurable;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import com.intellij.xdebugger.settings.XDebuggerSettings;

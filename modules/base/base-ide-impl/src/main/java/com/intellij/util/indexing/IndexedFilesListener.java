@@ -9,6 +9,7 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.container.boot.ContainerPathManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import javax.annotation.Nonnull;
 import java.io.File;

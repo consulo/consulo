@@ -55,7 +55,7 @@ import com.intellij.usages.rules.PsiElementUsage;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 

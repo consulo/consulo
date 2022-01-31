@@ -18,7 +18,7 @@ package com.intellij.vcs.log.graph.impl.print;
 
 import consulo.logging.Logger;
 import com.intellij.util.NullableFunction;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUMap;
 import com.intellij.vcs.log.graph.api.EdgeFilter;

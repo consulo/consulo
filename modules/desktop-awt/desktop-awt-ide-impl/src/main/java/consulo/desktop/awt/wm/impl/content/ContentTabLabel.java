@@ -14,7 +14,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.ui.BaseButtonBehavior;
 import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.TimedDeadzone;

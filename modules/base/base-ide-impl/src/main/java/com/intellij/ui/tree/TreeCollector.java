@@ -2,7 +2,7 @@
 package com.intellij.ui.tree;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;

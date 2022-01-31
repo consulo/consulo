@@ -31,7 +31,7 @@ import com.intellij.openapi.vcs.impl.VcsInitObject;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.inject.Inject;

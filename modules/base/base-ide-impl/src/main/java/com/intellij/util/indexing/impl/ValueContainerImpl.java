@@ -16,7 +16,7 @@
 
 package com.intellij.util.indexing.impl;
 
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.indexing.ValueContainer;
 import com.intellij.util.indexing.containers.ChangeBufferingList;
 import com.intellij.util.indexing.containers.IntIdsIterator;

@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.util.BeforeAfter;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;

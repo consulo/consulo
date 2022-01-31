@@ -40,6 +40,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.*;
 import consulo.util.collection.SmartFMap;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;

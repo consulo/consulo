@@ -27,7 +27,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.FieldPanel;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

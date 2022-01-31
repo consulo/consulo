@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ItemRemovable;
 import consulo.application.ui.awt.UIUtil;

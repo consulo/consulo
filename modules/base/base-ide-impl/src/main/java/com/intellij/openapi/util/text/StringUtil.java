@@ -24,6 +24,7 @@ import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.text.MergingCharSequence;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -44,7 +44,7 @@ import com.intellij.psi.search.TodoItem;
 import consulo.language.psi.PsiUtilCore;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.NotNullProducer;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;

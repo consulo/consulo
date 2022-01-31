@@ -8,7 +8,7 @@ import com.intellij.ide.actions.runAnything.groups.RunAnythingHelpGroup;
 import com.intellij.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

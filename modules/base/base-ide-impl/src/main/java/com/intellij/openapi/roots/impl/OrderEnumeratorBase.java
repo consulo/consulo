@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.roots.OrderEnumerationHandler;
 import com.intellij.openapi.roots.OrderEnumeratorSettings;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.function.Processor;
 import consulo.content.OrderRootType;

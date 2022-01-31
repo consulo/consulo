@@ -18,7 +18,7 @@ import com.intellij.openapi.util.Getter;
 import consulo.component.util.ModificationTracker;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;

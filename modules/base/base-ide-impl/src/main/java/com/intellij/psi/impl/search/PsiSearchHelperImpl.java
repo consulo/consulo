@@ -55,7 +55,7 @@ import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import com.intellij.util.codeInsight.CommentUtilCore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.language.psi.stub.FileBasedIndex;
 import com.intellij.util.text.StringSearcher;
 import consulo.application.AccessRule;

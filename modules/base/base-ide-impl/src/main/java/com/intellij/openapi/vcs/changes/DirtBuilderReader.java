@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 
 public interface DirtBuilderReader {

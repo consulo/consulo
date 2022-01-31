@@ -21,7 +21,7 @@ import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -23,7 +23,7 @@ import com.intellij.history.core.changes.ChangeSet;
 import com.intellij.history.core.tree.Entry;
 import com.intellij.history.core.tree.RootEntry;
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 
 import java.util.List;

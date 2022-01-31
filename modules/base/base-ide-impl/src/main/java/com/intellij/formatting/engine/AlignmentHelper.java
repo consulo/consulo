@@ -21,7 +21,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 
 import java.util.EnumMap;

@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.fragmented;
 
 import com.intellij.diff.util.Side;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
 import java.util.List;

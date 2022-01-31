@@ -38,7 +38,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.component.persist.WriteExternalException;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.IconDeferrer;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.execution.impl.ConfigurationTypeCache;

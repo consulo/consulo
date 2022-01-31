@@ -32,7 +32,7 @@ import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.FileOrDirectoryCopyPackagingElement;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;

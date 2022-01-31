@@ -12,7 +12,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.document.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiFileEx;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.*;

@@ -20,7 +20,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 
 import java.util.Collection;
 

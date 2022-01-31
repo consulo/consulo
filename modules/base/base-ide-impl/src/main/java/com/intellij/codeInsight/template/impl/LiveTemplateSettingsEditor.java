@@ -44,7 +44,7 @@ import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.ui.GridBag;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;

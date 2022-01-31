@@ -33,7 +33,7 @@ import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.util.Function;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.vcsUtil.VcsCatchingRunnable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.logging.Logger;

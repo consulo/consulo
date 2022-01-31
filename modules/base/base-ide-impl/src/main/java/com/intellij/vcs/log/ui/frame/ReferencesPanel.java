@@ -20,7 +20,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.vcs.log.VcsRef;

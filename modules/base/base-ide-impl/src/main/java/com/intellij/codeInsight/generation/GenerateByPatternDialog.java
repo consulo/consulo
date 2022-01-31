@@ -13,7 +13,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.Couple;
 import consulo.application.util.SystemInfo;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.graph.*;
 import consulo.application.ApplicationProperties;
 import consulo.component.util.graph.Graph;

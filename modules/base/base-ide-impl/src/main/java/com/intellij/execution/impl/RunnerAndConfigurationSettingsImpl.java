@@ -22,7 +22,7 @@ import com.intellij.execution.runners.ProgramRunner;
 import consulo.component.extension.ExtensionException;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.JDOMExternalizable;
 import consulo.component.persist.WriteExternalException;

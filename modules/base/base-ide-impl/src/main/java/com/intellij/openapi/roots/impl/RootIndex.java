@@ -39,7 +39,7 @@ import com.intellij.util.CollectionQuery;
 import com.intellij.util.EmptyQuery;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;

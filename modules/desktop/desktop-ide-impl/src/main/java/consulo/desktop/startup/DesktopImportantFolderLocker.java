@@ -26,7 +26,7 @@ import consulo.util.io.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.builtInServer.impl.net.http.BuiltInServer;
 import consulo.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.builtInServer.impl.net.http.MessageDecoder;

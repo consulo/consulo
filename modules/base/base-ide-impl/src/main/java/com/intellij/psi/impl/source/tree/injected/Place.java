@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.SmartPsiElementPointer;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 
 public class Place extends SmartList<PsiLanguageInjectionHost.Shred> {

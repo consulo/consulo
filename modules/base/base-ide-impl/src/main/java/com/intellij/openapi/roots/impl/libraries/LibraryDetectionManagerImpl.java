@@ -22,7 +22,7 @@ import consulo.content.library.LibraryPresentationProvider;
 import consulo.content.library.LibraryProperties;
 import consulo.content.library.LibraryType;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

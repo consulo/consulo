@@ -29,7 +29,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;

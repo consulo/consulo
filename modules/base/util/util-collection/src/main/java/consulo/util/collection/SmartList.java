@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.util.collection;
 
-import com.intellij.util.containers.EmptyIterator;
-import com.intellij.util.containers.SingletonIteratorBase;
-import javax.annotation.Nonnull;
+import consulo.util.collection.impl.EmptyIterator;
+import consulo.util.collection.impl.SingletonIteratorBase;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Array;
 import java.util.*;
 

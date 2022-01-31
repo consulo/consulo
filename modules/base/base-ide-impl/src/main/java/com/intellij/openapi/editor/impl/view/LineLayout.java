@@ -18,7 +18,7 @@ import consulo.language.ast.TokenType;
 import consulo.language.ast.IElementType;
 import com.intellij.util.BitUtil;
 import com.intellij.util.DocumentUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;

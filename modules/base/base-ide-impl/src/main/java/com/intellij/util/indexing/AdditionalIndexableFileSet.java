@@ -19,7 +19,7 @@ import consulo.content.ContentIterator;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.language.psi.stub.IndexableFileSet;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.logging.Logger;
 

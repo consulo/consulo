@@ -32,7 +32,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

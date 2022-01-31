@@ -15,7 +15,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.OrderedSet;
+import consulo.util.collection.OrderedSet;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -28,7 +28,7 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ui.style.StandardColors;
 

@@ -23,7 +23,7 @@ import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessToken;

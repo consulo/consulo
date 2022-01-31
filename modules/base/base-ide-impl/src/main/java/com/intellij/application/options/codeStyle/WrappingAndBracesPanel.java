@@ -26,7 +26,7 @@ import com.intellij.psi.codeStyle.presentation.CodeStyleSoftMarginsPresentation;
 import com.intellij.ui.components.fields.CommaSeparatedIntegersField;
 import com.intellij.ui.components.fields.valueEditors.CommaSeparatedIntegersValueEditor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 

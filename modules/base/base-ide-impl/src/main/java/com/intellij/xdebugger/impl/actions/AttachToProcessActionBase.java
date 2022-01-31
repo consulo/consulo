@@ -23,7 +23,7 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.popup.async.AsyncPopupStep;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.ui.StatusText;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.attach.*;

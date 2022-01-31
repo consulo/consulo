@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import com.intellij.openapi.util.Getter;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.util.collection.util.WalkingState;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.logging.Logger;

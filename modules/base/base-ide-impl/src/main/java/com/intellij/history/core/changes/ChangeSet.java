@@ -20,7 +20,7 @@ import com.intellij.history.core.Content;
 import com.intellij.history.core.StreamUtil;
 import com.intellij.history.utils.LocalHistoryLog;
 import com.intellij.util.Producer;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

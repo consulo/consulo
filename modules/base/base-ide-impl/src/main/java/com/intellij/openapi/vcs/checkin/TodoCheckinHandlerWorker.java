@@ -49,7 +49,7 @@ import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.search.TodoItem;
 import com.intellij.psi.search.searches.IndexPatternSearch;
 import com.intellij.util.PairConsumer;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;

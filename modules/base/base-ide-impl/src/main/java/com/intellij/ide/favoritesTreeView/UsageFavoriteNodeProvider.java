@@ -36,9 +36,9 @@ import com.intellij.usages.impl.NullUsage;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.usages.rules.UsageInFiles;
 import com.intellij.util.ProxyComparator;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 
 import java.io.File;

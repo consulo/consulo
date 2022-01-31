@@ -24,7 +24,7 @@ import consulo.application.util.function.Computable;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.application.util.function.Processor;
 import com.intellij.util.StringLenComparator;
 import javax.annotation.Nonnull;

@@ -18,6 +18,7 @@ import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

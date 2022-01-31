@@ -21,7 +21,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.StringBuilderSpinAllocator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

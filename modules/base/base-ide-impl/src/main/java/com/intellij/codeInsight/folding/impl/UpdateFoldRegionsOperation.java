@@ -20,7 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 

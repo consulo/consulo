@@ -46,6 +46,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

@@ -40,6 +40,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import gnu.trove.TIntHashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

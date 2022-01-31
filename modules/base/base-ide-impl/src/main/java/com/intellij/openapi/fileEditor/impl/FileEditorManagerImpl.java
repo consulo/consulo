@@ -68,7 +68,7 @@ import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.messagebus.MessageBusConnection;

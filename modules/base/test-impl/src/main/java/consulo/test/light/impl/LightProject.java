@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainer;

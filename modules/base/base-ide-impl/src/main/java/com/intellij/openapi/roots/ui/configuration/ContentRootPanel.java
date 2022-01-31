@@ -33,7 +33,7 @@ import com.intellij.ui.roots.IconActionComponent;
 import com.intellij.ui.roots.ResizingWrapper;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.roots.ContentFolderScopes;

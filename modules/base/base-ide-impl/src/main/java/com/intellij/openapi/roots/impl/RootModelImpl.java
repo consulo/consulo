@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;

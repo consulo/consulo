@@ -47,7 +47,7 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

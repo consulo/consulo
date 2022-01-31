@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
 import com.intellij.ui.GuiUtils;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;

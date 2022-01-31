@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nullable;

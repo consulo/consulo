@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import consulo.content.base.ExcludedContentFolderTypeProvider;

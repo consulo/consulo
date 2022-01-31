@@ -27,7 +27,7 @@ import com.intellij.ui.OptionGroup;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.fields.IntegerField;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;

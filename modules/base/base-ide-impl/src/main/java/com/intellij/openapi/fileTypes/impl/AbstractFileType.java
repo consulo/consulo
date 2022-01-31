@@ -15,7 +15,7 @@ import consulo.component.persist.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.text.StringTokenizer;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import org.jdom.Element;

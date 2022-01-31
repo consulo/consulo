@@ -26,7 +26,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;

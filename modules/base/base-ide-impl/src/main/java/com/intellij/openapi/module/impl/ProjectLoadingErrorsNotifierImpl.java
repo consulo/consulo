@@ -30,7 +30,7 @@ import consulo.project.startup.StartupManager;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;

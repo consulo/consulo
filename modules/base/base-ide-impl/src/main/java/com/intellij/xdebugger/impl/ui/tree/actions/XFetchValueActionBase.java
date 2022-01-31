@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.IntIntHashMap;
 import com.intellij.xdebugger.frame.XFullValueEvaluator;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;

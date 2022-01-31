@@ -21,7 +21,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.Interner;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import consulo.application.options.PathMacrosService;
 import consulo.logging.Logger;
 import org.jdom.Attribute;

@@ -19,7 +19,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;

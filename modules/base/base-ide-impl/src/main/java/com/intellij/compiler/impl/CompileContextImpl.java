@@ -44,7 +44,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.pom.Navigatable;
-import com.intellij.util.containers.OrderedSet;
+import consulo.util.collection.OrderedSet;
 import consulo.language.psi.stub.FileBasedIndex;
 import com.intellij.util.ui.MessageCategory;
 import consulo.compiler.ModuleCompilerPathsManager;

@@ -32,7 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Chunk;
 import consulo.virtualFileSystem.util.PathsList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.OrderedSet;
+import consulo.util.collection.OrderedSet;
 import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;

@@ -21,7 +21,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;

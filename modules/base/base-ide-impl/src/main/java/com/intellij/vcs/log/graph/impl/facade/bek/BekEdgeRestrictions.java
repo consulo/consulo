@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph.impl.facade.bek;
 
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 
 class BekEdgeRestrictions {

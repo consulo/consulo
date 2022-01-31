@@ -46,7 +46,7 @@ import com.intellij.psi.impl.source.tree.*;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.document.util.TextRangeUtil;
 import consulo.logging.Logger;

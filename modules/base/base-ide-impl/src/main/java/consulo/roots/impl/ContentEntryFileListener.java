@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import com.intellij.util.containers.SmartHashSet;
+import consulo.util.collection.SmartHashSet;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.module.content.layer.ModuleRootLayer;
 

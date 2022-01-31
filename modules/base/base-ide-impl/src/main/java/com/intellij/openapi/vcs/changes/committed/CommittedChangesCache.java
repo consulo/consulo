@@ -42,7 +42,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.MessageBusUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.messagebus.Topic;

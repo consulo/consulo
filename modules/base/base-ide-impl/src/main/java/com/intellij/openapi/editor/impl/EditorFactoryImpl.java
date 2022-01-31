@@ -26,7 +26,7 @@ import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.text.CharArrayCharSequence;

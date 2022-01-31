@@ -19,7 +19,7 @@ package com.intellij.psi.impl;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

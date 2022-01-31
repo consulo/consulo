@@ -6,8 +6,8 @@ import com.intellij.formatting.engine.ExpandableIndent;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.util.containers.LinkedMultiMap;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.LinkedMultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.containers.Stack;
 import consulo.logging.Logger;
 

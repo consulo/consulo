@@ -18,8 +18,8 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.SmartList;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

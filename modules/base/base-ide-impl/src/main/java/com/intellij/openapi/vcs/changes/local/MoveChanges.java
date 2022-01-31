@@ -20,7 +20,7 @@ import com.intellij.openapi.vcs.changes.ChangeListListener;
 import com.intellij.openapi.vcs.changes.ChangeListWorker;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 
 import java.util.Collection;
 

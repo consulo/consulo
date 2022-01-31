@@ -66,7 +66,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.util.function.ThrowableComputable;

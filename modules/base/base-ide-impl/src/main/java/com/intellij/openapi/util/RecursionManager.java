@@ -2,7 +2,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.reference.SoftReference;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.function.Computable;
 import consulo.disposer.Disposable;

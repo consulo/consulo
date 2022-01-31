@@ -17,7 +17,7 @@ package com.intellij.formatting.engine;
 
 import com.intellij.formatting.*;
 import consulo.document.Document;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

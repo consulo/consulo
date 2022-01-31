@@ -14,7 +14,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nls;

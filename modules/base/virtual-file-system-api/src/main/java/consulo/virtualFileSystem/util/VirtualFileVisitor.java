@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.vfs;
+package consulo.virtualFileSystem.util;
 
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
@@ -59,7 +59,7 @@ public abstract class VirtualFileVisitor<T> {
   }
 
 
-  protected static class VisitorException extends RuntimeException {
+  public static class VisitorException extends RuntimeException {
     public VisitorException(@Nonnull Throwable cause) {
       super(cause);
     }

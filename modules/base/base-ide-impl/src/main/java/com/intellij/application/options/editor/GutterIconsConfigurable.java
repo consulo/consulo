@@ -37,7 +37,7 @@ import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import com.intellij.util.ui.DialogUtil;
 import consulo.application.ui.awt.EmptyIcon;
 import consulo.ui.ex.awt.TargetAWT;

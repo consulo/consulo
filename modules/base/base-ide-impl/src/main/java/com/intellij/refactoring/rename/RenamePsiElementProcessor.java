@@ -32,7 +32,7 @@ import com.intellij.refactoring.RefactoringSettings;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.usageView.UsageInfo;
 import consulo.language.util.IncorrectOperationException;
-import com.intellij.util.containers.MultiMap;
+import consulo.util.collection.MultiMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
