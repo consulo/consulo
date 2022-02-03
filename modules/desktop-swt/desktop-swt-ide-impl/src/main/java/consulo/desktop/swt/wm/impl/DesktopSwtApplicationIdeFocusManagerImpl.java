@@ -16,7 +16,7 @@
 package consulo.desktop.swt.wm.impl;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.application.ModalityState;
+import consulo.ui.ModalityState;
 import consulo.util.concurrent.AsyncResult;
 import consulo.project.util.ExpirableRunnable;
 import consulo.project.ui.wm.IdeFrame;

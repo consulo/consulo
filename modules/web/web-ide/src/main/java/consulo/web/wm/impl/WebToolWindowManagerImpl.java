@@ -15,30 +15,30 @@
  */
 package consulo.web.wm.impl;
 
-import consulo.component.persist.RoamingType;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.event.ProjectManagerListener;
-import com.intellij.openapi.ui.MessageType;
-import consulo.ui.ex.popup.Balloon;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.layout.DockLayout;
@@ -237,7 +237,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull MessageType type, @Nonnull String htmlBody) {
+  public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
 
   }
 

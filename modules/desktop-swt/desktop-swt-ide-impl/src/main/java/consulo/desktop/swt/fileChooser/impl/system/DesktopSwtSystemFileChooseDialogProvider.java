@@ -15,10 +15,10 @@
  */
 package consulo.desktop.swt.fileChooser.impl.system;
 
+import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.project.Project;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 
 import javax.annotation.Nonnull;
@@ -44,13 +44,13 @@ public class DesktopSwtSystemFileChooseDialogProvider implements FileChooseDialo
 
   @Nonnull
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return new DesktopSwtFileChooserDialog(descriptor);
   }
 
   @Nonnull
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return new DesktopSwtFileChooserDialog(descriptor);
   }
 }
