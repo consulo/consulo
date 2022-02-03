@@ -16,22 +16,23 @@
 
 package com.intellij.psi.impl.source;
 
-import consulo.language.plain.ast.PlainTextTokenTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.fileTypes.PlainTextParserDefinition;
+import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import consulo.language.file.FileViewProvider;
-import consulo.language.psi.PsiElementVisitor;
+import consulo.language.plain.PlainTextLanguage;
 import consulo.language.plain.psi.PsiPlainTextFile;
+import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiReference;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
-import consulo.language.plain.PlainTextLanguage;
-import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
+
 import javax.annotation.Nonnull;
 
 public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFile {
   private final FileType myFileType;
 
   public PsiPlainTextFileImpl(FileViewProvider viewProvider) {
-    super(PlainTextTokenTypes.PLAIN_TEXT_FILE, PlainTextTokenTypes.PLAIN_TEXT_FILE, viewProvider);
+    super(PlainTextParserDefinition.PLAIN_FILE_ELEMENT_TYPE, PlainTextParserDefinition.PLAIN_FILE_ELEMENT_TYPE, viewProvider);
     myFileType = viewProvider.getBaseLanguage() != PlainTextLanguage.INSTANCE ? PlainTextFileType.INSTANCE : viewProvider.getFileType();
   }
 
@@ -54,6 +55,6 @@ public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFil
   @Override
   @Nonnull
   public PsiReference[] getReferences() {
-    return ReferenceProvidersRegistry.getReferencesFromProviders(this,PsiPlainTextFile.class);
+    return ReferenceProvidersRegistry.getReferencesFromProviders(this);
   }
 }

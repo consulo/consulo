@@ -37,7 +37,7 @@ import consulo.language.version.LanguageVersion;
 import javax.annotation.Nonnull;
 
 public class PlainTextParserDefinition implements ParserDefinition {
-  private static final IFileElementType PLAIN_FILE_ELEMENT_TYPE = new IFileElementType(PlainTextLanguage.INSTANCE) {
+  public static final IFileElementType PLAIN_FILE_ELEMENT_TYPE = new IFileElementType(PlainTextLanguage.INSTANCE) {
     @Override
     public ASTNode parseContents(ASTNode chameleon) {
       final CharSequence chars = chameleon.getChars();

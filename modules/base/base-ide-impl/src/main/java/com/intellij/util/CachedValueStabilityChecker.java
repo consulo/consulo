@@ -1,16 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.language.psi.util.CachedValueProvider;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.language.psi.util.CachedValue;
+import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
 import consulo.logging.Logger;
-import consulo.component.util.PluginExceptionUtil;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -72,7 +72,7 @@ final class CachedValueStabilityChecker {
     return app.isUnitTestMode() || app.isInternal();
   }
 
-  static void checkProvidersEquivalent(CachedValueProvider<?> p1, CachedValueProvider<?> p2, Key<?> key) {
+  static void checkProvidersEquivalent(CachedValueProvider<?> p1, CachedValueProvider<?> p2, Key<?> key) throws Exception {
     if (p1 == p2 || !DO_CHECKS || ApplicationInfoImpl.isInStressTest()) return;
 
     if (p1.getClass() != p2.getClass()) {
@@ -98,7 +98,7 @@ final class CachedValueStabilityChecker {
     return index > 0 && index == name2.indexOf("$$Lambda") && name2.startsWith(name1.substring(0, index)) && ourFieldCache.get(c1).size() == ourFieldCache.get(c2).size();
   }
 
-  private static boolean checkFieldEquivalence(Object o1, Object o2, String key, int depth, @Nonnull Class<?> pluginClass) {
+  private static boolean checkFieldEquivalence(Object o1, Object o2, String key, int depth, @Nonnull Class<?> pluginClass) throws Exception {
     if (depth > 100) {
       complain("Too deep function delegation inside CachedValueProvider. If you have cyclic dependencies, please remove them.", key, pluginClass);
       return false;
@@ -107,14 +107,9 @@ final class CachedValueStabilityChecker {
     for (Field field : ourFieldCache.get(o1.getClass())) {
       Object v1;
       Object v2;
-      try {
-        field.setAccessible(true);
-        v1 = field.get(o1);
-        v2 = field.get(o2);
-      }
-      catch (Exception e) {
-        throw new UnsupportedOperationException("Please allow full reflective access");
-      }
+      field.setAccessible(true);
+      v1 = field.get(o1);
+      v2 = field.get(o2);
 
       if (areEqual(v1, v2)) continue;
 

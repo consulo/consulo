@@ -17,12 +17,9 @@
 package consulo.language.plain.ast;
 
 import consulo.language.ast.IElementType;
-import consulo.language.ast.IFileElementType;
 import consulo.language.plain.PlainTextLanguage;
 
 public class PlainTextTokenTypes {
-  public static final IElementType PLAIN_TEXT_FILE = new IFileElementType("PLAIN_TEXT_FILE", PlainTextLanguage.INSTANCE);
-
   public static final IElementType PLAIN_TEXT = new IElementType("PLAIN_TEXT", PlainTextLanguage.INSTANCE);
 
   private PlainTextTokenTypes() {

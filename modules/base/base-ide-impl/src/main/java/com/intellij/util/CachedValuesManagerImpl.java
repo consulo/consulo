@@ -5,6 +5,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.*;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
@@ -25,7 +26,9 @@ import java.util.function.Supplier;
  */
 @Singleton
 public final class CachedValuesManagerImpl extends CachedValuesManager {
-  private static final Object NULL = new Object();
+  private static final Logger LOG = Logger.getInstance(CachedValuesManagerImpl.class);
+
+  private static final Object NULL = ObjectUtil.sentinel("CachedValuesManagerImpl#NULL");
 
   private ConcurrentMap<UserDataHolder, Object> myCacheHolders = Maps.newConcurrentWeakIdentityMap();
   private Set<Key<?>> myKeys = ContainerUtil.newConcurrentSet();
@@ -62,7 +65,12 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
       if (data != null) {
         return data.get();
       }
-      CachedValueStabilityChecker.checkProvidersEquivalent(provider, value.getValueProvider(), key);
+      try {
+        CachedValueStabilityChecker.checkProvidersEquivalent(provider, value.getValueProvider(), key);
+      }
+      catch (Exception e) {
+        LOG.error(e);
+      }
     }
     if (value == null) {
       value = saveInUserData(dataHolder, key, freshCachedValue(dataHolder, key, provider, trackValue));
