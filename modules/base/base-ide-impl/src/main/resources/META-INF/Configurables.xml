@@ -180,7 +180,7 @@
     <applicationConfigurable id="updateSettings"
                              parentId="platformAndPlugins"
                              instance="consulo.ide.updateSettings.UpdatesConfigurable"
-                             displayName="Update Settings" />
+                             displayName="Update Settings"/>
 
     <applicationConfigurable parentId="general" instance="com.intellij.util.net.HttpProxyConfigurable" id="http.proxy" displayName="HTTP Proxy"/>
 
@@ -214,7 +214,8 @@
                     instance="consulo.diff.preferences.impl.ExternalDiffSettingsConfigurable"/>
     </applicationConfigurable>
 
-    <applicationConfigurable id="sdks.list" bundle="messages.ProjectBundle" key="global.bundles.display.name" instance="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
+    <applicationConfigurable id="sdks.list" bundle="consulo.project.ProjectBundle" key="global.bundles.display.name"
+                             instance="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
 
     <projectConfigurable id="project" nonDefaultProject="true" displayName="Project" instance="com.intellij.openapi.roots.ui.configuration.ProjectConfigurable"/>
 
