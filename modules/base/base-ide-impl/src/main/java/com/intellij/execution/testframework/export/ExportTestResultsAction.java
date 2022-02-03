@@ -20,35 +20,30 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.ide.BrowserUtil;
-import consulo.ui.NotificationType;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import consulo.application.progress.PerformInBackgroundOption;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
-import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.*;
 import consulo.application.util.function.Computable;
+import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import org.xml.sax.SAXException;
 
@@ -154,19 +149,9 @@ public class ExportTestResultsAction extends DumbAwareAction {
                     return;
                   }
                 }
-                catch (IOException ex) {
+                catch (IOException | SAXException | TransformerException ex) {
                   LOG.warn(ex);
                   showBalloon(project, NotificationType.ERROR, ExecutionBundle.message("export.test.results.failed", ex.getMessage()), null);
-                  return;
-                }
-                catch (TransformerException ex) {
-                  LOG.warn(ex);
-                  showBalloon(project, NotificationType.ERROR, ExecutionBundle.message("export.test.results.failed", ex.getMessage()), null);
-                  return;
-                }
-                catch (SAXException ex) {
-                  LOG.warn(ex);
-                  showBalloon(project, MessageType.ERROR, ExecutionBundle.message("export.test.results.failed", ex.getMessage()), null);
                   return;
                 }
                 catch (RuntimeException ex) {

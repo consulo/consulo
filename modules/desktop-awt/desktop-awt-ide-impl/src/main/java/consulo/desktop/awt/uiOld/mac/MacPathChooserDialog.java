@@ -19,6 +19,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
+import consulo.component.ComponentManager;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
@@ -180,7 +181,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
   @Nonnull
   @Override
-  public VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelectFiles) {
+  public VirtualFile[] choose(@Nullable ComponentManager project, @Nonnull VirtualFile... toSelectFiles) {
     VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
     choose(toSelect, files -> {
     });
@@ -190,7 +191,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
   @Nonnull
   @RequiredUIAccess
   @Override
-  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelectFiles) {
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelectFiles) {
     VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
     return chooseAsync(toSelect);
   }

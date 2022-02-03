@@ -409,7 +409,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
       myPopup.show(new RelativePoint(swCorner.getComponent(), new Point(swCorner.getPoint().x, swCorner.getPoint().y + yOffset)));
     }
     else {
-      myPopup.showInBestPositionFor(myEditor);
+      myEditor.showPopupInBestPositionFor(myPopup);
     }
 
     myPopupShown = true;

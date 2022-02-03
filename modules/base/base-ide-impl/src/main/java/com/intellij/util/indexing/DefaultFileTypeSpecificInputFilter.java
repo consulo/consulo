@@ -16,11 +16,12 @@
 package com.intellij.util.indexing;
 
 import consulo.language.psi.stub.FileBasedIndex;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.Consumer;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 public class DefaultFileTypeSpecificInputFilter implements FileBasedIndex.FileTypeSpecificInputFilter {
   private FileType[] myFileTypes;
@@ -31,7 +32,7 @@ public class DefaultFileTypeSpecificInputFilter implements FileBasedIndex.FileTy
 
   @Override
   public void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink) {
-    for (FileType ft : myFileTypes) fileTypeSink.consume(ft);
+    for (FileType ft : myFileTypes) fileTypeSink.accept(ft);
   }
 
   @Override

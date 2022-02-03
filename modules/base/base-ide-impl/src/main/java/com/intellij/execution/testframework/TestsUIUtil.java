@@ -20,24 +20,24 @@ import com.intellij.execution.Location;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.navigation.Navigatable;
-import consulo.language.psi.PsiElement;
 import com.intellij.ui.AppIcon;
 import com.intellij.ui.SystemNotifications;
+import consulo.dataContext.DataContext;
+import consulo.language.psi.PsiElement;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -128,10 +128,10 @@ public class TestsUIUtil {
     final String title = testResultPresentation.getTitle();
     final String text = testResultPresentation.getText();
     final String balloonText = testResultPresentation.getBalloonText();
-    final MessageType type = testResultPresentation.getType();
+    final NotificationType type = testResultPresentation.getType();
 
     if (!Comparing.strEqual(toolWindowManager.getActiveToolWindowId(), testRunDebugId)) {
-      toolWindowManager.notifyByBalloon(testRunDebugId, type, balloonText, null, null);
+      toolWindowManager.notifyByBalloon(testRunDebugId, type.toUI(), balloonText, null, null);
     }
 
     NOTIFICATION_GROUP.createNotification(balloonText, type).notify(project);
@@ -181,7 +181,7 @@ public class TestsUIUtil {
     private String myTitle;
     private String myText;
     private String myBalloonText;
-    private MessageType myType;
+    private NotificationType myType;
 
     public TestResultPresentation(AbstractTestProxy root, boolean started, String comment) {
       myRoot = root;
@@ -205,7 +205,7 @@ public class TestsUIUtil {
       return myBalloonText;
     }
 
-    public MessageType getType() {
+    public NotificationType getType() {
       return myType;
     }
 
@@ -227,23 +227,23 @@ public class TestsUIUtil {
       if (myRoot == null) {
         myBalloonText = myTitle = myStarted ? "Tests were interrupted" : ExecutionBundle.message("test.not.started.progress.text");
         myText = "";
-        myType = MessageType.WARNING;
+        myType = NotificationType.WARNING;
       }
       else {
         if (failedCount > 0) {
           myTitle = ExecutionBundle.message("junit.runing.info.tests.failed.label");
           myText = passedCount + " passed, " + failedCount + " failed" + (notStartedCount > 0 ? ", " + notStartedCount + " not started" : "");
-          myType = MessageType.ERROR;
+          myType = NotificationType.ERROR;
         }
         else if (notStartedCount > 0) {
           myTitle = ignoredCount > 0 ? "Tests Ignored" : ExecutionBundle.message("junit.running.info.failed.to.start.error.message");
           myText = passedCount + " passed, " + notStartedCount + (ignoredCount > 0 ? " ignored" : " not started");
-          myType = ignoredCount == 0 ? MessageType.WARNING : MessageType.ERROR;
+          myType = ignoredCount == 0 ? NotificationType.WARNING : NotificationType.ERROR;
         }
         else {
           myTitle = ExecutionBundle.message("junit.runing.info.tests.passed.label");
           myText = passedCount + " passed";
-          myType = MessageType.INFO;
+          myType = NotificationType.INFORMATION;
         }
         if (myComment != null) {
           myText += " " + myComment;

@@ -70,7 +70,7 @@ public class CustomFoldingRegionsPopup {
   }
 
   void show() {
-    myPopup.showInBestPositionFor(myEditor);
+    myEditor.showPopupInBestPositionFor(myPopup);
   }
 
   private static class MyListModel extends DefaultListModel {

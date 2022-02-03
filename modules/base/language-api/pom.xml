@@ -64,7 +64,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-indexing-io</artifactId>
+      <artifactId>consulo-index-io</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

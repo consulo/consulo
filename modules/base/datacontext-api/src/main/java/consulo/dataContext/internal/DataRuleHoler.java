@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger;
+package consulo.dataContext.internal;
 
-import com.intellij.xdebugger.evaluation.EvaluationMode;
-import consulo.language.Language;
+import consulo.dataContext.GetDataRule;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
- * @author egor
+ * @author VISTALL
+ * @since 03/02/2022
  */
-public interface XExpression {
-  @Nonnull
-  String getExpression();
-
-  @Nullable
-  Language getLanguage();
-
-  @Nullable
-  String getCustomInfo();
-
-  EvaluationMode getMode();
+public interface DataRuleHoler {
+  <T> GetDataRule<T> getDataRule(@Nonnull Key<T> dataId);
 }

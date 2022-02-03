@@ -383,7 +383,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         for (ShelvedChangeList changeList : selectedChangeLists) {
-          List<ShelvedChange> changesForChangelist = ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getChanges(myProject), selectedChanges));
+          List<ShelvedChange> changesForChangelist = ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getChanges((Project)myProject), selectedChanges));
           List<ShelvedBinaryFile> binariesForChangelist =
                   ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getBinaryFiles(), selectedBinaryChanges));
           boolean shouldUnshelveAllList = changesForChangelist.isEmpty() && binariesForChangelist.isEmpty();

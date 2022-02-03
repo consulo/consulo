@@ -90,7 +90,7 @@ public class FindPopupDirectoryChooser extends JPanel {
         myFindPopupPanel.getCanClose().set(false);
         IdeaFileChooser.chooseFiles(descriptor, myProject, null, VfsUtil.findFileByIoFile(new File(getDirectory()), true), new IdeaFileChooser.FileChooserConsumer() {
           @Override
-          public void consume(List<VirtualFile> files) {
+          public void accept(List<VirtualFile> files) {
             ApplicationManager.getApplication().invokeLater(() -> {
               myFindPopupPanel.getCanClose().set(true);
               IdeFocusManager.getInstance(myProject).requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);

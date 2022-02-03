@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl.system;
 
+import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
@@ -54,16 +55,16 @@ public class WindowsFileChooseDialogProvider implements FileChooseDialogProvider
 
   @Nonnull
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     if(EarlyAccessProgramManager.is(IFileDialogEarlyAccessProgramDescriptor.class)) {
-      return new WinPathChooserDialog2(descriptor, parent, project);
+      return new WinPathChooserDialog2(descriptor, parent, (Project)project);
     }
-    return new WinPathChooserDialog(descriptor, parent, project);
+    return new WinPathChooserDialog(descriptor, parent, (Project)project);
   }
 
   @Nonnull
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new WinPathChooserDialog(descriptor, parent, project);
+  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+    return new WinPathChooserDialog(descriptor, parent, (Project)project);
   }
 }

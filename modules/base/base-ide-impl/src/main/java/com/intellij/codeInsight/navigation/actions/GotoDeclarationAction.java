@@ -53,6 +53,7 @@ import consulo.codeInsight.TargetElementUtilEx;
 import consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.JBPopup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -207,7 +208,9 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
       if(renderer == null) {
         renderer = new DefaultPsiElementCellRenderer();
       }
-      NavigationUtil.getPsiElementPopup(elements, renderer, title, processor).showInBestPositionFor(editor);
+      JBPopup popup = NavigationUtil.getPsiElementPopup(elements, renderer, title, processor);
+
+      editor.showPopupInBestPositionFor(popup);
       return true;
     }
     return false;

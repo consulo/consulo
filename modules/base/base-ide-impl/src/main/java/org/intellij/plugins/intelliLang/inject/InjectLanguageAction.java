@@ -21,36 +21,35 @@ import com.intellij.codeInsight.hint.QuestionAction;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.injected.editor.EditorWindow;
-import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.IdeActions;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.configurable.Configurable;
-import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import consulo.util.lang.function.Condition;
-import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.psi.injection.Injectable;
 import com.intellij.psi.injection.ReferenceInjector;
-import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.FileContentUtil;
-import consulo.language.util.IncorrectOperationException;
-import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Processor;
+import consulo.configurable.Configurable;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import consulo.psi.injection.LanguageInjectionSupport;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.plugins.intelliLang.Configuration;
 import org.intellij.plugins.intelliLang.references.InjectedReferencesContributor;
 import org.jetbrains.annotations.NonNls;
@@ -199,15 +198,10 @@ public class InjectLanguageAction implements IntentionAction {
     }).setFilteringEnabled(language -> ((Injectable)language).getDisplayName()).createPopup();
     final String lastInjected = PropertiesComponent.getInstance().getValue(LAST_INJECTED_LANGUAGE);
     if (lastInjected != null) {
-      Injectable injectable = ContainerUtil.find(injectables, new Condition<Injectable>() {
-        @Override
-        public boolean value(Injectable injectable) {
-          return lastInjected.equals(injectable.getId());
-        }
-      });
+      Injectable injectable = ContainerUtil.find(injectables, it -> lastInjected.equals(it.getId()));
       list.setSelectedValue(injectable, true);
     }
-    popup.showInBestPositionFor(editor);
+    editor.showPopupInBestPositionFor(popup);
     return true;
   }
 

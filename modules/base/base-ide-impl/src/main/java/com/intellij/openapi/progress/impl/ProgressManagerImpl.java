@@ -11,6 +11,7 @@ import consulo.application.progress.Task;
 import com.intellij.openapi.progress.util.PingProgress;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWindow;
+import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.SystemNotifications;
 import com.intellij.util.containers.ContainerUtil;
@@ -88,7 +89,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
       final Task.NotificationInfo notificationInfo = task.notifyFinished();
       long time = end - start;
       if (notificationInfo != null && time > 5000) { // show notification only if process took more than 5 secs
-        final JFrame frame = WindowManager.getInstance().getFrame(task.getProject());
+        final JFrame frame = WindowManager.getInstance().getFrame((Project)task.getProject());
         if (frame != null && !frame.hasFocus()) {
           systemNotify(notificationInfo);
         }

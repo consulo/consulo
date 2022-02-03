@@ -15,16 +15,16 @@
  */
 package com.intellij.util.ui;
 
+import com.intellij.openapi.vcs.AbstractVcsHelper;
+import com.intellij.openapi.vcs.VcsException;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import com.intellij.openapi.vcs.AbstractVcsHelper;
-import com.intellij.openapi.vcs.VcsException;
-import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -68,7 +68,7 @@ public abstract class VcsBackgroundTask<T> extends Task.ConditionalModal {
   @RequiredUIAccess
   public void onSuccess() {
     if (!myExceptions.isEmpty()) {
-      AbstractVcsHelper.getInstance(myProject).showErrors(myExceptions, myTitle);
+      AbstractVcsHelper.getInstance((Project)myProject).showErrors(myExceptions, myTitle);
     }
   }
 

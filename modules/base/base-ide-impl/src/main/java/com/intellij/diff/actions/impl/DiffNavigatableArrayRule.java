@@ -16,7 +16,7 @@
 package com.intellij.diff.actions.impl;
 
 import com.intellij.diff.tools.util.DiffDataKeys;
-import com.intellij.ide.impl.dataRules.GetDataRule;
+import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;

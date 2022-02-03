@@ -80,7 +80,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     ProgressManager.getInstance().run(new Task.Backgroundable(project, event.getPresentation().getText()) {
       @Override
       public void run(@Nonnull final ProgressIndicator indicator) {
-        createDesktopEntry(getProject(), indicator, globalEntry);
+        createDesktopEntry((Project)getProject(), indicator, globalEntry);
       }
     });
   }

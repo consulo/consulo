@@ -218,7 +218,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   }
 
   @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull @Nls String progressTitle, boolean canBeCanceled, @Nullable Project project) {
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull @Nls String progressTitle, boolean canBeCanceled, @Nullable ComponentManager project) {
     return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, null);
   }
 
@@ -226,7 +226,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   public <T, E extends Exception> T runProcessWithProgressSynchronously(@Nonnull final ThrowableComputable<T, E> process,
                                                                         @Nonnull @Nls String progressTitle,
                                                                         boolean canBeCanceled,
-                                                                        @Nullable Project project) throws E {
+                                                                        @Nullable ComponentManager project) throws E {
     final AtomicReference<T> result = new AtomicReference<>();
     final AtomicReference<Throwable> exception = new AtomicReference<>();
 
@@ -346,7 +346,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
     }
     else {
       ApplicationManager.getApplication().invokeLater(() -> {
-        Project project = task.getProject();
+        ComponentManager project = task.getProject();
         if (project != null && project.isDisposed()) {
           LOG.info("Task canceled because of project disposal: " + task);
           finishTask(task, true, null);
@@ -468,7 +468,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
     };
 
     ApplicationEx application = (ApplicationEx)Application.get();
-    boolean result = application.runProcessWithProgressSynchronously(taskContainer, task.getTitle(), task.isCancellable(), task.isModal(), task.getProject(), task.getParentComponent(), task.getCancelText());
+    boolean result = application.runProcessWithProgressSynchronously(taskContainer, task.getTitle(), task.isCancellable(), task.isModal(), (Project)task.getProject(), task.getParentComponent(), task.getCancelText());
 
     ApplicationUtil.invokeAndWaitSomewhere(task.whereToRunCallbacks(), (ModalityState)application.getDefaultModalityState(), () -> finishTask(task, !result, exceptionRef.get()));
     return result;

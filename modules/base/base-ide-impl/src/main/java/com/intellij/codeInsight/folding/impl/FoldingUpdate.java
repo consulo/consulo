@@ -3,42 +3,42 @@
 package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.diagnostic.AttachmentFactory;
-import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
-import consulo.language.Language;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.lang.folding.LanguageFolding;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldingModel;
-import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.*;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import com.intellij.openapi.util.Getter;
-import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.util.registry.Registry;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.psi.*;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
-import javax.annotation.Nonnull;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class FoldingUpdate {
   private static final Logger LOG = Logger.getInstance(FoldingUpdate.class);
@@ -59,7 +59,7 @@ public class FoldingUpdate {
     CachedValue<Runnable> value = editor.getUserData(CODE_FOLDING_KEY);
 
     if (value != null && !applyDefaultState) {
-      Getter<Runnable> cached = value.getUpToDateOrNull();
+      Supplier<Runnable> cached = value.getUpToDateOrNull();
       if (cached != null) {
         return cached.get();
       }

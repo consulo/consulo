@@ -164,7 +164,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
           popup.show(new RelativePoint((MouseEvent)event));
         }
         else if (editor != null) {
-          popup.showInBestPositionFor(editor);
+          editor.showPopupInBestPositionFor(popup);
         }
         else {
           popup.showInBestPositionFor(dataContext);

@@ -1,23 +1,23 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing.impl.forward;
 
-import consulo.index.io.ID;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.logging.Logger;
-import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.VolatileNotNullLazyValue;
-import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.InputData;
 import com.intellij.util.indexing.impl.InputDataDiffBuilder;
 import com.intellij.util.indexing.impl.KeyValueUpdateProcessor;
 import com.intellij.util.indexing.impl.RemovedKeyProcessor;
+import consulo.application.progress.ProgressManager;
+import consulo.index.io.ID;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.logging.Logger;
+import consulo.util.io.ByteArraySequence;
+import consulo.util.lang.ref.Ref;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.Map;
 

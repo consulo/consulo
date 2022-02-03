@@ -124,7 +124,7 @@ public class ShowCoveringTestsAction extends AnAction {
         .setMovable(true)
         .setTitle(title)
         .createPopup();
-      popup.showInBestPositionFor(editor);
+      editor.showPopupInBestPositionFor(popup);
 
       if (component != null) {
         component.setHint(popup, title);

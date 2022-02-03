@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.google.common.base.Predicate;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.module.Module;
 import consulo.project.ProjectBundle;
@@ -47,6 +46,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /*
  * User: Anna.Kozlova

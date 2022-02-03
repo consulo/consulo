@@ -23,6 +23,7 @@ import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.ex.popup.JBPopup;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -86,11 +87,12 @@ public abstract class ChooseOneOrAllRunnable<T extends PsiElement> implements Ru
       ApplicationManager.getApplication().invokeLater(new Runnable() {
         @Override
         public void run() {
-          builder.
-            setTitle(myTitle).
-            setItemChoosenCallback(callback).
-            createPopup().
-            showInBestPositionFor(myEditor);
+          JBPopup popup = builder.
+                  setTitle(myTitle).
+                  setItemChoosenCallback(callback).
+                  createPopup();
+
+          myEditor.showPopupInBestPositionFor(popup);
         }
       });
     }

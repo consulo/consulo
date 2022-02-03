@@ -32,7 +32,7 @@ import java.io.*;
 public class ID<K, V> extends IndexId<K, V> {
   private static final IntObjectMap<ID> ourRegistry = IntMaps.newConcurrentIntObjectHashMap();
   private static final ObjectIntMap<String> ourNameToIdRegistry = ObjectMaps.newObjectIntHashMap();
-  static final int MAX_NUMBER_OF_INDICES = Short.MAX_VALUE;
+  public static final int MAX_NUMBER_OF_INDICES = Short.MAX_VALUE;
 
   private final short myUniqueId;
 

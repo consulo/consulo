@@ -58,7 +58,7 @@ public class ActionStub extends AnAction implements ActionStubBase {
 
   @Nonnull
   @Override
-  Presentation createTemplatePresentation() {
+  protected Presentation createTemplatePresentation() {
     return myTemplatePresentation.get();
   }
 

@@ -134,7 +134,7 @@ public class CommitHelper {
       Task.Backgroundable task = new Task.Backgroundable(myProject, myActionName, true, myConfiguration.getCommitOption()) {
         @Override
         public void run(@Nonnull final ProgressIndicator indicator) {
-          final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
+          final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance((Project)myProject);
           vcsManager.startBackgroundVcsOperation();
           try {
             action.run();

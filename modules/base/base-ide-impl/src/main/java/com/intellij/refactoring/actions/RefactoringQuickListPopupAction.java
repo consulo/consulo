@@ -79,7 +79,7 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
   protected void showPopup(AnActionEvent e, ListPopup popup) {
     final Editor editor = e.getData(PlatformDataKeys.EDITOR);
     if (editor != null) {
-      popup.showInBestPositionFor(editor);
+      editor.showPopupInBestPositionFor(popup);
     } else {
       super.showPopup(e, popup);
     }

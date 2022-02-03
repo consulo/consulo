@@ -1286,7 +1286,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
               tooManyUsagesStatus.pauseProcessingIfTooManyUsages();
               if (foundElements.size() + alreadyFoundCount >= UsageLimitUtil.USAGES_LIMIT && tooManyUsagesStatus.switchTooManyUsagesStatus()) {
                 int usageCount = foundElements.size() + alreadyFoundCount;
-                UsageViewManagerImpl.showTooManyUsagesWarningLater(getProject(), tooManyUsagesStatus, progressIndicator, presentation, usageCount, null);
+                UsageViewManagerImpl.showTooManyUsagesWarningLater((Project)getProject(), tooManyUsagesStatus, progressIndicator, presentation, usageCount, null);
                 return !progressIndicator.isCanceled();
               }
               return true;

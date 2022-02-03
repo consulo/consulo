@@ -16,6 +16,7 @@
 
 package com.intellij.ide.impl.dataRules;
 
+import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

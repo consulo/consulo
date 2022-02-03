@@ -43,7 +43,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   }
 
   @Nonnull
-  @Override
+  //@Override
   public ModifiableModuleRootLayer getModuleRootLayer() {
     return (ModifiableModuleRootLayer)myModuleRootLayer;
   }

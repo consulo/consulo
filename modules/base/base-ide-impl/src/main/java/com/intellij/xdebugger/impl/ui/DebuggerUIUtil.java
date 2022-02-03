@@ -161,7 +161,7 @@ public class DebuggerUIUtil {
       popup.showInScreenCoordinates(event.getComponent(), bounds.getLocation());
     }
     else {
-      popup.showInBestPositionFor(editor);
+      editor.showPopupInBestPositionFor(popup);
     }
   }
 

@@ -15,18 +15,18 @@
  */
 package consulo.sandboxPlugin.ide.library;
 
-import consulo.application.AllIcons;
-import consulo.project.Project;
-import consulo.module.content.layer.ModuleRootModel;
 import com.intellij.openapi.roots.libraries.DummyLibraryProperties;
-import consulo.content.library.LibraryType;
+import consulo.application.AllIcons;
 import consulo.content.library.NewLibraryConfiguration;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.content.library.ui.LibraryEditorComponent;
 import consulo.content.library.ui.LibraryPropertiesEditor;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.library.ModuleAwareLibraryType;
+import consulo.project.Project;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -37,21 +37,16 @@ import javax.swing.*;
  * @author VISTALL
  * @since 20.03.14
  */
-public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
+public class SandLibraryType extends ModuleAwareLibraryType<DummyLibraryProperties> {
   @Inject
   protected SandLibraryType() {
-    super(new PersistentLibraryKind<DummyLibraryProperties>("sand") {
+    super(new PersistentLibraryKind<>("sand") {
       @Nonnull
       @Override
       public DummyLibraryProperties createDefaultProperties() {
         return new DummyLibraryProperties();
       }
     });
-  }
-
-  @Override
-  public boolean isAvailable(@Nonnull ModuleRootModel moduleRootModel) {
-    return moduleRootModel.getExtension(SandModuleExtension.class) != null;
   }
 
   @Nullable
@@ -76,5 +71,10 @@ public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.Static;
+  }
+
+  @Override
+  public boolean isAvailable(@Nonnull ModuleRootLayer model) {
+    return model.getExtension(SandModuleExtension.class) != null;
   }
 }

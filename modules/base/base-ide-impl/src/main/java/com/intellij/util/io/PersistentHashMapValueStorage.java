@@ -5,20 +5,19 @@
  */
 package com.intellij.util.io;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThreadLocalCachedByteArray;
-import consulo.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.ArrayUtilRt;
-import consulo.util.lang.SystemProperties;
-import javax.annotation.Nonnull;
-
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
+import consulo.logging.Logger;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.ByteArraySequence;
+import consulo.util.lang.SystemProperties;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;

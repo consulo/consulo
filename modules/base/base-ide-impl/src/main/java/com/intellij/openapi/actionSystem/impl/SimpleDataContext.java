@@ -1,45 +1,23 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
-import consulo.dataContext.DataManager;
-import com.intellij.ide.impl.dataRules.GetDataRule;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.internal.BuilderDataContext;
 import consulo.project.Project;
-import consulo.ide.base.BaseDataManager;
 import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public final class SimpleDataContext implements DataContext {
-  private final Map<Key, Object> myDataId2Data;
-  private final DataContext myParent;
-
+@Deprecated
+@DeprecationInfo("Use DataContext#builder()")
+public final class SimpleDataContext extends BuilderDataContext implements DataContext {
   private SimpleDataContext(@Nonnull Map<Key, Object> dataId2data, @Nullable DataContext parent) {
-    myDataId2Data = dataId2data;
-    myParent = parent;
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getData(@Nonnull Key<T> dataId) {
-    Object result = getDataFromSelfOrParent(dataId);
-
-    if (result == null) {
-      GetDataRule rule = ((BaseDataManager)DataManager.getInstance()).getDataRule(dataId);
-      if (rule != null) {
-        return (T)rule.getData(this::getDataFromSelfOrParent);
-      }
-    }
-
-    return (T)result;
-  }
-
-  private Object getDataFromSelfOrParent(@Nonnull Key dataId) {
-    return myDataId2Data.containsKey(dataId) ? myDataId2Data.get(dataId) : myParent == null ? null : myParent.getData(dataId);
+    super(dataId2data, parent);
   }
 
   @Nonnull

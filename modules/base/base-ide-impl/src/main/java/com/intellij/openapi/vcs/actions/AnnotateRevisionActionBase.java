@@ -129,11 +129,11 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
       @Override
       public void onSuccess() {
         if (!exceptionRef.isNull()) {
-          AbstractVcsHelper.getInstance(myProject).showError(exceptionRef.get(), VcsBundle.message("operation.name.annotate"));
+          AbstractVcsHelper.getInstance((consulo.project.Project)myProject).showError(exceptionRef.get(), VcsBundle.message("operation.name.annotate"));
         }
         if (fileAnnotationRef.isNull()) return;
 
-        AbstractVcsHelper.getInstance(myProject).showAnnotation(fileAnnotationRef.get(), file, vcs, newLineRef.get());
+        AbstractVcsHelper.getInstance((consulo.project.Project)myProject).showAnnotation(fileAnnotationRef.get(), file, vcs, newLineRef.get());
       }
     });
 

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 24/01/2022
  */
-public abstract class ModuleAwareLibraryType<P extends LibraryProperties<P>> extends LibraryType<P> {
+public abstract class ModuleAwareLibraryType<P extends LibraryProperties> extends LibraryType<P> {
   public ModuleAwareLibraryType(@Nonnull PersistentLibraryKind<P> libraryKind) {
     super(libraryKind);
   }

@@ -39,6 +39,7 @@ import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.popup.ListPopup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -172,7 +173,9 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     DataContext context = DataManager.getInstance().getDataContext(editor.getContentComponent());
     JBPopupFactory.ActionSelectionAid mnemonics = JBPopupFactory.ActionSelectionAid.MNEMONICS;
     DefaultActionGroup group = new DefaultActionGroup(applicable.toArray(AnAction.EMPTY_ARRAY));
-    JBPopupFactory.getInstance().createActionGroupPopup(CodeInsightBundle.message("surround.with.chooser.title"), group, context, mnemonics, true).showInBestPositionFor(editor);
+    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(CodeInsightBundle.message("surround.with.chooser.title"), group, context, mnemonics, true);
+
+    editor.showPopupInBestPositionFor(popup);
   }
 
   static void doSurround(final Project project, final Editor editor, final Surrounder surrounder, final PsiElement[] elements) {

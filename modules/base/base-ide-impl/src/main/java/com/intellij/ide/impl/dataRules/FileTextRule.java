@@ -19,6 +19,7 @@ package com.intellij.ide.impl.dataRules;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.dataContext.GetDataRule;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;

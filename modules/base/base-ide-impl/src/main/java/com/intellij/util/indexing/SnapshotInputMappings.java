@@ -1,32 +1,33 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing;
 
-import consulo.index.io.EnumeratorIntegerDescriptor;
-import consulo.index.io.ID;
-import consulo.index.io.data.DataExternalizer;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.index.io.data.IOUtil;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.io.ByteArraySequence;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
 import com.intellij.util.CompressionUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtils;
-import consulo.util.lang.SystemProperties;
 import com.intellij.util.indexing.impl.DebugAssertions;
 import com.intellij.util.indexing.impl.InputData;
 import com.intellij.util.indexing.impl.forward.AbstractForwardIndexAccessor;
 import com.intellij.util.indexing.impl.forward.PersistentMapBasedForwardIndex;
-import com.intellij.util.io.*;
+import com.intellij.util.io.ByteSequenceDataExternalizer;
+import com.intellij.util.io.PersistentHashMap;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.index.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.ID;
+import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataOutputStream;
+import consulo.index.io.data.IOUtil;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
+import consulo.util.io.ByteArraySequence;
+import consulo.util.io.UnsyncByteArrayOutputStream;
+import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Collections;

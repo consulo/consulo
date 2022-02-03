@@ -69,10 +69,10 @@ public class PsiElementListNavigator {
     final JBPopup popup = navigateOrCreatePopup(targets, title, findUsagesTitle, listRenderer, listUpdaterTask);
     if (popup != null) {
       if (listUpdaterTask != null) {
-        runActionAndListUpdaterTask(() -> popup.showInBestPositionFor(e), listUpdaterTask);
+        runActionAndListUpdaterTask(() -> e.showPopupInBestPositionFor(popup), listUpdaterTask);
       }
       else {
-        popup.showInBestPositionFor(e);
+        e.showPopupInBestPositionFor(popup);
       }
     }
   }

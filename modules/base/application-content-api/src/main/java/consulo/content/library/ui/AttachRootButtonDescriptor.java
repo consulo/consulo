@@ -13,6 +13,7 @@
 package consulo.content.library.ui;
 
 import consulo.content.OrderRootType;
+import consulo.dataContext.DataContext;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -23,8 +24,8 @@ import javax.swing.*;
 /**
  * Describes an 'attach' button in the library roots component.
  *
- * @see ChooserBasedAttachRootButtonDescriptor
  * @author nik
+ * @see ChooserBasedAttachRootButtonDescriptor
  */
 public abstract class AttachRootButtonDescriptor {
   private final OrderRootType myOrderRootType;
@@ -50,8 +51,7 @@ public abstract class AttachRootButtonDescriptor {
     myToolbarIcon = toolbarIcon;
   }
 
-  public abstract VirtualFile[] selectFiles(@Nonnull JComponent parent, @Nullable VirtualFile initialSelection,
-                                            @Nullable Module contextModule, @Nonnull LibraryEditor libraryEditor);
+  public abstract VirtualFile[] selectFiles(@Nonnull JComponent parent, @Nullable VirtualFile initialSelection, @Nonnull DataContext dataContext, @Nonnull LibraryEditor libraryEditor);
 
   public String getButtonText() {
     return myButtonText;

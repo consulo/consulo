@@ -18,6 +18,7 @@ package consulo.desktop.awt.fileChooser.impl.system.windows2;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
+import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
@@ -66,7 +67,7 @@ public class WinPathChooserDialog2 implements FileChooserDialog {
 
   @Nonnull
   @Override
-  public VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect) {
+  public VirtualFile[] choose(@Nullable ComponentManager project, @Nonnull VirtualFile... toSelect) {
     throw new UnsupportedOperationException("impl async version");
   }
 
@@ -86,7 +87,7 @@ public class WinPathChooserDialog2 implements FileChooserDialog {
   @RequiredUIAccess
   @Nonnull
   @Override
-  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable Project project, @Nonnull VirtualFile[] toSelectFiles) {
+  public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelectFiles) {
     Window window = OwnerOptional.fromComponent(myParent).get();
 
     String directoryName = null;

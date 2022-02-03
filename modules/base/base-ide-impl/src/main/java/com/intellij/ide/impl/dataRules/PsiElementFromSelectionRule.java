@@ -19,6 +19,7 @@ package com.intellij.ide.impl.dataRules;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

@@ -21,21 +21,20 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessNotCreatedException;
 import com.intellij.execution.ui.RunContentDescriptor;
-import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.content.Content;
+import consulo.application.ApplicationManager;
 import consulo.application.ui.awt.UIUtil;
+import consulo.dataContext.DataManager;
 import consulo.execution.ExecutionDataKeys;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.content.Content;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StandardColors;
@@ -116,7 +115,7 @@ public class ExecutionUtil {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         if (toolWindowManager.canShowNotification(toolWindowId)) {
           //noinspection SSBasedInspection
-          toolWindowManager.notifyByBalloon(toolWindowId, MessageType.ERROR, fullMessage, null, finalListener);
+          toolWindowManager.notifyByBalloon(toolWindowId, consulo.ui.NotificationType.ERROR, fullMessage, null, finalListener);
         }
         else {
           Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "");

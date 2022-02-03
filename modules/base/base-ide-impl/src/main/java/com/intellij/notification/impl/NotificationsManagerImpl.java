@@ -15,31 +15,19 @@
  */
 package com.intellij.notification.impl;
 
-import consulo.application.AllIcons;
 import com.intellij.ide.FrameStateManager;
 import com.intellij.notification.*;
 import com.intellij.notification.impl.ui.NotificationsUtil;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import consulo.application.dumb.DumbAwareRunnable;
-import consulo.application.ui.awt.*;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.startup.StartupManager;
 import com.intellij.openapi.ui.DialogWrapperDialog;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.*;
+import com.intellij.openapi.ui.popup.BalloonBuilder;
+import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pair;
-import consulo.util.lang.ref.Ref;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.BalloonLayout;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.GradientViewport;
 import com.intellij.ui.components.labels.LinkLabel;
@@ -47,12 +35,25 @@ import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ArrayUtil;
-import consulo.application.ui.awt.FontUtil;
 import com.intellij.util.Function;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.*;
+import com.intellij.util.ui.AbstractLayoutManager;
+import com.intellij.util.ui.JBHtmlEditorKit;
+import consulo.application.AllIcons;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAwareRunnable;
+import consulo.application.ui.awt.*;
+import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.startup.StartupManager;
+import consulo.project.ui.wm.BalloonLayout;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
@@ -60,10 +61,11 @@ import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.impl.BalloonLayoutEx;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-import consulo.ui.ex.impl.BalloonLayoutEx;
+import consulo.util.lang.ref.Ref;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -191,7 +193,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
         break;
       case TOOL_WINDOW:
-        MessageType messageType = notification.getType() == NotificationType.ERROR ? MessageType.ERROR : notification.getType() == NotificationType.WARNING ? MessageType.WARNING : MessageType.INFO;
+        NotificationType messageType = notification.getType();
         final NotificationListener notificationListener = notification.getListener();
         HyperlinkListener listener = notificationListener == null ? null : new HyperlinkListener() {
           @Override
@@ -217,7 +219,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         }
 
         //noinspection SSBasedInspection
-        ToolWindowManager.getInstance(project).notifyByBalloon(toolWindowId, messageType, msg, notification.getIcon(), listener);
+        ToolWindowManager.getInstance(project).notifyByBalloon(toolWindowId, messageType.toUI(), msg, notification.getIcon(), listener);
     }
   }
 
@@ -1009,10 +1011,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     @Override
     public void notify(@Nonnull Notification notification) {
-      if(!Application.get().isSwingApplication()) {
+      if (!Application.get().isSwingApplication()) {
         return;
       }
-      
+
       doNotify(notification, null, myProject);
     }
   }

@@ -41,7 +41,7 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
   private DumbModeAction myDumbModeAction = DumbModeAction.NOTHING;
 
   public BackgroundableProcessIndicator(@Nonnull Task.Backgroundable task) {
-    this(task.getProject(), task, task);
+    this((Project)task.getProject(), task, task);
 
     myDumbModeAction = task.getDumbModeAction();
     if (myDumbModeAction == DumbModeAction.CANCEL) {

@@ -17,17 +17,17 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.module.Module;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
 
 public interface CommonDataKeys {
   Key<Project> PROJECT = Project.KEY;
-  Key<Module> MODULE = Key.create("module");
+  Key<Module> MODULE = Module.KEY;
   Key<Editor> EDITOR = Key.create("editor");
   /**
    * This key can be used to obtain reference to host editor instance, in case {@link #EDITOR} key is referring to an injected editor.
@@ -51,6 +51,7 @@ public interface CommonDataKeys {
   Key<PsiFile> PSI_FILE = Key.create("psi.File");
   /**
    * This key can be used to check if the current context relates to a virtual space in editor.
+   *
    * @see com.intellij.openapi.editor.EditorSettings#setVirtualSpace(boolean)
    */
   Key<Boolean> EDITOR_VIRTUAL_SPACE = Key.create("editor.virtual.space");

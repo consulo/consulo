@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
+import consulo.ui.NotificationType;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -62,7 +63,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
     final Project p = e.getData(CommonDataKeys.PROJECT);
     if (p != null) {
       ToolWindowManager.getInstance(p)
-        .notifyByBalloon("TODO", MessageType.INFO, "Started. <a href=\"#a\">Click me!</a>", null, new HyperlinkListener() {
+        .notifyByBalloon("TODO", NotificationType.INFO, "Started. <a href=\"#a\">Click me!</a>", null, new HyperlinkListener() {
           public void hyperlinkUpdate(final HyperlinkEvent e) {
             System.out.println(e);
           }

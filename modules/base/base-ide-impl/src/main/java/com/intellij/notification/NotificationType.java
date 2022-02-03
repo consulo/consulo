@@ -21,5 +21,18 @@ package com.intellij.notification;
 public enum NotificationType {
   INFORMATION,
   WARNING,
-  ERROR
+  ERROR ;
+
+  public consulo.ui.NotificationType toUI() {
+    switch (this) {
+      case INFORMATION:
+        return consulo.ui.NotificationType.INFO;
+      case WARNING:
+        return consulo.ui.NotificationType.WARNING;
+      case ERROR:
+        return consulo.ui.NotificationType.ERROR;
+    }
+
+    throw new UnsupportedOperationException();
+  }
 }

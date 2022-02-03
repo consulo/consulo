@@ -530,7 +530,7 @@ public class SchemesManagerImpl<T, E extends ExternalizableScheme> extends Abstr
     final byte[] byteOut = StorageUtil.writeToBytes(element);
 
     // if another new scheme uses old name of this scheme, so, we must not delete it (as part of rename operation)
-    boolean renamed = currentFileNameWithoutExtension != null && fileNameWithoutExtension != currentFileNameWithoutExtension && nameGenerator.value(currentFileNameWithoutExtension);
+    boolean renamed = currentFileNameWithoutExtension != null && fileNameWithoutExtension != currentFileNameWithoutExtension && nameGenerator.test(currentFileNameWithoutExtension);
     if (!externalInfo.isRemote()) {
       VirtualFile file = null;
       if (renamed) {

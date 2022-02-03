@@ -16,6 +16,8 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.application.AllIcons;
+import consulo.configurable.ConfigurationException;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
@@ -381,7 +383,12 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
 
   public void applyProperties() {
     if (myPropertiesEditor != null && myPropertiesEditor.isModified()) {
-      myPropertiesEditor.apply();
+      try {
+        myPropertiesEditor.apply();
+      }
+      catch (ConfigurationException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
@@ -459,7 +466,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
 
     @Override
     protected List<OrderRoot> selectRoots(@Nullable VirtualFile initialSelection) {
-      final VirtualFile[] files = myDescriptor.selectFiles(myPanel, initialSelection, myContextModule, getLibraryEditor());
+      final VirtualFile[] files = myDescriptor.selectFiles(myPanel, initialSelection, DataContext.builder().add(Module.KEY, myContextModule).build(), getLibraryEditor());
       if (files.length == 0) return Collections.emptyList();
 
       List<OrderRoot> roots = new ArrayList<>();
@@ -558,7 +565,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
           break;
         }
       }
-      
+
       FileChooser.chooseFiles(descriptor, myPanel, myProject, toSelect).doWhenDone(files -> {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override

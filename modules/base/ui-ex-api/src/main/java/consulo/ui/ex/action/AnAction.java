@@ -301,7 +301,7 @@ public abstract class AnAction implements PossiblyDumbAware {
   }
 
   @Nonnull
-  Presentation createTemplatePresentation() {
+  protected Presentation createTemplatePresentation() {
     return new Presentation();
   }
 
@@ -313,7 +313,7 @@ public abstract class AnAction implements PossiblyDumbAware {
   @RequiredUIAccess
   public abstract void actionPerformed(@Nonnull AnActionEvent e);
 
-  protected void setShortcutSet(ShortcutSet shortcutSet) {
+  public void setShortcutSet(ShortcutSet shortcutSet) {
     myShortcutSet = shortcutSet;
   }
 

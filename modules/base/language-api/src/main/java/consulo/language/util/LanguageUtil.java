@@ -185,7 +185,7 @@ public final class LanguageUtil {
   }
 
   @Nonnull
-  static JBIterable<Language> hierarchy(@Nonnull Language language) {
+  public static JBIterable<Language> hierarchy(@Nonnull Language language) {
     return JBIterable.generate(language, Language::getBaseLanguage);
   }
 }

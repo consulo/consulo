@@ -16,6 +16,7 @@
 
 package com.intellij.compiler.impl;
 
+import com.intellij.notification.NotificationType;
 import consulo.application.CommonBundle;
 import com.intellij.build.BuildContentManager;
 import com.intellij.compiler.CompilerMessageImpl;
@@ -592,9 +593,9 @@ public class CompileDriver {
         warningCount = compileContext.getMessageCount(CompilerMessageCategory.WARNING);
         if (!myProject.isDisposed()) {
           final String statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
-          final MessageType messageType = errorCount > 0 ? MessageType.ERROR : warningCount > 0 ? MessageType.WARNING : MessageType.INFO;
+          final com.intellij.notification.NotificationType messageType = errorCount > 0 ? com.intellij.notification.NotificationType.ERROR : warningCount > 0 ? com.intellij.notification.NotificationType.WARNING : NotificationType.INFORMATION;
           if (duration > ONE_MINUTE_MS) {
-            ToolWindowManager.getInstance(myProject).notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType, statusMessage);
+            ToolWindowManager.getInstance(myProject).notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage);
           }
           CompilerManager.NOTIFICATION_GROUP.createNotification(statusMessage, messageType).notify(myProject);
           if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {

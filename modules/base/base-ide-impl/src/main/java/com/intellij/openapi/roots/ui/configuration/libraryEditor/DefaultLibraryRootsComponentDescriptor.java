@@ -15,21 +15,17 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.content.library.ui.LibraryEditor;
-import consulo.module.Module;
-import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.ui.Util;
-import consulo.content.OrderRootType;
-import consulo.content.library.ui.AttachRootButtonDescriptor;
-import consulo.content.library.ui.LibraryRootsComponentDescriptor;
-import consulo.content.library.ui.OrderRootTypePresentation;
-import consulo.content.library.ui.RootDetector;
-import consulo.content.base.DocumentationOrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
+import consulo.component.extension.ExtensionPointName;
+import consulo.content.OrderRootType;
+import consulo.content.base.DocumentationOrderRootType;
+import consulo.content.library.ui.*;
+import consulo.dataContext.DataContext;
+import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
@@ -70,7 +66,7 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
     @Override
     public VirtualFile[] selectFiles(@Nonnull JComponent parent,
                                      @Nullable VirtualFile initialSelection,
-                                     @Nullable Module contextModule,
+                                     @Nullable DataContext dataContext,
                                      @Nonnull LibraryEditor libraryEditor) {
       final VirtualFile vFile = Util.showSpecifyJavadocUrlDialog(parent);
       if (vFile != null) {

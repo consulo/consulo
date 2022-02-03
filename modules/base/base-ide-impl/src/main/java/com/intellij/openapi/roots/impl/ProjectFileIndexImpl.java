@@ -239,7 +239,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   @Override
   public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && LanguageContentFolderScopes.test().apply(myDirectoryIndexProvider.get().getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) && LanguageContentFolderScopes.test().test(myDirectoryIndexProvider.get().getContentFolderType(info));
   }
 
   @Nullable

@@ -2,16 +2,16 @@
 package com.intellij.util.indexing.impl.forward;
 
 import com.intellij.openapi.util.ThreadLocalCachedByteArray;
-import consulo.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.util.indexing.impl.InputData;
 import com.intellij.util.indexing.impl.InputDataDiffBuilder;
+import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataOutputStream;
-import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.ByteArraySequence;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 

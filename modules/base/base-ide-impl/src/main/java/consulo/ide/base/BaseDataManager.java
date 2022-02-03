@@ -22,6 +22,8 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.GetDataRule;
+import consulo.dataContext.internal.DataRuleHoler;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.concurrent.AsyncResult;
@@ -55,7 +57,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author VISTALL
  * @since 2019-02-16
  */
-public abstract class BaseDataManager extends DataManager {
+public abstract class BaseDataManager extends DataManager implements DataRuleHoler {
   public static interface DataContextWithEventCount extends DataContext {
     void setEventCount(int eventCount, Object caller);
   }

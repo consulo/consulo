@@ -12,7 +12,6 @@ import com.intellij.openapi.wm.impl.status.TextPanel;
 import com.intellij.ui.ClickListener;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.PopupState;
-import com.intellij.util.Consumer;
 import consulo.application.ui.awt.JBFont;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -23,6 +22,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 public interface StatusBarWidgetWrapper {
   @Nonnull
@@ -171,7 +171,7 @@ public interface StatusBarWidgetWrapper {
     @Override
     public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
       if (!e.isPopupTrigger() && MouseEvent.BUTTON1 == e.getButton()) {
-        myClickConsumer.consume(e);
+        myClickConsumer.accept(e);
       }
       return true;
     }

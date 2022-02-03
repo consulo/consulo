@@ -19,6 +19,7 @@ import com.intellij.codeInsight.unwrap.ScopeHighlighter;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.Pass;
 import consulo.document.util.TextRange;
@@ -109,23 +110,18 @@ public class IntroduceTargetChooser {
       }
     });
 
-    JBPopupFactory.getInstance().createListPopupBuilder(list)
-          .setTitle(title)
-          .setMovable(false)
-          .setResizable(false)
-          .setRequestFocus(true)
-          .setItemChoosenCallback(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                      callback.pass((T)list.getSelectedValue());
-                                    }
-                                  })
-          .addListener(new JBPopupAdapter() {
-                          @Override
-                          public void onClosed(LightweightWindowEvent event) {
-                            highlighter.dropHighlight();
-                          }
-                       })
-          .createPopup().showInBestPositionFor(editor);
+    JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(list).setTitle(title).setMovable(false).setResizable(false).setRequestFocus(true).setItemChoosenCallback(new Runnable() {
+      @Override
+      public void run() {
+        callback.pass((T)list.getSelectedValue());
+      }
+    }).addListener(new JBPopupAdapter() {
+      @Override
+      public void onClosed(LightweightWindowEvent event) {
+        highlighter.dropHighlight();
+      }
+    }).createPopup();
+
+    editor.showPopupInBestPositionFor(popup);
   }
 }

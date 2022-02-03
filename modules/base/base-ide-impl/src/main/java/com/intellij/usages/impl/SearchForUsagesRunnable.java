@@ -17,51 +17,50 @@ package com.intellij.usages.impl;
 
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.find.FindManager;
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.application.TransactionGuard;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
-import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.util.Factory;
-import consulo.document.util.Segment;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.SearchScope;
 import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
-import consulo.application.util.function.Processor;
-import consulo.application.util.function.Processors;
 import com.intellij.util.ui.RangeBlinker;
-import consulo.application.ui.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.AccessRule;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.util.function.Processor;
+import consulo.application.util.function.Processors;
 import consulo.disposer.Disposer;
+import consulo.document.util.Segment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.SearchScope;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.popup.Balloon;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import javax.swing.Action;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.event.ActionEvent;
@@ -130,7 +129,7 @@ class SearchForUsagesRunnable implements Runnable {
   }
 
   private static void notifyByFindBalloon(@javax.annotation.Nullable final HyperlinkListener listener,
-                                          @Nonnull final MessageType info,
+                                          @Nonnull final NotificationType info,
                                           @Nonnull FindUsagesProcessPresentation processPresentation,
                                           @Nonnull final Project project,
                                           @Nonnull final List<String> lines) {
@@ -322,7 +321,7 @@ class SearchForUsagesRunnable implements Runnable {
     TooManyUsagesStatus.createFor(indicator);
     Alarm findUsagesStartedBalloon = new Alarm();
     findUsagesStartedBalloon.addRequest(() -> {
-      notifyByFindBalloon(null, MessageType.WARNING, myProcessPresentation, myProject,
+      notifyByFindBalloon(null, NotificationType.WARNING, myProcessPresentation, myProject,
                           Collections.singletonList(StringUtil.escapeXml(UsageViewManagerImpl.getProgressTitle(myPresentation))));
       findStartedBalloonShown.set(true);
     }, 300, ModalityState.NON_MODAL);
@@ -381,7 +380,7 @@ class SearchForUsagesRunnable implements Runnable {
         @Override
         public void run() {
           if (myProcessPresentation.isCanceled()) {
-            notifyByFindBalloon(null, MessageType.WARNING, myProcessPresentation, myProject, Collections.singletonList("Usage search was canceled"));
+            notifyByFindBalloon(null, NotificationType.WARNING, myProcessPresentation, myProject, Collections.singletonList("Usage search was canceled"));
             findStartedBalloonShown.set(false);
             return;
           }
@@ -400,7 +399,7 @@ class SearchForUsagesRunnable implements Runnable {
             if (myProcessPresentation.isShowFindOptionsPrompt()) {
               lines.add(createOptionsHtml(mySearchFor));
             }
-            MessageType type = myOutOfScopeUsages.get() == 0 ? MessageType.INFO : MessageType.WARNING;
+            NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
             notifyByFindBalloon(createGotToOptionsListener(mySearchFor), type, myProcessPresentation, myProject, lines);
             findStartedBalloonShown.set(false);
           }
@@ -438,7 +437,7 @@ class SearchForUsagesRunnable implements Runnable {
           lines.add(UsageViewManagerImpl.outOfScopeMessage(myOutOfScopeUsages.get(), mySearchScopeToWarnOfFallingOutOf));
         }
         lines.add(createOptionsHtml(mySearchFor));
-        MessageType type = myOutOfScopeUsages.get() == 0 ? MessageType.INFO : MessageType.WARNING;
+        NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
         notifyByFindBalloon(createGotToOptionsListener(mySearchFor), type, myProcessPresentation, myProject, lines);
       }, ModalityState.NON_MODAL, myProject.getDisposed());
     }
@@ -464,7 +463,7 @@ class SearchForUsagesRunnable implements Runnable {
           myOutOfScopeUsages.get() != 0 ||
           myProcessPresentation.searchIncludingProjectFileUsages() != null) {
         ApplicationManager.getApplication().invokeLater(() -> {
-          MessageType type = myOutOfScopeUsages.get() == 0 ? MessageType.INFO : MessageType.WARNING;
+          NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
           notifyByFindBalloon(hyperlinkListener, type, myProcessPresentation, myProject, lines);
         }, ModalityState.NON_MODAL, myProject.getDisposed());
       }

@@ -44,6 +44,19 @@
         <include>consulo:consulo-xcoverage-data</include>
         <include>consulo:consulo-proxy</include>
         <include>consulo:consulo-virtual-file-system-api</include>
+        <include>consulo:consulo-datacontext-api</include>
+        <include>consulo:consulo-navigation-api</include>
+        <include>consulo:consulo-module-api</include>
+        <include>consulo:consulo-index-io</include>
+        <include>consulo:consulo-file-chooser-api</include>
+        <include>consulo:consulo-application-content-api</include>
+        <include>consulo:consulo-project-content-api</include>
+        <include>consulo:consulo-module-content-api</include>
+        <include>consulo:consulo-project-ui-api</include>
+        <include>consulo:consulo-application-ui-api</include>
+        <include>consulo:consulo-ui-ex-api</include>
+        <include>consulo:consulo-configurable-api</include>
+        <include>consulo:consulo-language-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import com.intellij.ide.impl.dataRules.GetDataRule;
+import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;

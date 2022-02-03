@@ -16,12 +16,7 @@
 package com.intellij.dvcs.cherrypick;
 
 import com.google.common.collect.Lists;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
-import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsKey;
@@ -30,17 +25,21 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangeListManagerEx;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
 import com.intellij.vcs.log.CommitId;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLog;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.logging.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.project.Project;
+import consulo.util.collection.MultiMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
@@ -99,7 +98,7 @@ public class VcsCherryPickManager {
     public CherryPickingTask(@Nonnull Project project, @Nonnull List<VcsFullCommitDetails> detailsInReverseOrder) {
       super(project, "Cherry-Picking");
       myAllDetailsInReverseOrder = detailsInReverseOrder;
-      myChangeListManager = (ChangeListManagerEx)ChangeListManager.getInstance(myProject);
+      myChangeListManager = (ChangeListManagerEx)ChangeListManager.getInstance((Project)myProject);
       myChangeListManager.blockModalNotifications();
     }
 
@@ -125,7 +124,7 @@ public class VcsCherryPickManager {
     }
 
     public void showError(@Nonnull String message) {
-      VcsNotifier.getInstance(myProject).notifyWeakError(message);
+      VcsNotifier.getInstance((Project)myProject).notifyWeakError(message);
       LOG.warn(message);
     }
 

@@ -98,7 +98,7 @@
                 </constraints>
                 <properties>
                   <focusPainted value="true"/>
-                  <text resource-bundle="messages/CommonBundle" key="button.background"/>
+                  <text resource-bundle="consulo/application/CommonBundle" key="button.background"/>
                 </properties>
               </component>
             </children>

@@ -15,6 +15,7 @@
  */
 package consulo.fileChooser.impl;
 
+import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
@@ -32,14 +33,14 @@ import java.awt.*;
 public class UnifiedFileChooseDialogProvider implements FileChooseDialogProvider {
   @Nonnull
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new UnifiedChooserDialog(project, descriptor);
+  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+    return new UnifiedChooserDialog((Project)project, descriptor);
   }
 
   @Nonnull
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new UnifiedChooserDialog(project, descriptor);
+  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+    return new UnifiedChooserDialog((Project)project, descriptor);
   }
 
   @Nonnull

@@ -21,6 +21,7 @@ import consulo.component.util.pointer.Named;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
+import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -32,9 +33,11 @@ import javax.annotation.Nullable;
  * @see ModuleManager#getModules()
  */
 public interface Module extends ComponentManager, Disposable, Named {
-  public static final Module[] EMPTY_ARRAY = new Module[0];
+  Key<Module> KEY = Key.create(Module.class);
 
-  public static ArrayFactory<Module> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Module[count];
+  Module[] EMPTY_ARRAY = new Module[0];
+
+  ArrayFactory<Module> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Module[count];
 
   /**
    * Returns the <code>VirtualFile</code> to the module dir

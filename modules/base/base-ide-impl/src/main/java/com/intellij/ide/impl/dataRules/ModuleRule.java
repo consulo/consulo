@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.dataContext.GetDataRule;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;

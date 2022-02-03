@@ -1441,7 +1441,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     private void runListenerAction(@Nonnull TimerListener listener) {
-      ModalityState modalityState = listener.getModalityState();
+      ModalityState modalityState = (ModalityState)listener.getModalityState();
       if (modalityState == null) return;
       LOG.debug("notify ", listener);
       if (!ModalityState.current().dominates(modalityState)) {

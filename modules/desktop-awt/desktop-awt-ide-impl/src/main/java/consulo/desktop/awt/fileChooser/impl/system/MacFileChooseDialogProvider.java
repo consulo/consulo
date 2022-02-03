@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl.system;
 
+import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
@@ -51,13 +52,13 @@ public class MacFileChooseDialogProvider implements FileChooseDialogProvider {
 
   @Nonnull
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new MacPathChooserDialog(descriptor, parent, project);
+  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+    return new MacPathChooserDialog(descriptor, parent, (Project)project);
   }
 
   @Nonnull
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new MacPathChooserDialog(descriptor, parent, project);
+  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+    return new MacPathChooserDialog(descriptor, parent, (Project)project);
   }
 }

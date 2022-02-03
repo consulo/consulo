@@ -6,9 +6,10 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author Roman.Chernyatchik
@@ -40,7 +41,7 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
         @RequiredUIAccess
         @Override
         public void onSuccess() {
-          final CoverageView coverageView = CoverageViewManager.getInstance(myProject).getToolwindow(suite);
+          final CoverageView coverageView = CoverageViewManager.getInstance((Project)myProject).getToolwindow(suite);
           if (coverageView != null) {
             coverageView.updateParentTitle();
           }

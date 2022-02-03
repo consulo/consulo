@@ -245,7 +245,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     return FSRecords.writeContent(getFileId(file), readOnly);
   }
 
-  private static void writeContent(@Nonnull VirtualFile file, ByteArraySequence content, boolean readOnly) {
+  private static void writeContent(@Nonnull VirtualFile file, consulo.util.io.ByteArraySequence content, boolean readOnly) {
     FSRecords.writeContent(getFileId(file), content, readOnly);
   }
 
@@ -543,7 +543,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
            // do not cache archive content unless asked
            cacheContent && !application.isInternal() && !application.isUnitTestMode()) && content.length <= PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD) {
         synchronized (myInputLock) {
-          writeContent(file, new ByteArraySequence(content), delegate.isReadOnly());
+          writeContent(file, new consulo.util.io.ByteArraySequence(content), delegate.isReadOnly());
           setFlag(file, MUST_RELOAD_CONTENT, false);
         }
       }
@@ -612,7 +612,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
   private void storeContentToStorage(long fileLength, @Nonnull VirtualFile file, boolean readOnly, @Nonnull byte[] bytes, int bytesLength) {
     synchronized (myInputLock) {
       if (bytesLength == fileLength) {
-        writeContent(file, new ByteArraySequence(bytes, 0, bytesLength), readOnly);
+        writeContent(file, new consulo.util.io.ByteArraySequence(bytes, 0, bytesLength), readOnly);
         setFlag(file, MUST_RELOAD_CONTENT, false);
       }
       else {

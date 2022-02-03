@@ -116,7 +116,7 @@
     <extensionPoint name="keymapExtension"
                     interface="com.intellij.openapi.keymap.KeymapExtension"/>
 
-    <extensionPoint name="getDataRule" interface="com.intellij.ide.impl.dataRules.GetDataRule"/>
+    <extensionPoint name="getDataRule" interface="consulo.dataContext.GetDataRule"/>
 
     <extensionPoint name="dataValidator" interface="com.intellij.ide.impl.DataValidator"/>
 

@@ -196,7 +196,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
             public void run() {
               Messages.showErrorDialog((Project)myProject, "Error refreshing view: " + StringUtil.join(e.getMessages(), "\n"), "Committed Changes");
             }
-          }, null, myProject);
+          }, null, (Project)myProject);
         } finally {
           myInLoad = false;
           myBrowser.setLoading(false);

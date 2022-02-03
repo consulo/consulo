@@ -16,13 +16,13 @@
 package consulo.desktop.awt.ui.plaf.ideaOld;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredSideBorder;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.awt.ui.plaf.LafManagerImplUtil;
 import consulo.desktop.awt.ui.plaf.beg.*;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.util.lang.Pair;
 
 import javax.swing.*;
 import javax.swing.border.Border;

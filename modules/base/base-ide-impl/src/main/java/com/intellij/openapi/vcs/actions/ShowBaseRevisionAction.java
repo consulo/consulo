@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.actions;
 
+import consulo.project.Project;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -79,14 +80,14 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
     @RequiredUIAccess
     @Override
     public void onSuccess() {
-      if (myProject.isDisposed() || ! myProject.isOpen()) return;
+      if (myProject.isDisposed() || ! ((Project)myProject).isOpen()) return;
 
       if (myDescription != null) {
         NotificationPanel panel = new NotificationPanel();
         panel.setText(createMessage(myDescription, selectedFile));
         final JBPopup message = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, panel.getLabel()).createPopup();
         if (vcsContext.getEditor() != null) {
-          message.showInBestPositionFor(vcsContext.getEditor());
+          vcsContext.getEditor().showPopupInBestPositionFor(message);
         } else {
           message.showCenteredInCurrentWindow(vcsContext.getProject());
         }

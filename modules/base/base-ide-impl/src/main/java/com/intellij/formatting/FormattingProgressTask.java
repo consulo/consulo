@@ -221,12 +221,12 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
       if (file == null || document == null || myDocumentModificationStampBefore < 0) {
         return;
       }
-      FileEditor editor = FileEditorManager.getInstance(myProject).getSelectedEditor(file);
+      FileEditor editor = FileEditorManager.getInstance((Project)myProject).getSelectedEditor(file);
       if (editor == null) {
         return;
       }
 
-      UndoManager manager = UndoManager.getInstance(myProject);
+      UndoManager manager = UndoManager.getInstance((Project)myProject);
       while (manager.isUndoAvailable(editor) && document.getModificationStamp() != myDocumentModificationStampBefore) {
         manager.undo(editor);
       }

@@ -16,6 +16,7 @@
 package consulo.module.content;
 
 import consulo.component.util.SimpleModificationTracker;
+import consulo.module.Module;
 import consulo.module.content.layer.OrderEnumerator;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

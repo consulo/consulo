@@ -25,6 +25,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.EdtRunnable;
@@ -669,9 +670,25 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       position.set(Balloon.Position.atLeft);
     }
 
+    MessageType messageType = null;
+
+    switch (type) {
+      case INFO:
+        messageType = MessageType.INFO;
+        break;
+      case WARNING:
+        messageType = MessageType.WARNING;
+        break;
+      case ERROR:
+        messageType = MessageType.ERROR;
+        break;
+      case QUESTION:
+        throw new IllegalArgumentException();
+    }
+
     final BalloonHyperlinkListener listenerWrapper = new BalloonHyperlinkListener(listener);
-    final Balloon balloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(text.replace("\n", "<br>"), icon, type.getPopupBackground(), listenerWrapper).setHideOnClickOutside(false)
-            .setBorderColor(type.getBorderColor())
+    final Balloon balloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(text.replace("\n", "<br>"), icon, messageType.getPopupBackground(), listenerWrapper).setHideOnClickOutside(false)
+            .setBorderColor(messageType.getBorderColor())
             .setHideOnFrameResize(false).createBalloon();
     FrameStateManager.getInstance().getApplicationActive().doWhenDone(() -> {
       final Alarm alarm = new Alarm();

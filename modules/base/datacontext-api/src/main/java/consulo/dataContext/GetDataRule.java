@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.impl.dataRules;
+package consulo.dataContext;
 
-import consulo.dataContext.DataProvider;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;

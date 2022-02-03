@@ -21,30 +21,32 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.util.dataholder.Key;
+import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.Pair;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.RecursiveTreeElementWalkingVisitor;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.ui.components.JBList;
+import consulo.application.ApplicationManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -147,7 +149,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
         });
 
     JBPopup popup = builder.createPopup();
-    popup.showInBestPositionFor(editor);
+    editor.showPopupInBestPositionFor(popup);
   }
 
   public static TextAttributes getTestAttributesForExtract() {

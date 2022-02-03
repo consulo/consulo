@@ -15,24 +15,25 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.BackgroundTaskQueue;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
-import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vcs.*;
+import com.intellij.openapi.vcs.Details;
+import com.intellij.openapi.vcs.GenericDetailsLoader;
+import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.Ticket;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
-import javax.annotation.Nonnull;
-
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -152,7 +153,7 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
       LOG.info(e);
       String message = cause.getMessage() == null ? e.getMessage() : cause.getMessage();
       message = message == null ? "Unknown error" : message;
-      VcsBalloonProblemNotifier.showOverChangesView(myProject, message, MessageType.ERROR);
+      VcsBalloonProblemNotifier.showOverChangesView((Project)myProject, message, MessageType.ERROR);
     }
 
     @Override

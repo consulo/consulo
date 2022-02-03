@@ -15,11 +15,10 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.openapi.util.io.ByteArraySequence;
 import consulo.index.io.data.DataExternalizer;
+import consulo.util.io.ByteArraySequence;
 
 import javax.annotation.Nonnull;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

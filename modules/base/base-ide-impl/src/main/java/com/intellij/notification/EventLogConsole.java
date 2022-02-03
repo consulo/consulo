@@ -151,7 +151,7 @@ class EventLogConsole {
 
       @Override
       public int getConsoleFontSize() {
-        Pair<String, Integer> data = NotificationsUtil.getFontData();
+        consulo.util.lang.Pair<String, Integer> data = NotificationsUtil.getFontData();
         return data == null ? super.getConsoleFontSize() : data.second;
       }
 

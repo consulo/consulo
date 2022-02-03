@@ -15,18 +15,18 @@
  */
 package com.intellij.notification.impl.ui;
 
-import consulo.application.AllIcons;
-import consulo.application.ui.UISettings;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.xml.util.XmlStringUtil;
+import consulo.application.AllIcons;
+import consulo.application.ui.UISettings;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBUIScale;
-import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

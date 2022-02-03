@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
@@ -97,24 +98,20 @@ abstract class RenameChooser {
       }
     });
 
-    JBPopupFactory.getInstance().createListPopupBuilder(list)
-      .setTitle("String occurrences found")
-      .setMovable(false)
-      .setResizable(false)
-      .setRequestFocus(true)
-      .setItemChoosenCallback(new Runnable() {
-        @Override
-        public void run() {
-          runRenameTemplate(ALL_OCCURRENCES.equals(list.getSelectedValue()) ? stringUsages : new ArrayList<Pair<PsiElement, TextRange>>());
-        }
-      })
-      .addListener(new JBPopupAdapter() {
-        @Override
-        public void onClosed(LightweightWindowEvent event) {
-          dropHighlighters();
-        }
-      })
-      .createPopup().showInBestPositionFor(myEditor);
+    JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(list).setTitle("String occurrences found").setMovable(false).setResizable(false).setRequestFocus(true)
+            .setItemChoosenCallback(new Runnable() {
+              @Override
+              public void run() {
+                runRenameTemplate(ALL_OCCURRENCES.equals(list.getSelectedValue()) ? stringUsages : new ArrayList<Pair<PsiElement, TextRange>>());
+              }
+            }).addListener(new JBPopupAdapter() {
+              @Override
+              public void onClosed(LightweightWindowEvent event) {
+                dropHighlighters();
+              }
+            }).createPopup();
+
+    myEditor.showPopupInBestPositionFor(popup);
   }
 
 

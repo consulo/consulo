@@ -16,26 +16,26 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.actions.ActivateToolWindowAction;
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.IdeActions;
-import consulo.ui.ex.action.Shortcut;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.util.MacKeymapUtil;
-import consulo.project.Project;
-import com.intellij.openapi.util.Couple;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
+import consulo.application.ui.UISettings;
 import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.application.util.SystemInfo;
+import consulo.project.Project;
+import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.action.util.MacKeymapUtil;
+import consulo.ui.ex.awt.TargetAWT;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

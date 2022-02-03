@@ -15,34 +15,31 @@
  */
 package com.intellij.psi.impl.file;
 
-import consulo.language.ast.ASTNode;
-import consulo.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
-import consulo.application.ApplicationManager;
-import consulo.language.psi.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.ui.Queryable;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiElementBase;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
-import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.module.extension.ModuleExtension;
-import consulo.language.psi.PsiPackage;
-import consulo.language.psi.PsiPackageManager;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.ApplicationManager;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.*;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.util.IncorrectOperationException;
+import consulo.logging.Logger;
+import consulo.module.extension.ModuleExtension;
+import consulo.navigation.ItemPresentation;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.IntFunction;
 
 public abstract class PsiPackageBase extends PsiElementBase implements PsiPackage, Queryable {
   private static final Logger LOG = Logger.getInstance(PsiPackageBase.class);
@@ -182,7 +179,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     return getSubPackages(this, scope);
   }
 
-  protected abstract ArrayFactory<? extends PsiPackage> getPackageArrayFactory();
+  protected abstract IntFunction<? extends PsiPackage[]> getPackageArrayFactory();
 
   @Nonnull
   public PsiPackage[] getSubPackages(@Nonnull PsiPackage psiPackage, @Nonnull GlobalSearchScope scope) {

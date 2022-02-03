@@ -21,20 +21,21 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.Pass;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.text.MessageFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -45,7 +46,9 @@ import java.util.List;
 // from reusing it, use simpleChooser instead.
 public abstract class OccurrencesChooser<T> {
   public static enum ReplaceChoice {
-    NO("Replace this occurrence only"), NO_WRITE("Replace all occurrences but write"), ALL("Replace all {0} occurrences");
+    NO("Replace this occurrence only"),
+    NO_WRITE("Replace all occurrences but write"),
+    ALL("Replace all {0} occurrences");
 
     private final String myDescription;
 
@@ -100,11 +103,7 @@ public abstract class OccurrencesChooser<T> {
     final JList list = new JBList(model);
     list.setCellRenderer(new DefaultListCellRenderer() {
       @Override
-      public Component getListCellRendererComponent(final JList list,
-                                                    final Object value,
-                                                    final int index,
-                                                    final boolean isSelected,
-                                                    final boolean cellHasFocus) {
+      public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
         final Component rendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         final ReplaceChoice choices = (ReplaceChoice)value;
         if (choices != null) {
@@ -127,32 +126,27 @@ public abstract class OccurrencesChooser<T> {
         final List<T> occurrenceList = occurrencesMap.get(value);
         for (T occurrence : occurrenceList) {
           final TextRange textRange = getOccurrenceRange(occurrence);
-          final RangeHighlighter rangeHighlighter = markupModel.addRangeHighlighter(
-            textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes,
-            HighlighterTargetArea.EXACT_RANGE);
+          final RangeHighlighter rangeHighlighter =
+                  markupModel.addRangeHighlighter(textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes, HighlighterTargetArea.EXACT_RANGE);
           myRangeHighlighters.add(rangeHighlighter);
         }
       }
     });
 
-    JBPopupFactory.getInstance().createListPopupBuilder(list)
-      .setTitle("Multiple occurrences found")
-      .setMovable(false)
-      .setResizable(false)
-      .setRequestFocus(true)
-      .setItemChoosenCallback(new Runnable() {
-        @Override
-        public void run() {
-          callback.pass((ReplaceChoice)list.getSelectedValue());
-        }
-      })
-      .addListener(new JBPopupAdapter() {
-        @Override
-        public void onClosed(LightweightWindowEvent event) {
-          dropHighlighters();
-        }
-      })
-      .createPopup().showInBestPositionFor(myEditor);
+    JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(list).setTitle("Multiple occurrences found").setMovable(false).setResizable(false).setRequestFocus(true)
+            .setItemChoosenCallback(new Runnable() {
+              @Override
+              public void run() {
+                callback.pass((ReplaceChoice)list.getSelectedValue());
+              }
+            }).addListener(new JBPopupAdapter() {
+              @Override
+              public void onClosed(LightweightWindowEvent event) {
+                dropHighlighters();
+              }
+            }).createPopup();
+
+    myEditor.showPopupInBestPositionFor(popup);
   }
 
   protected abstract TextRange getOccurrenceRange(T occurrence);

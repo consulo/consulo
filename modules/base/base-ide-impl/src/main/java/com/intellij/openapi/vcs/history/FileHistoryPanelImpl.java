@@ -1108,7 +1108,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     @Override
     public void onSuccess() {
-      AbstractVcsHelper helper = AbstractVcsHelper.getInstance(myProject);
+      AbstractVcsHelper helper = AbstractVcsHelper.getInstance((Project)myProject);
       if (myException != null) {
         helper.showError(myException, VcsBundle.message("create.patch.error.title", myException.getMessage()));
       }
@@ -1116,7 +1116,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         helper.showError(null, "Can not load changelist contents");
       }
       else {
-        CreatePatchFromChangesAction.createPatch(myProject, myList.getComment(), new ArrayList<>(myList.getChanges()));
+        CreatePatchFromChangesAction.createPatch((Project)myProject, myList.getComment(), new ArrayList<>(myList.getChanges()));
       }
     }
   }

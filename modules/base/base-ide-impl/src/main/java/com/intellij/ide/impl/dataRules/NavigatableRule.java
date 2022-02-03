@@ -22,6 +22,7 @@ import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;

@@ -1,17 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.paint;
 
-import com.intellij.openapi.util.Pair;
+import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.JBUI.ScaleContext;
 import consulo.application.ui.awt.LinePainter2D;
 import consulo.application.ui.awt.LinePainter2D.Align;
 import consulo.application.ui.awt.LinePainter2D.StrokeType;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.JBUI.ScaleContext;
 import consulo.application.ui.awt.paint.PaintUtil;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;

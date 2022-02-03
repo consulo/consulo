@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.dataContext.GetDataRule;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;

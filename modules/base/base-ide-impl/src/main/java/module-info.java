@@ -1377,4 +1377,7 @@ open module consulo.ide.impl {
   exports org.jetbrains.ide;
   exports org.jetbrains.ide.script;
   exports org.jetbrains.io;
+
+  exports consulo.ui.ex.toolWindow;
+  exports consulo.options.impl;
 }
