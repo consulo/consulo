@@ -37,7 +37,7 @@ import com.intellij.codeInspection.offlineViewer.OfflineInspectionRVContentProvi
 import com.intellij.codeInspection.offlineViewer.OfflineViewParseUtil;
 import com.intellij.codeInspection.reference.RefManagerImpl;
 import com.intellij.codeInspection.ui.InspectionResultsView;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;

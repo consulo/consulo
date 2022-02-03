@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiPlainText;
+import consulo.language.plain.psi.PsiPlainText;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nullable;
 

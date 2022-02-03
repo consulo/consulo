@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.classpath;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import consulo.virtualFileSystem.VirtualFile;

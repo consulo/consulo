@@ -15,7 +15,7 @@
  */
 package com.intellij.notification.impl.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.UISettings;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
@@ -23,7 +23,6 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.JBColor;
 import consulo.application.ui.awt.JBUIScale;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
@@ -188,24 +187,6 @@ public class NotificationsUtil {
       case INFORMATION:
       default:
         return MessageType.INFO;
-    }
-  }
-
-  @Nonnull
-  public static Color getBackground(@Nonnull final Notification notification) {
-    return getMessageType(notification).getPopupBackground();
-  }
-
-  @Nonnull
-  public static Color getBorderColor(@Nonnull Notification notification) {
-    switch (notification.getType()) {
-      case ERROR:
-        return new JBColor(Color.gray, new Color(0xc8c8c8));
-      case WARNING:
-        return new JBColor(Color.gray, new Color(0x615f51));
-      case INFORMATION:
-      default:
-        return new JBColor(Color.gray, new Color(0x205c00));
     }
   }
 }

@@ -17,7 +17,7 @@ package consulo.ide.plugins.whatsNew;
 
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.localize.LocalizeValue;
 
 /**

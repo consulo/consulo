@@ -17,10 +17,10 @@
 package com.intellij.openapi.fileEditor;
 
 import javax.annotation.Nonnull;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 
 /**
- * File editor which supports possibility to navigate to {@link com.intellij.pom.Navigatable} element
+ * File editor which supports possibility to navigate to {@link Navigatable} element
  *
  * @author spleaner
  */
@@ -35,7 +35,7 @@ public interface NavigatableFileEditor extends FileEditor {
   boolean canNavigateTo(@Nonnull final Navigatable navigatable);
 
   /**
-   * Navigate editor to the given navigatable if {@link #canNavigateTo(com.intellij.pom.Navigatable)} is true
+   * Navigate editor to the given navigatable if {@link #canNavigateTo(Navigatable)} is true
    *
    * @param navigatable navigation target
    */

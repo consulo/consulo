@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.lang.moduleImport;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.application.WriteAction;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;

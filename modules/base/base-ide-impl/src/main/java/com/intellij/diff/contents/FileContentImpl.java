@@ -21,7 +21,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

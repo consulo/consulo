@@ -18,7 +18,7 @@ package com.intellij.find.editorHeaderActions;
 import com.intellij.find.FindBundle;
 import com.intellij.find.FindSettings;
 import com.intellij.find.SearchSession;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import javax.annotation.Nonnull;
 
 public class ToggleMatchCase extends EditorHeaderToggleAction implements Embeddable {

@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.scratch;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.language.Language;
 import consulo.application.Result;
 import consulo.application.RunResult;

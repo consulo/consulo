@@ -25,7 +25,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectTopics;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.impl.ProjectViewSelectInTarget;
 import com.intellij.ide.projectView.HelpID;

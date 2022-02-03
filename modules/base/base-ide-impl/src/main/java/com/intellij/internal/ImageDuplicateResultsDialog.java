@@ -17,7 +17,7 @@ package com.intellij.internal;
 
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.ImplementationViewComponent;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;

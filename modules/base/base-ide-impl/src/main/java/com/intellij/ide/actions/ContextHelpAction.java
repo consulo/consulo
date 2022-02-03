@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import consulo.application.CommonBundle;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.help.HelpManager;
 import consulo.dataContext.DataContext;

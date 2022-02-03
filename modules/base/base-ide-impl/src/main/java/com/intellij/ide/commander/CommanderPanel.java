@@ -49,7 +49,7 @@ import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;

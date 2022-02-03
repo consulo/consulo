@@ -2,7 +2,7 @@
 package com.intellij.ide.scratch;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.actions.NewActionGroup;
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.idea.ActionsBundle;
@@ -15,7 +15,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import consulo.language.file.LanguageFileType;
-import com.intellij.openapi.fileTypes.PlainTextLanguage;
+import consulo.language.plain.PlainTextLanguage;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.language.psi.*;
 import consulo.project.Project;

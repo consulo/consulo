@@ -19,7 +19,7 @@ package com.intellij.execution.ui.layout.actions;
 import com.intellij.execution.ui.actions.BaseViewAction;
 import com.intellij.execution.ui.layout.Tab;
 import com.intellij.execution.ui.layout.ViewContext;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.ui.wm.content.Content;
 

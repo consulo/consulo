@@ -2,7 +2,7 @@
 
 package com.intellij.psi;
 
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.Language;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;

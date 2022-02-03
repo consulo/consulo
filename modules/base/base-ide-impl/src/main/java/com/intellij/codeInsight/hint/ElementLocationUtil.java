@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.hint;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;

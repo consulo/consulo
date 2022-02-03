@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.TreeExpander;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.projectRoots.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.awt.JBColor;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnActionEvent;

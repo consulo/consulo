@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.ui.content.ContentManagerUtil;

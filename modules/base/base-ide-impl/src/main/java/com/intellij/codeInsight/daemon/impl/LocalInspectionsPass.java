@@ -27,7 +27,7 @@ import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import consulo.application.internal.concurrency.JobLauncher;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.language.Language;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lang.injection.InjectedLanguageManager;

@@ -18,7 +18,7 @@ package com.intellij.util;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.pom.StatePreservingNavigatable;
 
 public class OpenSourceUtil {
@@ -39,7 +39,7 @@ public class OpenSourceUtil {
    *
    * @param navigatables elements navigate to
    *
-   * @see OpenSourceUtil#navigate(boolean, com.intellij.pom.Navigatable...)
+   * @see OpenSourceUtil#navigate(boolean, Navigatable...)
    */
   public static void navigate(final Navigatable...navigatables) {
     navigate(true, navigatables);

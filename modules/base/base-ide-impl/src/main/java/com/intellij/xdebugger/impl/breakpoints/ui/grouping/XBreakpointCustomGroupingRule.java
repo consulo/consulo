@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;

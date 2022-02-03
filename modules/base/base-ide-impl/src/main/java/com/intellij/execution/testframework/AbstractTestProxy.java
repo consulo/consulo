@@ -20,7 +20,7 @@ import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.scope.GlobalSearchScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -25,7 +25,7 @@ import com.intellij.ui.TableUtil;
 import consulo.application.ui.awt.CustomLineBorder;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.BorderLayoutPanel;
-import consulo.application.ui.WholeWestDialogWrapper;
+import consulo.application.impl.WholeWestDialogWrapper;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.ide.plugins.PluginDescriptionPanel;

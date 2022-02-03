@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IconUtilEx;
 import consulo.content.OrderRootType;
 import com.intellij.openapi.vfs.LocalFileSystem;

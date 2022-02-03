@@ -19,7 +19,7 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.ScopeToolState;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import com.intellij.lang.annotation.HighlightSeverity;

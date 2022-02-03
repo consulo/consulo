@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.errorTreeView;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.ClickableTreeCellRenderer;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeNodePartListener;

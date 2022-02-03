@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions.runAnything;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.module.Module;
 import consulo.project.Project;

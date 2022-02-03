@@ -20,7 +20,7 @@ import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;

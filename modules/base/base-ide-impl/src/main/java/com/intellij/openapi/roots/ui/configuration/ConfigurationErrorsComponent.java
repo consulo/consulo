@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.project.Project;

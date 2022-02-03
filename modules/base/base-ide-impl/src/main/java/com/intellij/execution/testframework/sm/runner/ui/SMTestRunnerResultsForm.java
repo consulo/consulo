@@ -41,7 +41,7 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.Alarm;
 import com.intellij.util.OpenSourceUtil;
@@ -832,7 +832,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     @Override
     public void run(@Nonnull ProgressIndicator indicator) {
       writeState();
-      DaemonCodeAnalyzer.getInstance(getProject()).restart();
+      DaemonCodeAnalyzer.getInstance((Project)getProject()).restart();
       try {
         SAXTransformerFactory transformerFactory = (SAXTransformerFactory)TransformerFactory.newInstance();
         TransformerHandler handler = transformerFactory.newTransformerHandler();
@@ -842,7 +842,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
         final String configurationNameIncludedDate = PathUtil.suggestFileName(myConfiguration.getName()) + " - " +
                                                      new SimpleDateFormat(HISTORY_DATE_FORMAT).format(new Date());
 
-        myOutputFile = new File(TestStateStorage.getTestHistoryRoot(myProject), configurationNameIncludedDate + ".xml");
+        myOutputFile = new File(TestStateStorage.getTestHistoryRoot((Project)myProject), configurationNameIncludedDate + ".xml");
         FileUtilRt.createParentDirs(myOutputFile);
         handler.setResult(new StreamResult(new FileWriter(myOutputFile)));
         final SMTestProxy.SMRootTestProxy root = myRoot;
@@ -862,7 +862,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     private void writeState() {
       // read action to prevent project (and storage) from being disposed
       ApplicationManager.getApplication().runReadAction(() -> {
-        Project project = getProject();
+        Project project = (Project)getProject();
         if (project.isDisposed()) return;
         TestStateStorage storage = TestStateStorage.getInstance(project);
         List<SMTestProxy> tests = myRoot.getAllTests();
@@ -880,8 +880,8 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     @Override
     public void onSuccess() {
       if (myOutputFile != null && myOutputFile.exists()) {
-        AbstractImportTestsAction.adjustHistory(myProject);
-        TestHistoryConfiguration.getInstance(myProject)
+        AbstractImportTestsAction.adjustHistory((Project)myProject);
+        TestHistoryConfiguration.getInstance((Project)myProject)
                 .registerHistoryItem(myOutputFile.getName(), myConfiguration.getName(), myConfiguration.getType().getId());
       }
     }

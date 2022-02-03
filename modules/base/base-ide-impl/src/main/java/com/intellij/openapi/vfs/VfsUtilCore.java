@@ -15,30 +15,27 @@
  */
 package com.intellij.openapi.vfs;
 
-import consulo.content.ContentIterator;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.DistinctRootsCollection;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.StringFactory;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.function.Processor;
+import consulo.content.ContentIterator;
 import consulo.logging.Logger;
-import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -227,22 +224,17 @@ public class VfsUtilCore {
 
   @Nonnull
   public static InputStream byteStreamSkippingBOM(@Nonnull byte[] buf, @Nonnull VirtualFile file) throws IOException {
-    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") BufferExposingByteArrayInputStream stream = new BufferExposingByteArrayInputStream(buf);
-    return inputStreamSkippingBOM(stream, file);
+    return VirtualFileUtil.byteStreamSkippingBOM(buf, file);
   }
 
   @Nonnull
   public static InputStream inputStreamSkippingBOM(@Nonnull InputStream stream, @SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file) throws IOException {
-    return CharsetToolkit.inputStreamSkippingBOM(stream);
+    return VirtualFileUtil.inputStreamSkippingBOM(stream, file);
   }
 
   @Nonnull
   public static OutputStream outputStreamAddingBOM(@Nonnull OutputStream stream, @Nonnull VirtualFile file) throws IOException {
-    byte[] bom = file.getBOM();
-    if (bom != null) {
-      stream.write(bom);
-    }
-    return stream;
+    return VirtualFileUtil.outputStreamAddingBOM(stream, file);
   }
 
   public static boolean iterateChildrenRecursively(@Nonnull final VirtualFile root, @Nullable final VirtualFileFilter filter, @Nonnull final ContentIterator iterator) {

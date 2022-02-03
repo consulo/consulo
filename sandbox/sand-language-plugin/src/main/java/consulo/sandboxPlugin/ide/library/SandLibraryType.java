@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.library;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.module.content.layer.ModuleRootModel;
 import com.intellij.openapi.roots.libraries.DummyLibraryProperties;

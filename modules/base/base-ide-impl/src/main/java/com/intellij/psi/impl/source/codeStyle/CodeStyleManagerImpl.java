@@ -4,7 +4,7 @@ package com.intellij.psi.impl.source.codeStyle;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.*;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.lang.*;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
@@ -13,7 +13,7 @@ import consulo.document.RangeMarker;
 import consulo.language.CompositeLanguage;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
-import consulo.language.ast.PlainTextTokenTypes;
+import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.ast.TokenType;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;

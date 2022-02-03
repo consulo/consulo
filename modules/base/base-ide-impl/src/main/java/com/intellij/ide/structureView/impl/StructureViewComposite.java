@@ -21,7 +21,7 @@ import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.disposer.Disposer;
 import com.intellij.util.ArrayUtil;

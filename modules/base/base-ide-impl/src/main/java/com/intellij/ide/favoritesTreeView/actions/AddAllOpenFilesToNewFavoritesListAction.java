@@ -16,7 +16,7 @@
 
 package com.intellij.ide.favoritesTreeView.actions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

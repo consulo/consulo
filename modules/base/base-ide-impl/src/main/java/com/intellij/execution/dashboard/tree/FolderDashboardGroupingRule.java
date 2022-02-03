@@ -20,7 +20,7 @@ import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.dashboard.DashboardGroup;
 import com.intellij.execution.dashboard.DashboardGroupingRule;
 import com.intellij.execution.dashboard.DashboardRunConfigurationNode;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;

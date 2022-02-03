@@ -21,7 +21,7 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfileWithCompileBeforeLaunchOption;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.UIAccess;

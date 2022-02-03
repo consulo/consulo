@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.ui.popup.util;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.ui.popup.IconButton;
 
 public class MinimizeButton extends IconButton {

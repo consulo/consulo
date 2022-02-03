@@ -39,7 +39,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;

@@ -20,6 +20,7 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunnerLayoutUi;
+import consulo.application.AllIcons;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -101,7 +102,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
    * Call this method to setup custom icon and/or error message (it will be shown in tooltip) for breakpoint
    *
    * @param breakpoint   breakpoint
-   * @param icon         icon (<code>null</code> if default icon should be used). You can use icons from {@link com.intellij.icons.AllIcons.Debugger}
+   * @param icon         icon (<code>null</code> if default icon should be used). You can use icons from {@link AllIcons.Debugger}
    * @param errorMessage an error message if breakpoint isn't successfully registered
    */
   void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);

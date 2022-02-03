@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.ui.ex.MultiLineLabel;
 import com.intellij.packaging.impl.artifacts.InvalidArtifact;

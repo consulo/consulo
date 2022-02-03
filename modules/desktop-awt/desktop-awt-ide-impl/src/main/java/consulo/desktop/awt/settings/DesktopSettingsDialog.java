@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Couple;
 import consulo.application.ui.awt.CustomLineBorder;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.BorderLayoutPanel;
-import consulo.application.ui.WholeWestDialogWrapper;
+import consulo.application.impl.WholeWestDialogWrapper;
 import consulo.disposer.Disposer;
 import consulo.options.ProjectStructureSelector;
 import consulo.options.ProjectStructureSelectorOverSettings;

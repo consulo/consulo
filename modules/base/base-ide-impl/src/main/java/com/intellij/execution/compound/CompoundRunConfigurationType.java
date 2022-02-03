@@ -19,7 +19,7 @@ import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.ui.image.ImageEffects;
 

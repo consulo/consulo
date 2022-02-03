@@ -18,7 +18,7 @@ package com.intellij.diff.tools.fragmented;
 import com.intellij.diff.fragments.LineFragment;
 import com.intellij.diff.util.*;
 import com.intellij.diff.util.DiffUtil.UpdatedLineRange;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.document.Document;

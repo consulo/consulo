@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;

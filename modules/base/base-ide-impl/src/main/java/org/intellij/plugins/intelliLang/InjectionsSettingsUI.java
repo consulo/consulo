@@ -16,7 +16,7 @@
 
 package org.intellij.plugins.intelliLang;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
 import consulo.util.lang.function.Condition;

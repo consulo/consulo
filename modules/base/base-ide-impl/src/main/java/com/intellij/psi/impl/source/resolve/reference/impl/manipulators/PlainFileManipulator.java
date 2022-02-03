@@ -20,7 +20,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiPlainTextFile;
+import consulo.language.plain.psi.PsiPlainTextFile;
 import com.intellij.psi.AbstractElementManipulator;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;

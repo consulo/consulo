@@ -1,6 +1,6 @@
 package com.intellij.tasks.timeTracking;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;

@@ -47,7 +47,7 @@ import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ui.ModuleImportProcessor;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -215,7 +215,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
           throw new ConfigurationException(ProjectBundle.message("module.paths.validation.duplicate.content.error", contentRoot.getPresentableUrl(), previousName, moduleName));
         }
 
-        final VirtualFile[] sourceAndTestFiles = contentEntry.getFolderFiles(ContentFolderScopes.all(false));
+        final VirtualFile[] sourceAndTestFiles = contentEntry.getFolderFiles(LanguageContentFolderScopes.all(false));
         for (VirtualFile srcRoot : sourceAndTestFiles) {
           final VirtualFile anotherContentRoot = srcRootsToContentRootMap.put(srcRoot, contentRoot);
           if (anotherContentRoot != null) {

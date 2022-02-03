@@ -31,7 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.testFramework.BinaryLightVirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.PathUtil;
 import consulo.application.AccessRule;

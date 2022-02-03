@@ -18,7 +18,7 @@ package com.intellij.execution.lineMarker;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;

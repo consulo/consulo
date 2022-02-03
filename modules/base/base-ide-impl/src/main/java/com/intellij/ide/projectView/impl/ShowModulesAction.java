@@ -1,6 +1,6 @@
 package com.intellij.ide.projectView.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.ProjectView;
 import consulo.ui.ex.action.AnActionEvent;

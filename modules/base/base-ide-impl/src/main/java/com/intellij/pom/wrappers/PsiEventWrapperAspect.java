@@ -16,7 +16,7 @@
 
 package com.intellij.pom.wrappers;
 
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -33,7 +33,7 @@ import com.intellij.psi.impl.PsiDocumentManagerImpl;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.impl.PsiToDocumentSynchronizer;
 import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

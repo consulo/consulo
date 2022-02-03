@@ -24,7 +24,7 @@ import com.intellij.execution.configurations.SearchScopeProvider;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.ui.*;
 import com.intellij.execution.ui.layout.PlaceInGrid;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;

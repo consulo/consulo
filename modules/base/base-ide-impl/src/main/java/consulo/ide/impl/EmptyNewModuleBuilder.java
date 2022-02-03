@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ide.newProject.NewModuleBuilder;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleContext;

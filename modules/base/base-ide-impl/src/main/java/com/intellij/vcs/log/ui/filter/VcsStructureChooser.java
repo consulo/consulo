@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.filter;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.patch.formove.FilePathComparator;
 import consulo.application.ui.awt.SideBorder;

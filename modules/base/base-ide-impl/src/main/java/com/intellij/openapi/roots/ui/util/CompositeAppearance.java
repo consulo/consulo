@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.util;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;

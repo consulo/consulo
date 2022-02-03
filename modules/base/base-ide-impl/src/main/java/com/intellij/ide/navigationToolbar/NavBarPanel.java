@@ -43,7 +43,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;

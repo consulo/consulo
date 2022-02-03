@@ -27,6 +27,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.disposer.Disposable;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.util.Consumer;
 import consulo.application.util.function.Processor;

@@ -28,7 +28,7 @@ import com.intellij.openapi.fileEditor.*;
 import consulo.project.Project;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
 import consulo.ui.Component;

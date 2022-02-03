@@ -15,14 +15,14 @@
  */
 package consulo.roots.impl;
 
-import com.google.common.base.Predicate;
-import consulo.module.content.layer.ModuleRootModel;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.module.content.layer.ModuleRootModel;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -40,9 +40,7 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   }
 
   @Override
-  public void processFiles(@Nonnull final ModuleRootModel moduleRootModel,
-                           @Nonnull final Predicate<ContentFolderTypeProvider> predicate,
-                           @Nonnull final Processor<VirtualFile> processor) {
+  public void processFiles(@Nonnull final ModuleRootModel moduleRootModel, @Nonnull final Predicate<ContentFolderTypeProvider> predicate, @Nonnull final Processor<VirtualFile> processor) {
     moduleRootModel.iterateContentEntries(contentEntry -> {
       VirtualFile file = contentEntry.getFile();
       return file == null || processor.process(file);
@@ -50,9 +48,7 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   }
 
   @Override
-  public void processFileUrls(@Nonnull final ModuleRootModel moduleRootModel,
-                              @Nonnull final Predicate<ContentFolderTypeProvider> predicate,
-                              @Nonnull final Processor<String> processor) {
+  public void processFileUrls(@Nonnull final ModuleRootModel moduleRootModel, @Nonnull final Predicate<ContentFolderTypeProvider> predicate, @Nonnull final Processor<String> processor) {
     moduleRootModel.iterateContentEntries(contentEntry -> processor.process(contentEntry.getUrl()));
   }
 }

@@ -51,7 +51,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.components.impl.stores.BatchUpdateListener;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -256,7 +256,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       addRootsToTrack(moduleRootManager.getContentRootUrls(), recursive, flat);
 
       if (includeSourceRoots) {
-        addRootsToTrack(moduleRootManager.getContentFolderUrls(ContentFolderScopes.all(false)), recursive, flat);
+        addRootsToTrack(moduleRootManager.getContentFolderUrls(LanguageContentFolderScopes.all(false)), recursive, flat);
       }
 
       final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();

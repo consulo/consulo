@@ -20,7 +20,7 @@ public class WeakTimerListener implements TimerListener {
   public ModalityState getModalityState() {
     TimerListener delegate = myRef.get();
     if (delegate != null) {
-      return delegate.getModalityState();
+      return (ModalityState)delegate.getModalityState();
     }
     else {
       ActionManagerEx.getInstanceEx().removeTimerListener(this);

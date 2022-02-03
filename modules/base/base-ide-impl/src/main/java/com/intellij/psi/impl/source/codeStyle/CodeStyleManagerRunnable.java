@@ -20,7 +20,7 @@ import com.intellij.formatting.CoreFormatterUtil;
 import com.intellij.formatting.FormattingMode;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.LanguageFormatting;
 import com.intellij.lang.injection.InjectedLanguageManager;

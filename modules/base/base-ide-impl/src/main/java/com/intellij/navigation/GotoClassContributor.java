@@ -16,6 +16,8 @@
 
 package com.intellij.navigation;
 
+import consulo.navigation.NavigationItem;
+
 import javax.annotation.Nullable;
 
 /**

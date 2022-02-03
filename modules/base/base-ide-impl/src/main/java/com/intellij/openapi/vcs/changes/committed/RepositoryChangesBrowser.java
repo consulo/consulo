@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.actions.EditSourceAction;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.openapi.actionSystem.*;
@@ -37,7 +37,7 @@ import com.intellij.openapi.vcs.changes.actions.RevertSelectedChangesAction;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

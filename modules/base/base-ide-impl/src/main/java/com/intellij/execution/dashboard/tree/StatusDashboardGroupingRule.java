@@ -17,7 +17,7 @@ package com.intellij.execution.dashboard.tree;
 
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.dashboard.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;

@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi;
 
-import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 

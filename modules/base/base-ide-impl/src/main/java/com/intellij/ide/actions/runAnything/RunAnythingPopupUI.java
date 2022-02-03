@@ -5,7 +5,7 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.BigPopupUI;
 import com.intellij.ide.actions.bigPopup.ShowFilterAction;

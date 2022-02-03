@@ -18,7 +18,7 @@ package consulo.execution.ui;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configuration.EnvironmentVariablesTextFieldWithBrowseButton;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;
 import com.intellij.util.PathUtil;

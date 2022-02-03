@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vfs.ex.temp;
 
-import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
+import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.FileAttributes;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

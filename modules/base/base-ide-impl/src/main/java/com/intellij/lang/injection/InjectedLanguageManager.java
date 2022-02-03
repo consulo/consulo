@@ -16,7 +16,7 @@
 
 package com.intellij.lang.injection;
 
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
 import consulo.project.Project;

@@ -51,7 +51,7 @@ public class WaitForProgressToShow {
     }
   }
 
-  public static void runOrInvokeLaterAboveProgress(final Runnable command, @Nullable final ModalityState modalityState, @Nonnull final Project project) {
+  public static void runOrInvokeLaterAboveProgress(final Runnable command, @Nullable final consulo.ui.ModalityState modalityState, @Nonnull final Project project) {
     final Application application = ApplicationManager.getApplication();
     if (application.isDispatchThread()) {
       command.run();
@@ -63,7 +63,7 @@ public class WaitForProgressToShow {
         application.invokeLater(command, pi.getModalityState(), () -> (!project.isOpen()) || project.isDisposed());
       }
       else {
-        final ModalityState notNullModalityState = modalityState == null ? ModalityState.NON_MODAL : modalityState;
+        final ModalityState notNullModalityState = modalityState == null ? ModalityState.NON_MODAL : (ModalityState)modalityState;
         application.invokeLater(command, notNullModalityState, project.getDisposed());
       }
     }

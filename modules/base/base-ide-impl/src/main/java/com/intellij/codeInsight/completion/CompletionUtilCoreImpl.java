@@ -1,6 +1,6 @@
 package com.intellij.codeInsight.completion;
 
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

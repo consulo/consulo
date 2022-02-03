@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.project.Project;

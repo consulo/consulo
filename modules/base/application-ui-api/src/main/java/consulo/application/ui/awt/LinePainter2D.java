@@ -43,8 +43,7 @@ public class LinePainter2D {
     /**
      * The stroke is painted opposite to INSIDE.
      */
-    OUTSIDE
-  }
+    OUTSIDE}
 
   /**
    * A enum bit in a flag which defines alignment for a line or a rectangle.
@@ -57,8 +56,7 @@ public class LinePainter2D {
     /**
      * Align by a provided center y.
      */
-    CENTER_Y
-  }
+    CENTER_Y}
 
   /**
    * @see #paint(Graphics2D, double, double, double, double, StrokeType, double, Object)
@@ -330,7 +328,7 @@ public class LinePainter2D {
    * 1) new x (y), aligned along the provided center x (y)
    * 2) new size with adjusted parity
    */
-  static Pair<Double, Double> alignSizeXY(Graphics2D g, double xy, double prefSize, StrokeType strokeType, double strokeWidth, boolean rectangle) {
+  public static Pair<Double, Double> alignSizeXY(Graphics2D g, double xy, double prefSize, StrokeType strokeType, double strokeWidth, boolean rectangle) {
     prefSize = PaintUtil.alignToInt(prefSize, g);
     // if xy is (close to) dev int the resulting size should be EVEN, otherwise ODD - to compensate the middle dev pixel
     double _xy = PaintUtil.alignToInt(xy + 0.000001, g, RoundingMode.FLOOR);
@@ -368,7 +366,7 @@ public class LinePainter2D {
    * Returns the x (y) coordinate of the center of the stroke.
    *
    * @param g           the graphics
-   * @param xy       the x or y coordinate
+   * @param xy          the x or y coordinate
    * @param strokeType  the stroke type
    * @param strokeWidth the stroke width
    * @return the coordinate of the center of the stroke
@@ -380,8 +378,7 @@ public class LinePainter2D {
   /**
    * @see #getStrokeSplit(ScaleContext, StrokeType, double, boolean)
    */
-  /*public*/
-  static Pair<Double, Double> getStrokeSplit(ScaleContext ctx, StrokeType strokeType, double strokeWidth) {
+  public static Pair<Double, Double> getStrokeSplit(ScaleContext ctx, StrokeType strokeType, double strokeWidth) {
     return getStrokeSplit(ctx, strokeType, strokeWidth, true);
   }
 
@@ -394,8 +391,7 @@ public class LinePainter2D {
    * @param includeLinePixel should the line pixel (in user space) be included in the right (bottom) part of the split
    * @return the stroke split
    */
-  /*public*/
-  static Pair<Double, Double> getStrokeSplit(ScaleContext ctx, StrokeType strokeType, double strokeWidth, boolean includeLinePixel) {
+  public static Pair<Double, Double> getStrokeSplit(ScaleContext ctx, StrokeType strokeType, double strokeWidth, boolean includeLinePixel) {
     if (strokeType == StrokeType.OUTSIDE) {
       return Pair.create(strokeWidth, strokeWidth);
     }

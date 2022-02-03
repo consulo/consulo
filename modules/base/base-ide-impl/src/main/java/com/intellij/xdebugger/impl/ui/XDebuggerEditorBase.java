@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;

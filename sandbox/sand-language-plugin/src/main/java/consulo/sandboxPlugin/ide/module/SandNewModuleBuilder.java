@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.module;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.annotation.access.RequiredReadAction;
@@ -29,7 +29,7 @@ import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
 import consulo.localize.LocalizeValue;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;

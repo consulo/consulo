@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.diagram.builder.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.diagram.builder.GraphBuilder;
 import consulo.diagram.builder.GraphBuilderFactory;
 import consulo.diagram.builder.GraphNode;

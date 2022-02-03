@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl.tabActions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;

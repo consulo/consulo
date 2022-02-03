@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.application.ui.awt.VerticalFlowLayout;

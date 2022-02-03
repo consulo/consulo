@@ -21,7 +21,7 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.impl.ExecutionManagerImpl;
 import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;

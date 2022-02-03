@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.ui.EditorNotifications;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentFactory;

@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.ChooseElementsDialog;
 import consulo.module.Module;
 import consulo.project.Project;

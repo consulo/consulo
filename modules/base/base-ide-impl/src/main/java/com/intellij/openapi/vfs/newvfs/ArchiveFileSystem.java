@@ -19,7 +19,7 @@ import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
+import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;

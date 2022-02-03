@@ -19,7 +19,7 @@ import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupActionProvider;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementAction;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;

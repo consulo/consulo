@@ -16,7 +16,7 @@
 
 package com.intellij.ide.hierarchy;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.State;

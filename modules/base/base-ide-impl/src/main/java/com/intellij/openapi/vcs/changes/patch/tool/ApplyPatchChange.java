@@ -21,7 +21,7 @@ import com.intellij.diff.comparison.DiffTooBigException;
 import com.intellij.diff.fragments.DiffFragment;
 import com.intellij.diff.merge.MergeModelBase;
 import com.intellij.diff.util.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.document.Document;

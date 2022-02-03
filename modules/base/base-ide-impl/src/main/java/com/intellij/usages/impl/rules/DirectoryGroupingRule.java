@@ -15,8 +15,8 @@
  */
 package com.intellij.usages.impl.rules;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.application.AllIcons;
+import consulo.language.file.inject.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

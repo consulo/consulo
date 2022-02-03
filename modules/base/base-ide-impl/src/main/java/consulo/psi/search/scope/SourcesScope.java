@@ -15,7 +15,7 @@
  */
 package consulo.psi.search.scope;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;

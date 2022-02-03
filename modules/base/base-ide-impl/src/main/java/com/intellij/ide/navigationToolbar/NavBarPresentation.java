@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.navigationToolbar;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import consulo.application.ApplicationManager;

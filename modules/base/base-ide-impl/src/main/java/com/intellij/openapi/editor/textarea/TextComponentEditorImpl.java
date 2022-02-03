@@ -23,12 +23,14 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.impl.EmptyIndentsModel;
 import com.intellij.openapi.editor.impl.SettingsImpl;
 import com.intellij.openapi.editor.markup.MarkupModel;
-import consulo.project.Project;
-import consulo.document.Document;
-import consulo.util.dataholder.UserDataHolderBase;
+import com.intellij.ui.popup.AbstractPopup;
 import consulo.application.ui.awt.JBUI;
-import javax.annotation.Nonnull;
+import consulo.document.Document;
+import consulo.project.Project;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.util.dataholder.UserDataHolderBase;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -139,6 +141,11 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
   @Override
   public EditorKind getEditorKind() {
     return EditorKind.UNTYPED;
+  }
+
+  @Override
+  public void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
+    ((AbstractPopup)popup).showInBestPositionFor(this);
   }
 
   @Nonnull

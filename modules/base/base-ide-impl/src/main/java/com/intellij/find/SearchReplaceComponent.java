@@ -2,7 +2,7 @@
 package com.intellij.find;
 
 import com.intellij.find.editorHeaderActions.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.awt.JBColor;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;

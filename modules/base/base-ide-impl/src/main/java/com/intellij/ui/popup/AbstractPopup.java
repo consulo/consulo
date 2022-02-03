@@ -2,7 +2,7 @@
 package com.intellij.ui.popup;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.WindowAction;
 import com.intellij.ide.ui.PopupLocationTracker;
@@ -10,6 +10,7 @@ import com.intellij.ide.ui.ScreenAreaConsumer;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ui.awt.*;
 import consulo.application.util.SystemInfo;
+import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -426,11 +427,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   }
 
   @Override
-  public void showCenteredInCurrentWindow(@Nonnull Project project) {
+  public void showCenteredInCurrentWindow(@Nonnull ComponentManager project) {
     if (UiInterceptors.tryIntercept(this)) return;
     Window window = null;
 
-    Component focusedComponent = getWndManager().getFocusedComponent(project);
+    Component focusedComponent = getWndManager().getFocusedComponent((Project)project);
     if (focusedComponent != null) {
       Component parent = UIUtil.findUltimateParent(focusedComponent);
       if (parent instanceof Window) {
@@ -560,7 +561,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     return size;
   }
 
-  @Override
+  //@Override
   public void showInBestPositionFor(@Nonnull Editor editor) {
     // Intercept before the following assert; otherwise assertion may fail
     if (UiInterceptors.tryIntercept(this)) return;

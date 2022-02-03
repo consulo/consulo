@@ -1,6 +1,6 @@
 package com.intellij.ide.presentation;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.TypePresentationService;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;

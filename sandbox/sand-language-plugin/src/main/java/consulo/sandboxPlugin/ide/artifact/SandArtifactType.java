@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.artifact;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ArtifactType;

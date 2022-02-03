@@ -41,7 +41,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;

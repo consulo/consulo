@@ -43,7 +43,7 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.VcsApplicationSettings;
 import com.intellij.openapi.vcs.ex.LineStatusTracker;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.QueueProcessorRemovePartner;
 import com.intellij.util.containers.ContainerUtil;

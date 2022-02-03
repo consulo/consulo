@@ -16,6 +16,8 @@
 package consulo.virtualFileSystem.util;
 
 import consulo.logging.Logger;
+import consulo.util.io.BufferExposingByteArrayInputStream;
+import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import consulo.virtualFileSystem.VirtualFile;
@@ -23,6 +25,9 @@ import consulo.virtualFileSystem.VirtualFileFilter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.function.Predicate;
 
 /**
@@ -111,6 +116,26 @@ public final class VirtualFileUtil {
       }
       throw e;
     }
+  }
+
+  @Nonnull
+  public static InputStream byteStreamSkippingBOM(@Nonnull byte[] buf, @Nonnull VirtualFile file) throws IOException {
+    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") BufferExposingByteArrayInputStream stream = new BufferExposingByteArrayInputStream(buf);
+    return inputStreamSkippingBOM(stream, file);
+  }
+
+  @Nonnull
+  public static InputStream inputStreamSkippingBOM(@Nonnull InputStream stream, @SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file) throws IOException {
+    return CharsetToolkit.inputStreamSkippingBOM(stream);
+  }
+
+  @Nonnull
+  public static OutputStream outputStreamAddingBOM(@Nonnull OutputStream stream, @Nonnull VirtualFile file) throws IOException {
+    byte[] bom = file.getBOM();
+    if (bom != null) {
+      stream.write(bom);
+    }
+    return stream;
   }
 
   /**

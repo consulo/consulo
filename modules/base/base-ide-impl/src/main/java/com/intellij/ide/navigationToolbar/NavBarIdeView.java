@@ -6,7 +6,7 @@ import com.intellij.ide.util.DirectoryChooserUtil;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.util.collection.JBIterable;
 
 import java.util.List;

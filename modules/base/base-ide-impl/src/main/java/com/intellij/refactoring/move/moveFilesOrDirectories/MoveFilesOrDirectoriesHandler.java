@@ -18,6 +18,7 @@ package com.intellij.refactoring.move.moveFilesOrDirectories;
 import com.intellij.ide.scratch.ScratchFileService;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.plain.psi.PsiPlainText;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;

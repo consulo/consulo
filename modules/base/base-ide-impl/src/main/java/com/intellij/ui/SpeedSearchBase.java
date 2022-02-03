@@ -2,7 +2,7 @@
 package com.intellij.ui;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;
 import consulo.dataContext.DataManager;

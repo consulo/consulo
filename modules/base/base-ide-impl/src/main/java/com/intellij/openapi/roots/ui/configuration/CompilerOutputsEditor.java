@@ -29,7 +29,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ProjectLocalize;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.*;
@@ -65,7 +65,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
 
   protected CompilerOutputsEditor(final ModuleConfigurationState state) {
     super(state);
-    myFilter = ContentFolderScopes.productionAndTest();
+    myFilter = LanguageContentFolderScopes.productionAndTest();
   }
 
   @RequiredUIAccess
@@ -198,7 +198,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     if (myInheritCompilerOutput.getValueOrError() != moduleCompilerPathsManager.isInheritedCompilerOutput()) {
       return true;
     }
-    for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
+    for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
       CommitableFieldPanel commitableFieldPanel = toField(contentFolderTypeProvider);
       String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
 

@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.util.LineSeparator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

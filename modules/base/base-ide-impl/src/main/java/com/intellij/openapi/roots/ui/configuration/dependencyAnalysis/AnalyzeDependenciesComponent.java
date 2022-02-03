@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;

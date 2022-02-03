@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;

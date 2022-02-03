@@ -29,6 +29,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
+import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.LanguageSubstitutors;
 import com.intellij.psi.search.UseScopeEnlarger;
 import com.intellij.usages.impl.rules.UsageType;

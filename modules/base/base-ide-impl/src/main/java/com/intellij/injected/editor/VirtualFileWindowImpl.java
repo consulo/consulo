@@ -2,8 +2,9 @@
 package com.intellij.injected.editor;
 
 import consulo.language.Language;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import javax.annotation.Nonnull;
 
 /**

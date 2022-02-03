@@ -15,13 +15,13 @@
  */
 package com.intellij.ide.structureView.customRegions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.lang.folding.CustomFoldingProvider;
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import consulo.document.util.TextRange;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

@@ -22,7 +22,7 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfileWithCompileBeforeLaunchOption;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.application.TransactionGuard;
 import com.intellij.openapi.compiler.CompileScope;

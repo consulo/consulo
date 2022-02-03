@@ -37,7 +37,7 @@ import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.AppIcon;
 import consulo.application.ui.awt.UIUtil;
@@ -102,7 +102,7 @@ public class CompilerTask extends Task.Backgroundable {
     myBuildViewService.onStart(mySessionId, startCompilationStamp, () -> {
     }, indicator);
 
-    final Semaphore semaphore = ((CompilerManagerImpl)CompilerManager.getInstance(myProject)).getCompilationSemaphore();
+    final Semaphore semaphore = ((CompilerManagerImpl)CompilerManager.getInstance((Project)myProject)).getCompilationSemaphore();
     boolean acquired = false;
     try {
 
@@ -163,14 +163,14 @@ public class CompilerTask extends Task.Backgroundable {
       private void stopAppIconProgress() {
         UIUtil.invokeLaterIfNeeded(() -> {
           AppIcon appIcon = AppIcon.getInstance();
-          if (appIcon.hideProgress(myProject, APP_ICON_ID)) {
+          if (appIcon.hideProgress((Project)myProject, APP_ICON_ID)) {
             if (myErrorCount > 0) {
-              appIcon.setErrorBadge(myProject, String.valueOf(myErrorCount));
-              appIcon.requestAttention(myProject, true);
+              appIcon.setErrorBadge((Project)myProject, String.valueOf(myErrorCount));
+              appIcon.requestAttention((Project)myProject, true);
             }
             else if (!myCompilationStartedAutomatically) {
-              appIcon.setOkBadge(myProject, true);
-              appIcon.requestAttention(myProject, false);
+              appIcon.setOkBadge((Project)myProject, true);
+              appIcon.requestAttention((Project)myProject, false);
             }
           }
         });
@@ -179,7 +179,7 @@ public class CompilerTask extends Task.Backgroundable {
       @Override
       public void setFraction(final double fraction) {
         super.setFraction(fraction);
-        UIUtil.invokeLaterIfNeeded(() -> AppIcon.getInstance().setProgress(myProject, APP_ICON_ID, AppIconScheme.Progress.BUILD, fraction, true));
+        UIUtil.invokeLaterIfNeeded(() -> AppIcon.getInstance().setProgress((Project)myProject, APP_ICON_ID, AppIconScheme.Progress.BUILD, fraction, true));
       }
     });
   }
@@ -204,7 +204,7 @@ public class CompilerTask extends Task.Backgroundable {
   }
 
   private void informWolf(final CompilerMessage message) {
-    WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance(myProject);
+    WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance((Project)myProject);
     VirtualFile file = getVirtualFile(message);
     wolf.queue(file);
   }

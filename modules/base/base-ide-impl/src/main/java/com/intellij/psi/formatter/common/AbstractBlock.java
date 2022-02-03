@@ -17,7 +17,7 @@
 package com.intellij.psi.formatter.common;
 
 import com.intellij.formatting.*;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;

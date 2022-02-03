@@ -16,7 +16,7 @@
 package com.intellij.usages.impl;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsageView;
 import javax.annotation.Nonnull;

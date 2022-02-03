@@ -7,7 +7,7 @@ import com.intellij.ide.actions.GotoFileItemProvider;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.dumb.DumbAware;

@@ -16,7 +16,7 @@
 
 package consulo.language.psi;
 
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 
 /**
  * @author yole

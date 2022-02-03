@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.lang;
 
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -23,7 +23,7 @@ import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.reference.SoftReference;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.disposer.Disposable;

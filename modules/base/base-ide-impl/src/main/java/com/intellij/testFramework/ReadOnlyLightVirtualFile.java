@@ -2,6 +2,8 @@
 package com.intellij.testFramework;
 
 import consulo.language.Language;
+import consulo.language.file.light.LightVirtualFile;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

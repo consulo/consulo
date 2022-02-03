@@ -16,7 +16,7 @@
 package com.intellij.usages;
 
 import com.intellij.ide.SelectInEditorManager;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import consulo.application.ApplicationManager;

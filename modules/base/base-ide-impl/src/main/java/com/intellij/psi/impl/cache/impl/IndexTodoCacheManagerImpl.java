@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.cache.impl;
 
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.ReadAction;
 import consulo.language.psi.stub.DumbModeAccessType;
 import consulo.language.psi.stub.FileBasedIndex;
@@ -32,7 +32,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.indexing.*;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;

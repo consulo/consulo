@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.dnd;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.ui.MessageType;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

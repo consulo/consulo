@@ -31,7 +31,7 @@ import com.intellij.util.io.URLUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.compiler.impl.ModuleCompilerPathsManagerImpl;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -100,7 +100,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     for (Module module : moduleManager.getModules()) {
       ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
-      for (ContentFolderTypeProvider folderType : ContentFolderTypeProvider.filter(ContentFolderScopes.all(false))) {
+      for (ContentFolderTypeProvider folderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.all(false))) {
         String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(folderType);
         assert compilerOutputUrl != null : module.getName() + ":" + folderType + " url is null";
         rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(compilerOutputUrl));

@@ -2,7 +2,7 @@
 package com.intellij.util.ui.tree;
 
 import consulo.application.CommonBundle;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import com.intellij.lang.LangBundle;
 import com.intellij.lang.LanguagePerFileMappings;
 import com.intellij.lang.PerFileMappingsBase;

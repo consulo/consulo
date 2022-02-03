@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.attach;
 
 import com.intellij.execution.process.ProcessInfo;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.ui.image.Image;

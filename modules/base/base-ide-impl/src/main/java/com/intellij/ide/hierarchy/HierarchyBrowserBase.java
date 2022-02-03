@@ -30,7 +30,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;

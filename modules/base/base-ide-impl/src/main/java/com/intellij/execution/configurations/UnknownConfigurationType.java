@@ -16,7 +16,7 @@
 
 package com.intellij.execution.configurations;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 

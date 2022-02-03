@@ -11,7 +11,7 @@ import com.intellij.ide.todo.SmartTodoItemPointerComparator;
 import com.intellij.ide.todo.TodoFilter;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.language.psi.*;

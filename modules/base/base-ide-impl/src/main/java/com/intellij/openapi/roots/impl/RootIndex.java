@@ -41,7 +41,7 @@ import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.content.base.BinariesOrderRootType;
@@ -117,12 +117,12 @@ public class RootIndex {
       }
 
       for (ContentEntry contentEntry : moduleRootManager.getContentEntries()) {
-        for (VirtualFile excludeRoot : contentEntry.getFolderFiles(ContentFolderScopes.excluded())) {
+        for (VirtualFile excludeRoot : contentEntry.getFolderFiles(LanguageContentFolderScopes.excluded())) {
           info.excludedFromModule.put(excludeRoot, module);
         }
 
         // Init module sources
-        for (final ContentFolder sourceFolder : contentEntry.getFolders(ContentFolderScopes.all(false))) {
+        for (final ContentFolder sourceFolder : contentEntry.getFolders(LanguageContentFolderScopes.all(false))) {
           final VirtualFile sourceFolderRoot = sourceFolder.getFile();
           if (sourceFolderRoot != null) {
             info.contentFolders.put(sourceFolderRoot, sourceFolder);

@@ -6,7 +6,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,6 +15,7 @@
  */
 package consulo.util.lang;
 
+import consulo.util.lang.internal.NaturalComparator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 
@@ -34,6 +35,71 @@ public class StringUtil {
   private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
   @NonNls
   private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
+
+  @Contract(pure = true)
+  public static boolean isDecimalDigit(char c) {
+    return c >= '0' && c <= '9';
+  }
+
+  @Contract(pure = true)
+  public static int compare(@Nullable String s1, @Nullable String s2, boolean ignoreCase) {
+    //noinspection StringEquality
+    if (s1 == s2) return 0;
+    if (s1 == null) return -1;
+    if (s2 == null) return 1;
+    return ignoreCase ? s1.compareToIgnoreCase(s2) : s1.compareTo(s2);
+  }
+
+  @Contract(pure = true)
+  public static int compare(char c1, char c2, boolean ignoreCase) {
+    // duplicating String.equalsIgnoreCase logic
+    int d = c1 - c2;
+    if (d == 0 || !ignoreCase) {
+      return d;
+    }
+    // If characters don't match but case may be ignored,
+    // try converting both characters to uppercase.
+    // If the results match, then the comparison scan should
+    // continue.
+    char u1 = toUpperCase(c1);
+    char u2 = toUpperCase(c2);
+    d = u1 - u2;
+    if (d != 0) {
+      // Unfortunately, conversion to uppercase does not work properly
+      // for the Georgian alphabet, which has strange rules about case
+      // conversion.  So we need to make one last check before
+      // exiting.
+      d = toLowerCase(u1) - toLowerCase(u2);
+    }
+    return d;
+  }
+
+  @Contract(pure = true)
+  public static int compare(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean ignoreCase) {
+    if (s1 == s2) return 0;
+    if (s1 == null) return -1;
+    if (s2 == null) return 1;
+
+    int length1 = s1.length();
+    int length2 = s2.length();
+    int i = 0;
+    for (; i < length1 && i < length2; i++) {
+      int diff = compare(s1.charAt(i), s2.charAt(i), ignoreCase);
+      if (diff != 0) {
+        return diff;
+      }
+    }
+    return length1 - length2;
+  }
+
+  /**
+   * Implementation of "Sorting for Humans: Natural Sort Order":
+   * http://www.codinghorror.com/blog/2007/12/sorting-for-humans-natural-sort-order.html
+   */
+  @Contract(pure = true)
+  public static int naturalCompare(@Nullable String string1, @Nullable String string2) {
+    return NaturalComparator.INSTANCE.compare(string1, string2);
+  }
 
   @Contract(value = "null -> false", pure = true)
   public static boolean isNotEmpty(@Nullable String s) {

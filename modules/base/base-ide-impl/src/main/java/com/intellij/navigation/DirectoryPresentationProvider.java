@@ -15,11 +15,12 @@
  */
 package com.intellij.navigation;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import consulo.application.Application;
 import consulo.module.Module;
+import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;

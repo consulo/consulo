@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.treeView.smartTree;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

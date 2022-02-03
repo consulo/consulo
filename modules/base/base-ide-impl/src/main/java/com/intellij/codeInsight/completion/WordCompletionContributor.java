@@ -20,7 +20,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import consulo.language.ast.ASTNode;
 import consulo.language.parser.LanguageParserDefinitions;
 import com.intellij.lang.LanguageWordCompletion;
-import consulo.language.ast.PlainTextTokenTypes;
+import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

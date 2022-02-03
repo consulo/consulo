@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
@@ -36,7 +36,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
 
@@ -98,7 +98,7 @@ public abstract class ContentRootPanel extends JPanel {
   }
 
   protected void addFolderGroupComponents() {
-    final ContentFolder[] contentFolders = getContentEntry().getFolders(ContentFolderScopes.all());
+    final ContentFolder[] contentFolders = getContentEntry().getFolders(LanguageContentFolderScopes.all());
     MultiMap<ContentFolderTypeProvider, ContentFolder> folderByType = new MultiMap<ContentFolderTypeProvider, ContentFolder>();
     for (ContentFolder folder : contentFolders) {
       if (folder.isSynthetic()) {
@@ -239,7 +239,7 @@ public abstract class ContentRootPanel extends JPanel {
 
   public boolean isExcludedOrUnderExcludedDirectory(final VirtualFile file) {
     final ContentEntry contentEntry = getContentEntry();
-    for (VirtualFile excludedDir : contentEntry.getFolderFiles(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance()))) {
+    for (VirtualFile excludedDir : contentEntry.getFolderFiles(LanguageContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance()))) {
       if (VfsUtilCore.isAncestor(excludedDir, file, false)) {
         return true;
       }

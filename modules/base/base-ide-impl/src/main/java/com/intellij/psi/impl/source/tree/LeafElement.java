@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import consulo.language.ast.ASTFactory;
+import consulo.language.impl.ASTFactory;
 import consulo.language.ast.ASTNode;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;

@@ -20,7 +20,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;

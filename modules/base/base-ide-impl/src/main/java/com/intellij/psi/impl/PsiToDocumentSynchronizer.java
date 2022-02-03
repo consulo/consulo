@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl;
 
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;

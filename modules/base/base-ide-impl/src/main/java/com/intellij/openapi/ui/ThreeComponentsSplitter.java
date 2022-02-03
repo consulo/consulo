@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.util.Weighted;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.IdeGlassPane;

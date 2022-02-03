@@ -15,7 +15,7 @@
  */
 package com.intellij.remote.ext;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

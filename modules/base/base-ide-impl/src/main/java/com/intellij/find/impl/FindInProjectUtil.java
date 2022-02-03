@@ -4,9 +4,9 @@ package com.intellij.find.impl;
 
 import com.intellij.find.*;
 import com.intellij.find.findInProject.FindInProjectManager;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import consulo.application.ReadAction;

@@ -15,6 +15,7 @@ import com.intellij.codeInsight.hint.TooltipRenderer;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.ide.IdeEventQueue;
 import consulo.application.ui.awt.SideBorder;
+import consulo.language.plain.psi.PsiPlainText;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;

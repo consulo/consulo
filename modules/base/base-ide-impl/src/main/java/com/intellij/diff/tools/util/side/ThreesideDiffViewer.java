@@ -36,7 +36,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

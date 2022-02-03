@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -72,7 +72,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
       @Override
       @Nonnull
       public List<VirtualFileLogicalRoot> fun(final Module module) {
-        return ContainerUtil.map2List(ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.productionAndTest()), new Function<VirtualFile, VirtualFileLogicalRoot>() {
+        return ContainerUtil.map2List(ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest()), new Function<VirtualFile, VirtualFileLogicalRoot>() {
           @Override
           public VirtualFileLogicalRoot fun(final VirtualFile s) {
             return new VirtualFileLogicalRoot(s);

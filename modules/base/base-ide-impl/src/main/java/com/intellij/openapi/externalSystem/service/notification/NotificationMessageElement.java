@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.externalSystem.service.notification;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.errorTreeView.*;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.ui.LoadingNode;

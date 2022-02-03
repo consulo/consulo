@@ -7,7 +7,7 @@ package com.intellij.coverage;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.history.FileRevisionTimestampComparator;
 import com.intellij.history.LocalHistory;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;

@@ -15,7 +15,7 @@
  */
 package consulo.fileTypes.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import consulo.project.Project;
 import consulo.component.util.Iconable;

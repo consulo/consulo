@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.find.FindSettings;
 import com.intellij.find.impl.FindDialog;
 import com.intellij.find.impl.FindInProjectUtil;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import com.intellij.openapi.help.HelpManager;

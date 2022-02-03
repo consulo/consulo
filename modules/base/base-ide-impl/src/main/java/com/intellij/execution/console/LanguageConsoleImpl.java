@@ -43,7 +43,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.components.JBScrollBar;
 import com.intellij.ui.components.JBScrollPane.Alignment;
 import com.intellij.util.DocumentUtil;

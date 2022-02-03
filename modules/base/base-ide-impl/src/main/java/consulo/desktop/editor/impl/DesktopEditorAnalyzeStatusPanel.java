@@ -16,7 +16,7 @@
 package consulo.desktop.editor.impl;
 
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.PowerSaveMode;

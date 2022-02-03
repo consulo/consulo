@@ -16,7 +16,7 @@
  */
 package com.intellij.ui.content.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;

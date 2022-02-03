@@ -13,7 +13,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.ui.LoadingNode;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.SimpleColoredComponent;

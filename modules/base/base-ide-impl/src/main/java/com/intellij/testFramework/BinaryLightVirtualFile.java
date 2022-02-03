@@ -20,6 +20,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
+import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

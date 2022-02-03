@@ -15,20 +15,20 @@
  */
 package consulo.roots.impl;
 
-import com.google.common.base.Predicate;
-import consulo.module.content.layer.ContentFolder;
 import com.intellij.openapi.roots.impl.BaseModuleRootLayerChild;
 import com.intellij.openapi.roots.impl.ContentEntryImpl;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.module.content.layer.ContentFolder;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL

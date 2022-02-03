@@ -20,7 +20,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightLevelUtil;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import com.intellij.openapi.editor.EditorBundle;

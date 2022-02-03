@@ -15,7 +15,7 @@
  */
 package consulo.roots.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;

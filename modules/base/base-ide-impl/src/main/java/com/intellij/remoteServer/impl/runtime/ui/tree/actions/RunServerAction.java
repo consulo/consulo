@@ -2,7 +2,7 @@ package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 
 import com.intellij.execution.Executor;
 import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 
 /**
  * Created by IntelliJ IDEA.

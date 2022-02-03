@@ -7,6 +7,7 @@ import com.intellij.ide.CopyProvider;
 import com.intellij.ide.CutProvider;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.PasteProvider;
+import com.intellij.ui.popup.AbstractPopup;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
@@ -33,6 +34,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Queryable;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.registry.Registry;
 import consulo.document.Document;
@@ -1155,6 +1157,11 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
   public EditorHighlighter getHighlighter() {
     assertReadAccess();
     return myHighlighter;
+  }
+
+  @Override
+  public void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
+    ((AbstractPopup)popup).showInBestPositionFor(this);
   }
 
   @RequiredUIAccess

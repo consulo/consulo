@@ -16,7 +16,7 @@
 package com.intellij.execution.dashboard;
 
 import com.intellij.execution.ExecutionBundle;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

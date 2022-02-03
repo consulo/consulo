@@ -23,7 +23,7 @@ import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IStubFileElementType;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileContentImpl;
 import consulo.language.psi.stub.PsiFileStub;

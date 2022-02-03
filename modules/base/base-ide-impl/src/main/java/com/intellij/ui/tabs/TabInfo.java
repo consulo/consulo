@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.tabs;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.Queryable;

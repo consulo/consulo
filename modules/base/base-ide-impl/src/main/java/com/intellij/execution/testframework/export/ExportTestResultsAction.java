@@ -20,6 +20,7 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.ide.BrowserUtil;
+import consulo.ui.NotificationType;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -155,12 +156,12 @@ public class ExportTestResultsAction extends DumbAwareAction {
                 }
                 catch (IOException ex) {
                   LOG.warn(ex);
-                  showBalloon(project, MessageType.ERROR, ExecutionBundle.message("export.test.results.failed", ex.getMessage()), null);
+                  showBalloon(project, NotificationType.ERROR, ExecutionBundle.message("export.test.results.failed", ex.getMessage()), null);
                   return;
                 }
                 catch (TransformerException ex) {
                   LOG.warn(ex);
-                  showBalloon(project, MessageType.ERROR, ExecutionBundle.message("export.test.results.failed", ex.getMessage()), null);
+                  showBalloon(project, NotificationType.ERROR, ExecutionBundle.message("export.test.results.failed", ex.getMessage()), null);
                   return;
                 }
                 catch (SAXException ex) {
@@ -229,12 +230,12 @@ public class ExportTestResultsAction extends DumbAwareAction {
                         }
                       }
                     };
-                    showBalloon(project, MessageType.INFO, ExecutionBundle.message("export.test.results.succeeded", outputFile.getName()),
+                    showBalloon(project, NotificationType.INFO, ExecutionBundle.message("export.test.results.succeeded", outputFile.getName()),
                                 listener);
                   }
                 }
                 else {
-                  showBalloon(project, MessageType.ERROR, ExecutionBundle.message("export.test.results.failed", error.get()), null);
+                  showBalloon(project, NotificationType.ERROR, ExecutionBundle.message("export.test.results.failed", error.get()), null);
                 }
               }
             });
@@ -297,7 +298,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
       else {
         File xslFile = new File(config.getUserTemplatePath());
         if (!xslFile.isFile()) {
-          showBalloon(myRunConfiguration.getProject(), MessageType.ERROR,
+          showBalloon(myRunConfiguration.getProject(), NotificationType.ERROR,
                       ExecutionBundle.message("export.test.results.custom.template.not.found", xslFile.getPath()), null);
           return null;
         }
@@ -319,7 +320,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
     return w.toString();
   }
 
-  private void showBalloon(final Project project, final MessageType type, final String text, @Nullable final HyperlinkListener listener) {
+  private void showBalloon(final Project project, final NotificationType type, final String text, @Nullable final HyperlinkListener listener) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       public void run() {
         if (project.isDisposed()) return;

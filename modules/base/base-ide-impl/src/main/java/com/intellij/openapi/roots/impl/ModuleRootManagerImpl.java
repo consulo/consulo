@@ -16,34 +16,33 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.google.common.base.Predicate;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.module.ModifiableModuleModel;
-import consulo.content.OrderRootType;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ModuleFileIndex;
-import consulo.module.content.layer.*;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.content.layer.orderEntry.RootPolicy;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
-import consulo.component.persist.InvalidDataException;
-import consulo.module.content.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.function.Processor;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.Processor;
+import consulo.component.persist.InvalidDataException;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleFileIndex;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.*;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.extension.ModuleExtension;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.content.base.SourcesOrderRootType;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -51,6 +50,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 
 @Singleton
 public class ModuleRootManagerImpl extends ModuleRootManager implements Disposable {

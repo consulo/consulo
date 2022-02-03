@@ -15,7 +15,7 @@
  */
 package consulo.execution.ui.editor;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;

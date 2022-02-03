@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.actions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
 

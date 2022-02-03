@@ -11,7 +11,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiBinaryFile;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiPlainTextFile;
+import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;

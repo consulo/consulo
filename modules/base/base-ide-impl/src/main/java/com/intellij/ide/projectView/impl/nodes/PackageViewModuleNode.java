@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,7 +41,7 @@ public class PackageViewModuleNode extends AbstractModuleNode{
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     final Collection<AbstractTreeNode> result = PackageNodeUtil
-      .createPackageViewChildrenOnFiles(Arrays.asList(ModuleRootManager.getInstance(getValue()).getContentFolderFiles(ContentFolderScopes.productionAndTest())), myProject, getSettings(),
+      .createPackageViewChildrenOnFiles(Arrays.asList(ModuleRootManager.getInstance(getValue()).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest())), myProject, getSettings(),
                                         getValue(), false);
     if (getSettings().isShowLibraryContents()) {
       result.add(new PackageViewLibrariesNode(getProject(), getValue(),getSettings()));

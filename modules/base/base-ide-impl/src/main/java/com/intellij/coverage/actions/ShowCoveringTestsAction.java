@@ -9,7 +9,7 @@ import com.intellij.codeInsight.hint.ImplementationViewComponent;
 import com.intellij.coverage.CoverageDataManager;
 import com.intellij.coverage.CoverageSuite;
 import com.intellij.coverage.CoverageSuitesBundle;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;

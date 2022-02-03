@@ -2,7 +2,7 @@
 package com.intellij.execution.actions;
 
 import com.intellij.execution.ExecutionBundle;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

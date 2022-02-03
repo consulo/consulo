@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.keymap;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.InvalidDataException;

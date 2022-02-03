@@ -26,7 +26,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

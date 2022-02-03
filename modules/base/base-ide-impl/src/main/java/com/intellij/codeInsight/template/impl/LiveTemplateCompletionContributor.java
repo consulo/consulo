@@ -16,7 +16,7 @@ import com.intellij.patterns.PatternCondition;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.StandardPatterns;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiPlainTextFile;
+import consulo.language.plain.psi.PsiPlainTextFile;
 import com.intellij.ui.EditorTextField;
 import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;

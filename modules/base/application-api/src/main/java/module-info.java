@@ -5,6 +5,7 @@
 module consulo.application.api {
   requires transitive consulo.component.api;
   requires transitive consulo.localize.api;
+  requires transitive consulo.base.icon.library;
 
   requires transitive consulo.util.concurrent;
   requires transitive consulo.util.collection;

@@ -2,7 +2,7 @@
 package com.intellij.build;
 
 import com.intellij.build.events.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.lang.LangBundle;
 import com.intellij.notification.Notification;

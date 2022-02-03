@@ -33,6 +33,7 @@ import consulo.util.collection.Maps;
 import consulo.util.collection.Sets;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.*;
+import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileAttributes;

@@ -33,7 +33,7 @@ import consulo.disposer.Disposer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;

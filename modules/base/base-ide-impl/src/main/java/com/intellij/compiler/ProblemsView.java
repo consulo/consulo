@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.util.ArrayUtil;

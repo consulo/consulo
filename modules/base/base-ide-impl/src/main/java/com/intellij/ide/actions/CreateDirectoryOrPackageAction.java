@@ -16,7 +16,7 @@
 
 package com.intellij.ide.actions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;

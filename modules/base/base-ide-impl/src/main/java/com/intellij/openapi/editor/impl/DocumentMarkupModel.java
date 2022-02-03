@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.MarkupModelWindow;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;

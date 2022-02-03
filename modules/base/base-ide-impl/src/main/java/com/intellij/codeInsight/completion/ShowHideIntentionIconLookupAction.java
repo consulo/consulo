@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElementAction;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
 
 /**

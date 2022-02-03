@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.Language;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;

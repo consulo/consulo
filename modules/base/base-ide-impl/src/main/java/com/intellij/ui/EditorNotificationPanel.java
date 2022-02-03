@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.codeInsight.intention.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.awt.JBColor;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionManager;

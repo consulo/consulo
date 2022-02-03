@@ -17,14 +17,14 @@
 package com.intellij.psi.impl;
 
 import com.intellij.ide.util.PsiNavigationSupport;
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.SearchScope;

@@ -19,7 +19,7 @@ package com.intellij.psi.formatter;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.FormattingDocumentModel;
 import com.intellij.formatting.FormattingModelEx;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.language.ast.TokenType;

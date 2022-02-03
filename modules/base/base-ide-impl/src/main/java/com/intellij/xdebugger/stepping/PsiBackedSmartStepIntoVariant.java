@@ -16,8 +16,8 @@
 
 package com.intellij.xdebugger.stepping;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ui.image.Image;
 

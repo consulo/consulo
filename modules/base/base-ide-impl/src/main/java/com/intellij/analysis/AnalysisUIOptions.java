@@ -18,7 +18,7 @@ package com.intellij.analysis;
 
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ui.InspectionResultsView;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;

@@ -29,7 +29,7 @@ import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -62,7 +62,7 @@ public class MarkRootAction extends DumbAwareAction {
     for (VirtualFile vFile : vFiles) {
       ContentEntry entry = findContentEntry(model, vFile);
       if (entry != null) {
-        final ContentFolder[] sourceFolders = entry.getFolders(ContentFolderScopes.all());
+        final ContentFolder[] sourceFolders = entry.getFolders(LanguageContentFolderScopes.all());
         for (ContentFolder sourceFolder : sourceFolders) {
           if (Comparing.equal(sourceFolder.getFile(), vFile)) {
             entry.removeFolder(sourceFolder);
@@ -116,7 +116,7 @@ public class MarkRootAction extends DumbAwareAction {
       }
 
       for (ContentEntry contentEntry : contentEntries) {
-        for (ContentFolder contentFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
+        for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
           if (Comparing.equal(contentFolder.getFile(), vFile)) {
             if (contentFolder.getType() == myContentFolderType) {
               return false;

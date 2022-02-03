@@ -16,8 +16,8 @@
 package consulo.wm.impl;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.project.util.ExpirableRunnable;

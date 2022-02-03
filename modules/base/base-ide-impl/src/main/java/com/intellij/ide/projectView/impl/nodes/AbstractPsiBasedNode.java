@@ -3,7 +3,7 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.ide.projectView.PresentationData;
@@ -12,7 +12,7 @@ import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.ValidateableNode;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import consulo.module.Module;

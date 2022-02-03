@@ -1,6 +1,6 @@
 package com.intellij.ide.browsers;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.browsers.chrome.ChromeSettings;
 import com.intellij.ide.browsers.firefox.FirefoxSettings;

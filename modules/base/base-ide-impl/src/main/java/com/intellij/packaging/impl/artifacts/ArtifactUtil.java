@@ -37,7 +37,7 @@ import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

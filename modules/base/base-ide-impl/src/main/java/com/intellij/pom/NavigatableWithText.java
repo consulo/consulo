@@ -15,6 +15,8 @@
  */
 package com.intellij.pom;
 
+import consulo.navigation.Navigatable;
+
 import javax.annotation.Nullable;
 
 /**

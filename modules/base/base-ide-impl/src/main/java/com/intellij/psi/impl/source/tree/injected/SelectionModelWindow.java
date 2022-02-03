@@ -2,7 +2,7 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.SelectionModel;

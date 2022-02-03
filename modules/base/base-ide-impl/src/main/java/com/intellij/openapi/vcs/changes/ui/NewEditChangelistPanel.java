@@ -19,7 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.fileTypes.PlainTextLanguage;
+import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;

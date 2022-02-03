@@ -43,7 +43,7 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import consulo.language.ast.IElementType;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.text.CharSequenceSubSequence;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;

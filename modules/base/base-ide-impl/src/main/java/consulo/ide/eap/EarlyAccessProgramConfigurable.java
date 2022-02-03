@@ -15,7 +15,7 @@
  */
 package consulo.ide.eap;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.application.Application;
 import consulo.configurable.Configurable;

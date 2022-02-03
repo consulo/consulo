@@ -7,11 +7,8 @@ import com.intellij.ide.CutProvider;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.PasteProvider;
 import com.intellij.ide.highlighter.HighlighterFactory;
-import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.injected.editor.MarkupModelWindow;
-import consulo.dataContext.DataContext;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -27,17 +24,21 @@ import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.UnsafeWeakList;
+import consulo.application.ApplicationManager;
+import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.editor.internal.EditorInternal;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.virtualFileSystem.VirtualFile;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
@@ -315,6 +316,11 @@ class EditorWindowImpl extends com.intellij.injected.editor.EditorWindowImpl imp
   @Override
   public EditorKind getEditorKind() {
     return myDelegate.getEditorKind();
+  }
+
+  @Override
+  public void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
+    myDelegate.showPopupInBestPositionFor(popup);
   }
 
   @Override

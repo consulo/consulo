@@ -19,7 +19,7 @@ package com.intellij.find.impl;
 import com.intellij.find.FindBundle;
 import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesManager;
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

@@ -16,7 +16,7 @@
 
 package consulo.desktop.awt.uiOld.debugger.extensions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.*;

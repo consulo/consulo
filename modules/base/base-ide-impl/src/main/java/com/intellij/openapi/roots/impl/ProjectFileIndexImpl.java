@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -29,10 +29,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
-import consulo.roots.impl.TestResourceContentFolderTypeProvider;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
+import consulo.language.content.TestResourceContentFolderTypeProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -239,7 +239,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   @Override
   public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && ContentFolderScopes.test().apply(myDirectoryIndexProvider.get().getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) && LanguageContentFolderScopes.test().apply(myDirectoryIndexProvider.get().getContentFolderType(info));
   }
 
   @Nullable

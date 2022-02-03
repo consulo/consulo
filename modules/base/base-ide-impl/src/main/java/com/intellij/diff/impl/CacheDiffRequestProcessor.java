@@ -21,7 +21,7 @@ import com.intellij.diff.tools.util.SoftHardCacheMap;
 import com.intellij.diff.util.DiffTaskQueue;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;

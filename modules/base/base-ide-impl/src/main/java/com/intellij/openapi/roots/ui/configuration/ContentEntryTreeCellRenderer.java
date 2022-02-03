@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.fileChooser.FileElement;
@@ -28,7 +28,7 @@ import consulo.roots.ContentFoldersSupportUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import consulo.language.psi.PsiPackageSupportProvider;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
@@ -69,7 +69,7 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
   protected Image updateIcon(final ContentEntry entry, final VirtualFile file, Image originalIcon) {
     Image icon = originalIcon;
     VirtualFile currentRoot = null;
-    for (ContentFolder contentFolder : entry.getFolders(ContentFolderScopes.all())) {
+    for (ContentFolder contentFolder : entry.getFolders(LanguageContentFolderScopes.all())) {
       final VirtualFile contentPath = contentFolder.getFile();
       if (file.equals(contentPath)) {
         icon = ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());

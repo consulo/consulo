@@ -16,19 +16,19 @@
 package com.intellij.openapi.util.text;
 
 import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.text.MergingCharSequence;
 import com.intellij.util.text.StringFactory;
+import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
@@ -2720,7 +2720,7 @@ public class StringUtil extends StringUtilRt {
    */
   @Contract(pure = true)
   public static int naturalCompare(@Nullable String string1, @Nullable String string2) {
-    return NaturalComparator.INSTANCE.compare(string1, string2);
+    return consulo.util.lang.StringUtil.naturalCompare(string1, string2);
   }
 
   @Contract(pure = true)

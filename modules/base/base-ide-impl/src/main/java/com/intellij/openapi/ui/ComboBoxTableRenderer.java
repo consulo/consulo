@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.ui.popup.*;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;

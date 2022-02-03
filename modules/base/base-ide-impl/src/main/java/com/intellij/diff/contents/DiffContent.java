@@ -19,7 +19,7 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;

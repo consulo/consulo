@@ -15,16 +15,14 @@
  */
 package consulo.language.psi;
 
-import com.intellij.injected.editor.VirtualFileWindow;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.container.plugin.PluginIds;
 import consulo.document.util.FileContentUtilCore;
 import consulo.language.Language;
 import consulo.language.LanguageExtension;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ModalityState;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;

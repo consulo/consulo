@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.component.persist.InvalidDataException;
 import consulo.component.persist.WriteExternalException;

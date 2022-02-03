@@ -42,7 +42,7 @@ import consulo.util.lang.function.Conditions;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairFunction;
 import consulo.ui.ex.awt.TargetAWT;

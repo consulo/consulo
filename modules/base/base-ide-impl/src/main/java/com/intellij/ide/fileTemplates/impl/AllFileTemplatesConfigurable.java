@@ -16,7 +16,7 @@
 
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.fileTemplates.*;
 import com.intellij.ide.util.PropertiesComponent;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.vcs.CheckoutProvider;

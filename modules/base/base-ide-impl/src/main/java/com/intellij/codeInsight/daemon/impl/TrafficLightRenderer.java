@@ -10,7 +10,7 @@ import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile;
 import com.intellij.compiler.ProblemsView;
 import com.intellij.diff.util.DiffUserDataKeys;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.PowerSaveMode;
 import consulo.language.Language;
 import com.intellij.lang.annotation.HighlightSeverity;

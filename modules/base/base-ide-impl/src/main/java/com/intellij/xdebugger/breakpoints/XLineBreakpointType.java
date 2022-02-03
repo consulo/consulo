@@ -16,7 +16,7 @@
 
 package com.intellij.xdebugger.breakpoints;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.project.Project;
 import consulo.document.util.TextRange;

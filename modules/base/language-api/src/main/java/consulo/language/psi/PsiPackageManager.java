@@ -15,11 +15,13 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
+import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.module.extension.ModuleExtension;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

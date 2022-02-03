@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.action;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.actions.ImportModuleAction;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

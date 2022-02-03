@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.fileChooser.actions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.fileChooser.FileSystemTree;

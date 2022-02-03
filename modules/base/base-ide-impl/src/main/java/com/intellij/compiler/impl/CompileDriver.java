@@ -92,7 +92,7 @@ import consulo.compiler.roots.CompilerPathsImpl;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.util.collection.Maps;
 import consulo.util.collection.Sets;
@@ -851,7 +851,7 @@ public class CompileDriver {
       final MultiMap<File, Module> outputToModulesMap = new MultiMap<>();
       for (Module module : ModuleManager.getInstance(myProject).getModules()) {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
-        for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
+        for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
           final String outputPathUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
           if (outputPathUrl != null) {
             final String path = VirtualFileManager.extractPath(outputPathUrl);
@@ -1950,7 +1950,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
         }
 
         boolean isEmpty = true;
-        for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
+        for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
           if (hasContent(module, contentFolderType)) {
             isEmpty = false;
             break;
@@ -1961,7 +1961,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
           continue;
         }
 
-        for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
+        for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
           if (hasContent(module, contentFolderType)) {
 
             final String outputPath = getModuleOutputPath(module, contentFolderType);
@@ -2073,7 +2073,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
   private static boolean hasContent(Module module, ContentFolderTypeProvider c) {
     final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
     for (final ContentEntry contentEntry : contentEntries) {
-      final ContentFolder[] sourceFolders = contentEntry.getFolders(ContentFolderScopes.of(c));
+      final ContentFolder[] sourceFolders = contentEntry.getFolders(LanguageContentFolderScopes.of(c));
       if (sourceFolders.length > 0) {
         return true;
       }

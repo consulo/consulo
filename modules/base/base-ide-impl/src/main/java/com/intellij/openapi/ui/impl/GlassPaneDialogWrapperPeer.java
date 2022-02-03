@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.RemoteDesktopService;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;

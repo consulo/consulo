@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.roots.ContentFoldersSupportUtil;
-import consulo.roots.PackageBasedContentFolderTypeProvider;
+import consulo.language.content.PackageBasedContentFolderTypeProvider;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;

@@ -15,6 +15,9 @@
  */
 package com.intellij.navigation;
 
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
+
 /**
  * @author yole
  */

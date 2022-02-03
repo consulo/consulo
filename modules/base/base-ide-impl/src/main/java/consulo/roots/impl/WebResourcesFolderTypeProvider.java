@@ -16,7 +16,8 @@
 
 package consulo.roots.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
 import consulo.project.ProjectBundle;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.ui.image.Image;

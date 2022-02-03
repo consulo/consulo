@@ -3,8 +3,8 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
-import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.parser.LanguageParserDefinitions;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.editor.colors.EditorColorsManager;

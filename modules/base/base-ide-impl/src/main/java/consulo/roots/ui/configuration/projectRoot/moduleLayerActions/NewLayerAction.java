@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.projectRoot.moduleLayerActions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.module.content.layer.ModifiableRootModel;

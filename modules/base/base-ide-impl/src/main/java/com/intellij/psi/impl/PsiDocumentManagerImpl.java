@@ -3,7 +3,7 @@
 package com.intellij.psi.impl;
 
 import com.intellij.AppTopics;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.ApplicationManager;

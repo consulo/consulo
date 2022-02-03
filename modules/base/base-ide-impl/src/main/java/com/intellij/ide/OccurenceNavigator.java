@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 
 import javax.annotation.Nonnull;
 

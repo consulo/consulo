@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

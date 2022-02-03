@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.layer.ModuleRootLayer;
 import jakarta.inject.Inject;
@@ -71,7 +71,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
         return VirtualFilePointer.EMPTY_ARRAY;
       }
 
-      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
+      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
         result.add(manager.getCompilerOutputPointer(contentFolderType));
       }
     }

@@ -2,7 +2,7 @@
 package com.intellij.build.events;
 
 import consulo.project.Project;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

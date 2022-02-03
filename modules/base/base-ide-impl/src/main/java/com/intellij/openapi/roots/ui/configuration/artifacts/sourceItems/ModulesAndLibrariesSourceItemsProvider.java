@@ -39,7 +39,7 @@ import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.PackagingSourceItemsProvider;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.base.BinariesOrderRootType;
 
 import javax.annotation.Nonnull;
@@ -146,7 +146,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     }
 
     for(ContentEntry c :  context.getModulesProvider().getRootModel(module).getContentEntries()) {
-      if(c.getFolderFiles(ContentFolderScopes.of(type.getContentFolderType())).length > 0) {
+      if(c.getFolderFiles(LanguageContentFolderScopes.of(type.getContentFolderType())).length > 0) {
         return true;
       }
     }

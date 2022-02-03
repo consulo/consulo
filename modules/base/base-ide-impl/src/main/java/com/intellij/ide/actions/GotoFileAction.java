@@ -33,7 +33,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;

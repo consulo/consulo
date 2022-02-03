@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui;
 
 import consulo.application.CommonBundle;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.idea.ActionsBundle;

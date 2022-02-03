@@ -25,7 +25,7 @@ import com.intellij.diff.tools.util.base.TextDiffSettingsHolder.TextDiffSettings
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.internal.statistic.UsageTrigger;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;

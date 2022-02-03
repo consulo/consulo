@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
@@ -45,7 +45,7 @@ import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.decorator.SwingUIDecorator;
-import consulo.application.ui.WholeWestDialogWrapper;
+import consulo.application.impl.WholeWestDialogWrapper;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;

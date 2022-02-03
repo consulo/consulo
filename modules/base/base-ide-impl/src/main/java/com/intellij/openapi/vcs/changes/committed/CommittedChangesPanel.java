@@ -164,7 +164,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
 
             @Override
             public void consume(final List<CommittedChangeList> list) {
-              new AbstractCalledLater(myProject, ModalityState.stateForComponent(myBrowser)) {
+              new AbstractCalledLater((Project)myProject, ModalityState.stateForComponent(myBrowser)) {
                 @Override
                 public void run() {
                   myBrowser.append(list);
@@ -194,7 +194,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
           WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
             @Override
             public void run() {
-              Messages.showErrorDialog(myProject, "Error refreshing view: " + StringUtil.join(e.getMessages(), "\n"), "Committed Changes");
+              Messages.showErrorDialog((Project)myProject, "Error refreshing view: " + StringUtil.join(e.getMessages(), "\n"), "Committed Changes");
             }
           }, null, myProject);
         } finally {

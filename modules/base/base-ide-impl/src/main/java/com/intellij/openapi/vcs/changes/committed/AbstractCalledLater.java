@@ -23,9 +23,9 @@ import java.awt.*;
 
 public abstract class AbstractCalledLater implements Runnable {
   private final Project myProject;
-  private final ModalityState myState;
+  private final consulo.ui.ModalityState myState;
 
-  protected AbstractCalledLater(final Project project, final ModalityState modalityState) {
+  protected AbstractCalledLater(final Project project, final consulo.ui.ModalityState modalityState) {
     myProject = project;
     myState = modalityState;
   }

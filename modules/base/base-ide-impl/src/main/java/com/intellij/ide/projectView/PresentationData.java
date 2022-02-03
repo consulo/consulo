@@ -17,7 +17,7 @@ package com.intellij.ide.projectView;
 
 import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
 import com.intellij.navigation.ColoredItemPresentation;
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationWithSeparator;
 import com.intellij.navigation.LocationPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -34,7 +34,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Default implementation of the {@link com.intellij.navigation.ItemPresentation} interface.
+ * Default implementation of the {@link ItemPresentation} interface.
  */
 
 public class PresentationData implements ColoredItemPresentation, ComparableObject, LocationPresentation {

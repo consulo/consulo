@@ -43,7 +43,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.util.collection.OrderedSet;
 import consulo.language.psi.stub.FileBasedIndex;
 import com.intellij.util.ui.MessageCategory;
@@ -52,10 +52,10 @@ import consulo.compiler.impl.AdditionalOutputDirectoriesProvider;
 import consulo.compiler.make.impl.CompositeDependencyCache;
 import consulo.compiler.roots.CompilerPathsImpl;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -436,7 +436,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     Set<VirtualFile> additionalRoots = myModuleToRootsMap.get(module);
-    VirtualFile[] moduleRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.productionAndTest());
+    VirtualFile[] moduleRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
     if (additionalRoots == null || additionalRoots.isEmpty()) {
       myModuleToRootsCache.put(module, moduleRoots);
       return moduleRoots;

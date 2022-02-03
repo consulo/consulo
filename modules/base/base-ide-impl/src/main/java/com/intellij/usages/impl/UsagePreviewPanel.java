@@ -46,7 +46,7 @@ import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;
 import consulo.ui.ex.RelativePoint;

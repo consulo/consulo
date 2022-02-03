@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm;
 
 import consulo.project.Project;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 
 /**

@@ -2080,7 +2080,7 @@
     <syntaxHighlighter factoryClass="com.intellij.openapi.fileTypes.LanguageFileTypeHighlighterProvider"/>
     <structureViewBuilder factoryClass="com.intellij.ide.highlighter.LanguageFileTypeStructureViewBuilderProvider"/>
 
-    <lang.elementManipulator forClass="consulo.language.psi.PsiPlainTextFile"
+    <lang.elementManipulator forClass="consulo.language.plain.psi.PsiPlainTextFile"
                              implementationClass="com.intellij.psi.impl.source.resolve.reference.impl.manipulators.PlainFileManipulator"/>
     <lang.elementManipulator forClass="consulo.language.psi.PsiComment"
                              implementationClass="com.intellij.psi.impl.source.resolve.reference.impl.manipulators.PsiCommentManipulator"/>
@@ -2523,10 +2523,10 @@
     <projectService serviceInterface="consulo.module.extension.ModuleExtensionHelper"
                     serviceImplementation="consulo.module.extension.impl.ModuleExtensionHelperImpl"/>
 
-    <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="consulo.roots.impl.ProductionResourceContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="consulo.roots.impl.TestContentFolderTypeProvider"/>
-    <contentFolderTypeProvider implementation="consulo.roots.impl.TestResourceContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.language.content.ProductionContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.language.content.ProductionResourceContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.language.content.TestContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="consulo.language.content.TestResourceContentFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="consulo.roots.impl.WebResourcesFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="consulo.content.base.ExcludedContentFolderTypeProvider"/>
 

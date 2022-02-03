@@ -10,7 +10,7 @@ import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsApplicationSettings;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -16,15 +16,13 @@
 
 package consulo.language.util;
 
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.containers.JBIterable;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.util.lang.function.Condition;
 import consulo.language.InjectableLanguage;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.LanguageFileType;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
@@ -35,7 +33,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.template.TemplateLanguage;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.JBIterable;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 

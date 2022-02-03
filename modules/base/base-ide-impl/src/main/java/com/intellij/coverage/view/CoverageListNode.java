@@ -4,7 +4,7 @@ import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.*;
 import consulo.project.Project;

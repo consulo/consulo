@@ -33,7 +33,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.CalledInBackground;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.util.Alarm;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;

@@ -44,7 +44,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.tree.StructureTreeModel;
 import com.intellij.usageView.UsageTreeColorsScheme;
 import consulo.application.util.function.Processor;

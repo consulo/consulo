@@ -29,7 +29,7 @@ import com.intellij.history.integration.ui.models.FileDifferenceModel;
 import com.intellij.history.integration.ui.models.HistoryDialogModel;
 import com.intellij.history.integration.ui.models.RevisionProcessingProgress;
 import com.intellij.history.utils.LocalHistoryLog;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;

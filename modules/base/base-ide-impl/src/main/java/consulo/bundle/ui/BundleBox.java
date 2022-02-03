@@ -15,7 +15,7 @@
  */
 package consulo.bundle.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

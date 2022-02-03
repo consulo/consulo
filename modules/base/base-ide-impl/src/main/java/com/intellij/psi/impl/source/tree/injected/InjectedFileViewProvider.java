@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.document.Document;

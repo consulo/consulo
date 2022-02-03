@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.components.ComponentSerializationUtil;
@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;

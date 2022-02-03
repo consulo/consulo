@@ -7,6 +7,7 @@ import com.intellij.openapi.application.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
+import consulo.language.plain.psi.PsiPlainText;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;

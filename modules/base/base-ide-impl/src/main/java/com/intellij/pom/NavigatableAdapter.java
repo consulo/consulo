@@ -16,6 +16,7 @@
 package com.intellij.pom;
 
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 

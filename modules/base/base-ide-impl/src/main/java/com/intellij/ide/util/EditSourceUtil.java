@@ -16,14 +16,14 @@
 
 package com.intellij.ide.util;
 
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -7,7 +7,7 @@ import com.intellij.codeInsight.daemon.impl.HectorComponent;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSettingListener;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.PowerSaveMode;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;

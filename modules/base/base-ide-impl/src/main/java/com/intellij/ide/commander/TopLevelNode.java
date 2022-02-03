@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.commander;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;

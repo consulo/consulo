@@ -22,7 +22,7 @@ import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.find.FindBundle;
 import com.intellij.find.FindSettings;
 import com.intellij.lang.findUsages.LanguageFindUsages;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;

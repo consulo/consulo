@@ -22,6 +22,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;

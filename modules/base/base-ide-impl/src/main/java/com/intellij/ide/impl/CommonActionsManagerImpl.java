@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.*;
 import consulo.ui.ex.action.AnAction;

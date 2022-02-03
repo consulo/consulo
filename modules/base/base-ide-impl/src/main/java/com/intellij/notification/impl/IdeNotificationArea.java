@@ -15,7 +15,7 @@
  */
 package com.intellij.notification.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import com.intellij.notification.EventLog;

@@ -5,6 +5,7 @@
 module consulo.virtual.file.system.api {
   requires transitive consulo.application.api;
   requires transitive consulo.util.io;
+  requires transitive consulo.proxy;
 
   requires consulo.base.icon.library;
   requires consulo.base.localize.library;
@@ -17,6 +18,7 @@ module consulo.virtual.file.system.api {
   exports consulo.virtualFileSystem.encoding;
   exports consulo.virtualFileSystem.archive;
   exports consulo.virtualFileSystem.pointer;
+  exports consulo.virtualFileSystem.light;
   exports consulo.virtualFileSystem.util;
 
   // TODO [VISTALL] impl package

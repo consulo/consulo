@@ -19,7 +19,7 @@ import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.ide.impl.dataRules.GetDataRule;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 
 public class DiffNavigatableArrayRule implements GetDataRule<Navigatable[]> {

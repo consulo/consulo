@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;

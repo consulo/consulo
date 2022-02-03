@@ -16,7 +16,7 @@
 package com.intellij.formatting;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileTypes.PlainTextLanguage;
+import consulo.language.plain.PlainTextLanguage;
 import javax.annotation.Nonnull;
 
 import static com.intellij.psi.util.PsiUtilBase.getLanguageInEditor;

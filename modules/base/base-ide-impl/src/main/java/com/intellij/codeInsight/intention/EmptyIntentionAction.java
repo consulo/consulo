@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.intention;
 
 import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.editor.Editor;
 import consulo.project.Project;
 import consulo.component.util.Iconable;

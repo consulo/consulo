@@ -28,7 +28,7 @@ import com.intellij.diff.tools.util.TransferableFileEditorStateSupport;
 import com.intellij.diff.tools.util.side.TwosideDiffViewer;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.Side;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

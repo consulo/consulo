@@ -15,6 +15,8 @@
  */
 package com.intellij.navigation;
 
+import consulo.navigation.ItemPresentation;
+
 /**
  * @author pegov
  */

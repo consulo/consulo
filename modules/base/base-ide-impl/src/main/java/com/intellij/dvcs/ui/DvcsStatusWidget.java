@@ -5,7 +5,7 @@ import com.intellij.dvcs.branch.DvcsBranchUtil;
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.VcsRepositoryManager;
 import com.intellij.dvcs.repo.VcsRepositoryMappingListener;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;

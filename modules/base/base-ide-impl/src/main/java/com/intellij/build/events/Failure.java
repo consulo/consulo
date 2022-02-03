@@ -16,7 +16,7 @@
 package com.intellij.build.events;
 
 import com.intellij.notification.Notification;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 
 import javax.annotation.Nullable;
 import java.util.List;

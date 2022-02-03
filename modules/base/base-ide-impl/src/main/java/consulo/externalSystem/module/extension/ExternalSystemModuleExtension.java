@@ -17,12 +17,13 @@ package consulo.externalSystem.module.extension;
 
 import consulo.module.extension.ModuleExtension;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 03-Jun-17
  */
 public interface ExternalSystemModuleExtension<T extends ExternalSystemModuleExtension<T>> extends ModuleExtension<T> {
-  @javax.annotation.Nullable
+  @Nullable
   String getOption(@Nonnull String key);
 }

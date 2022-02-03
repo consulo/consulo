@@ -15,6 +15,8 @@
  */
 package com.intellij.pom;
 
+import consulo.navigation.Navigatable;
+
 /**
  * Navigatable that saves cursor position in the editor when navigating to
  * already opened documents

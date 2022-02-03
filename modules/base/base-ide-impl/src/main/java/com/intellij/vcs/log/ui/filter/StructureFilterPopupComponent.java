@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.filter;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;

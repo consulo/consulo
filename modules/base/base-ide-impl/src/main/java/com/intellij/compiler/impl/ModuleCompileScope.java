@@ -34,7 +34,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import javax.annotation.Nonnull;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -143,13 +143,13 @@ public class ModuleCompileScope extends FileIndexCompileScope {
 
     if (candidateModule != null && myScopeModules.contains(candidateModule)) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(candidateModule);
-      final String[] excludeRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderScopes.excluded());
+      final String[] excludeRootUrls = moduleRootManager.getContentFolderUrls(LanguageContentFolderScopes.excluded());
       for (String excludeRootUrl : excludeRootUrls) {
         if (isUrlUnderRoot(url, excludeRootUrl)) {
           return false;
         }
       }
-      final String[] sourceRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderScopes.all(false));
+      final String[] sourceRootUrls = moduleRootManager.getContentFolderUrls(LanguageContentFolderScopes.all(false));
       for (String sourceRootUrl : sourceRootUrls) {
         if (isUrlUnderRoot(url, sourceRootUrl)) {
           return true;

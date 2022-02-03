@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.impl.rules;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.content.TestSourcesFilter;

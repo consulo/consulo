@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.ui;
 
 import com.intellij.execution.testframework.AbstractTestProxy;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.util.Alarm;

@@ -21,7 +21,7 @@ import consulo.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nls;

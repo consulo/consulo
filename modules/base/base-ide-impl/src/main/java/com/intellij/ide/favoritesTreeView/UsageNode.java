@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.usages.Usage;
 
 /**

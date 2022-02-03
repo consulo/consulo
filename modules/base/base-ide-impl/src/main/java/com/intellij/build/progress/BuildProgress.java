@@ -5,7 +5,7 @@ import com.intellij.build.FilePosition;
 import com.intellij.build.events.BuildEventsNls;
 import com.intellij.build.events.MessageEvent;
 import com.intellij.build.issue.BuildIssue;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,21 +15,21 @@
  */
 package consulo.language.psi.stub;
 
-import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.progress.ProgressManager;
-import consulo.project.Project;
+import consulo.application.progress.ProgressManager;
 import consulo.content.ContentIterator;
-import consulo.module.content.ProjectRootManager;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileWithId;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileWithId;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.BitSet;
 
@@ -41,7 +41,8 @@ public abstract class IdFilter {
   @Nonnull
   public static IdFilter getProjectIdFilter(@Nonnull Project project, final boolean includeNonProjectItems) {
     Key<CachedValue<IdFilter>> key = includeNonProjectItems ? OUTSIDE_PROJECT : INSIDE_PROJECT;
-    CachedValueProvider<IdFilter> provider = () -> CachedValueProvider.Result.create(buildProjectIdFilter(project, includeNonProjectItems), ProjectRootManager.getInstance(project), VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS);
+    CachedValueProvider<IdFilter> provider =
+            () -> CachedValueProvider.Result.create(buildProjectIdFilter(project, includeNonProjectItems), ProjectRootManager.getInstance(project), VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS);
     return CachedValuesManager.getManager(project).getCachedValue(project, key, provider, false);
   }
 

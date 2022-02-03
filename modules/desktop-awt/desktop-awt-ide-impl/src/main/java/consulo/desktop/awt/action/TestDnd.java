@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.action;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.dnd.DnDActionInfo;
 import com.intellij.ide.dnd.DnDDragStartBean;
 import com.intellij.ide.dnd.DnDImage;

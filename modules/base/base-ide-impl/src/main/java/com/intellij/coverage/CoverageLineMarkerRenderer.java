@@ -24,7 +24,7 @@ import com.intellij.codeInsight.hint.EditorFragmentComponent;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.coverage.actions.HideCoverageInfoAction;
 import com.intellij.coverage.actions.ShowCoveringTestsAction;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

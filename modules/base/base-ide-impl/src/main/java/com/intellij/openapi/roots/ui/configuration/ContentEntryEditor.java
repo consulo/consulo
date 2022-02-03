@@ -25,7 +25,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.EventDispatcher;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.roots.ui.configuration.ContentFolderPropertiesDialog;
 import consulo.util.concurrent.AsyncResult;
@@ -225,7 +225,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
     if (contentEntry == null) {
       return null;
     }
-    for (ContentFolder contentFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
+    for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
       final VirtualFile f = contentFolder.getFile();
       if (f != null && f.equals(file)) {
         return contentFolder;

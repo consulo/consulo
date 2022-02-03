@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentFactory;
 import consulo.project.ui.wm.content.ContentManager;

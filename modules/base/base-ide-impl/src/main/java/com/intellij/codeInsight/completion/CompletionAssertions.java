@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.language.ast.FileASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;

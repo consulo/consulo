@@ -20,7 +20,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.language.Language;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.GotoClassContributor;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import consulo.language.psi.PsiElement;

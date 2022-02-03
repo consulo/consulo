@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle.arrangement.util;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;

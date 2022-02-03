@@ -16,7 +16,7 @@
 
 package com.intellij.ui.debugger.extensions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.ui.Splitter;

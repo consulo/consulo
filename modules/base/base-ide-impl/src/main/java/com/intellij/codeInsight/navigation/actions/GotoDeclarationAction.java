@@ -42,7 +42,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.RelativePoint;

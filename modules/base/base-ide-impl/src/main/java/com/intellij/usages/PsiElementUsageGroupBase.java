@@ -15,7 +15,7 @@
  */
 package com.intellij.usages;
 
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import com.intellij.navigation.NavigationItemFileStatus;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;

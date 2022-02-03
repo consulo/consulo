@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.classpath;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.Module;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;

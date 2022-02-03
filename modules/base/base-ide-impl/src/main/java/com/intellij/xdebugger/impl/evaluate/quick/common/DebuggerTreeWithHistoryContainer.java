@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.evaluate.quick.common;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.concurrency.ResultConsumer;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;

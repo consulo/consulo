@@ -15,7 +15,7 @@
  */
 package com.intellij.packageDependencies;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.components.MainConfigurationStateSplitter;
 import consulo.component.persist.State;

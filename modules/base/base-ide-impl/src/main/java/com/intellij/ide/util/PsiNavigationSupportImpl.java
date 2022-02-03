@@ -7,7 +7,7 @@ import com.intellij.ide.projectView.impl.ProjectViewPane;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import jakarta.inject.Singleton;

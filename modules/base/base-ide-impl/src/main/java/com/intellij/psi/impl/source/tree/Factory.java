@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import consulo.language.ast.ASTFactory;
+import consulo.language.impl.ASTFactory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.source.DummyHolder;

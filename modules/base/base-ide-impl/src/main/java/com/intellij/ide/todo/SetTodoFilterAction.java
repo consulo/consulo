@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.todo;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.todo.configurable.TodoConfigurable;
 import com.intellij.openapi.actionSystem.*;

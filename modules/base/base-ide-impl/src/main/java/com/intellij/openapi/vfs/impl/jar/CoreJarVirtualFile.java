@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.impl.jar;
 
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
+import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;

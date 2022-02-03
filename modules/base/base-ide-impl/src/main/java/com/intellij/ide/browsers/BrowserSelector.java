@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.browsers;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.ui.ComboBox;
 import consulo.util.lang.function.Condition;

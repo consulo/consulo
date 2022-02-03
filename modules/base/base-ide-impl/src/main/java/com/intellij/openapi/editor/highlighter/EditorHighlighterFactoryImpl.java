@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.LanguageSubstitutors;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;
 

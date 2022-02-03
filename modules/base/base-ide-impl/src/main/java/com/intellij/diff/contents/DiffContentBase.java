@@ -16,7 +16,7 @@
 package com.intellij.diff.contents;
 
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 

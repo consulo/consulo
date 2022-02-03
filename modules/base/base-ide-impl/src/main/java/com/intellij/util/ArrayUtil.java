@@ -378,14 +378,14 @@ public class ArrayUtil extends ArrayUtilRt {
    */
   @Nonnull
   @Contract(pure = true)
-  public static <T> T[] mergeArrayAndCollection(@Nonnull T[] array, @Nonnull Collection<T> collection, @Nonnull final ArrayFactory<T> factory) {
+  public static <T> T[] mergeArrayAndCollection(@Nonnull T[] array, @Nonnull Collection<T> collection, @Nonnull final IntFunction<T[]> factory) {
     if (collection.isEmpty()) {
       return array;
     }
 
     final T[] array2;
     try {
-      array2 = collection.toArray(factory.create(collection.size()));
+      array2 = collection.toArray(factory.apply(collection.size()));
     }
     catch (ArrayStoreException e) {
       throw new RuntimeException("Bad elements in collection: " + collection, e);
@@ -395,7 +395,7 @@ public class ArrayUtil extends ArrayUtilRt {
       return array2;
     }
 
-    final T[] result = factory.create(array.length + collection.size());
+    final T[] result = factory.apply(array.length + collection.size());
     System.arraycopy(array, 0, result, 0, array.length);
     System.arraycopy(array2, 0, result, array.length, array2.length);
     return result;

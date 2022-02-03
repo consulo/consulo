@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.service.ui;
 
 import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;

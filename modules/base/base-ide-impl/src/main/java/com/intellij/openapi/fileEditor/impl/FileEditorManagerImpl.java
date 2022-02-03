@@ -26,7 +26,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.plugins.PluginManagerCore;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.dataContext.DataContext;
 import consulo.application.AccessToken;
 import consulo.application.Application;

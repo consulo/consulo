@@ -19,7 +19,7 @@ import com.intellij.diff.impl.DiffRequestProcessor;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 
 import javax.annotation.Nonnull;
 

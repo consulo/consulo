@@ -30,7 +30,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.roots.impl.ModuleRootsProcessor;
 import consulo.content.base.BinariesOrderRootType;
 import org.jetbrains.annotations.TestOnly;
@@ -129,10 +129,10 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
 
         ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(moduleRootManager);
         if (rootsProcessor != null) {
-          rootsProcessor.processFiles(moduleRootManager, ContentFolderScopes.productionAndTest(), new CommonProcessors.CollectProcessor<VirtualFile>(set));
+          rootsProcessor.processFiles(moduleRootManager, LanguageContentFolderScopes.productionAndTest(), new CommonProcessors.CollectProcessor<VirtualFile>(set));
         }
         else {
-          Collections.addAll(set, moduleRootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest()));
+          Collections.addAll(set, moduleRootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest()));
         }
       }
 

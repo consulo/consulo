@@ -1,6 +1,6 @@
 package com.intellij.codeInspection.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.ui.image.Image;
 

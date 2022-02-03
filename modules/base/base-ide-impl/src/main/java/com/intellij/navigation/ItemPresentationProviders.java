@@ -17,6 +17,8 @@ package com.intellij.navigation;
 
 import com.intellij.openapi.util.ClassExtension;
 import consulo.container.plugin.PluginIds;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

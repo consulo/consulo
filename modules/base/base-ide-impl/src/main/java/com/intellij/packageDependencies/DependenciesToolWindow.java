@@ -15,7 +15,7 @@
  */
 package com.intellij.packageDependencies;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;

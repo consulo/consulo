@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.source.codeStyle;
 
-import consulo.language.ast.ASTFactory;
+import consulo.language.impl.ASTFactory;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.lang.LanguageTokenSeparatorGenerators;

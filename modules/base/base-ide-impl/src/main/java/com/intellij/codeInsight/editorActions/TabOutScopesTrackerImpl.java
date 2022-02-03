@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.CodeInsightSettings;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.Caret;

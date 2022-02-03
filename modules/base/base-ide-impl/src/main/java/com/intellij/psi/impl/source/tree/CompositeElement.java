@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.diagnostic.ThreadDumper;
-import consulo.language.ast.ASTFactory;
+import consulo.language.impl.ASTFactory;
 import consulo.language.ast.ASTNode;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -45,6 +45,7 @@ import consulo.psi.tree.PsiElementFactory;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.IntFunction;
 
 public class CompositeElement extends TreeElement {
   private static final Logger LOG = Logger.getInstance(CompositeElement.class);
@@ -387,10 +388,10 @@ public class CompositeElement extends TreeElement {
   }
 
   @Nonnull
-  public <T extends PsiElement> T[] getChildrenAsPsiElements(@Nullable TokenSet filter, @Nonnull ArrayFactory<? extends T> constructor) {
+  public <T extends PsiElement> T[] getChildrenAsPsiElements(@Nullable TokenSet filter, @Nonnull IntFunction<? extends T[]> constructor) {
     assertReadAccessAllowed();
     int count = countChildren(filter);
-    T[] result = constructor.create(count);
+    T[] result = constructor.apply(count);
     if (count == 0) {
       return result;
     }

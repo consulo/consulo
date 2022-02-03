@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.ElementsChooser;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.DumbService;

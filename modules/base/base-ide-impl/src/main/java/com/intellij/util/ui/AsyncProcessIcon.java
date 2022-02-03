@@ -16,7 +16,7 @@
 
 package com.intellij.util.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

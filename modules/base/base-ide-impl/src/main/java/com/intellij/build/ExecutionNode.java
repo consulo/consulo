@@ -2,13 +2,13 @@
 package com.intellij.build;
 
 import com.intellij.build.events.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.ui.AnimatedIcon;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.util.collection.SmartList;

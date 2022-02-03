@@ -19,7 +19,7 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import consulo.ui.ex.action.AnAction;

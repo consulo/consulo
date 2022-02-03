@@ -2,7 +2,7 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

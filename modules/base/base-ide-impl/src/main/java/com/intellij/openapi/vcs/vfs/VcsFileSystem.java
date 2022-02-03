@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.vfs;
 
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vfs.BaseVirtualFileSystem;
+import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@ import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.execution.testframework.ToggleModelAction;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;

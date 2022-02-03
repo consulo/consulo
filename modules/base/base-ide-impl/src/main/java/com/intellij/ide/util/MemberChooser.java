@@ -17,7 +17,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.codeInsight.generation.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;

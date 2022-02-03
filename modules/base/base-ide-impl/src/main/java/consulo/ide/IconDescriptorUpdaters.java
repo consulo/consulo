@@ -15,7 +15,7 @@
  */
 package consulo.ide;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import consulo.language.psi.*;
 import consulo.project.Project;

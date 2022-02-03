@@ -16,7 +16,7 @@
 
 package com.intellij.ide.scopeView;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.projectView.ProjectView;

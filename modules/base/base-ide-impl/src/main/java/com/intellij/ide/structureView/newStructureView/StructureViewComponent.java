@@ -38,7 +38,7 @@ import consulo.component.util.ModificationTracker;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;

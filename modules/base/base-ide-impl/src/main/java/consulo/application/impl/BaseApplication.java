@@ -16,7 +16,7 @@
 package consulo.application.impl;
 
 import com.intellij.diagnostic.PerformanceWatcher;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import consulo.application.event.ApplicationLoadListener;
 import com.intellij.ide.StartupProgress;

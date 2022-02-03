@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;

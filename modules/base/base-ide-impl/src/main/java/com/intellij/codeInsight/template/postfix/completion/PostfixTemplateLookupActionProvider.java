@@ -22,7 +22,7 @@ import com.intellij.codeInsight.lookup.LookupElementAction;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;

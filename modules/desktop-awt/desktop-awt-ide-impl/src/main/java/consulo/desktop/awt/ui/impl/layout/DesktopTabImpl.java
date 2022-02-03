@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;

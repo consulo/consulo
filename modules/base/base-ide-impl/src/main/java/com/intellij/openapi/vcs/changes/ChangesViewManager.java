@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.diff.util.DiffPlaces;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
 import com.intellij.ide.actions.ContextHelpAction;

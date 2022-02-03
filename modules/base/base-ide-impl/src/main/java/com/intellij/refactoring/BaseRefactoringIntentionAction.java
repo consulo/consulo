@@ -2,7 +2,7 @@ package com.intellij.refactoring;
 
 import com.intellij.codeInsight.intention.HighPriorityAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.ui.image.Image;
 

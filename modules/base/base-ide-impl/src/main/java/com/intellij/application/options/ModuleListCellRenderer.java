@@ -1,6 +1,6 @@
 package com.intellij.application.options;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.Module;
 import com.intellij.ui.ColoredListCellRenderer;
 

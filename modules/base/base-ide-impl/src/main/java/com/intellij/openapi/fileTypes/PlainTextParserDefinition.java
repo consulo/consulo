@@ -20,11 +20,14 @@
 package com.intellij.openapi.fileTypes;
 
 import consulo.language.ast.*;
+import consulo.language.impl.ASTFactory;
 import consulo.language.lexer.EmptyLexer;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiParser;
 import consulo.language.file.FileViewProvider;
+import consulo.language.plain.PlainTextLanguage;
+import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.PsiPlainTextFileImpl;

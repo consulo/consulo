@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.progress.EmptyProgressIndicator;

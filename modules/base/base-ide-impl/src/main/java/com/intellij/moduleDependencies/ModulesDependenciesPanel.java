@@ -20,7 +20,7 @@ import consulo.application.CommonBundle;
 import consulo.dataContext.DataProvider;
 import consulo.module.content.ProjectTopics;
 import com.intellij.analysis.AnalysisScopeBundle;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
 import com.intellij.ide.actions.ContextHelpAction;

@@ -2,7 +2,7 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;

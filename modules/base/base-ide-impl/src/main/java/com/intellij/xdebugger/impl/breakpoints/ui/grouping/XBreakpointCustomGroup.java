@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import consulo.ui.image.Image;
 

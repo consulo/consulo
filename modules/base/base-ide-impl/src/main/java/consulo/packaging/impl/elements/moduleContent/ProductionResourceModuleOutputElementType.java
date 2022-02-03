@@ -16,7 +16,7 @@
 package consulo.packaging.impl.elements.moduleContent;
 
 import com.intellij.packaging.impl.elements.moduleContent.ModuleOutputElementTypeBase;
-import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
 
 /**
  * @author VISTALL

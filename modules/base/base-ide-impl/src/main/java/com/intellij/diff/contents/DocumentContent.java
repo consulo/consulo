@@ -19,7 +19,7 @@ import com.intellij.diff.util.LineCol;
 import consulo.document.Document;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nonnull;

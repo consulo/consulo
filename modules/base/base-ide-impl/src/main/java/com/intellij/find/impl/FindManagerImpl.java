@@ -30,7 +30,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.file.LanguageFileType;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.lexer.Lexer;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

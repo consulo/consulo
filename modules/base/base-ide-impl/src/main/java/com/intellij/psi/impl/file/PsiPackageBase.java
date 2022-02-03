@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.file;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.*;

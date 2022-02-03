@@ -19,7 +19,7 @@ import com.intellij.diff.DiffContext;
 import com.intellij.diff.impl.DiffSettingsHolder;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.tools.holders.BinaryEditorHolder;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

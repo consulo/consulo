@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

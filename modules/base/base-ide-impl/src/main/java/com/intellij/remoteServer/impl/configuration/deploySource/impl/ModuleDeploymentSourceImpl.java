@@ -15,7 +15,7 @@
  */
 package com.intellij.remoteServer.impl.configuration.deploySource.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;

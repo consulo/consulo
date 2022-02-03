@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.templateLanguages;
 
-import consulo.language.ast.ASTFactory;
+import consulo.language.impl.ASTFactory;
 import consulo.document.util.TextRange;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.LeafElement;

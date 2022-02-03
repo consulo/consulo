@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.keymap.impl.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.action.Shortcut;
 import com.intellij.openapi.keymap.KeyMapBundle;

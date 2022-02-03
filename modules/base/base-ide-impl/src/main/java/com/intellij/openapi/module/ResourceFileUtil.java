@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.Query;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 
 import javax.annotation.Nullable;
 
@@ -39,7 +39,7 @@ public class ResourceFileUtil {
 
   @Nullable
   public static VirtualFile findResourceFile(final String name, final Module inModule) {
-    final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(inModule).getContentFolderFiles(ContentFolderScopes.productionAndTest());
+    final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(inModule).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(inModule.getProject()).getFileIndex();
     for (final VirtualFile sourceRoot : sourceRoots) {
       final String packagePrefix = fileIndex.getPackageNameByDirectory(sourceRoot);

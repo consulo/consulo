@@ -6,7 +6,7 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.PtyCommandLine;
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.runAnything.RunAnythingAction;
 import com.intellij.ide.actions.runAnything.RunAnythingCache;

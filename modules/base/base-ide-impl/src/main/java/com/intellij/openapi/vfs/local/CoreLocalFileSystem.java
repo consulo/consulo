@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.local;
 
-import com.intellij.openapi.vfs.BaseVirtualFileSystem;
+import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;

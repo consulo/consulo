@@ -18,6 +18,7 @@ package com.intellij.navigation;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.navigation.NavigationItem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

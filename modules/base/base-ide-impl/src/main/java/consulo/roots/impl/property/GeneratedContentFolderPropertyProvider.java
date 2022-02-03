@@ -15,7 +15,7 @@
  */
 package consulo.roots.impl.property;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 import consulo.module.content.layer.ContentFolderPropertyProvider;

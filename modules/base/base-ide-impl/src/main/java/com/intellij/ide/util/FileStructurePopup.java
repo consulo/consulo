@@ -2,7 +2,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.ViewStructureAction;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
@@ -39,7 +39,7 @@ import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -3,7 +3,7 @@ package com.intellij.ide.actions.searcheverywhere;
 
 import com.google.common.collect.Lists;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.SearchTopHitProvider;
 import com.intellij.ide.actions.BigPopupUI;

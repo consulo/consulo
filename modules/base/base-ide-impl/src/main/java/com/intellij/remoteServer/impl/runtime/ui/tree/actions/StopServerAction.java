@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServerNode;
 import javax.annotation.Nonnull;
 

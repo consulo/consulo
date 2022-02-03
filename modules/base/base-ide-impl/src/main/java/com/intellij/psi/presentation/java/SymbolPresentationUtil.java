@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.presentation.java;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;

@@ -20,7 +20,7 @@ import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefEntity;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.vcs.FileStatus;
 import consulo.language.psi.PsiElement;
 import com.intellij.xml.util.XmlStringUtil;

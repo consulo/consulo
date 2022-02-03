@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm;
 
 import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;

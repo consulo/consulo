@@ -21,7 +21,7 @@ import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.impl.ExecutionManagerImpl;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataManager;
 import consulo.application.dumb.DumbAware;

@@ -46,7 +46,7 @@ import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.FilterComponent;
 import com.intellij.ui.PopupHandler;

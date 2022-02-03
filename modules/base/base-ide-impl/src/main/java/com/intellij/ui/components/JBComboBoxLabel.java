@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.awt.TargetAWT;
 
 import javax.swing.*;

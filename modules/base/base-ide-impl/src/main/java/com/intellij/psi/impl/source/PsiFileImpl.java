@@ -4,7 +4,8 @@ package com.intellij.psi.impl.source;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.ide.util.PsiNavigationSupport;
-import com.intellij.navigation.ItemPresentation;
+import consulo.language.impl.ASTFactory;
+import consulo.navigation.ItemPresentation;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.document.Document;

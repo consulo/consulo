@@ -3,9 +3,9 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
@@ -39,7 +39,7 @@ import com.intellij.psi.impl.source.DummyHolder;
 import com.intellij.psi.injection.ReferenceInjector;
 import consulo.language.ast.IElementType;
 import com.intellij.reference.SoftReference;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ContainerUtil;

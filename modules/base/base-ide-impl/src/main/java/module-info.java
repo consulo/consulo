@@ -47,6 +47,7 @@ open module consulo.ide.impl {
   requires transitive consulo.datacontext.api;
   requires transitive consulo.ui.ex.api;
   requires transitive consulo.project.ui.api;
+  requires transitive consulo.navigation.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -372,7 +373,6 @@ open module consulo.ide.impl {
   exports com.intellij.history.integration.ui.models;
   exports com.intellij.history.integration.ui.views;
   exports com.intellij.history.utils;
-  exports com.intellij.icons;
   exports com.intellij.ide;
   exports com.intellij.ide.actionMacro;
   exports com.intellij.ide.actionMacro.actions;
@@ -947,7 +947,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.popup.util;
   exports com.intellij.ui.render;
   exports com.intellij.ui.roots;
-  exports com.intellij.ui.scale;
   exports com.intellij.ui.scroll;
   exports com.intellij.ui.speedSearch;
   exports com.intellij.ui.stripe;
@@ -1011,7 +1010,6 @@ open module consulo.ide.impl {
   exports com.intellij.util.ui;
   exports com.intellij.util.ui.accessibility;
   exports com.intellij.util.ui.classpath;
-  exports com.intellij.util.ui.components;
   exports com.intellij.util.ui.table;
   exports com.intellij.util.ui.tree;
   exports com.intellij.util.ui.update;
@@ -1083,8 +1081,6 @@ open module consulo.ide.impl {
   exports com.intellij.xdebugger.ui;
   exports com.intellij.xml;
   exports com.intellij.xml.util;
-  //exports com.maddyhome;
-  //exports com.maddyhome.idea;
   exports com.maddyhome.idea.copyright;
   exports com.maddyhome.idea.copyright.actions;
   exports com.maddyhome.idea.copyright.options;
@@ -1092,16 +1088,12 @@ open module consulo.ide.impl {
   exports com.maddyhome.idea.copyright.psi;
   exports com.maddyhome.idea.copyright.ui;
   exports com.maddyhome.idea.copyright.util;
-  //exports consulo;
   exports consulo.actionSystem;
   exports consulo.actionSystem.ex;
   exports consulo.actionSystem.impl;
   exports consulo.application.impl;
   exports consulo.application.options;
-  exports consulo.application.ui;
-  //exports consulo.async;
   exports consulo.async.ex;
-  exports consulo.awt;
   exports consulo.backgroundTaskByVfsChange;
   exports consulo.backgroundTaskByVfsChange.tree;
   exports consulo.backgroundTaskByVfsChange.ui;
@@ -1164,7 +1156,6 @@ open module consulo.ide.impl {
   exports consulo.copyright.psi;
   //exports consulo.desktop;
   //exports consulo.desktop.awt;
-  exports consulo.desktop.awt.util;
   exports consulo.desktop.editor;
   exports consulo.desktop.editor.impl;
   exports consulo.desktop.editor.impl.ui;
@@ -1172,7 +1163,6 @@ open module consulo.ide.impl {
   exports consulo.desktop.ui.swing;
   //exports consulo.desktop.util;
   exports consulo.desktop.util.awt;
-  exports consulo.desktop.util.awt.component;
   exports consulo.desktop.util.awt.graphics;
   exports consulo.desktop.util.awt.html;
   exports consulo.desktop.util.awt.laf;

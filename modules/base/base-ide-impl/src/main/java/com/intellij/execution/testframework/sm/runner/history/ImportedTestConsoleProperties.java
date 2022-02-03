@@ -30,7 +30,7 @@ import com.intellij.execution.testframework.sm.runner.TestProxyFilterProvider;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.project.Project;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

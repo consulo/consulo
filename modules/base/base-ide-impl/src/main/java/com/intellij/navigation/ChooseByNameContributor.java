@@ -16,6 +16,7 @@
 package com.intellij.navigation;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

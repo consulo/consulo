@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.components.editors;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.text.StringUtil;

@@ -46,7 +46,7 @@ import com.intellij.openapi.vfs.newvfs.FileSystemInterface;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.AppExecutorUtil;

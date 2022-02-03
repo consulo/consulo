@@ -16,7 +16,7 @@
 package com.intellij.find.editorHeaderActions;
 
 import com.intellij.find.EditorSearchSession;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.action.*;

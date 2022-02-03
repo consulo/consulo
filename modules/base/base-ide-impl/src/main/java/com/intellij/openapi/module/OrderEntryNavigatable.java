@@ -17,7 +17,7 @@ package com.intellij.openapi.module;
 
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.module.Module;
 
 /**

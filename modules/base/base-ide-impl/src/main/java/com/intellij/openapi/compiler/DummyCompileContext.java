@@ -22,12 +22,12 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.compiler.ModuleCompilerPathsManager;
 import javax.annotation.Nonnull;
 
 import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
 
 public class DummyCompileContext implements CompileContext {
   protected DummyCompileContext() {

@@ -2,7 +2,7 @@
 package com.intellij.ui;
 
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.ui.PopupLocationTracker;
 import com.intellij.ide.ui.ScreenAreaConsumer;

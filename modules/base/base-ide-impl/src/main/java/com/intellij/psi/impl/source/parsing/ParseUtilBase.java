@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.parsing;
 
-import consulo.language.ast.ASTFactory;
+import consulo.language.impl.ASTFactory;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.LexerUtil;
 import com.intellij.psi.impl.source.tree.TreeElement;

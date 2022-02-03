@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.action;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 

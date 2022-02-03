@@ -15,19 +15,19 @@
  */
 package consulo.roots.impl;
 
-import com.google.common.base.Predicate;
-import consulo.component.extension.ExtensionPointName;
-import consulo.module.content.layer.ModuleRootModel;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.util.function.Processor;
+import consulo.component.extension.ExtensionPointName;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.module.content.layer.ModuleRootModel;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -50,14 +50,12 @@ public abstract class ModuleRootsProcessor {
 
   public abstract boolean containsFile(@Nonnull ObjectIntMap<VirtualFile> roots, @Nonnull VirtualFile virtualFile);
 
-  public void processFiles(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate,
-                           @Nonnull Processor<VirtualFile> processor) {
+  public void processFiles(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate, @Nonnull Processor<VirtualFile> processor) {
     VirtualFile[] files = getFiles(moduleRootModel, predicate);
     ContainerUtil.process(files, processor);
   }
 
-  public void processFileUrls(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate,
-                              @Nonnull Processor<String> processor) {
+  public void processFileUrls(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate, @Nonnull Processor<String> processor) {
     String[] files = getUrls(moduleRootModel, predicate);
     ContainerUtil.process(files, processor);
   }

@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.application.CommonBundle;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
 import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;

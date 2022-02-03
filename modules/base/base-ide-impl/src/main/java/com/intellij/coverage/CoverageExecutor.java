@@ -1,7 +1,7 @@
 package com.intellij.coverage;
 
 import com.intellij.execution.Executor;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.wm.ToolWindowId;
 import consulo.ui.image.Image;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.usages;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.usageView.UsageInfo;
 import javax.annotation.Nonnull;
 

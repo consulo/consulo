@@ -4,7 +4,7 @@ package com.intellij.unscramble;
 import com.intellij.execution.filters.FileHyperlinkInfo;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.impl.EditorHyperlinkSupport;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;

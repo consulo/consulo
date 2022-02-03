@@ -23,7 +23,7 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.util.LineRange;
 import com.intellij.openapi.editor.Editor;
 import consulo.util.dataholder.Key;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 
 public interface DiffDataKeys {
   Key<Navigatable> NAVIGATABLE = Key.create("diff_navigatable");

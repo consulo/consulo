@@ -43,7 +43,7 @@ import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.util.dataholder.Key;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

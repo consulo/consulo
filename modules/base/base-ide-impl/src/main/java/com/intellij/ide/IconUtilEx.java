@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.component.util.Iconable;

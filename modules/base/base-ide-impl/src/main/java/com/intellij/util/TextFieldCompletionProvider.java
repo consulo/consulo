@@ -5,7 +5,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextLanguage;
+import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;

@@ -30,8 +30,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.externalSystem.module.extension.ExternalSystemMutableModuleExtension;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
 

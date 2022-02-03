@@ -38,7 +38,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -209,7 +209,7 @@ public class CompilerUtil {
                                               final Collection<VirtualFile> result) {
     for (Module module : ModuleManager.getInstance(project).getModules()) {
       final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-      final VirtualFile[] sourceRoots = rootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest());
+      final VirtualFile[] sourceRoots = rootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
       for (final VirtualFile outputPath : outputPaths) {
         for (VirtualFile sourceRoot : sourceRoots) {
           if (VfsUtilCore.isAncestor(outputPath, sourceRoot, true) || VfsUtilCore.isAncestor(sourceRoot, outputPath, false)) {

@@ -2,7 +2,7 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.FoldRegion;

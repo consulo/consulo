@@ -25,7 +25,7 @@ import com.intellij.diff.requests.MessageDiffRequest;
 import com.intellij.diff.requests.NoDiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.util.IntPair;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.awt.UIUtil;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;

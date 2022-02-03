@@ -7,7 +7,7 @@ import com.google.common.primitives.Ints;
 import com.intellij.Patches;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ui.awt.*;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;

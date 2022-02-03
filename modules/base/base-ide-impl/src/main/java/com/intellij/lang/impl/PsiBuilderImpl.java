@@ -16,6 +16,7 @@
 package com.intellij.lang.impl;
 
 import com.intellij.lang.*;
+import consulo.language.impl.ASTFactory;
 import consulo.language.lexer.Lexer;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.language.ast.*;

@@ -3,7 +3,7 @@ package com.intellij.execution.actions;
 
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;

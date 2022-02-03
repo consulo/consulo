@@ -29,7 +29,7 @@ import consulo.language.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -46,7 +46,7 @@ public class PackageViewProjectNode extends AbstractProjectNode {
       final List<Module> allModules = new ArrayList<Module>(Arrays.asList(ModuleManager.getInstance(getProject()).getModules()));
       for (Iterator<Module> it = allModules.iterator(); it.hasNext(); ) {
         final Module module = it.next();
-        final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.productionAndTest());
+        final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
         if (sourceRoots.length == 0) {
           // do not show modules with no source roots configured
           it.remove();

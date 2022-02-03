@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.errorTreeView;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.ExportToTextFileToolbarAction;
 import com.intellij.ide.actions.NextOccurenceToolbarAction;
@@ -34,7 +34,7 @@ import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.ui.AutoScrollToSourceHandler;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.PopupHandler;

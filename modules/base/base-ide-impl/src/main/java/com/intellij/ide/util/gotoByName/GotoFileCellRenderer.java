@@ -3,8 +3,8 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.ide.util.PsiElementListCellRenderer;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;

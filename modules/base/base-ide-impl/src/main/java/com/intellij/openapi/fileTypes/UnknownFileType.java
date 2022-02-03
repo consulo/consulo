@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;

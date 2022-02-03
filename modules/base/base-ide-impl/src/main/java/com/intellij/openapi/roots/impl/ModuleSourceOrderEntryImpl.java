@@ -28,7 +28,7 @@ import consulo.content.base.SourcesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.roots.orderEntry.ModuleSourceOrderEntryType;
 
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   @Nonnull
   public VirtualFile[] getFiles(OrderRootType type) {
     if (type == SourcesOrderRootType.getInstance()) {
-      return myModuleRootLayer.getContentFolderFiles(ContentFolderScopes.productionAndTest());
+      return myModuleRootLayer.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
     }
     return VirtualFile.EMPTY_ARRAY;
   }
@@ -85,7 +85,7 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
     if (type == SourcesOrderRootType.getInstance()) {
       final ContentEntry[] content = myModuleRootLayer.getContentEntries();
       for (ContentEntry contentEntry : content) {
-        Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest()));
+        Collections.addAll(result, contentEntry.getFolderUrls(LanguageContentFolderScopes.productionAndTest()));
       }
       return ArrayUtil.toStringArray(result);
     }

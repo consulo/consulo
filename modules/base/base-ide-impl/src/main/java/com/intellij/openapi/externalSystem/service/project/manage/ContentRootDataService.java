@@ -1,6 +1,10 @@
 package com.intellij.openapi.externalSystem.service.project.manage;
 
 import consulo.content.base.ExcludedContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.language.content.TestResourceContentFolderTypeProvider;
 import consulo.logging.Logger;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.Key;
@@ -28,9 +32,8 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.impl.*;
 import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
 
 import javax.annotation.Nonnull;
@@ -105,7 +108,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
 
             final ContentEntry contentEntry = findOrCreateContentRoot(model, contentRoot.getRootPath());
 
-            for (ContentFolder contentFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
+            for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
               if (contentFolder.isSynthetic()) {
                 continue;
               }
@@ -174,7 +177,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
                                                @Nonnull ContentFolderTypeProvider folderTypeProvider,
                                                boolean generated,
                                                boolean createEmptyContentRootDirectories) {
-    ContentFolder[] folders = entry.getFolders(ContentFolderScopes.of(folderTypeProvider));
+    ContentFolder[] folders = entry.getFolders(LanguageContentFolderScopes.of(folderTypeProvider));
     for (ContentFolder folder : folders) {
       VirtualFile file = folder.getFile();
       if (file == null) {
@@ -207,7 +210,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
                                                  @Nonnull String moduleName,
                                                  @Nonnull Project project) {
     String rootPath = root.getPath();
-    for (VirtualFile file : entry.getFolderFiles(ContentFolderScopes.excluded())) {
+    for (VirtualFile file : entry.getFolderFiles(LanguageContentFolderScopes.excluded())) {
       if (ExternalSystemApiUtil.getLocalFileSystemPath(file).equals(rootPath)) {
         return;
       }

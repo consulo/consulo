@@ -2,7 +2,7 @@
 package com.intellij.webcore.packaging;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.lang.LangBundle;

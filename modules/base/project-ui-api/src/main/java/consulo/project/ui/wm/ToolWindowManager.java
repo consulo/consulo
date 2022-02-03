@@ -15,13 +15,13 @@
  */
 package consulo.project.ui.wm;
 
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import consulo.ui.ex.popup.Balloon;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.project.Project;
 import consulo.project.ui.IdeFocusManager;
+import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.Balloon;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -123,7 +123,7 @@ public abstract class ToolWindowManager {
   @Nonnull
   public abstract IdeFocusManager getFocusManager();
 
-  public abstract void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final MessageType type, @Nonnull final String htmlBody);
+  public abstract void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final NotificationType type, @Nonnull final String htmlBody);
 
   @Nullable
   public abstract Balloon getToolWindowBalloon(String id);
@@ -193,7 +193,7 @@ public abstract class ToolWindowManager {
 
   @Deprecated
   public void notifyByBalloon(@Nonnull final String toolWindowId,
-                              @Nonnull final MessageType type,
+                              @Nonnull final NotificationType type,
                               @Nonnull final String htmlBody,
                               @Nullable final Image icon,
                               @Nullable javax.swing.event.HyperlinkListener listener) {

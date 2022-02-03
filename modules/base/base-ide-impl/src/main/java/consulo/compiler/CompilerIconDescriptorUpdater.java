@@ -15,7 +15,7 @@
  */
 package consulo.compiler;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.compiler.CompilerManager;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;

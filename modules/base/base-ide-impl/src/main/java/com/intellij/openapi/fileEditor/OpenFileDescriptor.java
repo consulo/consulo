@@ -33,7 +33,7 @@ import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

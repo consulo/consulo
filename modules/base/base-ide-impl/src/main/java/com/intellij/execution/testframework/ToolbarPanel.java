@@ -30,7 +30,7 @@ import com.intellij.execution.testframework.actions.TestTreeExpander;
 import com.intellij.execution.testframework.autotest.AdjustAutotestDelayActionGroup;
 import com.intellij.execution.testframework.export.ExportTestResultsAction;
 import com.intellij.execution.testframework.ui.AbstractTestTreeBuilder;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.OccurenceNavigator;
 import consulo.ui.ex.action.ActionManager;

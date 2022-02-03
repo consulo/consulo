@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.execution.ui.layout.ViewContext;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

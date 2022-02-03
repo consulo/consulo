@@ -7,7 +7,7 @@ import com.intellij.build.events.BuildEventsNls;
 import com.intellij.build.events.FileMessageEvent;
 import com.intellij.build.events.FileMessageEventResult;
 import consulo.project.Project;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

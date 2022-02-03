@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.diff;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.vcs.FileStatus;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;

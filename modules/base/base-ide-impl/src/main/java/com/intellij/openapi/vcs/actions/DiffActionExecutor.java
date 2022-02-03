@@ -115,14 +115,14 @@ public abstract class DiffActionExecutor {
           }
           DiffContent content1 = createRemote(revisionNumber);
           if (content1 == null) return;
-          DiffContent content2 = DiffContentFactory.getInstance().create(myProject, mySelectedFile);
+          DiffContent content2 = DiffContentFactory.getInstance().create((Project)myProject, mySelectedFile);
 
           String title = DiffRequestFactory.getInstance().getTitle(mySelectedFile);
 
           boolean inverted = false;
           String title1;
           String title2;
-          final FileStatus status = FileStatusManager.getInstance(myProject).getStatus(mySelectedFile);
+          final FileStatus status = FileStatusManager.getInstance((Project)myProject).getStatus(mySelectedFile);
           if (status == null || FileStatus.NOT_CHANGED.equals(status) || FileStatus.UNKNOWN.equals(status) ||
               FileStatus.IGNORED.equals(status)) {
             final VcsRevisionNumber currentRevision = myDiffProvider.getCurrentRevision(mySelectedFile);
@@ -138,7 +138,7 @@ public abstract class DiffActionExecutor {
 
           Integer line = null;
           if (content2 instanceof DocumentContent) {
-            Editor[] editors = EditorFactory.getInstance().getEditors(((DocumentContent)content2).getDocument(), myProject);
+            Editor[] editors = EditorFactory.getInstance().getEditors(((DocumentContent)content2).getDocument(), (Project)myProject);
             if (editors.length != 0) line = editors[0].getCaretModel().getLogicalPosition().line;
           }
 
@@ -178,11 +178,11 @@ public abstract class DiffActionExecutor {
         myHandler.completed(VcsBackgroundableActions.keyFrom(mySelectedFile));
 
         if (!exceptionRef.isNull()) {
-          AbstractVcsHelper.getInstance(myProject).showError(exceptionRef.get(), VcsBundle.message("message.title.diff"));
+          AbstractVcsHelper.getInstance((Project)myProject).showError(exceptionRef.get(), VcsBundle.message("message.title.diff"));
           return;
         }
         if (!requestRef.isNull()) {
-          DiffManager.getInstance().showDiff(myProject, requestRef.get());
+          DiffManager.getInstance().showDiff((Project)myProject, requestRef.get());
         }
       }
     };

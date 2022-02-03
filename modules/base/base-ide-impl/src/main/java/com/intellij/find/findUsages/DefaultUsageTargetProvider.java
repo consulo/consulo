@@ -17,7 +17,7 @@
 package com.intellij.find.findUsages;
 
 import com.intellij.find.FindManager;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import com.intellij.openapi.editor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiElement;

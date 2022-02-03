@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.annotation.DeprecationInfo;
 
 import javax.swing.*;

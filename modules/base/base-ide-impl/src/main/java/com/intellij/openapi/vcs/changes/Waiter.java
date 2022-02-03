@@ -67,7 +67,7 @@ public class Waiter extends Task.Modal {
     // Be careful with changes here as "Waiter.onSuccess()" is explicitly invoked from "FictiveBackgroundable"
     if (!myProject.isDisposed()) {
       myRunnable.run();
-      ChangesViewManager.getInstance(myProject).scheduleRefresh();
+      ChangesViewManager.getInstance((Project)myProject).scheduleRefresh();
     }
   }
 

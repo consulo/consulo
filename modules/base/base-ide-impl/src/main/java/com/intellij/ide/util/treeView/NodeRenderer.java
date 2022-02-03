@@ -17,7 +17,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.navigation.ColoredItemPresentation;
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;

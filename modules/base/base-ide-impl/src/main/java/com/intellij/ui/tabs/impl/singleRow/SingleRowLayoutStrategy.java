@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.tabs.impl.singleRow;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.tabs.impl.ShapeTransform;
 import com.intellij.ui.tabs.impl.TabLabel;

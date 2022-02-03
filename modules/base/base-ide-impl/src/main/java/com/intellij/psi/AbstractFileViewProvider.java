@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi;
 
-import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.language.parser.LanguageParserDefinitions;
@@ -37,7 +37,7 @@ import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.FileElement;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.util.lang.LocalTimeCounter;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;

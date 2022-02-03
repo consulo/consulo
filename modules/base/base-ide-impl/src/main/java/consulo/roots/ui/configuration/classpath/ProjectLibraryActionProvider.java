@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.classpath;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.ChooseElementsDialog;
 import consulo.project.Project;
 import consulo.content.library.Library;

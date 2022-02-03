@@ -1,6 +1,6 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 import com.intellij.openapi.util.text.StringUtil;

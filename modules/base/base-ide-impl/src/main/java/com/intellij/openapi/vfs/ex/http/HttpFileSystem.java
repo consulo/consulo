@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.ex.http;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.vfs.BaseVirtualFileSystem;
+import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

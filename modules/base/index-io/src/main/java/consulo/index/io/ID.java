@@ -89,7 +89,7 @@ public class ID<K, V> extends IndexId<K, V> {
     }
   }
 
-  static void reinitializeDiskStorage() {
+  public static void reinitializeDiskStorage() {
     synchronized (ourNameToIdRegistry) {
       writeEnumFile();
     }

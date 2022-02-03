@@ -17,12 +17,11 @@ package com.intellij.execution.executors;
 
 import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
 import com.intellij.xdebugger.XDebuggerBundle;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 

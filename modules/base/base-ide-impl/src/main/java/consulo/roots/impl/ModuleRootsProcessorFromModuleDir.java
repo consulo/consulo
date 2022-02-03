@@ -15,15 +15,16 @@
  */
 package consulo.roots.impl;
 
-import com.google.common.base.Predicate;
-import consulo.module.content.layer.ModuleRootModel;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.module.content.layer.ModuleRootModel;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -44,7 +45,7 @@ public abstract class ModuleRootsProcessorFromModuleDir extends ModuleRootsProce
   @Nonnull
   @Override
   public VirtualFile[] getFiles(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate) {
-    if (predicate.apply(ProductionContentFolderTypeProvider.getInstance())) {
+    if (predicate.test(ProductionContentFolderTypeProvider.getInstance())) {
       VirtualFile moduleDir = moduleRootModel.getModule().getModuleDir();
       if (moduleDir == null) {
         return VirtualFile.EMPTY_ARRAY;
@@ -57,7 +58,7 @@ public abstract class ModuleRootsProcessorFromModuleDir extends ModuleRootsProce
   @Nonnull
   @Override
   public String[] getUrls(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate) {
-    if (predicate.apply(ProductionContentFolderTypeProvider.getInstance())) {
+    if (predicate.test(ProductionContentFolderTypeProvider.getInstance())) {
       return new String[]{moduleRootModel.getModule().getModuleDirUrl()};
     }
     return ArrayUtil.EMPTY_STRING_ARRAY;

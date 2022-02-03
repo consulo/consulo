@@ -36,7 +36,7 @@ import consulo.language.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
@@ -174,7 +174,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   public VirtualFile[] getContentSourceRoots() {
     final List<VirtualFile> result = new ArrayList<VirtualFile>();
     for (Module module : getModuleManager().getModules()) {
-      final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.all(false));
+      final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.all(false));
       ContainerUtil.addAll(result, sourceRoots);
     }
     return VfsUtilCore.toVirtualFileArray(result);

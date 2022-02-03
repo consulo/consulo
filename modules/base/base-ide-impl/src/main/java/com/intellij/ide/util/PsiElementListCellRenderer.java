@@ -3,8 +3,8 @@ package com.intellij.ide.util;
 
 import consulo.application.ui.UISettings;
 import com.intellij.navigation.ColoredItemPresentation;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
 import consulo.application.ReadAction;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;

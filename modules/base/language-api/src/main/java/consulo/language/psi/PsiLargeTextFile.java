@@ -15,5 +15,7 @@
  */
 package consulo.language.psi;
 
+import consulo.language.plain.psi.PsiPlainTextFile;
+
 public interface PsiLargeTextFile extends PsiPlainTextFile, PsiLargeFile {
 }

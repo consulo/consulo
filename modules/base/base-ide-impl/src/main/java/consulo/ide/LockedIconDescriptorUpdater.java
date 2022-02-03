@@ -15,7 +15,7 @@
  */
 package consulo.ide;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.WritingAccessProvider;

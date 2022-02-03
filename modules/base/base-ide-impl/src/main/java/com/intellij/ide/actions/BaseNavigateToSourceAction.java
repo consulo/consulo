@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.util.OpenSourceUtil;

@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.editor;
 
-import consulo.dataContext.DataProvider;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
@@ -23,14 +22,16 @@ import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.markup.MarkupModel;
-import consulo.project.Project;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.UserDataHolder;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -528,4 +529,6 @@ public interface Editor extends UserDataHolder {
     // actual implementation in EditorImpl is a bit more complex, but this gives an idea how it's constructed
     return (int)(getContentComponent().getFontMetrics(getColorsScheme().getFont(EditorFontType.PLAIN)).getAscent() * getColorsScheme().getLineSpacing());
   }
+
+  void showPopupInBestPositionFor(@Nonnull JBPopup popup);
 }

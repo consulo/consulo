@@ -16,13 +16,14 @@
 package consulo.language.psi;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.module.extension.ModuleExtension;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**

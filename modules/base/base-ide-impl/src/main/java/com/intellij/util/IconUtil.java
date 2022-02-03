@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.util.NotWorkingIconLoader;
 import consulo.application.ui.awt.ScalableIcon;
 import consulo.application.ui.awt.*;

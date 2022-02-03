@@ -5,7 +5,7 @@ import consulo.application.internal.concurrency.JobLauncher;
 import com.intellij.ide.util.NavigationItemListCellRenderer;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.ChooseByNameContributorEx;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import com.intellij.openapi.application.ReadActionProcessor;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;

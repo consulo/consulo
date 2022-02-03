@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.ReadOnlyFragmentModificationException;
 import consulo.document.Document;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

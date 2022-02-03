@@ -23,13 +23,15 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import consulo.project.Project;
+import com.intellij.ui.popup.AbstractPopup;
 import consulo.document.Document;
-import consulo.util.dataholder.UserDataHolderBase;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.util.dataholder.UserDataHolderBase;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -136,6 +138,11 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   @Override
   public EditorKind getEditorKind() {
     return getEditor().getEditorKind();
+  }
+
+  @Override
+  public void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
+    ((AbstractPopup)popup).showInBestPositionFor(this);
   }
 
   @Override

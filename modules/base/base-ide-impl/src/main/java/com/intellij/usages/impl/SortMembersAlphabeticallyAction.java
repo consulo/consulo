@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.UsageViewSettings;
 

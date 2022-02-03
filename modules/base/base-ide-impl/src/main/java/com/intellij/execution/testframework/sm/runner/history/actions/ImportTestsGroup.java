@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.sm.runner.history.actions;
 import com.intellij.execution.TestStateStorage;
 import com.intellij.execution.testframework.sm.TestHistoryConfiguration;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.util.Function;

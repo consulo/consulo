@@ -19,7 +19,7 @@ package com.intellij.execution.impl;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorConfigurable;

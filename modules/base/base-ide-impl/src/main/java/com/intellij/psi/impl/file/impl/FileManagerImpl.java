@@ -2,7 +2,7 @@
 package com.intellij.psi.impl.file.impl;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.Language;
 import consulo.language.psi.LanguageSubstitutors;
 import consulo.language.util.LanguageUtil;
@@ -30,7 +30,7 @@ import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.file.PsiDirectoryImpl;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;

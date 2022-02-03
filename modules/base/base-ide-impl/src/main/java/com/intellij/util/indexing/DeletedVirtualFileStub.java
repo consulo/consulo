@@ -17,7 +17,7 @@ package com.intellij.util.indexing;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import javax.annotation.Nonnull;
 
 /**

@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import com.intellij.analysis.AnalysisScopeBundle;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;

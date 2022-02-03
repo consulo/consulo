@@ -20,21 +20,20 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.navigation.NavigationUtil;
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
-import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import consulo.language.psi.*;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.dumb.DumbAware;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.codeInsight.TargetElementUtilEx;
+import consulo.component.extension.Extensions;
+import consulo.language.psi.*;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,7 +76,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
       navigate(project, symbolTypes[0]);
     }
     else {
-      NavigationUtil.getPsiElementPopup(symbolTypes, CodeInsightBundle.message("choose.type.popup.title")).showInBestPositionFor(editor);
+      editor.showPopupInBestPositionFor(NavigationUtil.getPsiElementPopup(symbolTypes, CodeInsightBundle.message("choose.type.popup.title")));
     }
   }
 
@@ -107,8 +106,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
   @Nullable
   @RequiredReadAction
   public static PsiElement[] findSymbolTypes(Editor editor, int offset) {
-    Set<String> flags = ContainerUtil
-            .newHashSet(TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED, TargetElementUtilEx.ELEMENT_NAME_ACCEPTED, TargetElementUtilEx.LOOKUP_ITEM_ACCEPTED);
+    Set<String> flags = ContainerUtil.newHashSet(TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED, TargetElementUtilEx.ELEMENT_NAME_ACCEPTED, TargetElementUtilEx.LOOKUP_ITEM_ACCEPTED);
     PsiElement targetElement = TargetElementUtil.findTargetElement(editor, flags, offset);
 
     if (targetElement != null) {

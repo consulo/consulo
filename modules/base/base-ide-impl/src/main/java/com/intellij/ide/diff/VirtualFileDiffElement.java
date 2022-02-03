@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.diff;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -32,7 +32,7 @@ import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;

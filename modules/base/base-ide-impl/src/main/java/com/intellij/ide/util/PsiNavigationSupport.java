@@ -4,7 +4,7 @@ package com.intellij.ide.util;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

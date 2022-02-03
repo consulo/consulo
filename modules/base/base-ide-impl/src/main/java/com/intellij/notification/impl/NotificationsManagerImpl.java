@@ -15,7 +15,7 @@
  */
 package com.intellij.notification.impl;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.FrameStateManager;
 import com.intellij.notification.*;
 import com.intellij.notification.impl.ui.NotificationsUtil;

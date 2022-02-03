@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import jakarta.inject.Inject;
@@ -108,7 +108,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
   @Override
   public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule()) && ContentFolderScopes.test().test(myDirectoryIndexProvider.get().getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule()) && LanguageContentFolderScopes.test().test(myDirectoryIndexProvider.get().getContentFolderType(info));
   }
 
   @Nullable

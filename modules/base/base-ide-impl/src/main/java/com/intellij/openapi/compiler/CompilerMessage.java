@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

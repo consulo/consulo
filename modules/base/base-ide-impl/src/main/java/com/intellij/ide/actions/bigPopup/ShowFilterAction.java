@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.bigPopup;
 
 import com.intellij.execution.runners.ExecutionUtil;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.ElementsChooser;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

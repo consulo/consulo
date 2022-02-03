@@ -19,7 +19,7 @@ import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.IdeUICustomization;

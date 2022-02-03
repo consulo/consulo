@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.util;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
 

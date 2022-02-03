@@ -16,7 +16,7 @@
 package com.intellij.ide.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 
 /**
  * An element in the structure view tree model.

@@ -23,7 +23,7 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInspection.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.language.Language;

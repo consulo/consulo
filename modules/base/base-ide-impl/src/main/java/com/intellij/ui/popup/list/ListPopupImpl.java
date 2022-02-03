@@ -1,41 +1,40 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.popup.list;
 
-import com.intellij.icons.AllIcons;
-import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ide.CopyPasteManager;
-import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
-import consulo.disposer.Disposer;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.ListPopupStep;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.util.dataholder.Key;
+import com.intellij.openapi.ui.popup.ListPopupStepEx;
+import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
 import com.intellij.ui.ListActions;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.SeparatorWithText;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.ClosableByLeftArrow;
 import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.ui.popup.NextStepHandler;
 import com.intellij.ui.popup.WizardPopup;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.UIUtil;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
@@ -682,19 +681,19 @@ public class ListPopupImpl extends WizardPopup implements ListPopup, NextStepHan
   public boolean isModalContext() {
     return true;
   }
-
-  @Override
-  public void showInBestPositionFor(@Nonnull Editor editor) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      handleSelect(true);
-      if (!Disposer.isDisposed(this)) {
-        Disposer.dispose(this);
-      }
-    }
-    else {
-      super.showInBestPositionFor(editor);
-    }
-  }
+  //
+  //@Override
+  //public void showInBestPositionFor(@Nonnull Editor editor) {
+  //  if (ApplicationManager.getApplication().isUnitTestMode()) {
+  //    handleSelect(true);
+  //    if (!Disposer.isDisposed(this)) {
+  //      Disposer.dispose(this);
+  //    }
+  //  }
+  //  else {
+  //    super.showInBestPositionFor(editor);
+  //  }
+  //}
 
   private void replacePasteAction() {
     if (myStep.isSpeedSearchEnabled()) {

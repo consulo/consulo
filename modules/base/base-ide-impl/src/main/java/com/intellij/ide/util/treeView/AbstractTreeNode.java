@@ -2,7 +2,7 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;

@@ -24,7 +24,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 

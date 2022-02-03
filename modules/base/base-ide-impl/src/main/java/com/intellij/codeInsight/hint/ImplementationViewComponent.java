@@ -17,10 +17,10 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.find.FindUtil;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.highlighter.HighlighterFactory;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;

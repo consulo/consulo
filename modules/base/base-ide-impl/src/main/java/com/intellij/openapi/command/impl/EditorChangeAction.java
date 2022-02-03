@@ -24,7 +24,7 @@ import consulo.project.ProjectManager;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.impl.FileStatusManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.CompressionUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

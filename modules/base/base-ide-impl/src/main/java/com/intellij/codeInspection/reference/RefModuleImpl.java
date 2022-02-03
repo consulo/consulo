@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.reference;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

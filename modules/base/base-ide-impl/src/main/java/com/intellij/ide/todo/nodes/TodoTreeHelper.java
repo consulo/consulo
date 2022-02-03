@@ -36,7 +36,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -55,7 +55,7 @@ public class TodoTreeHelper {
     }
     else {
       ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-      ContainerUtil.addAll(sourceRoots, moduleRootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest()));
+      ContainerUtil.addAll(sourceRoots, moduleRootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest()));
     }
 
     final Set<PsiPackage> topLevelPackages = new HashSet<PsiPackage>();
@@ -142,7 +142,7 @@ public class TodoTreeHelper {
     else {
       ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
       ContainerUtil.addAll(roots, moduleRootManager.getContentRoots());
-      ContainerUtil.addAll(sourceRoots, moduleRootManager.getContentFolderFiles(ContentFolderScopes.productionAndTest()));
+      ContainerUtil.addAll(sourceRoots, moduleRootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest()));
     }
     roots.removeAll(sourceRoots);
     for (VirtualFile dir : roots) {

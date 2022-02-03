@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.toolwindow;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.actions.ToolWindowTabRenameActionBase;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

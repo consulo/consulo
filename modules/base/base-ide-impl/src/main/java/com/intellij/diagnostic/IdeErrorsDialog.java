@@ -17,7 +17,7 @@ package com.intellij.diagnostic;
 
 import consulo.application.CommonBundle;
 import com.intellij.diagnostic.errordialog.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.util.PropertiesComponent;

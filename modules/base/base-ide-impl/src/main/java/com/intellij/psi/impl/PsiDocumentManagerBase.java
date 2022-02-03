@@ -2,7 +2,7 @@
 package com.intellij.psi.impl;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.injected.editor.DocumentWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.application.progress.ProgressManager;
 import consulo.document.util.FileContentUtilCore;
 import consulo.language.ast.ASTNode;

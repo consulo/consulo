@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl;
 
-import consulo.language.ast.ASTFactory;
+import consulo.language.impl.ASTFactory;
 import com.intellij.lang.Commenter;
 import consulo.language.Language;
 import com.intellij.lang.LanguageCommenters;

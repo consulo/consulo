@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import consulo.module.Module;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
@@ -31,10 +31,10 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.application.util.function.Processor;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
-import consulo.roots.impl.TestContentFolderTypeProvider;
-import consulo.roots.impl.TestResourceContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.language.content.TestResourceContentFolderTypeProvider;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.ui.image.Image;
 

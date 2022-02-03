@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.treeView.smartTree;
 
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import javax.annotation.Nonnull;
 
 /**

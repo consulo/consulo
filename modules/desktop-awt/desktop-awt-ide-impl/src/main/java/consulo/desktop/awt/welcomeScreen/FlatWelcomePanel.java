@@ -16,7 +16,7 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.notification.NotificationType;

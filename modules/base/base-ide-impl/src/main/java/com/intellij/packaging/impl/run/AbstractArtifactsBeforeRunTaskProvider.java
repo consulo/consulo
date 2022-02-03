@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.run;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.RunManagerEx;
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.compiler.CompilerBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;

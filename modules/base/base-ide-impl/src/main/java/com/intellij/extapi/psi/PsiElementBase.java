@@ -17,13 +17,13 @@
 package com.intellij.extapi.psi;
 
 import com.intellij.ide.util.PsiNavigationSupport;
-import com.intellij.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentation;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.psi.impl.ResolveScopeManager;
 import com.intellij.psi.impl.SharedPsiElementImplUtil;
 import consulo.language.psi.resolve.PsiScopeProcessor;

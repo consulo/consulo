@@ -26,7 +26,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.IFileElementType;
 import consulo.language.ast.ILazyParseableElementTypeBase;
 import consulo.language.ast.TokenSet;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.language.template.ITemplateDataElementType;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.util.CharTable;

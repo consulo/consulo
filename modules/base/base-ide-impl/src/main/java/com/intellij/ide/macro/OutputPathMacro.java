@@ -29,8 +29,8 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.roots.CompilerPathsImpl;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
 
 import java.io.File;
 

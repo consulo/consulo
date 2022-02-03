@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.PseudoSplitter;
 import com.intellij.openapi.ui.Splitter;

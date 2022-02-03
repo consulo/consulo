@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
 
 /**
 * @author nik

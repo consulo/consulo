@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
@@ -29,7 +29,7 @@ import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.vfs.PersistentFSConstants;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import com.intellij.util.Alarm;
 import com.intellij.util.OpenSourceUtil;
 import consulo.util.concurrent.AsyncResult;

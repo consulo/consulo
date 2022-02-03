@@ -19,7 +19,7 @@ import com.intellij.diff.fragments.MergeLineFragment;
 import com.intellij.diff.tools.simple.MergeInnerDifferences;
 import com.intellij.diff.tools.simple.ThreesideDiffChangeBase;
 import com.intellij.diff.util.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.document.Document;

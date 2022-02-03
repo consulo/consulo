@@ -23,7 +23,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.util.PsiTreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

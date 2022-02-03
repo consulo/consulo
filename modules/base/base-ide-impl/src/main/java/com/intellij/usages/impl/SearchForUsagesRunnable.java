@@ -17,7 +17,7 @@ package com.intellij.usages.impl;
 
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.find.FindManager;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

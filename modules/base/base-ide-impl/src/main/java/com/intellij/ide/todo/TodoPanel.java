@@ -3,7 +3,7 @@ package com.intellij.ide.todo;
 
 import com.intellij.find.FindModel;
 import com.intellij.find.impl.FindInProjectUtil;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.NextOccurenceToolbarAction;
 import com.intellij.ide.actions.PreviousOccurenceToolbarAction;

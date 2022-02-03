@@ -19,14 +19,14 @@
  */
 package com.intellij.util.io.storage;
 
-import consulo.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.ConcurrencyUtil;
-import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.language.util.IncorrectOperationException;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.ByteArraySequence;
 
 import javax.annotation.Nonnull;
 import java.io.DataInputStream;

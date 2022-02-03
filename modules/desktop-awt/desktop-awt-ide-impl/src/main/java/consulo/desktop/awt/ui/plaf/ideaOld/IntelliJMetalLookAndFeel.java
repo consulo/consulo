@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.ideaOld;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredSideBorder;
 import consulo.application.ui.awt.JBUIScale;

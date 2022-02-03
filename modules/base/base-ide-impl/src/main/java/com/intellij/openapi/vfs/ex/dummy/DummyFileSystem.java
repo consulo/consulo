@@ -15,11 +15,7 @@
  */
 package com.intellij.openapi.vfs.ex.dummy;
 
-import com.intellij.openapi.vfs.*;
-import consulo.virtualFileSystem.NonPhysicalFileSystem;
-import consulo.virtualFileSystem.VfsBundle;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.*;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

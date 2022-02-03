@@ -16,7 +16,7 @@
 package com.intellij.usages;
 
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

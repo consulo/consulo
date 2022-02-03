@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.dir.actions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.diff.DirDiffSettings;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

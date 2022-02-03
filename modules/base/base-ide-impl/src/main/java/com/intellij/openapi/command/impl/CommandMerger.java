@@ -22,7 +22,7 @@ import com.intellij.openapi.command.undo.UndoableAction;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
 
 import javax.annotation.Nonnull;

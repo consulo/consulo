@@ -16,7 +16,7 @@
 package com.intellij.psi.formatter;
 
 import com.intellij.codeInsight.actions.ReformatCodeProcessor;
-import consulo.language.ast.ASTFactory;
+import consulo.language.impl.ASTFactory;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.openapi.command.CommandProcessor;

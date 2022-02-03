@@ -27,10 +27,10 @@ import com.intellij.util.ArrayUtil;
 import consulo.util.collection.OrderedSet;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.logging.Logger;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
 
 import java.io.File;
 import java.util.Set;
@@ -131,7 +131,7 @@ public class CompilerPathsImpl extends CompilerPathsEx {
 
     final Set<String> outputPaths = new OrderedSet<String>();
     for (Module module : modules) {
-      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
+      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
         String outputPathUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
         if (outputPathUrl != null) {
           outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
@@ -149,7 +149,7 @@ public class CompilerPathsImpl extends CompilerPathsEx {
 
     final Set<VirtualFile> dirs = new OrderedSet<VirtualFile>();
     for (Module module : modules) {
-      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
+      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
         VirtualFile virtualFile = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
         if (virtualFile != null) {
           dirs.add(virtualFile);

@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.readOnlyHandler;
 
 import consulo.application.CommonBundle;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;

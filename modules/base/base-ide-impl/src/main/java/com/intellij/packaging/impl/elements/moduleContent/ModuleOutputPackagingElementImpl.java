@@ -38,7 +38,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.application.AccessRule;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.util.pointers.NamedPointerUtil;
@@ -101,7 +101,7 @@ public class ModuleOutputPackagingElementImpl
     List<VirtualFile> roots = new SmartList<VirtualFile>();
     ModuleRootModel rootModel = context.getModulesProvider().getRootModel(module);
     for (ContentEntry entry : rootModel.getContentEntries()) {
-      for (ContentFolder folder : entry.getFolders(ContentFolderScopes.of(myContentFolderType))) {
+      for (ContentFolder folder : entry.getFolders(LanguageContentFolderScopes.of(myContentFolderType))) {
         ContainerUtil.addIfNotNull(folder.getFile(), roots);
       }
     }

@@ -19,60 +19,37 @@ import com.intellij.ide.FrameStateManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
-import consulo.ui.ex.action.event.AnActionListener;
-import consulo.application.ApplicationManager;
-import consulo.util.lang.function.Condition;
-import consulo.component.persist.RoamingType;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.event.ProjectManagerListener;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Splitter;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowAnchor;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.ui.ex.action.Shortcut;
-import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.*;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.util.ExpirableRunnable;
-import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.util.EdtRunnable;
+import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import consulo.desktop.awt.wm.impl.commands.DesktopRequestFocusInToolWindowCmd;
 import com.intellij.ui.BalloonImpl;
-import consulo.application.ui.awt.ColorUtil;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
-import consulo.util.lang.SystemProperties;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.ui.ex.PositionTracker;
-import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.awt.ColorUtil;
+import consulo.application.ui.awt.UIUtil;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.dataContext.DataContext;
+import consulo.desktop.awt.wm.impl.commands.DesktopRequestFocusInToolWindowCmd;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
@@ -80,13 +57,36 @@ import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.IdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.project.ui.wm.WindowManager;
+import consulo.project.util.ExpirableRunnable;
+import consulo.ui.NotificationType;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.PositionTracker;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.SystemProperties;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.wm.impl.ToolWindowManagerBase;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -628,12 +628,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final MessageType type, @Nonnull final String htmlBody) {
+  public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final NotificationType type, @Nonnull final String htmlBody) {
     notifyByBalloon(toolWindowId, type, htmlBody, null, null);
   }
 
   @Override
-  public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final MessageType type, @Nonnull final String text, @Nullable final Image icon, @Nullable final HyperlinkListener listener) {
+  public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final NotificationType type, @Nonnull final String text, @Nullable final Image icon, @Nullable final HyperlinkListener listener) {
     checkId(toolWindowId);
 
 

@@ -15,9 +15,6 @@
  */
 package consulo.language.psi.util;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.util.PairProcessor;
-import com.intellij.util.SmartList;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
@@ -61,7 +58,7 @@ public class PsiTreeUtil {
    *
    * @param ancestor parent candidate. <code>false</code> will be returned if ancestor is null.
    * @param element  child candidate
-   * @param strict   whether return true if ancestor and parent are the same.
+   * @param strict   whether return true if ancestor and parent are PsiUtilCorethe same.
    * @return true if element has ancestor as its parent somewhere in the hierarchy and false otherwise.
    */
   @Contract("null, _, _ -> false")

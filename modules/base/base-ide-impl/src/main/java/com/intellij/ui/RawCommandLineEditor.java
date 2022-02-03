@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.Function;

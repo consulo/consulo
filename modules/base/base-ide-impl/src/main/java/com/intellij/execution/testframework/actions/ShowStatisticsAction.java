@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.actions;
 
 import com.intellij.execution.testframework.TestConsoleProperties;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.util.config.ToggleBooleanProperty;
 
 /**

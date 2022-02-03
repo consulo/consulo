@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.notification.NotificationType;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.image.Image;

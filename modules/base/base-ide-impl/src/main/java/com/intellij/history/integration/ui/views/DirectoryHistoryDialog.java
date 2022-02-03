@@ -21,7 +21,7 @@ import com.intellij.history.core.LocalHistoryFacade;
 import com.intellij.history.core.revisions.Difference;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.ui.models.DirectoryHistoryDialogModel;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

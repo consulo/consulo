@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon.impl.actions;
 
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInspection.*;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.language.Language;
 import com.intellij.openapi.command.undo.UndoUtil;
 import consulo.project.Project;

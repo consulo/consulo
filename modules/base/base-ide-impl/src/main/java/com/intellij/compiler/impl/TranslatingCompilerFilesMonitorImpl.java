@@ -61,7 +61,7 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
@@ -1086,7 +1086,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
       }
 
-      VirtualFile[] contentFolderFiles = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.all(false));
+      VirtualFile[] contentFolderFiles = ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.all(false));
       Collections.addAll(list, contentFolderFiles);
     }
     return VfsUtil.toVirtualFileArray(list);

@@ -15,7 +15,7 @@
  */
 package com.intellij.usages;
 
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.editor.Editor;

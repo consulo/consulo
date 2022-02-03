@@ -46,7 +46,7 @@ import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.module.content.layer.OrderEnumerator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.roots.orderEntry.OrderEntrySerializationUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
@@ -584,7 +584,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public VirtualFile[] getExcludeRoots() {
     final List<VirtualFile> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderFiles(ContentFolderScopes.excluded()));
+      Collections.addAll(result, contentEntry.getFolderFiles(LanguageContentFolderScopes.excluded()));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }
@@ -594,7 +594,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public String[] getExcludeRootUrls() {
     final List<String> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderScopes.excluded()));
+      Collections.addAll(result, contentEntry.getFolderUrls(LanguageContentFolderScopes.excluded()));
     }
     return ArrayUtil.toStringArray(result);
   }
@@ -610,7 +610,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public VirtualFile[] getSourceRoots(boolean includingTests) {
     List<VirtualFile> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, includingTests ? contentEntry.getFolderFiles(ContentFolderScopes.productionAndTest()) : contentEntry.getFolderFiles(ContentFolderScopes.production()));
+      Collections.addAll(result, includingTests ? contentEntry.getFolderFiles(LanguageContentFolderScopes.productionAndTest()) : contentEntry.getFolderFiles(LanguageContentFolderScopes.production()));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }
@@ -626,7 +626,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public String[] getSourceRootUrls(boolean includingTests) {
     List<String> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, includingTests ? contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest()) : contentEntry.getFolderUrls(ContentFolderScopes.production()));
+      Collections.addAll(result, includingTests ? contentEntry.getFolderUrls(LanguageContentFolderScopes.productionAndTest()) : contentEntry.getFolderUrls(LanguageContentFolderScopes.production()));
     }
     return ArrayUtil.toStringArray(result);
   }

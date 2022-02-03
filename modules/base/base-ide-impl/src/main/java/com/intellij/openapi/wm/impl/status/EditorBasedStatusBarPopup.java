@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-import com.intellij.openapi.vfs.impl.BulkVirtualFileListenerAdapter;
+import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;

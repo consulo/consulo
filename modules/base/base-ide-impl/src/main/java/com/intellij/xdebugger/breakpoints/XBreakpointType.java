@@ -16,7 +16,7 @@
 
 package com.intellij.xdebugger.breakpoints;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import com.intellij.xdebugger.XSourcePosition;

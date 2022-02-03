@@ -3,8 +3,8 @@ package com.intellij.ide.util;
 
 import consulo.application.ui.UISettings;
 import com.intellij.ide.util.treeView.NodeRenderer;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
 import com.intellij.navigation.NavigationItemFileStatus;
 import com.intellij.navigation.PsiElementNavigationItem;
 import com.intellij.openapi.editor.markup.EffectType;

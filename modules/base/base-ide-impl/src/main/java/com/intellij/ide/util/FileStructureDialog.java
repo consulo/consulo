@@ -46,7 +46,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import com.intellij.pom.Navigatable;
+import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -23,7 +23,7 @@ import com.intellij.find.EditorSearchSession;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.navigation.NavigationItem;
+import consulo.navigation.NavigationItem;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.ui.ex.action.Shortcut;

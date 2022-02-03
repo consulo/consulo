@@ -16,7 +16,7 @@
 
 package com.maddyhome.idea.copyright.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -19,7 +19,7 @@ package com.intellij.ide.todo.configurable;
 import com.intellij.application.options.colors.ColorAndFontDescription;
 import com.intellij.application.options.colors.ColorAndFontDescriptionPanel;
 import com.intellij.application.options.colors.TextAttributesDescription;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;

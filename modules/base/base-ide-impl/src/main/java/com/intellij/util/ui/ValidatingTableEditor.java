@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import com.intellij.openapi.application.ApplicationBundle;

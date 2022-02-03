@@ -16,7 +16,7 @@ import com.intellij.openapi.vfs.encoding.ChangeFileEncodingAction;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
 import com.intellij.openapi.vfs.encoding.EncodingManagerListener;
 import com.intellij.openapi.vfs.encoding.EncodingUtil;
-import com.intellij.openapi.vfs.impl.BulkVirtualFileListenerAdapter;
+import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import com.intellij.util.ObjectUtils;

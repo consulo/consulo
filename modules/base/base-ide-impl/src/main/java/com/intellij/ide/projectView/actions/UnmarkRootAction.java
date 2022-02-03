@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.projectView.actions;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.idea.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -26,7 +26,7 @@ import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.roots.ContentFolderScopes;
+import consulo.language.content.LanguageContentFolderScopes;
 
 /**
  * @author yole
@@ -56,7 +56,7 @@ public class UnmarkRootAction extends MarkRootAction {
       }
 
       for (ContentEntry contentEntry : contentEntries) {
-        for (ContentFolder contentFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
+        for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
           if (Comparing.equal(contentFolder.getFile(), vFile)) {
             return true;
           }

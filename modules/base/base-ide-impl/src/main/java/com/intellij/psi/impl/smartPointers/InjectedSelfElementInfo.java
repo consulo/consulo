@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.impl.smartPointers;
 
-import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.*;
 import consulo.language.util.LanguageUtil;
 import com.intellij.lang.injection.InjectedLanguageManager;
