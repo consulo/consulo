@@ -1288,7 +1288,6 @@ open module consulo.ide.impl {
   exports consulo.progress.util.impl;
   exports consulo.project.impl;
   exports consulo.projectView.impl;
-  exports consulo.psi;
   exports consulo.psi.impl;
   //exports consulo.psi.impl.source;
   exports consulo.psi.impl.source.codeStyle;

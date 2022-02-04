@@ -27,9 +27,11 @@ module consulo.language.api {
   // TODO impl package
   exports consulo.language.psi.scope.internal;
   exports consulo.language.psi.stub;
+
   exports consulo.language.psi.util;
+  opens consulo.language.psi.util to consulo.ide.impl;
+
   exports consulo.language.template;
   exports consulo.language.util;
   exports consulo.language.version;
-  exports consulo.language.codeInsight;
 }

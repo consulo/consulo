@@ -688,7 +688,8 @@
     <extensionPoint name="fileTemplateGroup"
                     interface="com.intellij.ide.fileTemplates.FileTemplateGroupDescriptorFactory"/>
     <extensionPoint name="colorProvider"
-                    interface="consulo.language.codeInsight.ElementColorProvider"/>
+                    interface="consulo.language.psi.ElementColorProvider"
+                    area="PROJECT"/>
     <extensionPoint name="createFromTemplateHandler"
                     interface="com.intellij.ide.fileTemplates.CreateFromTemplateHandler"/>
     <extensionPoint name="defaultTemplatePropertiesProvider"

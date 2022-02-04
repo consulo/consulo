@@ -25,7 +25,7 @@ import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.language.codeInsight.ElementColorProvider;
+import consulo.language.psi.ElementColorProvider;
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
