@@ -31,7 +31,7 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.Function;
-import consulo.application.internal.PerApplicationInstance;
+import consulo.application.util.PerApplicationInstance;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;

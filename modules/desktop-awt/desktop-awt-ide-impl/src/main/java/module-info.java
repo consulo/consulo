@@ -43,6 +43,6 @@ open module consulo.desktop.awt.ide.impl {
   provides consulo.container.boot.ContainerStartup with consulo.desktop.awt.container.impl.DesktopContainerStartup;
   provides TargetAWTFacade with DesktopAwtTargetAWTImpl;
 
-  // TODO it's will not work due different classloaders?
+  // FIXME it's will not work due different classloaders?
   provides javax.imageio.spi.ImageReaderSpi with consulo.desktop.awt.spi.CommonsImagingImageReaderSpi;
 }

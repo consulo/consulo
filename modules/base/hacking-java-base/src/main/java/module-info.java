@@ -3,5 +3,5 @@ module consulo.hacking.java.base {
   requires consulo.logging.api;
   requires consulo.util.lang;
 
-  exports consulo.hacking.java.base;
+  exports consulo.hacking.java.base to consulo.disposer.impl;
 }

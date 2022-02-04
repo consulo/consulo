@@ -6,6 +6,5 @@ module consulo.disposer.api {
 
   uses consulo.disposer.internal.DisposerInternal;
 
-  // TODO [VISTALL] this package must be exported only to impl module!
-  exports consulo.disposer.internal;
+  exports consulo.disposer.internal to consulo.disposer.impl;
 }

@@ -2,7 +2,7 @@
 package consulo.language.psi.stub;
 
 import consulo.application.ReadAction;
-import consulo.application.internal.PerApplicationInstance;
+import consulo.application.util.PerApplicationInstance;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;

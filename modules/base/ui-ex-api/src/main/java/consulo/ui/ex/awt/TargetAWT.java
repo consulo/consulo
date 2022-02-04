@@ -56,7 +56,7 @@ public class TargetAWT {
 
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
       if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
-        ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
+        ServiceLoader<T> loader = ServiceLoader.load(descriptor.getModuleLayer(), interfaceClass);
 
         Iterator<T> iterator = loader.iterator();
         if (iterator.hasNext()) {

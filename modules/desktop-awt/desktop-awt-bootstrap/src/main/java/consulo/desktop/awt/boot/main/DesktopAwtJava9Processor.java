@@ -15,12 +15,9 @@
  */
 package consulo.desktop.awt.boot.main;
 
-import consulo.container.impl.classloader.Java9ModuleInitializer;
 import consulo.container.impl.classloader.Java9ModuleProcessor;
 
-import java.util.Set;
-
-import static consulo.container.impl.classloader.Java9ModuleInitializer.*;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -30,43 +27,19 @@ public class DesktopAwtJava9Processor implements Java9ModuleProcessor {
   public static final DesktopAwtJava9Processor INSTANCE = new DesktopAwtJava9Processor();
 
   @Override
-  public void process(Object bootModuleLayer, Object controller) {
-    aberto(bootModuleLayer, controller);
-    alohomora(bootModuleLayer, controller);
-  }
+  public void process(List<Opens> toOpenMap) {
+    toOpenMap.add(new Opens("java.base", "java.lang", "consulo.hacking.java.base"));
 
-  @Override
-  public void addBaseResolveModules(Set<String> toResolve) {
-    toResolve.add("consulo.desktop.awt.hacking");
-  }
-
-  private static void aberto(Object bootModuleLayer, Object controller) {
-    Object javaBaseModule = Java9ModuleInitializer.findModuleUnwrap(bootModuleLayer, "java.base");
-
-    Object plaformModuleLayer = instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
-
-    Object hackingJavaBaseModule = findModuleUnwrap(plaformModuleLayer, "consulo.hacking.java.base");
-
-    instanceInvoke(java_lang_Module_addOpens, javaBaseModule, "java.lang", hackingJavaBaseModule);
-  }
-
-  private static void alohomora(Object bootModuleLayer, Object controller) {
-    Object javaDesktopModule = findModuleUnwrap(bootModuleLayer, "java.desktop");
-
-    Object plaformModuleLayer = instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
-
-    Object desktopHackingModule = findModuleUnwrap(plaformModuleLayer, "consulo.desktop.awt.hacking");
-
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.awt", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.swing", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.awt.image", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.java2d", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.font", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing.plaf.basic", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing.text.html", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt.peer", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt.event", desktopHackingModule);
+    toOpenMap.add(new Opens("java.desktop", "sun.awt", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "sun.swing", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "sun.awt.image", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "sun.java2d", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "sun.font", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "java.awt", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "javax.swing", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "javax.swing.plaf.basic", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "javax.swing.text.html", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "java.awt.peer", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "java.awt.event", "consulo.desktop.awt.hacking"));
   }
 }

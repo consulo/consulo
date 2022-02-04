@@ -16,7 +16,7 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.internal.PerApplicationInstance;
+import consulo.application.util.PerApplicationInstance;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;

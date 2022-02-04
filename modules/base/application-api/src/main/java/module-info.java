@@ -27,8 +27,7 @@ module consulo.application.api {
   exports consulo.application.extension;
   exports consulo.application.progress;
 
-  // TODO [VISTALL] impl package
-  exports consulo.application.internal;
+  exports consulo.application.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.application.internal.concurrency;
 
   exports consulo.application.util.mac.foundation;

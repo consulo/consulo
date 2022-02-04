@@ -10,7 +10,5 @@ module consulo.platform.api {
   uses consulo.platform.internal.PlatformInternal;
   
   exports consulo.platform;
-  //TODO restrict to impl module
-  exports consulo.platform.internal;
-  //exports consulo.platform.internal to consulo.desktop.awt.ide;
+  exports consulo.platform.internal to consulo.desktop.awt.ide.impl;
 }

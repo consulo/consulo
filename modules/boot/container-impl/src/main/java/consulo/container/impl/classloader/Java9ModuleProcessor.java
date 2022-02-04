@@ -15,7 +15,7 @@
  */
 package consulo.container.impl.classloader;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -24,17 +24,21 @@ import java.util.Set;
 public interface Java9ModuleProcessor {
   Java9ModuleProcessor EMPTY = new Java9ModuleProcessor() {
     @Override
-    public void process(Object bootModuleLayer, Object controller) {
-
-    }
-
-    @Override
-    public void addBaseResolveModules(Set<String> toResolve) {
-
+    public void process(List<Opens> toOpenMap) {
     }
   };
 
-  void process(Object bootModuleLayer, Object controller);
+  class Opens {
+    public final String fromModuleName;
+    public final String packageName;
+    public final String toModuleName;
 
-  void addBaseResolveModules(Set<String> toResolve);
+    public Opens(String fromModuleName, String packageName, String toModuleName) {
+      this.fromModuleName = fromModuleName;
+      this.packageName = packageName;
+      this.toModuleName = toModuleName;
+    }
+  }
+
+  void process(List<Opens> toOpenMap);
 }

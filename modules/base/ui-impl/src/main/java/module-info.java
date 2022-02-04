@@ -18,14 +18,8 @@ module consulo.ui.impl {
   requires consulo.util.lang;
   requires consulo.util.io;
 
-  exports consulo.ui.impl;
-  exports consulo.ui.impl.image;
-  exports consulo.ui.impl.model;
-  exports consulo.ui.impl.style;
-
-  // TODO  exports impl packages only to impl modules
-  //exports consulo.ui.impl to consulo.ide.impl, consulo.desktop.awt.ide;
-  //exports consulo.ui.impl.image to consulo.ide.impl, consulo.desktop.awt.ide;
-  //exports consulo.ui.impl.model to consulo.ide.impl, consulo.desktop.awt.ide;
-  //exports consulo.ui.impl.style to consulo.ide.impl, consulo.desktop.awt.ide;
+  exports consulo.ui.impl to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+  exports consulo.ui.impl.image to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+  exports consulo.ui.impl.model to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+  exports consulo.ui.impl.style to consulo.ide.impl, consulo.desktop.awt.ide.impl;
 }

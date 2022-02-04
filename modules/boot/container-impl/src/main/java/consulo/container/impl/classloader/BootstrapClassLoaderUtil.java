@@ -25,7 +25,6 @@ import consulo.container.impl.PluginHolderModificator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.util.StatCollector;
-import consulo.util.nodep.SystemInfoRt;
 
 import java.io.File;
 import java.net.URL;
@@ -46,7 +45,7 @@ public class BootstrapClassLoaderUtil {
     PluginDescriptorImpl base = initializePlatformBase(modulesDirectory, containerLogger, processor);
     mark.run();
 
-    List<PluginDescriptorImpl> descriptors = new ArrayList<PluginDescriptorImpl>();
+    List<PluginDescriptorImpl> descriptors = new ArrayList<>();
     descriptors.add(base);
 
     File[] files = modulesDirectory.listFiles();
@@ -68,9 +67,7 @@ public class BootstrapClassLoaderUtil {
 
       ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(descriptor.getClassPath()), basePluginClassLoader, descriptor);
 
-      if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-        descriptor.setModuleLayer((ModuleLayer)Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(), loader));
-      }
+      descriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(), loader));
 
       descriptors.add(descriptor);
 
@@ -83,7 +80,7 @@ public class BootstrapClassLoaderUtil {
     PluginLoadStatistics.initialize(false);
 
     for (PluginDescriptor pluginDescriptor : PluginHolderModificator.getPlugins()) {
-      ServiceLoader<ContainerStartup> loader = ServiceLoader.load(ContainerStartup.class, pluginDescriptor.getPluginClassLoader());
+      ServiceLoader<ContainerStartup> loader = ServiceLoader.load(pluginDescriptor.getModuleLayer(), ContainerStartup.class);
 
       Iterator<ContainerStartup> iterator = loader.iterator();
 
@@ -114,9 +111,7 @@ public class BootstrapClassLoaderUtil {
 
     ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parent, platformBasePlugin);
 
-    if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-      platformBasePlugin.setModuleLayer((ModuleLayer)Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger, processor));
-    }
+    platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger, processor));
 
     platformBasePlugin.setLoader(loader);
 
@@ -126,10 +121,10 @@ public class BootstrapClassLoaderUtil {
   }
 
   private static List<URL> filesToUrls(List<File> files) throws Exception {
-    List<URL> urls = new ArrayList<URL>(files.size());
+    List<URL> urls = new ArrayList<>(files.size());
 
-    for (int i = 0; i < files.size(); i++) {
-      urls.add(files.get(i).toURI().toURL());
+    for (File file : files) {
+      urls.add(file.toURI().toURL());
     }
     return urls;
   }

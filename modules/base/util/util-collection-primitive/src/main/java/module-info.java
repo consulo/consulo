@@ -1,3 +1,5 @@
+import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
+
 /**
  * @author VISTALL
  * @since 07/02/2021
@@ -11,9 +13,11 @@ module consulo.util.collection.primitive {
   exports consulo.util.collection.primitive.bytes;
   exports consulo.util.collection.primitive.ints;
   exports consulo.util.collection.primitive.longs;
+  exports consulo.util.collection.primitive.longs.impl to consulo.util.collection.via.trove;
   exports consulo.util.collection.primitive.doubles;
   exports consulo.util.collection.primitive.objects;
 
-  // TODO export only to impl modules
-  exports consulo.util.collection.primitive.impl;
+  exports consulo.util.collection.primitive.impl to consulo.util.collection.via.trove;
+
+  uses PrimitiveCollectionFactory;
 }

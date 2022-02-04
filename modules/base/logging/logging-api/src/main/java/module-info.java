@@ -5,8 +5,7 @@ module consulo.logging.api {
   exports consulo.logging;
   exports consulo.logging.attachment;
 
-  // TODO [VISTALL] this package must be exported only to impl module!
-  exports consulo.logging.internal;
+  exports consulo.logging.internal to consulo.logging.log4j2.impl, consulo.ide.impl;
 
   uses consulo.logging.internal.LoggerFactory;
   uses consulo.logging.attachment.AttachmentFactory;

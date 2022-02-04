@@ -7,7 +7,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.Topic;
-import consulo.application.internal.PerApplicationInstance;
+import consulo.application.util.PerApplicationInstance;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -217,7 +217,7 @@ public class PluginsLoader {
                 createPluginClassLoader(classPath.toArray(new File[classPath.size()]), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader}, pluginDescriptor);
 
         if (SystemInfo.IS_AT_LEAST_JAVA9) {
-          List<Object> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
+          List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
 
           pluginDescriptor.setModuleLayer((ModuleLayer)Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(), pluginClassLoader));
         }
@@ -491,8 +491,8 @@ public class PluginsLoader {
   }
 
   @Nonnull
-  static List<Object> getParentModuleLayer(Map<PluginId, ? extends PluginDescriptor> idToDescriptorMap, PluginId[] pluginIds) {
-    final List<Object> result = new ArrayList<>();
+  static List<ModuleLayer> getParentModuleLayer(Map<PluginId, ? extends PluginDescriptor> idToDescriptorMap, PluginId[] pluginIds) {
+    final List<ModuleLayer> result = new ArrayList<>();
     for (final PluginId id : pluginIds) {
       PluginDescriptor pluginDescriptor = idToDescriptorMap.get(id);
       if (pluginDescriptor == null) {
@@ -500,7 +500,7 @@ public class PluginsLoader {
       }
 
       if (pluginDescriptor instanceof PluginDescriptorImpl) {
-        result.add(((PluginDescriptorImpl)pluginDescriptor).getModuleLayer());
+        result.add((pluginDescriptor).getModuleLayer());
       }
     }
     return result;

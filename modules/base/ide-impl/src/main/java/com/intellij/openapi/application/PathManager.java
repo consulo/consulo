@@ -103,7 +103,12 @@ public class PathManager {
         URL location = codeSource.getLocation();
         if (location != null) {
           URI uri = location.toURI();
-          return extractRoot(uri.toURL(), path);
+          if (uri.toString().contains("!/")) {
+            return extractRoot(uri.toURL(), path);
+          }
+          else {
+            return new File(uri).getAbsolutePath();
+          }
         }
       }
     }

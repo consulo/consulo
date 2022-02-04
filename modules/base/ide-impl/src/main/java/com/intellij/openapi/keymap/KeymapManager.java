@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.keymap;
 
-import consulo.application.internal.PerApplicationInstance;
+import consulo.application.util.PerApplicationInstance;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

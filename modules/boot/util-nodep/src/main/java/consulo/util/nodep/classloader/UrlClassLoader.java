@@ -362,7 +362,7 @@ public class UrlClassLoader extends ClassLoader {
     if (i != -1) {
       String pkgName = name.substring(0, i);
       // Check if package already loaded.
-      Package pkg = getPackage(pkgName);
+      Package pkg = getDefinedPackage(pkgName);
       if (pkg == null) {
         try {
           definePackage(pkgName, res.getValue(Resource.Attribute.SPEC_TITLE), res.getValue(Resource.Attribute.SPEC_VERSION), res.getValue(Resource.Attribute.SPEC_VENDOR),

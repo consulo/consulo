@@ -59,7 +59,6 @@ public abstract class DisposerInternal {
   public abstract <T> DisposableList<T> createList();
 
   @Nonnull
-  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.util.ServiceLoaderUtil")
   private static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {
     ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, clazz.getClassLoader());
     Iterator<T> iterator = serviceLoader.iterator();
