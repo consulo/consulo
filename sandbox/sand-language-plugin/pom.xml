@@ -32,7 +32,7 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>consulo-base-ide-impl</artifactId>
+      <artifactId>consulo-ide-impl</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

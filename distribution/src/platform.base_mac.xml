@@ -14,7 +14,7 @@
   - limitations under the License.
   -->
 <component>
-  <!--FIXME [VISTALL] this file is copy file without _mac prefix. It's need due mac distribution have own path-->
+  <!--FIXME [VISTALL] if you update this file - update _mac file too-->
   <dependencySets>
     <dependencySet>
       <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo/lib</outputDirectory>
@@ -24,7 +24,7 @@
         <include>consulo:consulo-annotation</include>
         <include>consulo:consulo-component-api</include>
         <include>consulo:consulo-application-api</include>
-        <include>consulo:consulo-base-ide-impl</include>
+        <include>consulo:consulo-ide-impl</include>
         <include>consulo:consulo-disposer-api</include>
         <include>consulo:consulo-disposer-impl</include>
         <include>consulo:consulo-injecting-api</include>
@@ -32,8 +32,8 @@
         <include>consulo:consulo-localize-api</include>
         <include>consulo:consulo-localize-impl</include>
         <include>consulo:consulo-logging-api</include>
-        <include>consulo:consulo-project-api</include>
         <include>consulo:consulo-document-api</include>
+        <include>consulo:consulo-project-api</include>
         <include>consulo:consulo-logging-log4j2-impl</include>
         <include>consulo:consulo-logging-slf4j-binding-impl</include>
         <include>consulo:consulo-remote-servers-agent-rt</include>
@@ -44,6 +44,19 @@
         <include>consulo:consulo-xcoverage-data</include>
         <include>consulo:consulo-proxy</include>
         <include>consulo:consulo-virtual-file-system-api</include>
+        <include>consulo:consulo-datacontext-api</include>
+        <include>consulo:consulo-navigation-api</include>
+        <include>consulo:consulo-module-api</include>
+        <include>consulo:consulo-index-io</include>
+        <include>consulo:consulo-file-chooser-api</include>
+        <include>consulo:consulo-application-content-api</include>
+        <include>consulo:consulo-project-content-api</include>
+        <include>consulo:consulo-module-content-api</include>
+        <include>consulo:consulo-project-ui-api</include>
+        <include>consulo:consulo-application-ui-api</include>
+        <include>consulo:consulo-ui-ex-api</include>
+        <include>consulo:consulo-configurable-api</include>
+        <include>consulo:consulo-language-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>
@@ -103,7 +116,6 @@
         <include>org.apache.httpcomponents:httpclient</include>
         <include>org.apache.httpcomponents:httpmime</include>
         <include>org.lz4:lz4-java</include>
-        <include>org.apache.commons:commons-imaging</include>
         <include>com.github.markusbernhardt:proxy-vole</include>
         <include>org.apache.commons:commons-imaging</include>
         <include>com.google.code.gson:gson</include>
