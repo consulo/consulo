@@ -82,13 +82,5 @@ public class PluginExtensionRegistrator {
     for (SimpleXmlElement element : extensionPoints) {
       area.registerExtensionPoint(pluginDescriptor, element);
     }
-
-    String oldAreaId = "CONSULO_" + areaId;
-    Collection<SimpleXmlElement> oldExtensionPoints = extensionsPoints.get(oldAreaId);
-    for (SimpleXmlElement oldElement : oldExtensionPoints) {
-      LOG.warn("Using old area id " + oldAreaId + ": " + oldElement);
-
-      area.registerExtensionPoint(pluginDescriptor, oldElement);
-    }
   }
 }
