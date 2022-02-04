@@ -14,6 +14,6 @@ module consulo.project.api {
   exports consulo.project.event;
   exports consulo.project.startup;
   exports consulo.project.util;
-  // TODO [VISTALL] impl
-  exports consulo.project.internal;
+
+  exports consulo.project.internal to consulo.ide.impl;
 }

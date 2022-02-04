@@ -10,6 +10,5 @@ module consulo.datacontext.api {
   requires transitive consulo.util.dataholder;
 
   exports consulo.dataContext;
-  // todo internal impl
-  exports consulo.dataContext.internal;
+  exports consulo.dataContext.internal to consulo.ide.impl;
 }

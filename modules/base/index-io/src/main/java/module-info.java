@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 28/01/2022
  */
-module consulo.indexing.io {
+module consulo.index.io {
   requires transitive consulo.annotation;
   requires transitive consulo.util.collection;
   requires transitive consulo.util.collection.primitive;

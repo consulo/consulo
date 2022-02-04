@@ -30,6 +30,5 @@ module consulo.component.api {
   exports consulo.component.util.text;
   exports consulo.component.util.graph;
 
-  // TODO only to impl module
-  exports consulo.component.extension.internal;
+  exports consulo.component.extension.internal to consulo.application.api, consulo.virtual.file.system.api;
 }

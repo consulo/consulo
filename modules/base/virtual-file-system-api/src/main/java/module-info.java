@@ -21,6 +21,5 @@ module consulo.virtual.file.system.api {
   exports consulo.virtualFileSystem.light;
   exports consulo.virtualFileSystem.util;
 
-  // TODO [VISTALL] impl package
-  exports consulo.virtualFileSystem.internal;
+  exports consulo.virtualFileSystem.internal to consulo.document.api;
 }

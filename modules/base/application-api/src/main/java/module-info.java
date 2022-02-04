@@ -3,6 +3,9 @@
  * @since 16/01/2022
  */
 module consulo.application.api {
+  // TODO [VISTALL] remove this dependency when we will ready. obsolete dep
+  requires java.desktop;
+
   requires transitive consulo.component.api;
   requires transitive consulo.localize.api;
   requires transitive consulo.base.icon.library;
@@ -13,9 +16,6 @@ module consulo.application.api {
   requires consulo.injecting.api;
   
   requires transitive jakarta.inject;
-
-  // TODO [VISTALL] remove this dependency when we will ready. obsolete dep
-  requires java.desktop;
 
   requires com.sun.jna;
   requires com.sun.jna.platform;

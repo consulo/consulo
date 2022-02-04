@@ -11,6 +11,5 @@ module consulo.configurable.api {
   requires transitive consulo.base.localize.library;
 
   exports consulo.configurable;
-  // TODO [VISTALL] internal impl
-  exports consulo.configurable.internal;
+  exports consulo.configurable.internal to consulo.ide.impl;
 }
