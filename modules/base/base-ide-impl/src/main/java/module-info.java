@@ -1264,7 +1264,6 @@ open module consulo.ide.impl {
   exports consulo.internal.statistic;
   exports consulo.lang.injection;
   //exports consulo.language;
-  exports consulo.language.editor;
   exports consulo.module.bundle;
   exports consulo.module.extension.impl;
   exports consulo.moduleImport;

@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.fileTypes;
 
-/**
- * @author peter
+/*
+ * @author max
  */
-public interface TemplateLanguageFileType {
+package consulo.language.file;
+
+import consulo.virtualFileSystem.VirtualFile;
+import javax.annotation.Nonnull;
+
+public interface BinaryFileDecompiler {
+  @Nonnull
+  CharSequence decompile(VirtualFile file);
 }

@@ -2,7 +2,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.BinaryFileDecompiler;
+import consulo.language.file.BinaryFileDecompiler;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import consulo.language.file.CharsetUtil;
 import consulo.virtualFileSystem.fileType.FileType;

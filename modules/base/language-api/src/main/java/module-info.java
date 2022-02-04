@@ -31,4 +31,5 @@ module consulo.language.api {
   exports consulo.language.template;
   exports consulo.language.util;
   exports consulo.language.version;
+  exports consulo.language.codeInsight;
 }

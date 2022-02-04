@@ -20,6 +20,7 @@
 package com.intellij.openapi.fileTypes;
 
 import consulo.container.plugin.PluginIds;
+import consulo.language.file.BinaryFileDecompiler;
 import consulo.virtualFileSystem.fileType.FileTypeExtension;
 
 public class BinaryFileTypeDecompilers extends FileTypeExtension<BinaryFileDecompiler> {

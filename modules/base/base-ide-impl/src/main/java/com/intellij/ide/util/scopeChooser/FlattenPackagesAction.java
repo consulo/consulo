@@ -27,7 +27,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.project.Project;
 import com.intellij.packageDependencies.DependencyUISettings;
-import consulo.psi.PsiPackageSupportProviders;
+import consulo.language.psi.PsiPackageSupportProviders;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public final class FlattenPackagesAction extends ToggleAction {

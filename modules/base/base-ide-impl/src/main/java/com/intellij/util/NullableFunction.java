@@ -15,21 +15,18 @@
  */
 package com.intellij.util;
 
+import javax.annotation.Nullable;
+
 /**
  * @author peter
  */
 public interface NullableFunction<Param, Result> extends Function<Param, Result> {
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   Result fun(final Param param);
 
   /**
    * @see FunctionUtil#nullConstant()
    */
-  NullableFunction NULL = new NullableFunction() {
-    @Override
-    public Object fun(final Object o) {
-      return null;
-    }
-  };
+  NullableFunction NULL = o -> null;
 }

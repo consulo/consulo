@@ -18,7 +18,7 @@ package com.intellij.openapi.fileTypes.impl;
 import com.intellij.ui.ListCellRendererWrapper;
 import consulo.language.Language;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.TemplateLanguageFileType;
+import consulo.language.template.TemplateLanguageFileType;
 import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
 import consulo.ui.ex.awt.TargetAWT;
 

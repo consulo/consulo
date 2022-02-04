@@ -36,7 +36,7 @@ import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.psi.PsiPackageSupportProviders;
+import consulo.language.psi.PsiPackageSupportProviders;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

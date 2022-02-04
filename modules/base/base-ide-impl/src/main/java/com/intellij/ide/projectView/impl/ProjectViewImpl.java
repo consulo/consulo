@@ -104,7 +104,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.logging.Logger;
-import consulo.psi.PsiPackageSupportProviders;
+import consulo.language.psi.PsiPackageSupportProviders;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.ActionCallback;

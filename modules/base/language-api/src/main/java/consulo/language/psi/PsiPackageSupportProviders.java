@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.psi;
+package consulo.language.psi;
 
-import consulo.language.psi.PsiPackageSupportProvider;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectRootManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectRootManager;
 import consulo.module.extension.ModuleExtension;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import java.util.List;

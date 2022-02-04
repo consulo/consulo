@@ -172,7 +172,7 @@
                     interface="com.intellij.openapi.fileEditor.impl.http.RemoteFileEditorActionProvider"/>
 
     <extensionPoint name="filetype.decompiler" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.BinaryFileDecompiler"/>
+      <with attribute="implementationClass" implements="consulo.language.file.BinaryFileDecompiler"/>
     </extensionPoint>
 
     <extensionPoint name="editorActionHandler" beanClass="com.intellij.openapi.editor.actionSystem.EditorActionHandlerBean">
@@ -688,7 +688,7 @@
     <extensionPoint name="fileTemplateGroup"
                     interface="com.intellij.ide.fileTemplates.FileTemplateGroupDescriptorFactory"/>
     <extensionPoint name="colorProvider"
-                    interface="consulo.language.editor.ElementColorProvider"/>
+                    interface="consulo.language.codeInsight.ElementColorProvider"/>
     <extensionPoint name="createFromTemplateHandler"
                     interface="com.intellij.ide.fileTemplates.CreateFromTemplateHandler"/>
     <extensionPoint name="defaultTemplatePropertiesProvider"

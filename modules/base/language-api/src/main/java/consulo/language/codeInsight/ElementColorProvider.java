@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor;
+package consulo.language.codeInsight;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.component.extension.ExtensionList;
+import consulo.component.extension.ExtensionType;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
@@ -27,8 +29,9 @@ import javax.annotation.Nullable;
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionType(value = "colorProvider", component = Project.class)
 public interface ElementColorProvider {
-  ExtensionPointName<ElementColorProvider> EP_NAME = ExtensionPointName.create("consulo.colorProvider");
+  ExtensionList<ElementColorProvider, Project> EP = ExtensionList.of(ElementColorProvider.class);
 
   @Nullable
   @RequiredReadAction
