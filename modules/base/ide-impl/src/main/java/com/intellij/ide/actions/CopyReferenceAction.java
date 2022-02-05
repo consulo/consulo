@@ -9,7 +9,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;

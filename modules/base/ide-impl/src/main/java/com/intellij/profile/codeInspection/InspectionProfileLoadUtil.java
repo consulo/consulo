@@ -17,7 +17,7 @@ package com.intellij.profile.codeInspection;
 
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolRegistrar;
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.profile.Profile;

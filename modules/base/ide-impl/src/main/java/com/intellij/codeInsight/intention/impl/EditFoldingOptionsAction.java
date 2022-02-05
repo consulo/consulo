@@ -19,7 +19,7 @@ package com.intellij.codeInsight.intention.impl;
 import com.intellij.application.options.editor.CodeFoldingConfigurable;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

@@ -22,7 +22,7 @@ import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;

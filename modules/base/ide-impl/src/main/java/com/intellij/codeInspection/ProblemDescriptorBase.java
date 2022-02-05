@@ -20,7 +20,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.navigation.Navigatable;

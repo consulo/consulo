@@ -15,17 +15,17 @@
  */
 package com.intellij.ui.popup.util;
 
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.SettingsImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.*;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.document.Document;

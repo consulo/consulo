@@ -22,7 +22,7 @@ import com.intellij.codeInsight.generation.ImplementMethodsHandler;
 import com.intellij.lang.CodeInsightActions;
 import consulo.language.Language;
 import com.intellij.lang.LanguageCodeInsightActionHandler;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.psi.PsiFile;

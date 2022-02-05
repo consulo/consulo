@@ -4,7 +4,6 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
@@ -12,6 +11,10 @@ import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.util.DocumentUtil;
 import consulo.document.Document;
+import consulo.editor.FoldRegion;
+import consulo.editor.LogicalPosition;
+import consulo.editor.SoftWrap;
+import consulo.editor.VisualPosition;
 import consulo.editor.impl.CodeEditorFoldingModelBase;
 import consulo.logging.Logger;
 

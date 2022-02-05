@@ -22,7 +22,7 @@ import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import com.intellij.codeInsight.intention.impl.CachedIntentions;
 import com.intellij.codeInsight.intention.impl.IntentionActionWithTextCaching;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.TooltipAction;
 import consulo.project.Project;

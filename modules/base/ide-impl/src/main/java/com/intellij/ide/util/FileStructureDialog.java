@@ -33,7 +33,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.keymap.KeymapUtil;

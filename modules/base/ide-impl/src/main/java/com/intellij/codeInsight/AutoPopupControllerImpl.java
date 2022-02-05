@@ -13,7 +13,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.AppUIExecutor;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorActivityManager;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;

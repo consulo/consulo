@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsDataKeys;

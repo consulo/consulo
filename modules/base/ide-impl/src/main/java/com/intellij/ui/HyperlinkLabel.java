@@ -17,8 +17,8 @@
 package com.intellij.ui;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBColor;
 import consulo.application.ui.awt.JBUI;

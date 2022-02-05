@@ -15,7 +15,7 @@
  */
 package consulo.content.library;
 
-import consulo.component.persist.JDOMExternalizable;
+import com.intellij.util.xmlb.JDOMExternalizable;
 import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.disposer.Disposable;

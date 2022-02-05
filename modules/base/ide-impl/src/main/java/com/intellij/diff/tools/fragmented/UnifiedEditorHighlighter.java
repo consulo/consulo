@@ -15,16 +15,16 @@
  */
 package com.intellij.diff.tools.fragmented;
 
+import com.intellij.openapi.util.Comparing;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterClient;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.HighlighterClient;
+import consulo.editor.highlighter.HighlighterIterator;
+import consulo.editor.markup.TextAttributes;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 
@@ -42,20 +42,13 @@ class UnifiedEditorHighlighter implements EditorHighlighter {
   @Nonnull
   private final List<Element> myPieces;
 
-  public UnifiedEditorHighlighter(@Nonnull Document document,
-                                  @Nonnull EditorHighlighter highlighter1,
-                                  @Nonnull EditorHighlighter highlighter2,
-                                  @Nonnull List<HighlightRange> ranges,
-                                  int textLength) {
+  public UnifiedEditorHighlighter(@Nonnull Document document, @Nonnull EditorHighlighter highlighter1, @Nonnull EditorHighlighter highlighter2, @Nonnull List<HighlightRange> ranges, int textLength) {
     myDocument = document;
     myPieces = new ArrayList<Element>();
     init(highlighter1.createIterator(0), highlighter2.createIterator(0), ranges, textLength);
   }
 
-  private void init(@Nonnull HighlighterIterator it1,
-                    @Nonnull HighlighterIterator it2,
-                    @Nonnull List<HighlightRange> ranges,
-                    int textLength) {
+  private void init(@Nonnull HighlighterIterator it1, @Nonnull HighlighterIterator it2, @Nonnull List<HighlightRange> ranges, int textLength) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     int offset = 0;
@@ -89,10 +82,7 @@ class UnifiedEditorHighlighter implements EditorHighlighter {
         int relativeStart = Math.max(it.getStart() - changed.getStartOffset(), 0);
         int relativeEnd = Math.min(it.getEnd() - changed.getStartOffset(), changed.getLength() + 1);
 
-        addElement(new Element(offset + relativeStart,
-                               offset + relativeEnd,
-                               it.getTokenType(),
-                               it.getTextAttributes()));
+        addElement(new Element(offset + relativeStart, offset + relativeEnd, (IElementType)it.getTokenType(), it.getTextAttributes()));
 
         if (changed.getEndOffset() <= it.getEnd()) {
           offset += changed.getLength();
@@ -116,15 +106,10 @@ class UnifiedEditorHighlighter implements EditorHighlighter {
     boolean merged = false;
     if (!myPieces.isEmpty()) {
       Element oldElement = myPieces.get(myPieces.size() - 1);
-      if (oldElement.getEnd() >= element.getStart() &&
-          Comparing.equal(oldElement.getAttributes(), element.getAttributes()) &&
-          Comparing.equal(oldElement.getElementType(), element.getElementType())) {
+      if (oldElement.getEnd() >= element.getStart() && Comparing.equal(oldElement.getAttributes(), element.getAttributes()) && Comparing.equal(oldElement.getElementType(), element.getElementType())) {
         merged = true;
         myPieces.remove(myPieces.size() - 1);
-        myPieces.add(new Element(oldElement.getStart(),
-                                 element.getEnd(),
-                                 element.getElementType(),
-                                 element.getAttributes()));
+        myPieces.add(new Element(oldElement.getStart(), element.getEnd(), element.getElementType(), element.getAttributes()));
       }
     }
     if (!merged) {

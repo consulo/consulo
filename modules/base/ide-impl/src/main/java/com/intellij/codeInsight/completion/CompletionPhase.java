@@ -2,17 +2,20 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
+import consulo.editor.event.CaretEvent;
+import consulo.editor.event.CaretListener;
+import consulo.editor.event.SelectionEvent;
+import consulo.editor.event.SelectionListener;
 import consulo.language.Language;
 import consulo.disposer.Disposable;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
-import com.intellij.openapi.editor.CaretModel;
+import consulo.editor.CaretModel;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.editor.event.*;
+import consulo.editor.Editor;
+import consulo.editor.SelectionModel;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListenerImpl;
 import consulo.project.Project;

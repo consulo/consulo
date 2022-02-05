@@ -18,7 +18,7 @@ package com.intellij.codeInsight.completion;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import consulo.application.dumb.DumbAware;

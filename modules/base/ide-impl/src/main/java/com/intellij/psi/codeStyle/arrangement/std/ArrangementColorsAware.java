@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.codeStyle.arrangement.std;
 
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.markup.TextAttributes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

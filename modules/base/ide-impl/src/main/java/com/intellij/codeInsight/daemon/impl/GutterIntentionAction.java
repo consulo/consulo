@@ -5,7 +5,7 @@ import com.intellij.codeInsight.intention.AbstractIntentionAction;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PriorityAction;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;

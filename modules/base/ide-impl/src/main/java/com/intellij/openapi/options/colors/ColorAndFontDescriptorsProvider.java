@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.options.colors;
 
-import com.intellij.openapi.editor.colors.EditorColorKey;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.EditorColorKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 

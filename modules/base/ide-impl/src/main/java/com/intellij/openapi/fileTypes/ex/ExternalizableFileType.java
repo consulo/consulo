@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes.ex;
 
-import consulo.component.persist.JDOMExternalizable;
+import com.intellij.util.xmlb.JDOMExternalizable;
 
 /**
  * @author yole

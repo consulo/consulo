@@ -1,8 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.lang.folding;
 
+import consulo.editor.FoldRegion;
 import consulo.language.ast.ASTNode;
-import com.intellij.openapi.editor.FoldingGroup;
+import consulo.editor.FoldingGroup;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.component.util.ModificationTracker;
@@ -272,7 +273,7 @@ public class FoldingDescriptor {
   }
 
   /**
-   * See javadoc for {@link com.intellij.openapi.editor.FoldRegion#setGutterMarkEnabledForSingleLine(boolean)}.
+   * See javadoc for {@link FoldRegion#setGutterMarkEnabledForSingleLine(boolean)}.
    *
    * @see #isGutterMarkEnabledForSingleLine()
    */

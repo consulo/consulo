@@ -75,6 +75,7 @@
     <module>modules/base/ui-ex-api</module>
     <module>modules/base/project-ui-api</module>
     <module>modules/base/navigation-api</module>
+    <module>modules/base/editor-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

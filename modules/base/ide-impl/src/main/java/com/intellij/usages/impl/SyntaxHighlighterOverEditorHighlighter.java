@@ -17,12 +17,12 @@ package com.intellij.usages.impl;
 
 import consulo.language.lexer.LayeredLexer;
 import consulo.language.lexer.Lexer;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.util.LayeredHighlighterIterator;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;

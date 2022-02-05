@@ -6,7 +6,7 @@ import com.intellij.codeInsight.intention.CustomizableIntentionAction;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 

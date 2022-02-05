@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

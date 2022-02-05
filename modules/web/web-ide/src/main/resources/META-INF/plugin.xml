@@ -19,7 +19,7 @@
 
   <application-components>
     <component>
-      <interface-class>com.intellij.openapi.editor.EditorFactory</interface-class>
+      <interface-class>consulo.editor.EditorFactory</interface-class>
       <implementation-class>consulo.web.editor.impl.WebEditorFactoryImpl</implementation-class>
     </component>
   </application-components>

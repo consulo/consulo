@@ -27,7 +27,7 @@ import com.intellij.lang.refactoring.InlineHandler;
 import com.intellij.lang.refactoring.InlineHandlers;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

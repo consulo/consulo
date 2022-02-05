@@ -3,9 +3,9 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.document.Document;
-import com.intellij.openapi.editor.event.EditorMouseEvent;
-import com.intellij.openapi.editor.event.EditorMouseListener;
-import com.intellij.openapi.editor.event.EditorMouseMotionListener;
+import consulo.editor.event.EditorMouseEvent;
+import consulo.editor.event.EditorMouseListener;
+import consulo.editor.event.EditorMouseMotionListener;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;

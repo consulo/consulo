@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.logging.Logger;

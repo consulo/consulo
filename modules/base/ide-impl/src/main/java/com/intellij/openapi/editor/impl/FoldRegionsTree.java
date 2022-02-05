@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import consulo.document.Document;
-import com.intellij.openapi.editor.FoldRegion;
+import consulo.editor.FoldRegion;
 import consulo.document.RangeMarker;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.CommonProcessors;

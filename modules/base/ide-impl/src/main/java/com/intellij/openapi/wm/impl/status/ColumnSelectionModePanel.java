@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.event.EditorEventMulticaster;
+import consulo.editor.Editor;
+import consulo.editor.EditorFactory;
+import consulo.editor.event.EditorEventMulticaster;
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileEditor.FileEditorManager;

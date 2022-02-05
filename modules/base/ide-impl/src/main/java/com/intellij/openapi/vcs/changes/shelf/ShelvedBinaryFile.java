@@ -17,10 +17,10 @@
 package com.intellij.openapi.vcs.changes.shelf;
 
 import consulo.project.Project;
-import com.intellij.openapi.util.DefaultJDOMExternalizer;
-import consulo.component.persist.InvalidDataException;
-import consulo.component.persist.JDOMExternalizable;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.DefaultJDOMExternalizer;
+import com.intellij.util.xmlb.InvalidDataException;
+import com.intellij.util.xmlb.JDOMExternalizable;
+import com.intellij.util.xmlb.WriteExternalException;
 import com.intellij.openapi.vcs.FilePathImpl;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.VcsBundle;

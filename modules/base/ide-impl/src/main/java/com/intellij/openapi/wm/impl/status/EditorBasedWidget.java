@@ -3,7 +3,7 @@ package com.intellij.openapi.wm.impl.status;
 
 import consulo.application.Application;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.*;
 import consulo.project.Project;

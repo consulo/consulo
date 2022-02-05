@@ -17,9 +17,9 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import java.util.HashMap;
 import consulo.application.ui.awt.JBUI;

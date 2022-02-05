@@ -22,7 +22,7 @@ import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.module.Module;

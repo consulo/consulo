@@ -13,7 +13,7 @@ import consulo.content.RootProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import consulo.disposer.Disposer;
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;

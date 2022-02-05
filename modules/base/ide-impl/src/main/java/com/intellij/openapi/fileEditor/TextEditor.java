@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import javax.annotation.Nonnull;
 
 public interface TextEditor extends NavigatableFileEditor {

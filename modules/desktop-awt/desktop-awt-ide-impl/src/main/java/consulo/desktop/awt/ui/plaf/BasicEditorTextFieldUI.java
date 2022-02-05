@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.EditorTextField;
 import consulo.application.ui.awt.JBInsets;

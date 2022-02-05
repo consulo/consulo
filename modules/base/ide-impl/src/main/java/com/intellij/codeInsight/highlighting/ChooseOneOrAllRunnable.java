@@ -18,7 +18,7 @@ package com.intellij.codeInsight.highlighting;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.components.JBList;

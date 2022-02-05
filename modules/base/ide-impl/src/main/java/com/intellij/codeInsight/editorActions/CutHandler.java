@@ -25,6 +25,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.actions.CopyAction;
+import consulo.editor.*;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;

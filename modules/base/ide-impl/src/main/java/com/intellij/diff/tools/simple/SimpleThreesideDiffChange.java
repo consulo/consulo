@@ -19,7 +19,7 @@ import com.intellij.diff.fragments.MergeLineFragment;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.MergeConflictType;
 import com.intellij.diff.util.ThreeSide;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

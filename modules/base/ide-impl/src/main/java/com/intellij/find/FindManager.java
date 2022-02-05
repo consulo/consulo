@@ -17,7 +17,7 @@ package com.intellij.find;
 
 import consulo.navigation.NavigationItem;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

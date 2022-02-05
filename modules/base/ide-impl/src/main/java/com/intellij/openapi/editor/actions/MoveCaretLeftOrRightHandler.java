@@ -20,10 +20,10 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.internal.EditorInternal;
+import consulo.editor.*;
+import consulo.editor.impl.EditorInternal;
 
 class MoveCaretLeftOrRightHandler extends EditorActionHandler {
   enum Direction {LEFT, RIGHT}

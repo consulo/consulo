@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.surroundWith;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

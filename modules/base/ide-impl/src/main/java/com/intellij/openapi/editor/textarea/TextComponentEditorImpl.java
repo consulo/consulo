@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.editor.textarea;
 
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.EditorMouseEventArea;
-import com.intellij.openapi.editor.event.EditorMouseListener;
-import com.intellij.openapi.editor.event.EditorMouseMotionListener;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.*;
+import consulo.editor.event.EditorMouseEventArea;
+import consulo.editor.event.EditorMouseListener;
+import consulo.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.impl.EmptyIndentsModel;
 import com.intellij.openapi.editor.impl.SettingsImpl;
-import com.intellij.openapi.editor.markup.MarkupModel;
+import consulo.editor.markup.MarkupModel;
 import com.intellij.ui.popup.AbstractPopup;
 import consulo.application.ui.awt.JBUI;
 import consulo.document.Document;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.markup;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

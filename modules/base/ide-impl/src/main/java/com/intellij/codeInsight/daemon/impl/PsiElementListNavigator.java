@@ -7,7 +7,7 @@ import com.intellij.codeInsight.navigation.ListBackgroundUpdaterTask;
 import com.intellij.find.FindUtil;
 import com.intellij.ide.PsiCopyPasteManager;
 import com.intellij.ide.util.PsiElementListCellRenderer;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

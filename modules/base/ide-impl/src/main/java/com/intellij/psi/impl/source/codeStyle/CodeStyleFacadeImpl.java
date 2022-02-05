@@ -23,7 +23,7 @@ import com.intellij.application.options.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import consulo.language.Language;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.configurable.Configurable;
 import consulo.project.Project;

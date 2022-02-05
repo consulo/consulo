@@ -28,7 +28,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.EditorHighlighter;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.DumbService;

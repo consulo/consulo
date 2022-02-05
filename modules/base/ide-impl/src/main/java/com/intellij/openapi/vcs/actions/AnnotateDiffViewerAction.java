@@ -44,7 +44,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;

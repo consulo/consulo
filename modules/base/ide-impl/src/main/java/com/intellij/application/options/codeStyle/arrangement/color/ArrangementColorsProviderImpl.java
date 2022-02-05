@@ -15,8 +15,8 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.color;
 
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementColorsAware;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.application.ui.awt.JBColor;

@@ -1,7 +1,7 @@
 package com.intellij.execution.console;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.JBColor;
 import javax.annotation.Nonnull;

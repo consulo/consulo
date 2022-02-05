@@ -18,7 +18,7 @@ package com.intellij.application.options.colors;
 
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.OnePixelSplitter;

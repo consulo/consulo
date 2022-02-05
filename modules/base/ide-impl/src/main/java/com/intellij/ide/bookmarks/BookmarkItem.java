@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.bookmarks;
 
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;

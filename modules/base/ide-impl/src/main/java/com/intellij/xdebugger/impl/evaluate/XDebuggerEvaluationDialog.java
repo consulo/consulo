@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.evaluate;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

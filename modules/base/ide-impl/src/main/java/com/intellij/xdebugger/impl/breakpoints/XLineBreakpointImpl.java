@@ -15,18 +15,21 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
+import consulo.editor.markup.GutterDraggableObject;
+import consulo.editor.markup.HighlighterTargetArea;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import consulo.ui.ex.action.AnAction;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import consulo.document.Document;
 import consulo.document.LazyRangeMarkerFactory;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import com.intellij.openapi.editor.markup.*;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;

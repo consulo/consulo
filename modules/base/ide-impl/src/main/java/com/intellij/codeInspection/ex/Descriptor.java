@@ -21,7 +21,7 @@ import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.InspectionProfileEntry;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.WriteExternalException;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

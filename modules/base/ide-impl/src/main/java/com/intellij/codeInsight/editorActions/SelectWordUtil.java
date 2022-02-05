@@ -19,7 +19,7 @@ package com.intellij.codeInsight.editorActions;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
 import consulo.language.lexer.Lexer;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
 import consulo.component.extension.Extensions;
 import consulo.project.DumbService;

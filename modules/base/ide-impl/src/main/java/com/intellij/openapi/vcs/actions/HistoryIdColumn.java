@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;

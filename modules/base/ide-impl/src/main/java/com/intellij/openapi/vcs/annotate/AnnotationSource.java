@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.annotate;
 
-import com.intellij.openapi.editor.colors.EditorColorKey;
+import consulo.editor.colorScheme.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColors;
 
 import javax.annotation.Nonnull;

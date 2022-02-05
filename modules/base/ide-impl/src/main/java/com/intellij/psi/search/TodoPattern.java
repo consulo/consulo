@@ -16,8 +16,8 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.util.Comparing;
-import consulo.component.persist.InvalidDataException;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.InvalidDataException;
+import com.intellij.util.xmlb.WriteExternalException;
 import consulo.logging.Logger;
 import org.jdom.Element;
 

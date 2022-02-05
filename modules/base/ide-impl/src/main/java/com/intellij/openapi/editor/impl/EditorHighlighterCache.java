@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl;
 import consulo.language.lexer.Lexer;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

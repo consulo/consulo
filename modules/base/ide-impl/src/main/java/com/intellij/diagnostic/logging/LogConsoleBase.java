@@ -30,7 +30,7 @@ import consulo.application.ApplicationManager;
 import consulo.dataContext.DataProvider;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;

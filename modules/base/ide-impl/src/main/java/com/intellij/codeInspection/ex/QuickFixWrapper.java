@@ -23,7 +23,7 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.QuickFix;
 import com.intellij.openapi.command.undo.UndoUtil;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

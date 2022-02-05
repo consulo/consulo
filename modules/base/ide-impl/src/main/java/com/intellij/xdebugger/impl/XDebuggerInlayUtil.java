@@ -15,14 +15,14 @@
  */
 package com.intellij.xdebugger.impl;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorCustomElementRenderer;
-import com.intellij.openapi.editor.Inlay;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.FontPreferences;
+import consulo.editor.Editor;
+import consulo.editor.EditorCustomElementRenderer;
+import consulo.editor.Inlay;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.colorScheme.FontPreferences;
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.editor.impl.FontInfo;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;

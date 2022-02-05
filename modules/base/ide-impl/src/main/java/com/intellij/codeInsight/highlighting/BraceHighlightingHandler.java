@@ -27,6 +27,10 @@ package com.intellij.codeInsight.highlighting;
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
 import com.intellij.injected.editor.EditorWindow;
+import consulo.editor.markup.HighlighterTargetArea;
+import consulo.editor.markup.LineMarkerRenderer;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import consulo.language.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.Application;
@@ -34,18 +38,18 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.util.HighlighterIteratorWrapper;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.language.plain.psi.PsiPlainTextFile;
@@ -407,11 +411,11 @@ public class BraceHighlightingHandler {
     final CharSequence chars = myDocument.getCharsSequence();
 
     if (BraceMatchingUtil.isLBraceToken(iterator, chars, fileType)) {
-      IElementType tokenType = iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
 
       iterator.advance();
       if (!iterator.atEnd() && BraceMatchingUtil.isRBraceToken(iterator, chars, fileType)) {
-        if (BraceMatchingUtil.isPairBraces(tokenType, iterator.getTokenType(), fileType) &&
+        if (BraceMatchingUtil.isPairBraces(tokenType, (IElementType)iterator.getTokenType(), fileType) &&
             originalOffset == iterator.getStart()) return;
       }
 

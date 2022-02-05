@@ -7,7 +7,7 @@ import com.intellij.lang.ExpressionTypeProvider;
 import consulo.language.Language;
 import com.intellij.lang.LanguageExpressionTypes;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.DumbService;
 import consulo.project.Project;

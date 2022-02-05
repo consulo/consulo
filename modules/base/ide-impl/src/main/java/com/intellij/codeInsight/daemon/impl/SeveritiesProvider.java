@@ -21,7 +21,8 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.markup.TextAttributes;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ui.color.ColorValue;
 
@@ -32,7 +33,7 @@ public abstract class SeveritiesProvider {
   public static final ExtensionPointName<SeveritiesProvider> EP_NAME = ExtensionPointName.create("consulo.severitiesProvider");
 
   /**
-   * @see com.intellij.openapi.editor.colors.TextAttributesKey#createTextAttributesKey(String, com.intellij.openapi.editor.markup.TextAttributes)
+   * @see TextAttributesKey#createTextAttributesKey(String, TextAttributes)
    */
   @Nonnull
   public abstract List<HighlightInfoType> getSeveritiesHighlightInfoTypes();

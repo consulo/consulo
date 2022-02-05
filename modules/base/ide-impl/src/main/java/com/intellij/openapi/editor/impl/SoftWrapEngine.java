@@ -4,7 +4,7 @@ package com.intellij.openapi.editor.impl;
 import consulo.document.Document;
 import com.intellij.openapi.editor.LanguageLineWrapPositionStrategy;
 import com.intellij.openapi.editor.LineWrapPositionStrategy;
-import com.intellij.openapi.editor.SoftWrap;
+import consulo.editor.SoftWrap;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapImpl;

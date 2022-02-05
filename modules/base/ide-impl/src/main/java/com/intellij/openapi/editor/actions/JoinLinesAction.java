@@ -17,11 +17,14 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
+import consulo.editor.Caret;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
+import consulo.editor.ScrollType;
 
 public class JoinLinesAction extends TextComponentEditorAction {
   public JoinLinesAction() {

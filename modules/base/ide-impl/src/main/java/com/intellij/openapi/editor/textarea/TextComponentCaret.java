@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.textarea;
 
-import com.intellij.openapi.editor.*;
+import consulo.editor.*;
 import consulo.util.dataholder.UserDataHolderBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

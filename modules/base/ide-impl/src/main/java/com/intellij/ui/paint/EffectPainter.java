@@ -16,6 +16,7 @@
 package com.intellij.ui.paint;
 
 import com.intellij.util.ui.RegionPainter;
+import consulo.editor.markup.EffectType;
 
 import java.awt.*;
 
@@ -24,7 +25,7 @@ import java.awt.*;
  */
 public enum EffectPainter implements RegionPainter<Font> {
   /**
-   * @see com.intellij.openapi.editor.markup.EffectType#LINE_UNDERSCORE
+   * @see EffectType#LINE_UNDERSCORE
    */
   LINE_UNDERSCORE {
     /**
@@ -43,7 +44,7 @@ public enum EffectPainter implements RegionPainter<Font> {
     }
   },
   /**
-   * @see com.intellij.openapi.editor.markup.EffectType#BOLD_LINE_UNDERSCORE
+   * @see EffectType#BOLD_LINE_UNDERSCORE
    */
   BOLD_LINE_UNDERSCORE {
     /**
@@ -62,7 +63,7 @@ public enum EffectPainter implements RegionPainter<Font> {
     }
   },
   /**
-   * @see com.intellij.openapi.editor.markup.EffectType#BOLD_DOTTED_LINE
+   * @see EffectType#BOLD_DOTTED_LINE
    */
   BOLD_DOTTED_UNDERSCORE {
     /**
@@ -81,7 +82,7 @@ public enum EffectPainter implements RegionPainter<Font> {
     }
   },
   /**
-   * @see com.intellij.openapi.editor.markup.EffectType#WAVE_UNDERSCORE
+   * @see EffectType#WAVE_UNDERSCORE
    */
   WAVE_UNDERSCORE {
     /**
@@ -100,7 +101,7 @@ public enum EffectPainter implements RegionPainter<Font> {
     }
   },
   /**
-   * @see com.intellij.openapi.editor.markup.EffectType#STRIKEOUT
+   * @see EffectType#STRIKEOUT
    */
   STRIKE_THROUGH {
     /**

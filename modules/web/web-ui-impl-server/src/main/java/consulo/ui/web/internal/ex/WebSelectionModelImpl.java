@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.openapi.editor.SelectionModel;
+import consulo.editor.SelectionModel;
 import consulo.editor.impl.CodeEditorBase;
 import consulo.editor.impl.CodeEditorSelectionModelBase;
 

@@ -18,8 +18,8 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.language.ast.TokenSet;
 import consulo.language.ast.IElementType;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.highlighter.HighlighterIterator;
+import consulo.editor.Editor;
 import consulo.document.Document;
 
 public class SimpleTokenSetQuoteHandler implements QuoteHandler {
@@ -35,7 +35,7 @@ public class SimpleTokenSetQuoteHandler implements QuoteHandler {
 
   @Override
   public boolean isClosingQuote(HighlighterIterator iterator, int offset) {
-    final IElementType tokenType = iterator.getTokenType();
+    final IElementType tokenType = (IElementType)iterator.getTokenType();
 
     if (myLiteralTokenSet.contains(tokenType)){
       int start = iterator.getStart();
@@ -48,7 +48,7 @@ public class SimpleTokenSetQuoteHandler implements QuoteHandler {
 
   @Override
   public boolean isOpeningQuote(HighlighterIterator iterator, int offset) {
-    if (myLiteralTokenSet.contains(iterator.getTokenType())){
+    if (myLiteralTokenSet.contains((IElementType)iterator.getTokenType())){
       int start = iterator.getStart();
       return offset == start;
     }
@@ -65,7 +65,7 @@ public class SimpleTokenSetQuoteHandler implements QuoteHandler {
       int lineEnd = doc.getLineEndOffset(doc.getLineNumber(offset));
 
       while (!iterator.atEnd() && iterator.getStart() < lineEnd) {
-        IElementType tokenType = iterator.getTokenType();
+        IElementType tokenType = (IElementType)iterator.getTokenType();
 
         if (myLiteralTokenSet.contains(tokenType)) {
           if (isNonClosedLiteral(iterator, chars)) return true;
@@ -90,6 +90,6 @@ public class SimpleTokenSetQuoteHandler implements QuoteHandler {
 
   @Override
   public boolean isInsideLiteral(HighlighterIterator iterator) {
-    return myLiteralTokenSet.contains(iterator.getTokenType());
+    return myLiteralTokenSet.contains((IElementType)iterator.getTokenType());
   }
 }

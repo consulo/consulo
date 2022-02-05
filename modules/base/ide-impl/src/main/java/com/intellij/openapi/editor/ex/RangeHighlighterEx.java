@@ -2,9 +2,9 @@
 
 package com.intellij.openapi.editor.ex;
 
-import com.intellij.openapi.editor.FoldRegion;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.FoldRegion;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import javax.annotation.Nonnull;
 
 import java.util.Comparator;

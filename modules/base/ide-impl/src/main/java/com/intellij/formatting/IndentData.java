@@ -16,7 +16,7 @@
 
 package com.intellij.formatting;
 
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

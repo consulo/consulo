@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
+import com.intellij.util.xmlb.JDOMExternalizerUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;

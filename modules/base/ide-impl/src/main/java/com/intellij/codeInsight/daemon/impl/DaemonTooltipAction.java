@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.ShowIntentionActionsHandler;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.TooltipAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

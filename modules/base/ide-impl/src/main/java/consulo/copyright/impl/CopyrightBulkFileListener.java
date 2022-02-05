@@ -18,7 +18,7 @@ package consulo.copyright.impl;
 import consulo.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import consulo.document.Document;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.EditorFactory;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.FileDocumentManager;

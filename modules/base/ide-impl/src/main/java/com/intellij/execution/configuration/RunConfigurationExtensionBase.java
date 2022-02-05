@@ -22,7 +22,7 @@ import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.options.SettingsEditor;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.WriteExternalException;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

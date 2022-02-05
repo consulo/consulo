@@ -25,7 +25,7 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 
 public class SelectLineAction extends TextComponentEditorAction {

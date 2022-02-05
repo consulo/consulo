@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.navigation.GotoRelatedItem;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import consulo.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

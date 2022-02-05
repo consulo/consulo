@@ -20,10 +20,10 @@ import consulo.language.Language;
 import com.intellij.lang.LanguageBraceMatching;
 import com.intellij.lang.PairedBraceMatcher;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeExtensionPoint;
 import consulo.language.file.LanguageFileType;
@@ -101,7 +101,7 @@ public class BraceMatchingUtil {
       this.forward = forward;
 
       myMatcher = getBraceMatcher(fileType, iterator);
-      brace1Token = this.iterator.getTokenType();
+      brace1Token = (IElementType)this.iterator.getTokenType();
       group = getTokenGroup(brace1Token, this.fileType);
       brace1TagName = getTagName(myMatcher, this.fileText, this.iterator);
 
@@ -204,16 +204,16 @@ public class BraceMatchingUtil {
     while (!iterator.atEnd()) {
       if (isStructuralBraceToken(fileType, iterator, fileText)) {
         if (isRBraceToken(iterator, fileText, fileType)) {
-          braceStack.push(iterator.getTokenType());
+          braceStack.push((IElementType)iterator.getTokenType());
           tagNameStack.push(getTagName(matcher, fileText, iterator));
         }
         if (isLBraceToken(iterator, fileText, fileType)) {
           if (braceStack.isEmpty()) return true;
 
-          final int group = matcher.getBraceTokenGroupId(iterator.getTokenType());
+          final int group = matcher.getBraceTokenGroupId((IElementType)iterator.getTokenType());
 
           final IElementType topTokenType = braceStack.pop();
-          final IElementType tokenType = iterator.getTokenType();
+          final IElementType tokenType = (IElementType)iterator.getTokenType();
 
           boolean isStrict = isStrictTagMatching(matcher, fileType, group);
           boolean isCaseSensitive = areTagsCaseSensitive(matcher, fileType, group);

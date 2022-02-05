@@ -2,7 +2,7 @@
 
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.SelectionModel;
+import consulo.editor.SelectionModel;
 import consulo.annotation.DeprecationInfo;
 import consulo.editor.impl.CodeEditorSelectionModelBase;
 

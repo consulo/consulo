@@ -22,11 +22,12 @@ import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.util.Comparing;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.WriteExternalException;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.editor.markup.RangeHighlighter;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
@@ -91,7 +92,7 @@ public interface HighlightInfoType {
           new HighlightInfoType.HighlightInfoTypeImpl(ELEMENT_UNDER_CARET_SEVERITY, EditorColors.WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES);
 
   /**
-   * @see com.intellij.openapi.editor.markup.RangeHighlighter#VISIBLE_IF_FOLDED
+   * @see RangeHighlighter#VISIBLE_IF_FOLDED
    */
   Set<HighlightInfoType> VISIBLE_IF_FOLDED = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
           ELEMENT_UNDER_CARET_READ,

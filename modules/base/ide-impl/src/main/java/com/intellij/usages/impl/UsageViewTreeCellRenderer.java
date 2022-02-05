@@ -16,7 +16,7 @@
 package com.intellij.usages.impl;
 
 import consulo.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;

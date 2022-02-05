@@ -19,7 +19,7 @@ import com.intellij.codeInsight.hints.InlayParameterHintsProvider;
 import com.intellij.codeInsight.hints.filtering.MatcherConstructor;
 import consulo.language.Language;
 import consulo.document.Document;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.fileTypes.PlainTextFileType;

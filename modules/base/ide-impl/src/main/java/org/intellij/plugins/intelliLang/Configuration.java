@@ -15,6 +15,7 @@
  */
 package org.intellij.plugins.intelliLang;
 
+import com.intellij.util.xmlb.JDOMExternalizerUtil;
 import consulo.util.lang.function.Condition;
 import consulo.language.Language;
 import com.intellij.openapi.command.UndoConfirmationPolicy;

@@ -19,10 +19,10 @@
  */
 package com.intellij.application.options.colors;
 
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.TextAttributes;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;

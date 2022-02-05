@@ -3,7 +3,7 @@ package com.intellij.ui.components.fields.valueEditors;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

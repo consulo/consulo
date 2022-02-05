@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor.ex.util;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.highlighter.HighlighterIterator;
+import consulo.editor.markup.TextAttributes;
 import consulo.language.ast.IElementType;
 
 /**
@@ -47,7 +47,7 @@ public class HighlighterIteratorWrapper implements HighlighterIterator {
 
   @Override
   public IElementType getTokenType() {
-    return myOriginal.getTokenType();
+    return (IElementType)myOriginal.getTokenType();
   }
 
   @Override

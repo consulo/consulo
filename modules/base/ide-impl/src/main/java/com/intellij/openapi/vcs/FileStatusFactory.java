@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.editor.colors.EditorColorKey;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorKey;
+import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 

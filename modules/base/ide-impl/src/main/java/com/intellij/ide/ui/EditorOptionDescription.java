@@ -16,7 +16,7 @@
 package com.intellij.ide.ui;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

@@ -19,7 +19,7 @@ import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

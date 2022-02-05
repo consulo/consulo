@@ -6,7 +6,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;

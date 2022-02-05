@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
+import consulo.editor.internal.PrioritizedDocumentListener;
 
 /**
  * Holds values to use for common {@link PrioritizedDocumentListener prioritized document listeners} used within standard IntelliJ

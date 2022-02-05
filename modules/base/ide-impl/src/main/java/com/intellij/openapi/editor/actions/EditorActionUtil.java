@@ -24,17 +24,18 @@
  */
 package com.intellij.openapi.editor.actions;
 
+import consulo.editor.*;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.event.EditorMouseEvent;
-import com.intellij.openapi.editor.event.EditorMouseEventArea;
+import consulo.editor.event.EditorMouseEvent;
+import consulo.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -245,9 +246,9 @@ public class EditorActionUtil {
     if (it.getStart() != offset) {
       return false;
     }
-    IElementType rightToken = it.getTokenType();
+    IElementType rightToken = (IElementType)it.getTokenType();
     it.retreat();
-    IElementType leftToken = it.getTokenType();
+    IElementType leftToken = (IElementType)it.getTokenType();
     return !Comparing.equal(leftToken, rightToken);
   }
 
@@ -950,10 +951,10 @@ public class EditorActionUtil {
 
   private static boolean retreatTokenOnBoundary(@Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text, int offset) {
     if (isTokenStart(tokenIterator, offset)) {
-      final IElementType rightToken = tokenIterator.getTokenType();
+      final IElementType rightToken = (IElementType)tokenIterator.getTokenType();
       final boolean wasQuotedToken = isQuotedToken(tokenIterator, text);
       tokenIterator.retreat();
-      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary(tokenIterator.getTokenType(), rightToken);
+      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary((IElementType)tokenIterator.getTokenType(), rightToken);
     }
     return isQuotedTokenInnardsBoundary(tokenIterator, text, offset);
   }
@@ -1024,10 +1025,10 @@ public class EditorActionUtil {
 
   private static boolean advanceTokenOnBoundary(@Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text, int offset) {
     if (isTokenEnd(tokenIterator, offset)) {
-      final IElementType leftToken = tokenIterator.getTokenType();
+      final IElementType leftToken = (IElementType)tokenIterator.getTokenType();
       final boolean wasQuotedToken = isQuotedToken(tokenIterator, text);
       tokenIterator.advance();
-      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary(leftToken, tokenIterator.getTokenType());
+      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary(leftToken, (IElementType)tokenIterator.getTokenType());
     }
     return isQuotedTokenInnardsBoundary(tokenIterator, text, offset);
   }

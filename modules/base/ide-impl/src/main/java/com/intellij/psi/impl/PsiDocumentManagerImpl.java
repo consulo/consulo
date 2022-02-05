@@ -9,7 +9,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.document.Document;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.EditorFactory;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import consulo.document.FileDocumentManager;

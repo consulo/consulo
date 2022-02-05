@@ -16,8 +16,8 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts.nodes;
 
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactProblemDescription;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;

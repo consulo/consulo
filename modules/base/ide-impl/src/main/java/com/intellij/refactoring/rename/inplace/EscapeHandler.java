@@ -20,8 +20,8 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
+import consulo.editor.Editor;
+import consulo.editor.SelectionModel;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 
 /**

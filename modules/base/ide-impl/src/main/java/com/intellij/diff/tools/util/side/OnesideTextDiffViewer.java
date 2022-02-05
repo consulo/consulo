@@ -31,7 +31,7 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineCol;
 import com.intellij.diff.util.Side;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;

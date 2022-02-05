@@ -16,12 +16,12 @@
 package com.intellij.application.options.colors.highlighting;
 
 import com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorCustomElementRenderer;
-import com.intellij.openapi.editor.Inlay;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.Editor;
+import consulo.editor.EditorCustomElementRenderer;
+import consulo.editor.Inlay;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.markup.TextAttributes;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;

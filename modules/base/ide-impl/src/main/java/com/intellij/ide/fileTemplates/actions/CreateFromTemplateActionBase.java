@@ -28,7 +28,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

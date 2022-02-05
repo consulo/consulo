@@ -3,7 +3,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.intention.IntentionActionProvider;
 import com.intellij.codeInsight.intention.IntentionActionWithOptions;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;

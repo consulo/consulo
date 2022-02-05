@@ -2,7 +2,6 @@
 package com.intellij.openapi.editor.impl.event;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import consulo.component.extension.ExtensionPointName;
@@ -10,7 +9,8 @@ import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.editor.internal.EditorInternal;
+import consulo.editor.event.*;
+import consulo.editor.impl.EditorInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;

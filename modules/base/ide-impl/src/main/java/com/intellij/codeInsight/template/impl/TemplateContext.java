@@ -19,8 +19,8 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.template.EverywhereContextType;
 import com.intellij.codeInsight.template.TemplateContextType;
-import consulo.component.persist.InvalidDataException;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.InvalidDataException;
+import com.intellij.util.xmlb.WriteExternalException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.editor.TextAnnotationGutterProvider;
-import com.intellij.openapi.editor.EditorGutterAction;
+import consulo.editor.TextAnnotationGutterProvider;
+import consulo.editor.EditorGutterAction;
 
 public interface ActiveAnnotationGutter extends TextAnnotationGutterProvider, EditorGutterAction {
 }

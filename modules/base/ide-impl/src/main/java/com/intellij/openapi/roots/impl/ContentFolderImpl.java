@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.impl;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import com.intellij.openapi.util.Comparing;
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;

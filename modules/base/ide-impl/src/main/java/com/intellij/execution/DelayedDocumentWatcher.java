@@ -20,7 +20,7 @@ import com.intellij.execution.testframework.autotest.AutoTestWatcher;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.document.Document;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.FileDocumentManager;

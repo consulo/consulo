@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.structureView;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import consulo.language.psi.PsiFile;

@@ -16,7 +16,7 @@
 package com.intellij.application.options.colors;
 
 import com.intellij.application.options.colors.OptionsPanelImpl.ColorDescriptionPanel;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.util.lang.function.Condition;
 import javax.annotation.Nonnull;
 

@@ -20,7 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.openapi.util.Pair;
 import consulo.project.Project;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 
 import java.util.List;
 

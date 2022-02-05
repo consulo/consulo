@@ -20,7 +20,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -41,7 +41,7 @@ import com.intellij.refactoring.rename.RenamePsiElementProcessor;
 import com.intellij.refactoring.rename.naming.AutomaticRenamerFactory;
 import com.intellij.usageView.UsageViewUtil;
 import consulo.codeInsight.TargetElementUtil;
-import consulo.editor.internal.EditorInternal;
+import consulo.editor.impl.EditorInternal;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -17,6 +17,7 @@ package com.intellij.util;
 
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.collection.Maps;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -84,10 +85,7 @@ public class ConcurrencyUtil {
    */
   @Nonnull
   public static <K, V> V cacheOrGet(@Nonnull Map<K, V> map, @Nonnull final K key, @Nonnull final V defaultValue) {
-    V v = map.get(key);
-    if (v != null) return v;
-    V prev = map.putIfAbsent(key, defaultValue);
-    return prev == null ? defaultValue : prev;
+    return Maps.cacheOrGet(map, key, defaultValue);
   }
 
   /**
@@ -96,7 +94,7 @@ public class ConcurrencyUtil {
    */
   @Nonnull
   public static <K, V> V cacheOrGet(@Nonnull ConcurrentMap<K, V> map, @Nonnull final K key, @Nonnull final V defaultValue) {
-    return cacheOrGet((Map<K, V>)map, key, defaultValue);
+    return Maps.cacheOrGet(map, key, defaultValue);
   }
 
   /**

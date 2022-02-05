@@ -21,27 +21,28 @@ import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.util.PsiUtilBase;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.dataContext.DataContext;
+import consulo.document.util.TextRange;
+import consulo.editor.Caret;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
+import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import java.util.List;
 
 public class BackspaceHandler extends EditorWriteActionHandler {
@@ -125,7 +126,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
         return true;
       }
 
-      int rparenOffset = BraceMatchingUtil.findRightmostRParen(iterator, iterator.getTokenType() ,chars,fileType);
+      int rparenOffset = BraceMatchingUtil.findRightmostRParen(iterator, (IElementType)iterator.getTokenType(), chars, fileType);
       if (rparenOffset >= 0){
         iterator = ((EditorEx)editor).getHighlighter().createIterator(rparenOffset);
         boolean matched = BraceMatchingUtil.matchBrace(chars, fileType, iterator, false);

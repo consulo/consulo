@@ -2,7 +2,6 @@
 package consulo.editor.impl;
 
 import com.intellij.diagnostic.Dumpable;
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.impl.FontPreferencesImpl;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.*;
@@ -20,6 +19,7 @@ import consulo.document.util.TextRange;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
+import consulo.editor.*;
 import consulo.editor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;

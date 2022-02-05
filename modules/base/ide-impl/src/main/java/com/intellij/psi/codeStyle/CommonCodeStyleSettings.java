@@ -15,11 +15,12 @@
  */
 package com.intellij.psi.codeStyle;
 
+import com.intellij.util.xmlb.DefaultJDOMExternalizer;
 import consulo.language.Language;
-import consulo.component.persist.JDOMExternalizable;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.JDOMExternalizable;
+import com.intellij.util.xmlb.WriteExternalException;
 import consulo.document.Document;
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.*;
 import consulo.language.psi.PsiDocumentManager;

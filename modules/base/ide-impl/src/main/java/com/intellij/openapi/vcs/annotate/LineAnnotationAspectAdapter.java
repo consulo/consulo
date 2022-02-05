@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.annotate;
 
-import com.intellij.openapi.editor.EditorGutterAction;
+import consulo.editor.EditorGutterAction;
 
 import java.awt.*;
 

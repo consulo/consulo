@@ -15,9 +15,9 @@
  */
 package com.intellij.refactoring.introduce.inplace;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -25,6 +25,10 @@ import com.intellij.openapi.util.Pass;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.document.util.TextRange;
+import consulo.editor.markup.HighlighterTargetArea;
+import consulo.editor.markup.MarkupModel;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;

@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.markup.TextAttributes;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

@@ -17,14 +17,17 @@ package consulo.desktop.swt.editor.impl;
 
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import consulo.editor.EditorGutter;
+import consulo.editor.EditorKind;
+import consulo.editor.LogicalPosition;
+import consulo.editor.VisualPosition;
 import consulo.project.Project;
 import consulo.document.Document;
 import consulo.editor.impl.*;
-import consulo.editor.internal.EditorInternal;
+import consulo.editor.impl.EditorInternal;
 import consulo.ui.Component;
 import org.intellij.lang.annotations.MagicConstant;
 

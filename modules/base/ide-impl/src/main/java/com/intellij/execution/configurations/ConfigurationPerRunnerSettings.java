@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.configurations;
 
-import consulo.component.persist.JDOMExternalizable;
+import com.intellij.util.xmlb.JDOMExternalizable;
 
 /**
  * Settings of a run configuration which refer to a specific runner and are managed by the run configuration, rather than the runner.

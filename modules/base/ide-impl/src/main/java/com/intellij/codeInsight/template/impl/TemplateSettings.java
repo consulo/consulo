@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInsight.template.impl;
 
+import com.intellij.util.xmlb.InvalidDataException;
+import com.intellij.util.xmlb.WriteExternalException;
 import consulo.component.persist.*;
 import consulo.component.util.localize.AbstractBundle;
 import com.intellij.codeInsight.template.Template;

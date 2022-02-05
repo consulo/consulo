@@ -21,7 +21,7 @@ import com.intellij.codeInsight.ContainerProvider;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

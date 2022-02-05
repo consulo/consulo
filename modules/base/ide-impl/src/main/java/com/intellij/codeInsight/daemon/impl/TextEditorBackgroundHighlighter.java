@@ -21,7 +21,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiCompiledFile;
 import consulo.language.psi.PsiDocumentManager;

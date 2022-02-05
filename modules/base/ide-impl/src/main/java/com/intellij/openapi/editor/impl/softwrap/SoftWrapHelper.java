@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.softwrap;
 
-import com.intellij.openapi.editor.*;
+import consulo.editor.*;
 
 /**
  * Holds utility methods for soft wraps-related processing.

@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle.arrangement.engine;
 
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import consulo.project.DumbService;
 import com.intellij.openapi.util.Pair;

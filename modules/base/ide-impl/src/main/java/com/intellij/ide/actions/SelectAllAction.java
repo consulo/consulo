@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actions.TextComponentEditorAction;
 import consulo.application.dumb.DumbAware;

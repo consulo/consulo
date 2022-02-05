@@ -3,8 +3,8 @@ package com.intellij.codeInsight.hint;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.openapi.editor.colors.EditorColorKey;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorKey;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.util.lang.ref.Ref;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;

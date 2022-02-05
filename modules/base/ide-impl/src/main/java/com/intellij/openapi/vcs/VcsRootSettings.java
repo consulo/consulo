@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs;
 
-import consulo.component.persist.JDOMExternalizable;
+import com.intellij.util.xmlb.JDOMExternalizable;
 
 /**
  * Marker interface for per-root VCS-dependent settings.

@@ -23,7 +23,7 @@ import com.intellij.lang.refactoring.InlineHandlers;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;

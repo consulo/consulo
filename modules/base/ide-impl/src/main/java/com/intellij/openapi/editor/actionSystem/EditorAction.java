@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actionSystem;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.ActionManager;

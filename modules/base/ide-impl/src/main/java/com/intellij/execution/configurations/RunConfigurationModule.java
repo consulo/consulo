@@ -9,7 +9,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.ModulePointerManager;
 import consulo.project.Project;
-import consulo.component.persist.JDOMExternalizable;
+import com.intellij.util.xmlb.JDOMExternalizable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;

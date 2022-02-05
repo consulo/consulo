@@ -16,9 +16,9 @@
 package com.intellij.refactoring.ui;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.virtualFileSystem.fileType.FileType;

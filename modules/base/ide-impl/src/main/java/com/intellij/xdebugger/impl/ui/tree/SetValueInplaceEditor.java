@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.ui.tree;
 
 import com.intellij.codeInsight.hint.HintManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.SimpleColoredComponent;

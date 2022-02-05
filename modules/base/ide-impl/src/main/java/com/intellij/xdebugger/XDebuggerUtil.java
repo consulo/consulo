@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

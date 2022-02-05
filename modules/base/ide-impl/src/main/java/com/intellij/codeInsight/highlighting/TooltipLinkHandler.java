@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.highlighting;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ public abstract class TooltipLinkHandler {
 
   /**
    * Override to show extended description on mouse clicks on a link or expand action.
-   * This method is only called if {@link #handleLink(String, com.intellij.openapi.editor.Editor)}
+   * This method is only called if {@link #handleLink(String, Editor)}
    * returned {@code false}.
    *
    * @param refSuffix part of link's href attribute after registered prefix.

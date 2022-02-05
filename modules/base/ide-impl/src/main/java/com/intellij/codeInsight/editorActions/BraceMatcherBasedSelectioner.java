@@ -18,9 +18,9 @@ package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.highlighting.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.Trinity;
@@ -52,10 +52,10 @@ public abstract class BraceMatcherBasedSelectioner extends ExtendWordSelectionHa
     while (!iterator.atEnd() && iterator.getStart() < totalRange.getEndOffset()) {
       final Trinity<Integer, Integer, IElementType> last;
       if (braceMatcher.isLBraceToken(iterator, editorText, fileType)) {
-        stack.addLast(Trinity.create(iterator.getStart(), iterator.getEnd(), iterator.getTokenType()));
+        stack.addLast(Trinity.create(iterator.getStart(), iterator.getEnd(), (IElementType) iterator.getTokenType()));
       }
       else if (braceMatcher.isRBraceToken(iterator, editorText, fileType)
-          && !stack.isEmpty() && braceMatcher.isPairBraces((last = stack.getLast()).third, iterator.getTokenType())) {
+          && !stack.isEmpty() && braceMatcher.isPairBraces((last = stack.getLast()).third, (IElementType)iterator.getTokenType())) {
         stack.removeLast();
         result.addAll(expandToWholeLine(editorText, new TextRange(last.first, iterator.getEnd())));
         int bodyStart = last.second;

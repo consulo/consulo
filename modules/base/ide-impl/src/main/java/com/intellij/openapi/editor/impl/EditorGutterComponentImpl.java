@@ -2,7 +2,7 @@
 
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.codeInsight.daemon.GutterMark;
+import consulo.editor.markup.*;
 import com.intellij.codeInsight.daemon.NonHideableIconGutterMark;
 import com.intellij.codeInsight.folding.impl.FoldingUtil;
 import com.intellij.codeInsight.hint.TooltipController;
@@ -17,10 +17,11 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.EditorColorKey;
+import consulo.editor.colorScheme.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorFontType;
-import com.intellij.openapi.editor.event.EditorMouseEventArea;
+import consulo.editor.colorScheme.EditorFontType;
+import consulo.editor.*;
+import consulo.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;

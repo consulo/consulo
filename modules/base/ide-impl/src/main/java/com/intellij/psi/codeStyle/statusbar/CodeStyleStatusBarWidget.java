@@ -5,7 +5,7 @@ import com.intellij.application.options.CodeStyle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

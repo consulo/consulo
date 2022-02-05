@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.codeInsight.completion.PrefixMatcher;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

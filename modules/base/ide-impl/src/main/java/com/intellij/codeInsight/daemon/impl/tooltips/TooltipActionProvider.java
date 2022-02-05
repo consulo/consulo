@@ -3,7 +3,7 @@ package com.intellij.codeInsight.daemon.impl.tooltips;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.TooltipAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;

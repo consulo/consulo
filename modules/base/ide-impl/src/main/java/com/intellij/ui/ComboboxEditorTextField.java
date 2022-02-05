@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListener;
 import consulo.virtualFileSystem.fileType.FileType;

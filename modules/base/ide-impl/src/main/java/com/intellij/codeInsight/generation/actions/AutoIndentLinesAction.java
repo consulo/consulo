@@ -22,7 +22,7 @@ import com.intellij.codeInsight.generation.AutoIndentLinesHandler;
 import com.intellij.lang.LanguageFormatting;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import consulo.application.dumb.DumbAware;

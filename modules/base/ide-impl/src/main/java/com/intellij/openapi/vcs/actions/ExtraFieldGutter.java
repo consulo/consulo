@@ -13,7 +13,7 @@
 package com.intellij.openapi.vcs.actions;
 
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;

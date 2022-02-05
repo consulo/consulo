@@ -16,7 +16,7 @@
 
 package com.intellij.ide.highlighter.custom;
 
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 
 public interface CustomHighlighterColors {
   TextAttributesKey CUSTOM_KEYWORD1_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("CUSTOM_KEYWORD1_ATTRIBUTES");

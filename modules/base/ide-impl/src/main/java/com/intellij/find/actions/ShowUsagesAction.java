@@ -28,7 +28,7 @@ import com.intellij.ide.util.gotoByName.ModelDiff;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.TextEditor;

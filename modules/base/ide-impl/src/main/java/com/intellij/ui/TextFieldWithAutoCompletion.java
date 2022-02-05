@@ -20,7 +20,7 @@ import com.intellij.codeInsight.hint.HintManager;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;

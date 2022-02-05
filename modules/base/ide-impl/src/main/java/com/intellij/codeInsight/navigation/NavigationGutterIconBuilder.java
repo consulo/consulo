@@ -23,7 +23,7 @@ import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.navigation.GotoRelatedItem;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import consulo.editor.markup.GutterIconRenderer;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.NotNullLazyValue;
@@ -43,7 +43,7 @@ import java.text.MessageFormat;
 import java.util.*;
 
 /**
- * DOM-specific builder for {@link com.intellij.openapi.editor.markup.GutterIconRenderer}
+ * DOM-specific builder for {@link GutterIconRenderer}
  * and {@link com.intellij.codeInsight.daemon.LineMarkerInfo}.
  *
  * @author peter

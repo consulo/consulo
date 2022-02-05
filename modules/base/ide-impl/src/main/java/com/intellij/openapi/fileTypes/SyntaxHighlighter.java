@@ -17,7 +17,7 @@ package com.intellij.openapi.fileTypes;
 
 import consulo.language.Language;
 import consulo.language.lexer.Lexer;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.KeyedFactoryEPBean;
 import consulo.project.Project;

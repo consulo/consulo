@@ -20,7 +20,7 @@ import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.notification.impl.NotificationsConfigurable;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;

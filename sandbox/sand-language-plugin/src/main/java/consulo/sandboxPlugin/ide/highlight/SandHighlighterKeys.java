@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.ide.highlight;
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.sandboxPlugin.lang.SandLanguage;
 
 /**

@@ -28,7 +28,7 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

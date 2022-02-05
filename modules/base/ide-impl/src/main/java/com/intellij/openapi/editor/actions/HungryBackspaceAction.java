@@ -17,10 +17,10 @@ package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.editor.Caret;
+import consulo.editor.Caret;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
+import consulo.editor.Editor;
+import consulo.editor.SelectionModel;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;

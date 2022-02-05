@@ -24,7 +24,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.Pair;

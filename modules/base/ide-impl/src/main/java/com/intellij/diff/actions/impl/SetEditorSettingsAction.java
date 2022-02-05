@@ -21,12 +21,12 @@ import com.intellij.diff.tools.util.base.TextDiffSettingsHolder;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.actions.AbstractToggleUseSoftWrapsAction;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.editor.internal.EditorInternal;
+import consulo.editor.impl.EditorInternal;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;

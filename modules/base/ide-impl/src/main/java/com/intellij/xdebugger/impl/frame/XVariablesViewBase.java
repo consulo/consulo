@@ -16,10 +16,10 @@
 package com.intellij.xdebugger.impl.frame;
 
 import com.intellij.ide.dnd.DnDManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.event.SelectionEvent;
-import com.intellij.openapi.editor.event.SelectionListener;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
+import consulo.editor.event.SelectionEvent;
+import consulo.editor.event.SelectionListener;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

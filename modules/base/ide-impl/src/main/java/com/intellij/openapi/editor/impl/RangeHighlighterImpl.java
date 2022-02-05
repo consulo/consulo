@@ -1,17 +1,17 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.codeInsight.daemon.GutterMark;
+import consulo.editor.markup.GutterMark;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Consumer;
+import consulo.editor.markup.*;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;

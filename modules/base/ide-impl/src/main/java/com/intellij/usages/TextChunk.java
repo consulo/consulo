@@ -15,8 +15,8 @@
  */
 package com.intellij.usages;
 
-import com.intellij.openapi.editor.markup.AttributesFlyweight;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.AttributesFlyweight;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.usages.impl.rules.UsageType;
 import javax.annotation.Nonnull;

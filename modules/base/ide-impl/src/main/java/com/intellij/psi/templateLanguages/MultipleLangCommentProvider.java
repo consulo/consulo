@@ -17,7 +17,7 @@ package com.intellij.psi.templateLanguages;
 
 import com.intellij.lang.Commenter;
 import consulo.language.Language;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;

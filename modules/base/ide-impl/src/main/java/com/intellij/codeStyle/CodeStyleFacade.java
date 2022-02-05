@@ -22,7 +22,7 @@ package com.intellij.codeStyle;
 import consulo.language.Language;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.configurable.Configurable;

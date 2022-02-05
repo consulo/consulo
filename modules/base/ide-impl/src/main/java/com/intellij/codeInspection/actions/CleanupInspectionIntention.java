@@ -27,7 +27,7 @@ import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.codeInspection.ex.PerformFixesModalTask;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

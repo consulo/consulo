@@ -17,10 +17,10 @@ package com.intellij.diff.util;
 
 import com.intellij.diff.fragments.DiffFragment;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.*;
@@ -30,6 +30,7 @@ import consulo.application.ui.awt.JBColor;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
+import consulo.editor.markup.*;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 

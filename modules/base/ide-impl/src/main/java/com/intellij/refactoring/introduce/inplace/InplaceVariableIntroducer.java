@@ -26,7 +26,7 @@ import com.intellij.lang.LanguageTokenSeparatorGenerators;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;

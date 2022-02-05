@@ -19,7 +19,7 @@ package com.intellij.codeInsight.highlighting;
 import com.intellij.lang.BracePair;
 import consulo.language.Language;
 import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;

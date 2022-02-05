@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.actions;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.ex.LineStatusTracker;
 import com.intellij.openapi.vcs.ex.LineStatusTrackerDrawing;

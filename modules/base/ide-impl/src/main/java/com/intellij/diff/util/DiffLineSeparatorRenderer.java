@@ -15,15 +15,15 @@
  */
 package com.intellij.diff.util;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.colors.EditorColorKey;
+import consulo.editor.Editor;
+import consulo.editor.colorScheme.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
-import com.intellij.openapi.editor.markup.LineSeparatorRenderer;
+import consulo.editor.markup.LineSeparatorRenderer;
 import consulo.application.ui.awt.GraphicsConfig;
 import com.intellij.openapi.util.BooleanGetter;
 import consulo.application.ui.awt.GraphicsUtil;

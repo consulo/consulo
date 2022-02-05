@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.editor.colors;
 
+import consulo.editor.colorScheme.EditorColorKey;
+import consulo.editor.colorScheme.TextAttributesKey;
+
 @SuppressWarnings("unused")
 public interface CodeInsightColors {
   TextAttributesKey WRONG_REFERENCES_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("WRONG_REFERENCES_ATTRIBUTES");

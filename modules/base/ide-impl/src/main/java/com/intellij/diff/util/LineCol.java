@@ -16,7 +16,7 @@
 package com.intellij.diff.util;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import javax.annotation.Nonnull;
 
 public class LineCol {

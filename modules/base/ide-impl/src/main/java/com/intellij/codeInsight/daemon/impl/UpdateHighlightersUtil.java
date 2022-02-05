@@ -2,12 +2,12 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.daemon.GutterMark;
+import consulo.editor.markup.GutterMark;
 import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
@@ -16,6 +16,7 @@ import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.RedBlackTree;
 import com.intellij.openapi.editor.impl.SweepProcessor;
 import com.intellij.openapi.editor.markup.*;
+import consulo.editor.markup.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;

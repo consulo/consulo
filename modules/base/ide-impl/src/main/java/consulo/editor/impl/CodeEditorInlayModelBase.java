@@ -3,7 +3,6 @@ package consulo.editor.impl;
 
 import com.intellij.diagnostic.Dumpable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.*;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.PrioritizedInternalDocumentListener;
@@ -15,6 +14,10 @@ import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
+import consulo.editor.EditorCustomElementRenderer;
+import consulo.editor.Inlay;
+import consulo.editor.InlayModel;
+import consulo.editor.VisualPosition;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

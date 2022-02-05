@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.ide.highlight;
 
 import consulo.language.version.LanguageVersion;
 import consulo.language.lexer.Lexer;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.language.ast.IElementType;
 import consulo.fileTypes.LanguageVersionableSyntaxHighlighter;
 import javax.annotation.Nonnull;

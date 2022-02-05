@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.highlighting;
 
 import consulo.codeInsight.TargetElementUtil;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

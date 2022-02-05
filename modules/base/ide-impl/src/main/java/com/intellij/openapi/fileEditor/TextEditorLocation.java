@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.LogicalPosition;
+import consulo.editor.LogicalPosition;
 import javax.annotation.Nonnull;
 
 /**

@@ -12,7 +12,7 @@ import com.intellij.lang.parameterInfo.LanguageParameterInfo;
 import com.intellij.lang.parameterInfo.ParameterInfoHandler;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorActivityManager;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;

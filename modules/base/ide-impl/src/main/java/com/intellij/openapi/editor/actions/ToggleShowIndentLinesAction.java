@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 
 public class ToggleShowIndentLinesAction extends EditorToggleDecorationAction {
   @Override

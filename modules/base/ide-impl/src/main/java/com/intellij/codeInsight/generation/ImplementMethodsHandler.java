@@ -21,7 +21,7 @@ import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.lang.CodeInsightActions;
 import consulo.language.Language;
 import com.intellij.lang.LanguageCodeInsightActionHandler;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

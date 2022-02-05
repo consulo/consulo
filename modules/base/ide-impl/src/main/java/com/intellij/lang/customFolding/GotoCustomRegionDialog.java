@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.language.Language;
 import com.intellij.lang.folding.*;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.language.file.FileViewProvider;

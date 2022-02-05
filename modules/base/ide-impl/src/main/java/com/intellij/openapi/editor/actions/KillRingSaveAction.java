@@ -18,8 +18,8 @@ package com.intellij.openapi.editor.actions;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.DocumentRunnable;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
+import consulo.editor.Editor;
+import consulo.editor.SelectionModel;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.ide.KillRingTransferable;
 

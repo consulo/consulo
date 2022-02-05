@@ -8,7 +8,7 @@ import consulo.application.ui.awt.ColorUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

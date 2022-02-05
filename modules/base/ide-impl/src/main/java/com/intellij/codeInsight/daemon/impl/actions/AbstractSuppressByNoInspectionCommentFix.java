@@ -23,7 +23,7 @@ import com.intellij.codeInspection.SuppressionUtil;
 import consulo.language.Language;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.UndoUtil;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.language.psi.PsiComment;

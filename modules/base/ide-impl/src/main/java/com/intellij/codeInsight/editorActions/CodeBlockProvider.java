@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;

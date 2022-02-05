@@ -3,20 +3,20 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.IdeEventQueue;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Caret;
+import consulo.editor.Caret;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.CaretEvent;
-import com.intellij.openapi.editor.event.CaretListener;
-import com.intellij.openapi.editor.event.SelectionEvent;
-import com.intellij.openapi.editor.event.SelectionListener;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.event.CaretEvent;
+import consulo.editor.event.CaretListener;
+import consulo.editor.event.SelectionEvent;
+import consulo.editor.event.SelectionListener;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.markup.MarkupModel;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.MarkupModel;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
@@ -36,8 +36,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import static com.intellij.openapi.editor.markup.EffectType.LINE_UNDERSCORE;
-import static com.intellij.openapi.editor.markup.HighlighterTargetArea.EXACT_RANGE;
+import static consulo.editor.markup.EffectType.LINE_UNDERSCORE;
+import static consulo.editor.markup.HighlighterTargetArea.EXACT_RANGE;
 
 public class FocusModeModel implements Disposable {
   public static final Key<TextAttributes> FOCUS_MODE_ATTRIBUTES = Key.create("editor.focus.mode.attributes");

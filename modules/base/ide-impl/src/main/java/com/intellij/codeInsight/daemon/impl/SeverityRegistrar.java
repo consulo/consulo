@@ -18,12 +18,12 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;
-import consulo.component.persist.InvalidDataException;
-import consulo.component.persist.JDOMExternalizable;
+import com.intellij.util.xmlb.InvalidDataException;
+import com.intellij.util.xmlb.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMExternalizableStringList;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.WriteExternalException;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.util.concurrency.AtomicFieldUpdater;

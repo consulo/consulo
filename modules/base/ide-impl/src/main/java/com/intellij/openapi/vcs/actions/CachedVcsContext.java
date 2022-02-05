@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.Change;

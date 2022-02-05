@@ -19,7 +19,7 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.editorActions.CodeDocumentationUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;

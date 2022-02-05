@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.intention;
 
 import consulo.application.Application;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.component.util.Iconable;

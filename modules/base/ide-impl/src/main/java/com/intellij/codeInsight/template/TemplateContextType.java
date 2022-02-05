@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.template;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.EditorFactory;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import consulo.project.Project;

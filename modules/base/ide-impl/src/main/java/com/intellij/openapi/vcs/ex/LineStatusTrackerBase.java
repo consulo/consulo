@@ -25,7 +25,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
+import consulo.editor.markup.RangeHighlighter;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.document.util.TextRange;

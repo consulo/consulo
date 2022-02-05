@@ -25,7 +25,7 @@ import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

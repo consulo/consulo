@@ -25,7 +25,7 @@ import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

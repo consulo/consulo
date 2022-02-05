@@ -19,7 +19,7 @@ import com.intellij.codeInsight.lookup.LookupEx;
 import com.intellij.codeInsight.lookup.LookupManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

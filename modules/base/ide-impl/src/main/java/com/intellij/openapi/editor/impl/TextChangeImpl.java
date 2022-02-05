@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.TextChange;
+import consulo.editor.TextChange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceBackedByArray;

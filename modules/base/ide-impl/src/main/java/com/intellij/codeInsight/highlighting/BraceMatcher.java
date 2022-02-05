@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.highlighting;
 
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.HighlighterIterator;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeExtensionPoint;

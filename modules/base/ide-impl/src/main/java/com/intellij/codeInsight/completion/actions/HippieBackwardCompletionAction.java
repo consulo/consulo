@@ -19,7 +19,7 @@ package com.intellij.codeInsight.completion.actions;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

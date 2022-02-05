@@ -2,7 +2,7 @@
 package com.intellij.execution.filters;
 
 import consulo.application.Application;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

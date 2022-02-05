@@ -4,7 +4,7 @@ package com.intellij.openapi.vfs.encoding;
 import com.intellij.AppTopics;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;

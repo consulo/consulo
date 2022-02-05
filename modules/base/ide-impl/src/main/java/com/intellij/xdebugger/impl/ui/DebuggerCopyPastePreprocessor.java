@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.codeInsight.editorActions.CopyPastePreProcessor;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.RawText;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

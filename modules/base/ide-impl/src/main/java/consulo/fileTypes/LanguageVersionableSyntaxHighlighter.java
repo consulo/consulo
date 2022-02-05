@@ -17,7 +17,7 @@ package consulo.fileTypes;
 
 import consulo.language.version.LanguageVersion;
 import consulo.language.lexer.Lexer;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;

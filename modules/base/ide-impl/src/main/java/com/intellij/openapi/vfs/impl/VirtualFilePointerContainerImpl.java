@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.impl;
 
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.io.FileUtil;

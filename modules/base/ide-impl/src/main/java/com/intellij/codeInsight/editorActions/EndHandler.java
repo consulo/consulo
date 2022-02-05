@@ -25,6 +25,7 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.document.FileDocumentManager;
+import consulo.editor.*;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

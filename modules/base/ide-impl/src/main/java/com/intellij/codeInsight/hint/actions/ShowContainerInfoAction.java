@@ -22,7 +22,7 @@ import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

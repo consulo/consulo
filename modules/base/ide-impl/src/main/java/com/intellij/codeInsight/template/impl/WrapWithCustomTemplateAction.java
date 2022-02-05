@@ -6,7 +6,7 @@ import com.intellij.codeInsight.template.CustomTemplateCallback;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;

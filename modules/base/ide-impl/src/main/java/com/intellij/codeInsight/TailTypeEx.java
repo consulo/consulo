@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import org.jetbrains.annotations.NonNls;
 
 /**

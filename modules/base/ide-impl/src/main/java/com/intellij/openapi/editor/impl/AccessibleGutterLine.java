@@ -1,17 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.codeInsight.daemon.GutterMark;
+import consulo.editor.markup.GutterMark;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.TextAnnotationGutterProvider;
+import consulo.editor.Caret;
+import consulo.editor.Editor;
+import consulo.editor.TextAnnotationGutterProvider;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
-import com.intellij.openapi.editor.event.CaretEvent;
-import com.intellij.openapi.editor.event.CaretListener;
+import consulo.editor.event.CaretEvent;
+import consulo.editor.event.CaretListener;
 import com.intellij.openapi.editor.markup.ActiveGutterRenderer;
-import com.intellij.openapi.editor.markup.LineMarkerRenderer;
+import consulo.editor.markup.LineMarkerRenderer;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.IdeFocusManager;

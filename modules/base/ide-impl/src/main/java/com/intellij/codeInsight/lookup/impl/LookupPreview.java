@@ -17,10 +17,9 @@ package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.EditorFontType;
+import consulo.editor.colorScheme.EditorFontType;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.TextAttributes;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
@@ -29,6 +28,8 @@ import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.application.ui.awt.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
+import consulo.editor.*;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

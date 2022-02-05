@@ -3,14 +3,14 @@
 package com.intellij.codeInsight.highlighting;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.editor.event.*;
+import consulo.editor.Editor;
+import consulo.editor.EditorFactory;
+import consulo.editor.SelectionModel;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.editor.event.*;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import consulo.document.event.DocumentEvent;

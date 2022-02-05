@@ -18,7 +18,7 @@ package com.intellij.codeInspection.ex;
 import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.JDOMUtil;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.WriteExternalException;
 import org.jdom.Element;
 
 import java.util.*;

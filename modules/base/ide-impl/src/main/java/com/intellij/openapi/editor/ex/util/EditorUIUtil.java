@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.ex.util;
 
 import consulo.application.ui.awt.DesktopAntialiasingTypeUtil;
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.application.util.SystemInfo;
 import consulo.application.ui.awt.MacUIUtil;

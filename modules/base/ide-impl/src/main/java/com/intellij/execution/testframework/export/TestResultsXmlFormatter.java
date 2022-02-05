@@ -26,7 +26,7 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.application.progress.ProgressManager;
 import consulo.util.lang.ref.Ref;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Attribute;
 import org.jdom.Element;

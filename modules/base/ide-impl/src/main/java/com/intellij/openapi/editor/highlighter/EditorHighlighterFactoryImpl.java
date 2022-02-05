@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.editor.highlighter;
 
+import consulo.editor.highlighter.EditorHighlighter;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import com.intellij.openapi.fileTypes.*;
 import consulo.application.progress.ProcessCanceledException;

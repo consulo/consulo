@@ -1,8 +1,8 @@
 package com.intellij.coverage;
 
 import com.intellij.execution.configurations.RunnerSettings;
-import consulo.component.persist.InvalidDataException;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.InvalidDataException;
+import com.intellij.util.xmlb.WriteExternalException;
 import org.jdom.Element;
 
 /**

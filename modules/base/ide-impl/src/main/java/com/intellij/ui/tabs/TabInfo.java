@@ -17,7 +17,7 @@ package com.intellij.ui.tabs;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.IconDeferrer;

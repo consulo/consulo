@@ -18,8 +18,8 @@ package com.intellij.codeInsight.navigation;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.lookup.LookupManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
+import consulo.editor.Editor;
+import consulo.editor.ScrollType;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

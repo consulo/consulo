@@ -20,7 +20,7 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.LowPriorityAction;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

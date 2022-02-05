@@ -6,7 +6,7 @@ import com.intellij.codeInsight.daemon.impl.actions.ShowErrorDescriptionAction;
 import com.intellij.codeInsight.hint.LineTooltipRenderer;
 import com.intellij.codeInsight.hint.TooltipLinkHandlerEP;
 import com.intellij.codeInspection.ui.InspectionNodeInfo;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBColor;

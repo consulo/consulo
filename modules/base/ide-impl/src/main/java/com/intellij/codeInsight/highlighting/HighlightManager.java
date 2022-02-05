@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInsight.highlighting;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.Editor;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
@@ -161,7 +161,7 @@ public abstract class HighlightManager {
                                               @Nullable ColorValue scrollmarkColor);
 
   /**
-   * @deprecated Use {@link #addOccurrenceHighlights(com.intellij.openapi.editor.Editor, PsiElement[], com.intellij.openapi.editor.markup.TextAttributes, boolean, java.util.Collection)} instead (it does the same thing).
+   * @deprecated Use {@link #addOccurrenceHighlights(Editor, PsiElement[], TextAttributes, boolean, java.util.Collection)} instead (it does the same thing).
    */
   public abstract void addElementsOccurrenceHighlights(@Nonnull Editor editor,
                                                        @Nonnull PsiElement[] elements,

@@ -8,7 +8,7 @@ import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.progress.ProgressManager;
 import com.intellij.patterns.StandardPatterns;
 import consulo.language.psi.PsiFile;

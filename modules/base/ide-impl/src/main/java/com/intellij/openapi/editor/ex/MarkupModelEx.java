@@ -16,10 +16,10 @@
 package com.intellij.openapi.editor.ex;
 
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
-import com.intellij.openapi.editor.markup.HighlighterTargetArea;
-import com.intellij.openapi.editor.markup.MarkupModel;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.HighlighterTargetArea;
+import consulo.editor.markup.MarkupModel;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.util.Consumer;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;

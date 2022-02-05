@@ -17,20 +17,11 @@ package com.intellij.openapi.editor.ex.util;
 
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
-import consulo.dataContext.DataManager;
-import consulo.application.ui.UISettings;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
-import com.intellij.openapi.editor.event.EditorFactoryEvent;
-import com.intellij.openapi.editor.event.SelectionEvent;
-import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.editor.ex.DocumentBulkUpdateListener;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -38,28 +29,44 @@ import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DesktopScrollingModelImpl;
 import com.intellij.openapi.editor.impl.FontInfo;
-import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.util.Pair;
-import consulo.util.lang.ref.Ref;
-import consulo.application.util.SystemInfo;
-import consulo.document.Document;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.UISettings;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.editor.*;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.event.CaretActionListener;
+import consulo.editor.event.EditorFactoryEvent;
+import consulo.editor.event.SelectionEvent;
+import consulo.editor.event.SelectionListener;
+import consulo.editor.highlighter.EditorHighlighter;
+import consulo.editor.impl.EmptyEditorHighlighter;
+import consulo.editor.highlighter.HighlighterClient;
+import consulo.editor.highlighter.HighlighterIterator;
+import consulo.editor.markup.TextAttributes;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
@@ -933,5 +940,41 @@ public final class EditorUtil {
         return context.getData(dataId);
       }
     };
+  }
+
+  public static EditorHighlighter createEmptyHighlighter(@Nullable Project project, @Nonnull Document document) {
+    EditorHighlighter highlighter = new EmptyEditorHighlighter(new TextAttributes()) {
+      @Override
+      public
+      @Nonnull
+      HighlighterIterator createIterator(int startOffset) {
+        setText(document.getImmutableCharSequence());
+        return super.createIterator(startOffset);
+      }
+
+      @Override
+      public void setAttributes(TextAttributes attributes) {
+      }
+
+      @Override
+      public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
+      }
+    };
+    highlighter.setEditor(new HighlighterClient() {
+      @Override
+      public Project getProject() {
+        return project;
+      }
+
+      @Override
+      public void repaint(int start, int end) {
+      }
+
+      @Override
+      public Document getDocument() {
+        return document;
+      }
+    });
+    return highlighter;
   }
 }

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.intention;
 
 import javax.annotation.Nonnull;
 import consulo.project.Project;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.language.psi.PsiFile;
 
 /**

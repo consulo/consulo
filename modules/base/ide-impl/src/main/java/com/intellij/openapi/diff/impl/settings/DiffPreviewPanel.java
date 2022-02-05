@@ -16,14 +16,14 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.TextDiffTypeFactory.TextDiffTypeImpl;
 import com.intellij.diff.util.ThreeSide;
 import com.intellij.openapi.diff.DiffBundle;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.FoldRegion;
+import consulo.editor.Editor;
+import consulo.editor.FoldRegion;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.CaretEvent;
-import com.intellij.openapi.editor.event.CaretListener;
-import com.intellij.openapi.editor.event.EditorMouseEvent;
-import com.intellij.openapi.editor.event.EditorMouseMotionListener;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.event.CaretEvent;
+import consulo.editor.event.CaretListener;
+import consulo.editor.event.EditorMouseEvent;
+import consulo.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.project.Project;
@@ -168,7 +168,7 @@ class DiffPreviewPanel implements PreviewPanel {
     }
   }
 
-  private final class EditorClickListener implements CaretListener, com.intellij.openapi.editor.event.EditorMouseListener {
+  private final class EditorClickListener implements CaretListener, consulo.editor.event.EditorMouseListener {
     @Nonnull
     private final ThreeSide mySide;
 

@@ -15,11 +15,11 @@
  */
 package com.intellij.diff.util;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
+import consulo.editor.markup.RangeHighlighter;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 

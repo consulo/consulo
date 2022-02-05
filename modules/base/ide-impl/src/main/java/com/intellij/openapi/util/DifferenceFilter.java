@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.util;
 
+import com.intellij.util.xmlb.DefaultJDOMExternalizer;
+
 import javax.annotation.Nonnull;
 
 import java.lang.reflect.Field;

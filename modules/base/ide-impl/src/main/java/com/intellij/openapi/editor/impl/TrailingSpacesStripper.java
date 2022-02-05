@@ -16,6 +16,9 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.dataContext.DataManager;
+import consulo.editor.Caret;
+import consulo.editor.Editor;
+import consulo.editor.VisualPosition;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;

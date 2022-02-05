@@ -5,7 +5,7 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.component.util.Iconable;

@@ -19,7 +19,7 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

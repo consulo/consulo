@@ -15,7 +15,7 @@ import com.intellij.codeInsight.template.impl.TemplateState;
 import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.document.FileDocumentManager;

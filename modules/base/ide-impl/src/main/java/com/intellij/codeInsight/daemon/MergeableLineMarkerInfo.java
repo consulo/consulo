@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import consulo.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.document.util.TextRange;

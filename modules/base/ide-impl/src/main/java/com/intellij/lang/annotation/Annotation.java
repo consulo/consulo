@@ -21,13 +21,14 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.LocalQuickFixAsIntentionAdapter;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.openapi.editor.HighlighterColors;
+import consulo.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.markup.GutterIconRenderer;
+import consulo.editor.markup.TextAttributes;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.editor.markup.RangeHighlighter;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +42,7 @@ import java.util.List;
  * @author max
  * @see Annotator
  * @see AnnotationHolder
- * @see com.intellij.openapi.editor.markup.RangeHighlighter
+ * @see RangeHighlighter
  */
 public final class Annotation implements Segment {
   private final int myStartOffset;

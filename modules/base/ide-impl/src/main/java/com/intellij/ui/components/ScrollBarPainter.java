@@ -3,7 +3,7 @@ package com.intellij.ui.components;
 
 import consulo.application.ui.UISettings;
 import consulo.application.Application;
-import com.intellij.openapi.editor.colors.EditorColorKey;
+import consulo.editor.colorScheme.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;

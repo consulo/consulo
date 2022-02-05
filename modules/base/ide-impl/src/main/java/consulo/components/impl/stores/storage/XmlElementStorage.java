@@ -20,7 +20,7 @@ import com.intellij.openapi.components.StateStorageException;
 import consulo.component.persist.Storage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.JDOMUtil;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.WriteExternalException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.components.impl.stores.DefaultStateSerializer;
 import consulo.components.impl.stores.StorageUtil;

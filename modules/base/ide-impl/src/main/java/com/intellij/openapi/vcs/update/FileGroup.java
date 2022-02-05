@@ -19,11 +19,12 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.util.xmlb.DefaultJDOMExternalizer;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.ui.ex.awt.TargetAWT;
-import consulo.component.persist.InvalidDataException;
-import consulo.component.persist.JDOMExternalizable;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.InvalidDataException;
+import com.intellij.util.xmlb.JDOMExternalizable;
+import com.intellij.util.xmlb.WriteExternalException;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

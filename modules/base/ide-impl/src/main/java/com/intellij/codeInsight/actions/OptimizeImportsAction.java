@@ -24,7 +24,7 @@ import com.intellij.lang.LanguageImportStatements;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.*;

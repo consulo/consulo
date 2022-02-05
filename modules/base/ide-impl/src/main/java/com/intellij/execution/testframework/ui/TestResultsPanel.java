@@ -20,7 +20,7 @@ import com.intellij.execution.testframework.TestFrameworkPropertyListener;
 import com.intellij.execution.testframework.TestTreeView;
 import com.intellij.execution.testframework.ToolbarPanel;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsManager;
 import com.intellij.openapi.ui.Splitter;
 import consulo.application.ui.awt.SideBorder;
 import consulo.application.util.registry.Registry;

@@ -20,7 +20,7 @@ import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import consulo.editor.markup.GutterIconRenderer;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

@@ -4,14 +4,14 @@ package com.intellij.openapi.editor.ex.util;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterClient;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.HighlighterClient;
+import consulo.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.TextAttributes;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
@@ -567,7 +567,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
 
     @Override
     public IElementType getTokenType() {
-      return myLayerIterator != null ? myLayerIterator.getTokenType() : myBaseIterator.getTokenType();
+      return (IElementType)(myLayerIterator != null ? myLayerIterator.getTokenType() : myBaseIterator.getTokenType());
     }
 
     @Override

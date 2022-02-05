@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.evaluate.quick.common;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

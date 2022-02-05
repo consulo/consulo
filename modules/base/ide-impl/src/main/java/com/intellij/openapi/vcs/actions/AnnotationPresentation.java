@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.actions;
 
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.editor.colors.EditorColorKey;
-import com.intellij.openapi.editor.colors.EditorFontType;
+import consulo.editor.colorScheme.EditorColorKey;
+import consulo.editor.colorScheme.EditorFontType;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
 import com.intellij.openapi.vcs.annotate.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;

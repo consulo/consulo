@@ -20,14 +20,14 @@
 package com.intellij.openapi.editor.colors.impl;
 
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.colors.*;
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.options.FontSize;
+import consulo.editor.HighlighterColors;
+import consulo.editor.colorScheme.*;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.FontSize;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.WriteExternalException;
 import java.util.HashMap;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.color.ColorValue;

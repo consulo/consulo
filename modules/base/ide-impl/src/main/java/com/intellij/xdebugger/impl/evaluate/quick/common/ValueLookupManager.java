@@ -21,12 +21,12 @@
 package com.intellij.xdebugger.impl.evaluate.quick.common;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.Editor;
+import consulo.editor.EditorFactory;
 import com.intellij.openapi.editor.event.EditorMouseAdapter;
-import com.intellij.openapi.editor.event.EditorMouseEvent;
-import com.intellij.openapi.editor.event.EditorMouseEventArea;
-import com.intellij.openapi.editor.event.EditorMouseMotionListener;
+import consulo.editor.event.EditorMouseEvent;
+import consulo.editor.event.EditorMouseEventArea;
+import consulo.editor.event.EditorMouseMotionListener;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.util.Alarm;

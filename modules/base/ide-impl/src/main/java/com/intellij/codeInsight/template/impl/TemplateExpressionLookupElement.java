@@ -25,7 +25,7 @@ import com.intellij.codeInsight.lookup.LookupElementDecorator;
 import com.intellij.codeInsight.template.TemplateLookupSelectionHandler;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;

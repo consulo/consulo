@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions.wordSelection;
 
 import com.intellij.codeInsight.editorActions.ExtendWordSelectionHandlerBase;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;

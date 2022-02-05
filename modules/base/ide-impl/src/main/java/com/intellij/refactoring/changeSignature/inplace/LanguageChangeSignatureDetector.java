@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature.inplace;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

@@ -28,7 +28,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.DocumentContent;
 import com.intellij.openapi.diff.SimpleContent;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.document.FileDocumentManager;

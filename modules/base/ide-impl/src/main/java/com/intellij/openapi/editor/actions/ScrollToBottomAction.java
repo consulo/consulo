@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
+import consulo.editor.Editor;
+import consulo.editor.ScrollType;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 
 /**

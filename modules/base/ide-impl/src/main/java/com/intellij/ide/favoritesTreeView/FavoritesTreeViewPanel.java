@@ -34,7 +34,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import consulo.navigation.ItemPresentation;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;

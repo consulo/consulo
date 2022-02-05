@@ -15,7 +15,7 @@
  */
 package com.intellij.usageView;
 
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 
 public interface UsageTreeColors {
   TextAttributesKey INVALID_PREFIX = TextAttributesKey.createTextAttributesKey("$INVALID_PREFIX");

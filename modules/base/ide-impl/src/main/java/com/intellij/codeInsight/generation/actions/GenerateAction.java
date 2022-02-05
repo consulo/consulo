@@ -18,7 +18,7 @@ package com.intellij.codeInsight.generation.actions;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.dataContext.DataContext;

@@ -16,14 +16,14 @@
 
 package com.intellij.application.options.colors.highlighting;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.Editor;
+import consulo.editor.HighlighterColors;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
-import com.intellij.openapi.editor.markup.HighlighterTargetArea;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.HighlighterTargetArea;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import consulo.application.ui.awt.UIUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;

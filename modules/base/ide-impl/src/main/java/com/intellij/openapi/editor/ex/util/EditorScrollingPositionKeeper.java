@@ -1,12 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.ex.util;
 
-import com.intellij.openapi.editor.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.editor.Editor;
+import consulo.editor.EditorFactory;
+import consulo.editor.ScrollingModel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

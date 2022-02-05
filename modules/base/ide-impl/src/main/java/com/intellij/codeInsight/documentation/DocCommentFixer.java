@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.documentation;
 
 import consulo.language.LanguageExtension;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiComment;
 import consulo.container.plugin.PluginIds;

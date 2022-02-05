@@ -16,9 +16,11 @@
 
 package com.intellij.codeInsight.editorActions.moveUpDown;
 
-import com.intellij.openapi.editor.*;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Pair;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
+import consulo.editor.SelectionModel;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
@@ -54,7 +56,7 @@ public abstract class StatementUpDownMover {
     public boolean indentTarget = true;
 
     /**
-     * Use this method in {@link StatementUpDownMover#checkAvailable(com.intellij.openapi.editor.Editor, PsiFile, com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover.MoveInfo, boolean)}
+     * Use this method in {@link StatementUpDownMover#checkAvailable(Editor, PsiFile, com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover.MoveInfo, boolean)}
      * @return true to suppress further movers processing
      */
     public final boolean prohibitMove() {

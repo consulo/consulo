@@ -2,7 +2,7 @@ package com.intellij.internal.psiView;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

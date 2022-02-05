@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.actions.handlers;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;

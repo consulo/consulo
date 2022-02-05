@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 import com.intellij.codeInsight.CodeInsightSettings;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
 import com.intellij.openapi.editor.impl.DocumentImpl;

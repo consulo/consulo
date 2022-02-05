@@ -2,11 +2,11 @@
 package com.intellij.openapi.editor.impl.view;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.HighlighterColors;
+import consulo.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.util.ArrayUtilRt;
@@ -16,6 +16,13 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.editor.Caret;
+import consulo.editor.CaretModel;
+import consulo.editor.FoldRegion;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.HighlighterTargetArea;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.markup.TextAttributesEffectsBuilder;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;

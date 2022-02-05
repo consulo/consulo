@@ -3,7 +3,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.daemon.DaemonBundle;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

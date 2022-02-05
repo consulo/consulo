@@ -18,8 +18,8 @@ package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.lookup.LookupManager;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Caret;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.ui.ScrollingUtil;
 import jakarta.inject.Inject;

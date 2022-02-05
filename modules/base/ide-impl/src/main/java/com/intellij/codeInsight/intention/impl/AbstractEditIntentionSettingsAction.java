@@ -4,7 +4,7 @@ package com.intellij.codeInsight.intention.impl;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.config.IntentionActionWrapper;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiFile;

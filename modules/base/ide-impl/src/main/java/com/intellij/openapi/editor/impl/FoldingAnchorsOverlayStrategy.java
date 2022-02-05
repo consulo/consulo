@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.FoldRegion;
+import consulo.editor.FoldRegion;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

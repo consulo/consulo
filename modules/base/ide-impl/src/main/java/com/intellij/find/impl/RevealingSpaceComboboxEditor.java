@@ -22,7 +22,7 @@
  */
 package com.intellij.find.impl;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;

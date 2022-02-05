@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.impl;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.template.CustomLiveTemplateBase;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -18,7 +18,7 @@ package com.intellij.openapi.options.colors.pages;
 import com.intellij.ide.highlighter.custom.CustomFileHighlighter;
 import com.intellij.ide.highlighter.custom.CustomHighlighterColors;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import consulo.configurable.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;

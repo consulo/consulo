@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.ex;
 
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
+import consulo.editor.markup.RangeHighlighter;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -23,7 +23,7 @@ import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.util.ProperTextRange;

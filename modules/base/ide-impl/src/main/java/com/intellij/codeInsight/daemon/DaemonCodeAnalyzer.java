@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

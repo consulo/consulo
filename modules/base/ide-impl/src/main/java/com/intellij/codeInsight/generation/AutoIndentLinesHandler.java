@@ -18,7 +18,9 @@ package com.intellij.codeInsight.generation;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.*;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
+import consulo.editor.ScrollType;
 import consulo.project.Project;
 import consulo.document.Document;
 import consulo.document.util.TextRange;

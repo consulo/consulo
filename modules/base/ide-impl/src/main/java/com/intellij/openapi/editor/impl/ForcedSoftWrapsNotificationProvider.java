@@ -2,7 +2,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
@@ -12,7 +12,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.editor.internal.EditorInternal;
+import consulo.editor.impl.EditorInternal;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.util.dataholder.Key;
 

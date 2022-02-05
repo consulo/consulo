@@ -25,7 +25,7 @@ import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.component.extension.Extensions;
 import consulo.application.progress.ProgressManager;

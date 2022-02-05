@@ -15,6 +15,7 @@
  */
 package com.intellij.diff.util;
 
+import consulo.editor.EditorKind;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataProvider;
@@ -70,7 +71,7 @@ public interface DiffUserDataKeys {
   /**
    * Marks central <code>Editor</code> in merge view with <code>Boolean.TRUE</code>.
    *
-   * @see com.intellij.openapi.editor.EditorKind#DIFF
+   * @see EditorKind#DIFF
    */
   Key<Boolean> MERGE_EDITOR_FLAG = Key.create("Diff.mergeEditor");
 }

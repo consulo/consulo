@@ -16,7 +16,7 @@
 
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;

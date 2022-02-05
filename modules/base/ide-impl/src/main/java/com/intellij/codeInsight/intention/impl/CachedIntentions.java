@@ -12,7 +12,7 @@ import com.intellij.codeInspection.SuppressIntentionActionFromFix;
 import com.intellij.codeInspection.ex.QuickFixWrapper;
 import com.intellij.concurrency.ConcurrentCollectionFactory;
 import consulo.application.AllIcons;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;

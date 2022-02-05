@@ -3,10 +3,10 @@ package com.intellij.execution.ui;
 
 import com.intellij.execution.process.ProcessOutputType;
 import com.intellij.execution.process.ProcessOutputTypes;
-import com.intellij.openapi.editor.colors.EditorColorKey;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.EditorColorKey;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.markup.TextAttributes;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 

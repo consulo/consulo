@@ -20,15 +20,15 @@ import com.intellij.lang.LanguageFormatting;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.editor.LogicalPosition;
+import consulo.editor.LogicalPosition;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.HighlighterIterator;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
@@ -219,7 +219,7 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
   @Nullable
   protected IElementType getNonWhitespaceElementType(final HighlighterIterator iterator, int currentLineStartOffset, final int prevLineStartOffset) {
     while (!iterator.atEnd() && iterator.getEnd() >= currentLineStartOffset && iterator.getStart() >= prevLineStartOffset) {
-      final IElementType tokenType = iterator.getTokenType();
+      final IElementType tokenType = (IElementType)iterator.getTokenType();
       if (!myWhitespaceTokens.contains(tokenType)) {
         return tokenType;
       }

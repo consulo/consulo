@@ -16,7 +16,7 @@
 package consulo.desktop.awt.fileEditor.impl.text;
 
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.impl.text.TextEditorComponentContainer;
 import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;

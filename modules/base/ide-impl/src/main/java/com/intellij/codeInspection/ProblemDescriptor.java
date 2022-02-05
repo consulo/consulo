@@ -16,7 +16,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.lang.annotation.ProblemGroup;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

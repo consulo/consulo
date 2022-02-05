@@ -2,10 +2,10 @@ package com.intellij.execution.process;
 
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.TextAttributes;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;

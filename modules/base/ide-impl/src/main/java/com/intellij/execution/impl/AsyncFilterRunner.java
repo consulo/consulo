@@ -7,7 +7,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import consulo.application.progress.ProgressManager;

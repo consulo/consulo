@@ -4,9 +4,9 @@ package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.FoldRegion;
-import com.intellij.openapi.editor.FoldingGroup;
+import consulo.editor.Editor;
+import consulo.editor.FoldRegion;
+import consulo.editor.FoldingGroup;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.impl.DesktopFoldingModelImpl;

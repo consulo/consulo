@@ -15,7 +15,7 @@
  */
 package consulo.editor.impl;
 
-import com.intellij.openapi.editor.event.VisibleAreaListener;
+import consulo.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.ScrollingModelEx;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;

@@ -17,10 +17,10 @@ package com.intellij.openapi.editor.actions;
 
 import com.intellij.codeInsight.hint.HintManager;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Caret;
+import consulo.editor.Caret;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
+import consulo.editor.Editor;
+import consulo.editor.SelectionModel;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.document.util.TextRange;

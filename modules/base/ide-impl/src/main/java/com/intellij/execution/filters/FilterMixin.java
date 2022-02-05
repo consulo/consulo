@@ -16,7 +16,7 @@
 package com.intellij.execution.filters;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

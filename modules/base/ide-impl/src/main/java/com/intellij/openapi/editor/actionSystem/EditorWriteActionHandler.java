@@ -20,6 +20,8 @@ import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import consulo.document.FileDocumentManager;
+import consulo.editor.Caret;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;

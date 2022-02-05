@@ -20,7 +20,7 @@ import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -16,9 +16,9 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Pair;

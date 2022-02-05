@@ -21,8 +21,8 @@
 package com.intellij.codeInspection;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.CaretModel;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiElement;

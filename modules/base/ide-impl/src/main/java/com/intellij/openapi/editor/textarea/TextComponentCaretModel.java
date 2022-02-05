@@ -1,9 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.textarea;
 
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.event.CaretListener;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.*;
+import consulo.editor.event.CaretActionListener;
+import consulo.editor.event.CaretListener;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
 

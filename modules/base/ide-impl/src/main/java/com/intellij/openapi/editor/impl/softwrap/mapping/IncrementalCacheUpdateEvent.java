@@ -2,8 +2,8 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.SoftWrap;
+import consulo.editor.LogicalPosition;
+import consulo.editor.SoftWrap;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.editor.impl.CodeEditorBase;

@@ -3,7 +3,7 @@
  */
 package com.intellij.lang.parameterInfo;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.UserDataHolderEx;
 

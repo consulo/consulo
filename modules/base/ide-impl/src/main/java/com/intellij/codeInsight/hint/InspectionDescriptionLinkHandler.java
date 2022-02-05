@@ -20,7 +20,7 @@ import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import consulo.language.psi.PsiDocumentManager;

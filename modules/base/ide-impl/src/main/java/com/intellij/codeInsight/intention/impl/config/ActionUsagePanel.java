@@ -15,14 +15,17 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.TextAttributes;
 import consulo.document.Document;
+import consulo.editor.Editor;
+import consulo.editor.EditorFactory;
+import consulo.editor.EditorSettings;
+import consulo.editor.LogicalPosition;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.Segment;
 import com.intellij.openapi.util.text.StringUtil;

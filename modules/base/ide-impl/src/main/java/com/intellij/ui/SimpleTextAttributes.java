@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.ui.awt.Gray;

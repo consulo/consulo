@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.navigation.actions;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nullable;

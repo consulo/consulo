@@ -32,7 +32,7 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.disposer.Disposer;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;

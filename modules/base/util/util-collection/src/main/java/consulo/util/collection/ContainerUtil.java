@@ -16,6 +16,7 @@
 package consulo.util.collection;
 
 import consulo.util.collection.impl.map.*;
+import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -25,12 +26,57 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 /**
  * Based on IDEA code
  */
 public class ContainerUtil {
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> findAll(@Nonnull T[] collection, @Nonnull Condition<? super T> condition) {
+    final List<T> result = new SmartList<T>();
+    for (T t : collection) {
+      if (condition.value(t)) {
+        result.add(t);
+      }
+    }
+    return result;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> filter(@Nonnull Collection<? extends T> collection, @Nonnull Condition<? super T> condition) {
+    return findAll(collection, condition);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K, V> Map<K, V> filter(@Nonnull Map<K, ? extends V> map, @Nonnull Condition<? super K> keyFilter) {
+    Map<K, V> result = new HashMap<K, V>();
+    for (Map.Entry<K, ? extends V> entry : map.entrySet()) {
+      if (keyFilter.value(entry.getKey())) {
+        result.put(entry.getKey(), entry.getValue());
+      }
+    }
+    return result;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> findAll(@Nonnull Collection<? extends T> collection, @Nonnull Condition<? super T> condition) {
+    if (collection.isEmpty()) return List.of();
+    final List<T> result = new SmartList<T>();
+    for (final T t : collection) {
+      if (condition.value(t)) {
+        result.add(t);
+      }
+    }
+    return result;
+  }
+
+
   /**
    * @return read-only list consisting of the elements from the iterable converted by mapping
    */

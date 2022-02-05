@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.ex;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import com.intellij.openapi.vfs.VfsUtilCore;

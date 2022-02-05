@@ -30,7 +30,7 @@
 
     <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService" serviceImplementation="consulo.desktop.swt.ide.DesktopSwtRemoteDesktopService"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.editor.EditorFactory" serviceImplementation="consulo.desktop.swt.editor.impl.DesktopSwtEditorFactoryImpl"/>
+    <applicationService serviceInterface="consulo.editor.EditorFactory" serviceImplementation="consulo.desktop.swt.editor.impl.DesktopSwtEditorFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil" serviceImplementation="consulo.options.impl.UnifiedShowSettingsUtil"/>
 

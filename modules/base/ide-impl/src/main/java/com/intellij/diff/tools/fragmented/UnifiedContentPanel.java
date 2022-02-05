@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.fragmented;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

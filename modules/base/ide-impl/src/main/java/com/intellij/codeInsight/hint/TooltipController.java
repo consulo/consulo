@@ -17,7 +17,7 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;

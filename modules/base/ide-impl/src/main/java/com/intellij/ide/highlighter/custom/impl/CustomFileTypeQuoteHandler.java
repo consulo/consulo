@@ -18,8 +18,8 @@ package com.intellij.ide.highlighter.custom.impl;
 
 import com.intellij.codeInsight.editorActions.QuoteHandler;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.Editor;
+import consulo.editor.highlighter.HighlighterIterator;
 import com.intellij.psi.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
 
@@ -29,7 +29,7 @@ import consulo.language.ast.IElementType;
 class CustomFileTypeQuoteHandler implements QuoteHandler {
   @Override
   public boolean isClosingQuote(HighlighterIterator iterator, int offset) {
-    final IElementType tokenType = iterator.getTokenType();
+    final IElementType tokenType = (IElementType)iterator.getTokenType();
 
     if (tokenType == CustomHighlighterTokenType.STRING ||
         tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING ||
@@ -43,7 +43,7 @@ class CustomFileTypeQuoteHandler implements QuoteHandler {
 
   @Override
   public boolean isOpeningQuote(HighlighterIterator iterator, int offset) {
-    final IElementType tokenType = iterator.getTokenType();
+    final IElementType tokenType = (IElementType)iterator.getTokenType();
 
     if (tokenType == CustomHighlighterTokenType.STRING ||
         tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING ||
@@ -62,7 +62,7 @@ class CustomFileTypeQuoteHandler implements QuoteHandler {
       int lineEnd = doc.getLineEndOffset(doc.getLineNumber(offset));
 
       while (!iterator.atEnd() && iterator.getStart() < lineEnd) {
-        IElementType tokenType = iterator.getTokenType();
+        IElementType tokenType = (IElementType)iterator.getTokenType();
 
         if (tokenType == CustomHighlighterTokenType.STRING ||
             tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING ||
@@ -84,7 +84,7 @@ class CustomFileTypeQuoteHandler implements QuoteHandler {
 
   @Override
   public boolean isInsideLiteral(HighlighterIterator iterator) {
-    final IElementType tokenType = iterator.getTokenType();
+    final IElementType tokenType = (IElementType)iterator.getTokenType();
 
     return tokenType == CustomHighlighterTokenType.STRING ||
         tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING ||

@@ -15,11 +15,14 @@
  */
 package com.intellij.codeInsight.daemon;
 
+import consulo.editor.EditorSettings;
+import consulo.editor.markup.GutterMark;
+
 /**
  * A marker interface, that allows to show gutter icon
  * even with "do not show gutter icons" option enabled.
  *
- * @see com.intellij.openapi.editor.EditorSettings#areGutterIconsShown()
+ * @see EditorSettings#areGutterIconsShown()
  */
 public interface NonHideableIconGutterMark extends GutterMark {
 }

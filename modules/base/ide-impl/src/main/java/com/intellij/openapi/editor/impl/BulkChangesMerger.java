@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.TextChange;
+import consulo.editor.TextChange;
 import com.intellij.util.text.StringFactory;
 import javax.annotation.Nonnull;
 

@@ -21,7 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
+import consulo.editor.internal.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;

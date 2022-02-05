@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.highlighter;
 
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;

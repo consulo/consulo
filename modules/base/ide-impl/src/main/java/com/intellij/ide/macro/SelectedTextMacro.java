@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.macro;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 
 /**
  * @author yole

@@ -16,8 +16,8 @@
 package com.intellij.diff.actions.impl;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.event.EditorMouseEventArea;
+import consulo.editor.Editor;
+import consulo.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

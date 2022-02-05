@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.template.postfix.templates;
 
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
@@ -54,7 +54,7 @@ public interface PostfixTemplateProvider {
 
   /**
    * Prepare file for checking availability of templates.
-   * Almost the same as {@link this#preExpand(PsiFile, com.intellij.openapi.editor.Editor)} with several differences:
+   * Almost the same as {@link this#preExpand(PsiFile, Editor)} with several differences:
    * 1. Processes copy of file. So implementations can modify it without corrupting the real file.
    * 2. Could be invoked from anywhere (EDT, write-action, read-action, completion-thread etc.). So implementations should make 
    * additional effort to make changes in file.

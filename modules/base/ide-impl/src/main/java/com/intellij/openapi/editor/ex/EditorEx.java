@@ -21,12 +21,13 @@ import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.PasteProvider;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.LineExtensionInfo;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.MarkupEditorFilter;
+import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
@@ -74,7 +75,7 @@ public interface EditorEx extends Editor {
    * (for example, debugger breakpoints in a diff viewer editors)
    *
    * @return the markup model instance.
-   * @see com.intellij.openapi.editor.markup.MarkupEditorFilter
+   * @see MarkupEditorFilter
    * @see com.intellij.openapi.editor.impl.DesktopEditorImpl#setHighlightingFilter(Condition<RangeHighlighter>)
    * @see com.intellij.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, Project, boolean)
    */

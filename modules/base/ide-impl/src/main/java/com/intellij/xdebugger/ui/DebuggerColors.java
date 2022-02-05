@@ -19,8 +19,8 @@
  */
 package com.intellij.xdebugger.ui;
 
-import com.intellij.openapi.editor.colors.EditorColorKey;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.EditorColorKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import consulo.ui.color.RGBColor;
 import consulo.util.dataholder.Key;

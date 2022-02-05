@@ -34,8 +34,8 @@ import javax.swing.event.DocumentEvent;
 
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.Editor;
+import consulo.editor.EditorFactory;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;

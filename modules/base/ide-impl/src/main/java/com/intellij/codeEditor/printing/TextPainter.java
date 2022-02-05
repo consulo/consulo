@@ -18,12 +18,12 @@ package com.intellij.codeEditor.printing;
 
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.LineIterator;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.highlighter.EditorHighlighter;
+import consulo.editor.highlighter.HighlighterIterator;
+import consulo.editor.markup.TextAttributes;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

@@ -7,7 +7,7 @@ import com.intellij.codeInsight.intention.*;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.DumbService;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.project.Project;

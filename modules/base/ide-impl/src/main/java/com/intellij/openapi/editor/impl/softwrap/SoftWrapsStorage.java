@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor.impl.softwrap;
 
 import com.intellij.diagnostic.Dumpable;
-import com.intellij.openapi.editor.SoftWrap;
-import com.intellij.openapi.editor.TextChange;
+import consulo.editor.SoftWrap;
+import consulo.editor.TextChange;
 import com.intellij.openapi.editor.ex.SoftWrapChangeListener;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

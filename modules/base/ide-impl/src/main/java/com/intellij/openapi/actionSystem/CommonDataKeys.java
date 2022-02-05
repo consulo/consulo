@@ -15,8 +15,9 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Caret;
+import consulo.editor.Editor;
+import consulo.editor.EditorSettings;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;
@@ -52,7 +53,7 @@ public interface CommonDataKeys {
   /**
    * This key can be used to check if the current context relates to a virtual space in editor.
    *
-   * @see com.intellij.openapi.editor.EditorSettings#setVirtualSpace(boolean)
+   * @see EditorSettings#setVirtualSpace(boolean)
    */
   Key<Boolean> EDITOR_VIRTUAL_SPACE = Key.create("editor.virtual.space");
 }

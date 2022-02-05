@@ -24,7 +24,7 @@ import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.GlobalInspectionContextBase;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiFile;

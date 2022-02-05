@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.colorScheme.EditorColorKey;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.markup.EffectType;
+import consulo.editor.markup.TextAttributes;
 import consulo.ui.style.StandardColors;
 
 public interface EditorColors {
@@ -35,7 +37,8 @@ public interface EditorColors {
   EditorColorKey SELECTION_BACKGROUND_COLOR = EditorColorKey.createColorKey("SELECTION_BACKGROUND");
   EditorColorKey SELECTION_FOREGROUND_COLOR = EditorColorKey.createColorKey("SELECTION_FOREGROUND");
 
-  TextAttributesKey REFERENCE_HYPERLINK_COLOR = TextAttributesKey.createTextAttributesKey("CTRL_CLICKABLE", new TextAttributes(StandardColors.BLUE, null, StandardColors.BLUE, EffectType.LINE_UNDERSCORE, 0));
+  TextAttributesKey
+          REFERENCE_HYPERLINK_COLOR = TextAttributesKey.createTextAttributesKey("CTRL_CLICKABLE", new TextAttributes(StandardColors.BLUE, null, StandardColors.BLUE, EffectType.LINE_UNDERSCORE, 0));
 
   TextAttributesKey SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("SEARCH_RESULT_ATTRIBUTES");
   TextAttributesKey LIVE_TEMPLATE_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("LIVE_TEMPLATE_ATTRIBUTES");

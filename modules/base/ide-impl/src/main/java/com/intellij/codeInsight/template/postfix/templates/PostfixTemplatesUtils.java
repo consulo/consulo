@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.postfix.templates;
 import consulo.language.Language;
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.lang.surroundWith.Surrounder;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

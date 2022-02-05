@@ -27,10 +27,10 @@ package com.intellij.openapi.editor.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.SelectionModel;
+import consulo.editor.Caret;
+import consulo.editor.CaretModel;
+import consulo.editor.LogicalPosition;
+import consulo.editor.SelectionModel;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.application.dumb.DumbAware;
 

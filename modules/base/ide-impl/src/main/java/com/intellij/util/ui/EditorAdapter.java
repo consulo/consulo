@@ -21,11 +21,11 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
+import consulo.editor.Editor;
+import consulo.editor.ScrollType;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
-import com.intellij.openapi.editor.markup.HighlighterTargetArea;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.markup.HighlighterTargetArea;
+import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;
 import com.intellij.util.Alarm;
 

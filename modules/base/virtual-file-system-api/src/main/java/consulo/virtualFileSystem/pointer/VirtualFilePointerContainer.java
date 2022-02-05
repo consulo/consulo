@@ -15,7 +15,7 @@
  */
 package consulo.virtualFileSystem.pointer;
 
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import consulo.disposer.Disposable;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;

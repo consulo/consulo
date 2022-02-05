@@ -22,7 +22,7 @@ import consulo.component.persist.Storage;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;

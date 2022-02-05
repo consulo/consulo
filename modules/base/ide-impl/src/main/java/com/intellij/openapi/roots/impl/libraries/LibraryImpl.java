@@ -11,7 +11,7 @@ import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.util.Comparing;
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;

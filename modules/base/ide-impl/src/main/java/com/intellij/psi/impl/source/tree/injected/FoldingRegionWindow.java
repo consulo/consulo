@@ -3,9 +3,9 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.FoldRegion;
-import com.intellij.openapi.editor.FoldingGroup;
+import consulo.editor.Editor;
+import consulo.editor.FoldRegion;
+import consulo.editor.FoldingGroup;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import com.intellij.openapi.editor.impl.FoldRegionImpl;
 import javax.annotation.Nonnull;

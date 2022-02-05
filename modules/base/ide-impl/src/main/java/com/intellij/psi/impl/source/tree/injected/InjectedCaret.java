@@ -2,7 +2,7 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.injected.editor.EditorWindow;
-import com.intellij.openapi.editor.*;
+import consulo.editor.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.TextRange;

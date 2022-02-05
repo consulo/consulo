@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;

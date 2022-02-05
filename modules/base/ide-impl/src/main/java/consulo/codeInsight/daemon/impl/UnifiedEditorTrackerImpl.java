@@ -16,8 +16,8 @@
 package consulo.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.impl.EditorTracker;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.event.EditorFactoryEvent;
+import consulo.editor.Editor;
+import consulo.editor.event.EditorFactoryEvent;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;

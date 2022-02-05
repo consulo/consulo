@@ -23,7 +23,7 @@ import com.intellij.ide.highlighter.custom.AbstractCustomLexer;
 import com.intellij.ide.highlighter.custom.tokens.*;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.CustomHighlighterTokenType;

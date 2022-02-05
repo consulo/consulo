@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import consulo.util.dataholder.Key;

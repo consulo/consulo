@@ -16,9 +16,9 @@
 package com.intellij.formatting.engine;
 
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.TextChange;
+import consulo.editor.Editor;
+import consulo.editor.EditorFactory;
+import consulo.editor.TextChange;
 import com.intellij.openapi.editor.impl.BulkChangesMerger;
 import javax.annotation.Nonnull;
 

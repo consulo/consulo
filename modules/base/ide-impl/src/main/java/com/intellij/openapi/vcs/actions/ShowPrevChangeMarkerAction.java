@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.actions;
 
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.vcs.ex.LineStatusTracker;
 import com.intellij.openapi.vcs.ex.Range;
 

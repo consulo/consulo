@@ -25,7 +25,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
+import consulo.editor.markup.RangeHighlighter;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

@@ -26,7 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.actions.AbstractToggleUseSoftWrapsAction;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.ex.EditorEx;

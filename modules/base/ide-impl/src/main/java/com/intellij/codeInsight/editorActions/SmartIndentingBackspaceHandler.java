@@ -17,10 +17,10 @@ package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeStyle.CodeStyleFacade;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.CaretModel;
+import consulo.editor.CaretModel;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;

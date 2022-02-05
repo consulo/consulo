@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.impl.text;
 
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -24,6 +23,10 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.editor.CaretModel;
+import consulo.editor.CaretState;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

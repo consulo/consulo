@@ -17,9 +17,9 @@ package com.intellij.openapi.fileEditor.impl.text;
 
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.*;
+import consulo.editor.*;
 import consulo.project.Project;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;

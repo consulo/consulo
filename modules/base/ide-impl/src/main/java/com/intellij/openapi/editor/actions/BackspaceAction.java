@@ -34,6 +34,9 @@ import consulo.application.ui.awt.MacUIUtil;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
+import consulo.editor.Caret;
+import consulo.editor.Editor;
+import consulo.editor.FoldRegion;
 
 public class BackspaceAction extends EditorAction {
   public BackspaceAction() {

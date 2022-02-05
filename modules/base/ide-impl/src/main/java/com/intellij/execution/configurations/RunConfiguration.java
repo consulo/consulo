@@ -18,7 +18,7 @@ package com.intellij.execution.configurations;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.project.Project;
-import consulo.component.persist.JDOMExternalizable;
+import com.intellij.util.xmlb.JDOMExternalizable;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

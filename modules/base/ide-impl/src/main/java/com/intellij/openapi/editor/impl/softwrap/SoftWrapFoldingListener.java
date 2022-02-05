@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.softwrap;
 
-import com.intellij.openapi.editor.FoldRegion;
+import consulo.editor.FoldRegion;
 import com.intellij.openapi.editor.ex.FoldingListener;
 
 /**

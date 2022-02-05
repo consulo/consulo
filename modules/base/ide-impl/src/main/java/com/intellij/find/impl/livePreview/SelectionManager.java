@@ -17,8 +17,9 @@ package com.intellij.find.impl.livePreview;
 
 import com.intellij.find.FindResult;
 import com.intellij.find.FindUtil;
-import com.intellij.openapi.editor.*;
 import consulo.document.util.TextRange;
+import consulo.editor.*;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

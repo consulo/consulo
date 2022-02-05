@@ -15,8 +15,8 @@
  */
 package consulo.desktop.swt.editor.impl;
 
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.ScrollType;
+import consulo.editor.LogicalPosition;
+import consulo.editor.ScrollType;
 import consulo.editor.impl.CodeEditorBase;
 import consulo.editor.impl.CodeEditorScrollingModelBase;
 

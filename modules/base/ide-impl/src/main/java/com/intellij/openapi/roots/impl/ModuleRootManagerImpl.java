@@ -23,7 +23,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
-import consulo.component.persist.InvalidDataException;
+import com.intellij.util.xmlb.InvalidDataException;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;

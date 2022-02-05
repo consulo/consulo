@@ -20,7 +20,7 @@ import com.intellij.codeHighlighting.EditorBoundHighlightingPass;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.codeInsight.folding.impl.FoldingUpdate;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;

@@ -15,7 +15,6 @@
  */
 package com.intellij.codeInsight.hint;
 
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import consulo.document.Document;
@@ -24,6 +23,9 @@ import consulo.document.util.TextRange;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.ScreenUtil;
+import consulo.editor.Editor;
+import consulo.editor.VisualPosition;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

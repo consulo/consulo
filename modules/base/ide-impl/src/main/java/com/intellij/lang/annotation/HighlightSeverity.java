@@ -15,9 +15,9 @@
  */
 package com.intellij.lang.annotation;
 
-import com.intellij.openapi.util.DefaultJDOMExternalizer;
-import com.intellij.openapi.util.JDOMExternalizerUtil;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.DefaultJDOMExternalizer;
+import com.intellij.util.xmlb.JDOMExternalizerUtil;
+import com.intellij.util.xmlb.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

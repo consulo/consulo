@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.frame;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import consulo.editor.markup.GutterIconRenderer;
 import com.intellij.xdebugger.Obsolescent;
 import consulo.ui.image.Image;
 

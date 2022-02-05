@@ -3,8 +3,8 @@ package com.intellij.codeInsight.editorActions.enter;
 
 import com.intellij.codeInsight.editorActions.EnterHandler;
 import consulo.language.Language;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.editor.Editor;
+import consulo.editor.highlighter.HighlighterIterator;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;

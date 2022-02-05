@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.ScrollType;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
+import consulo.editor.ScrollType;
 import consulo.project.Project;
 import consulo.project.ui.IdeFocusManager;
 import javax.annotation.Nonnull;

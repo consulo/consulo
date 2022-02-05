@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.editor.HighlighterColors;
+import consulo.editor.colorScheme.TextAttributesKey;
 
 /**
  * Base highlighter colors for multiple languages.

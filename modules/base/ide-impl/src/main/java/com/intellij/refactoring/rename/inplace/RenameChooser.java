@@ -16,12 +16,16 @@
 package com.intellij.refactoring.rename.inplace;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
+import consulo.editor.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.editor.markup.HighlighterTargetArea;
+import consulo.editor.markup.MarkupModel;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.TextAttributes;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.Pair;
@@ -80,8 +84,8 @@ abstract class RenameChooser {
           for (Pair<PsiElement, TextRange> pair : stringUsages) {
             final TextRange textRange = pair.second.shiftRight(pair.first.getTextOffset());
             final RangeHighlighter rangeHighlighter = markupModel.addRangeHighlighter(
-              textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes,
-              HighlighterTargetArea.EXACT_RANGE);
+                    textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes,
+                    HighlighterTargetArea.EXACT_RANGE);
             myRangeHighlighters.add(rangeHighlighter);
           }
         }

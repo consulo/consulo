@@ -15,16 +15,16 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.EditorMouseEventArea;
-import com.intellij.openapi.editor.event.EditorMouseListener;
-import com.intellij.openapi.editor.event.EditorMouseMotionListener;
-import com.intellij.openapi.editor.markup.MarkupModel;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.event.EditorMouseEventArea;
+import consulo.editor.event.EditorMouseListener;
+import consulo.editor.event.EditorMouseMotionListener;
+import consulo.editor.markup.MarkupModel;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.ui.popup.AbstractPopup;
 import consulo.document.Document;
+import consulo.editor.*;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;

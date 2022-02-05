@@ -23,7 +23,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.fileEditor.FileEditor;

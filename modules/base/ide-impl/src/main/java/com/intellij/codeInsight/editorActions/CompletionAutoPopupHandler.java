@@ -9,7 +9,7 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.application.AppUIExecutor;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

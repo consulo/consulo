@@ -3,9 +3,9 @@ package com.intellij.ide.util.treeView;
 
 import consulo.navigation.NavigationItem;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
-import consulo.component.persist.InvalidDataException;
-import consulo.component.persist.JDOMExternalizable;
-import consulo.component.persist.WriteExternalException;
+import com.intellij.util.xmlb.InvalidDataException;
+import com.intellij.util.xmlb.JDOMExternalizable;
+import com.intellij.util.xmlb.WriteExternalException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Progressive;
 import com.intellij.openapi.util.*;

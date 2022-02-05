@@ -16,11 +16,12 @@
 package com.intellij.openapi.vcs.annotate;
 
 import com.intellij.openapi.vcs.VcsBundle;
+import consulo.editor.EditorGutterAction;
 
 /**
  * Represents one part of a line annotation which is shown in the editor when the "Annotate"
  * action is invoked. Classes implementing this interface can also implement
- * {@link com.intellij.openapi.editor.EditorGutterAction} to handle clicks on the annotation.
+ * {@link EditorGutterAction} to handle clicks on the annotation.
  *
  * @author Konstantin Bulenkov
  * @see FileAnnotation#getAspects()

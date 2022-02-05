@@ -23,7 +23,7 @@ import com.intellij.dvcs.repo.RepositoryManager;
 import com.intellij.ide.file.BatchFileChangeListener;
 import consulo.application.AccessToken;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;

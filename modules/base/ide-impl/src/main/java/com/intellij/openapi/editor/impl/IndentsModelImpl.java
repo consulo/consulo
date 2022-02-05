@@ -19,9 +19,9 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.IndentGuideDescriptor;
-import com.intellij.openapi.editor.IndentsModel;
-import com.intellij.openapi.editor.LogicalPosition;
+import consulo.editor.IndentGuideDescriptor;
+import consulo.editor.IndentsModel;
+import consulo.editor.LogicalPosition;
 import consulo.editor.impl.CodeEditorBase;
 
 import javax.annotation.Nonnull;

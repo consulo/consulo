@@ -15,8 +15,8 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.ScrollType;
+import consulo.editor.LogicalPosition;
+import consulo.editor.ScrollType;
 import com.intellij.openapi.editor.ex.ScrollingModelEx;
 import consulo.editor.impl.CodeEditorBase;
 import consulo.editor.impl.CodeEditorScrollingModelBase;

@@ -15,9 +15,9 @@
  */
 package com.intellij.ui.popup.util;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.editor.Editor;
+import consulo.editor.LogicalPosition;
+import consulo.editor.markup.TextAttributes;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 

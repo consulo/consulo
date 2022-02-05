@@ -17,10 +17,10 @@
 package com.intellij.codeInsight.daemon;
 
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.openapi.editor.markup.MarkupEditorFilter;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.SeparatorPlacement;
+import consulo.editor.markup.GutterIconRenderer;
+import consulo.editor.markup.MarkupEditorFilter;
+import consulo.editor.markup.RangeHighlighter;
+import consulo.editor.markup.SeparatorPlacement;
 import consulo.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;

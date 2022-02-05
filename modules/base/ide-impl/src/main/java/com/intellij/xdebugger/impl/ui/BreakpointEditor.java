@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.labels.LinkLabel;

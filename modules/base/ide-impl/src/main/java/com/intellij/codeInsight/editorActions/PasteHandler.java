@@ -24,6 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.editor.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;

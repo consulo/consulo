@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.breadcrumbs;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
+import consulo.editor.Editor;
+import consulo.editor.ScrollType;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;

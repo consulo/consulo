@@ -4,6 +4,10 @@ package com.intellij.psi.impl.source.codeStyle;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.*;
+import consulo.editor.CaretModel;
+import consulo.editor.Editor;
+import consulo.editor.ScrollType;
+import consulo.editor.VisualPosition;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.lang.*;
 import com.intellij.lang.injection.InjectedLanguageManager;
@@ -18,7 +22,6 @@ import consulo.language.ast.TokenType;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.ProcessCanceledException;

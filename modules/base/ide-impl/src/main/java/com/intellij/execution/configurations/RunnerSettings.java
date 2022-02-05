@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.configurations;
 
-import consulo.component.persist.JDOMExternalizable;
+import com.intellij.util.xmlb.JDOMExternalizable;
 
 public interface RunnerSettings extends JDOMExternalizable {
 }

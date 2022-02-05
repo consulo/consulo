@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import consulo.language.Language;
 import consulo.document.Document;
-import com.intellij.openapi.editor.EditorFactory;
+import consulo.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;

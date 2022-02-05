@@ -1,7 +1,7 @@
 package com.intellij.coverage;
 
 import consulo.project.Project;
-import consulo.component.persist.JDOMExternalizable;
+import com.intellij.util.xmlb.JDOMExternalizable;
 import com.intellij.rt.coverage.data.ProjectData;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

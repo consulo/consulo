@@ -30,7 +30,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.document.Document;
-import com.intellij.openapi.editor.Editor;
+import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

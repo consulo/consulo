@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actionSystem;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
-import com.intellij.openapi.editor.Caret;
+import consulo.editor.Caret;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

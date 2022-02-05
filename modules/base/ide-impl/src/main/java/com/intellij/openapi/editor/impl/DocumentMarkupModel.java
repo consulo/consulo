@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import consulo.editor.Editor;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.MarkupModelWindow;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.markup.MarkupModel;
+import consulo.editor.markup.MarkupModel;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
@@ -52,7 +53,7 @@ public class DocumentMarkupModel {
    * @param project the project for which the markup model is requested, or null if the default markup
    *                model is requested.
    * @return the markup model instance.
-   * @see com.intellij.openapi.editor.Editor#getMarkupModel()
+   * @see Editor#getMarkupModel()
    */
   public static MarkupModel forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
     if (document instanceof DocumentWindow) {
