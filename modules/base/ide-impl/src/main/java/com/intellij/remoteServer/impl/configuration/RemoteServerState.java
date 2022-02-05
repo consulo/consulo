@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.configuration;
 
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
 import org.jdom.Element;
 
 /**

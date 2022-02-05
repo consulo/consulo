@@ -22,7 +22,7 @@ import consulo.component.persist.Storage;
 import consulo.project.Project;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.document.util.TextRange;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;

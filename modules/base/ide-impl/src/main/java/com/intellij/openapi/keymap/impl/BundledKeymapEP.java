@@ -17,7 +17,7 @@ package com.intellij.openapi.keymap.impl;
 
 import consulo.application.Application;
 import consulo.component.extension.AbstractExtensionPointBean;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 

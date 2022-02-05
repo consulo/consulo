@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.impl.libraries;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.content.library.Library;
 import consulo.content.library.PersistentLibraryKind;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;

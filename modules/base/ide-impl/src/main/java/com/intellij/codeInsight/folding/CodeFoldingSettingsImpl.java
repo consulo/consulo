@@ -19,7 +19,7 @@ package com.intellij.codeInsight.folding;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
 /**

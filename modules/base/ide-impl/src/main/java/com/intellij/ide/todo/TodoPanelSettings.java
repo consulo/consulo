@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.todo;
 
-import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.util.xml.serializer.annotation.OptionTag;
 import javax.annotation.Nonnull;
 
 public class TodoPanelSettings {

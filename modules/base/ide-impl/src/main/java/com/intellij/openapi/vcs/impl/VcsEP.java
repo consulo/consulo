@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 import javax.annotation.Nonnull;
 

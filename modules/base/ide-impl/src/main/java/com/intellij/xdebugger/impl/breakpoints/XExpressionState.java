@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.breakpoints;
 
 import consulo.language.Language;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Text;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Text;
 import com.intellij.xdebugger.XExpression;
 import javax.annotation.Nonnull;
 

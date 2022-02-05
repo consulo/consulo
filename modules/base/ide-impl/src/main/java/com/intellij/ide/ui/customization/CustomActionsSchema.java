@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.ui.customization;
 
-import com.intellij.util.xmlb.DefaultJDOMExternalizer;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -33,9 +33,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.JDOMExternalizable;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;

@@ -15,8 +15,8 @@
  */
 package com.intellij.tasks.timeTracking.model;
 
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
 
 import java.util.Date;
 

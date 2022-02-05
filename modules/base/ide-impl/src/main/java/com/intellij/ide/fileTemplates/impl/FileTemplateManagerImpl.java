@@ -39,7 +39,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.text.DateFormatUtil;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 

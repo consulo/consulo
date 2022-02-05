@@ -16,7 +16,7 @@
 package com.intellij.notification.impl;
 
 import consulo.component.extension.AbstractExtensionPointBean;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 /**
  * @author Alexander Lobas

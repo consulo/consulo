@@ -22,7 +22,7 @@ package com.intellij.openapi.fileTypes;
 import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.LazyInstance;
 import consulo.component.extension.KeyedLazyInstance;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 public class FileTypeExtensionPoint<T> extends AbstractExtensionPointBean implements KeyedLazyInstance<T> {
 

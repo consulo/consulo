@@ -18,11 +18,11 @@ package com.intellij.tasks.context;
 import javax.annotation.Nonnull;
 
 import consulo.application.ApplicationManager;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.WriteExternalException;
-import com.intellij.util.xmlb.Accessor;
-import com.intellij.util.xmlb.SerializationFilter;
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.Accessor;
+import consulo.util.xml.serializer.SerializationFilter;
+import consulo.util.xml.serializer.XmlSerializer;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl;

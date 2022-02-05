@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.reference;
 
-import com.intellij.util.xmlb.JDOMExternalizable;
+import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import org.jdom.Element;

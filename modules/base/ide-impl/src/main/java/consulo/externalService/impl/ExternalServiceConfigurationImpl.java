@@ -18,7 +18,7 @@ package consulo.externalService.impl;
 import consulo.application.Application;
 import com.intellij.util.io.HttpRequests;
 import consulo.application.ui.awt.JBUI;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;

@@ -18,7 +18,7 @@ package com.intellij.ide.util;
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 import javax.annotation.Nullable;
 

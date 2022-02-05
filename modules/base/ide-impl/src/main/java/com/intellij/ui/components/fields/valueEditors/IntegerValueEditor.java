@@ -2,7 +2,7 @@
 package com.intellij.ui.components.fields.valueEditors;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

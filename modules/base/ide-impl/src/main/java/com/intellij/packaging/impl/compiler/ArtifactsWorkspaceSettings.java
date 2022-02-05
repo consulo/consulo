@@ -22,8 +22,8 @@ import consulo.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.Tag;
 
 import javax.annotation.Nonnull;
 

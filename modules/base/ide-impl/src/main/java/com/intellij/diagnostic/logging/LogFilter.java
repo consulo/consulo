@@ -16,10 +16,10 @@
 
 package com.intellij.diagnostic.logging;
 
-import com.intellij.util.xmlb.DefaultJDOMExternalizer;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.JDOMExternalizable;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 

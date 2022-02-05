@@ -29,9 +29,9 @@ import com.intellij.openapi.vcs.impl.CancellableRunnable;
 import com.intellij.tasks.impl.BaseRepository;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.util.xml.serializer.annotation.Transient;
 import consulo.ui.image.Image;
 
 /**

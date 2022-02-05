@@ -19,8 +19,8 @@ import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.util.xml.serializer.annotation.Transient;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 

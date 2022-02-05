@@ -6,10 +6,10 @@ import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
-import com.intellij.util.xmlb.annotations.MapAnnotation;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.MapAnnotation;
+import consulo.util.xml.serializer.annotation.Tag;
 
 import javax.annotation.Nonnull;
 

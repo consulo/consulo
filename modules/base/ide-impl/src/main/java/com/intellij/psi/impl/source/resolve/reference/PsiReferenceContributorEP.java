@@ -21,7 +21,7 @@ import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiReferenceContributor;
 import consulo.component.extension.KeyedLazyInstance;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 import javax.annotation.Nonnull;
 

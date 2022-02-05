@@ -15,11 +15,7 @@
  */
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.openapi.util.*;
-import com.intellij.util.xmlb.DefaultJDOMExternalizer;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.JDOMExternalizable;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

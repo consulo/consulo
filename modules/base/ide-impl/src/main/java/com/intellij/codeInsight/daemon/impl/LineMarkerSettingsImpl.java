@@ -20,7 +20,7 @@ import com.intellij.codeInsight.daemon.LineMarkerSettings;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.util.xmlb.annotations.MapAnnotation;
+import consulo.util.xml.serializer.annotation.MapAnnotation;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;

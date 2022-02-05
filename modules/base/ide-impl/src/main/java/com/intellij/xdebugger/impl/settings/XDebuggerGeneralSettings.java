@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.settings;
 
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.Tag;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
 
 /**

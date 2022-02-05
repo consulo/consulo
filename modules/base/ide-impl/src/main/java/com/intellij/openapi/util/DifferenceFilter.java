@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.xmlb.DefaultJDOMExternalizer;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 
 import javax.annotation.Nonnull;
 

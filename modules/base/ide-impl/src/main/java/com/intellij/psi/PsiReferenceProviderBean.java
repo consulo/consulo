@@ -29,10 +29,10 @@ import com.intellij.patterns.StandardPatterns;
 import consulo.component.extension.KeyedLazyInstance;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Property;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Property;
+import consulo.util.xml.serializer.annotation.Tag;
 
 import javax.annotation.Nullable;
 import java.util.List;

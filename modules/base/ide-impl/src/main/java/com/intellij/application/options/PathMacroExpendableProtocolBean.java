@@ -16,7 +16,7 @@
 package com.intellij.application.options;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 public class PathMacroExpendableProtocolBean {
   public static ExtensionPointName<PathMacroExpendableProtocolBean> EP_NAME = ExtensionPointName.create("consulo.pathMacroExpendableProtocol");

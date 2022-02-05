@@ -19,9 +19,9 @@
  */
 package consulo.editor.markup;
 
-import com.intellij.util.xmlb.DefaultJDOMExternalizer;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.JDOMExternalizerUtil;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;

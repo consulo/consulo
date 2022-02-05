@@ -35,7 +35,7 @@ import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.util.ArrayUtil;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.application.AccessRule;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.language.content.LanguageContentFolderScopes;

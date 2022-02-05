@@ -29,7 +29,7 @@ import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.MapAnnotation;
+import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.application.AccessRule;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWithProviderComposite;

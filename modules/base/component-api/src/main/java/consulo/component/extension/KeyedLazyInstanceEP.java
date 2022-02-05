@@ -15,7 +15,7 @@
  */
 package consulo.component.extension;
 
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 import javax.annotation.Nullable;
 

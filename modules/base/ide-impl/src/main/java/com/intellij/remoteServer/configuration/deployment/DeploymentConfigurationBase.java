@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.configuration.deployment;
 
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import javax.annotation.Nullable;
 
 /**

@@ -21,8 +21,8 @@ import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.DirectoryElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.util.xml.serializer.annotation.Attribute;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

@@ -16,7 +16,7 @@
 package com.intellij.execution.configuration;
 
 import com.intellij.openapi.application.PathMacroFilter;
-import com.intellij.util.xmlb.Constants;
+import consulo.util.xml.serializer.Constants;
 import org.jdom.Attribute;
 import org.jdom.Element;
 

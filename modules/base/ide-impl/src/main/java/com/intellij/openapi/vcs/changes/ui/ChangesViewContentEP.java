@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.ui;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import com.intellij.util.NotNullFunction;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.component.extension.PluginAware;

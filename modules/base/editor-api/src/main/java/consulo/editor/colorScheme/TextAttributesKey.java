@@ -15,8 +15,8 @@
  */
 package consulo.editor.colorScheme;
 
-import com.intellij.util.xmlb.JDOMExternalizerUtil;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.JDOMExternalizerUtil;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.Application;
 import consulo.editor.markup.TextAttributes;
 import consulo.util.collection.Maps;

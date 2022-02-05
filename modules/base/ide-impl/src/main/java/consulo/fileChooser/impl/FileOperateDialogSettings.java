@@ -16,7 +16,7 @@
 package consulo.fileChooser.impl;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;

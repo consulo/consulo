@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.components;
 
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.component.extension.PluginAware;
 

@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;

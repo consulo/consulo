@@ -17,10 +17,10 @@
 package consulo.copyright.config;
 
 import com.intellij.openapi.util.*;
-import com.intellij.util.xmlb.DefaultJDOMExternalizer;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.JDOMExternalizable;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
 public class CopyrightFileConfig implements JDOMExternalizable, Cloneable {

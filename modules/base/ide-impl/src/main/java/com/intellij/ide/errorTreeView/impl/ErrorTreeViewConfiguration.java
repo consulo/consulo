@@ -20,7 +20,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 

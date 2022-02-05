@@ -17,7 +17,7 @@
 package com.intellij.tools;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.xmlb.JDOMExternalizable;
+import consulo.util.xml.serializer.JDOMExternalizable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

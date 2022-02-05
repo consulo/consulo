@@ -17,9 +17,9 @@ package com.intellij.dvcs.branch;
 
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.MapAnnotation;
-import com.intellij.util.xmlb.annotations.Property;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.MapAnnotation;
+import consulo.util.xml.serializer.annotation.Property;
+import consulo.util.xml.serializer.annotation.Tag;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

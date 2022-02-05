@@ -17,7 +17,7 @@ package consulo.codeInsight.template.impl;
 
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 /**
  * @author VISTALL

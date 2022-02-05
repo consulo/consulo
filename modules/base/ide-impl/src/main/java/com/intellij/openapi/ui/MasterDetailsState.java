@@ -16,8 +16,8 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
-import com.intellij.util.xmlb.annotations.Property;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.Property;
+import consulo.util.xml.serializer.annotation.Tag;
 
 /**
  * @author nik

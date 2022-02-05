@@ -34,7 +34,7 @@ import com.intellij.packaging.impl.ui.LibraryElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

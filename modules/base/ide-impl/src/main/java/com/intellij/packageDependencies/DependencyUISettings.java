@@ -19,7 +19,7 @@ package com.intellij.packageDependencies;
 import com.intellij.openapi.components.*;
 import consulo.component.extension.Extensions;
 import com.intellij.packageDependencies.ui.PatternDialectProvider;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;

@@ -18,8 +18,8 @@ package com.intellij.tasks.context;
 
 import com.intellij.execution.RunManager;
 import com.intellij.execution.impl.RunManagerImpl;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

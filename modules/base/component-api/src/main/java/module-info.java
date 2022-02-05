@@ -12,7 +12,7 @@ module consulo.component.api {
   requires transitive consulo.container.api;
   requires transitive consulo.annotation;
   requires transitive consulo.ui.api;
-  requires transitive consulo.util.serializer;
+  requires transitive consulo.util.xml.serializer;
   requires transitive consulo.util.concurrent;
   requires transitive consulo.util.collection;
   requires transitive consulo.platform.api;

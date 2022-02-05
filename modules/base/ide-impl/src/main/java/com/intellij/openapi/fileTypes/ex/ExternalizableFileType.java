@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes.ex;
 
-import com.intellij.util.xmlb.JDOMExternalizable;
+import consulo.util.xml.serializer.JDOMExternalizable;
 
 /**
  * @author yole

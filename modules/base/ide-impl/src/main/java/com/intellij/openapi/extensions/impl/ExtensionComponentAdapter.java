@@ -17,7 +17,7 @@ package com.intellij.openapi.extensions.impl;
 
 import consulo.component.ComponentManager;
 import consulo.application.progress.ProcessCanceledException;
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.XmlSerializer;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.component.extension.ComponentAware;

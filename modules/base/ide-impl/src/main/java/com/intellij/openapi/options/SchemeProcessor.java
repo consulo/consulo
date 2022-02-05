@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.Parent;

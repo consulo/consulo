@@ -2,8 +2,8 @@
 package com.intellij.formatting.fileSet;
 
 import consulo.language.psi.PsiFile;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

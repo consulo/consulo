@@ -17,8 +17,8 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.util.xmlb.annotations.MapAnnotation;
-import com.intellij.util.xmlb.annotations.Property;
+import consulo.util.xml.serializer.annotation.MapAnnotation;
+import consulo.util.xml.serializer.annotation.Property;
 
 import java.util.HashMap;
 import java.util.Map;

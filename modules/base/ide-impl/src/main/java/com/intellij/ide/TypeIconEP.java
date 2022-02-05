@@ -18,7 +18,7 @@ package com.intellij.ide;
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.NullableLazyValue;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 

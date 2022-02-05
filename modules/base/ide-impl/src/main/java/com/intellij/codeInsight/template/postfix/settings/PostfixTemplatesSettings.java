@@ -22,9 +22,9 @@ import com.intellij.codeInsight.template.postfix.templates.PostfixTemplatesUtils
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
-import com.intellij.util.xmlb.XmlSerializer;
-import com.intellij.util.xmlb.annotations.MapAnnotation;
+import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
+import consulo.util.xml.serializer.XmlSerializer;
+import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;

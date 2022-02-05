@@ -74,7 +74,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-serializer</artifactId>
+      <artifactId>consulo-util-xml-serializer</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

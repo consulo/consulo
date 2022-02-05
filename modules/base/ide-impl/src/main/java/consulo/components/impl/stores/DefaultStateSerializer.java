@@ -17,12 +17,12 @@ package consulo.components.impl.stores;
 
 import com.intellij.openapi.components.StateStorageException;
 import consulo.component.persist.Storage;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.JDOMExternalizable;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
+import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

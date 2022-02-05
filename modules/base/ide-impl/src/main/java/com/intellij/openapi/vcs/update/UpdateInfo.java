@@ -17,9 +17,9 @@ package com.intellij.openapi.vcs.update;
 
 import consulo.project.Project;
 import com.intellij.openapi.util.Clock;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.JDOMExternalizable;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.util.text.DateFormatUtil;
 import org.jdom.Element;

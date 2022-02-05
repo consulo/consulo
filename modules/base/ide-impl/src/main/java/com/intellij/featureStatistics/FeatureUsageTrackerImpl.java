@@ -20,7 +20,7 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.XmlSerializer;
 import consulo.component.persist.PersistentStateComponent;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

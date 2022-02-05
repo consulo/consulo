@@ -16,8 +16,8 @@
 
 package com.maddyhome.idea.copyright;
 
-import com.intellij.util.xmlb.SmartSerializer;
-import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.util.xml.serializer.SmartSerializer;
+import consulo.util.xml.serializer.annotation.OptionTag;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import org.jdom.Element;
 

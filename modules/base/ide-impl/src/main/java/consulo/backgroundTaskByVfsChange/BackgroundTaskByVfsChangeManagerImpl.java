@@ -35,7 +35,7 @@ import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.XmlSerializer;
 import consulo.backgroundTaskByVfsChange.ui.BackgroundTaskByVfsChangeManageDialog;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposable;

@@ -27,7 +27,7 @@ import consulo.editor.markup.TextAttributes;
 import consulo.editor.colorScheme.FontSize;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.WriteExternalException;
 import java.util.HashMap;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.color.ColorValue;

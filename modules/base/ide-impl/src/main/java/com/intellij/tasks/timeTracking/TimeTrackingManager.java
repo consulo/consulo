@@ -17,7 +17,7 @@ import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.timeTracking.model.WorkItem;
 import com.intellij.util.Alarm;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindow;

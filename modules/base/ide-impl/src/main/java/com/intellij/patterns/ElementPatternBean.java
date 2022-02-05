@@ -17,9 +17,9 @@ package com.intellij.patterns;
 
 import com.intellij.patterns.compiler.PatternCompilerFactory;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.util.xmlb.annotations.Text;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.util.xml.serializer.annotation.Text;
 import javax.annotation.Nullable;
 
 @Tag("pattern")

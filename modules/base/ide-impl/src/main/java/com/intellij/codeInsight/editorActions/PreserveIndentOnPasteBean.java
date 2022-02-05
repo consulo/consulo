@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 /**
  * @author yole

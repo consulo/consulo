@@ -18,8 +18,8 @@ package com.intellij.tasks;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
 import javax.annotation.Nonnull;
 
 /**

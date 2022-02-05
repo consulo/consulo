@@ -16,6 +16,8 @@
 
 package consulo.component.persist;
 
+import consulo.util.xml.serializer.XmlSerializerUtil;
+
 import javax.annotation.Nullable;
 
 /**
@@ -41,7 +43,7 @@ public interface PersistentStateComponent<T> {
    * config files were externally changed while IDEA running.
    *
    * @param state loaded component state
-   * @see com.intellij.util.xmlb.XmlSerializerUtil#copyBean(Object, Object)
+   * @see XmlSerializerUtil#copyBean(Object, Object)
    */
   void loadState(T state);
 

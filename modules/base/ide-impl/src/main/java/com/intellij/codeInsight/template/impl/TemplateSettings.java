@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.component.persist.*;
 import consulo.component.util.localize.AbstractBundle;
 import com.intellij.codeInsight.template.Template;
@@ -31,8 +31,8 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.MultiMap;
-import com.intellij.util.xmlb.Converter;
-import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.util.xml.serializer.Converter;
+import consulo.util.xml.serializer.annotation.OptionTag;
 import consulo.codeInsight.template.impl.BundleLiveTemplateSetEP;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.logging.Logger;

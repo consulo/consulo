@@ -16,7 +16,7 @@
 
 package com.intellij.ide.projectView.impl;
 
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -43,7 +43,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;

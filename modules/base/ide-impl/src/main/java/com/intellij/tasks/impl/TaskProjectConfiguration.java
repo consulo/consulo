@@ -27,10 +27,10 @@ import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.TaskRepository;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Property;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Property;
+import consulo.util.xml.serializer.annotation.Tag;
 
 /**
 * @author Dmitry Avdeev

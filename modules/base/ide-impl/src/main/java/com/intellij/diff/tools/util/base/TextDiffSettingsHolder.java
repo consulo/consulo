@@ -21,7 +21,7 @@ import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.util.xmlb.annotations.MapAnnotation;
+import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 

@@ -16,7 +16,7 @@
 package com.intellij.usages.impl;
 
 import com.intellij.openapi.components.*;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;

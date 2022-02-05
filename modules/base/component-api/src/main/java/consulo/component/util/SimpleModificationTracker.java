@@ -15,7 +15,7 @@
  */
 package consulo.component.util;
 
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.util.xml.serializer.annotation.Transient;
 
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 

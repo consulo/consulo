@@ -21,7 +21,7 @@ package com.intellij.openapi.util;
 
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.KeyedLazyInstance;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 public class ClassExtensionPoint<T> extends AbstractExtensionPointBean implements KeyedLazyInstance<T> {
   // these must be public for scrambling compatibility

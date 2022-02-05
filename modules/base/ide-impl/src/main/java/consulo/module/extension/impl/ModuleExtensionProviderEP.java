@@ -21,7 +21,7 @@ import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;

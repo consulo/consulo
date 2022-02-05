@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.configuration;
 
-import com.intellij.util.xmlb.annotations.AbstractCollection;
-import com.intellij.util.xmlb.annotations.Property;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.Property;
 
 import java.util.ArrayList;
 import java.util.List;

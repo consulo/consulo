@@ -15,10 +15,10 @@
  */
 package com.intellij.psi.codeStyle;
 
-import com.intellij.util.xmlb.DefaultJDOMExternalizer;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.DifferenceFilter;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -16,8 +16,8 @@
 package com.intellij.ide.util.gotoByName;
 
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.Tag;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

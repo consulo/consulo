@@ -15,8 +15,8 @@
  */
 package consulo.extensions;
 
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.util.xmlb.annotations.Text;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.util.xml.serializer.annotation.Text;
 
 /**
  * @author VISTALL

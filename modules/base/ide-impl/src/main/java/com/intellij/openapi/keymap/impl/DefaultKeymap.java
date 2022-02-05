@@ -19,7 +19,7 @@ import consulo.application.Application;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

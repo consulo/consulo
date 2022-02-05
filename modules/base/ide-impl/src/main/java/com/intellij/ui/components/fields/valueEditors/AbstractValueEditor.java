@@ -16,7 +16,7 @@
 package com.intellij.ui.components.fields.valueEditors;
 
 import consulo.configurable.ConfigurationException;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

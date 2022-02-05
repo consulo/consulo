@@ -57,7 +57,7 @@ public class SemanticEditorPosition {
 
   public void moveBeforeOptional(@Nonnull SyntaxElement syntaxElement) {
     if (!myIterator.atEnd()) {
-      if (syntaxElement.equals(map(myIterator.getTokenType()))) myIterator.retreat();
+      if (syntaxElement.equals(map((IElementType)myIterator.getTokenType()))) myIterator.retreat();
     }
   }
 
@@ -125,7 +125,7 @@ public class SemanticEditorPosition {
 
   public void moveAfterOptional(@Nonnull SyntaxElement syntaxElement) {
     if (!myIterator.atEnd()) {
-      if (syntaxElement.equals(map(myIterator.getTokenType()))) myIterator.advance();
+      if (syntaxElement.equals(map((IElementType)myIterator.getTokenType()))) myIterator.advance();
     }
   }
 

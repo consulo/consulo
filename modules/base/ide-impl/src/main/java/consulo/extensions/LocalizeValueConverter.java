@@ -15,7 +15,7 @@
  */
 package consulo.extensions;
 
-import com.intellij.util.xmlb.Converter;
+import consulo.util.xml.serializer.Converter;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 

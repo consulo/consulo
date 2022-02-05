@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

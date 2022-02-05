@@ -18,8 +18,8 @@ package com.intellij.patterns.compiler;
 
 import consulo.logging.Logger;
 import consulo.component.extension.AbstractExtensionPointBean;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
 
 public class PatternClassBean extends AbstractExtensionPointBean {
   private static final Logger LOG = Logger.getInstance(PatternClassBean.class);

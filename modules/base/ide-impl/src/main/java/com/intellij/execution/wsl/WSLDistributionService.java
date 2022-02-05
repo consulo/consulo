@@ -7,9 +7,9 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import com.intellij.openapi.util.AtomicNullableLazyValue;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

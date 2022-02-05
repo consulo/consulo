@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.settings;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

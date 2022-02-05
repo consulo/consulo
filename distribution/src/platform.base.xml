@@ -69,7 +69,7 @@
         <include>consulo:consulo-util-concurrent</include>
         <include>consulo:consulo-util-rmi</include>
         <include>consulo:consulo-util-dataholder</include>
-        <include>consulo:consulo-util-serializer</include>
+        <include>consulo:consulo-util-xml-serializer</include>
         <include>consulo:consulo-util-io</include>
         <include>consulo:consulo-util-jdom</include>
         <include>consulo:consulo-util-interner</include>

@@ -3,7 +3,7 @@ package com.intellij.tasks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 /**
  * @author Mikhail Golubev

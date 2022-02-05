@@ -17,9 +17,9 @@
 package com.intellij.openapi.roots.impl.libraries;
 
 import consulo.util.lang.function.Condition;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.JDOMExternalizable;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;

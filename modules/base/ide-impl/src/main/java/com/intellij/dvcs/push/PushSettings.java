@@ -21,9 +21,9 @@ import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import consulo.util.lang.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

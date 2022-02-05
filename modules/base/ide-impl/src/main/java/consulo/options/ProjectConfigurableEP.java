@@ -18,10 +18,10 @@ package consulo.options;
 import com.intellij.openapi.options.ConfigurableEP;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Property;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Property;
+import consulo.util.xml.serializer.annotation.Tag;
 
 import jakarta.inject.Inject;
 

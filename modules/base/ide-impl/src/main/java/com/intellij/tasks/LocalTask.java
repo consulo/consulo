@@ -18,7 +18,7 @@ package com.intellij.tasks;
 
 import com.intellij.tasks.timeTracking.model.WorkItem;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 import javax.annotation.Nonnull;
 import java.util.Date;

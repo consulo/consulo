@@ -37,7 +37,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.util.xmlb.DefaultJDOMExternalizer;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;

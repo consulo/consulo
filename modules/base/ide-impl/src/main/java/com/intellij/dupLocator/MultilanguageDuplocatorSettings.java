@@ -6,8 +6,8 @@ import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
+import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 

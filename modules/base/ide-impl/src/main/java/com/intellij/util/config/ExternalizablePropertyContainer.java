@@ -17,7 +17,7 @@ package com.intellij.util.config;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
-import com.intellij.util.xmlb.JDOMExternalizable;
+import consulo.util.xml.serializer.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.util.collection.SmartList;
 import consulo.logging.Logger;

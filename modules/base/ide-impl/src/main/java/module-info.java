@@ -65,7 +65,7 @@ open module consulo.ide.impl {
   requires transitive consulo.util.jdom;
   requires transitive consulo.util.lang;
   requires transitive consulo.util.rmi;
-  requires transitive consulo.util.serializer;
+  requires transitive consulo.util.xml.serializer;
 
   // TODO [VISTALL] remove this dependency
   requires gnu.trove;

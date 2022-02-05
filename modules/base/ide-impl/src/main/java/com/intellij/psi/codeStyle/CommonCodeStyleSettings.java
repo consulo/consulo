@@ -15,12 +15,12 @@
  */
 package com.intellij.psi.codeStyle;
 
-import com.intellij.util.xmlb.DefaultJDOMExternalizer;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.language.Language;
-import com.intellij.util.xmlb.JDOMExternalizable;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.document.Document;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.*;
 import consulo.language.psi.PsiDocumentManager;
@@ -30,8 +30,8 @@ import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
+import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;

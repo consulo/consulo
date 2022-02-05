@@ -16,7 +16,7 @@
 package com.intellij.codeInspection;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 /**
  * @author Dmitry Avdeev

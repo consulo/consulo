@@ -20,7 +20,7 @@ import com.intellij.execution.ui.layout.PlaceInGrid;
 import com.intellij.execution.ui.layout.Tab;
 import com.intellij.execution.ui.layout.View;
 import consulo.util.dataholder.Key;
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
 
 public class ViewImpl implements View {

@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.xmlb.WriteExternalException;
+import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.editor.markup.RangeHighlighter;

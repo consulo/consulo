@@ -19,7 +19,7 @@ import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;

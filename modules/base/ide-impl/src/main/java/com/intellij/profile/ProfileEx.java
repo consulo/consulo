@@ -16,11 +16,11 @@
 package com.intellij.profile;
 
 import consulo.project.Project;
-import com.intellij.util.xmlb.InvalidDataException;
-import com.intellij.util.xmlb.WriteExternalException;
-import com.intellij.util.xmlb.SmartSerializer;
-import com.intellij.util.xmlb.annotations.OptionTag;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.SmartSerializer;
+import consulo.util.xml.serializer.annotation.OptionTag;
+import consulo.util.xml.serializer.annotation.Transient;
 import consulo.logging.Logger;
 import org.jdom.Element;
 

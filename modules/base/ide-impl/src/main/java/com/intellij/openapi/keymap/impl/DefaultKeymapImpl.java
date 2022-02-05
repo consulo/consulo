@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.ui.ex.action.MouseShortcut;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.application.util.SystemInfo;
 import org.jdom.Element;
 

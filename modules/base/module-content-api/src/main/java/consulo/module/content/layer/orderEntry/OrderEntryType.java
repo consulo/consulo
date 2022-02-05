@@ -16,7 +16,7 @@
 package consulo.module.content.layer.orderEntry;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.module.content.layer.ModuleRootLayer;
 import org.jdom.Element;
 

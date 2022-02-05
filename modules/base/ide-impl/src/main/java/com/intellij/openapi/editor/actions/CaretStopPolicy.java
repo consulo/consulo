@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.util.xml.serializer.annotation.OptionTag;
 
 import java.util.Objects;
 

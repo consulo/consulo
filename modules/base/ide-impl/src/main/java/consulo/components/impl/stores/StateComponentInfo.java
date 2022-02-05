@@ -22,7 +22,7 @@ import consulo.component.persist.State;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import consulo.project.Project;
-import com.intellij.util.xmlb.JDOMExternalizable;
+import consulo.util.xml.serializer.JDOMExternalizable;
 import com.intellij.openapi.util.RoamingTypeDisabled;
 import consulo.container.PluginException;
 import consulo.container.plugin.ComponentConfig;

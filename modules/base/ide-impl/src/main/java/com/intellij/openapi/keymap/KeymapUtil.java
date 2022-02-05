@@ -18,7 +18,7 @@ package com.intellij.openapi.keymap;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;

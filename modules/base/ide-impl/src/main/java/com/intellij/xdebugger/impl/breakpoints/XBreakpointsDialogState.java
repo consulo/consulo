@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import com.intellij.util.xmlb.annotations.AbstractCollection;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.AbstractCollection;
+import consulo.util.xml.serializer.annotation.Tag;
 
 import java.util.HashSet;
 import java.util.Set;

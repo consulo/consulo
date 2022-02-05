@@ -17,7 +17,7 @@ package com.intellij.remote;
 
 import com.intellij.openapi.util.PasswordUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.util.xml.serializer.annotation.Transient;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 

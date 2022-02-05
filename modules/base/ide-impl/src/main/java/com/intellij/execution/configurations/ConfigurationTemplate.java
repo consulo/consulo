@@ -16,7 +16,7 @@
 package com.intellij.execution.configurations;
 
 import consulo.configurable.Configurable;
-import com.intellij.util.xmlb.JDOMExternalizable;
+import consulo.util.xml.serializer.JDOMExternalizable;
 
 /**
  * @author dyoma

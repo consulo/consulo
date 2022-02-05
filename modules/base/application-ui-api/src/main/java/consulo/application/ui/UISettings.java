@@ -15,11 +15,11 @@
  */
 package consulo.application.ui;
 
-import com.intellij.util.xmlb.Accessor;
-import com.intellij.util.xmlb.SerializationFilter;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Property;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.util.xml.serializer.Accessor;
+import consulo.util.xml.serializer.SerializationFilter;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.util.xml.serializer.annotation.Property;
+import consulo.util.xml.serializer.annotation.Transient;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

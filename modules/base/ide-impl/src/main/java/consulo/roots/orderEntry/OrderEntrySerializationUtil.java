@@ -16,7 +16,7 @@
 package consulo.roots.orderEntry;
 
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import com.intellij.util.xmlb.InvalidDataException;
+import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.module.content.layer.ModuleRootLayer;

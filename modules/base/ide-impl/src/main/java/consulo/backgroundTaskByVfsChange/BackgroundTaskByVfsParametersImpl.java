@@ -16,8 +16,8 @@
 package consulo.backgroundTaskByVfsChange;
 
 import consulo.project.Project;
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.util.xml.serializer.annotation.Transient;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

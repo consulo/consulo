@@ -30,8 +30,8 @@ import consulo.project.ui.wm.content.ContentFactory;
 import consulo.project.ui.wm.content.ContentManager;
 import com.intellij.util.ObjectUtils;
 import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.OptionTag;
 import consulo.application.AccessRule;
 import javax.annotation.Nonnull;
 

@@ -16,8 +16,8 @@
 package consulo.extensions;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Text;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Text;
 
 /**
  * @author VISTALL

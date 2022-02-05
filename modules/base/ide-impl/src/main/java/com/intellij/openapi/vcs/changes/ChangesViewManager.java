@@ -59,7 +59,7 @@ import com.intellij.util.FunctionUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

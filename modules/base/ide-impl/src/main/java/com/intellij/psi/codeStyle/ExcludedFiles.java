@@ -5,8 +5,8 @@ import com.intellij.formatting.fileSet.FileSetDescriptor;
 import com.intellij.formatting.fileSet.FileSetDescriptorFactory;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.XmlSerializer;
-import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.util.xml.serializer.XmlSerializer;
+import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 

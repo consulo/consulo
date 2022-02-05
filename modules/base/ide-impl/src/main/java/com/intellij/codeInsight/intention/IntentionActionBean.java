@@ -23,7 +23,7 @@ import consulo.logging.Logger;
 import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.annotation.Tag;
 
 import javax.annotation.Nullable;
 import java.util.ResourceBundle;

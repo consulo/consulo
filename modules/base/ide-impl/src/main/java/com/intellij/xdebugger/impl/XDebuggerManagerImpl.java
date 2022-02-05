@@ -42,7 +42,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.xmlb.annotations.Property;
+import consulo.util.xml.serializer.annotation.Property;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
