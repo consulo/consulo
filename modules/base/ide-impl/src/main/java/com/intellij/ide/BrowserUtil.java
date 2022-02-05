@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.browsers.BrowserLauncher;
 import com.intellij.ide.browsers.BrowserLauncherAppless;

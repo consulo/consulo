@@ -17,7 +17,7 @@ package com.intellij.execution.configurations;
 
 import com.intellij.diagnostic.logging.LogConsole;
 import com.intellij.execution.ExecutionTarget;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.project.Project;

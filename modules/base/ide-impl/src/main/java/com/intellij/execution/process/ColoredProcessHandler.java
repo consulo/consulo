@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.process;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.dataholder.Key;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

@@ -18,9 +18,12 @@ package consulo.util.lang;
 import consulo.util.lang.internal.NaturalComparator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 
@@ -28,13 +31,325 @@ import java.util.function.Function;
  * Based on IDEA code
  */
 public class StringUtil {
+  private static final Logger LOG = LoggerFactory.getLogger(StringUtil.class);
+
   private static final String[] MN_QUOTED = {"&&", "__"};
   private static final String[] MN_CHARS = {"&", "_"};
 
-  @NonNls
   private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
-  @NonNls
   private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
+
+  /**
+   * Converts line separators to <code>"\n"</code>
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String convertLineSeparators(@Nonnull String text) {
+    return convertLineSeparators(text, false);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String join(@Nonnull final String[] strings, @Nonnull final String separator) {
+    return join(strings, 0, strings.length, separator);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String join(@Nonnull final String[] strings, int startIndex, int endIndex, @Nonnull final String separator) {
+    final StringBuilder result = new StringBuilder();
+    for (int i = startIndex; i < endIndex; i++) {
+      if (i > startIndex) result.append(separator);
+      result.append(strings[i]);
+    }
+    return result.toString();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimLog(@Nonnull final String text, final int limit) {
+    if (limit > 5 && text.length() > limit) {
+      return text.substring(0, limit - 5) + " ...\n";
+    }
+    return text;
+  }
+
+  public static void quote(@Nonnull final StringBuilder builder) {
+    quote(builder, '\"');
+  }
+
+  public static void quote(@Nonnull final StringBuilder builder, final char quotingChar) {
+    builder.insert(0, quotingChar);
+    builder.append(quotingChar);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeQuotes(@Nonnull final String str) {
+    return escapeChar(str, '"');
+  }
+
+  public static void escapeQuotes(@Nonnull final StringBuilder buf) {
+    escapeChar(buf, '"');
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String convertLineSeparators(@Nonnull String text, boolean keepCarriageReturn) {
+    return convertLineSeparators(text, "\n", null, keepCarriageReturn);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator) {
+    return convertLineSeparators(text, newSeparator, null);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static CharSequence convertLineSeparators(@Nonnull CharSequence text, @Nonnull String newSeparator) {
+    return unifyLineSeparators(text, newSeparator, null, false);
+  }
+
+  @Nonnull
+  public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep) {
+    return convertLineSeparators(text, newSeparator, offsetsToKeep, false);
+  }
+
+  @Nonnull
+  public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep, boolean keepCarriageReturn) {
+    return unifyLineSeparators(text, newSeparator, offsetsToKeep, keepCarriageReturn).toString();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static CharSequence unifyLineSeparators(@Nonnull CharSequence text) {
+    return unifyLineSeparators(text, "\n", null, false);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String shortenTextWithEllipsis(@Nonnull final String text, final int maxLength, final int suffixLength, @Nonnull String symbol) {
+    final int textLength = text.length();
+    if (textLength > maxLength) {
+      final int prefixLength = maxLength - suffixLength - symbol.length();
+      assert prefixLength > 0;
+      return text.substring(0, prefixLength) + symbol + text.substring(textLength - suffixLength);
+    }
+    else {
+      return text;
+    }
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String shortenTextWithEllipsis(@Nonnull final String text, final int maxLength, final int suffixLength, boolean useEllipsisSymbol) {
+    String symbol = useEllipsisSymbol ? "\u2026" : "...";
+    return shortenTextWithEllipsis(text, maxLength, suffixLength, symbol);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String shortenPathWithEllipsis(@Nonnull final String path, final int maxLength, boolean useEllipsisSymbol) {
+    return shortenTextWithEllipsis(path, maxLength, (int)(maxLength * 0.7), useEllipsisSymbol);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String shortenPathWithEllipsis(@Nonnull final String path, final int maxLength) {
+    return shortenPathWithEllipsis(path, maxLength, false);
+  }
+
+  @Nonnull
+  public static CharSequence unifyLineSeparators(@Nonnull CharSequence text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep, boolean keepCarriageReturn) {
+    StringBuilder buffer = null;
+    int intactLength = 0;
+    final boolean newSeparatorIsSlashN = "\n".equals(newSeparator);
+    for (int i = 0; i < text.length(); i++) {
+      char c = text.charAt(i);
+      if (c == '\n') {
+        if (!newSeparatorIsSlashN) {
+          if (buffer == null) {
+            buffer = new StringBuilder(text.length());
+            buffer.append(text, 0, intactLength);
+          }
+          buffer.append(newSeparator);
+          shiftOffsets(offsetsToKeep, buffer.length(), 1, newSeparator.length());
+        }
+        else if (buffer == null) {
+          intactLength++;
+        }
+        else {
+          buffer.append(c);
+        }
+      }
+      else if (c == '\r') {
+        boolean followedByLineFeed = i < text.length() - 1 && text.charAt(i + 1) == '\n';
+        if (!followedByLineFeed && keepCarriageReturn) {
+          if (buffer == null) {
+            intactLength++;
+          }
+          else {
+            buffer.append(c);
+          }
+          continue;
+        }
+        if (buffer == null) {
+          buffer = new StringBuilder(text.length());
+          buffer.append(text, 0, intactLength);
+        }
+        buffer.append(newSeparator);
+        if (followedByLineFeed) {
+          //noinspection AssignmentToForLoopParameter
+          i++;
+          shiftOffsets(offsetsToKeep, buffer.length(), 2, newSeparator.length());
+        }
+        else {
+          shiftOffsets(offsetsToKeep, buffer.length(), 1, newSeparator.length());
+        }
+      }
+      else {
+        if (buffer == null) {
+          intactLength++;
+        }
+        else {
+          buffer.append(c);
+        }
+      }
+    }
+    return buffer == null ? text : buffer;
+  }
+
+  private static void shiftOffsets(int[] offsets, int changeOffset, int oldLength, int newLength) {
+    if (offsets == null) return;
+    int shift = newLength - oldLength;
+    if (shift == 0) return;
+    for (int i = 0; i < offsets.length; i++) {
+      int offset = offsets[i];
+      if (offset >= changeOffset + oldLength) {
+        offsets[i] += shift;
+      }
+    }
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static List<String> splitHonorQuotes(@Nonnull String s, char separator) {
+    final List<String> result = new ArrayList<String>();
+    final StringBuilder builder = new StringBuilder(s.length());
+    boolean inQuotes = false;
+    for (int i = 0; i < s.length(); i++) {
+      final char c = s.charAt(i);
+      if (c == separator && !inQuotes) {
+        if (builder.length() > 0) {
+          result.add(builder.toString());
+          builder.setLength(0);
+        }
+        continue;
+      }
+
+      if ((c == '"' || c == '\'') && !(i > 0 && s.charAt(i - 1) == '\\')) {
+        inQuotes = !inQuotes;
+      }
+      builder.append(c);
+    }
+
+    if (builder.length() > 0) {
+      result.add(builder.toString());
+    }
+    return result;
+  }
+
+  @Contract(pure = true)
+  public static int countNewLines(@Nonnull CharSequence text) {
+    return countChars(text, '\n');
+  }
+
+  @Contract(pure = true)
+  public static int countChars(@Nonnull CharSequence text, char c) {
+    return countChars(text, c, 0, false);
+  }
+
+  @Contract(pure = true)
+  public static int countChars(@Nonnull CharSequence text, char c, int offset, boolean stopAtOtherChar) {
+    return countChars(text, c, offset, text.length(), stopAtOtherChar);
+  }
+
+  @Contract(pure = true)
+  public static int countChars(@Nonnull CharSequence text, char c, int start, int end, boolean stopAtOtherChar) {
+    boolean forward = start <= end;
+    start = forward ? Math.max(0, start) : Math.min(text.length(), start);
+    end = forward ? Math.min(text.length(), end) : Math.max(0, end);
+    int count = 0;
+    for (int i = forward ? start : start - 1; forward == i < end; i += forward ? 1 : -1) {
+      if (text.charAt(i) == c) {
+        count++;
+      }
+      else if (stopAtOtherChar) {
+        break;
+      }
+    }
+    return count;
+  }
+
+  public static void repeatSymbol(@Nonnull Appendable buffer, char symbol, int times) {
+    assert times >= 0 : times;
+    try {
+      for (int i = 0; i < times; i++) {
+        buffer.append(symbol);
+      }
+    }
+    catch (IOException e) {
+      LOG.error(e.getMessage(), e);
+    }
+  }
+
+  @Contract(pure = true)
+  public static int indexOfAny(@Nonnull final String s, @Nonnull final String chars) {
+    return indexOfAny(s, chars, 0, s.length());
+  }
+
+  @Contract(pure = true)
+  public static int indexOfAny(@Nonnull final CharSequence s, @Nonnull final String chars) {
+    return indexOfAny(s, chars, 0, s.length());
+  }
+
+  @Contract(pure = true)
+  public static int indexOfAny(@Nonnull final String s, @Nonnull final String chars, final int start, final int end) {
+    return indexOfAny((CharSequence)s, chars, start, end);
+  }
+
+  @Contract(pure = true)
+  public static int indexOfAny(@Nonnull final CharSequence s, @Nonnull final String chars, final int start, final int end) {
+    for (int i = start; i < end; i++) {
+      if (containsChar(chars, s.charAt(i))) return i;
+    }
+    return -1;
+  }
+
+  @Contract(pure = true)
+  public static boolean containsChar(@Nonnull final String value, final char ch) {
+    return value.indexOf(ch) >= 0;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String repeatSymbol(final char aChar, final int count) {
+    char[] buffer = new char[count];
+    Arrays.fill(buffer, aChar);
+    return new String(buffer);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String repeat(@Nonnull String s, int count) {
+    assert count >= 0 : count;
+    StringBuilder sb = new StringBuilder(s.length() * count);
+    for (int i = 0; i < count; i++) {
+      sb.append(s);
+    }
+    return sb.toString();
+  }
 
   @Contract(pure = true)
   public static boolean isDecimalDigit(char c) {

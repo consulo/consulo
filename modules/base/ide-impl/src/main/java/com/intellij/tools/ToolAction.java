@@ -16,7 +16,7 @@
 
 package com.intellij.tools;
 
-import com.intellij.execution.process.ProcessListener;
+import consulo.process.event.ProcessListener;
 import com.intellij.ide.macro.MacroManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.process;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.KillableProcess;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.util.io.BaseOutputReader;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.io.BaseOutputReader;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.Charset;

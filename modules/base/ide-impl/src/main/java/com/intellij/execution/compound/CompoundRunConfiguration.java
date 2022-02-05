@@ -24,6 +24,7 @@ import com.intellij.execution.runners.ExecutionEnvironmentBuilder;
 import com.intellij.execution.runners.ProgramRunner;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.SettingsEditor;
+import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.Pair;

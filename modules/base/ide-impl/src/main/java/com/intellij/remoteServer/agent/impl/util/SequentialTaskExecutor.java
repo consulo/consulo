@@ -3,7 +3,7 @@ package com.intellij.remoteServer.agent.impl.util;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.Ref;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;

@@ -1,18 +1,18 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.uiOld.components.fields;
 
-import consulo.desktop.awt.uiOld.Expandable;
 import com.intellij.ui.components.JBScrollBar;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.Function;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
+import consulo.desktop.awt.uiOld.Expandable;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.util.function.Function;
 
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
@@ -30,7 +30,7 @@ public class IntelliJExpandableSupport<Source extends JTextComponent> extends Ex
     int height = metrics == null ? 16 : metrics.getHeight();
     Dimension size = new Dimension(height * 32, height * 16);
 
-    JTextArea area = new JTextArea(onShow.fun(field.getText()));
+    JTextArea area = new JTextArea(onShow.apply(field.getText()));
     area.putClientProperty(Expandable.class, this);
     area.setEditable(field.isEditable());
     area.setBackground(field.getBackground());
@@ -77,7 +77,7 @@ public class IntelliJExpandableSupport<Source extends JTextComponent> extends Ex
       @Override
       public void cancel(@Nonnull Function<? super String, String> onHide) {
         if (field.isEditable()) {
-          field.setText(onHide.fun(area.getText()));
+          field.setText(onHide.apply(area.getText()));
           copyCaretPosition(area, field);
         }
       }

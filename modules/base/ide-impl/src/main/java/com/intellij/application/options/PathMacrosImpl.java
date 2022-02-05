@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options;
 
-import com.intellij.openapi.application.PathMacros;
+import consulo.application.PathMacros;
 import com.intellij.openapi.components.*;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.component.persist.*;

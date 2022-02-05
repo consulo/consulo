@@ -16,8 +16,12 @@
 package com.intellij.execution.impl;
 
 import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.process.*;
 import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.process.local.BaseProcessHandler;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessHandler;
+import consulo.process.local.OSProcessHandler;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import javax.annotation.Nonnull;

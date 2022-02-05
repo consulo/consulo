@@ -15,7 +15,7 @@
  */
 package consulo.vfs.impl.mediator;
 
-import com.intellij.jna.JnaLoader;
+import consulo.util.jna.JnaLoader;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.win32.IdeaWin32;

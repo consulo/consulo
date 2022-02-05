@@ -15,15 +15,15 @@
  */
 package com.intellij.remote;
 
-import com.intellij.execution.CommandLineUtil;
-import com.intellij.execution.TaskExecutor;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessOutputTypes;
-import com.intellij.execution.process.ProcessWaitFor;
+import consulo.process.CommandLineUtil;
+import consulo.process.TaskExecutor;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessOutputTypes;
+import consulo.process.local.ProcessWaitFor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.io.BaseOutputReader;
+import consulo.process.io.BaseOutputReader;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

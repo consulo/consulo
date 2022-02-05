@@ -17,7 +17,7 @@ package com.intellij.openapi.util.process;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 
 import java.io.IOException;
 import java.util.concurrent.Future;

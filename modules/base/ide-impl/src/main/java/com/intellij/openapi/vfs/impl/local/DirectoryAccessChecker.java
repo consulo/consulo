@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.impl.local;
 
 import com.intellij.execution.configurations.PathEnvironmentVariableUtil;
-import com.intellij.execution.process.ProcessIOExecutorService;
+import consulo.process.io.ProcessIOExecutorService;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;

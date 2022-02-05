@@ -24,7 +24,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.util.WaitForProgressToShow;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 
 /**
  * @author irengrig

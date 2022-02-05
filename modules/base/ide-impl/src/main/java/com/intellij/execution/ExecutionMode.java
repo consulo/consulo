@@ -15,7 +15,7 @@
  */
 package com.intellij.execution;
 
-import com.intellij.execution.process.ProcessListener;
+import consulo.process.event.ProcessListener;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

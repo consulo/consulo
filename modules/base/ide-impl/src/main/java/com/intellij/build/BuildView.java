@@ -10,7 +10,7 @@ import com.intellij.execution.actions.StopAction;
 import com.intellij.execution.actions.StopProcessAction;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.*;
 import com.intellij.ide.IdeBundle;

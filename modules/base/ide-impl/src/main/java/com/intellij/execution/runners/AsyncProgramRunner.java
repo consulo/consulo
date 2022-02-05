@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.runners;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.RunProfileStarter;
 import com.intellij.execution.configurations.RunProfileState;

@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger;
 
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 
 import java.io.OutputStream;
 

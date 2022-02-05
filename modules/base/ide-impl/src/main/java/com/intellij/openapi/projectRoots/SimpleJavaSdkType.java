@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.projectRoots;
 
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
 import consulo.content.bundle.SdkTable;

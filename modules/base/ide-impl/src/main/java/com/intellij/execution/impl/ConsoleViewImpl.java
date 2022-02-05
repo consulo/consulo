@@ -12,7 +12,7 @@ import com.intellij.execution.actions.ConsoleActionsPostProcessor;
 import com.intellij.execution.actions.EOFAction;
 import com.intellij.execution.filters.*;
 import com.intellij.execution.filters.Filter.ResultItem;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.ObservableConsoleView;

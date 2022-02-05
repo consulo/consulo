@@ -18,7 +18,7 @@ package com.intellij.execution.ui;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.ide.HelpIdProvider;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnAction;

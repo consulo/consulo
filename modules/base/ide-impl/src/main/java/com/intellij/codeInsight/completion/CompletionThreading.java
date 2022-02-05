@@ -11,7 +11,7 @@ import com.intellij.openapi.progress.util.ProgressWrapper;
 import consulo.application.util.function.Computable;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.FutureResult;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 
 import java.util.ArrayList;
 import java.util.List;

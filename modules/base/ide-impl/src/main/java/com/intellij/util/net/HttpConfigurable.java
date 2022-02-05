@@ -28,6 +28,7 @@ import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
+import consulo.process.cmd.ParametersList;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.WaitForProgressToShow;
 import com.intellij.util.containers.ContainerUtil;
@@ -501,7 +502,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
   }
 
   /**
-   * @deprecated use {@link com.intellij.execution.configurations.ParametersList#addProperty(String, String)} (to be removed in IDEA 2018)
+   * @deprecated use {@link ParametersList#addProperty(String, String)} (to be removed in IDEA 2018)
    */
   @SuppressWarnings({"deprecation", "unused"})
   @Nonnull

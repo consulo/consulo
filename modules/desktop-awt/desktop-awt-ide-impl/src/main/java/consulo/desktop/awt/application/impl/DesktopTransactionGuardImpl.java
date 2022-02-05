@@ -20,7 +20,7 @@ import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.util.registry.Registry;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessToken;
 import consulo.application.Application;

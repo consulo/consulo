@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner.ui;
 
 import com.intellij.execution.process.AnsiEscapeDecoder;
-import com.intellij.execution.process.ProcessOutputTypes;
+import consulo.process.ProcessOutputTypes;
 import com.intellij.execution.testframework.PoolOfTestIcons;
 import com.intellij.execution.testframework.Printer;
 import com.intellij.execution.testframework.TestConsoleProperties;

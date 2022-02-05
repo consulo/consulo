@@ -20,11 +20,14 @@ import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
 import consulo.application.AllIcons;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.local.OSProcessHandler;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -96,7 +99,7 @@ public abstract class CommandLineState implements RunProfileState {
    * @return the handler for the running process
    * @throws ExecutionException if the execution failed.
    * @see GeneralCommandLine
-   * @see com.intellij.execution.process.OSProcessHandler
+   * @see OSProcessHandler
    */
   @Nonnull
   protected abstract ProcessHandler startProcess() throws ExecutionException;

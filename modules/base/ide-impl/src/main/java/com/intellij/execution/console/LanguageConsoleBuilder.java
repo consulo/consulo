@@ -16,7 +16,7 @@
 package com.intellij.execution.console;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnAction;

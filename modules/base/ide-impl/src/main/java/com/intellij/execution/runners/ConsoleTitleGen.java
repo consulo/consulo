@@ -17,7 +17,7 @@
 package com.intellij.execution.runners;
 
 import com.intellij.execution.ExecutionHelper;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentDescriptor;
 import consulo.project.Project;
 

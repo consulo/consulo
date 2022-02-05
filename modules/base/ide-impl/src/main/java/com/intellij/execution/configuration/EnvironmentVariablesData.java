@@ -2,7 +2,7 @@
 package com.intellij.execution.configuration;
 
 import com.google.common.collect.ImmutableMap;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.cmd.GeneralCommandLine;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

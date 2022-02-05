@@ -19,8 +19,8 @@
  */
 package com.intellij.openapi.projectRoots;
 
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.configurations.ParametersList;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.cmd.ParametersList;
 import com.intellij.execution.configurations.SimpleJavaParameters;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.util.Comparing;

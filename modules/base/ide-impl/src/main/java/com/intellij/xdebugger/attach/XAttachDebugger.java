@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.attach;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.process.ProcessInfo;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

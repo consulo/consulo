@@ -15,21 +15,21 @@
  */
 package com.intellij.ui;
 
-import consulo.application.AllIcons;
-import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.util.Function;
-import com.intellij.util.execution.ParametersListUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.process.cmd.ParametersListUtil;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.ValueComponent;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.function.Function;
 
 public class RawCommandLineEditor extends Wrapper implements TextAccessor {
   private final TextBoxWithExpandAction myTextBoxWithExpandAction;
@@ -40,7 +40,7 @@ public class RawCommandLineEditor extends Wrapper implements TextAccessor {
 
   public RawCommandLineEditor(final Function<String, List<String>> lineParser, final Function<List<String>, String> lineJoiner) {
     super(new BorderLayout());
-    myTextBoxWithExpandAction = TextBoxWithExpandAction.create(AllIcons.Actions.ShowViewer, "", lineParser::fun, lineJoiner::fun);
+    myTextBoxWithExpandAction = TextBoxWithExpandAction.create(AllIcons.Actions.ShowViewer, "", lineParser, lineJoiner);
     setContent((JComponent)TargetAWT.to(myTextBoxWithExpandAction));
 
     setDescriptor(null);

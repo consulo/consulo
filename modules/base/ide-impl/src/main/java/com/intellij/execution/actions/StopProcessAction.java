@@ -16,7 +16,7 @@
 package com.intellij.execution.actions;
 
 import com.intellij.execution.KillableProcess;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

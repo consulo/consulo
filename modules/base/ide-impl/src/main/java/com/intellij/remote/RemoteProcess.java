@@ -16,7 +16,7 @@
 package com.intellij.remote;
 
 import com.google.common.net.HostAndPort;
-import com.intellij.execution.process.SelfKiller;
+import consulo.process.SelfKiller;
 import javax.annotation.Nullable;
 
 /**

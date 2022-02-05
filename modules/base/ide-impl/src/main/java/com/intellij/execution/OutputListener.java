@@ -1,8 +1,8 @@
 package com.intellij.execution;
 
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessOutputTypes;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

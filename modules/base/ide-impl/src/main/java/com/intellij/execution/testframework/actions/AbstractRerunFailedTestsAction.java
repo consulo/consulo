@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.actions;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.RunnerRegistry;
 import com.intellij.execution.configurations.*;

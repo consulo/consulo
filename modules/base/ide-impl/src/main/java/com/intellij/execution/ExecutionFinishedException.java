@@ -1,5 +1,7 @@
 package com.intellij.execution;
 
+import consulo.process.ExecutionException;
+
 public class ExecutionFinishedException extends ExecutionException {
   public ExecutionFinishedException() {
     this(null);

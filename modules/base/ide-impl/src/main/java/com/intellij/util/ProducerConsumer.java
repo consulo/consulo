@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import consulo.application.ApplicationManager;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 
 import java.util.ArrayDeque;
 

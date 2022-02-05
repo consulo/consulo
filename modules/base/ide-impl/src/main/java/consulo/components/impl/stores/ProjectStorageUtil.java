@@ -17,7 +17,7 @@ package consulo.components.impl.stores;
 
 import com.intellij.notification.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.PathMacros;
+import consulo.application.PathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;

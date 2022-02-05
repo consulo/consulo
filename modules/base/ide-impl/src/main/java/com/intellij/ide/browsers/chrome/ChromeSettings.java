@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
-import com.intellij.util.execution.ParametersListUtil;
+import consulo.process.cmd.ParametersListUtil;
 import consulo.util.xml.serializer.annotation.Tag;
 
 import javax.annotation.Nonnull;

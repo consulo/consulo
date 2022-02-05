@@ -2,14 +2,14 @@
 package consulo.desktop.awt.uiOld.components.fields;
 
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.desktop.awt.uiOld.Expandable;
-import com.intellij.util.Function;
-import com.intellij.util.execution.ParametersListUtil;
 import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
+import consulo.desktop.awt.uiOld.Expandable;
+import consulo.process.cmd.ParametersListUtil;
 
 import javax.annotation.Nonnull;
 import javax.swing.text.JTextComponent;
 import java.util.List;
+import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -34,8 +34,8 @@ public class ExpandableTextField extends ExtendableTextField implements Expandab
    * @see ParametersListUtil
    */
   public ExpandableTextField(@Nonnull Function<? super String, ? extends List<String>> parser, @Nonnull Function<? super List<String>, String> joiner) {
-    Function<? super String, String> onShow = text -> StringUtil.join(parser.fun(text), "\n");
-    Function<? super String, String> onHide = text -> joiner.fun(asList(StringUtil.splitByLines(text)));
+    Function<? super String, String> onShow = text -> StringUtil.join(parser.apply(text), "\n");
+    Function<? super String, String> onHide = text -> joiner.apply(asList(StringUtil.splitByLines(text)));
     support = new IntelliJExpandableSupport<JTextComponent>(this, onShow, onHide);
 
     putClientProperty("monospaced", true);
@@ -43,8 +43,8 @@ public class ExpandableTextField extends ExtendableTextField implements Expandab
   }
 
   public ExpandableTextField(@Nonnull Function<? super String, ? extends List<String>> parser, @Nonnull Function<? super List<String>, String> joiner, SupportTextBoxWithExpandActionExtender lookAndFeel) {
-    Function<? super String, String> onShow = text -> StringUtil.join(parser.fun(text), "\n");
-    Function<? super String, String> onHide = text -> joiner.fun(asList(StringUtil.splitByLines(text)));
+    Function<? super String, String> onShow = text -> StringUtil.join(parser.apply(text), "\n");
+    Function<? super String, String> onHide = text -> joiner.apply(asList(StringUtil.splitByLines(text)));
 
     support = lookAndFeel.createExpandableSupport(this, onShow, onHide);
 

@@ -51,7 +51,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.application.util.function.Computable;

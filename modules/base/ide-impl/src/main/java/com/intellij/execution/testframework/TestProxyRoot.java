@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 
 public interface TestProxyRoot {
   String getPresentation();

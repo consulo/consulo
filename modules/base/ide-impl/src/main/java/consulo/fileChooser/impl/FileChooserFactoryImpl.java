@@ -15,7 +15,7 @@
  */
 package consulo.fileChooser.impl;
 
-import com.intellij.openapi.application.PathMacros;
+import consulo.application.PathMacros;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.component.ComponentManager;

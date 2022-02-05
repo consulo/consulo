@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.runners;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.Executor;
 import com.intellij.execution.console.ConsoleExecuteAction;
@@ -27,6 +27,10 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.openapi.actionSystem.*;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessHandler;
+import consulo.process.local.OSProcessHandler;
 import consulo.project.Project;
 import consulo.application.ui.awt.JBColor;
 import consulo.application.ui.awt.SideBorder;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.configurations.SimpleJavaParameters;
 import javax.annotation.Nonnull;
 

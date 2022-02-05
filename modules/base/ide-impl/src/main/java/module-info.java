@@ -49,6 +49,7 @@ open module consulo.ide.impl {
   requires transitive consulo.project.ui.api;
   requires transitive consulo.navigation.api;
   requires transitive consulo.editor.api;
+  requires transitive consulo.process.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -65,6 +66,7 @@ open module consulo.ide.impl {
   requires transitive consulo.util.jdom;
   requires transitive consulo.util.lang;
   requires transitive consulo.util.rmi;
+  requires transitive consulo.util.jna;
   requires transitive consulo.util.xml.serializer;
 
   // TODO [VISTALL] remove this dependency
@@ -490,7 +492,6 @@ open module consulo.ide.impl {
   exports com.intellij.internal.statistic.updater;
   exports com.intellij.internal.tree;
   exports com.intellij.internal.validation;
-  exports com.intellij.jna;
   exports com.intellij.lang;
   exports com.intellij.lang.annotation;
   exports com.intellij.lang.cacheBuilder;
@@ -981,7 +982,6 @@ open module consulo.ide.impl {
   exports com.intellij.util.continuation;
   exports com.intellij.util.diff;
   exports com.intellij.util.exception;
-  exports com.intellij.util.execution;
   exports com.intellij.util.gist;
   exports com.intellij.util.graph;
   exports com.intellij.util.graph.impl;

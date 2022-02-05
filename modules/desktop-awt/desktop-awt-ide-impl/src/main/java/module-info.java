@@ -9,8 +9,6 @@ open module consulo.desktop.awt.ide.impl {
   requires java.desktop;
   requires java.management;
 
-  requires com.sun.jna;
-  requires com.sun.jna.platform;
   requires miglayout;
   requires com.google.common;
   requires svg.salamander;
@@ -33,6 +31,7 @@ open module consulo.desktop.awt.ide.impl {
   requires consulo.ui.impl;
   requires consulo.ide.impl;
   requires consulo.desktop.ide.impl;
+  requires consulo.util.jna;
 
   requires consulo.desktop.awt.bootstrap;
   requires consulo.desktop.awt.hacking;

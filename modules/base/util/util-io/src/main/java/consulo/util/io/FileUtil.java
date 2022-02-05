@@ -36,6 +36,61 @@ public class FileUtil {
   private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
 
   @Nonnull
+  public static String loadTextAndClose(@Nonnull InputStream stream) throws IOException {
+    //noinspection IOResourceOpenedButNotSafelyClosed
+    return loadTextAndClose(new InputStreamReader(stream));
+  }
+
+  @Nonnull
+  public static String loadTextAndClose(@Nonnull InputStream inputStream, boolean convertLineSeparators) throws IOException {
+    String text = loadTextAndClose(inputStream);
+    return convertLineSeparators ? StringUtil.convertLineSeparators(text) : text;
+  }
+
+  @Nonnull
+  public static String loadTextAndClose(@Nonnull Reader reader) throws IOException {
+    try {
+      return new String(adaptiveLoadText(reader));
+    }
+    finally {
+      reader.close();
+    }
+  }
+
+  @Nonnull
+  public static char[] adaptiveLoadText(@Nonnull Reader reader) throws IOException {
+    char[] chars = new char[4096];
+    List<char[]> buffers = null;
+    int count = 0;
+    int total = 0;
+    while (true) {
+      int n = reader.read(chars, count, chars.length - count);
+      if (n <= 0) break;
+      count += n;
+      if (total > 1024 * 1024 * 10) throw new FileTooBigException("File too big " + reader);
+      total += n;
+      if (count == chars.length) {
+        if (buffers == null) {
+          buffers = new ArrayList<>();
+        }
+        buffers.add(chars);
+        int newLength = Math.min(1024 * 1024, chars.length * 2);
+        chars = new char[newLength];
+        count = 0;
+      }
+    }
+    char[] result = new char[total];
+    if (buffers != null) {
+      for (char[] buffer : buffers) {
+        System.arraycopy(buffer, 0, result, result.length - total, buffer.length);
+        total -= buffer.length;
+      }
+    }
+    System.arraycopy(chars, 0, result, result.length - total, total);
+    return result;
+  }
+
+  @Nonnull
   public static String getExtension(@Nonnull String fileName) {
     int index = fileName.lastIndexOf('.');
     if (index < 0) return "";

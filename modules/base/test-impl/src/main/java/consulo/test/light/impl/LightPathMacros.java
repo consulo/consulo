@@ -15,7 +15,7 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.application.PathMacros;
+import consulo.application.PathMacros;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

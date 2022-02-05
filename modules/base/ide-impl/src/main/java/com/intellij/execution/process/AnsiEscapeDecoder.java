@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

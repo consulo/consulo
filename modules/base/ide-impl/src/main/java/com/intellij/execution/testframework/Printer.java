@@ -17,7 +17,7 @@ package com.intellij.execution.testframework;
 
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.process.AnsiEscapeDecoder;
-import com.intellij.execution.process.ProcessOutputTypes;
+import consulo.process.ProcessOutputTypes;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;

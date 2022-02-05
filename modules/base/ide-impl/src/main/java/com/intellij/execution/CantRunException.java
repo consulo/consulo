@@ -20,6 +20,8 @@ import consulo.content.bundle.Sdk;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.impl.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
+import consulo.process.ExecutionException;
+
 import javax.annotation.Nonnull;
 
 public class CantRunException extends ExecutionException {

@@ -17,6 +17,10 @@ package com.intellij.execution.process;
 
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
+import consulo.process.ProcessOutputTypes;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.project.ui.wm.StatusBar;

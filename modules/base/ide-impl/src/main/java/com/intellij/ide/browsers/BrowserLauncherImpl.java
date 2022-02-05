@@ -16,7 +16,7 @@
 package com.intellij.ide.browsers;
 
 import com.intellij.concurrency.JobScheduler;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;

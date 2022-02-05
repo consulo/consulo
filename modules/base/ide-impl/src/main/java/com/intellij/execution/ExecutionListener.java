@@ -16,7 +16,7 @@
 package com.intellij.execution;
 
 import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import javax.annotation.Nonnull;
 

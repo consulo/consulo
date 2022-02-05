@@ -15,12 +15,12 @@
  */
 package consulo.execution.console;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.PtyCommandLine;
-import com.intellij.execution.process.OSProcessHandler;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.process.ProcessHandlerFactory;
+import consulo.process.local.OSProcessHandler;
+import consulo.process.ProcessHandler;
+import consulo.process.local.ProcessHandlerFactory;
 import com.intellij.execution.process.RunnerMediator;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;

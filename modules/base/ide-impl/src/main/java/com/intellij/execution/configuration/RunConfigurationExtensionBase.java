@@ -15,12 +15,12 @@
  */
 package com.intellij.execution.configuration;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.Location;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunnerSettings;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
@@ -132,7 +132,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    *
    * @param configuration
    * @param isExecution   true if the configuration is about to be executed, false if the configuration settings are being edited.
-   * @throws com.intellij.execution.ExecutionException
+   * @throws ExecutionException
    *
    */
   protected void validateConfiguration(@Nonnull final T configuration, final boolean isExecution) throws Exception {

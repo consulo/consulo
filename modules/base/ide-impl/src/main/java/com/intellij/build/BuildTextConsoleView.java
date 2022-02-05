@@ -6,7 +6,7 @@ import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.LazyFileHyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.process.AnsiEscapeDecoder;
-import com.intellij.execution.process.ProcessOutputTypes;
+import consulo.process.ProcessOutputTypes;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import consulo.project.Project;
 import consulo.language.psi.scope.GlobalSearchScope;

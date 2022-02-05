@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.application.progress.ProgressManager;
 import consulo.util.lang.ref.Ref;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

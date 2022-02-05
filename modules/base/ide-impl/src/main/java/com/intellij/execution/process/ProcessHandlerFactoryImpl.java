@@ -15,8 +15,10 @@
  */
 package com.intellij.execution.process;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.local.ProcessHandlerFactory;
+import consulo.process.local.OSProcessHandler;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

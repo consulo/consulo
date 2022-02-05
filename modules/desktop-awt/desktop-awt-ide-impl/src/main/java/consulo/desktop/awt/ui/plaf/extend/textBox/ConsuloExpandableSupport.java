@@ -15,19 +15,19 @@
  */
 package consulo.desktop.awt.ui.plaf.extend.textBox;
 
-import consulo.application.ui.awt.VerticalFlowLayout;
-import consulo.desktop.awt.uiOld.Expandable;
 import com.intellij.ui.ScrollPaneFactory;
-import consulo.desktop.awt.uiOld.components.fields.ExpandableSupport;
-import consulo.desktop.awt.uiOld.components.fields.IntelliJExpandableSupport;
-import com.intellij.util.Function;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.VerticalFlowLayout;
+import consulo.desktop.awt.uiOld.Expandable;
+import consulo.desktop.awt.uiOld.components.fields.ExpandableSupport;
+import consulo.desktop.awt.uiOld.components.fields.IntelliJExpandableSupport;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -53,7 +53,7 @@ public class ConsuloExpandableSupport<T extends JTextComponent> extends Expandab
 
     JPanel mainPanel = new JPanel(new BorderLayout());
 
-    JTextArea area = new JTextArea(onShow.fun(field.getText()));
+    JTextArea area = new JTextArea(onShow.apply(field.getText()));
     area.putClientProperty(Expandable.class, this);
     area.setEditable(field.isEditable());
     //area.setBackground(field.getBackground());
@@ -92,7 +92,7 @@ public class ConsuloExpandableSupport<T extends JTextComponent> extends Expandab
       @Override
       public void cancel(@Nonnull Function<? super String, String> onHide) {
         if (field.isEditable()) {
-          field.setText(onHide.fun(area.getText()));
+          field.setText(onHide.apply(area.getText()));
           IntelliJExpandableSupport.copyCaretPosition(area, field);
         }
       }

@@ -16,7 +16,7 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.EnvironmentUtil;
+import consulo.process.local.EnvironmentUtil;
 import consulo.util.collection.SmartList;
 import consulo.logging.Logger;
 

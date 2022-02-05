@@ -9,7 +9,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
 import consulo.util.lang.ref.Ref;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 
 import java.util.function.Supplier;
 

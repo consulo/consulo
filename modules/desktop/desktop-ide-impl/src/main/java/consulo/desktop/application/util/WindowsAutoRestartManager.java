@@ -15,7 +15,7 @@
  */
 package consulo.desktop.application.util;
 
-import com.intellij.jna.JnaLoader;
+import consulo.util.jna.JnaLoader;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 import consulo.logging.Logger;

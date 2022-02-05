@@ -10,7 +10,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.ExceptionUtil;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import consulo.application.ui.awt.internal.EDT;

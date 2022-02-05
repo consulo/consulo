@@ -15,12 +15,12 @@
  */
 package com.intellij.tools;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.CommandLineState;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.ModuleRunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.filters.RegexpFilter;
@@ -34,6 +34,11 @@ import com.intellij.ide.macro.MacroManager;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.process.ProcessOutputTypes;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessHandler;
+import consulo.process.local.OSProcessHandler;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.ui.image.Image;

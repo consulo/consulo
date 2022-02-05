@@ -34,9 +34,8 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.mac.MacMessages;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.Alarm;
-import com.intellij.util.Function;
 import com.intellij.util.PairFunction;
-import com.intellij.util.execution.ParametersListUtil;
+import consulo.process.cmd.ParametersListUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
@@ -61,6 +60,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 public class Messages {
   public static final int OK = 0;
@@ -1136,7 +1136,7 @@ public class Messages {
       final JTextArea textArea = new JTextArea(10, 50);
       textArea.setWrapStyleWord(true);
       textArea.setLineWrap(true);
-      List<String> lines = parser.fun(textField.getText());
+      List<String> lines = parser.apply(textField.getText());
       textArea.setText(StringUtil.join(lines, "\n"));
       InsertPathAction.copyFromTo(textField, textArea);
       final DialogBuilder builder = new DialogBuilder(textField);
@@ -1153,7 +1153,7 @@ public class Messages {
       builder.setOkOperation(new Runnable() {
         @Override
         public void run() {
-          textField.setText(lineJoiner.fun(Arrays.asList(StringUtil.splitByLines(textArea.getText()))));
+          textField.setText(lineJoiner.apply(Arrays.asList(StringUtil.splitByLines(textArea.getText()))));
           builder.getDialogWrapper().close(DialogWrapper.OK_EXIT_CODE);
         }
       });

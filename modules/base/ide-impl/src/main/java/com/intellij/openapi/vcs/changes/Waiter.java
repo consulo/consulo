@@ -19,7 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

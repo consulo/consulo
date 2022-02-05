@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.ui;
 import com.intellij.execution.impl.ConsoleState;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.impl.ConsoleViewRunningState;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.language.psi.scope.GlobalSearchScope;
 

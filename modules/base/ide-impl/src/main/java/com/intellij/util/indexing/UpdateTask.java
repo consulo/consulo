@@ -17,7 +17,7 @@ package com.intellij.util.indexing;
 
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 
 import java.util.Collection;

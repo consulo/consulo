@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.console;
 
-import com.intellij.execution.process.BaseOSProcessHandler;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.local.BaseOSProcessHandler;
+import consulo.process.ProcessHandler;
 import consulo.util.lang.function.Condition;
 import javax.annotation.Nonnull;
 

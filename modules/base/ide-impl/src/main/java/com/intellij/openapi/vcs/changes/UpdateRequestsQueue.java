@@ -24,7 +24,7 @@ import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.util.Consumer;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import org.jetbrains.annotations.TestOnly;
 

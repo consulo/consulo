@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.util;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.process.CapturingProcessHandler;
-import com.intellij.execution.process.ProcessOutput;
+import consulo.process.local.ProcessOutput;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;

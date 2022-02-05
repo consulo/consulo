@@ -17,7 +17,7 @@ package com.intellij.diagnostic.logging;
 
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.ui.RunnerLayoutUi;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComponentWithActions;

@@ -17,6 +17,7 @@
 package com.intellij.execution;
 
 import com.intellij.ide.IdeBundle;
+import consulo.process.ExecutionException;
 
 /**
  * @author nik

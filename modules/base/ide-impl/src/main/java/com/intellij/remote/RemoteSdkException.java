@@ -1,6 +1,6 @@
 package com.intellij.remote;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 
 import java.net.NoRouteToHostException;
 

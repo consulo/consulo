@@ -18,7 +18,7 @@ package com.intellij.application.options;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;
 import com.intellij.openapi.application.PathMacroFilter;
-import com.intellij.openapi.application.PathMacros;
+import consulo.application.PathMacros;
 import com.intellij.openapi.components.PathMacroMap;
 import consulo.application.options.PathMacrosService;
 import org.jdom.Element;

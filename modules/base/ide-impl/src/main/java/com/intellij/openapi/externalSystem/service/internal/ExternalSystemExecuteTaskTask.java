@@ -28,7 +28,7 @@ import consulo.project.Project;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import com.intellij.util.execution.ParametersListUtil;
+import consulo.process.cmd.ParametersListUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

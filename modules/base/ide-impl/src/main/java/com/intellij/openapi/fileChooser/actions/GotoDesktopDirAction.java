@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser.actions;
 
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.fileChooser.FileSystemTree;

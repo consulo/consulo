@@ -22,6 +22,7 @@ import com.pty4j.PtyProcess;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.process.cmd.GeneralCommandLine;
 
 import javax.annotation.Nonnull;
 import java.io.File;

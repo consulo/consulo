@@ -29,7 +29,7 @@ import consulo.project.ui.IdeFocusManager;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

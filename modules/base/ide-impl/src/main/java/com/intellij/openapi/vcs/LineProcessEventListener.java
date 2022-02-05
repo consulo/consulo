@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs;
 
+import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 
 /**
@@ -28,7 +29,7 @@ public interface LineProcessEventListener extends ProcessEventListener {
    * This method is invoked when line (as separated by \n or \r) becomes available.
    *
    * @param line       a line of the text
-   * @param outputType a type of output (one of constants from {@link com.intellij.execution.process.ProcessOutputTypes})
+   * @param outputType a type of output (one of constants from {@link ProcessOutputTypes})
    */
   @SuppressWarnings({"UnusedParameters", "UnnecessaryFullyQualifiedName"})
   void onLineAvailable(String line, Key outputType);

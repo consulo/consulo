@@ -58,6 +58,7 @@
         <include>consulo:consulo-configurable-api</include>
         <include>consulo:consulo-language-api</include>
         <include>consulo:consulo-editor-api</include>
+        <include>consulo:consulo-process-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>
@@ -74,6 +75,7 @@
         <include>consulo:consulo-util-io</include>
         <include>consulo:consulo-util-jdom</include>
         <include>consulo:consulo-util-interner</include>
+        <include>consulo:consulo-util-jna</include>
 
         <include>consulo:consulo-hacking-java-base</include>
 

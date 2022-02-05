@@ -16,7 +16,7 @@
 package com.intellij.remote;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;

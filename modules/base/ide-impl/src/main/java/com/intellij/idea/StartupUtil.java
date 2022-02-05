@@ -15,7 +15,7 @@
  */
 package com.intellij.idea;
 
-import com.intellij.jna.JnaLoader;
+import consulo.util.jna.JnaLoader;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.util.ShutDownTracker;
@@ -23,7 +23,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.EnvironmentUtil;
+import consulo.process.local.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
 import consulo.container.ExitCodes;
 import consulo.container.StartupError;
@@ -169,7 +169,7 @@ public class StartupUtil {
       System.setProperty("jna.nosys", "true");  // prefer bundled JNA dispatcher lib
     }
 
-    JnaLoader.load(log);
+    JnaLoader.load(org.slf4j.LoggerFactory.getLogger(StartupUtil.class));
 
     if (SystemInfo.isWin2kOrNewer) {
       IdeaWin32.isAvailable();  // logging is done there

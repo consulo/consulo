@@ -3,7 +3,7 @@ package com.intellij.execution.ui;
 
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.TerminateRemoteProcessDialog;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.ide.GeneralSettings;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -18,7 +18,7 @@ import consulo.project.ui.wm.content.Content;
 import consulo.project.ui.wm.content.ContentManager;
 import consulo.project.ui.wm.content.event.ContentManagerEvent;
 import consulo.project.ui.wm.content.event.ContentManagerListener;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

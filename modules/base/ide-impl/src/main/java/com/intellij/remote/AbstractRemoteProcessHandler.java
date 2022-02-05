@@ -15,8 +15,8 @@
  */
 package com.intellij.remote;
 
-import com.intellij.execution.TaskExecutor;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.TaskExecutor;
+import consulo.process.ProcessHandler;
 
 /**
  * @author Alexander Koshevoy

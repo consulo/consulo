@@ -2,7 +2,7 @@
 package com.intellij.build;
 
 import com.intellij.build.events.BuildEventsNls;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.RunContentDescriptor;
 import javax.annotation.Nonnull;

@@ -1,17 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.uiOld.components.fields;
 
-import consulo.application.AllIcons;
-import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pair;
-import consulo.desktop.awt.uiOld.Expandable;
 import com.intellij.ui.ScreenUtil;
-import consulo.ui.ex.RelativePoint;
-import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent.Extension;
-import com.intellij.util.Function;
+import consulo.application.AllIcons;
 import consulo.application.ui.awt.UIUtil;
+import consulo.desktop.awt.uiOld.Expandable;
+import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent.Extension;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.popup.JBPopup;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -21,6 +20,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.function.Function;
 
 import static com.intellij.openapi.keymap.KeymapUtil.createTooltipText;
 import static java.awt.event.InputEvent.CTRL_MASK;
@@ -41,8 +41,8 @@ public abstract class ExpandableSupport<Source extends JComponent> implements Ex
 
   public ExpandableSupport(@Nonnull Source source, Function<? super String, String> onShow, Function<? super String, String> onHide) {
     this.source = source;
-    this.onShow = onShow != null ? onShow : Function.ID;
-    this.onHide = onHide != null ? onHide : Function.ID;
+    this.onShow = onShow != null ? onShow : Function.identity();
+    this.onHide = onHide != null ? onHide : Function.identity();
     source.putClientProperty(Expandable.class, this);
     source.addAncestorListener(create(AncestorListener.class, this, "collapse"));
     source.addComponentListener(create(ComponentListener.class, this, "collapse"));

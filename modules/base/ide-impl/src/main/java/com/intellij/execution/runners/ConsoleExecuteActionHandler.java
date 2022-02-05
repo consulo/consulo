@@ -16,7 +16,7 @@
 package com.intellij.execution.runners;
 
 import com.intellij.execution.console.ProcessBackedConsoleExecuteActionHandler;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 
 @SuppressWarnings({"ClassNameSameAsAncestorName", "UnusedDeclaration"})
 @Deprecated

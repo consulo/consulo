@@ -15,7 +15,7 @@
  */
 package consulo.xdebugger;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import javax.annotation.Nonnull;

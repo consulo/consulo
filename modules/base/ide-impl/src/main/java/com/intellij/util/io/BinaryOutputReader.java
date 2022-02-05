@@ -15,6 +15,8 @@
  */
 package com.intellij.util.io;
 
+import consulo.process.io.BaseDataReader;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

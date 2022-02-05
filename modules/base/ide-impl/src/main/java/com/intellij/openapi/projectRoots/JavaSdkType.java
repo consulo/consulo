@@ -20,7 +20,7 @@
  */
 package com.intellij.openapi.projectRoots;
 
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.annotation.DeprecationInfo;
 import consulo.content.bundle.Sdk;
 import org.jetbrains.annotations.NonNls;

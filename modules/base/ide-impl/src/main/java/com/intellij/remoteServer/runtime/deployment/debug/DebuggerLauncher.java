@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.runtime.deployment.debug;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import javax.annotation.Nonnull;

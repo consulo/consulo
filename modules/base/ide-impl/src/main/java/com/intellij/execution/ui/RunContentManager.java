@@ -17,7 +17,7 @@ package com.intellij.execution.ui;
 
 import com.intellij.execution.Executor;
 import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.component.messagebus.Topic;

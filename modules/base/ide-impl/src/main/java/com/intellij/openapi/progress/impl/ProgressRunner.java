@@ -13,7 +13,7 @@ import com.intellij.openapi.progress.util.BlockingProgressIndicator;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import consulo.application.ui.awt.internal.EDT;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.progress.ProgressManager;

@@ -76,6 +76,7 @@
     <module>modules/base/project-ui-api</module>
     <module>modules/base/navigation-api</module>
     <module>modules/base/editor-api</module>
+    <module>modules/base/process-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>
@@ -94,6 +95,7 @@
     <module>modules/base/util/util-io</module>
     <module>modules/base/util/util-xml-serializer</module>
     <module>modules/base/util/util-interner</module>
+    <module>modules/base/util/util-jna</module>
 
     <module>modules/base/injecting/injecting-api</module>
     <module>modules/base/injecting/injecting-pico-impl</module>

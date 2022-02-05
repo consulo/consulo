@@ -15,7 +15,7 @@
  */
 package com.intellij.util.continuation;
 
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 
 /**
  * @author irengrig

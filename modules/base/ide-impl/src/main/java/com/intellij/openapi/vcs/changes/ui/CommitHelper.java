@@ -44,7 +44,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.WaitForProgressToShow;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.application.util.Semaphore;
 import com.intellij.util.ui.ConfirmationDialog;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

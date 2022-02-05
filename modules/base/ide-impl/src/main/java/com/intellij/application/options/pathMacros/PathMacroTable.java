@@ -16,7 +16,7 @@
 package com.intellij.application.options.pathMacros;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.application.PathMacros;
+import consulo.application.PathMacros;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import consulo.application.ui.awt.JBColor;

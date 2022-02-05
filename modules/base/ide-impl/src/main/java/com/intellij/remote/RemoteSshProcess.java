@@ -1,6 +1,6 @@
 package com.intellij.remote;
 
-import com.intellij.execution.process.SelfKiller;
+import consulo.process.SelfKiller;
 
 /**
  * @author traff

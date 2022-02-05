@@ -16,7 +16,8 @@
 
 package com.intellij.execution.configurations;
 
-import com.intellij.util.EnvironmentUtil;
+import consulo.process.local.EnvironmentUtil;
+import consulo.process.cmd.ParametersList;
 
 import java.io.File;
 import java.util.HashMap;

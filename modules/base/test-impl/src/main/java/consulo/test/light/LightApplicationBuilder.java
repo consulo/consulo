@@ -26,7 +26,7 @@ import com.intellij.lang.impl.PsiBuilderFactoryImpl;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import com.intellij.openapi.application.PathMacroFilter;
-import com.intellij.openapi.application.PathMacros;
+import consulo.application.PathMacros;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;

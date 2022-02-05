@@ -15,12 +15,12 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.jna.JnaLoader;
-import consulo.ui.ex.action.ActionManager;
+import com.sun.jna.Callback;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
-import com.sun.jna.Callback;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.ActionManager;
+import consulo.util.jna.JnaLoader;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

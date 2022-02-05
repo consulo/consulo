@@ -15,6 +15,7 @@
  */
 package com.intellij.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.function.ThrowableRunnable;
 import consulo.util.collection.Maps;
@@ -30,6 +31,8 @@ import java.util.concurrent.locks.Lock;
 /**
  * @author cdr
  */
+@Deprecated
+@DeprecationInfo("Use consulo.util.concurrent.ConcurrencyUtil or consulo.util.collection.Maps")
 public class ConcurrencyUtil {
   /**
    * Invokes and waits all tasks using threadPool, avoiding thread starvation on the way

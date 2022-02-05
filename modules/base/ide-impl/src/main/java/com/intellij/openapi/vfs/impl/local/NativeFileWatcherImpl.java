@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.impl.local;
 
-import com.intellij.execution.process.OSProcessHandler;
-import com.intellij.execution.process.ProcessOutputTypes;
+import consulo.process.local.OSProcessHandler;
+import consulo.process.ProcessOutputTypes;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.notification.NotificationListener;
 import consulo.application.Application;
@@ -17,8 +17,8 @@ import com.intellij.openapi.vfs.local.FileWatcherNotificationSink;
 import com.intellij.openapi.vfs.local.PluggableFileWatcher;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import consulo.util.lang.TimeoutUtil;
-import com.intellij.util.io.BaseDataReader;
-import com.intellij.util.io.BaseOutputReader;
+import consulo.process.io.BaseDataReader;
+import consulo.process.io.BaseOutputReader;
 import com.sun.jna.Platform;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;

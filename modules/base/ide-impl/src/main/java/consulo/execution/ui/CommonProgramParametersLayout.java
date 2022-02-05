@@ -22,7 +22,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;
 import com.intellij.util.PathUtil;
-import com.intellij.util.execution.ParametersListUtil;
+import consulo.process.cmd.ParametersListUtil;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;

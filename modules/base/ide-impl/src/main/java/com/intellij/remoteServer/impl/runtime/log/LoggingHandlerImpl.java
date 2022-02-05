@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.runtime.log;
 
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import consulo.project.Project;

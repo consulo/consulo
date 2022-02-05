@@ -15,12 +15,14 @@
  */
 package com.intellij.execution.process;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.process.ProcessHandler;
+import consulo.process.local.internal.UnixProcessManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

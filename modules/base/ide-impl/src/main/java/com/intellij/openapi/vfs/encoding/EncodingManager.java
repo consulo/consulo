@@ -3,6 +3,7 @@ package com.intellij.openapi.vfs.encoding;
 
 import consulo.application.Application;
 import consulo.document.Document;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 
@@ -48,7 +49,7 @@ public abstract class EncodingManager extends EncodingRegistry {
   public abstract void setDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile, @Nullable Charset charset);
 
   /**
-   * @return encoding used by default in {@link com.intellij.execution.configurations.GeneralCommandLine}
+   * @return encoding used by default in {@link GeneralCommandLine}
    */
   @Override
   @Nonnull

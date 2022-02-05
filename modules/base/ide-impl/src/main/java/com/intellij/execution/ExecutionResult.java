@@ -15,7 +15,7 @@
  */
 package com.intellij.execution;
 
-import com.intellij.execution.process.ProcessHandler;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import consulo.ui.ex.action.AnAction;
 

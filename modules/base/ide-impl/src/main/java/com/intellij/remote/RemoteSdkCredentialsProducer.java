@@ -15,7 +15,7 @@
  */
 package com.intellij.remote;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import consulo.project.Project;
 import com.intellij.util.Consumer;
 import javax.annotation.Nullable;

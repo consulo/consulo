@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.runAnything.execution;
 
 import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;

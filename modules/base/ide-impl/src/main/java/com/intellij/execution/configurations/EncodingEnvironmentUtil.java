@@ -15,11 +15,12 @@
  */
 package com.intellij.execution.configurations;
 
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
-import com.intellij.util.EnvironmentUtil;
+import consulo.process.local.EnvironmentUtil;
 import consulo.annotation.UsedInPlugin;
 import consulo.logging.Logger;
 
