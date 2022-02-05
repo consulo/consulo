@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.editor.textarea;
 
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.*;
 import consulo.editor.event.EditorMouseEventArea;
@@ -22,6 +23,7 @@ import consulo.editor.event.EditorMouseListener;
 import consulo.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.impl.EmptyIndentsModel;
 import com.intellij.openapi.editor.impl.SettingsImpl;
+import consulo.language.editor.EditorHighlighter;
 import consulo.editor.markup.MarkupModel;
 import com.intellij.ui.popup.AbstractPopup;
 import consulo.application.ui.awt.JBUI;

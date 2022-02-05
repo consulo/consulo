@@ -22,14 +22,15 @@ import com.intellij.codeInsight.editorActions.QuoteHandler;
 import com.intellij.codeInsight.editorActions.TypedHandler;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
+import consulo.language.ast.IElementType;
 import consulo.language.lexer.StringLiteralLexer;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.highlighter.EditorHighlighter;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
@@ -117,7 +118,7 @@ public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
       if (quoteHandler != null) {
         EditorHighlighter highlighter = ((EditorEx)editor).getHighlighter();
         HighlighterIterator iterator = highlighter.createIterator(offset - 1);
-        return StringEscapesTokenTypes.STRING_LITERAL_ESCAPES.contains(iterator.getTokenType()) || quoteHandler.isInsideLiteral(iterator);
+        return StringEscapesTokenTypes.STRING_LITERAL_ESCAPES.contains((IElementType)iterator.getTokenType()) || quoteHandler.isInsideLiteral(iterator);
       }
     }
     return false;

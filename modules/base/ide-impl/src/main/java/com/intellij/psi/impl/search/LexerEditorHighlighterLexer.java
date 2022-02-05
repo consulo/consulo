@@ -16,8 +16,8 @@
 package com.intellij.psi.impl.search;
 
 import consulo.language.lexer.LexerBase;
-import consulo.editor.highlighter.EditorHighlighter;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import com.intellij.util.text.CharSequenceSubSequence;
 import javax.annotation.Nonnull;
@@ -62,7 +62,7 @@ public class LexerEditorHighlighterLexer extends LexerBase {
   @Override
   public IElementType getTokenType() {
     if (iterator.atEnd()) return null;
-    return iterator.getTokenType();
+    return (IElementType)iterator.getTokenType();
   }
 
   @Override

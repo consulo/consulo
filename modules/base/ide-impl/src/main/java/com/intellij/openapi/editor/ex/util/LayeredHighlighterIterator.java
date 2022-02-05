@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 
 public interface LayeredHighlighterIterator extends HighlighterIterator {

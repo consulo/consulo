@@ -20,14 +20,16 @@ import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.lang.CodeDocumentationAwareCommenter;
 import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
+import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.editor.Editor;
 import consulo.editor.FoldRegion;
-import consulo.editor.highlighter.HighlighterIterator;
-import consulo.project.Project;
+import consulo.language.editor.HighlighterIterator;
 import consulo.language.psi.PsiDocCommentBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -77,7 +79,7 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
     if (element == null) return false;
     final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(element.getLanguage());
     if (!(commenter instanceof CodeDocumentationAwareCommenter)) return false;
-    final HighlighterIterator iterator = editor.getHighlighter().createIterator(region.getStartOffset());
+    final HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(region.getStartOffset());
     if (iterator.atEnd()) return false;
     return ((CodeDocumentationAwareCommenter)commenter).getDocumentationCommentTokenType() == iterator.getTokenType();
   }

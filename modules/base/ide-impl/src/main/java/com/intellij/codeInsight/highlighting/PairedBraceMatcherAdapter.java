@@ -19,7 +19,7 @@ package com.intellij.codeInsight.highlighting;
 import com.intellij.lang.BracePair;
 import consulo.language.Language;
 import com.intellij.lang.PairedBraceMatcher;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
@@ -50,7 +50,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
 
   @Nullable
   public BracePair findPair(boolean left, HighlighterIterator iterator, CharSequence fileText, FileType fileType) {
-    final IElementType tokenType = iterator.getTokenType();
+    final IElementType tokenType = (IElementType)iterator.getTokenType();
     final BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
       if (tokenType == (left ? pair.getLeftBraceType() : pair.getRightBraceType())) return pair;
@@ -93,7 +93,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
 
   @Override
   public boolean isStructuralBrace(HighlighterIterator iterator, CharSequence text, FileType fileType) {
-    final IElementType tokenType = iterator.getTokenType();
+    final IElementType tokenType = (IElementType)iterator.getTokenType();
     final BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
       if (tokenType == pair.getRightBraceType() || tokenType == pair.getLeftBraceType()) return pair.isStructural();

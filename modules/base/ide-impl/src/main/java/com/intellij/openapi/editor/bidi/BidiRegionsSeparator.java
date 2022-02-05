@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor.bidi;
 
-import consulo.editor.highlighter.EditorHighlighter;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 

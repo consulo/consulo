@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.editor.highlighter;
+package consulo.language.editor;
 
 import consulo.document.Document;
 import consulo.editor.markup.TextAttributes;
+import consulo.language.ast.IElementType;
 
 public interface HighlighterIterator {
   TextAttributes getTextAttributes();
@@ -26,7 +27,10 @@ public interface HighlighterIterator {
 
   int getEnd();
 
-  Object getTokenType();
+  /**
+   * @return IElementType, return object since not need dependency to language-api module
+   */
+  IElementType getTokenType();
 
   void advance();
 

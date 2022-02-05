@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.ex.util;
 
 import consulo.document.Document;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import consulo.editor.markup.TextAttributes;
 import consulo.language.ast.IElementType;
 

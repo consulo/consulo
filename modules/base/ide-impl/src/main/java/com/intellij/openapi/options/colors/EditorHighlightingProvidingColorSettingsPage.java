@@ -20,7 +20,7 @@
 package com.intellij.openapi.options.colors;
 
 import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.editor.highlighter.EditorHighlighter;
+import consulo.language.editor.EditorHighlighter;
 
 public interface EditorHighlightingProvidingColorSettingsPage extends ColorSettingsPage {
   EditorHighlighter createEditorHighlighter(final EditorColorsScheme scheme);

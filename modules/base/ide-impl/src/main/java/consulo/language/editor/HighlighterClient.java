@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.editor.highlighter;
+package consulo.language.editor;
 
 import consulo.document.Document;
 import consulo.project.Project;

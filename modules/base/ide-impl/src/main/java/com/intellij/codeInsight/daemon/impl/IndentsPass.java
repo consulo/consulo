@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.view.EditorPainter;
 import com.intellij.openapi.editor.impl.view.VisualLinesIterator;
@@ -428,7 +428,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
     private boolean isComment(int offset) {
       final HighlighterIterator it = myEditor.getHighlighter().createIterator(offset);
-      IElementType tokenType = it.getTokenType();
+      IElementType tokenType = (IElementType)it.getTokenType();
       Language language = tokenType.getLanguage();
       TokenSet comments = myComments.get(language);
       if (comments == null) {

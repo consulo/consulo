@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
-import consulo.editor.highlighter.EditorHighlighter;
+import consulo.language.editor.EditorHighlighter;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.RangeHighlighter;

@@ -2,9 +2,10 @@
 package com.intellij.codeInsight.editorActions.enter;
 
 import com.intellij.codeInsight.editorActions.EnterHandler;
+import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.Language;
 import consulo.editor.Editor;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
@@ -37,6 +38,6 @@ public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBra
 
   @Nonnull
   public static HighlighterIterator createBeforeIterator(@Nonnull Editor editor, int caretOffset) {
-    return editor.getHighlighter().createIterator(caretOffset == 0 ? 0 : caretOffset - 1);
+    return ((EditorEx)editor).getHighlighter().createIterator(caretOffset == 0 ? 0 : caretOffset - 1);
   }
 }

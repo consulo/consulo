@@ -9,7 +9,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.bidi.BidiRegionsSeparator;
 import com.intellij.openapi.editor.bidi.LanguageBidiRegionsSeparator;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import com.intellij.openapi.editor.impl.FontFallbackIterator;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -146,7 +146,7 @@ abstract class LineLayout {
       while (!iterator.atEnd() && iterator.getStart() - startOffsetInEditor < textLength) {
         int iteratorRelStart = alignToCodePointBoundary(text, iterator.getStart() - startOffsetInEditor);
         int iteratorRelEnd = alignToCodePointBoundary(text, iterator.getEnd() - startOffsetInEditor);
-        IElementType currentToken = iterator.getTokenType();
+        IElementType currentToken = (IElementType)iterator.getTokenType();
         int relStartOffset = Math.max(relLastOffset, iteratorRelStart);
         String lcPrefix = getLineCommentPrefix(currentToken);
         // for line comments we process prefix and following text separately

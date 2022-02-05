@@ -17,7 +17,6 @@ package consulo.editor.event;
 
 import consulo.editor.CaretModel;
 
-import javax.swing.event.CaretEvent;
 import java.util.EventListener;
 
 /**

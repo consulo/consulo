@@ -57,6 +57,7 @@
         <include>consulo:consulo-ui-ex-api</include>
         <include>consulo:consulo-configurable-api</include>
         <include>consulo:consulo-language-api</include>
+        <include>consulo:consulo-editor-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

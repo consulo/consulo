@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.editor.highlighter;
+package consulo.language.editor;
 
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.document.event.DocumentListener;

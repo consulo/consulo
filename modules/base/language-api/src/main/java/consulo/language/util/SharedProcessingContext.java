@@ -1,12 +1,12 @@
 package consulo.language.util;
 
-import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author peter

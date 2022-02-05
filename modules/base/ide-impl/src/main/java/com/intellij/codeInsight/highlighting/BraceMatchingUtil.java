@@ -22,8 +22,8 @@ import com.intellij.lang.PairedBraceMatcher;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.highlighter.EditorHighlighter;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeExtensionPoint;
 import consulo.language.file.LanguageFileType;
@@ -91,7 +91,7 @@ public class BraceMatchingUtil {
     private final Stack<String> myTagNameStack = new Stack<String>();
 
     MatchBraceContext(@Nonnull CharSequence fileText, @Nonnull FileType fileType, @Nonnull HighlighterIterator iterator, boolean forward) {
-      this(fileText, fileType, iterator, forward,isStrictTagMatching(getBraceMatcher(fileType, iterator), fileType, getTokenGroup(iterator.getTokenType(), fileType)));
+      this(fileText, fileType, iterator, forward,isStrictTagMatching(getBraceMatcher(fileType, iterator), fileType, getTokenGroup((IElementType)iterator.getTokenType(), fileType)));
     }
 
     MatchBraceContext(@Nonnull CharSequence fileText, @Nonnull FileType fileType, @Nonnull HighlighterIterator iterator, boolean forward, boolean strict) {
@@ -128,7 +128,7 @@ public class BraceMatchingUtil {
           break;
         }
 
-        IElementType tokenType = iterator.getTokenType();
+        IElementType tokenType = (IElementType)iterator.getTokenType();
 
         if (getTokenGroup(tokenType, fileType) != group) {
           continue;
@@ -274,7 +274,7 @@ public class BraceMatchingUtil {
 
     Stack<IElementType> braceStack = new Stack<IElementType>();
     for (; !iterator.atEnd(); iterator.retreat()) {
-      final IElementType tokenType = iterator.getTokenType();
+      final IElementType tokenType = (IElementType)iterator.getTokenType();
 
       if (isLBraceToken(iterator, fileText, fileType)) {
         if (!braceStack.isEmpty()) {
@@ -293,7 +293,7 @@ public class BraceMatchingUtil {
         }
       }
       else if (isRBraceToken(iterator, fileText, fileType)) {
-        braceStack.push(iterator.getTokenType());
+        braceStack.push((IElementType)iterator.getTokenType());
       }
     }
 
@@ -308,7 +308,7 @@ public class BraceMatchingUtil {
 
     Stack<IElementType> braceStack = new Stack<IElementType>();
     for (; !iterator.atEnd(); iterator.retreat()) {
-      final IElementType tokenType = iterator.getTokenType();
+      final IElementType tokenType = (IElementType)iterator.getTokenType();
 
       if (isLBraceToken(iterator, fileText, fileType)) {
         if (!braceStack.isEmpty()) {
@@ -362,7 +362,7 @@ public class BraceMatchingUtil {
         }
       }
       else if (isLBraceToken(iterator, fileText, fileType)) {
-        braceStack.push(iterator.getTokenType());
+        braceStack.push((IElementType)iterator.getTokenType());
       }
     }
 

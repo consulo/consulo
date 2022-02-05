@@ -24,7 +24,6 @@ import consulo.editor.colorScheme.EditorFontType;
 import consulo.editor.event.EditorMouseEventArea;
 import consulo.editor.event.EditorMouseListener;
 import consulo.editor.event.EditorMouseMotionListener;
-import consulo.editor.highlighter.EditorHighlighter;
 import consulo.editor.markup.MarkupModel;
 import consulo.project.Project;
 import consulo.ui.Component;
@@ -515,9 +514,6 @@ public interface Editor extends UserDataHolder {
 
   @Nonnull
   EditorKind getEditorKind();
-
-  @Nonnull
-  EditorHighlighter getHighlighter();
 
   /**
    * Vertical distance, in pixels, between the top of visual line (corresponding coordinate is returned by {@link #visualLineToY(int)},

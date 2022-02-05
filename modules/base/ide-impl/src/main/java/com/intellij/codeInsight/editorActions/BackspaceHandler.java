@@ -33,7 +33,7 @@ import consulo.document.util.TextRange;
 import consulo.editor.Caret;
 import consulo.editor.Editor;
 import consulo.editor.LogicalPosition;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

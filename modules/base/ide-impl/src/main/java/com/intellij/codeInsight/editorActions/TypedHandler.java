@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.actionSystem.ActionPlan;
 import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.highlighter.EditorHighlighter;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DefaultRawTypedHandler;
 import com.intellij.openapi.editor.impl.TypedActionImpl;
 import consulo.document.Document;
@@ -362,14 +362,14 @@ public class TypedHandler extends TypedActionHandlerBase {
     if (iterator.atEnd()) return;
     BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
     if (iterator.atEnd()) return;
-    IElementType braceTokenType = iterator.getTokenType();
+    IElementType braceTokenType = (IElementType)iterator.getTokenType();
     final CharSequence fileText = editor.getDocument().getCharsSequence();
     if (!braceMatcher.isLBraceToken(iterator, fileText, fileType)) return;
 
     if (!iterator.atEnd()) {
       iterator.advance();
 
-      if (!iterator.atEnd() && !BraceMatchingUtil.isPairedBracesAllowedBeforeTypeInFileType(braceTokenType, iterator.getTokenType(), fileType)) {
+      if (!iterator.atEnd() && !BraceMatchingUtil.isPairedBracesAllowedBeforeTypeInFileType(braceTokenType, (IElementType)iterator.getTokenType(), fileType)) {
         return;
       }
 
@@ -424,7 +424,7 @@ public class TypedHandler extends TypedActionHandlerBase {
       return false;
     }
 
-    IElementType tokenType = iterator.getTokenType();
+    IElementType tokenType = (IElementType)iterator.getTokenType();
 
     iterator.retreat();
 
@@ -473,7 +473,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
 
     if (!iterator.atEnd()) {
-      IElementType tokenType = iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
       if (quoteHandler instanceof JavaLikeQuoteHandler) {
         try {
           if (!((JavaLikeQuoteHandler)quoteHandler).isAppropriateElementTypeForLiteral(tokenType)) return false;
@@ -611,7 +611,7 @@ public class TypedHandler extends TypedActionHandlerBase {
 
       if (CodeInsightSettings.getInstance().REFORMAT_BLOCK_ON_RBRACE && rBraceToken && braceMatcher.isStructuralBrace(iterator, chars, fileType) && offset > 0) {
         lBraceOffset = BraceMatchingUtil
-                .findLeftLParen(highlighter.createIterator(offset - 1), braceMatcher.getOppositeBraceTokenType(iterator.getTokenType()), editor.getDocument().getCharsSequence(), fileType);
+                .findLeftLParen(highlighter.createIterator(offset - 1), braceMatcher.getOppositeBraceTokenType((IElementType)iterator.getTokenType()), editor.getDocument().getCharsSequence(), fileType);
       }
       if (element.getNode() != null && isBrace) {
         DefaultRawTypedHandler handler = ((TypedActionImpl)TypedAction.getInstance()).getDefaultRawTypedHandler();

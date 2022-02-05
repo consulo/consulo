@@ -20,7 +20,7 @@ import com.intellij.formatting.Indent;
 import consulo.language.Language;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import consulo.project.Project;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;

@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.highlighting;
 
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nullable;
 

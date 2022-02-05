@@ -57,9 +57,5 @@
       <artifactId>consulo-ui-ex-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.jdom</groupId>
-      <artifactId>jdom-core</artifactId>
-    </dependency>
   </dependencies>
 </project>

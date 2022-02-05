@@ -19,12 +19,13 @@ import com.intellij.ide.CopyProvider;
 import com.intellij.ide.CutProvider;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.PasteProvider;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.LineExtensionInfo;
 import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.editor.highlighter.EditorHighlighter;
+import consulo.language.editor.EditorHighlighter;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import consulo.editor.markup.MarkupEditorFilter;
 import consulo.editor.markup.TextAttributes;
@@ -86,7 +87,9 @@ public interface EditorEx extends Editor {
   EditorGutterComponentEx getGutterComponentEx();
 
   @Nonnull
-  EditorHighlighter getHighlighter();
+  default EditorHighlighter getHighlighter() {
+    return EditorUtil.createEmptyHighlighter(getProject(), getDocument());
+  }
 
   default JComponent getPermanentHeaderComponent() {
     throw new UnsupportedOperationException("Unsupported platform");

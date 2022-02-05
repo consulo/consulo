@@ -18,18 +18,18 @@ package com.intellij.codeInsight.completion;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.highlighter.HighlighterIterator;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
-import consulo.application.dumb.DumbAware;
 import com.intellij.psi.CustomHighlighterTokenType;
-import consulo.language.psi.PsiElement;
-import consulo.language.ast.IElementType;
-import consulo.language.util.ProcessingContext;
-import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.dumb.DumbAware;
 import consulo.codeInsight.completion.CompletionProvider;
+import consulo.language.editor.HighlighterIterator;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.ProcessingContext;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 
@@ -71,10 +71,10 @@ public class CustomFileTypeCompletionContributor extends CompletionContributor i
 
   private static boolean inCommentOrLiteral(CompletionParameters parameters) {
     HighlighterIterator iterator = ((EditorEx)parameters.getEditor()).getHighlighter().createIterator(parameters.getOffset());
-    IElementType elementType = iterator.getTokenType();
+    IElementType elementType = (IElementType)iterator.getTokenType();
     if (elementType == CustomHighlighterTokenType.WHITESPACE) {
       iterator.retreat();
-      elementType = iterator.getTokenType();
+      elementType = (IElementType)iterator.getTokenType();
     }
     return elementType == CustomHighlighterTokenType.LINE_COMMENT ||
            elementType == CustomHighlighterTokenType.MULTI_LINE_COMMENT ||

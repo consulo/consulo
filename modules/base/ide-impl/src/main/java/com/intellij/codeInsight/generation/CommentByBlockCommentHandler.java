@@ -34,7 +34,7 @@ import consulo.editor.ScrollType;
 import consulo.language.lexer.Lexer;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.language.Language;
@@ -442,7 +442,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
     if (!(myCommenter instanceof CodeDocumentationAwareCommenter) || !(myEditor instanceof EditorEx) || offset == 0) return false;
     CodeDocumentationAwareCommenter commenter = (CodeDocumentationAwareCommenter)myCommenter;
     HighlighterIterator it = ((EditorEx)myEditor).getHighlighter().createIterator(offset - 1);
-    IElementType tokenType = it.getTokenType();
+    IElementType tokenType = (IElementType)it.getTokenType();
     return (tokenType != null &&
             (it.getEnd() > offset &&
              (tokenType == commenter.getLineCommentTokenType() || tokenType == commenter.getBlockCommentTokenType() || tokenType == commenter.getDocumentationCommentTokenType()) ||

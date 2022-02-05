@@ -11,13 +11,10 @@ module consulo.editor.api {
   requires transitive consulo.document.api;
   requires transitive consulo.ui.ex.api;
 
-  requires org.jdom;
-
   exports consulo.editor;
   exports consulo.editor.colorScheme;
   exports consulo.editor.colorScheme.event;
   exports consulo.editor.event;
-  exports consulo.editor.highlighter;
   exports consulo.editor.markup;
   exports consulo.editor.internal to consulo.ide.impl;
 }

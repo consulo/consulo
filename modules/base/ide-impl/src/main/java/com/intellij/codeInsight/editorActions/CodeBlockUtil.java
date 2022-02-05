@@ -31,7 +31,7 @@ import consulo.editor.LogicalPosition;
 import consulo.editor.ScrollType;
 import consulo.language.Language;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -46,7 +46,7 @@ public class CodeBlockUtil {
   }
 
   private static Language getBraceType(HighlighterIterator iterator) {
-    final IElementType type = iterator.getTokenType();
+    final IElementType type = (IElementType)iterator.getTokenType();
     return type.getLanguage();
   }
 

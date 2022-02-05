@@ -19,7 +19,7 @@ import consulo.editor.event.EditorMouseListener;
 import consulo.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.editor.highlighter.EditorHighlighter;
+import consulo.language.editor.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.LightHighlighterClient;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import consulo.editor.markup.TextAttributes;

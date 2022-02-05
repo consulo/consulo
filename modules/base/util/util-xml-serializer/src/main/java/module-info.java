@@ -3,6 +3,8 @@
  * @since 2020-10-23
  */
 module consulo.util.xml.serializer {
+  requires transitive org.jdom;
+
   requires consulo.annotation;
   requires consulo.util.lang;
   requires consulo.util.collection;
@@ -10,6 +12,7 @@ module consulo.util.xml.serializer {
 
   requires org.slf4j;
 
+  // todo bosolete dependency
   requires java.desktop;
 
   exports consulo.util.xml.serializer;

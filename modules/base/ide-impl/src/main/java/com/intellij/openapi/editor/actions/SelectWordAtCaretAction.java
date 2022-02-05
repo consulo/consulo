@@ -30,7 +30,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import consulo.application.dumb.DumbAware;
 import consulo.document.Document;
 import consulo.document.util.TextRange;

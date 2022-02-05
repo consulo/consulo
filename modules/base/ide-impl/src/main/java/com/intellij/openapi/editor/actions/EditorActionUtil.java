@@ -34,8 +34,8 @@ import consulo.editor.event.EditorMouseEvent;
 import consulo.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.editor.highlighter.EditorHighlighter;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -1097,6 +1097,6 @@ public class EditorActionUtil {
 
   @Nullable
   private static HighlighterIterator createHighlighterIteratorAtOffset(@Nonnull Editor editor, int offset) {
-    return editor.getHighlighter().createIterator(offset);
+    return ((EditorEx)editor).getHighlighter().createIterator(offset);
   }
 }

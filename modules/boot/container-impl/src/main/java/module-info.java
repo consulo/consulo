@@ -12,6 +12,9 @@ module consulo.container.impl {
   exports consulo.container.impl.classloader.proxy to consulo.proxy;
   exports consulo.container.impl.parser;
 
+  // FIXME this export not work as expected in multiclassloader system, but need for compilation, this export hardcoded in Java9ModuleInitializer
+  exports consulo.container.impl.securityManager.impl to consulo.ide.impl;
+
   uses consulo.container.boot.ContainerStartup;
 
   provides consulo.container.plugin.internal.PluginManagerInternal with consulo.container.impl.PluginManagerInternalImpl;

@@ -21,8 +21,8 @@ import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
-import consulo.editor.highlighter.EditorHighlighter;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
@@ -186,7 +186,7 @@ public abstract class PlatformIdTableBuilding {
         }
 
         while (!iterator.atEnd()) {
-          final IElementType token = iterator.getTokenType();
+          final IElementType token = (IElementType)iterator.getTokenType();
 
           if (myCommentTokens.contains(token) || isCommentToken(languageVersionCache, token)) {
             int start = iterator.getStart();

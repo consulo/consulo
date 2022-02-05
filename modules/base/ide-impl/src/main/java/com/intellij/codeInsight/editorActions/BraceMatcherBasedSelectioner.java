@@ -20,7 +20,7 @@ import com.intellij.codeInsight.highlighting.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.Trinity;

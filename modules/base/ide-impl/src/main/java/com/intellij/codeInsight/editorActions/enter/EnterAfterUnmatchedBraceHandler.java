@@ -27,8 +27,8 @@ import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.highlighter.EditorHighlighter;
-import consulo.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -343,7 +343,7 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
       return -1;
     }
 
-    Language language = iterator.getTokenType().getLanguage();
+    Language language = ((IElementType)iterator.getTokenType()).getLanguage();
 
     iterator = highlighter.createIterator(0);
     int lBracesBeforeOffset = 0;
@@ -351,7 +351,7 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
     int rBracesBeforeOffset = 0;
     int rBracesAfterOffset = 0;
     for (; !iterator.atEnd(); iterator.advance()) {
-      IElementType tokenType = iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
       if (!tokenType.getLanguage().equals(language) || !braceMatcher.isStructuralBrace(iterator, chars, fileType)) {
         continue;
       }
