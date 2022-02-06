@@ -13,35 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options;
+package consulo.configurable;
 
-import com.intellij.openapi.util.Getter;
-import com.intellij.util.ReflectionUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.configurable.IdeaConfigurableBase;
-import consulo.configurable.IdeaConfigurableUi;
+import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 @Deprecated
 @DeprecationInfo("Use SimpleConfigurable")
 public final class IdeaSimpleConfigurable<UI extends IdeaConfigurableUi<S>, S> extends IdeaConfigurableBase<UI, S> {
   private final Class<UI> uiClass;
-  private final Getter<S> settingsGetter;
+  private final Supplier<S> settingsGetter;
 
-  private IdeaSimpleConfigurable(@Nonnull String id, @Nonnull String displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Getter<S> settingsGetter) {
+  private IdeaSimpleConfigurable(@Nonnull String id, @Nonnull String displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
     super(id, displayName, helpTopic);
 
     this.uiClass = uiClass;
     this.settingsGetter = settingsGetter;
   }
 
-  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull String displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Getter<S> settingsGetter) {
+  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull String displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
     return new IdeaSimpleConfigurable<UI, S>(id, displayName, helpTopic, uiClass, settingsGetter);
   }
 
-  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull String displayName, @Nonnull Class<UI> uiClass, @Nonnull Getter<S> settingsGetter) {
+  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull String displayName, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
     return create(id, displayName, id, uiClass, settingsGetter);
   }
 
