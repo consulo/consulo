@@ -750,16 +750,16 @@
     <extensionPoint name="indexPatternBuilder" interface="com.intellij.psi.impl.search.IndexPatternBuilder"/>
 
     <extensionPoint name="configurationType"
-                    interface="com.intellij.execution.configurations.ConfigurationType"/>
+                    interface="consulo.execution.configuration.ConfigurationType"/>
 
     <extensionPoint name="runConfigurationsSettings"
                     interface="com.intellij.execution.configurations.RunConfigurationsSettings"/>
 
     <extensionPoint name="programRunner"
-                    interface="com.intellij.execution.runners.ProgramRunner"/>
+                    interface="consulo.execution.runner.ProgramRunner"/>
 
     <extensionPoint name="executor"
-                    interface="com.intellij.execution.Executor"/>
+                    interface="consulo.execution.Executor"/>
 
     <extensionPoint name="executionTargetProvider"
                     interface="com.intellij.execution.ExecutionTargetProvider"/>
@@ -1250,7 +1250,7 @@
     <applicationService serviceImplementation="com.intellij.openapi.editor.richcopy.settings.RichCopySettings"/>
     <applicationService serviceImplementation="com.intellij.openapi.actionSystem.impl.MouseGestureManager"/>
 
-    <applicationService serviceInterface="com.intellij.execution.RunnerRegistry" serviceImplementation="com.intellij.execution.impl.RunnerRegistryImpl"/>
+    <applicationService serviceInterface="consulo.execution.RunnerRegistry" serviceImplementation="com.intellij.execution.impl.RunnerRegistryImpl"/>
 
     <undoProvider implementation="consulo.command.impl.ApplicationFileUndoProvider"/>
     <projectUndoProvider implementation="consulo.command.impl.ProjectFileUndoProvider"/>
@@ -2305,7 +2305,7 @@
 
     <applicationService serviceInterface="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"
                         serviceImplementation="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"/>
-    <projectService serviceInterface="com.intellij.execution.ui.RunnerLayoutUi$Factory"
+    <projectService serviceInterface="consulo.execution.ui.layout.RunnerLayoutUi$Factory"
                     serviceImplementation="com.intellij.execution.ui.layout.impl.RunnerLayoutUiFactoryImpl"/>
     <projectService serviceInterface="com.intellij.compiler.ProblemsView"
                     serviceImplementation="com.intellij.compiler.impl.ProblemsViewImpl"/>
@@ -2742,7 +2742,7 @@
 
     <postStartupActivity implementation="com.intellij.openapi.vcs.update.RestoreUpdateTree$MyStartUpActivity"/>
 
-    <projectService serviceInterface="com.intellij.execution.RunManager" serviceImplementation="com.intellij.execution.impl.RunManagerImpl"/>
+    <projectService serviceInterface="consulo.execution.RunManager" serviceImplementation="com.intellij.execution.impl.RunManagerImpl"/>
 
     <projectService serviceImplementation="com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager"/>
     <applicationService serviceImplementation="com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetSettings"/>

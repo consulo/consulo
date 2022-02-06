@@ -19,7 +19,7 @@ import consulo.process.ExecutionException;
 import com.intellij.execution.Location;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunnerSettings;
+import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.SettingsEditor;

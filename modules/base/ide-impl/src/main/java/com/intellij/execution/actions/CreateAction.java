@@ -16,10 +16,10 @@
 
 package com.intellij.execution.actions;
 
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.RunManager;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.RunManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.impl.RunDialog;
 import com.intellij.execution.impl.RunManagerImpl;
 import consulo.ui.ex.action.Presentation;

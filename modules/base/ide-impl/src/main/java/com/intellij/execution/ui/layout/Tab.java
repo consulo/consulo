@@ -16,6 +16,8 @@
 
 package com.intellij.execution.ui.layout;
 
+import consulo.execution.ui.layout.PlaceInGrid;
+
 public interface Tab {
 
   boolean isDefault();

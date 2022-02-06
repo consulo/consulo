@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.impl.statistics;
 
-import com.intellij.execution.RunManager;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.RunManager;
+import consulo.execution.configuration.RunConfiguration;
 
 import javax.annotation.Nonnull;
 

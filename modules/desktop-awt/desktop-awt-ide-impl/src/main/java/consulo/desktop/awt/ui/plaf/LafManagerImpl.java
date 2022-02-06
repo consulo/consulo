@@ -50,7 +50,7 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.ScreenUtil;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import consulo.desktop.awt.ui.plaf.beg.BegMenuItemUI;
 import consulo.desktop.awt.ui.plaf.beg.IdeaMenuUI;
 import com.intellij.ui.tree.ui.DefaultTreeUI;

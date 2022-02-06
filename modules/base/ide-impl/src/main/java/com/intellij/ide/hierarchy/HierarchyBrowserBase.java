@@ -36,7 +36,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.AutoScrollToSourceHandler;
 import com.intellij.ui.TreeSpeedSearch;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.treeStructure.Tree;
 import consulo.application.ui.awt.UIUtil;

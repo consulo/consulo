@@ -15,6 +15,8 @@
  */
 package com.intellij.execution.configurations;
 
+import consulo.execution.configuration.RunConfiguration;
+
 /**
  * Allow to get before/after steps from wrapped configuration: e.g. to rerun tests with initial tests before options
  */

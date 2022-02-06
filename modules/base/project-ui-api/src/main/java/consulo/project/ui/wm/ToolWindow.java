@@ -18,7 +18,7 @@ package consulo.project.ui.wm;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.BusyObject;
 import consulo.localize.LocalizeValue;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.ContentManager;
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;

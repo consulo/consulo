@@ -15,14 +15,14 @@
  */
 package com.intellij.execution.testframework.sm.runner.history;
 
-import com.intellij.execution.DefaultExecutionResult;
+import consulo.execution.DefaultExecutionResult;
 import consulo.process.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.RunProfileState;
+import consulo.execution.ExecutionResult;
+import consulo.execution.Executor;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.RunProfileState;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.runner.ProgramRunner;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.execution.testframework.actions.AbstractRerunFailedTestsAction;
 import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil;

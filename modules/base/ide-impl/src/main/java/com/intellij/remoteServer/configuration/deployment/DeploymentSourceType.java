@@ -15,7 +15,7 @@
  */
 package com.intellij.remoteServer.configuration.deployment;
 
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import org.jdom.Element;

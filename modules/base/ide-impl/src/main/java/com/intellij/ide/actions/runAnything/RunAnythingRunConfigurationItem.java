@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.runAnything;
 
 import com.intellij.execution.actions.ChooseRunConfigurationPopup;
-import com.intellij.execution.configurations.ConfigurationType;
+import consulo.execution.configuration.ConfigurationType;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItemBase;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

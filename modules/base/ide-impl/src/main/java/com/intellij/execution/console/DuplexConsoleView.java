@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.console;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewImpl;

@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.dashboard;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.dashboard.tree.DashboardGrouper;
 import com.intellij.execution.dashboard.tree.RunDashboardTreeStructure;
 import com.intellij.ide.CommonActionsManager;
@@ -34,10 +34,10 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentManager;
-import consulo.project.ui.wm.content.event.ContentManagerEvent;
-import consulo.project.ui.wm.content.event.ContentManagerListener;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.*;

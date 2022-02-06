@@ -22,8 +22,8 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

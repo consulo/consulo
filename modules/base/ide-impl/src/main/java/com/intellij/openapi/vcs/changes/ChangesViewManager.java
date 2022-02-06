@@ -53,7 +53,7 @@ import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.ui.*;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.util.Alarm;
 import com.intellij.util.FunctionUtil;
 import consulo.application.ui.awt.JBUI;

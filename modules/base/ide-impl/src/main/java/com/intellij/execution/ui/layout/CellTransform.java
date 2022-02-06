@@ -17,7 +17,7 @@
 package com.intellij.execution.ui.layout;
 
 import consulo.util.concurrent.ActionCallback;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 
 import java.util.ArrayList;
 

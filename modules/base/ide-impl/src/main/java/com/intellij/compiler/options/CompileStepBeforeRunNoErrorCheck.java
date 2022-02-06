@@ -15,12 +15,12 @@
  */
 package com.intellij.compiler.options;
 
-import com.intellij.execution.BeforeRunTask;
+import consulo.execution.BeforeRunTask;
 import com.intellij.execution.BeforeRunTaskProvider;
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.configurations.RunProfileWithCompileBeforeLaunchOption;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;

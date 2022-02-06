@@ -16,7 +16,7 @@
 
 package com.intellij.execution.ui.actions;
 
-import com.intellij.execution.ui.layout.LayoutViewOptions;
+import consulo.execution.ui.layout.LayoutViewOptions;
 
 public class FocusOnStartAction extends AbstractFocusOnAction {
   public FocusOnStartAction() {

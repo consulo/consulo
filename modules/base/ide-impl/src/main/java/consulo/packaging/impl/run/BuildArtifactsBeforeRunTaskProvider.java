@@ -15,11 +15,11 @@
  */
 package consulo.packaging.impl.run;
 
-import com.intellij.execution.BeforeRunTask;
+import consulo.execution.BeforeRunTask;
 import com.intellij.execution.RunManagerEx;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.impl.ConfigurationSettingsEditorWrapper;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.compiler.CompileStatusNotification;

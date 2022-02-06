@@ -23,7 +23,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.ContentManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;

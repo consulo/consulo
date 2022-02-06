@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.ide.OccurenceNavigator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

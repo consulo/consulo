@@ -16,19 +16,19 @@
 package com.intellij.tools;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
+import consulo.execution.ExecutionManager;
+import consulo.execution.ExecutionResult;
+import consulo.execution.Executor;
 import com.intellij.execution.configurations.CommandLineState;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.ModuleRunProfile;
-import com.intellij.execution.configurations.RunProfileState;
+import consulo.execution.configuration.RunProfileState;
 import com.intellij.execution.filters.RegexpFilter;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.*;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;
 import consulo.dataContext.DataContext;

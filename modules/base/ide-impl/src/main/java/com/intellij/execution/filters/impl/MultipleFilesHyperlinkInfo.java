@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.filters.impl;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.filters.FileHyperlinkInfo;
 import com.intellij.execution.filters.HyperlinkInfoBase;
 import com.intellij.execution.filters.HyperlinkInfoFactory;

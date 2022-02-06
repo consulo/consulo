@@ -16,7 +16,7 @@
 
 package com.intellij.execution.ui.layout.impl;
 
-import com.intellij.execution.ui.layout.PlaceInGrid;
+import consulo.execution.ui.layout.PlaceInGrid;
 import com.intellij.execution.ui.layout.Tab;
 import consulo.ui.image.Image;
 

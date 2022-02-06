@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.ui;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.TerminateRemoteProcessDialog;
 import consulo.process.ProcessHandler;
 import com.intellij.ide.GeneralSettings;
@@ -14,10 +14,10 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentManager;
-import consulo.project.ui.wm.content.event.ContentManagerEvent;
-import consulo.project.ui.wm.content.event.ContentManagerListener;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.application.util.Semaphore;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

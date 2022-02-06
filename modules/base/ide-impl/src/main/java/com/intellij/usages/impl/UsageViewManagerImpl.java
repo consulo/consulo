@@ -38,7 +38,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.search.*;
 import consulo.language.psi.PsiUtilCore;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
 import com.intellij.usages.rules.PsiElementUsage;

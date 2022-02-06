@@ -17,16 +17,16 @@
 package com.intellij.tools;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.RunnerRegistry;
+import consulo.execution.RunnerRegistry;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import consulo.process.local.OSProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessListener;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ExecutionEnvironmentBuilder;
-import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironmentBuilder;
+import consulo.execution.runner.ProgramRunner;
+import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.execution.util.ExecutionErrorDialog;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;

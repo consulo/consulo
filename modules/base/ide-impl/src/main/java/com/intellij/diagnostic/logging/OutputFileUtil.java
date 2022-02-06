@@ -24,7 +24,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ExecutionConsole;
+import consulo.execution.ui.ExecutionConsole;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;

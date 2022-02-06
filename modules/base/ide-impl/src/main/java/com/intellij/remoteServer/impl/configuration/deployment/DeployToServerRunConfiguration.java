@@ -16,12 +16,12 @@
 package com.intellij.remoteServer.impl.configuration.deployment;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationFactory;
+import consulo.execution.Executor;
+import consulo.execution.configuration.ConfigurationFactory;
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.configurations.RuntimeConfigurationException;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.openapi.components.ComponentSerializationUtil;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.project.Project;

@@ -3,8 +3,8 @@ package com.intellij.build;
 
 import com.intellij.build.events.BuildEventsNls;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.RunContentDescriptor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,7 +16,7 @@
 
 package com.intellij.tools;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.macro.MacroManager;
 import com.intellij.ide.macro.MacrosDialog;

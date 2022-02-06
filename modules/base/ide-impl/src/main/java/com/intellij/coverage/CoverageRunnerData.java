@@ -1,6 +1,6 @@
 package com.intellij.coverage;
 
-import com.intellij.execution.configurations.RunnerSettings;
+import consulo.execution.configuration.RunnerSettings;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;

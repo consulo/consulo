@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import javax.annotation.Nonnull;
 
 abstract class CurrentFileTodosPanel extends TodoPanel {

@@ -41,7 +41,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.ui.*;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Function;
 import com.intellij.util.containers.Convertor;

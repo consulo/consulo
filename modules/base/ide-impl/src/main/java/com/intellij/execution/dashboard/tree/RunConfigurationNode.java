@@ -15,21 +15,21 @@
  */
 package com.intellij.execution.dashboard.tree;
 
-import com.intellij.execution.Executor;
-import com.intellij.execution.RunManager;
+import consulo.execution.Executor;
+import consulo.execution.RunManager;
 import com.intellij.execution.RunManagerEx;
-import com.intellij.execution.RunnerAndConfigurationSettings;
+import consulo.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.dashboard.DashboardRunConfigurationNode;
 import com.intellij.execution.dashboard.DashboardRunConfigurationStatus;
 import com.intellij.execution.dashboard.RunDashboardContributor;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManagerImpl;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.SimpleTextAttributes;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

@@ -20,9 +20,9 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.testframework.actions.ScrollToTestSourceAction;
 import com.intellij.execution.testframework.actions.ShowStatisticsAction;
 import com.intellij.execution.testframework.actions.TestFrameworkActions;

@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.compound;
 
-import com.intellij.execution.BeforeRunTask;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.BeforeRunTask;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.configurations.UnknownConfigurationType;
 import com.intellij.execution.impl.RunConfigurationBeforeRunProvider;
 import com.intellij.execution.impl.RunConfigurationSelector;

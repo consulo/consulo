@@ -15,10 +15,11 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.RuntimeConfigurationException;
 
 
-public class RuntimeConfigurationWarning extends RuntimeConfigurationException{
+public class RuntimeConfigurationWarning extends RuntimeConfigurationException {
   public RuntimeConfigurationWarning(final String message) {
     this(message, null);
   }

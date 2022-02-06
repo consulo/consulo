@@ -26,7 +26,7 @@ import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.ContentManager;
 import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Inject;
 

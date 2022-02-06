@@ -16,14 +16,14 @@
 
 package com.intellij.execution.ui.layout;
 
-import com.intellij.execution.ui.RunnerLayoutUi;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ui.ex.action.ActionManager;
 import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.component.util.ActiveRunnable;
 import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.actions;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import consulo.application.AllIcons;

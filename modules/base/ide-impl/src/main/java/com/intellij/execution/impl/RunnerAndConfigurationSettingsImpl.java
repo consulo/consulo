@@ -16,9 +16,10 @@
 
 package com.intellij.execution.impl;
 
-import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.*;
+import consulo.execution.configuration.*;
+import consulo.execution.runner.ProgramRunner;
 import consulo.component.extension.ExtensionException;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;

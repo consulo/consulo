@@ -20,7 +20,7 @@
  */
 package com.intellij.execution.testframework.stacktrace;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.filters.HyperlinkInfoBase;
 import com.intellij.execution.testframework.Printable;

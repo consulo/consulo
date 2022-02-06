@@ -50,6 +50,7 @@ open module consulo.ide.impl {
   requires transitive consulo.navigation.api;
   requires transitive consulo.editor.api;
   requires transitive consulo.process.api;
+  requires transitive consulo.execution.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -1178,12 +1179,9 @@ open module consulo.ide.impl {
   exports consulo.editor.impl;
   exports consulo.editor.impl.softwrap.mapping;
   exports consulo.editor.notifications;
-  exports consulo.execution;
   exports consulo.execution.console;
   exports consulo.execution.impl;
-  exports consulo.execution.process;
   exports consulo.execution.testframework.thrift.runner;
-  exports consulo.execution.ui;
   exports consulo.execution.ui.editor;
   exports consulo.execution.ui.impl;
   //exports consulo.extension;

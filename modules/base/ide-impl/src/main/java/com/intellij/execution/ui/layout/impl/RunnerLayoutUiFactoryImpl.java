@@ -16,7 +16,7 @@
 
 package com.intellij.execution.ui.layout.impl;
 
-import com.intellij.execution.ui.RunnerLayoutUi;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 

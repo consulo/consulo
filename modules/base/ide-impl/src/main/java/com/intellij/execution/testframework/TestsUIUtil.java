@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.Location;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

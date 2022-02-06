@@ -15,21 +15,27 @@
  */
 package com.intellij.execution.runners;
 
-import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
+import consulo.execution.ExecutionManager;
+import consulo.execution.ExecutionResult;
+import consulo.execution.Executor;
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.configurations.SearchScopeProvider;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.ui.*;
-import com.intellij.execution.ui.layout.PlaceInGrid;
+import consulo.execution.runner.ExecutionEnvironmentBuilder;
+import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.project.Project;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import consulo.util.collection.SmartList;
 import consulo.disposer.Disposer;
@@ -50,7 +56,7 @@ public class RunContentBuilder extends RunTab {
   private final ExecutionResult myExecutionResult;
 
   /**
-   * @deprecated use {@link #RunContentBuilder(com.intellij.execution.ExecutionResult, ExecutionEnvironment)}
+   * @deprecated use {@link #RunContentBuilder(ExecutionResult, ExecutionEnvironment)}
    * to remove in IDEA 14
    */
   @SuppressWarnings("UnusedParameters")
@@ -64,7 +70,7 @@ public class RunContentBuilder extends RunTab {
   }
 
   /**
-   * @deprecated use {@link #RunContentBuilder(com.intellij.execution.ExecutionResult, ExecutionEnvironment)}
+   * @deprecated use {@link #RunContentBuilder(ExecutionResult, ExecutionEnvironment)}
    * to remove in IDEA 15
    */
   public RunContentBuilder(ProgramRunner runner,

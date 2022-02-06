@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import com.intellij.execution.Executor;
+import consulo.execution.Executor;
 import com.intellij.execution.Location;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.filters.CompositeFilter;
 import com.intellij.execution.filters.FileHyperlinkInfo;
 import com.intellij.execution.filters.Filter;

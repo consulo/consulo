@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.externalSystem.util;
 
-import com.intellij.execution.*;
-import com.intellij.execution.configurations.ConfigurationType;
+import consulo.execution.*;
+import consulo.execution.configuration.ConfigurationType;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.event.ExecutionListener;
 import consulo.process.ExecutionException;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
@@ -27,8 +28,8 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.rmi.RemoteUtil;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
 import consulo.dataContext.DataProvider;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -89,8 +90,8 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import consulo.application.util.Semaphore;

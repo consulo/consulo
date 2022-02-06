@@ -16,8 +16,8 @@
 
 package com.intellij.execution.actions;
 
-import com.intellij.execution.Executor;
-import com.intellij.execution.ExecutorRegistry;
+import consulo.execution.Executor;
+import consulo.execution.ExecutorRegistry;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

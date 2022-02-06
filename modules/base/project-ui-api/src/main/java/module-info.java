@@ -14,8 +14,6 @@ module consulo.project.ui.api {
   exports consulo.project.ui;
   exports consulo.project.ui.wm;
   exports consulo.project.ui.wm.event;
-  exports consulo.project.ui.wm.content;
-  exports consulo.project.ui.wm.content.event;
 
   exports consulo.project.ui.wm.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl;
 }

@@ -17,9 +17,10 @@
 package com.intellij.execution.actions;
 
 import com.intellij.execution.*;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.*;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.runners.ExecutionUtil;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.runner.ProgramRunner;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.util.Pair;
 

@@ -16,10 +16,10 @@
 
 package com.intellij.xdebugger;
 
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunnerLayoutUi;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.application.AllIcons;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;

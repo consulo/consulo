@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.ui;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.openapi.progress.util.ColorProgressBar;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBProgressBar;

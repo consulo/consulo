@@ -16,7 +16,7 @@
 
 package com.intellij.tasks.context;
 
-import com.intellij.execution.RunManager;
+import consulo.execution.RunManager;
 import com.intellij.execution.impl.RunManagerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;

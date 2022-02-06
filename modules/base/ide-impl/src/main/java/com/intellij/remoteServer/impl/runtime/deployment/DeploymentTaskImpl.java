@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.impl.runtime.deployment;
 
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;

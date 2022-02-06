@@ -15,20 +15,20 @@
  */
 package com.intellij.xdebugger.impl;
 
-import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.ExecutionManager;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.filters.OpenFileHyperlinkInfo;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunnerLayoutUi;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.notification.NotificationGroup;

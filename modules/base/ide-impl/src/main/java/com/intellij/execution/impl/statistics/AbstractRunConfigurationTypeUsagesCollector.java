@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.impl.statistics;
 
-import com.intellij.execution.RunManager;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.RunManager;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import consulo.project.Project;

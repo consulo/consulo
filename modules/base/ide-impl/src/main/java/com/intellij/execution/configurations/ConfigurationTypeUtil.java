@@ -16,6 +16,8 @@
 
 package com.intellij.execution.configurations;
 
+import consulo.execution.configuration.ConfigurationType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;

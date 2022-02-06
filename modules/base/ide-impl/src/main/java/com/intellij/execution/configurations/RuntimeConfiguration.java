@@ -16,6 +16,7 @@
 
 package com.intellij.execution.configurations;
 
+import consulo.execution.configuration.ConfigurationFactory;
 import consulo.module.Module;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

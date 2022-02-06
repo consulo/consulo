@@ -17,6 +17,8 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.util.ArrayUtil;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationType;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

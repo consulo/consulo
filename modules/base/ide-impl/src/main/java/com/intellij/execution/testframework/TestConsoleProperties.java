@@ -15,15 +15,15 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.DefaultExecutionTarget;
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.ExecutionTarget;
-import com.intellij.execution.Executor;
+import consulo.execution.DefaultExecutionTarget;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ExecutionTarget;
+import consulo.execution.Executor;
 import com.intellij.execution.configurations.ModuleRunProfile;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ExecutionConsole;
+import consulo.execution.ui.ExecutionConsole;
 import com.intellij.execution.util.StoringPropertyContainer;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;

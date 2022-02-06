@@ -16,8 +16,8 @@
 package com.intellij.tools;
 
 import com.intellij.execution.BeforeRunTaskProvider;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;

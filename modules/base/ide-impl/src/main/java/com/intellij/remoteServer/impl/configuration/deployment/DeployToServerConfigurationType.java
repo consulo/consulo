@@ -17,7 +17,7 @@ package com.intellij.remoteServer.impl.configuration.deployment;
 
 import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import com.intellij.remoteServer.ServerType;
 import com.intellij.remoteServer.configuration.RemoteServer;

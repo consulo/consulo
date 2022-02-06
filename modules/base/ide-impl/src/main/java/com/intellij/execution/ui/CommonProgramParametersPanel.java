@@ -16,7 +16,7 @@
 package com.intellij.execution.ui;
 
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;

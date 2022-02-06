@@ -26,7 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.ContentManager;
 import com.intellij.util.ArrayUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import javax.annotation.Nonnull;

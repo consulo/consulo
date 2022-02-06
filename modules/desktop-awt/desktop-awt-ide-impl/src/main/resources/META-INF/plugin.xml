@@ -170,7 +170,7 @@
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
                         serviceImplementation="consulo.desktop.awt.welcomeScreen.DesktopWelcomeFrameManager"/>
 
-    <applicationService serviceInterface="consulo.project.ui.wm.content.ContentFactory"
+    <applicationService serviceInterface="consulo.ui.ex.content.ContentFactory"
                         serviceImplementation="consulo.desktop.awt.uiOld.content.ContentFactoryImpl"/>
 
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView"

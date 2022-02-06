@@ -20,7 +20,7 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.history.LocalHistory;
 import consulo.project.Project;
 import consulo.application.ui.awt.JBColor;

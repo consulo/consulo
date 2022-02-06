@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.impl;
 
-import com.intellij.execution.RunnerAndConfigurationSettings;
+import consulo.execution.RunnerAndConfigurationSettings;
 import com.intellij.openapi.options.SettingsEditorConfigurable;
 
 /**

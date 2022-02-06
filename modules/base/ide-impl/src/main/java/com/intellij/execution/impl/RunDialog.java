@@ -16,11 +16,11 @@
 
 package com.intellij.execution.impl;
 
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.Executor;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.Executor;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.openapi.help.HelpManager;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;

@@ -1,6 +1,6 @@
 package com.intellij.execution.configuration;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationFactory;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import consulo.project.Project;

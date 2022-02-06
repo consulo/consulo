@@ -75,7 +75,7 @@
     <applicationService
         serviceInterface="consulo.fileEditor.impl.text.TextEditorComponentContainerFactory" serviceImplementation="consulo.fileEditor.impl.text.UnifiedTextEditorComponentContainerFactory"/>
 
-    <applicationService serviceInterface="consulo.project.ui.wm.content.ContentFactory" serviceImplementation="consulo.wm.impl.UnifiedContentFactoryImpl"/>
+    <applicationService serviceInterface="consulo.ui.ex.content.ContentFactory" serviceImplementation="consulo.wm.impl.UnifiedContentFactoryImpl"/>
 
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView" serviceImplementation="consulo.projectView.impl.UnifiedProjectViewImpl"/>
 

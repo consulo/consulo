@@ -19,7 +19,7 @@ package com.intellij.execution.ui.actions;
 import com.intellij.execution.ui.layout.ViewContext;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.Toggleable;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import javax.annotation.Nonnull;
 
 public class AbstractFocusOnAction extends BaseViewAction implements Toggleable {

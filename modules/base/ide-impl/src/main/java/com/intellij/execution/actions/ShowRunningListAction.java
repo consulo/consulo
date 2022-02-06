@@ -15,12 +15,12 @@
  */
 package com.intellij.execution.actions;
 
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.Executor;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.Executor;
 import com.intellij.execution.KillableProcess;
 import com.intellij.execution.impl.ExecutionManagerImpl;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -15,9 +15,9 @@
  */
 package consulo.sandboxPlugin.ide.run;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.module.extension.ModuleExtensionHelper;

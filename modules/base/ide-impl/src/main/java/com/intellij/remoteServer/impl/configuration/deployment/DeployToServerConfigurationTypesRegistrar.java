@@ -15,7 +15,7 @@
  */
 package com.intellij.remoteServer.impl.configuration.deployment;
 
-import com.intellij.execution.configurations.ConfigurationType;
+import consulo.execution.configuration.ConfigurationType;
 import consulo.component.ComponentManager;
 import com.intellij.remoteServer.ServerType;
 import consulo.component.extension.ExtensionExtender;

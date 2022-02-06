@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.testframework.export;
 
-import com.intellij.execution.DefaultExecutionTarget;
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.ExecutionTarget;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.DefaultExecutionTarget;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ExecutionTarget;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.impl.ConsoleBuffer;
 import com.intellij.execution.testframework.*;

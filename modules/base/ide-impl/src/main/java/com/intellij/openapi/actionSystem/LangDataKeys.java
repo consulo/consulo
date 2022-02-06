@@ -16,10 +16,10 @@
 
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.ide.IdeView;
 import consulo.language.Language;
 import consulo.module.ModifiableModuleModel;

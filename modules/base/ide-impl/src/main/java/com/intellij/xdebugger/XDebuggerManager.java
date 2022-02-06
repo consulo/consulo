@@ -17,10 +17,10 @@
 package com.intellij.xdebugger;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.project.Project;
 import consulo.component.messagebus.Topic;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;

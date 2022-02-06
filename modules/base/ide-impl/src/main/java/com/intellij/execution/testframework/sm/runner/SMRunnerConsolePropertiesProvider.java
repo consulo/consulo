@@ -15,11 +15,12 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import com.intellij.execution.Executor;
+import consulo.execution.Executor;
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;
+import consulo.execution.configuration.RunConfiguration;
 
 /**
- * If {@link com.intellij.execution.configurations.RunConfiguration} uses SMRunner and implements this interface,
+ * If {@link RunConfiguration} uses SMRunner and implements this interface,
  * {@link AbstractImportTestsAction} would work from Main Menu.
  */
 public interface SMRunnerConsolePropertiesProvider {

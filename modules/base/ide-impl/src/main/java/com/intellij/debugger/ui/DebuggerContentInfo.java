@@ -15,7 +15,7 @@
  */
 package com.intellij.debugger.ui;
 
-import com.intellij.execution.ui.ExecutionConsole;
+import consulo.execution.ui.ExecutionConsole;
 import org.jetbrains.annotations.NonNls;
 
 public interface DebuggerContentInfo {

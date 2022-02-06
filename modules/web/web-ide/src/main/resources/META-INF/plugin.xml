@@ -37,7 +37,7 @@
 
     <applicationService serviceInterface="consulo.progress.util.ProgressDialogFactory" serviceImplementation="consulo.progress.util.impl.UnifiedProgressDialogFactory"/>
 
-    <applicationService serviceInterface="consulo.project.ui.wm.content.ContentFactory"
+    <applicationService serviceInterface="consulo.ui.ex.content.ContentFactory"
                         serviceImplementation="consulo.wm.impl.UnifiedContentFactoryImpl"/>
 
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView" serviceImplementation="consulo.projectView.impl.UnifiedProjectViewImpl"/>

@@ -15,15 +15,16 @@
  */
 package consulo.desktop.awt.uiOld.content;
 
-import consulo.project.Project;
-import com.intellij.ui.content.*;
+import com.intellij.ui.content.TabbedPaneContentUI;
 import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.ui.content.impl.DesktopContentManagerImpl;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentFactory;
-import consulo.project.ui.wm.content.ContentManager;
-import consulo.project.ui.wm.content.ContentUI;
+import consulo.component.ComponentManager;
+import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUI;
 import consulo.wm.impl.UnifiedContentImpl;
 import jakarta.inject.Singleton;
 
@@ -34,13 +35,13 @@ import javax.annotation.Nullable;
 public class ContentFactoryImpl implements ContentFactory {
   @Nonnull
   @Override
-  public ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
-    return new DesktopContentManagerImpl(contentUI, canCloseContents, project);
+  public ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull ComponentManager project) {
+    return new DesktopContentManagerImpl(contentUI, canCloseContents, (Project)project);
   }
 
   @Nonnull
   @Override
-  public ContentManager createContentManager(boolean canCloseContents, @Nonnull Project project) {
+  public ContentManager createContentManager(boolean canCloseContents, @Nonnull ComponentManager project) {
     return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
   }
 

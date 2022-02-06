@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.testframework.actions;
 
-import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ExecutionManager;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnAction;

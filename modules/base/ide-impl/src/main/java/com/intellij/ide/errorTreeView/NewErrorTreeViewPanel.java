@@ -39,7 +39,7 @@ import com.intellij.ui.AutoScrollToSourceHandler;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.PopupHandler;
 import consulo.application.ui.awt.SideBorder;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.MessageView;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Alarm;

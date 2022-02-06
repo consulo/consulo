@@ -22,8 +22,9 @@
  */
 package com.intellij.execution;
 
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.BeforeRunTask;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;

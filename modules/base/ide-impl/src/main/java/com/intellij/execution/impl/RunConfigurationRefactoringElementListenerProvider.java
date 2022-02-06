@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.impl;
 
-import com.intellij.execution.RunManager;
+import consulo.execution.RunManager;
 import com.intellij.execution.configurations.RefactoringListenerProvider;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.listeners.RefactoringElementListener;

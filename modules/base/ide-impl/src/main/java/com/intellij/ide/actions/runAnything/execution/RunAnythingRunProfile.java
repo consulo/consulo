@@ -1,11 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions.runAnything.execution;
 
-import com.intellij.execution.Executor;
+import consulo.execution.Executor;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

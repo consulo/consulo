@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowDataKeys;
 import consulo.application.ui.awt.JBColor;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;

@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.dashboard;
 
-import com.intellij.execution.configurations.ConfigurationType;
+import consulo.execution.configuration.ConfigurationType;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.ide.projectView.PresentationData;
 import consulo.component.extension.ExtensionPointName;
 import consulo.application.util.registry.Registry;

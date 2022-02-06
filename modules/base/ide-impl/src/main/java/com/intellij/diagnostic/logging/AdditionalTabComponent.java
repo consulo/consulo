@@ -17,7 +17,7 @@
 package com.intellij.diagnostic.logging;
 
 import consulo.ui.ex.ComponentContainer;
-import com.intellij.openapi.ui.ComponentWithActions;
+import consulo.ui.ex.ComponentWithActions;
 
 import javax.annotation.Nonnull;
 

@@ -16,12 +16,13 @@
 
 package com.intellij.execution;
 
+import consulo.execution.ExecutionManager;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import consulo.process.ProcessHandler;
 import consulo.process.local.ProcessOutput;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunContentManager;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentManager;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
@@ -43,8 +44,8 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentFactory;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
 import com.intellij.ui.content.MessageView;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;

@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.compound;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.ConfigurationTypeUtil;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.ui.image.ImageEffects;

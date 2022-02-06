@@ -15,7 +15,7 @@
  */
 package consulo.project.ui.wm;
 
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import consulo.util.dataholder.Key;
 
 /**

@@ -17,7 +17,7 @@
 package com.intellij.coverage;
 
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunnerSettings;
+import consulo.execution.configuration.RunnerSettings;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import consulo.process.ProcessHandler;
 import consulo.disposer.Disposable;

@@ -25,7 +25,7 @@ import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.util.DiffPlaces;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

@@ -16,6 +16,8 @@
 
 package com.intellij.execution.ui;
 
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import org.jetbrains.annotations.NonNls;
 
 /**

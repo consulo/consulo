@@ -17,7 +17,7 @@
 package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;

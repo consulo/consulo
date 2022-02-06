@@ -17,14 +17,15 @@
 package com.intellij.execution.actions;
 
 import com.intellij.execution.*;
-import com.intellij.execution.configurations.ConfigurationType;
+import consulo.execution.*;
+import consulo.execution.configuration.ConfigurationType;
 import com.intellij.execution.configurations.UnknownConfigurationType;
 import com.intellij.execution.impl.EditConfigurationsDialog;
 import com.intellij.execution.impl.RunDialog;
 import com.intellij.execution.impl.RunManagerImpl;
 import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl;
 import com.intellij.execution.runners.ExecutionUtil;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.runner.ProgramRunner;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;

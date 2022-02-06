@@ -16,19 +16,19 @@
 package com.intellij.openapi.externalSystem.service;
 
 import consulo.application.CommonBundle;
-import com.intellij.execution.DefaultExecutionResult;
+import consulo.execution.DefaultExecutionResult;
 import consulo.process.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
+import consulo.execution.ExecutionResult;
+import consulo.execution.Executor;
 import com.intellij.execution.configurations.CommandLineState;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.configurations.RunProfileState;
+import consulo.execution.configuration.RunProfileState;
 import com.intellij.execution.configurations.SimpleJavaParameters;
 import consulo.process.local.OSProcessHandler;
 import consulo.process.ProcessHandler;
 import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.rmi.RemoteProcessSupport;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.runner.ProgramRunner;
 import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.application.PathManager;

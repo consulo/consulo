@@ -15,7 +15,9 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.execution.ExecutionTarget;
+import consulo.execution.ExecutionTarget;
+import consulo.execution.configuration.RunProfile;
+
 import javax.annotation.Nonnull;
 
 public interface TargetAwareRunProfile extends RunProfile {

@@ -2,10 +2,10 @@
 package com.intellij.ide.actions.runAnything.activity;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.Executor;
+import consulo.execution.Executor;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.PtyCommandLine;
-import com.intellij.execution.runners.ExecutionEnvironmentBuilder;
+import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.runAnything.RunAnythingAction;

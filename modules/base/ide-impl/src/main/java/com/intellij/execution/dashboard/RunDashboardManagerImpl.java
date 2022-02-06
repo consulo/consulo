@@ -15,13 +15,17 @@
  */
 package com.intellij.execution.dashboard;
 
-import com.intellij.execution.*;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.RunManager;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.dashboard.tree.DashboardGrouper;
 import com.intellij.execution.impl.ExecutionManagerImpl;
+import consulo.execution.ExecutionManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.event.ExecutionListener;
+import consulo.execution.event.RunManagerListener;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -37,10 +41,10 @@ import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentFactory;
-import consulo.project.ui.wm.content.ContentManager;
-import consulo.project.ui.wm.content.ContentUI;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUI;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;

@@ -17,7 +17,7 @@ package com.intellij.execution.testframework.sm.runner.ui;
 
 import com.intellij.execution.filters.HyperlinkInfo;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.execution.testframework.*;
 import com.intellij.execution.testframework.sm.SMRunnerUtil;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;

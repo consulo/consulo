@@ -17,10 +17,10 @@ package com.intellij.xdebugger.impl.ui.tree;
 
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
-import com.intellij.execution.Executor;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunContentManager;
-import com.intellij.execution.ui.RunContentWithExecutorListener;
+import consulo.execution.Executor;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentManager;
+import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;

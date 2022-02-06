@@ -3,7 +3,8 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.RuntimeConfigurationException;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

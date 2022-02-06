@@ -16,6 +16,8 @@
 
 package com.intellij.execution.configurations;
 
+import consulo.execution.configuration.RunConfiguration;
+
 /**
  * @author spleaner
  */

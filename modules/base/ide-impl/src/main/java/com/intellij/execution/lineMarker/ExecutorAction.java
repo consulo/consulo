@@ -15,11 +15,11 @@
  */
 package com.intellij.execution.lineMarker;
 
-import com.intellij.execution.Executor;
-import com.intellij.execution.ExecutorRegistry;
+import consulo.execution.Executor;
+import consulo.execution.ExecutorRegistry;
 import com.intellij.execution.actions.*;
 import com.intellij.execution.configurations.LocatableConfiguration;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.impl.RunManagerImpl;
 import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl;
 import consulo.dataContext.DataManager;

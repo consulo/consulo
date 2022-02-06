@@ -2,18 +2,18 @@
 package com.intellij.ide.actions.runAnything.execution;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.ExecutionManager;
+import consulo.execution.ExecutionManager;
 import com.intellij.execution.configurations.CommandLineState;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.process.KillableColoredProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.runAnything.RunAnythingUtil;
 import com.intellij.ide.actions.runAnything.handlers.RunAnythingCommandHandler;

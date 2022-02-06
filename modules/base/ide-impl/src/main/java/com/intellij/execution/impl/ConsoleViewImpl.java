@@ -6,7 +6,7 @@ import com.google.common.base.CharMatcher;
 import com.intellij.codeInsight.navigation.IncrementalSearchHandler;
 import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import com.intellij.execution.ConsoleFolding;
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.execution.actions.ClearConsoleAction;
 import com.intellij.execution.actions.ConsoleActionsPostProcessor;
 import com.intellij.execution.actions.EOFAction;

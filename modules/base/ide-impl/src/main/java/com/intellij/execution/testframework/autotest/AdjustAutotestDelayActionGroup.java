@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.autotest;
 
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;

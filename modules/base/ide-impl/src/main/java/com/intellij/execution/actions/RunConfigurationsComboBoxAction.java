@@ -17,10 +17,11 @@
 package com.intellij.execution.actions;
 
 import com.intellij.execution.*;
-import com.intellij.execution.configurations.ConfigurationType;
+import consulo.execution.*;
+import consulo.execution.configuration.ConfigurationType;
 import com.intellij.execution.impl.ExecutionManagerImpl;
 import com.intellij.execution.runners.ExecutionUtil;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.idea.ActionsBundle;

@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.ContentManager;
 import com.intellij.util.BufferedListConsumer;
 import com.intellij.util.Consumer;
 import com.intellij.util.ContentUtilEx;

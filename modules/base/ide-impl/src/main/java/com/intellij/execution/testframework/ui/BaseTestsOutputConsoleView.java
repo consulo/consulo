@@ -22,7 +22,7 @@ import com.intellij.execution.testframework.*;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.ObservableConsoleView;
-import com.intellij.ide.HelpIdProvider;
+import consulo.ui.ex.HelpIdProvider;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnAction;
 import consulo.disposer.Disposer;

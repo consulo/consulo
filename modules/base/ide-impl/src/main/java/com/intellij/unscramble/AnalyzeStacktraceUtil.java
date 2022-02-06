@@ -16,8 +16,8 @@
 
 package com.intellij.unscramble;
 
-import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.Executor;
+import consulo.execution.ExecutionManager;
+import consulo.execution.Executor;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.TextConsoleBuilder;
@@ -26,8 +26,8 @@ import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;

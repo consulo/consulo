@@ -16,15 +16,15 @@
 package com.intellij.diagnostic.logging;
 
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.configuration.RunProfile;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.ui.RunnerLayoutUi;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentWithActions;
+import consulo.ui.ex.ComponentWithActions;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.ContentManagerAdapter;
-import consulo.project.ui.wm.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerEvent;
 import com.intellij.util.ArrayUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

@@ -15,6 +15,8 @@
  */
 package com.intellij.execution.configurations;
 
+import consulo.execution.configuration.RunProfile;
+
 /**
  * Special interface for remote debug processes
  *

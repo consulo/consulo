@@ -23,7 +23,7 @@ import com.intellij.build.events.StartBuildEvent;
 import com.intellij.build.process.BuildProcessHandler;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.util.Consumer;
 

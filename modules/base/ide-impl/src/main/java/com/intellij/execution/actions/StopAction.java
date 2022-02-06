@@ -1,13 +1,13 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.actions;
 
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.ExecutionManager;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ExecutionManager;
 import com.intellij.execution.KillableProcess;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.impl.ExecutionManagerImpl;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;

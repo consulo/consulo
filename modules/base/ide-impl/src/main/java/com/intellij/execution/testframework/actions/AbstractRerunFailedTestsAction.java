@@ -15,15 +15,20 @@
  */
 package com.intellij.execution.testframework.actions;
 
+import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.configuration.ConfigurationInfoProvider;
+import consulo.execution.configuration.ConfigurationPerRunnerSettings;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.process.ExecutionException;
-import com.intellij.execution.Executor;
-import com.intellij.execution.RunnerRegistry;
+import consulo.execution.Executor;
+import consulo.execution.RunnerRegistry;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ExecutionEnvironmentBuilder;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironmentBuilder;
+import consulo.execution.runner.ProgramRunner;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.Filter;
 import com.intellij.execution.testframework.TestConsoleProperties;

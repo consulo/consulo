@@ -15,7 +15,7 @@
  */
 package com.intellij.tools;
 
-import com.intellij.execution.BeforeRunTask;
+import consulo.execution.BeforeRunTask;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.dataContext.DataContext;

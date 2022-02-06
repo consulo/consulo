@@ -17,6 +17,8 @@
 package com.intellij.execution;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.execution.ExecutionTarget;
+import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

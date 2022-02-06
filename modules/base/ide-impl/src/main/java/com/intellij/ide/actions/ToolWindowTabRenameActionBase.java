@@ -28,7 +28,7 @@ import consulo.project.ui.wm.ToolWindowDataKeys;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.util.BooleanFunction;
 import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;

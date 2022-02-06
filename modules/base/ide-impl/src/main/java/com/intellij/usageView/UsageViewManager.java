@@ -3,7 +3,7 @@ package com.intellij.usageView;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import javax.annotation.Nonnull;
 
 import jakarta.inject.Inject;

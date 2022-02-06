@@ -17,8 +17,9 @@
 package com.intellij.xdebugger;
 
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
+import consulo.execution.runner.ProgramRunner;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.ui.ExecutionConsole;
+import consulo.execution.ui.ExecutionConsole;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
@@ -38,8 +39,8 @@ import javax.swing.event.HyperlinkListener;
 /**
  * Extends this class to provide debugging capabilities for custom language/framework.
  *
- * In order to start debugger by 'Debug' action for a specific run configuration implement {@link com.intellij.execution.runners.ProgramRunner}
- * and call {@link XDebuggerManager#startSession} from {@link com.intellij.execution.runners.ProgramRunner#execute} method
+ * In order to start debugger by 'Debug' action for a specific run configuration implement {@link ProgramRunner}
+ * and call {@link XDebuggerManager#startSession} from {@link ProgramRunner#execute} method
  *
  * Otherwise use method {@link XDebuggerManager#startSessionAndShowTab} to start new debugging session
  *

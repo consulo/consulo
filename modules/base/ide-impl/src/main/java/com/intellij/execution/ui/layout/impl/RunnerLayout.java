@@ -16,14 +16,14 @@
 
 package com.intellij.execution.ui.layout.impl;
 
-import com.intellij.execution.ui.layout.LayoutAttractionPolicy;
-import com.intellij.execution.ui.layout.PlaceInGrid;
+import consulo.execution.ui.layout.LayoutAttractionPolicy;
+import consulo.execution.ui.layout.PlaceInGrid;
 import com.intellij.execution.ui.layout.Tab;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.ui.image.Image;

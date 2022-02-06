@@ -16,26 +16,26 @@
 
 package com.intellij.execution.ui.layout.impl;
 
-import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.execution.ui.layout.LayoutAttractionPolicy;
-import com.intellij.execution.ui.layout.LayoutStateDefaults;
-import com.intellij.execution.ui.layout.LayoutViewOptions;
-import com.intellij.execution.ui.layout.PlaceInGrid;
+import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.execution.ui.layout.LayoutAttractionPolicy;
+import consulo.execution.ui.layout.LayoutStateDefaults;
+import consulo.execution.ui.layout.LayoutViewOptions;
+import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentWithActions;
+import consulo.ui.ex.ComponentWithActions;
 import consulo.util.concurrent.ActionCallback;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentFactory;
-import consulo.project.ui.wm.content.ContentManager;
-import consulo.project.ui.wm.content.event.ContentManagerListener;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import com.intellij.ui.switcher.QuickActionProvider;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

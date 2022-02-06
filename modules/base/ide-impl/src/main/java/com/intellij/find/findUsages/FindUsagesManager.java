@@ -59,7 +59,7 @@ import consulo.project.ui.wm.StatusBar;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.search.*;
 import com.intellij.ui.LightweightHint;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewContentManager;
 import com.intellij.usageView.UsageViewUtil;

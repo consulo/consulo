@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.process;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import consulo.process.ExecutionException;
 import com.intellij.execution.KillableProcess;
 import consulo.process.cmd.GeneralCommandLine;

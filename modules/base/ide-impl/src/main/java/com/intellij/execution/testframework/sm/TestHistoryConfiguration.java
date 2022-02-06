@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm;
 
-import com.intellij.execution.configurations.ConfigurationType;
+import consulo.execution.configuration.ConfigurationType;
 import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;
 import com.intellij.openapi.components.*;

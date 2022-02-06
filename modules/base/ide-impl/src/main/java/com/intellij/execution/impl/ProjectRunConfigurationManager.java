@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.impl;
 
-import com.intellij.execution.RunManager;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.RunManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.configurations.UnknownRunConfiguration;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.State;

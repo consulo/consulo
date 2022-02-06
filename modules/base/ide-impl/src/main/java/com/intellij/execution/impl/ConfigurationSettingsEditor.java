@@ -16,11 +16,11 @@
 
 package com.intellij.execution.impl;
 
-import com.intellij.execution.*;
-import com.intellij.execution.configurations.ConfigurationPerRunnerSettings;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunnerSettings;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.*;
+import consulo.execution.configuration.ConfigurationPerRunnerSettings;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunnerSettings;
+import consulo.execution.runner.ProgramRunner;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.options.*;

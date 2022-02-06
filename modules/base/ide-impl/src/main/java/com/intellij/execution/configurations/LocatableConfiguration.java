@@ -15,6 +15,8 @@
  */
 package com.intellij.execution.configurations;
 
+import consulo.execution.configuration.RunConfiguration;
+
 import javax.annotation.Nullable;
 
 /**

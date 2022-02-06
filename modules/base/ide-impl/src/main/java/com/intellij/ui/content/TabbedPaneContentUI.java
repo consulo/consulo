@@ -17,10 +17,10 @@ package com.intellij.ui.content;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataProvider;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentManager;
-import consulo.project.ui.wm.content.ContentUI;
-import consulo.project.ui.wm.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUI;
+import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.AnAction;

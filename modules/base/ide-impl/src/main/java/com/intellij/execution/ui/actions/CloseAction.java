@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.ui.actions;
 
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.Executor;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ExecutionManager;
+import consulo.execution.Executor;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;

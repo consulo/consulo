@@ -15,12 +15,13 @@
  */
 package com.intellij.execution.runners;
 
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.ExecutorRegistry;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ExecutionManager;
+import consulo.execution.ExecutorRegistry;
 import com.intellij.execution.impl.ExecutionManagerImpl;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataManager;

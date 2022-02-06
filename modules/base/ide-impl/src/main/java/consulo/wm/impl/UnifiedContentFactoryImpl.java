@@ -15,16 +15,18 @@
  */
 package consulo.wm.impl;
 
+import com.intellij.ui.content.TabbedPaneContentUI;
+import consulo.component.ComponentManager;
 import consulo.project.Project;
-import com.intellij.ui.content.*;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentFactory;
-import consulo.project.ui.wm.content.ContentManager;
-import consulo.project.ui.wm.content.ContentUI;
 import consulo.ui.Component;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUI;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -34,13 +36,13 @@ import jakarta.inject.Singleton;
 public class UnifiedContentFactoryImpl implements ContentFactory {
   @Nonnull
   @Override
-  public ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
-    return new UnifiedContentManager(contentUI, canCloseContents, project);
+  public ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull ComponentManager project) {
+    return new UnifiedContentManager(contentUI, canCloseContents, (Project)project);
   }
 
   @Nonnull
   @Override
-  public ContentManager createContentManager(boolean canCloseContents, @Nonnull Project project) {
+  public ContentManager createContentManager(boolean canCloseContents, @Nonnull ComponentManager project) {
     return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
   }
 

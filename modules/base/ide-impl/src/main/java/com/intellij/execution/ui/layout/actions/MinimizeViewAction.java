@@ -21,7 +21,7 @@ import com.intellij.execution.ui.layout.Tab;
 import com.intellij.execution.ui.layout.ViewContext;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 
 public class MinimizeViewAction extends BaseViewAction {
 

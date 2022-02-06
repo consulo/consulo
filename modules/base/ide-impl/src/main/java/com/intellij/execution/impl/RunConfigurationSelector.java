@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.impl;
 
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

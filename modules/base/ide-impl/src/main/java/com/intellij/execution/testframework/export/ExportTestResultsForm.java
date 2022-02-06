@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.export;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;

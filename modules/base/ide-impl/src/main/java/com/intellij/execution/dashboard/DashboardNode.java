@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.dashboard;
 
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.project.Project;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import javax.annotation.Nullable;
 
 /**

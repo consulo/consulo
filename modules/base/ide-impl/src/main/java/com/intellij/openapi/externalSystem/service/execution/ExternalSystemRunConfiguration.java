@@ -1,18 +1,21 @@
 package com.intellij.openapi.externalSystem.service.execution;
 
 import com.intellij.diagnostic.logging.LogConfigurationPanel;
-import com.intellij.execution.*;
-import com.intellij.execution.configurations.ConfigurationFactory;
+import consulo.execution.DefaultExecutionResult;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.configuration.ConfigurationFactory;
 import com.intellij.execution.configurations.LocatableConfigurationBase;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunProfileState;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfileState;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.TextConsoleBuilderImpl;
+import consulo.execution.ExecutionResult;
+import consulo.execution.Executor;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;

@@ -15,11 +15,11 @@
  */
 package com.intellij.execution.impl;
 
-import com.intellij.execution.BeforeRunTask;
+import consulo.execution.BeforeRunTask;
 import com.intellij.execution.BeforeRunTaskProvider;
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.configurations.UnknownRunConfiguration;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;

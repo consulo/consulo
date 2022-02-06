@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 
 
-import com.intellij.execution.Executor;
+import consulo.execution.Executor;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServerNode;
 import consulo.ui.image.Image;
 

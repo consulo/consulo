@@ -16,6 +16,7 @@
 package com.intellij.execution.configurations;
 
 import consulo.configurable.Configurable;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.util.xml.serializer.JDOMExternalizable;
 
 /**

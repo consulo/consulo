@@ -10,7 +10,7 @@ import com.intellij.execution.impl.ConsoleViewImpl;
 import consulo.process.ProcessHandler;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.execution.ui.ExecutionConsole;
+import consulo.execution.ui.ExecutionConsole;
 import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.IdeBundle;

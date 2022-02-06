@@ -20,7 +20,7 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.update.ActionInfo;
 import com.intellij.openapi.vcs.update.UpdateInfoTree;
 import com.intellij.openapi.vcs.update.UpdatedFiles;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.ContentManager;
 import javax.annotation.Nonnull;
 
 import java.util.List;

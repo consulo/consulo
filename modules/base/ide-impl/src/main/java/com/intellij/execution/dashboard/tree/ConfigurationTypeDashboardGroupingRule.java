@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.dashboard.tree;
 
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.ConfigurationType;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.ConfigurationType;
 import com.intellij.execution.dashboard.DashboardGroup;
 import com.intellij.execution.dashboard.DashboardGroupingRule;
 import com.intellij.execution.dashboard.DashboardRunConfigurationNode;

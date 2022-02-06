@@ -15,19 +15,19 @@
  */
 package com.intellij.execution.testframework.autotest;
 
-import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunProfile;
+import consulo.execution.ExecutionManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.impl.RunManagerImpl;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessListener;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.execution.runners.ExecutionUtil;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunContentManager;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentManager;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -36,7 +36,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;

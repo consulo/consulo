@@ -16,8 +16,8 @@
 package com.intellij.execution.testframework.export;
 
 import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

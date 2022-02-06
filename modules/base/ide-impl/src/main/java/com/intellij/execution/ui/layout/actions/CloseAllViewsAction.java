@@ -19,8 +19,8 @@ package com.intellij.execution.ui.layout.actions;
 import com.intellij.execution.ui.actions.BaseViewAction;
 import com.intellij.execution.ui.layout.ViewContext;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
 
 public class CloseAllViewsAction extends BaseViewAction {
   @Override

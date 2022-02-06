@@ -15,11 +15,12 @@
  */
 package com.intellij.execution.configuration;
 
+import consulo.execution.runner.ProgramRunner;
 import consulo.process.ExecutionException;
 import com.intellij.execution.Location;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunnerSettings;
+import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
 import com.intellij.openapi.options.SettingsEditor;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -106,7 +107,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param configuration  the underlying run configuration.
    * @param runnerSettings the runner-specific settings.
    * @param cmdLine        the command line of the process about to be started.
-   * @param runnerId       the ID of the {@link com.intellij.execution.runners.ProgramRunner} used to start the process.
+   * @param runnerId       the ID of the {@link ProgramRunner} used to start the process.
    * @throws ExecutionException if there was an error configuring the command line and the execution should be canceled.
    */
   protected abstract void patchCommandLine(@Nonnull final T configuration,

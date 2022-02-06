@@ -15,13 +15,13 @@
  */
 package com.intellij.execution.dashboard;
 
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.content.ContentManager;
+import consulo.ui.ex.content.ContentManager;
 import consulo.component.messagebus.Topic;
 import consulo.ui.image.Image;
 

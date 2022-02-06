@@ -16,14 +16,14 @@
 package com.intellij.execution.testframework.sm;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.Executor;
+import consulo.execution.Executor;
 import com.intellij.execution.Location;
 import com.intellij.execution.configurations.CommandLineState;
 import com.intellij.execution.configurations.ModuleRunConfiguration;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.*;
 import com.intellij.execution.testframework.sm.runner.ui.AttachToProcessListener;

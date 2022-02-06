@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.executors;
 
-import com.intellij.execution.Executor;
-import com.intellij.execution.ExecutorRegistry;
+import consulo.execution.Executor;
+import consulo.execution.ExecutorRegistry;
 import consulo.application.AllIcons;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;

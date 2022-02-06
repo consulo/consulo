@@ -17,6 +17,7 @@ package com.intellij.execution.ui;
 
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.action.AnAction;
 import javax.annotation.Nonnull;

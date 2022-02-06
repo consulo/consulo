@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm.runner.states;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 
 /**
  * @author Roman Chernyatchik

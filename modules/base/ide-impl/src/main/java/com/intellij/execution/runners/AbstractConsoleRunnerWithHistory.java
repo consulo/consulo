@@ -16,14 +16,14 @@
 package com.intellij.execution.runners;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.Executor;
+import consulo.execution.ExecutionManager;
+import consulo.execution.Executor;
 import com.intellij.execution.console.ConsoleExecuteAction;
 import com.intellij.execution.console.LanguageConsoleView;
 import com.intellij.execution.console.ProcessBackedConsoleExecuteActionHandler;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.process.*;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.openapi.actionSystem.*;

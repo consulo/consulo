@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.dashboard;
 
-import com.intellij.execution.RunnerAndConfigurationSettings;
+import consulo.execution.RunnerAndConfigurationSettings;
 import javax.annotation.Nonnull;
 
 /**

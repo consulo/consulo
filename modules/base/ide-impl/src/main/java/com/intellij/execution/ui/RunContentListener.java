@@ -15,6 +15,8 @@
  */
 package com.intellij.execution.ui;
 
+import consulo.execution.ui.RunContentDescriptor;
+
 import java.util.EventListener;
 
 public interface RunContentListener extends EventListener{

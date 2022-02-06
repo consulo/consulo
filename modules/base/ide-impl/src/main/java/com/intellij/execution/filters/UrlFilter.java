@@ -1,7 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.filters;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.browsers.OpenUrlHyperlinkInfo;
 import consulo.ui.ex.action.ActionGroup;

@@ -16,9 +16,9 @@
 
 package com.intellij.execution.impl;
 
-import com.intellij.execution.RunnerRegistry;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.RunnerRegistry;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.runner.ProgramRunner;
 import com.intellij.openapi.util.Comparing;
 import jakarta.inject.Singleton;
 

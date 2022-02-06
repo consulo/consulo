@@ -16,7 +16,9 @@
 
 package com.intellij.execution.ui.layout.impl;
 
-import com.intellij.execution.ui.RunnerLayoutUi;
+import consulo.execution.ui.layout.LayoutViewOptions;
+import consulo.execution.ui.layout.PlaceInGrid;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import com.intellij.execution.ui.layout.*;
 import com.intellij.execution.ui.layout.actions.CloseViewAction;
 import com.intellij.execution.ui.layout.actions.MinimizeViewAction;
@@ -25,14 +27,15 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.actions.CloseAction;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataProvider;
+import consulo.execution.ui.layout.LayoutAttractionPolicy;
 import consulo.project.Project;
 import com.intellij.openapi.ui.AbstractPainter;
-import consulo.project.ui.wm.content.Content;
-import consulo.project.ui.wm.content.ContentFactory;
-import consulo.project.ui.wm.content.ContentManager;
-import consulo.project.ui.wm.content.ContentUI;
-import consulo.project.ui.wm.content.event.ContentManagerEvent;
-import consulo.project.ui.wm.content.event.ContentManagerListener;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUI;
+import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.action.*;
 import consulo.util.concurrent.ActionCallback;
 import consulo.component.util.ActiveRunnable;

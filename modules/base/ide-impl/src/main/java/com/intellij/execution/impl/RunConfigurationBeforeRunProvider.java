@@ -16,15 +16,16 @@
 package com.intellij.execution.impl;
 
 import com.intellij.execution.*;
-import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.*;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import consulo.process.ExecutionException;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;

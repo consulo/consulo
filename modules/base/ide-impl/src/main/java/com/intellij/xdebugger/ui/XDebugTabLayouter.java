@@ -1,11 +1,11 @@
 package com.intellij.xdebugger.ui;
 
 import com.intellij.debugger.ui.DebuggerContentInfo;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.execution.ui.layout.PlaceInGrid;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.application.AllIcons;
-import consulo.project.ui.wm.content.Content;
+import consulo.ui.ex.content.Content;
 import com.intellij.xdebugger.XDebuggerBundle;
 import javax.annotation.Nonnull;
 

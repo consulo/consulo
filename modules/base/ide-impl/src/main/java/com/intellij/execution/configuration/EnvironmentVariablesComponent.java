@@ -20,7 +20,7 @@
  */
 package com.intellij.execution.configuration;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.UserActivityProviderComponent;

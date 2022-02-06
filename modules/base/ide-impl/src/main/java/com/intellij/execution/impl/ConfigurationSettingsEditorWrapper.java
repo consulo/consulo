@@ -16,9 +16,9 @@
 
 package com.intellij.execution.impl;
 
-import com.intellij.execution.BeforeRunTask;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.BeforeRunTask;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.configurations.UnknownRunConfiguration;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;

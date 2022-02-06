@@ -15,9 +15,10 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.execution.ExecutionBundle;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.RuntimeConfigurationException;
 
-public class RuntimeConfigurationError extends RuntimeConfigurationException{
+public class RuntimeConfigurationError extends RuntimeConfigurationException {
   public RuntimeConfigurationError(final String message) {
     super(message, ExecutionBundle.message("error.common.title"));
   }
