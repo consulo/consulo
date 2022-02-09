@@ -26,7 +26,7 @@ import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.FilteringProcessor;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;

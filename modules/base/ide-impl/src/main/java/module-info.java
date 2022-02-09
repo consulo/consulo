@@ -1210,7 +1210,6 @@ open module consulo.ide.impl {
   exports consulo.fileTypes.impl;
   exports consulo.fileTypes.ui.impl;
   exports consulo.help.impl;
-  exports consulo.ide;
   exports consulo.ide.actions;
   exports consulo.ide.actions.impl;
   exports consulo.ide.actions.webSearch;

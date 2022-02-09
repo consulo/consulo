@@ -13,32 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide;
+package consulo.language.icon;
 
-import consulo.application.AllIcons;
-import com.intellij.ide.presentation.VirtualFilePresentation;
-import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.component.util.Iconable;
-import com.intellij.openapi.util.NotNullLazyValue;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.IconDeferrer;
-import com.intellij.util.NullableFunction;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.AllIcons;
+import consulo.component.util.Iconable;
+import consulo.language.psi.*;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 0:25/19.07.13
  */
-public class IconDescriptorUpdaters {
-  private static final NotNullLazyValue<Image> ourVisibilityIconPlaceholder =
-          NotNullLazyValue.createValue(() -> Image.empty(AllIcons.Nodes.C_public.getWidth(), AllIcons.Nodes.C_public.getHeight()));
+public final class IconDescriptorUpdaters {
+  private static final Supplier<Image> ourVisibilityIconPlaceholder =
+          LazyValue.notNull(() -> Image.empty(AllIcons.Nodes.C_public.getWidth(), AllIcons.Nodes.C_public.getHeight()));
 
-  private static final NullableFunction<ElementIconRequest, Image> ourIconCompute = request -> {
+  private static final Function<ElementIconRequest, Image> ourIconCompute = request -> {
     final PsiElement element = request.myPointer.getElement();
     if (element == null || !element.isValid() || element.getProject().isDisposed()) return null;
 
@@ -99,7 +100,7 @@ public class IconDescriptorUpdaters {
   private static Image computeBaseIcon(@Nonnull PsiElement element, int flags) {
     Image icon = computeBaseIcon(element);
     if ((flags & Iconable.ICON_FLAG_VISIBILITY) > 0) {
-      return ImageEffects.appendRight(icon, ourVisibilityIconPlaceholder.getValue());
+      return ImageEffects.appendRight(icon, ourVisibilityIconPlaceholder.get());
     }
     return icon;
   }
@@ -109,9 +110,9 @@ public class IconDescriptorUpdaters {
     if(element instanceof PsiFileSystemItem) {
       VirtualFile file = ((PsiFileSystemItem)element).getVirtualFile();
       if(file != null) {
-        return VirtualFilePresentation.getIcon(file);
+        return VirtualFileManager.getInstance().getBaseFileIcon(file);
       }
-      return AllIcons.Nodes.NodePlaceholder;
+      return PlatformIconGroup.nodesNodePlaceholder();
     }
 
     PsiFile containingFile = element.getContainingFile();
@@ -121,21 +122,19 @@ public class IconDescriptorUpdaters {
         return virtualFile.getFileType().getIcon();
       }
     }
-    return AllIcons.Nodes.NodePlaceholder;
+    return PlatformIconGroup.nodesNodePlaceholder();
   }
 
   @Nonnull
   @RequiredReadAction
   public static Image getIconWithoutCache(@Nonnull PsiElement element, int flags) {
-    Project project = element.getProject();
     IconDescriptor iconDescriptor = new IconDescriptor(null);
-    IconDescriptorUpdater.EP_NAME.composite(project).updateIcon(iconDescriptor, element, flags);
+    IconDescriptorUpdater.EP.forEachExtensionSafe(element.getProject(), it -> it.updateIcon(iconDescriptor, element, flags));
     return iconDescriptor.toIcon();
   }
 
   @RequiredReadAction
   public static void processExistingDescriptor(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
-    Project project = element.getProject();
-    IconDescriptorUpdater.EP_NAME.composite(project).updateIcon(iconDescriptor, element, flags);
+    IconDescriptorUpdater.EP.forEachExtensionSafe(element.getProject(), it -> it.updateIcon(iconDescriptor, element, flags));
   }
 }

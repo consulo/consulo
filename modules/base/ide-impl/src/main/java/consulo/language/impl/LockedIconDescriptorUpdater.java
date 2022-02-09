@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide;
+package consulo.language.impl;
 
 import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
+import consulo.language.icon.IconDescriptor;
+import consulo.language.icon.IconDescriptorUpdater;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.WritingAccessProvider;
 import consulo.language.psi.PsiElement;

@@ -54,7 +54,7 @@
 
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.UnifiedFileChooseDialogProvider" order="last"/>
 
-    <applicationService serviceInterface="com.intellij.ui.IconDeferrer" serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
+    <applicationService serviceInterface="consulo.ui.ex.IconDeferrer" serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
 
     <applicationService serviceInterface="consulo.fileChooser.FileChooserFactory" serviceImplementation="consulo.fileChooser.impl.FileChooserFactoryImpl"/>
 

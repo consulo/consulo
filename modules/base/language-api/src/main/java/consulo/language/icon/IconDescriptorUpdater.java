@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide;
+package consulo.language.icon;
 
-import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.container.plugin.PluginIds;
-import consulo.extensions.CompositeExtensionPointName;
+import consulo.component.extension.ExtensionList;
+import consulo.component.extension.ExtensionType;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
@@ -26,9 +27,9 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 0:20/19.07.13
  */
+@ExtensionType(value = "iconDescriptorUpdater", component = Project.class)
 public interface IconDescriptorUpdater {
-  CompositeExtensionPointName<IconDescriptorUpdater> EP_NAME =
-          CompositeExtensionPointName.projectPoint(PluginIds.CONSULO_BASE + ".iconDescriptorUpdater", IconDescriptorUpdater.class);
+  ExtensionList<IconDescriptorUpdater, Project> EP = ExtensionList.of(IconDescriptorUpdater.class);
 
   @RequiredReadAction
   void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags);

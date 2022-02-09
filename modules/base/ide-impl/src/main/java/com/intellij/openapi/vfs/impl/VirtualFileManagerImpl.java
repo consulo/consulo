@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl;
 
+import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.application.ModalityState;
 import consulo.virtualFileSystem.StandardFileSystems;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;
@@ -364,6 +365,11 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
     if (fileSystem == null) return null;
     String path = nioPath.toString();
     return refresh ? fileSystem.refreshAndFindFileByPath(path) : fileSystem.findFileByPath(path);
+  }
+
+  @Override
+  public Image getBaseFileIcon(@Nonnull VirtualFile file) {
+    return VirtualFilePresentation.getIcon(file);
   }
 
   @Override

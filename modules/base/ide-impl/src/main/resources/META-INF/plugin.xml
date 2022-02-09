@@ -198,7 +198,7 @@
 
     <extensionPoint name="tipAndTrick" beanClass="com.intellij.ide.util.TipAndTrickBean"/>
 
-    <extensionPoint name="iconDescriptorUpdater" interface="consulo.ide.IconDescriptorUpdater" area="PROJECT"/>
+    <extensionPoint name="iconDescriptorUpdater" interface="consulo.language.icon.IconDescriptorUpdater" area="PROJECT"/>
 
     <extensionPoint name="customizableActionGroupProvider" interface="com.intellij.ide.ui.customization.CustomizableActionGroupProvider"/>
 
@@ -1514,7 +1514,7 @@
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.CharsetEP"/>
 
-    <iconDescriptorUpdater implementation="consulo.ide.LockedIconDescriptorUpdater"/>
+    <iconDescriptorUpdater implementation="consulo.language.impl.LockedIconDescriptorUpdater"/>
 
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.LargeFileEditorProvider"/>
 

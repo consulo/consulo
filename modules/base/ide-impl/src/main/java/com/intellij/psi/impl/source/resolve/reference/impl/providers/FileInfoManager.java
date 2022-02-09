@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import consulo.disposer.Disposable;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.Pair;

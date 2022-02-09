@@ -21,7 +21,7 @@ import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.IconUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

@@ -14,7 +14,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.VolatileNotNullLazyValue;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.IconDeferrer;
+import consulo.ui.ex.IconDeferrer;
 import com.intellij.util.Function;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

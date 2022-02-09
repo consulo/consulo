@@ -20,25 +20,23 @@
 package consulo.desktop.awt.uiOld;
 
 import consulo.application.Application;
+import consulo.application.util.LowMemoryWatcher;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
+import consulo.language.psi.PsiModificationTracker;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
-import consulo.application.util.LowMemoryWatcher;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.IconDeferrer;
+import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.language.psi.PsiModificationTracker;
-import com.intellij.ui.IconDeferrer;
-import com.intellij.util.Function;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.disposer.Disposable;
-import consulo.ui.UIAccess;
-import consulo.ui.image.Image;
-
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,18 +88,18 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
   }
 
   @Override
-  public <T> Image defer(final Image base, final T param, @Nonnull final Function<T, Image> evaluator) {
+  public <T> Image defer(final Image base, final T param, @Nonnull final java.util.function.Function<T, Image> evaluator) {
     return deferImpl(base, param, evaluator, false);
   }
 
   @Override
-  public <T> Image deferAutoUpdatable(Image base, T param, @Nonnull Function<T, Image> evaluator) {
+  public <T> Image deferAutoUpdatable(Image base, T param, @Nonnull java.util.function.Function<T, Image> evaluator) {
     return deferImpl(base, param, evaluator, true);
   }
 
-  private <T> Image deferImpl(Image base, T param, @Nonnull Function<T, Image> evaluator, final boolean autoUpdatable) {
+  private <T> Image deferImpl(Image base, T param, @Nonnull java.util.function.Function<T, Image> evaluator, final boolean autoUpdatable) {
     if (ourEvaluationIsInProgress.get()) {
-      return evaluator.fun(param);
+      return evaluator.apply(param);
     }
 
     synchronized (LOCK) {

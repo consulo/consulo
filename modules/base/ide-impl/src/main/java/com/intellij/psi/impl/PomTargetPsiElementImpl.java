@@ -28,7 +28,7 @@ import com.intellij.psi.PsiTarget;
 import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

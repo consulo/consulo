@@ -42,7 +42,7 @@
 
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView" serviceImplementation="consulo.projectView.impl.UnifiedProjectViewImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ui.IconDeferrer"
+    <applicationService serviceInterface="consulo.ui.ex.IconDeferrer"
                         serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"

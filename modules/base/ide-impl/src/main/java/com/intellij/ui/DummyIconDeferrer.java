@@ -19,21 +19,22 @@
  */
 package com.intellij.ui;
 
-import com.intellij.util.Function;
+import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 @Singleton
 public class DummyIconDeferrer extends IconDeferrer {
   @Override
   public <T> Image defer(Image base, T param, @Nonnull Function<T, Image> f) {
-    return f.fun(param);
+    return f.apply(param);
   }
 
   @Override
   public <T> Image deferAutoUpdatable(Image base, T param, @Nonnull Function<T, Image> f) {
-    return f.fun(param);
+    return f.apply(param);
   }
 }

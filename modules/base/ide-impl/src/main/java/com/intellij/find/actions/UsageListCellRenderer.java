@@ -32,7 +32,7 @@ import com.intellij.usages.TextChunk;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsagePresentation;
 import com.intellij.usages.rules.UsageInFile;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

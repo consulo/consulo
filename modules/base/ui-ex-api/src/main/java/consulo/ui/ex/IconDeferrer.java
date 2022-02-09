@@ -17,19 +17,19 @@
 /*
  * @author max
  */
-package com.intellij.ui;
+package consulo.ui.ex;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.util.Function;
+import consulo.application.Application;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 public abstract class IconDeferrer {
   @Nonnull
   public static IconDeferrer getInstance() {
-    return ServiceManager.getService(IconDeferrer.class);
+    return Application.get().getInstance(IconDeferrer.class);
   }
 
   public abstract <T> Image defer(Image base, T param, @Nonnull Function<T, Image> f);

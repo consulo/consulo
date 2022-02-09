@@ -49,7 +49,7 @@ import com.intellij.util.*;
 import consulo.application.AccessRule;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 

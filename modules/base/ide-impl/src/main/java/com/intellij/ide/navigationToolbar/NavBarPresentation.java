@@ -43,7 +43,7 @@ import consulo.application.ui.awt.JBUI;
 import consulo.application.AccessRule;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.content.bundle.SdkUtil;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

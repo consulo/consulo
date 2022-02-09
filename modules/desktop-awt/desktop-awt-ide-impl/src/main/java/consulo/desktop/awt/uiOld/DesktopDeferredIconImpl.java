@@ -21,25 +21,24 @@ package consulo.desktop.awt.uiOld;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.ide.PowerSaveMode;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import consulo.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.ui.awt.ScalableIcon;
-import consulo.application.util.registry.Registry;
 import com.intellij.ui.PaintingParent;
 import com.intellij.ui.RetrievableIcon;
 import com.intellij.ui.tabs.impl.TabLabel;
-import consulo.project.ui.util.Alarm;
-import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.application.ApplicationManager;
 import consulo.application.ui.awt.JBUI;
+import consulo.application.ui.awt.ScalableIcon;
 import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
-import consulo.logging.Logger;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.ui.impl.image.DesktopImage;
+import consulo.logging.Logger;
+import consulo.project.IndexNotReadyException;
+import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ref.SimpleReference;
@@ -54,6 +53,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DesktopDeferredIconImpl<T>>
         implements DeferredIcon, DesktopImage<DesktopDeferredIconImpl<T>>, RetrievableIcon, consulo.ui.image.Image {
@@ -144,7 +144,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     private static final boolean CHECK_CONSISTENCY = ApplicationManager.getApplication().isUnitTestMode();
   }
 
-  DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon, T param, @Nonnull Function<T, consulo.ui.image.Image> evaluator, @Nonnull IconListener<T> listener, boolean autoUpdatable) {
+  DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon, T param, @Nonnull Function<T, Image> evaluator, @Nonnull IconListener<T> listener, boolean autoUpdatable) {
     this(baseIcon, param, true, evaluator, listener, autoUpdatable);
   }
 
@@ -324,7 +324,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   public Icon evaluate() {
     consulo.ui.image.Image result;
     try {
-      result = nonNull(myEvaluator.fun(myParam));
+      result = nonNull(myEvaluator.apply(myParam));
     }
     catch (IndexNotReadyException e) {
       result = EMPTY_ICON;
@@ -342,7 +342,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   public Image evaluateImage() {
     consulo.ui.image.Image result;
     try {
-      result = nonNull(myEvaluator.fun(myParam));
+      result = nonNull(myEvaluator.apply(myParam));
     }
     catch (IndexNotReadyException e) {
       result = EMPTY_ICON;

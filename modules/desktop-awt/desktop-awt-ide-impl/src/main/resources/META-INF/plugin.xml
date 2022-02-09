@@ -179,7 +179,7 @@
     <applicationService serviceInterface="com.intellij.ui.ColorChooserService"
                         serviceImplementation="consulo.desktop.awt.uiOld.DesktopColorChooserServiceImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ui.IconDeferrer"
+    <applicationService serviceInterface="consulo.ui.ex.IconDeferrer"
                         serviceImplementation="consulo.desktop.awt.uiOld.DesktopIconDeferrerImpl"/>
 
     <applicationService serviceInterface="consulo.diagram.builder.GraphBuilderFactory"

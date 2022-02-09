@@ -7,6 +7,7 @@ module consulo.language.api {
   requires transitive consulo.document.api;
   requires transitive consulo.index.io;
   requires transitive consulo.navigation.api;
+  requires consulo.ui.ex.api;
 
   exports consulo.language;
   exports consulo.language.ast;
@@ -19,6 +20,7 @@ module consulo.language.api {
   exports consulo.language.plain;
   exports consulo.language.plain.ast;
   exports consulo.language.plain.psi;
+  exports consulo.language.icon;
   exports consulo.language.psi;
   exports consulo.language.psi.event;
   exports consulo.language.psi.meta;

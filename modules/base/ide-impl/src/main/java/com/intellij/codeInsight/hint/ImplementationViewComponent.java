@@ -54,7 +54,7 @@ import com.intellij.usages.UsageView;
 import com.intellij.util.PairFunction;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.fileEditor.impl.text.TextEditorProvider;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

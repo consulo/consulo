@@ -40,7 +40,7 @@ import consulo.util.xml.serializer.JDOMExternalizableStringList;
 import com.intellij.openapi.util.Pair;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.util.registry.Registry;
-import com.intellij.ui.IconDeferrer;
+import consulo.ui.ex.IconDeferrer;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;

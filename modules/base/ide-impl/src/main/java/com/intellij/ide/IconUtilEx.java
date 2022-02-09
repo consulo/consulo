@@ -22,7 +22,7 @@ import consulo.component.util.Iconable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.fileTypes.impl.VfsIconUtil;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 
 public class IconUtilEx {

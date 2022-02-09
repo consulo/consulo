@@ -29,8 +29,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.AstLoadingFilter;
-import consulo.ide.IconDescriptor;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptor;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 

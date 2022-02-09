@@ -20,7 +20,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.IconDeferrer;
+import consulo.ui.ex.IconDeferrer;
 import consulo.ui.ex.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;

@@ -254,5 +254,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
   @Nonnull
   public abstract CharSequence getVFileName(int nameId);
 
+  public abstract Image getBaseFileIcon(@Nonnull VirtualFile file);
+
   public abstract Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags);
 }

@@ -24,12 +24,12 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.WritingAccessProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.IconDeferrer;
+import consulo.ui.ex.IconDeferrer;
 import com.intellij.util.AnyIconKey;
 import com.intellij.util.BitUtil;
 import com.intellij.util.NullableFunction;
-import consulo.ide.IconDescriptor;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptor;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 

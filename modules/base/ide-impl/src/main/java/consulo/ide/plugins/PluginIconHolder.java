@@ -16,7 +16,7 @@
 package consulo.ide.plugins;
 
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.ui.IconDeferrer;
+import consulo.ui.ex.IconDeferrer;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;

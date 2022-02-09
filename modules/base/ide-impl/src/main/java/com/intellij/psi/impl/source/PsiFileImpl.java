@@ -50,7 +50,7 @@ import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElementWithSubtreeChangeNotifier;

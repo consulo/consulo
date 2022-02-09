@@ -27,7 +27,7 @@ import consulo.language.psi.PsiManager;
 import com.intellij.ui.*;
 import com.intellij.ui.popup.util.DetailView;
 import com.intellij.ui.popup.util.ItemWrapper;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
 
 import javax.swing.*;
 import java.awt.*;
