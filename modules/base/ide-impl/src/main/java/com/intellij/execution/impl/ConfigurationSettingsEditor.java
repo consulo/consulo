@@ -20,6 +20,10 @@ import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationPerRunnerSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunnerSettings;
+import consulo.execution.configuration.ui.CompositeSettingsBuilder;
+import consulo.execution.configuration.ui.CompositeSettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditorWrapper;
 import consulo.execution.runner.ProgramRunner;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
@@ -176,7 +180,7 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
 
   @Override
   public RunnerAndConfigurationSettings getSnapshot() throws ConfigurationException {
-    RunnerAndConfigurationSettings settings = getFactory().create();
+    RunnerAndConfigurationSettings settings = getFactory().get();
     settings.setName(myConfiguration.getName());
     if (myConfigurationEditor instanceof CheckableRunConfigurationEditor) {
       ((CheckableRunConfigurationEditor)myConfigurationEditor).checkEditorData(settings.getConfiguration());

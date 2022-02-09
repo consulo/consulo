@@ -7,6 +7,7 @@ module consulo.editor.api {
   requires java.desktop;
 
   requires transitive consulo.application.api;
+  requires transitive consulo.project.api;
   requires transitive consulo.virtual.file.system.api;
   requires transitive consulo.document.api;
   requires transitive consulo.ui.ex.api;

@@ -37,7 +37,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.ProblemListener;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.util.collection.SmartList;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;

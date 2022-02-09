@@ -44,7 +44,7 @@ import com.intellij.ui.content.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.ui.popup.PopupState;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.ContentUtilEx;
 import com.intellij.util.Function;
 import consulo.application.ui.awt.JBUI;

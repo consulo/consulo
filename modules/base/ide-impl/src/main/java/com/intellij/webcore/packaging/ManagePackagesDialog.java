@@ -23,7 +23,7 @@ import com.intellij.util.CatchingConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.SwingHelper;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.ex.update.UiNotifyConnector;
 import consulo.logging.Logger;
 import consulo.packagesView.SearchablePackageManagementService;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.EditorFactory;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;

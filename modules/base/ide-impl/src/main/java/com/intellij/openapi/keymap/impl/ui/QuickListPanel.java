@@ -25,6 +25,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.event.DocumentAdapter;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

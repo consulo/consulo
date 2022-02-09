@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.ChangesBrowserSettingsEditor;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

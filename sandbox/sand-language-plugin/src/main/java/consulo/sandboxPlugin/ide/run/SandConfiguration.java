@@ -25,7 +25,7 @@ import com.intellij.execution.configurations.*;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
 import consulo.execution.impl.CommonProgramParametersLayout;
 import consulo.ui.Component;

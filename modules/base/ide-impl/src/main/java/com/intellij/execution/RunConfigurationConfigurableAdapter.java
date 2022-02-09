@@ -16,7 +16,7 @@
 package com.intellij.execution;
 
 import consulo.execution.configuration.RunConfiguration;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorConfigurable;
 
 public class  RunConfigurationConfigurableAdapter<T extends RunConfiguration> extends SettingsEditorConfigurable<T>{

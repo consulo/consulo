@@ -15,7 +15,7 @@ import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.panels.VerticalLayout;
 import consulo.application.ui.awt.JBUIScale;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.application.ui.awt.JBEmptyBorder;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.JBValue;

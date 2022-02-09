@@ -18,7 +18,7 @@ package com.intellij.openapi.ui.playback;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.UiActivityMonitor;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationActivationListener;
+import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.playback.commands.AssertFocused;
 import consulo.logging.Logger;

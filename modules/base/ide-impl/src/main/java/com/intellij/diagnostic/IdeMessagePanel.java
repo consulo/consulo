@@ -18,7 +18,7 @@ import consulo.project.ui.wm.BalloonLayout;
 import com.intellij.ui.BalloonLayoutData;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;

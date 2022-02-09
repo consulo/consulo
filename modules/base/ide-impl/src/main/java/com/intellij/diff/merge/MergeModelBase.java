@@ -22,7 +22,7 @@ import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import consulo.document.Document;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;

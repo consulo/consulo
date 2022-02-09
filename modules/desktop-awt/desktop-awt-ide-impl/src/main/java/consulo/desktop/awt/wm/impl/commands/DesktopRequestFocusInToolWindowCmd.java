@@ -24,7 +24,7 @@ import consulo.desktop.awt.wm.impl.DesktopFloatingDecorator;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowImpl;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.DesktopWindowWatcher;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

@@ -54,7 +54,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.ui.*;
 import consulo.ui.ex.content.Content;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.FunctionUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

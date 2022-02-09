@@ -23,7 +23,7 @@ import consulo.execution.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;

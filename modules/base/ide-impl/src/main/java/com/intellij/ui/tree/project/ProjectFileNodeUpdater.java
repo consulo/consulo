@@ -13,7 +13,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import com.intellij.psi.*;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import com.intellij.util.concurrency.Invoker;
 import consulo.util.collection.SmartHashSet;
 import consulo.component.messagebus.MessageBusConnection;

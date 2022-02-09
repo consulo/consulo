@@ -27,7 +27,7 @@ import consulo.application.ui.awt.JBColor;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.EditorFactory;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.project.Project;
@@ -48,8 +48,8 @@ import consulo.util.collection.MultiMap;
 import com.intellij.util.ui.GridBag;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import com.intellij.util.ui.update.Activatable;
-import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
+import consulo.ui.ex.update.UiNotifyConnector;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -100,14 +100,14 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
     createComponents(allowNoContext);
 
-    myKeyField.getDocument().addDocumentListener(new com.intellij.ui.DocumentAdapter() {
+    myKeyField.getDocument().addDocumentListener(new consulo.ui.ex.event.DocumentAdapter() {
       @Override
       protected void textChanged(javax.swing.event.DocumentEvent e) {
         myTemplate.setKey(myKeyField.getText().trim());
         nodeChanged.run();
       }
     });
-    myDescription.getDocument().addDocumentListener(new com.intellij.ui.DocumentAdapter() {
+    myDescription.getDocument().addDocumentListener(new consulo.ui.ex.event.DocumentAdapter() {
       @Override
       protected void textChanged(javax.swing.event.DocumentEvent e) {
         myTemplate.setDescription(myDescription.getText().trim());

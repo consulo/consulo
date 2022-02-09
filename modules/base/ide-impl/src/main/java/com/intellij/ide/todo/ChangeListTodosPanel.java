@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.changes.ChangeListAdapter;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.ui.AppUIUtil;
 import consulo.ui.ex.content.Content;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 

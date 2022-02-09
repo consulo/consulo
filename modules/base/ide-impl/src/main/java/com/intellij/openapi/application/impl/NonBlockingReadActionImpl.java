@@ -3,7 +3,7 @@ package com.intellij.openapi.application.impl;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.concurrency.SensitiveProgressWrapper;
-import com.intellij.diagnostic.ThreadDumper;
+import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
 import com.intellij.openapi.application.WriteAction;
@@ -11,7 +11,7 @@ import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.ApplicationManager;

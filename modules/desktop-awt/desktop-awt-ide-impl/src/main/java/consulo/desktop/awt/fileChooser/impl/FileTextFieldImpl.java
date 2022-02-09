@@ -25,7 +25,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.ui.update.LazyUiDisposable;
 import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.ex.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

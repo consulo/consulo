@@ -11,7 +11,7 @@ import consulo.project.ProjectLocator;
 import consulo.virtualFileSystem.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.concurrency.SequentialTaskExecutor;
+import consulo.application.util.concurrent.SequentialTaskExecutor;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

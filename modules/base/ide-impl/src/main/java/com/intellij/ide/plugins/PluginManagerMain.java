@@ -39,7 +39,7 @@ import com.intellij.ui.components.panels.Wrapper;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.ui.awt.BorderLayoutPanel;
-import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.ex.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;

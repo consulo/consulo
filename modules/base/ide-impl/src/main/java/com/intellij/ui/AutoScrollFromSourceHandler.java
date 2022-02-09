@@ -28,7 +28,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.component.messagebus.MessageBusConnection;
 import javax.annotation.Nonnull;
 

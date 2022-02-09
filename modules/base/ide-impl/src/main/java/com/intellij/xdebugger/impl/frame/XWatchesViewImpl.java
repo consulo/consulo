@@ -34,7 +34,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.*;
 import consulo.application.ui.awt.CustomLineBorder;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;

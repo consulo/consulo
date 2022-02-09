@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.startup.splash;
 
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 

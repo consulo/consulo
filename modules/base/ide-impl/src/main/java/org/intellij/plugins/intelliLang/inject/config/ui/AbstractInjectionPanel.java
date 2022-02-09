@@ -22,7 +22,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.project.Project;
 import consulo.application.ui.awt.UIUtil;

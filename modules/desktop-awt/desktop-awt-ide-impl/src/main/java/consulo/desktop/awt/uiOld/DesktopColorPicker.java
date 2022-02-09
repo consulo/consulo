@@ -24,7 +24,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.ColorPickerListener;
 import consulo.application.ui.awt.ColorUtil;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBUI;

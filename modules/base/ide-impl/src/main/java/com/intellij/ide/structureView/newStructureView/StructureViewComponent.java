@@ -30,6 +30,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
+import consulo.project.ui.util.Alarm;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;

@@ -25,13 +25,13 @@ import consulo.execution.ExecutionResult;
 import consulo.execution.Executor;
 import consulo.execution.RunManager;
 import consulo.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 abstract class BaseProgramRunner<Settings extends RunnerSettings> implements ProgramRunner<Settings> {
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public Settings createConfigurationData(ConfigurationInfoProvider settingsProvider) {
     return null;
   }
@@ -45,7 +45,7 @@ abstract class BaseProgramRunner<Settings extends RunnerSettings> implements Pro
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration) {
     return null;
   }
@@ -56,7 +56,7 @@ abstract class BaseProgramRunner<Settings extends RunnerSettings> implements Pro
   }
 
   @Override
-  public void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback) throws ExecutionException {
+  public void execute(@Nonnull ExecutionEnvironment environment, @Nullable Callback callback) throws ExecutionException {
     RunProfileState state = environment.getState();
     if (state == null) {
       return;
@@ -66,11 +66,11 @@ abstract class BaseProgramRunner<Settings extends RunnerSettings> implements Pro
     execute(environment, callback, state);
   }
 
-  protected abstract void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback, @Nonnull RunProfileState state)
+  protected abstract void execute(@Nonnull ExecutionEnvironment environment, @Nullable Callback callback, @Nonnull RunProfileState state)
           throws ExecutionException;
 
   @Nullable
-  static RunContentDescriptor postProcess(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable RunContentDescriptor descriptor, @Nullable Callback callback) {
+  static RunContentDescriptor postProcess(@Nonnull ExecutionEnvironment environment, @Nullable RunContentDescriptor descriptor, @Nullable Callback callback) {
     if (descriptor != null) {
       descriptor.setExecutionId(environment.getExecutionId());
     }

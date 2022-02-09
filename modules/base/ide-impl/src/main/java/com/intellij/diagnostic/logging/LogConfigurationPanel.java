@@ -23,7 +23,7 @@ import com.intellij.execution.configurations.RunConfigurationBase;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;

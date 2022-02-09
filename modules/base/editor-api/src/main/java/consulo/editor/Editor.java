@@ -75,7 +75,7 @@ public interface Editor extends UserDataHolder {
    * @return the component instance.
    */
   @Nonnull
-  default javax.swing.JComponent getComponent() {
+  default JComponent getComponent() {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
@@ -99,7 +99,7 @@ public interface Editor extends UserDataHolder {
    * @return the component instance.
    */
   @Nonnull
-  default javax.swing.JComponent getContentComponent() {
+  default JComponent getContentComponent() {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
@@ -119,7 +119,7 @@ public interface Editor extends UserDataHolder {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
-  default java.awt.Insets getInsets() {
+  default Insets getInsets() {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
@@ -216,7 +216,7 @@ public interface Editor extends UserDataHolder {
    * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    */
   @Nonnull
-  default java.awt.Point logicalPositionToXY(@Nonnull LogicalPosition pos) {
+  default Point logicalPositionToXY(@Nonnull LogicalPosition pos) {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
@@ -245,7 +245,7 @@ public interface Editor extends UserDataHolder {
    * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    */
   @Nonnull
-  default java.awt.Point visualPositionToXY(@Nonnull VisualPosition visible) {
+  default Point visualPositionToXY(@Nonnull VisualPosition visible) {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
@@ -314,7 +314,7 @@ public interface Editor extends UserDataHolder {
    * @return the corresponding logical position.
    */
   @Nonnull
-  default LogicalPosition xyToLogicalPosition(@Nonnull java.awt.Point p) {
+  default LogicalPosition xyToLogicalPosition(@Nonnull Point p) {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
@@ -326,13 +326,13 @@ public interface Editor extends UserDataHolder {
    * @return the corresponding visual position.
    */
   @Nonnull
-  default VisualPosition xyToVisualPosition(@Nonnull java.awt.Point p) {
+  default VisualPosition xyToVisualPosition(@Nonnull Point p) {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
 
   /**
-   * Same as {{@link #xyToVisualPosition(java.awt.Point)}}, but allows to specify target point with higher precision.
+   * Same as {{@link #xyToVisualPosition(Point)}}, but allows to specify target point with higher precision.
    */
   @Nonnull
   default VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
@@ -438,7 +438,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the project instance, or null if the editor is not related to any project.
    */
-  @javax.annotation.Nullable
+  @Nullable
   Project getProject();
 
   /**

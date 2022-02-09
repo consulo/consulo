@@ -2,7 +2,7 @@
 package com.intellij.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.util.concurrency.EdtScheduledExecutorService;
+import consulo.ui.ex.concurrent.EdtScheduledExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;

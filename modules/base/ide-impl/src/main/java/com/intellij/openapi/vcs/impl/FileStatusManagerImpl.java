@@ -22,7 +22,7 @@ import consulo.document.Document;
 import consulo.editor.EditorFactory;
 import consulo.editor.colorScheme.EditorColorKey;
 import consulo.editor.colorScheme.EditorColorsManager;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAwareRunnable;

@@ -23,7 +23,7 @@ import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
-import com.intellij.openapi.util.LowMemoryWatcher;
+import consulo.application.util.LowMemoryWatcher;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;

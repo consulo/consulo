@@ -23,11 +23,11 @@ import com.intellij.featureStatistics.FeatureUsageTrackerImpl;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.statistics.StatisticsInfo;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 

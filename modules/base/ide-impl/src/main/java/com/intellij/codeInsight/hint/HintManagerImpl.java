@@ -34,7 +34,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.BitUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.TimerUtil;

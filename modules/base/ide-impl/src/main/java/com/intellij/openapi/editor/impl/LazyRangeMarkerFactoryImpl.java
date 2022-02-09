@@ -17,8 +17,8 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.codeStyle.CodeStyleFacade;
 import consulo.editor.EditorFactory;
-import com.intellij.openapi.editor.event.DocumentAdapter;
-import com.intellij.util.containers.WeakList;
+import consulo.document.event.DocumentAdapter;
+import consulo.util.collection.WeakList;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.document.Document;

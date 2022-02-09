@@ -26,7 +26,7 @@ import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.util.Consumer;
-import com.intellij.util.containers.UnsafeWeakList;
+import consulo.util.collection.UnsafeWeakList;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;

@@ -29,7 +29,7 @@ import com.intellij.openapi.externalSystem.service.internal.ExternalSystemExecut
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;

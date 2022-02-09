@@ -16,9 +16,16 @@
 
 package com.intellij.util;
 
+import java.util.function.BiConsumer;
+
 /**
  * @author peter
  */
-public interface PairConsumer<S, T> {
+public interface PairConsumer<S, T> extends BiConsumer<S, T> {
   void consume(S s, T t);
+
+  @Override
+  default void accept(S s, T t) {
+    consume(s, t);
+  }
 }

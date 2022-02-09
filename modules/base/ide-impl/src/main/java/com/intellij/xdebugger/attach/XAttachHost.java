@@ -16,9 +16,9 @@
 package com.intellij.xdebugger.attach;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.process.ProcessInfo;
-import javax.annotation.Nonnull;
+import consulo.process.ProcessInfo;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**

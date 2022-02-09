@@ -33,7 +33,7 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
 import com.intellij.psi.codeStyle.autodetect.IndentOptionsAdjuster;
 import com.intellij.psi.codeStyle.autodetect.IndentOptionsDetectorImpl;
 import com.intellij.util.Time;
-import com.intellij.util.concurrency.SequentialTaskExecutor;
+import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -2,8 +2,9 @@
 package com.intellij.xdebugger.attach;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.process.ProcessInfo;
+import consulo.process.ProcessInfo;
 import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 public interface XLocalAttachDebugger extends XAttachDebugger {

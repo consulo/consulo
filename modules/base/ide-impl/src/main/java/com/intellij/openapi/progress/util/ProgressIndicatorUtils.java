@@ -16,7 +16,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;

@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import consulo.application.Application;
-import com.intellij.openapi.application.ApplicationActivationListener;
+import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;

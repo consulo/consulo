@@ -1,7 +1,7 @@
 package com.intellij.execution.impl;
 
 import consulo.execution.RunnerAndConfigurationSettings;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 
 /**
  * Created by IntelliJ IDEA.

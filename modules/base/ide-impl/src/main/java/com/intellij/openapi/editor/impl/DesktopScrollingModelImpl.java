@@ -22,7 +22,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import consulo.editor.LogicalPosition;
 import consulo.editor.ScrollType;
 import consulo.editor.VisualPosition;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.editor.event.VisibleAreaEvent;
 import consulo.editor.event.VisibleAreaListener;

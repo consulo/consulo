@@ -19,7 +19,7 @@ package com.intellij.packageDependencies.ui;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.Consumer;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.localize.LocalizeValue;
 
 import javax.swing.*;

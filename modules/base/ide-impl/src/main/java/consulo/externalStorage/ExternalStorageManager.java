@@ -33,7 +33,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.StreamUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.application.ApplicationProperties;
 import consulo.components.impl.stores.IApplicationStore;

@@ -21,7 +21,7 @@ import com.intellij.idea.ApplicationStarter;
 import consulo.desktop.startup.DesktopImportantFolderLocker;
 import com.intellij.idea.StartupUtil;
 import consulo.desktop.awt.startup.DesktopApplicationStarter;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;

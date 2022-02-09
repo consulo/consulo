@@ -22,6 +22,8 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.update.Activatable;
+import consulo.ui.ex.update.UiNotifyConnector;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.application.ApplicationProperties;

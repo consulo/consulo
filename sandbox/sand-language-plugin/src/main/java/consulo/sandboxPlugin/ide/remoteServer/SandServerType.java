@@ -21,7 +21,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.ModulePointerManager;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import com.intellij.remoteServer.ServerType;

@@ -68,7 +68,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.IdeBorderFactory;
 import consulo.application.ui.awt.SideBorder;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.DocumentUtil;
 import consulo.util.lang.SystemProperties;

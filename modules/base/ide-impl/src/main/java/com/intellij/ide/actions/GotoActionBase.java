@@ -36,7 +36,7 @@ import consulo.project.ui.IdeFocusManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;

@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Getter;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -15,7 +15,7 @@
  */
 package consulo.async.ex;
 
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@ import consulo.project.startup.IdeaStartupActivity;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import javax.annotation.Nonnull;
 
 public class BraceHighlighter implements IdeaStartupActivity {

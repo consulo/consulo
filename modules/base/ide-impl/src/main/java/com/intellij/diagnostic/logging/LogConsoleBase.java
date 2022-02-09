@@ -41,7 +41,7 @@ import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.FilterComponent;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

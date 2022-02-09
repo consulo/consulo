@@ -34,6 +34,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.event.DocumentAdapter;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 

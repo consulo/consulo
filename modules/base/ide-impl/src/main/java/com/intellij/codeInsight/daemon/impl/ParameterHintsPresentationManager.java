@@ -25,7 +25,7 @@ import consulo.editor.Inlay;
 import com.intellij.openapi.editor.impl.FontInfo;
 import consulo.editor.markup.TextAttributes;
 import consulo.application.ui.awt.GraphicsConfig;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.application.ui.awt.GraphicsUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;

@@ -5,6 +5,7 @@
 module consulo.application.api {
   // TODO [VISTALL] remove this dependency when we will ready. obsolete dep
   requires java.desktop;
+  requires java.management;
 
   requires transitive consulo.component.api;
   requires transitive consulo.localize.api;
@@ -34,5 +35,6 @@ module consulo.application.api {
 
   exports consulo.application.util;
   exports consulo.application.util.function;
+  exports consulo.application.util.concurrent;
   exports consulo.application.util.registry;
 }

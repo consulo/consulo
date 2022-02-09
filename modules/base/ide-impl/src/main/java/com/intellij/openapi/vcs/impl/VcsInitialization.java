@@ -14,7 +14,7 @@ import consulo.project.startup.IdeaStartupActivity;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.vcs.VcsBundle;
 import consulo.util.lang.TimeoutUtil;
-import com.intellij.util.concurrency.QueueProcessor;
+import consulo.application.util.concurrent.QueueProcessor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;

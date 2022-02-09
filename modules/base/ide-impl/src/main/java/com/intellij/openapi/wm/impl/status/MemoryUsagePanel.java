@@ -7,10 +7,10 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.ui.UIBundle;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import com.intellij.util.ui.*;
-import com.intellij.util.ui.update.Activatable;
-import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
+import consulo.ui.ex.update.UiNotifyConnector;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

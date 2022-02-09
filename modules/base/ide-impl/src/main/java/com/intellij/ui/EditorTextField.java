@@ -33,6 +33,8 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.document.Document;
 import consulo.editor.*;
+import consulo.ui.ex.DocumentBasedComponent;
+import consulo.ui.ex.TextComponent;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;

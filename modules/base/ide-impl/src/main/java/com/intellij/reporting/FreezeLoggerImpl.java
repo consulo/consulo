@@ -15,14 +15,14 @@
  */
 package com.intellij.reporting;
 
-import com.intellij.diagnostic.ThreadDumper;
+import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.openapi.application.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

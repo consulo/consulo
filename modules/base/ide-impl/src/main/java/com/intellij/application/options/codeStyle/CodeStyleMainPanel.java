@@ -25,7 +25,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
 import com.intellij.ui.components.labels.SwingActionLink;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

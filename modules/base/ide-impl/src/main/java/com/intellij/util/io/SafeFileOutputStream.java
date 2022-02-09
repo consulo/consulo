@@ -4,7 +4,7 @@ package com.intellij.util.io;
 import consulo.application.CommonBundle;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

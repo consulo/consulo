@@ -9,7 +9,7 @@ import com.intellij.openapi.progress.util.PingProgress;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.LowMemoryWatcher;
+import consulo.application.util.LowMemoryWatcher;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.io.*;

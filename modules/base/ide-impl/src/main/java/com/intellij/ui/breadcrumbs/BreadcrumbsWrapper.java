@@ -39,7 +39,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.MouseEventAdapter;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.ex.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
 import kava.beans.PropertyChangeEvent;
 import javax.annotation.Nonnull;

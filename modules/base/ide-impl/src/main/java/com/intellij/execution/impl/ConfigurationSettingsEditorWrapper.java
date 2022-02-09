@@ -26,7 +26,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.ui.HideableDecorator;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.panels.VerticalLayout;

@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbServiceImpl;
 import consulo.project.Project;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

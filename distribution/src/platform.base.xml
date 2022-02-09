@@ -59,6 +59,7 @@
         <include>consulo:consulo-language-api</include>
         <include>consulo:consulo-editor-api</include>
         <include>consulo:consulo-process-api</include>
+        <include>consulo:consulo-execution-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

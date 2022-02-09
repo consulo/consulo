@@ -23,7 +23,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.ui.BaseButtonBehavior;
 import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.TimedDeadzone;

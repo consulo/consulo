@@ -35,7 +35,7 @@ import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.panels.HorizontalLayout;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.util.collection.JBIterable;

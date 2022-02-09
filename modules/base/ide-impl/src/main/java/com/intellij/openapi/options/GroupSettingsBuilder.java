@@ -18,6 +18,9 @@ package com.intellij.openapi.options;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.TabbedPaneWrapper;
+import consulo.execution.configuration.ui.CompositeSettingsBuilder;
+import consulo.execution.configuration.ui.SettingsEditor;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

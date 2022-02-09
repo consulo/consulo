@@ -15,6 +15,7 @@
  */
 package com.intellij.util.concurrency;
 
+import consulo.application.util.concurrent.QueueProcessor;
 import consulo.project.Project;
 import com.intellij.util.Consumer;
 

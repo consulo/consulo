@@ -18,7 +18,7 @@ package com.intellij.diff.actions;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

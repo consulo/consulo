@@ -17,26 +17,27 @@ package com.intellij.diagnostic;
 
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.application.ApplicationInfo;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
-import consulo.util.lang.SystemProperties;
-import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.concurrent.AppScheduledExecutorService;
+import consulo.application.util.concurrent.ThreadDump;
+import consulo.application.util.concurrent.ThreadDumper;
+import consulo.application.util.registry.Registry;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.util.lang.SystemProperties;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationEmitter;

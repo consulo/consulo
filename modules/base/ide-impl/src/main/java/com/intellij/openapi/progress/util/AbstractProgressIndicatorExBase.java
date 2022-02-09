@@ -19,7 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.WeakList;
+import consulo.util.collection.WeakList;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

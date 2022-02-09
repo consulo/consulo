@@ -69,7 +69,7 @@ import com.intellij.usageView.UsageViewUtil;
 import com.intellij.usages.*;
 import com.intellij.usages.impl.*;
 import com.intellij.usages.rules.UsageFilteringRuleProvider;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;
 import consulo.component.messagebus.MessageBusConnection;

@@ -22,7 +22,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

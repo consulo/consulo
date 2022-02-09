@@ -46,7 +46,7 @@ import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBOptionButton;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.TargetAWT;

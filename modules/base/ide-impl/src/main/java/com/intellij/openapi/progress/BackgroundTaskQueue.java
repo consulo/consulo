@@ -25,7 +25,7 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
-import com.intellij.util.concurrency.QueueProcessor;
+import consulo.application.util.concurrent.QueueProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.application.progress.ProgressIndicator;
@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 
 import java.util.function.BooleanSupplier;
 
-import static com.intellij.util.concurrency.QueueProcessor.ThreadToUse;
+import static consulo.application.util.concurrent.QueueProcessor.ThreadToUse;
 
 /**
  * Runs backgroundable tasks one by one.

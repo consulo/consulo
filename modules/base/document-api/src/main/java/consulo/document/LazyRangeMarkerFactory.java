@@ -15,13 +15,13 @@
  */
 package consulo.document;
 
-import consulo.project.Project;
+import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
 public abstract class LazyRangeMarkerFactory {
-  public static LazyRangeMarkerFactory getInstance(Project project) {
+  public static LazyRangeMarkerFactory getInstance(ComponentManager project) {
     return project.getInstance(LazyRangeMarkerFactory.class);
   }
 

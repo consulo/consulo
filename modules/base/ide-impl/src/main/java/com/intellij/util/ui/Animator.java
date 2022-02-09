@@ -18,7 +18,7 @@ package com.intellij.util.ui;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 

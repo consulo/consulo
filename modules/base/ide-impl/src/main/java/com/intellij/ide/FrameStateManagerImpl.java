@@ -16,12 +16,12 @@
 package com.intellij.ide;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationActivationListener;
+import consulo.project.ui.wm.event.ApplicationActivationListener;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.component.util.BusyObject;
 import consulo.disposer.Disposer;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;

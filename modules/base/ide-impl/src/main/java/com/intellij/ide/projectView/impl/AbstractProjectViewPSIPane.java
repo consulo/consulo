@@ -29,8 +29,8 @@ import com.intellij.util.OpenSourceUtil;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import com.intellij.util.ui.tree.TreeUtil;
-import com.intellij.util.ui.update.Activatable;
-import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
+import consulo.ui.ex.update.UiNotifyConnector;
 import consulo.disposer.Disposer;
 import consulo.ui.color.ColorValue;
 

@@ -2743,6 +2743,7 @@
     <postStartupActivity implementation="com.intellij.openapi.vcs.update.RestoreUpdateTree$MyStartUpActivity"/>
 
     <projectService serviceInterface="consulo.execution.RunManager" serviceImplementation="com.intellij.execution.impl.RunManagerImpl"/>
+    <applicationService serviceInterface="consulo.execution.internal.ExecutionDataContextCacher" serviceImplementation="consulo.execution.impl.ExecutionDataContextCacherImpl"/>
 
     <projectService serviceImplementation="com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager"/>
     <applicationService serviceImplementation="com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetSettings"/>

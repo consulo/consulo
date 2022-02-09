@@ -29,7 +29,7 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.ScrollingUtil;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 
 import javax.swing.*;
 import java.awt.*;

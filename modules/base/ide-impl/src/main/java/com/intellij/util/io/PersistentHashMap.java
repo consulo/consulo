@@ -9,7 +9,7 @@ import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.LowMemoryWatcher;
+import consulo.application.util.LowMemoryWatcher;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ThreadLocalCachedValue;
 import consulo.util.io.BufferExposingByteArrayOutputStream;

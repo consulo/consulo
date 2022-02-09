@@ -7,7 +7,7 @@ import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import com.intellij.ui.ComponentTreeWatcher;
+import consulo.ui.ex.ComponentTreeWatcher;
 import com.intellij.ui.components.JBOptionButton;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.DialogUtil;

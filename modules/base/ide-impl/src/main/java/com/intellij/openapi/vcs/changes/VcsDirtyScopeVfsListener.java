@@ -15,7 +15,7 @@ import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFileMoveEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

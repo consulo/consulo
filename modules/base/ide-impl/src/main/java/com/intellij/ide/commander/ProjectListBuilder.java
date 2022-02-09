@@ -31,7 +31,7 @@ import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;

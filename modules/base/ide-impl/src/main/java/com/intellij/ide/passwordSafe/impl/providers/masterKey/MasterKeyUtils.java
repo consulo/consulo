@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.passwordSafe.impl.providers.masterKey;
 
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import consulo.application.util.function.Processor;
 
 import javax.swing.*;

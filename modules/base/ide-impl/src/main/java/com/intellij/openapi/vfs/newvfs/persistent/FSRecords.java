@@ -10,7 +10,7 @@ import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.intellij.util.*;
-import com.intellij.util.concurrency.SequentialTaskExecutor;
+import consulo.application.util.concurrent.SequentialTaskExecutor;
 import com.intellij.util.io.*;
 import com.intellij.util.io.storage.*;
 import consulo.application.ApplicationManager;

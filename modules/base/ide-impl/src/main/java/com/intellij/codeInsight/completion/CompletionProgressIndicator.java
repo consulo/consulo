@@ -41,7 +41,7 @@ import consulo.language.psi.PsiReference;
 import com.intellij.psi.ReferenceRange;
 import com.intellij.ui.GuiUtils;
 import com.intellij.ui.LightweightHint;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ObjectUtils;
 import consulo.application.util.Semaphore;

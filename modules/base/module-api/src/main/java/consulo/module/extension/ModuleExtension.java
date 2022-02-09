@@ -43,7 +43,9 @@ public interface ModuleExtension<T extends ModuleExtension> extends PersistentSt
   Module getModule();
 
   @Nonnull
-  Project getProject();
+  default Project getProject() {
+    return getModule().getProject();
+  }
 
   @RequiredReadAction
   void commit(@Nonnull T mutableModuleExtension);

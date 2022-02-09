@@ -45,7 +45,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.NotNullProducer;
 import consulo.util.collection.SmartList;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import com.intellij.util.containers.Stack;

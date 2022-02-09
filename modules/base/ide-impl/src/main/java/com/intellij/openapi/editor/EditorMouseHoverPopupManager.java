@@ -53,7 +53,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.ui.popup.PopupPositionManager;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;

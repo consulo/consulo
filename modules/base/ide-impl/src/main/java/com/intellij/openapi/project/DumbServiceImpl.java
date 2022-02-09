@@ -2,7 +2,7 @@
 package com.intellij.openapi.project;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.diagnostic.ThreadDumper;
+import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.file.BatchFileChangeListener;
 import com.intellij.openapi.application.*;

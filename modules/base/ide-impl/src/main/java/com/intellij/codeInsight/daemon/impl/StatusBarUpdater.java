@@ -32,7 +32,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;

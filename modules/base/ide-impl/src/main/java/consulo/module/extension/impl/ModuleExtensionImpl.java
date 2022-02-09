@@ -65,12 +65,6 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
     return myModuleRootLayer.getModule();
   }
 
-  @Nonnull
-  @Override
-  public Project getProject() {
-    return getModule().getProject();
-  }
-
   @RequiredReadAction
   @Override
   public void commit(@Nonnull T mutableModuleExtension) {

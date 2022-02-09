@@ -20,7 +20,7 @@ import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.DumbService;
 import consulo.language.content.FileIndexFacade;
-import com.intellij.openapi.util.LowMemoryWatcher;
+import consulo.application.util.LowMemoryWatcher;
 import com.intellij.openapi.util.StackOverflowPreventedException;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.InvalidVirtualFileAccessException;

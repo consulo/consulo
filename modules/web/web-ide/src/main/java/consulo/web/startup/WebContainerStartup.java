@@ -21,7 +21,7 @@ import com.intellij.idea.StartupUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;

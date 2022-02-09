@@ -23,7 +23,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

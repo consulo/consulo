@@ -19,7 +19,7 @@
  */
 package com.intellij.concurrency;
 
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;

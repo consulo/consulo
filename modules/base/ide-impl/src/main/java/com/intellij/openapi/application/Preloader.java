@@ -21,7 +21,7 @@ import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import consulo.util.lang.TimeoutUtil;
-import com.intellij.util.concurrency.SequentialTaskExecutor;
+import consulo.application.util.concurrent.SequentialTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.Application;
 import consulo.container.util.StatCollector;

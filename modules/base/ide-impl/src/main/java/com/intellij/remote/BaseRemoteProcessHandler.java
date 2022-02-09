@@ -22,7 +22,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.local.ProcessWaitFor;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.process.io.BaseOutputReader;
 import consulo.logging.Logger;
 

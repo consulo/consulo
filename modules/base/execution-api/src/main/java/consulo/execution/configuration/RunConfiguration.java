@@ -15,8 +15,8 @@
  */
 package consulo.execution.configuration;
 
-import com.intellij.openapi.options.SettingsEditor;
 import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.runner.ProgramRunner;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

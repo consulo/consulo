@@ -14,7 +14,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.TimeoutUtil;
-import com.intellij.util.concurrency.SequentialTaskExecutor;
+import consulo.application.util.concurrent.SequentialTaskExecutor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.util.concurrent.Promise;

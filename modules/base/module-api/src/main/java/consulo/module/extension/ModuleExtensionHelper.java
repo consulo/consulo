@@ -24,7 +24,7 @@ import java.util.Collection;
  * @author VISTALL
  * @since 7:57/12.11.13
  */
-public abstract class ModuleExtensionHelper {
+public interface ModuleExtensionHelper {
   @Nonnull
   public static ModuleExtensionHelper getInstance(@Nonnull Project project) {
     return project.getInstance(ModuleExtensionHelper.class);
@@ -34,4 +34,7 @@ public abstract class ModuleExtensionHelper {
 
   @Nonnull
   public abstract <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@Nonnull Class<T> clazz);
+
+  @Nonnull
+  public String getModuleExtensionName(@Nonnull ModuleExtension<?> moduleExtension);
 }

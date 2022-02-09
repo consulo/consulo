@@ -36,7 +36,7 @@ import java.util.Map;
  * @since 8:00/12.11.13
  */
 @Singleton
-public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
+public class ModuleExtensionHelperImpl implements ModuleExtensionHelper {
   private final Project myProject;
   private MultiMap<Class<? extends ModuleExtension>, ModuleExtension> myExtensions;
 
@@ -75,6 +75,14 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
       }
     }
     return (Collection)moduleExtensions;
+  }
+
+  @Nonnull
+  @Override
+  public String getModuleExtensionName(@Nonnull ModuleExtension<?> moduleExtension) {
+    final ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(moduleExtension.getId());
+    assert provider != null;
+    return provider.getName();
   }
 
   @RequiredReadAction

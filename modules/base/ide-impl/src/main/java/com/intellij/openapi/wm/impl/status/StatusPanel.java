@@ -32,7 +32,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.ClickListener;
 import consulo.application.ui.awt.JBColor;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;

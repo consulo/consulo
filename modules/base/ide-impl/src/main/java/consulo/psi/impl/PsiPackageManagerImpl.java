@@ -25,7 +25,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.util.LowMemoryWatcher;
+import consulo.application.util.LowMemoryWatcher;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
 import com.intellij.util.ObjectUtil;

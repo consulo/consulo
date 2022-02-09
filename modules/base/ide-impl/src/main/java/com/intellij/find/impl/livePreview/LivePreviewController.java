@@ -16,7 +16,7 @@ import consulo.editor.event.SelectionListener;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

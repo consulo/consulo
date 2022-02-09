@@ -19,8 +19,8 @@ package com.intellij.openapi.wm;
 import com.intellij.openapi.ui.Painter;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import com.intellij.util.ui.update.UiNotifyConnector;
-import com.intellij.util.ui.update.Activatable;
+import consulo.ui.ex.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
 
 import javax.swing.*;
 import java.awt.*;

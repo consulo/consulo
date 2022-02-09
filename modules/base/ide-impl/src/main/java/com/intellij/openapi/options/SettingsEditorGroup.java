@@ -18,6 +18,8 @@ package com.intellij.openapi.options;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
+import consulo.execution.configuration.ui.SettingsEditor;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

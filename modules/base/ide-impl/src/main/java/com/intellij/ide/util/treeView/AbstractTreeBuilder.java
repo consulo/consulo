@@ -9,7 +9,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Progressive;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.reference.SoftReference;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import consulo.disposer.Disposable;

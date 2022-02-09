@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.PathUtil;
 import consulo.configurable.Configurable;

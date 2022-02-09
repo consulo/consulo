@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui.table;
 
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.ui.components.JBLabel;

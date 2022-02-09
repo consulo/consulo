@@ -23,7 +23,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.ex.update.UiNotifyConnector;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.plugins.PluginDescriptionPanel;
 import consulo.localize.LocalizeValue;

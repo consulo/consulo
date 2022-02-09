@@ -27,7 +27,7 @@ import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.EditorComboBox;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
@@ -303,7 +303,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
       urls.add(0, myDefaultRepoUrl);
     }
     myRepositoryURL.setHistory(ArrayUtil.toObjectArray(urls, String.class));
-    myRepositoryURL.addDocumentListener(new com.intellij.openapi.editor.event.DocumentAdapter() {
+    myRepositoryURL.addDocumentListener(new consulo.document.event.DocumentAdapter() {
       @Override
       public void documentChanged(consulo.document.event.DocumentEvent e) {
         // enable test button only if something is entered in repository URL

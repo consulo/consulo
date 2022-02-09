@@ -15,14 +15,14 @@
  */
 package consulo.sandboxPlugin.ide.debugger.attach;
 
-import consulo.process.ExecutionException;
-import com.intellij.execution.process.ProcessInfo;
-import consulo.project.Project;
-import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.attach.*;
-import javax.annotation.Nonnull;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessInfo;
+import consulo.project.Project;
+import consulo.util.dataholder.UserDataHolder;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 

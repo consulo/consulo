@@ -23,6 +23,7 @@ import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBa
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.editor.event.CaretEvent;

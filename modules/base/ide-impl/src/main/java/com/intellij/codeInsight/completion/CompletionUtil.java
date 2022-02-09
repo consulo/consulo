@@ -6,7 +6,7 @@ import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupValueWithPsiElement;
-import com.intellij.diagnostic.ThreadDumper;
+import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.language.Language;
 import consulo.ui.ex.action.ActionManager;

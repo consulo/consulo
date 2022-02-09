@@ -34,7 +34,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.CalledInBackground;
 import consulo.navigation.Navigatable;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;

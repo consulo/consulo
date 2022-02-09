@@ -26,7 +26,7 @@ import com.intellij.openapi.application.PermanentInstallationID;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.external.api.StatisticsBean;
 import consulo.externalService.impl.WebServiceApi;

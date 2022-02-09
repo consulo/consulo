@@ -20,7 +20,7 @@ import com.intellij.codeInsight.hints.filtering.MatcherConstructor;
 import consulo.language.Language;
 import consulo.document.Document;
 import consulo.editor.EditorFactory;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.ui.ComboBox;

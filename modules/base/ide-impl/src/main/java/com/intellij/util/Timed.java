@@ -19,7 +19,7 @@ package com.intellij.util;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.disposer.Disposer;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

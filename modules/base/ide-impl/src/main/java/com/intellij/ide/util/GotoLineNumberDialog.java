@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.util.PatternUtil;
 import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;

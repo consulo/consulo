@@ -5,7 +5,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.WeakList;
+import consulo.util.collection.WeakList;
 import consulo.util.collection.Maps;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

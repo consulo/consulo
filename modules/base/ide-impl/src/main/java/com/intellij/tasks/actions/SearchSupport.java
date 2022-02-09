@@ -21,7 +21,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
 import consulo.editor.VisualPosition;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;

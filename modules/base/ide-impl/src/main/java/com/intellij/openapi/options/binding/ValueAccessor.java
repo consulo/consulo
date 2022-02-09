@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.options.binding;
 
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

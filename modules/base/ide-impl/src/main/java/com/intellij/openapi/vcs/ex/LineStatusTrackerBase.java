@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.UndoConstants;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import consulo.editor.markup.RangeHighlighter;

@@ -15,7 +15,7 @@
  */
 package com.intellij.remoteServer.configuration.deployment;
 
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

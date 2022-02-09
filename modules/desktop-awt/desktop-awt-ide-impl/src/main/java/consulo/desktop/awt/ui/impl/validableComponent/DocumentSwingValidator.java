@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.validableComponent;
 
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

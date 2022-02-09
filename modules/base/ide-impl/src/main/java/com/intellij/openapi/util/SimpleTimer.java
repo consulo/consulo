@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledExecutorService;

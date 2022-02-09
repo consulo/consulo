@@ -2,6 +2,7 @@
 package com.intellij.util.concurrency;
 
 import consulo.application.ReadAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
 
 import javax.annotation.Nonnull;
 

@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 
 import java.util.ArrayList;
 import java.util.Collection;

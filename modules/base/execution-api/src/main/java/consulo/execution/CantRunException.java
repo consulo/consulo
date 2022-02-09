@@ -15,11 +15,10 @@
  */
 package consulo.execution;
 
-import consulo.module.Module;
 import consulo.content.bundle.Sdk;
+import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.impl.ModuleExtensionProviderEP;
-import consulo.module.extension.impl.ModuleExtensionProviders;
+import consulo.module.extension.ModuleExtensionHelper;
 import consulo.process.ExecutionException;
 
 import javax.annotation.Nonnull;
@@ -51,9 +50,8 @@ public class CantRunException extends ExecutionException {
   }
 
   public static CantRunException noSdkForModuleExtension(@Nonnull final ModuleExtension e) {
-    final ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(e.getId());
-    assert provider != null;
-    return new CantRunException(ExecutionBundle.message("no.sdk.for.module.extension.error.message", provider.getName(), e.getModule().getName()));
+    String moduleExtensionName = ModuleExtensionHelper.getInstance(e.getProject()).getModuleExtensionName(e);
+    return new CantRunException(ExecutionBundle.message("no.sdk.for.module.extension.error.message", moduleExtensionName, e.getModule().getName()));
   }
 
   public static CantRunException jdkMisconfigured(@Nonnull final Sdk jdk, @Nonnull final Module module) {

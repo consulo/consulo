@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.util.NotNullProducer;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

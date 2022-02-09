@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.diagnostic.ThreadDumper;
+import consulo.application.util.concurrent.ThreadDumper;
 import consulo.language.impl.ASTFactory;
 import consulo.language.ast.ASTNode;
 import consulo.application.ApplicationManager;

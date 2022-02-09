@@ -25,9 +25,9 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.ui.UserActivityListener;
-import com.intellij.ui.UserActivityWatcher;
+import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.event.UserActivityListener;
+import consulo.ui.ex.UserActivityWatcher;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.ex.awt.TargetAWT;
 

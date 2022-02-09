@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.util.LowMemoryWatcher;
+import consulo.application.util.LowMemoryWatcher;
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.locks.Lock;

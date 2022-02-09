@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.PersistentFSConstants;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.navigation.Navigatable;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.OpenSourceUtil;
 import consulo.util.concurrent.AsyncResult;
 

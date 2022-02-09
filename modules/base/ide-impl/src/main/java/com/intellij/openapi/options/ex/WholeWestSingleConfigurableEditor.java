@@ -25,7 +25,7 @@ import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.options.ConfigurableUIMigrationUtil;

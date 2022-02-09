@@ -42,7 +42,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.TaskRepository;
 import com.intellij.tasks.impl.BaseRepository;
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.EditorTextField;
 import consulo.application.ui.awt.PanelWithAnchor;
 import com.intellij.ui.components.JBCheckBox;
@@ -223,7 +223,7 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
   }
 
   protected void installListener(final Document document) {
-    document.addDocumentListener(new com.intellij.openapi.editor.event.DocumentAdapter() {
+    document.addDocumentListener(new consulo.document.event.DocumentAdapter() {
       @Override
       public void documentChanged(consulo.document.event.DocumentEvent e) {
         doApply();

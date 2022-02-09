@@ -3,7 +3,7 @@ package com.intellij.execution.util;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.ui.UserActivityProviderComponent;
+import consulo.ui.ex.UserActivityProviderComponent;
 import com.intellij.util.PathMappingSettings;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

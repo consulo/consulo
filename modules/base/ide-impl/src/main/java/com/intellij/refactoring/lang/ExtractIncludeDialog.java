@@ -35,7 +35,7 @@ import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileSystemItemUtil;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 

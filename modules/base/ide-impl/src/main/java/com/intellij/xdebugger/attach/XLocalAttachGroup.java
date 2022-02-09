@@ -15,9 +15,10 @@
  */
 package com.intellij.xdebugger.attach;
 
-import com.intellij.execution.process.ProcessInfo;
+import consulo.process.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
+
 import javax.annotation.Nonnull;
 
 /**

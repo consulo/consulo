@@ -62,6 +62,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.project.ui.util.Alarm;
 import consulo.util.collection.JBIterable;
 import consulo.document.util.TextRangeUtil;
 import consulo.application.ui.awt.JBUI;

@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
-import com.intellij.util.containers.WeakList;
+import consulo.util.collection.WeakList;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

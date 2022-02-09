@@ -16,7 +16,7 @@
 package com.intellij.ui.components;
 
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.components.panels.ValidatingComponent;
 
 import javax.swing.*;

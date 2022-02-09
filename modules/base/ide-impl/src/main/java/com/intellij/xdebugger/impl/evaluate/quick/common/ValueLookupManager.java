@@ -29,7 +29,7 @@ import consulo.editor.event.EditorMouseEventArea;
 import consulo.editor.event.EditorMouseMotionListener;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;

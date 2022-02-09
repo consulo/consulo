@@ -38,7 +38,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.ui.PopupHandler;
-import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

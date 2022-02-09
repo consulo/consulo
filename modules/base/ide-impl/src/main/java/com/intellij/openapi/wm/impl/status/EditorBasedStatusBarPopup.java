@@ -32,7 +32,7 @@ import consulo.project.ui.wm.StatusBarWidget;
 import com.intellij.ui.ClickListener;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.PopupState;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;

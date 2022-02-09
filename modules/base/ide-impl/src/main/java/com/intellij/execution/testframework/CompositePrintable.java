@@ -23,7 +23,7 @@ import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;

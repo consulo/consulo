@@ -27,7 +27,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.ui.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

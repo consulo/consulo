@@ -3,7 +3,7 @@ package com.intellij.codeInsight.documentation;
 
 import com.intellij.ide.IdeTooltipManager;
 import consulo.application.Application;
-import com.intellij.openapi.application.ApplicationActivationListener;
+import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
@@ -28,7 +28,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.popup.PopupFactoryImpl;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

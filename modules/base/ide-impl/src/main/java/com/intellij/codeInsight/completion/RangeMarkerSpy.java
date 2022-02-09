@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 
 /**

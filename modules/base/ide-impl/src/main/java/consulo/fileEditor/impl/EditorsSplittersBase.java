@@ -29,7 +29,7 @@ import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import consulo.application.ui.awt.JBColor;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.containers.ArrayListSet;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;

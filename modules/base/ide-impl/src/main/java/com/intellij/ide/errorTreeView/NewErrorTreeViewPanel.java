@@ -42,7 +42,7 @@ import consulo.application.ui.awt.SideBorder;
 import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.MessageView;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.ui.MutableErrorTreeView;
 import consulo.application.ui.awt.UIUtil;

@@ -23,7 +23,7 @@ import com.intellij.execution.util.EnvironmentVariable;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.HyperlinkLabel;
-import com.intellij.ui.UserActivityProviderComponent;
+import consulo.ui.ex.UserActivityProviderComponent;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.TargetAWT;

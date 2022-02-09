@@ -19,7 +19,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -21,7 +21,7 @@ import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ProgramRunner;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.dataholder.UserDataHolderBase;

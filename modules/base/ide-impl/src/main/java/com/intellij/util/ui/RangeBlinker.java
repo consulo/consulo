@@ -25,7 +25,7 @@ import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;
 import consulo.document.util.Segment;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import com.intellij.util.ArrayUtil;
 
 import java.util.ArrayList;

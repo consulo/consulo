@@ -2,6 +2,8 @@ module consulo.util.collection {
   requires transitive consulo.annotation;
   requires transitive consulo.util.lang;
 
+  requires org.slf4j;
+
   exports consulo.util.collection;
   exports consulo.util.collection.util;
 

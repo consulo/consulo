@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.ui.awt.VerticalFlowLayout;
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.FontComboBox;
 import com.intellij.ui.FontInfoRenderer;
 import consulo.application.ui.awt.JBColor;

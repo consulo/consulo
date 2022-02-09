@@ -23,19 +23,15 @@ import consulo.execution.configuration.ConfigurationPerRunnerSettings;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.configuration.RunnerSettings;
+import consulo.execution.internal.ExecutionDataContextCacher;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.module.Module;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ExecutionEnvironment extends UserDataHolderBase implements Disposable {
@@ -54,7 +50,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
   @Nullable private RunnerSettings myRunnerSettings;
   @Nullable private ConfigurationPerRunnerSettings myConfigurationSettings;
   @Nullable private final RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
-  @javax.annotation.Nullable
+  @Nullable
   private RunContentDescriptor myContentToReuse;
   private final ProgramRunner<?> myRunner;
   private long myExecutionId = 0;
@@ -123,7 +119,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
                        @Nonnull Project project,
                        @Nullable RunnerSettings runnerSettings,
                        @Nullable ConfigurationPerRunnerSettings configurationSettings,
-                       @javax.annotation.Nullable RunContentDescriptor contentToReuse,
+                       @Nullable RunContentDescriptor contentToReuse,
                        @Nullable RunnerAndConfigurationSettings settings,
                        @Nonnull ProgramRunner<?> runner) {
     myExecutor = executor;
@@ -158,12 +154,12 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     return myRunProfile;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public RunnerAndConfigurationSettings getRunnerAndConfigurationSettings() {
     return myRunnerAndConfigurationSettings;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public RunContentDescriptor getContentToReuse() {
     return myContentToReuse;
   }
@@ -176,7 +172,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Deprecated
   /**
    * Use {@link #getRunner()} instead
@@ -196,7 +192,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     return myRunnerSettings;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public ConfigurationPerRunnerSettings getConfigurationSettings() {
     return myConfigurationSettings;
   }
@@ -239,35 +235,11 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
   }
 
   public void setDataContext(@Nonnull DataContext dataContext) {
-    myDataContext = CachingDataContext.cacheIfNeed(dataContext);
+    myDataContext = ExecutionDataContextCacher.getInstance().getCachedContext(dataContext);
   }
 
   @Nullable
   public DataContext getDataContext() {
     return myDataContext;
-  }
-
-  private static class CachingDataContext implements DataContext {
-    private static final Key[] keys = {Project.KEY, PlatformDataKeys.PROJECT_FILE_DIRECTORY, CommonDataKeys.EDITOR, CommonDataKeys.VIRTUAL_FILE, Module.KEY, CommonDataKeys.PSI_FILE};
-    private final Map<Key, Object> values = new HashMap<>();
-
-    @Nonnull
-    static CachingDataContext cacheIfNeed(@Nonnull DataContext context) {
-      if (context instanceof CachingDataContext)
-        return (CachingDataContext)context;
-      return new CachingDataContext(context);
-    }
-
-    private CachingDataContext(DataContext context) {
-      for (Key key : keys) {
-        values.put(key, context.getData(key));
-      }
-    }
-
-    @Override
-    @SuppressWarnings("unchekced")
-    public <T> T getData(@NonNls Key<T> dataId) {
-      return (T)values.get(dataId);
-    }
   }
 }

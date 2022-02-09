@@ -1,7 +1,7 @@
 package com.intellij.diagnostic.errordialog;
 
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;
 import consulo.application.ui.awt.UIUtil;

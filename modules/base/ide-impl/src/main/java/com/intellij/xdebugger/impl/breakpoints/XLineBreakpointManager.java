@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.document.Document;
+import consulo.document.event.DocumentAdapter;
 import consulo.editor.Editor;
 import consulo.editor.EditorFactory;
 import consulo.editor.EditorKind;

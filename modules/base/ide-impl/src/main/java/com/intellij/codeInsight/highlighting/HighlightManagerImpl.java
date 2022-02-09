@@ -33,7 +33,7 @@ import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.EditorFactory;
 import consulo.editor.ScrollType;
-import com.intellij.openapi.editor.event.DocumentAdapter;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.ex.MarkupModelEx;

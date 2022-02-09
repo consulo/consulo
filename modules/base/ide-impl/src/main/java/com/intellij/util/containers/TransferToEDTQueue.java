@@ -15,6 +15,7 @@
  */
 package com.intellij.util.containers;
 
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.function.Processor;
 import consulo.application.util.Semaphore;
@@ -34,7 +35,7 @@ import java.util.function.BooleanSupplier;
  * and reschedules processing later for longer batches.
  * Usage: {@link TransferToEDTQueue#offer(Object)} } : schedules element for processing in EDT (via invokeLater)
  *
- * @deprecated use {@link com.intellij.util.concurrency.EdtExecutorService} instead
+ * @deprecated use {@link EdtExecutorService} instead
  */
 @Deprecated
 public class TransferToEDTQueue<T> {

@@ -21,7 +21,7 @@ import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.OnePixelSplitter;
-import com.intellij.util.Alarm;
+import consulo.project.ui.util.Alarm;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

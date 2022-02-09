@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import com.intellij.ui.DocumentAdapter;
+import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.Function;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;

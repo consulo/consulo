@@ -29,7 +29,7 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.ThreeState;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentEvent;

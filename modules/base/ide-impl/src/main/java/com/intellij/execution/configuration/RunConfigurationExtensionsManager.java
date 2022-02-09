@@ -22,7 +22,7 @@ import com.intellij.execution.configurations.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;

@@ -3,7 +3,7 @@ package com.intellij.openapi.externalSystem.service.execution;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.PaintAwarePanel;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

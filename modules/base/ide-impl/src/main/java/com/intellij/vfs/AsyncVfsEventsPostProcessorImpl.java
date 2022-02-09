@@ -23,7 +23,7 @@ import consulo.virtualFileSystem.event.AsyncVfsEventsListener;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import com.intellij.util.concurrency.QueueProcessor;
+import consulo.application.util.concurrent.QueueProcessor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

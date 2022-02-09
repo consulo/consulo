@@ -15,8 +15,8 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.util.LowMemoryWatcher;
-import com.intellij.util.containers.WeakList;
+import consulo.application.util.LowMemoryWatcher;
+import consulo.util.collection.WeakList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

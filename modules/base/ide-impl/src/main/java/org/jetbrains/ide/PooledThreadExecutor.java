@@ -15,7 +15,7 @@
  */
 package org.jetbrains.ide;
 
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.Application;
 
 import java.util.concurrent.ExecutorService;

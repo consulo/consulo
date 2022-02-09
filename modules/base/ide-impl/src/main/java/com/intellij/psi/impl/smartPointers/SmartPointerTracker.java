@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.FrozenDocument;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.LowMemoryWatcher;
+import consulo.application.util.LowMemoryWatcher;
 import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

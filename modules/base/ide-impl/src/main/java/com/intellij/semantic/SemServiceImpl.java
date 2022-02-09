@@ -17,7 +17,7 @@ package com.intellij.semantic;
 
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.util.LowMemoryWatcher;
+import consulo.application.util.LowMemoryWatcher;
 import com.intellij.openapi.util.RecursionGuard;
 import com.intellij.openapi.util.RecursionManager;
 import com.intellij.patterns.ElementPattern;

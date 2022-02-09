@@ -20,6 +20,7 @@ import consulo.execution.ExecutionResult;
 import consulo.execution.Executor;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import org.jetbrains.annotations.NonNls;
@@ -104,5 +105,5 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
 
   void execute(@Nonnull ExecutionEnvironment environment) throws ExecutionException;
 
-  void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback) throws ExecutionException;
+  void execute(@Nonnull ExecutionEnvironment environment, @Nullable Callback callback) throws ExecutionException;
 }

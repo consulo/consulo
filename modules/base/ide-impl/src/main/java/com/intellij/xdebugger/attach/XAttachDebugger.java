@@ -15,11 +15,12 @@
  */
 package com.intellij.xdebugger.attach;
 
-import consulo.process.ExecutionException;
-import com.intellij.execution.process.ProcessInfo;
-import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessInfo;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

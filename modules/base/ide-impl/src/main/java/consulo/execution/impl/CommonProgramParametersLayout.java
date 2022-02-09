@@ -16,18 +16,18 @@
 package consulo.execution.impl;
 
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configuration.EnvironmentVariablesTextFieldWithBrowseButton;
-import consulo.application.AllIcons;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;
 import com.intellij.util.PathUtil;
-import consulo.process.cmd.ParametersListUtil;
+import consulo.application.AllIcons;
+import consulo.execution.ExecutionBundle;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;

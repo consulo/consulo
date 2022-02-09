@@ -24,6 +24,8 @@ import consulo.logging.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.ui.ex.event.DocumentAdapter;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

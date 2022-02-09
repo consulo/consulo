@@ -16,7 +16,7 @@ import com.intellij.psi.codeStyle.modifier.TransientCodeStyleSettings;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.util.lang.ObjectUtil;
 import javax.annotation.Nonnull;
 
