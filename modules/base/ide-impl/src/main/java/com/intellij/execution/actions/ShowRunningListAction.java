@@ -17,7 +17,7 @@ package com.intellij.execution.actions;
 
 import consulo.execution.ExecutionBundle;
 import consulo.execution.Executor;
-import com.intellij.execution.KillableProcess;
+import consulo.process.KillableProcess;
 import com.intellij.execution.impl.ExecutionManagerImpl;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.RunContentDescriptor;

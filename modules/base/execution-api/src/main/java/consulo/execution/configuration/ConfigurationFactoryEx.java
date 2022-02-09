@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.configurations;
+package consulo.execution.configuration;
 
-import consulo.execution.ExecutionTarget;
-import consulo.execution.configuration.RunProfile;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 
-public interface TargetAwareRunProfile extends RunProfile {
-  /**
-   * Checks if this configuration supports running on the provided target (see {@link ExecutionTarget} for details).
-   * @param target target provided by {@link com.intellij.execution.ExecutionTargetProvider}
-   */
-  boolean canRunOn(@Nonnull ExecutionTarget target);
+/**
+ * @author nik
+ */
+@Deprecated
+@DeprecationInfo("Use ConfigurationFactory as is")
+public abstract class ConfigurationFactoryEx extends ConfigurationFactory {
+  protected ConfigurationFactoryEx(@Nonnull ConfigurationType type) {
+    super(type);
+  }
+
+  @Override
+  public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
+  }
+
+  @Override
+  public void onConfigurationCopied(@Nonnull RunConfiguration configuration) {
+  }
 }

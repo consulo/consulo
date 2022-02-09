@@ -111,4 +111,10 @@ public abstract class ConfigurationFactory {
   public boolean canConfigurationBeSingleton() {
     return true; // Configuration may be marked as singleton by default
   }
+
+  public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
+  }
+
+  public void onConfigurationCopied(@Nonnull RunConfiguration configuration) {
+  }
 }

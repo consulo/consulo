@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.configurations;
+package consulo.execution.configuration;
 
-import consulo.execution.configuration.RunProfile;
+import consulo.execution.WithoutOwnBeforeRunSteps;
 
 /**
- * Special interface for remote debug processes
- *
- * @author Konstantin Bulenkov
- * @since 14
+ * Allow to get before/after steps from wrapped configuration: e.g. to rerun tests with initial tests before options
  */
-public interface RemoteRunProfile extends RunProfile {
+public interface WrappingRunConfiguration<T extends RunConfiguration> extends WithoutOwnBeforeRunSteps {
+  T getPeer();
 }

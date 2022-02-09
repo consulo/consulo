@@ -15,7 +15,7 @@
  */
 package consulo.execution.impl;
 
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.configuration.EnvironmentVariablesTextFieldWithBrowseButton;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;

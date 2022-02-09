@@ -16,10 +16,7 @@
 package com.intellij.execution.testframework.actions;
 
 import consulo.execution.RuntimeConfigurationException;
-import consulo.execution.configuration.ConfigurationInfoProvider;
-import consulo.execution.configuration.ConfigurationPerRunnerSettings;
-import consulo.execution.configuration.ConfigurationType;
-import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.*;
 import consulo.process.ExecutionException;
 import consulo.execution.Executor;
 import consulo.execution.RunnerRegistry;

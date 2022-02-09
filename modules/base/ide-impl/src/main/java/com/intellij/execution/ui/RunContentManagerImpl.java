@@ -25,6 +25,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
+import consulo.process.KillableProcess;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;

@@ -13,24 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.configuration;
+package consulo.execution;
 
-import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.ConfigurationType;
-import consulo.execution.configuration.RunConfiguration;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-/**
- * @author nik
- */
-public abstract class ConfigurationFactoryEx extends ConfigurationFactory {
-  protected ConfigurationFactoryEx(@Nonnull ConfigurationType type) {
-    super(type);
-  }
+import java.util.Map;
 
-  public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
-  }
+public interface CommonProgramRunConfigurationParameters {
+  @Nullable
+  Project getProject();
 
-  public void onConfigurationCopied(@Nonnull RunConfiguration configuration) {
-  }
+  void setProgramParameters(@Nullable String value);
+
+  @Nullable
+  String getProgramParameters();
+
+  void setWorkingDirectory(@Nullable String value);
+
+  @Nullable
+  String getWorkingDirectory();
+
+  void setEnvs(@Nonnull Map<String, String> envs);
+
+  @Nonnull
+  Map<String, String> getEnvs();
+
+  void setPassParentEnvs(boolean passParentEnvs);
+
+  boolean isPassParentEnvs();
 }

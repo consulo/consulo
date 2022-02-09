@@ -17,6 +17,7 @@
 package com.intellij.execution.configurations;
 
 import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.WithoutOwnBeforeRunSteps;
 import consulo.execution.configuration.*;
 import consulo.process.ExecutionException;
 import consulo.execution.Executor;

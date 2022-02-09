@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution;
 
+package consulo.execution;
+
+import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import java.util.Map;
+import java.util.List;
 
-public interface CommonProgramRunConfigurationParameters {
-  @Nullable
-  Project getProject();
-
-  void setProgramParameters(@Nullable String value);
-
-  @Nullable
-  String getProgramParameters();
-
-  void setWorkingDirectory(@Nullable String value);
-
-  @Nullable
-  String getWorkingDirectory();
-
-  void setEnvs(@Nonnull Map<String, String> envs);
+public abstract class ExecutionTargetProvider {
+  public static final ExtensionPointName<ExecutionTargetProvider> EXTENSION_NAME =
+    ExtensionPointName.create("consulo.executionTargetProvider");
 
   @Nonnull
-  Map<String, String> getEnvs();
-
-  void setPassParentEnvs(boolean passParentEnvs);
-
-  boolean isPassParentEnvs();
+  public abstract List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunnerAndConfigurationSettings configuration);
 }

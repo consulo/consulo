@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree;
 
-import com.intellij.execution.configurations.RemoteRunProfile;
+import consulo.execution.configuration.RemoteRunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;

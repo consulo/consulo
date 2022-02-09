@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options;
+package consulo.execution.configuration.ui;
 
 import consulo.configurable.BaseConfigurable;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
-import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.ui.annotation.RequiredUIAccess;
 

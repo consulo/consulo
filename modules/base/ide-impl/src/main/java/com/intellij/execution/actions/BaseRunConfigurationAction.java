@@ -20,7 +20,7 @@ import consulo.execution.ExecutionBundle;
 import com.intellij.execution.ProgramRunnerUtil;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationType;
-import com.intellij.execution.configurations.LocatableConfiguration;
+import consulo.execution.configuration.LocatableConfiguration;
 import com.intellij.execution.configurations.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
 import com.intellij.openapi.actionSystem.*;

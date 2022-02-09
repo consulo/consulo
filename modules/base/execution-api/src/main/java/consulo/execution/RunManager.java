@@ -21,6 +21,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 
@@ -281,4 +282,15 @@ public abstract class RunManager {
     configuration.setName(suggestUniqueName(StringUtil.notNullize(oldName, UNNAMED), configuration.getType()));
     return !Comparing.equal(oldName, configuration.getName());
   }
+
+  @Nonnull
+  public abstract List<BeforeRunTask> getBeforeRunTasks(RunConfiguration settings);
+
+  public abstract void setBeforeRunTasks(RunConfiguration runConfiguration, List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent);
+
+  @Nonnull
+  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Key<T> taskProviderID);
+
+  @Nonnull
+  public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID);
 }

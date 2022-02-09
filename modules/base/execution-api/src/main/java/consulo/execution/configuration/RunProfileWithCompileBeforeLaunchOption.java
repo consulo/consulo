@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.configurations;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.configurable.UnnamedConfigurable;
+package consulo.execution.configuration;
+
+import consulo.module.Module;
+
 import javax.annotation.Nonnull;
 
-public interface RunConfigurationsSettings {
-  ExtensionPointName<RunConfigurationsSettings> EXTENSION_POINT = ExtensionPointName.create("consulo.runConfigurationsSettings");
-
+/**
+ * @author spleaner
+ */
+public interface RunProfileWithCompileBeforeLaunchOption extends RunProfile {
+  /**
+   * @return modules to compile before run. Empty list to make project
+   */
   @Nonnull
-  UnnamedConfigurable createConfigurable();
+  Module[] getModules();
 }

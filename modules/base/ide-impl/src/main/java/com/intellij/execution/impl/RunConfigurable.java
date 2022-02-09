@@ -17,22 +17,19 @@
 package com.intellij.execution.impl;
 
 import com.intellij.execution.*;
-import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.*;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.options.*;
 import consulo.configurable.BaseConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.dataContext.DataProvider;
 import consulo.execution.*;
-import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.ConfigurationType;
-import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.*;
 import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditorConfigurable;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
@@ -1157,9 +1154,7 @@ public class RunConfigurable extends BaseConfigurable {
       }
     }
     final RunnerAndConfigurationSettings settings = getRunManager().createConfiguration(createUniqueName(typeNode, null, CONFIGURATION, TEMPORARY_CONFIGURATION), factory);
-    if (factory instanceof ConfigurationFactoryEx) {
-      ((ConfigurationFactoryEx)factory).onNewConfigurationCreated(settings.getConfiguration());
-    }
+    factory.onNewConfigurationCreated(settings.getConfiguration());
     createNewConfiguration(settings, node);
   }
 
@@ -1459,9 +1454,7 @@ public class RunConfigurable extends BaseConfigurable {
         final String copyName = createUniqueName(typeNode, configuration.getNameText(), CONFIGURATION, TEMPORARY_CONFIGURATION);
         settings.setName(copyName);
         final ConfigurationFactory factory = settings.getFactory();
-        if (factory instanceof ConfigurationFactoryEx) {
-          ((ConfigurationFactoryEx)factory).onConfigurationCopied(settings.getConfiguration());
-        }
+        factory.onConfigurationCopied(settings.getConfiguration());
         final SingleConfigurationConfigurable<RunConfiguration> configurable = createNewConfiguration(settings, typeNode);
         IdeFocusManager.getInstance(myProject).requestFocus(configurable.getNameTextField(), true);
         configurable.getNameTextField().setSelectionStart(0);

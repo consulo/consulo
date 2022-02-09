@@ -16,7 +16,7 @@
 package com.intellij.execution.impl;
 
 import consulo.execution.BeforeRunTask;
-import com.intellij.execution.BeforeRunTaskProvider;
+import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;

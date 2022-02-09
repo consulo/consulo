@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution;
+package consulo.execution.configuration.ui;
 
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.ui.SettingsEditor;
-import com.intellij.openapi.options.SettingsEditorConfigurable;
 
 public class  RunConfigurationConfigurableAdapter<T extends RunConfiguration> extends SettingsEditorConfigurable<T>{
   public RunConfigurationConfigurableAdapter(SettingsEditor<T> settingsEditor, T configuration) {

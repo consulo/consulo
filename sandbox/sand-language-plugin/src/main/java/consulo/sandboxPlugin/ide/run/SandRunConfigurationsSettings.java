@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.run;
 
-import com.intellij.execution.configurations.RunConfigurationsSettings;
+import consulo.execution.configuration.RunConfigurationsSettings;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;

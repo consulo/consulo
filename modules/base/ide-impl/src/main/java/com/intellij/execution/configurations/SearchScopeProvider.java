@@ -16,6 +16,7 @@
 package com.intellij.execution.configurations;
 
 import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.SearchScopeProvidingRunProfile;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.language.psi.scope.GlobalSearchScope;

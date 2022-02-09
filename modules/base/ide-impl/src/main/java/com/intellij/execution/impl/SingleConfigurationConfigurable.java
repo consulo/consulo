@@ -26,7 +26,7 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
-import com.intellij.openapi.options.SettingsEditorConfigurable;
+import consulo.execution.configuration.ui.SettingsEditorConfigurable;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.components.JBCheckBox;

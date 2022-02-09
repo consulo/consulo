@@ -16,6 +16,9 @@
 
 package com.intellij.execution.configurations;
 
+import consulo.execution.configuration.RunProfileWithCompileBeforeLaunchOption;
+import consulo.execution.configuration.SearchScopeProvidingRunProfile;
+
 /**
  * @author spleaner
  */

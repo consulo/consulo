@@ -15,7 +15,7 @@
  */
 package consulo.backgroundTaskByVfsChange;
 
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.CommonProgramRunConfigurationParameters;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

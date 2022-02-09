@@ -1,4 +1,4 @@
-package com.intellij.execution.configuration;
+package consulo.execution.configuration;
 
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;

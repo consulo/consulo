@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.intellij.execution.configurations;
+package consulo.execution.configuration;
 
 import consulo.execution.configuration.RunProfile;
-import consulo.module.Module;
-import javax.annotation.Nonnull;
 
 /**
- * Base interface for run configurations that can specify which part of the project should be used to search sources. This information
- * will be used to provide more accurate navigation to sources from stack traces, debugger, etc
+ * Special interface for remote debug processes
  *
- * @author nik
+ * @author Konstantin Bulenkov
+ * @since 14
  */
-public interface SearchScopeProvidingRunProfile extends RunProfile {
-  /**
-   * @return modules where to search sources for this configuration
-   */
-  @Nonnull
-  Module[] getModules();
+public interface RemoteRunProfile extends RunProfile {
 }

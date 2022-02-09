@@ -17,12 +17,13 @@ package com.intellij.execution.impl;
 
 import consulo.application.CommonBundle;
 import com.intellij.execution.*;
-import com.intellij.execution.configuration.CompatibilityAwareRunProfile;
+import consulo.execution.configuration.CompatibilityAwareRunProfile;
 import consulo.execution.*;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
 import consulo.process.ExecutionException;
+import consulo.process.KillableProcess;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;

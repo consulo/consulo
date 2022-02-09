@@ -20,9 +20,8 @@
  * Date: Jul 4, 2007
  * Time: 12:33:18 AM
  */
-package com.intellij.execution;
+package consulo.execution;
 
-import consulo.execution.BeforeRunTask;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.dataContext.DataContext;

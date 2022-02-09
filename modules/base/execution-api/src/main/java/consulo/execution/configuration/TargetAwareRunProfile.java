@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.execution.configuration;
 
-package com.intellij.execution;
-
-import consulo.component.extension.ExtensionPointName;
 import consulo.execution.ExecutionTarget;
-import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.project.Project;
+import consulo.execution.ExecutionTargetProvider;
+
 import javax.annotation.Nonnull;
 
-import java.util.List;
-
-public abstract class ExecutionTargetProvider {
-  public static final ExtensionPointName<ExecutionTargetProvider> EXTENSION_NAME =
-    ExtensionPointName.create("consulo.executionTargetProvider");
-
-  @Nonnull
-  public abstract List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunnerAndConfigurationSettings configuration);
+public interface TargetAwareRunProfile extends RunProfile {
+  /**
+   * Checks if this configuration supports running on the provided target (see {@link ExecutionTarget} for details).
+   * @param target target provided by {@link ExecutionTargetProvider}
+   */
+  boolean canRunOn(@Nonnull ExecutionTarget target);
 }

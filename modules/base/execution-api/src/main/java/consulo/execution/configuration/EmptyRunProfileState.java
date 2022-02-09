@@ -1,9 +1,8 @@
-package com.intellij.execution.configuration;
+package consulo.execution.configuration;
 
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
 import consulo.execution.Executor;
-import consulo.execution.configuration.RunProfileState;
 import consulo.execution.runner.ProgramRunner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

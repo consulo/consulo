@@ -15,14 +15,14 @@
  */
 package com.intellij.packaging.impl.run;
 
-import com.intellij.execution.BeforeRunTaskProvider;
-import com.intellij.execution.RunManagerEx;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.application.AllIcons;
+import consulo.execution.BeforeRunTaskProvider;
 import com.intellij.openapi.compiler.CompilerBundle;
-import consulo.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.packaging.artifacts.*;
+import consulo.application.AllIcons;
+import consulo.execution.RunManager;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
@@ -48,7 +48,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactListener() {
       @Override
       public void artifactRemoved(@Nonnull Artifact artifact) {
-        final RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
+        final RunManager runManager = RunManager.getInstance(myProject);
         for (RunConfiguration configuration : runManager.getAllConfigurationsList()) {
           final List<T> tasks = runManager.getBeforeRunTasks(configuration, getId());
           for (AbstractArtifactsBeforeRunTask task : tasks) {

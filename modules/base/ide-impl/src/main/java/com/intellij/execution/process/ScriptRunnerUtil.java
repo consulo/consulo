@@ -17,7 +17,7 @@ package com.intellij.execution.process;
 
 import consulo.execution.ExecutionBundle;
 import consulo.process.ExecutionException;
-import com.intellij.execution.KillableProcess;
+import consulo.process.KillableProcess;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;

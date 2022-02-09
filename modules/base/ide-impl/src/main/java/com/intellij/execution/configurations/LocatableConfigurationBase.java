@@ -17,6 +17,7 @@ package com.intellij.execution.configurations;
 
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.LocatableConfiguration;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;

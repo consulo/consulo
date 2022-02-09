@@ -753,7 +753,7 @@
                     interface="consulo.execution.configuration.ConfigurationType"/>
 
     <extensionPoint name="runConfigurationsSettings"
-                    interface="com.intellij.execution.configurations.RunConfigurationsSettings"/>
+                    interface="consulo.execution.configuration.RunConfigurationsSettings"/>
 
     <extensionPoint name="programRunner"
                     interface="consulo.execution.runner.ProgramRunner"/>
@@ -762,11 +762,11 @@
                     interface="consulo.execution.Executor"/>
 
     <extensionPoint name="executionTargetProvider"
-                    interface="com.intellij.execution.ExecutionTargetProvider"/>
+                    interface="consulo.execution.ExecutionTargetProvider"/>
 
 
     <extensionPoint name="stepsBeforeRunProvider"
-                    interface="com.intellij.execution.BeforeRunTaskProvider"
+                    interface="consulo.execution.BeforeRunTaskProvider"
                     area="PROJECT"/>
 
     <extensionPoint name="utf8BomOptionProvider" interface="com.intellij.openapi.vfs.encoding.Utf8BomOptionProvider"/>

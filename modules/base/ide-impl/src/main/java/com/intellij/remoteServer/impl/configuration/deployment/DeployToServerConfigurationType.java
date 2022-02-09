@@ -15,10 +15,7 @@
  */
 package com.intellij.remoteServer.impl.configuration.deployment;
 
-import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.project.Project;
 import com.intellij.remoteServer.ServerType;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.RemoteServersManager;
@@ -28,6 +25,9 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.configuration.localServer.LocalRunner;
 import com.intellij.remoteServer.impl.configuration.localServer.LocalServerRunConfiguration;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -48,7 +48,7 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     myServerType = serverType;
   }
 
-  public class DeployToServerConfigurationFactory extends ConfigurationFactoryEx {
+  public class DeployToServerConfigurationFactory extends ConfigurationFactory {
     public DeployToServerConfigurationFactory() {
       super(DeployToServerConfigurationType.this);
     }
@@ -91,7 +91,7 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     }
   }
 
-  public class LocalServerConfigurationFactory extends ConfigurationFactoryEx {
+  public class LocalServerConfigurationFactory extends ConfigurationFactory {
     private final LocalRunner myLocalRunner;
 
     public LocalServerConfigurationFactory(LocalRunner localRunner) {

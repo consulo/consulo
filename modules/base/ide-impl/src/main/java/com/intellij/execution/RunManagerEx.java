@@ -65,9 +65,11 @@ public abstract class RunManagerEx extends RunManager {
 
   public abstract boolean isConfigurationShared(RunnerAndConfigurationSettings settings);
 
+  @Override
   @Nonnull
   public abstract List<BeforeRunTask> getBeforeRunTasks(RunConfiguration settings);
 
+  @Override
   public abstract void setBeforeRunTasks(RunConfiguration runConfiguration, List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent);
 
   @Nonnull
