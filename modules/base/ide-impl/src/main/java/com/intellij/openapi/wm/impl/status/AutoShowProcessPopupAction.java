@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.impl.status;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.application.util.registry.Registry;
 
 public class AutoShowProcessPopupAction extends ToggleAction {

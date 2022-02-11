@@ -34,7 +34,7 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.refactoring.util.RadioUpDownListener;
 import com.intellij.ui.TitledSeparator;

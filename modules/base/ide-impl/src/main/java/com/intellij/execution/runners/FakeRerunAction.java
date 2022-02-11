@@ -17,7 +17,7 @@ package com.intellij.execution.runners;
 
 import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionManager;
-import consulo.execution.ExecutorRegistry;
+import consulo.execution.executor.ExecutorRegistry;
 import com.intellij.execution.impl.ExecutionManagerImpl;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.process.ProcessHandler;

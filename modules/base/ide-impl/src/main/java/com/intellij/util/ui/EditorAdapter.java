@@ -23,7 +23,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.ScrollType;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;

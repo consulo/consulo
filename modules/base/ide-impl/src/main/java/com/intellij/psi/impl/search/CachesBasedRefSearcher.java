@@ -11,7 +11,7 @@ import consulo.language.psi.PsiReference;
 import com.intellij.psi.impl.SyntheticFileSystemItem;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;

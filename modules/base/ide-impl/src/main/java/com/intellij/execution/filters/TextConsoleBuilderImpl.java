@@ -17,11 +17,14 @@
 package com.intellij.execution.filters;
 
 import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.ui.ConsoleView;
-import consulo.project.Project;
+import consulo.content.scope.SearchScope;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.language.psi.scope.GlobalSearchScope;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +33,8 @@ import java.util.List;
  */
 public class TextConsoleBuilderImpl extends TextConsoleBuilder {
   private final Project myProject;
-  private final GlobalSearchScope myScope;
-  private final ArrayList<Filter> myFilters = new ArrayList<Filter>();
+  private final SearchScope myScope;
+  private final ArrayList<Filter> myFilters = new ArrayList<>();
   private boolean myViewer;
   private boolean myUsePredefinedMessageFilter = true;
 
@@ -39,7 +42,7 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
     this(project, GlobalSearchScope.allScope(project));
   }
 
-  public TextConsoleBuilderImpl(@Nonnull final Project project, @Nonnull GlobalSearchScope scope) {
+  public TextConsoleBuilderImpl(@Nonnull final Project project, @Nonnull SearchScope scope) {
     myProject = project;
     myScope = scope;
   }
@@ -77,7 +80,7 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
     return myProject;
   }
 
-  protected GlobalSearchScope getScope() {
+  protected SearchScope getScope() {
     return myScope;
   }
 

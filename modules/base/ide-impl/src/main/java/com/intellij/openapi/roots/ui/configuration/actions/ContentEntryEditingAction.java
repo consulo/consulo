@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
 import consulo.application.dumb.DumbAware;

@@ -15,7 +15,6 @@ import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.RedBlackTree;
 import com.intellij.openapi.editor.impl.SweepProcessor;
-import com.intellij.openapi.editor.markup.*;
 import consulo.editor.markup.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;

@@ -19,7 +19,7 @@ import com.intellij.ide.scratch.ScratchUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.ProjectScope;
+import consulo.project.content.scope.ProjectScopes;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
@@ -44,7 +44,7 @@ public class NonProjectFilesScope extends NamedScope {
         if (file.getFileSystem() instanceof NonPhysicalFileSystem) return false;
         if (!file.isInLocalFileSystem()) return true;
         if (ScratchUtil.isScratch(file)) return false;
-        return !ProjectScope.getProjectScope(project).contains(file);
+        return !ProjectScopes.getProjectScope(project).contains(file);
       }
     });
   }

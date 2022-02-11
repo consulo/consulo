@@ -20,7 +20,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.codeInsight.template.impl.TemplateColors;
 import consulo.editor.HighlighterColors;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
+import consulo.editor.colorScheme.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.component.extension.Extensions;

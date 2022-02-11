@@ -22,7 +22,7 @@ import com.intellij.codeInspection.LocalQuickFixAsIntentionAdapter;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import consulo.editor.HighlighterColors;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
+import consulo.editor.colorScheme.CodeInsightColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.GutterIconRenderer;
 import consulo.editor.markup.TextAttributes;

@@ -33,7 +33,7 @@ import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import consulo.editor.markup.CustomHighlighterRenderer;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.project.Project;

@@ -37,7 +37,7 @@ import com.intellij.psi.impl.search.PsiSearchHelperImpl;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopeUtil;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.FindUsagesProcessPresentation;

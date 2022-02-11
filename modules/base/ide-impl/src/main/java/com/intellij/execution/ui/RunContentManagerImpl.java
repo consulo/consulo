@@ -20,7 +20,7 @@ import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.ConfigurationType;
 import com.intellij.execution.dashboard.RunDashboardContributor;
 import com.intellij.execution.dashboard.RunDashboardManager;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;

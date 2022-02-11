@@ -18,7 +18,7 @@ package com.intellij.codeInspection;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
+import consulo.editor.colorScheme.CodeInsightColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.util.Couple;
 import consulo.document.util.TextRange;

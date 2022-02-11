@@ -20,7 +20,7 @@ import consulo.editor.Editor;
 import consulo.editor.HighlighterColors;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.TextAttributesKey;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
 
-import static com.intellij.openapi.editor.colors.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
+import static consulo.editor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
 
 public class HighlightData {
   private final int myStartOffset;

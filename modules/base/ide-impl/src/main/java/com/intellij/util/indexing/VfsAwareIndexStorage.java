@@ -15,14 +15,14 @@
  */
 package com.intellij.util.indexing;
 
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.impl.IndexStorage;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.stub.IdFilter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface VfsAwareIndexStorage<Key, Value> extends IndexStorage<Key, Value> {
-  boolean processKeys(@Nonnull Processor<? super Key> processor, GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
+  boolean processKeys(@Nonnull Processor<? super Key> processor, SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
 }

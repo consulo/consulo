@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.filters;
 
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nullable;
 

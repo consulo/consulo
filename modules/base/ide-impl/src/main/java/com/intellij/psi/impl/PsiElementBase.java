@@ -27,7 +27,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;

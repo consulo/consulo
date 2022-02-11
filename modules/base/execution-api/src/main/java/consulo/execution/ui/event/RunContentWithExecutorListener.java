@@ -15,7 +15,7 @@
  */
 package consulo.execution.ui.event;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 
 import javax.annotation.Nonnull;

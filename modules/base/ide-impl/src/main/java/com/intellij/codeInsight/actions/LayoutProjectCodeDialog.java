@@ -29,7 +29,7 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.ui.IdeBorderFactory;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

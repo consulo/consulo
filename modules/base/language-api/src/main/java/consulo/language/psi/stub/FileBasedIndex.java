@@ -2,18 +2,19 @@
 package consulo.language.psi.stub;
 
 import consulo.application.ReadAction;
-import consulo.application.util.PerApplicationInstance;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.PerApplicationInstance;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import consulo.content.ContentIterator;
+import consulo.content.scope.SearchScope;
 import consulo.index.io.ID;
-import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.util.IncorrectOperationException;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
+import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VFileProperty;
@@ -80,10 +81,10 @@ public abstract class FileBasedIndex {
   }
 
   @Nonnull
-  public abstract <K, V> List<V> getValues(@Nonnull ID<K, V> indexId, @Nonnull K dataKey, @Nonnull GlobalSearchScope filter);
+  public abstract <K, V> List<V> getValues(@Nonnull ID<K, V> indexId, @Nonnull K dataKey, @Nonnull SearchScope filter);
 
   @Nonnull
-  public abstract <K, V> Collection<VirtualFile> getContainingFiles(@Nonnull ID<K, V> indexId, @Nonnull K dataKey, @Nonnull GlobalSearchScope filter);
+  public abstract <K, V> Collection<VirtualFile> getContainingFiles(@Nonnull ID<K, V> indexId, @Nonnull K dataKey, @Nonnull SearchScope filter);
 
   /**
    * @return {@code false} if ValueProcessor.process() returned {@code false}; {@code true} otherwise or if ValueProcessor was not called at all
@@ -92,7 +93,7 @@ public abstract class FileBasedIndex {
                                                @Nonnull K dataKey,
                                                @Nullable VirtualFile inFile,
                                                @Nonnull ValueProcessor<? super V> processor,
-                                               @Nonnull GlobalSearchScope filter);
+                                               @Nonnull SearchScope filter);
 
   /**
    * @return {@code false} if ValueProcessor.process() returned {@code false}; {@code true} otherwise or if ValueProcessor was not called at all
@@ -101,7 +102,7 @@ public abstract class FileBasedIndex {
                                       @Nonnull K dataKey,
                                       @Nullable VirtualFile inFile,
                                       @Nonnull ValueProcessor<? super V> processor,
-                                      @Nonnull GlobalSearchScope filter,
+                                      @Nonnull SearchScope filter,
                                       @Nullable IdFilter idFilter) {
     return processValues(indexId, dataKey, inFile, processor, filter);
   }
@@ -110,7 +111,7 @@ public abstract class FileBasedIndex {
 
   public abstract <K, V> boolean processFilesContainingAllKeys(@Nonnull ID<K, V> indexId,
                                                                @Nonnull Collection<? extends K> dataKeys,
-                                                               @Nonnull GlobalSearchScope filter,
+                                                               @Nonnull SearchScope filter,
                                                                @Nullable Condition<? super V> valueChecker,
                                                                @Nonnull Processor<? super VirtualFile> processor);
 
@@ -126,7 +127,7 @@ public abstract class FileBasedIndex {
    * The method is internal to indexing engine end is called internally. The method is public due to implementation details
    */
   //@ApiStatus.Internal
-  public abstract <K> void ensureUpToDate(@Nonnull ID<K, ?> indexId, @Nullable Project project, @Nullable GlobalSearchScope filter);
+  public abstract <K> void ensureUpToDate(@Nonnull ID<K, ?> indexId, @Nullable Project project, @Nullable SearchScope filter);
 
   public abstract void requestRebuild(@Nonnull ID<?, ?> indexId, Throwable throwable);
 
@@ -134,7 +135,7 @@ public abstract class FileBasedIndex {
 
   public abstract void requestReindex(@Nonnull VirtualFile file);
 
-  public abstract <K, V> boolean getFilesWithKey(@Nonnull ID<K, V> indexId, @Nonnull Set<? extends K> dataKeys, @Nonnull Processor<? super VirtualFile> processor, @Nonnull GlobalSearchScope filter);
+  public abstract <K, V> boolean getFilesWithKey(@Nonnull ID<K, V> indexId, @Nonnull Set<? extends K> dataKeys, @Nonnull Processor<? super VirtualFile> processor, @Nonnull SearchScope filter);
 
   /**
    * Executes command and allow its to have an index access in dumb mode.
@@ -162,8 +163,8 @@ public abstract class FileBasedIndex {
    */
   public abstract <K> boolean processAllKeys(@Nonnull ID<K, ?> indexId, @Nonnull Processor<? super K> processor, @Nullable Project project);
 
-  public <K> boolean processAllKeys(@Nonnull ID<K, ?> indexId, @Nonnull Processor<? super K> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) {
-    return processAllKeys(indexId, processor, scope.getProject());
+  public <K> boolean processAllKeys(@Nonnull ID<K, ?> indexId, @Nonnull Processor<? super K> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) {
+    return processAllKeys(indexId, processor, ((ProjectAwareSearchScope)scope).getProject());
   }
 
   //@ApiStatus.Experimental

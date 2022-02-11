@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ui.ex.content.Content;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.content.*;
 import com.intellij.util.NotNullFunction;

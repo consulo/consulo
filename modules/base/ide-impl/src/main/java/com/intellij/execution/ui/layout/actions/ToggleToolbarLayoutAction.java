@@ -18,7 +18,7 @@ package com.intellij.execution.ui.layout.actions;
 
 import com.intellij.execution.ui.layout.impl.RunnerContentUi;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import javax.annotation.Nullable;
 
 public class ToggleToolbarLayoutAction extends ToggleAction {

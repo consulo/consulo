@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.scope;
 
+import consulo.content.scope.BaseSearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -32,7 +34,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class LocalSearchScope extends SearchScope {
+public class LocalSearchScope extends BaseSearchScope {
   private static final Logger LOG = Logger.getInstance(LocalSearchScope.class);
 
   private final PsiElement[] myScope;

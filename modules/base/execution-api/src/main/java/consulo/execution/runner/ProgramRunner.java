@@ -17,7 +17,7 @@ package consulo.execution.runner;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.ExecutionResult;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
 import consulo.execution.configuration.ui.SettingsEditor;

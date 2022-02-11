@@ -21,7 +21,7 @@ import com.intellij.find.FindModel;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.IdeaFileChooser;

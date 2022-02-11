@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

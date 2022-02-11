@@ -37,7 +37,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

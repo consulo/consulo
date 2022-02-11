@@ -10,7 +10,7 @@ import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.search.PredefinedSearchScopeProvider;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.psi.search.SearchScopeProvider;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopeManager;

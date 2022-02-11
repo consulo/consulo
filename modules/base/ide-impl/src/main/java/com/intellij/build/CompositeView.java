@@ -12,9 +12,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 

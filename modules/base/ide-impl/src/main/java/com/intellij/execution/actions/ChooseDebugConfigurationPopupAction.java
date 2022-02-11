@@ -16,7 +16,7 @@
 
 package com.intellij.execution.actions;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 
 public class ChooseDebugConfigurationPopupAction extends ChooseRunConfigurationPopupAction {
   @Override

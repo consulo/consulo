@@ -15,20 +15,20 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import com.intellij.execution.Location;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.filters.CompositeFilter;
 import com.intellij.execution.filters.FileHyperlinkInfo;
-import com.intellij.execution.filters.Filter;
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.actions.AbstractRerunFailedTestsAction;
 import com.intellij.execution.testframework.sm.SMStacktraceParserEx;
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;
 import com.intellij.execution.testframework.sm.runner.history.actions.ImportTestsGroup;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnAction;
 import consulo.document.Document;

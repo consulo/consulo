@@ -1,13 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.search;
 
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IdFilter;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -27,7 +28,7 @@ public final class FileNameIndexServiceImpl implements FileNameIndexService {
 
   @Nonnull
   @Override
-  public Collection<VirtualFile> getVirtualFilesByName(Project project, @Nonnull String name, @Nonnull GlobalSearchScope scope, IdFilter filter) {
+  public Collection<VirtualFile> getVirtualFilesByName(Project project, @Nonnull String name, @Nonnull SearchScope scope, IdFilter filter) {
     Set<VirtualFile> files = new HashSet<>();
     myIndex.processValues(FilenameIndexImpl.NAME, name, null, (file, value) -> {
       files.add(file);
@@ -37,18 +38,18 @@ public final class FileNameIndexServiceImpl implements FileNameIndexService {
   }
 
   @Override
-  public void processAllFileNames(@Nonnull Processor<? super String> processor, @Nonnull GlobalSearchScope scope, IdFilter filter) {
+  public void processAllFileNames(@Nonnull Processor<? super String> processor, @Nonnull SearchScope scope, IdFilter filter) {
     myIndex.processAllKeys(FilenameIndexImpl.NAME, processor, scope, filter);
   }
 
   @Nonnull
   @Override
-  public Collection<VirtualFile> getFilesWithFileType(@Nonnull FileType fileType, @Nonnull GlobalSearchScope scope) {
+  public Collection<VirtualFile> getFilesWithFileType(@Nonnull FileType fileType, @Nonnull SearchScope scope) {
     return myIndex.getContainingFiles(FileTypeIndexImpl.NAME, fileType, scope);
   }
 
   @Override
-  public boolean processFilesWithFileType(@Nonnull FileType fileType, @Nonnull Processor<? super VirtualFile> processor, @Nonnull GlobalSearchScope scope) {
+  public boolean processFilesWithFileType(@Nonnull FileType fileType, @Nonnull Processor<? super VirtualFile> processor, @Nonnull SearchScope scope) {
     return myIndex.processValues(FileTypeIndexImpl.NAME, fileType, null, (file, value) -> processor.process(file), scope);
   }
 }

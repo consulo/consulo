@@ -36,7 +36,7 @@ import com.intellij.pom.PomTarget;
 import com.intellij.pom.PsiDeclaredTarget;
 import com.intellij.pom.references.PomService;
 import com.intellij.psi.search.PsiSearchHelper;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;

@@ -15,33 +15,39 @@
  */
 package com.intellij.execution.runners;
 
+import com.intellij.execution.configurations.RunConfigurationBase;
+import com.intellij.execution.impl.ConsoleViewImpl;
+import com.intellij.execution.ui.ExecutionConsoleEx;
+import com.intellij.execution.ui.ObservableConsoleView;
+import com.intellij.execution.ui.RunContentManagerImpl;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.ui.content.tabs.PinToolwindowTabAction;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.content.scope.SearchScope;
+import consulo.disposer.Disposer;
 import consulo.execution.ExecutionManager;
 import consulo.execution.ExecutionResult;
-import consulo.execution.Executor;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.ExecutionSearchScopeProvider;
 import consulo.execution.configuration.RunProfile;
-import com.intellij.execution.configurations.SearchScopeProvider;
-import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.ui.*;
-import consulo.execution.runner.ExecutionEnvironmentBuilder;
-import consulo.execution.ui.layout.PlaceInGrid;
-import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.ApplicationManager;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.project.Project;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ui.ex.content.Content;
-import com.intellij.ui.content.tabs.PinToolwindowTabAction;
-import consulo.util.collection.SmartList;
-import consulo.disposer.Disposer;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.content.Content;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -102,8 +108,8 @@ public class RunContentBuilder extends RunTab {
   /**
    * @deprecated to remove in IDEA 15
    */
-  public static GlobalSearchScope createSearchScope(Project project, RunProfile runProfile) {
-    return SearchScopeProvider.createSearchScope(project, runProfile);
+  public static SearchScope createSearchScope(Project project, RunProfile runProfile) {
+    return ExecutionSearchScopeProvider.createSearchScope(project, runProfile);
   }
 
   @Nonnull

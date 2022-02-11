@@ -19,6 +19,7 @@ package com.intellij.execution.impl;
 import consulo.execution.*;
 import consulo.execution.configuration.*;
 import consulo.execution.event.RunManagerListener;
+import consulo.execution.executor.Executor;
 import consulo.module.content.ProjectTopics;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;

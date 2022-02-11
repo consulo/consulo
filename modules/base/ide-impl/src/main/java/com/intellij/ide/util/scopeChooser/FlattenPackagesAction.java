@@ -24,7 +24,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.project.Project;
 import com.intellij.packageDependencies.DependencyUISettings;
 import consulo.language.psi.PsiPackageSupportProviders;

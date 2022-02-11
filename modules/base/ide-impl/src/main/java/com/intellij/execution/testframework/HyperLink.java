@@ -20,7 +20,7 @@ package com.intellij.execution.testframework;
 
 
 
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.HyperlinkInfo;
 
 
 

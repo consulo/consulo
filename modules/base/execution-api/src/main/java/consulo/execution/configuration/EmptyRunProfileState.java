@@ -2,7 +2,7 @@ package consulo.execution.configuration;
 
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.ProgramRunner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

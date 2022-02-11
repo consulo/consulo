@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
-import consulo.language.psi.scope.ProjectScope;
+import consulo.project.content.scope.ProjectScopes;
 import javax.annotation.Nonnull;
 
 public class HighlightLevelUtil {
@@ -58,7 +58,7 @@ public class HighlightLevelUtil {
     if (ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile)) return false;
 
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    if (ProjectScope.getLibrariesScope(project).contains(virtualFile) && !fileIndex.isInContent(virtualFile)) return false;
+    if (ProjectScopes.getLibrariesScope(project).contains(virtualFile) && !fileIndex.isInContent(virtualFile)) return false;
 
     if (SingleRootFileViewProvider.isTooLargeForIntelligence(virtualFile)) return false;
 

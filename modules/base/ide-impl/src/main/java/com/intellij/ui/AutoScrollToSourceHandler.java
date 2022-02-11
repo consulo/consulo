@@ -21,7 +21,7 @@ import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;

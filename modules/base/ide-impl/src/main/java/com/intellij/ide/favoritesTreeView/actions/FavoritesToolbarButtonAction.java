@@ -19,7 +19,7 @@ import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import com.intellij.ide.favoritesTreeView.FavoritesViewSettings;
 import com.intellij.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.Toggleable;
+import consulo.ui.ex.action.Toggleable;
 import consulo.project.Project;
 import com.intellij.ui.AnActionButton;
 import consulo.disposer.Disposer;

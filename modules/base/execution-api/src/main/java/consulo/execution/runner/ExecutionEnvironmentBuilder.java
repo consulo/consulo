@@ -21,6 +21,7 @@ import consulo.execution.configuration.ConfigurationPerRunnerSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunnerSettings;
+import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.project.Project;

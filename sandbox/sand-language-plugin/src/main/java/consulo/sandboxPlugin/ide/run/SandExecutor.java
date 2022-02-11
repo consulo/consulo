@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.run;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.module.extension.ModuleExtensionHelper;

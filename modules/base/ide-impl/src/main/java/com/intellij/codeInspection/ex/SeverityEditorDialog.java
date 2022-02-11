@@ -29,7 +29,7 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
+import consulo.editor.colorScheme.CodeInsightColors;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;

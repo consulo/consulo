@@ -31,6 +31,7 @@ import consulo.execution.configuration.*;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorConfigurable;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
+import consulo.execution.executor.Executor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.Messages;

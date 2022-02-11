@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import javax.annotation.Nonnull;
 
 /**

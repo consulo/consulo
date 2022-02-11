@@ -21,7 +21,7 @@ package com.intellij.ide.actions;
 
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 
 public class ViewStatusBarAction extends ToggleAction implements DumbAware {

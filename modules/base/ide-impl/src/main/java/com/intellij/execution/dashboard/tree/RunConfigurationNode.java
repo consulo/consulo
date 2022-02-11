@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.dashboard.tree;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.RunManager;
 import com.intellij.execution.RunManagerEx;
 import consulo.execution.RunnerAndConfigurationSettings;

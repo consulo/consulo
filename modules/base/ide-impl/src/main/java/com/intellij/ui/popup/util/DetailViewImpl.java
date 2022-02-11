@@ -22,7 +22,7 @@ import consulo.language.editor.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.SettingsImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.*;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;

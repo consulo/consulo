@@ -39,6 +39,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.roots.ContentFoldersSupportUtil;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

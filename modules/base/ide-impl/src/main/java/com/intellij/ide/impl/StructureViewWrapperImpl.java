@@ -52,7 +52,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vfs.PersistentFSConstants;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.language.psi.PsiElement;

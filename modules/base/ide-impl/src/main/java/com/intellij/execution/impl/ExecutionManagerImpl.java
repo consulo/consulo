@@ -22,6 +22,8 @@ import consulo.execution.*;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
 import consulo.process.ExecutionException;
 import consulo.process.KillableProcess;
 import consulo.process.event.ProcessAdapter;

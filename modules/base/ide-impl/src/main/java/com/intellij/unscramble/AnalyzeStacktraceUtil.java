@@ -17,15 +17,15 @@
 package com.intellij.unscramble;
 
 import consulo.execution.ExecutionManager;
-import consulo.execution.Executor;
-import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.filters.Filter;
-import com.intellij.execution.filters.TextConsoleBuilder;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.TextConsoleBuilder;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.impl.ConsoleViewUtil;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.dataContext.DataProvider;

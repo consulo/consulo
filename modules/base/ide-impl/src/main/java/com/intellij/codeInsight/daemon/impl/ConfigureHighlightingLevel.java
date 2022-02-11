@@ -28,6 +28,7 @@ import com.intellij.openapi.editor.markup.InspectionsLevel;
 import consulo.module.content.ProjectFileIndex;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;

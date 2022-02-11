@@ -15,11 +15,11 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import com.intellij.execution.filters.Filter;
+import consulo.execution.ui.console.Filter;
 import com.intellij.execution.testframework.Printer;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;

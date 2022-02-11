@@ -15,10 +15,10 @@
  */
 package com.intellij.notification;
 
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.execution.impl.EditorHyperlinkSupport;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.application.AllIcons;
 import com.intellij.notification.impl.NotificationSettings;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
@@ -35,7 +35,6 @@ import consulo.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.ContextMenuPopupHandler;
-import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.editor.Editor;
 import consulo.editor.EditorFactory;
@@ -46,6 +45,7 @@ import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.Pair;
+import consulo.ui.ex.action.*;
 import consulo.util.lang.ref.Ref;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
@@ -59,10 +59,6 @@ import com.intellij.util.text.DateFormatUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
 

@@ -21,7 +21,7 @@ import consulo.module.Module;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -18,7 +18,7 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.util.dataholder.Key;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.UIBundle;

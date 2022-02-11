@@ -22,6 +22,8 @@ import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationPerRunnerSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunnerSettings;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ProgramRunner;
 import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;

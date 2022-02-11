@@ -26,7 +26,7 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.actionSystem.Toggleable;
+import consulo.ui.ex.action.Toggleable;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;

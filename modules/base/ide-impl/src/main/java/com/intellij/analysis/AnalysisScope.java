@@ -49,7 +49,7 @@ import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopesCore;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;

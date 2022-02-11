@@ -27,7 +27,7 @@ import com.intellij.openapi.util.*;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;

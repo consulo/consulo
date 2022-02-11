@@ -33,7 +33,7 @@ import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import consulo.application.AllIcons;
 import consulo.language.Language;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
+import consulo.editor.colorScheme.CodeInsightColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;
 import consulo.fileChooser.IdeaFileChooser;

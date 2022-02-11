@@ -15,7 +15,7 @@
  */
 package consulo.execution.ui.impl;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import com.intellij.execution.dashboard.RunDashboardManager;
 import consulo.execution.ui.RunContentManager;
 import consulo.dataContext.DataManager;
@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import consulo.ui.ex.content.Content;

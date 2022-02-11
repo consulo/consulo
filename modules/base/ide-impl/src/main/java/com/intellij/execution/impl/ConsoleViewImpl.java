@@ -6,45 +6,23 @@ import com.google.common.base.CharMatcher;
 import com.intellij.codeInsight.navigation.IncrementalSearchHandler;
 import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import com.intellij.execution.ConsoleFolding;
-import consulo.execution.ExecutionBundle;
 import com.intellij.execution.actions.ClearConsoleAction;
 import com.intellij.execution.actions.ConsoleActionsPostProcessor;
 import com.intellij.execution.actions.EOFAction;
 import com.intellij.execution.filters.*;
-import com.intellij.execution.filters.Filter.ResultItem;
-import consulo.process.ProcessHandler;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.ObservableConsoleView;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.OccurenceNavigator;
 import com.intellij.ide.startup.StartupManagerEx;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.application.ReadAction;
 import com.intellij.openapi.command.undo.UndoUtil;
-import consulo.disposer.Disposer;
-import consulo.document.Document;
-import consulo.document.RangeMarker;
-import consulo.document.util.TextRange;
-import consulo.editor.*;
-import consulo.editor.markup.HighlighterTargetArea;
-import consulo.editor.markup.MarkupModel;
-import consulo.editor.markup.RangeHighlighter;
-import consulo.editor.markup.TextAttributes;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
@@ -55,33 +33,56 @@ import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.RangeMarkerImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
-import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.project.*;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.project.DumbAwareAction;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.IdeBorderFactory;
-import consulo.application.ui.awt.SideBorder;
-import consulo.ui.ex.RelativePoint;
-import consulo.project.ui.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.DocumentUtil;
-import consulo.util.lang.SystemProperties;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
+import consulo.application.ui.awt.SideBorder;
+import consulo.application.ui.awt.UIUtil;
+import consulo.content.scope.SearchScope;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
+import consulo.editor.*;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.event.EditorMouseEvent;
+import consulo.editor.markup.*;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.Filter.ResultItem;
+import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.logging.Logger;
+import consulo.module.content.scope.ModuleAwareSearchScope;
+import consulo.process.ProcessHandler;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
+import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -165,7 +166,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     this(project, GlobalSearchScope.allScope(project), viewer, true);
   }
 
-  public ConsoleViewImpl(@Nonnull final Project project, @Nonnull GlobalSearchScope searchScope, boolean viewer, boolean usePredefinedMessageFilter) {
+  public ConsoleViewImpl(@Nonnull final Project project, @Nonnull SearchScope searchScope, boolean viewer, boolean usePredefinedMessageFilter) {
     this(project, searchScope, viewer, new ConsoleState.NotStartedStated() {
       @Nonnull
       @Override
@@ -175,7 +176,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }, usePredefinedMessageFilter);
   }
 
-  protected ConsoleViewImpl(@Nonnull final Project project, @Nonnull GlobalSearchScope searchScope, boolean viewer, @Nonnull final ConsoleState initialState, boolean usePredefinedMessageFilter) {
+  protected ConsoleViewImpl(@Nonnull final Project project, @Nonnull SearchScope searchScope, boolean viewer, @Nonnull final ConsoleState initialState, boolean usePredefinedMessageFilter) {
     super(new BorderLayout());
     initTypedHandler();
     myIsViewer = viewer;

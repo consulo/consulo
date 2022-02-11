@@ -3,6 +3,7 @@ package com.intellij.execution.filters;
 
 import consulo.application.Application;
 import consulo.editor.Editor;
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

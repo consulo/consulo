@@ -19,7 +19,7 @@ package com.intellij.ide.hierarchy;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.application.ApplicationManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;

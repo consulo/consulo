@@ -16,27 +16,31 @@
 
 package com.intellij.util.indexing;
 
-import consulo.application.progress.ProgressManager;
-import consulo.index.io.KeyDescriptor;
-import consulo.index.io.data.DataExternalizer;
-import consulo.language.psi.stub.IdFilter;
-import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.psi.search.ProjectAndLibrariesScope;
 import com.intellij.psi.search.ProjectScopeImpl;
-import consulo.application.util.function.Processor;
-import consulo.util.lang.SystemProperties;
-import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;
-import consulo.index.io.data.DataOutputStream;
-import com.intellij.util.io.*;
+import com.intellij.util.io.AppendableStorageBackedByResizableMappedFile;
+import com.intellij.util.io.DifferentSerializableBytesImplyNonEqualityPolicy;
+import com.intellij.util.io.PagedFileStorage;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Processor;
+import consulo.application.util.function.ThrowableRunnable;
 import consulo.container.boot.ContainerPathManager;
-import consulo.logging.Logger;
-import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.content.scope.SearchScope;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.IdFilter;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.content.scope.ProjectAwareSearchScope;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.lang.SystemProperties;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.TestOnly;
 
@@ -147,7 +151,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
   }
 
   @Override
-  public boolean processKeys(@Nonnull final Processor<? super Key> processor, GlobalSearchScope scope, final IdFilter idFilter) throws StorageException {
+  public boolean processKeys(@Nonnull final Processor<? super Key> processor, SearchScope scope, final IdFilter idFilter) throws StorageException {
     l.lock();
     try {
       myCache.clear(); // this will ensure that all new keys are made into the map
@@ -156,7 +160,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         TIntHashSet hashMaskSet = null;
         long l = System.currentTimeMillis();
         GlobalSearchScope filterScope = idFilter.getEffectiveFilteringScope();
-        GlobalSearchScope effectiveFilteringScope = filterScope != null ? filterScope : scope;
+        SearchScope effectiveFilteringScope = filterScope != null ? filterScope : scope;
 
         File fileWithCaches = getSavedProjectFileValueIds(myLastScannedId, effectiveFilteringScope);
         final boolean useCachedHashIds =
@@ -232,7 +236,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     }
   }
 
-  private void saveHashedIds(@Nonnull TIntHashSet hashMaskSet, int largestId, @Nonnull GlobalSearchScope scope) {
+  private void saveHashedIds(@Nonnull TIntHashSet hashMaskSet, int largestId, @Nonnull SearchScope scope) {
     File newFileWithCaches = getSavedProjectFileValueIds(largestId, scope);
     assert newFileWithCaches != null;
 
@@ -278,10 +282,11 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
   }
 
   @Nullable
-  private File getSavedProjectFileValueIds(int id, @Nonnull GlobalSearchScope scope) {
-    Project project = scope.getProject();
+  private File getSavedProjectFileValueIds(int id, @Nonnull SearchScope scope) {
+    ProjectAwareSearchScope projectAwareSearchScope = (ProjectAwareSearchScope)scope;
+    Project project = projectAwareSearchScope.getProject();
     if (project == null) return null;
-    return new File(getSessionDir(), getProjectFile().getName() + "." + project.hashCode() + "." + id + "." + scope.isSearchInLibraries());
+    return new File(getSessionDir(), getProjectFile().getName() + "." + project.hashCode() + "." + id + "." + projectAwareSearchScope.isSearchInLibraries());
   }
 
   @Override

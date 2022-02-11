@@ -18,7 +18,7 @@ package com.intellij.find;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.util.PatternUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

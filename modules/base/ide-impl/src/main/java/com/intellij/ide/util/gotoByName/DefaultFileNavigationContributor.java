@@ -16,17 +16,17 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.navigation.ChooseByNameContributorEx;
-import consulo.navigation.NavigationItem;
-import consulo.application.dumb.DumbAware;
-import consulo.project.ProjectCoreUtil;
-import consulo.application.util.registry.Registry;
-import consulo.language.psi.PsiFileSystemItem;
 import com.intellij.psi.search.FilenameIndex;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.FindSymbolParameters;
+import consulo.application.dumb.DumbAware;
+import consulo.application.util.function.Processor;
+import consulo.application.util.registry.Registry;
+import consulo.content.scope.SearchScope;
+import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.stub.IdFilter;
 import consulo.logging.Logger;
+import consulo.navigation.NavigationItem;
+import consulo.project.ProjectCoreUtil;
 
 import javax.annotation.Nonnull;
 
@@ -34,7 +34,7 @@ public class DefaultFileNavigationContributor implements ChooseByNameContributor
   private static final Logger LOG = Logger.getInstance(DefaultFileNavigationContributor.class);
 
   @Override
-  public void processNames(@Nonnull final Processor<String> processor, @Nonnull GlobalSearchScope scope, IdFilter filter) {
+  public void processNames(@Nonnull final Processor<String> processor, @Nonnull SearchScope scope, IdFilter filter) {
     long started = System.currentTimeMillis();
     FilenameIndex.processAllFileNames(processor, scope, filter);
     if (LOG.isDebugEnabled()) {

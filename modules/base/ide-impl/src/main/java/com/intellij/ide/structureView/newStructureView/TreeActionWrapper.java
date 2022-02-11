@@ -20,7 +20,7 @@ import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.TreeAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.application.dumb.DumbAware;
 

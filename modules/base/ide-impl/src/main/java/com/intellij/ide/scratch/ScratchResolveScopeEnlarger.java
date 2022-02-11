@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.ResolveScopeEnlarger;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

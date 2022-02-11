@@ -19,7 +19,7 @@ import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.execution.runners.GenericProgramRunner;
 import com.intellij.execution.runners.RunContentBuilder;

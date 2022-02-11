@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -52,7 +52,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;

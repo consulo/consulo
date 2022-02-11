@@ -33,6 +33,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.util.dataholder.Key;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;

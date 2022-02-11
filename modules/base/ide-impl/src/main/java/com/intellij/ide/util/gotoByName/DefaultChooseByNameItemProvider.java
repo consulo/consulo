@@ -1,35 +1,36 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util.gotoByName;
 
-import consulo.application.internal.concurrency.JobLauncher;
 import com.intellij.ide.actions.searcheverywhere.FoundItemDescriptor;
-import consulo.application.util.function.Processor;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.codeStyle.MinusculeMatcher;
+import com.intellij.psi.codeStyle.NameUtil;
+import com.intellij.psi.util.proximity.PsiProximityComparator;
+import com.intellij.util.CollectConsumer;
+import com.intellij.util.Consumer;
+import com.intellij.util.SynchronizedCollectConsumer;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.FList;
+import com.intellij.util.indexing.FindSymbolParameters;
+import consulo.application.internal.concurrency.JobLauncher;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.util.Pair;
+import consulo.application.util.function.Processor;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import com.intellij.psi.codeStyle.MinusculeMatcher;
-import com.intellij.psi.codeStyle.NameUtil;
-import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.psi.util.proximity.PsiProximityComparator;
-import com.intellij.util.*;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FList;
-import com.intellij.util.indexing.FindSymbolParameters;
 import consulo.language.psi.stub.IdFilter;
 import consulo.logging.Logger;
+import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -203,7 +204,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
   private static FindSymbolParameters createParameters(@Nonnull ChooseByNameViewModel base, @Nonnull String pattern, boolean everywhere) {
     ChooseByNameModel model = base.getModel();
     IdFilter idFilter = model instanceof ContributorsBasedGotoByModel ? ((ContributorsBasedGotoByModel)model).getIdFilter(everywhere) : null;
-    GlobalSearchScope searchScope = FindSymbolParameters.searchScopeFor(base.getProject(), everywhere);
+    ProjectAwareSearchScope searchScope = FindSymbolParameters.searchScopeFor(base.getProject(), everywhere);
     return new FindSymbolParameters(pattern, getNamePattern(base, pattern), searchScope, idFilter);
   }
 

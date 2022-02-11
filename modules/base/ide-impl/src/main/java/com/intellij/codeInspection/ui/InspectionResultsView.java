@@ -56,7 +56,7 @@ import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.navigation.Navigatable;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;

@@ -16,8 +16,8 @@
 
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.filters.HyperlinkInfo;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import javax.annotation.Nonnull;
 
 public class DeferingPrinter implements Printer {

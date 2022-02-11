@@ -16,11 +16,11 @@
 
 package com.intellij.util.indexing;
 
+import com.intellij.util.indexing.impl.AbstractUpdateData;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.application.util.function.Processor;
-import com.intellij.util.indexing.impl.AbstractUpdateData;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -35,7 +35,7 @@ import java.util.concurrent.locks.ReadWriteLock;
  */
 public interface UpdatableIndex<Key, Value, Input> extends InvertedIndex<Key, Value, Input> {
 
-  boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
+  boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
 
   @Nonnull
   Lock getReadLock();

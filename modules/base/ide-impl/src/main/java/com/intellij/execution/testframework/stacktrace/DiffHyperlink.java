@@ -21,12 +21,12 @@
 package com.intellij.execution.testframework.stacktrace;
 
 import consulo.execution.ExecutionBundle;
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.filters.HyperlinkInfoBase;
 import com.intellij.execution.testframework.Printable;
 import com.intellij.execution.testframework.Printer;
 import com.intellij.execution.testframework.actions.ViewAssertEqualsDiffAction;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;

@@ -23,9 +23,10 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.ProjectScope;
+import consulo.project.content.scope.ProjectScopes;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
 import consulo.util.collection.MultiMap;
@@ -45,14 +46,14 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
 
   private final ProjectFileIndex myProjectFileIndex;
   private final Set<Module> myModules;
-  private final GlobalSearchScope myProjectScope;
+  private final ProjectAwareSearchScope myProjectScope;
 
   ModuleWithDependentsScope(@Nonnull Module module) {
     super(module.getProject());
     myModule = module;
 
     myProjectFileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
-    myProjectScope = ProjectScope.getProjectScope(module.getProject());
+    myProjectScope = ProjectScopes.getProjectScope(module.getProject());
 
     myModules = buildDependents(myModule);
   }

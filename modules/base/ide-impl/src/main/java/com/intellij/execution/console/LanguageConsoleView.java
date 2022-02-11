@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.console;
 
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.EditorEx;

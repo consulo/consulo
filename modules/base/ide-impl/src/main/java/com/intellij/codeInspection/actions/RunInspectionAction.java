@@ -39,7 +39,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

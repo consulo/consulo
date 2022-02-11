@@ -17,7 +17,7 @@
 package com.intellij.execution.impl;
 
 import consulo.execution.ExecutionBundle;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Splitter;

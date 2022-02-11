@@ -16,37 +16,40 @@
 
 package com.intellij.diagnostic.logging;
 
-import com.intellij.execution.filters.TextConsoleBuilder;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.impl.ConsoleBuffer;
 import com.intellij.execution.impl.ConsoleViewImpl;
-import consulo.process.event.ProcessAdapter;
-import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.ui.FilterComponent;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
-import consulo.dataContext.DataProvider;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.editor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
+import consulo.content.scope.SearchScope;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.editor.Editor;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.console.TextConsoleBuilder;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.logging.Logger;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.project.Project;
+import consulo.project.ui.util.Alarm;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
-import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.ui.FilterComponent;
-import consulo.project.ui.util.Alarm;
-import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
@@ -106,7 +109,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
   }
 
   public LogConsoleBase(@Nonnull Project project, @Nullable Reader reader, String title, final boolean buildInActions, LogFilterModel model,
-                        @Nonnull GlobalSearchScope scope) {
+                        @Nonnull SearchScope scope) {
     super(new BorderLayout());
     myProject = project;
     myTitle = title;

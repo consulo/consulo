@@ -17,7 +17,7 @@ package com.intellij.psi.search;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 
 import javax.annotation.Nonnull;
 

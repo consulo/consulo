@@ -60,7 +60,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

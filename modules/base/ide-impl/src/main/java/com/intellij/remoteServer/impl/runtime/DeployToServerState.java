@@ -17,7 +17,7 @@ package com.intellij.remoteServer.impl.runtime;
 
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.configuration.RunProfileState;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import consulo.execution.runner.ExecutionEnvironment;

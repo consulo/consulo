@@ -28,6 +28,7 @@ import com.intellij.usages.rules.UsageFilteringRuleProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.ToggleAction;
 
 import javax.annotation.Nonnull;
 

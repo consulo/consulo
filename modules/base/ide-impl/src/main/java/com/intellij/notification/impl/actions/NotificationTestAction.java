@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.component.messagebus.MessageBus;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

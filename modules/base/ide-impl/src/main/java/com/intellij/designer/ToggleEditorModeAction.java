@@ -16,7 +16,7 @@
 package com.intellij.designer;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowAnchor;

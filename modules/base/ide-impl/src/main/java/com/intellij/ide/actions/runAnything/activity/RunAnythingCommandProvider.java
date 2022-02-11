@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.runAnything.activity;
 
 import consulo.process.ExecutionException;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.PtyCommandLine;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;

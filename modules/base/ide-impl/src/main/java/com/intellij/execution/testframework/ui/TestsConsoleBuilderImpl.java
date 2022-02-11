@@ -16,7 +16,8 @@
 package com.intellij.execution.testframework.ui;
 
 import com.intellij.execution.filters.TextConsoleBuilderImpl;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.content.scope.SearchScope;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.project.Project;
 import consulo.language.psi.scope.GlobalSearchScope;
 
@@ -25,7 +26,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
  */
 public class TestsConsoleBuilderImpl extends TextConsoleBuilderImpl {
   public TestsConsoleBuilderImpl(final Project project,
-                                 final GlobalSearchScope scope,
+                                 final SearchScope scope,
                                  boolean isViewer,
                                  boolean usePredefinedMessageFilter) {
     super(project, scope);

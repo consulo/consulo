@@ -24,6 +24,8 @@ import consulo.execution.configuration.ui.CompositeSettingsBuilder;
 import consulo.execution.configuration.ui.CompositeSettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorWrapper;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ProgramRunner;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;

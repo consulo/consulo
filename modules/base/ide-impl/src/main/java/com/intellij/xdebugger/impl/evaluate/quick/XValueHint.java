@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.evaluate.quick;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.execution.console.LanguageConsoleView;
 import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ShortcutSet;

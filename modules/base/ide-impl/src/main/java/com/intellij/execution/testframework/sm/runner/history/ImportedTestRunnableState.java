@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.sm.runner.history;
 import consulo.execution.DefaultExecutionResult;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
 import consulo.process.ProcessHandler;

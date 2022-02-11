@@ -16,7 +16,7 @@
 package consulo.execution.configuration;
 
 import consulo.execution.ExecutionResult;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.process.ExecutionException;

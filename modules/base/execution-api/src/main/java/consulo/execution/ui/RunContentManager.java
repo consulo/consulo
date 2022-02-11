@@ -16,7 +16,7 @@
 package consulo.execution.ui;
 
 import consulo.component.messagebus.Topic;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.event.RunContentWithExecutorListener;

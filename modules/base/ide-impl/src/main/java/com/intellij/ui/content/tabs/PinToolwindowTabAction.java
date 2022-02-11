@@ -18,7 +18,7 @@ package com.intellij.ui.content.tabs;
 import com.intellij.ide.actions.PinActiveTabAction;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.Toggleable;
+import consulo.ui.ex.action.Toggleable;
 
 /**
  * @author spleaner

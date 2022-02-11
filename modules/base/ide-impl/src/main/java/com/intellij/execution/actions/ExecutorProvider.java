@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.actions;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 
 /**
  * User: Vassiliy.Kudryashov

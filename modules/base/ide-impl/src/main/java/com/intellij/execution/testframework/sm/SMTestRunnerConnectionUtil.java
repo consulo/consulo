@@ -16,10 +16,10 @@
 package com.intellij.execution.testframework.sm;
 
 import consulo.process.ExecutionException;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import com.intellij.execution.Location;
-import com.intellij.execution.configurations.CommandLineState;
-import com.intellij.execution.configurations.ModuleRunConfiguration;
+import consulo.execution.configuration.CommandLineState;
+import consulo.execution.configuration.ModuleRunConfiguration;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
@@ -32,7 +32,7 @@ import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerUIActionsHandl
 import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm;
 import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;

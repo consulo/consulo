@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.scope;
 
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;

@@ -37,6 +37,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import com.intellij.psi.search.scope.packageSet.NamedScope;

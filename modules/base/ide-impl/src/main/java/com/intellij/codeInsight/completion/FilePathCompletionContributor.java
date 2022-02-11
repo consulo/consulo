@@ -21,34 +21,34 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.openapi.actionSystem.IdeActions;
-import consulo.virtualFileSystem.fileType.FileNameMatcher;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import consulo.module.Module;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.*;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.util.ArrayUtil;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressManager;
+import consulo.codeInsight.completion.CompletionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.*;
-import com.intellij.psi.search.FilenameIndex;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.ProjectScope;
-import com.intellij.util.ArrayUtil;
 import consulo.language.util.ProcessingContext;
-import consulo.codeInsight.completion.CompletionProvider;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.content.scope.ProjectAwareSearchScope;
+import consulo.project.content.scope.ProjectScopes;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -122,7 +122,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
             if (contextModule != null) {
               final List<FileReferenceHelper> helpers = FileReferenceHelperRegistrar.getHelpers(originalFile);
 
-              final GlobalSearchScope scope = ProjectScope.getProjectScope(project);
+              final ProjectAwareSearchScope scope = ProjectScopes.getProjectScope(project);
               for (final String name : resultNames) {
                 ProgressManager.checkCanceled();
 

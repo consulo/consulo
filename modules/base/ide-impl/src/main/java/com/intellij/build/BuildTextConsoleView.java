@@ -2,12 +2,12 @@
 package com.intellij.build;
 
 import com.intellij.build.events.*;
-import com.intellij.execution.filters.Filter;
+import consulo.execution.ui.console.Filter;
 import com.intellij.execution.filters.LazyFileHyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.process.AnsiEscapeDecoder;
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.project.Project;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.util.dataholder.Key;

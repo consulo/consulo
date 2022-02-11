@@ -17,7 +17,7 @@
 package com.intellij.execution.impl;
 
 import consulo.execution.ExecutionBundle;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;

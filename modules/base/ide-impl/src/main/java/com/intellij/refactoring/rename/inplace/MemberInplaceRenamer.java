@@ -31,8 +31,8 @@ import consulo.language.psi.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.scope.ProjectScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.project.content.scope.ProjectScopes;
+import consulo.content.scope.SearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringBundle;
@@ -149,7 +149,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
   protected SearchScope getReferencesSearchScope(VirtualFile file) {
     PsiFile currentFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myEditor.getDocument());
     return currentFile != null ? new LocalSearchScope(currentFile)
-                               : ProjectScope.getProjectScope(myProject);
+                               : ProjectScopes.getProjectScope(myProject);
   }
 
   @Override

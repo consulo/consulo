@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.service.task.ui;
 
-import consulo.execution.Executor;
-import consulo.execution.ExecutorRegistry;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;

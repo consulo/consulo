@@ -23,7 +23,7 @@ import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PathMacroUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
-import com.intellij.openapi.module.WorkingDirectoryProvider;
+import consulo.execution.WorkingDirectoryProvider;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;

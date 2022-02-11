@@ -1,7 +1,7 @@
 package com.intellij.execution.console;
 
 import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

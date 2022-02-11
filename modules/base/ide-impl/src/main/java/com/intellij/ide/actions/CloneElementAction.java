@@ -20,7 +20,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.copy.CopyHandler;

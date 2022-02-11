@@ -1,40 +1,35 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.impl;
 
-import com.intellij.execution.filters.ConsoleDependentFilterProvider;
-import com.intellij.execution.filters.ConsoleFilterProvider;
-import com.intellij.execution.filters.ConsoleFilterProviderEx;
-import com.intellij.execution.filters.Filter;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
-import consulo.application.ui.UISettings;
-import consulo.editor.*;
-import consulo.editor.colorScheme.*;
-import consulo.language.lexer.Lexer;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.UndoUtil;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.impl.EmptyEditorHighlighter;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import consulo.editor.markup.TextAttributes;
-import consulo.document.Document;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import consulo.project.Project;
-import consulo.ui.color.ColorValue;
-import consulo.util.dataholder.Key;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.ast.IElementType;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.StringTokenizer;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.UISettings;
+import consulo.content.scope.SearchScope;
+import consulo.document.Document;
+import consulo.editor.*;
+import consulo.editor.colorScheme.*;
+import consulo.editor.impl.EmptyEditorHighlighter;
+import consulo.editor.markup.TextAttributes;
+import consulo.execution.ui.console.*;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.Lexer;
+import consulo.project.Project;
+import consulo.ui.color.ColorValue;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -242,9 +237,9 @@ public class ConsoleViewUtil {
   }
 
   @Nonnull
-  public static List<Filter> computeConsoleFilters(@Nonnull Project project, @Nullable ConsoleView consoleView, @Nonnull GlobalSearchScope searchScope) {
+  public static List<Filter> computeConsoleFilters(@Nonnull Project project, @Nullable ConsoleView consoleView, @Nonnull SearchScope searchScope) {
     List<Filter> result = new ArrayList<>();
-    for (ConsoleFilterProvider eachProvider : ConsoleFilterProvider.FILTER_PROVIDERS.getExtensions()) {
+    for (ConsoleFilterProvider eachProvider : ConsoleFilterProvider.FILTER_PROVIDERS.getExtensionList()) {
       Filter[] filters;
       if (consoleView != null && eachProvider instanceof ConsoleDependentFilterProvider) {
         filters = ((ConsoleDependentFilterProvider)eachProvider).getDefaultFilters(consoleView, project, searchScope);

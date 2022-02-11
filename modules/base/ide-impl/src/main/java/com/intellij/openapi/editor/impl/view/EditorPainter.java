@@ -11,7 +11,6 @@ import consulo.language.editor.EditorHighlighter;
 import consulo.language.editor.HighlighterIterator;
 import com.intellij.openapi.editor.impl.*;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
-import com.intellij.openapi.editor.markup.*;
 import consulo.editor.markup.*;
 import consulo.editor.markup.TextAttributesEffectsBuilder.EffectDescriptor;
 import com.intellij.openapi.util.Couple;

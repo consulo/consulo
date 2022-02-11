@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.filters.impl;
 
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.filters.HyperlinkInfoFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

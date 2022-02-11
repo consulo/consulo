@@ -22,7 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import com.intellij.openapi.vcs.update.UpdateInfoTree;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;
 import com.intellij.util.ContentUtilEx;

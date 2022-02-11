@@ -42,10 +42,7 @@ import consulo.application.ui.awt.JBColor;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

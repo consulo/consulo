@@ -17,11 +17,11 @@ package com.intellij.execution.runners;
 
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionManager;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import com.intellij.execution.console.ConsoleExecuteAction;
 import com.intellij.execution.console.LanguageConsoleView;
 import com.intellij.execution.console.ProcessBackedConsoleExecuteActionHandler;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import com.intellij.execution.process.*;
 import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.actions.CloseAction;

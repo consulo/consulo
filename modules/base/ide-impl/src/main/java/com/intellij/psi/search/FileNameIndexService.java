@@ -15,25 +15,25 @@
  */
 package com.intellij.psi.search;
 
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
+import consulo.language.psi.stub.IdFilter;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.function.Processor;
-import consulo.language.psi.stub.IdFilter;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
 interface FileNameIndexService {
   @Nonnull
-  Collection<VirtualFile> getVirtualFilesByName(Project project, @Nonnull String name, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter);
+  Collection<VirtualFile> getVirtualFilesByName(Project project, @Nonnull String name, @Nonnull SearchScope scope, @Nullable IdFilter idFilter);
 
-  void processAllFileNames(@Nonnull Processor<? super String> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter);
+  void processAllFileNames(@Nonnull Processor<? super String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter);
 
   @Nonnull
-  Collection<VirtualFile> getFilesWithFileType(@Nonnull FileType type, @Nonnull GlobalSearchScope scope);
+  Collection<VirtualFile> getFilesWithFileType(@Nonnull FileType type, @Nonnull SearchScope scope);
 
-  boolean processFilesWithFileType(@Nonnull FileType type, @Nonnull Processor<? super VirtualFile> processor, @Nonnull GlobalSearchScope scope);
+  boolean processFilesWithFileType(@Nonnull FileType type, @Nonnull Processor<? super VirtualFile> processor, @Nonnull SearchScope scope);
 }

@@ -1,22 +1,23 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.navigation;
 
+import com.intellij.util.indexing.FindSymbolParameters;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.IdFilter;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
-import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.util.ArrayUtilRt;
-import consulo.application.util.function.Processor;
-import com.intellij.util.indexing.FindSymbolParameters;
-import consulo.language.psi.stub.IdFilter;
-import javax.annotation.Nonnull;
+import consulo.util.collection.ArrayUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public interface ChooseByNameContributorEx extends ChooseByNameContributor {
 
-  void processNames(@Nonnull Processor<String> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter);
+  void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter);
 
   void processElementsWithName(@Nonnull String name, @Nonnull Processor<NavigationItem> processor, @Nonnull FindSymbolParameters parameters);
 
@@ -29,7 +30,7 @@ public interface ChooseByNameContributorEx extends ChooseByNameContributor {
   default String[] getNames(Project project, boolean includeNonProjectItems) {
     List<String> result = new ArrayList<>();
     processNames(result::add, FindSymbolParameters.searchScopeFor(project, includeNonProjectItems), null);
-    return ArrayUtilRt.toStringArray(result);
+    return ArrayUtil.toStringArray(result);
   }
 
   /**

@@ -5,7 +5,7 @@ package com.intellij.usages;
 
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.usageView.UsageInfo;
 import javax.annotation.Nonnull;
 

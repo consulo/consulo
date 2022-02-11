@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import com.intellij.execution.testframework.*;
@@ -23,7 +23,7 @@ import com.intellij.execution.testframework.sm.SMRunnerUtil;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.testframework.ui.TestResultsPanel;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

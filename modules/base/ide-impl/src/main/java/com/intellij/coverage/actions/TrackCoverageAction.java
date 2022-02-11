@@ -7,7 +7,7 @@ package com.intellij.coverage.actions;
 import com.intellij.coverage.CoverageDataManager;
 import com.intellij.coverage.CoverageExecutor;
 import com.intellij.coverage.CoverageSuitesBundle;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import com.intellij.execution.Location;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import consulo.execution.configuration.RunProfile;

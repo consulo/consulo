@@ -16,6 +16,7 @@
 package com.intellij.execution.filters;
 
 import com.intellij.ide.BrowserUtil;
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
 
 /**

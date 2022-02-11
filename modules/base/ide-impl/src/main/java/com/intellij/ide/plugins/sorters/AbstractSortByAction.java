@@ -18,7 +18,7 @@ package com.intellij.ide.plugins.sorters;
 import com.intellij.ide.plugins.PluginTable;
 import com.intellij.ide.plugins.PluginTableModel;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.container.plugin.PluginDescriptor;
 
 /**

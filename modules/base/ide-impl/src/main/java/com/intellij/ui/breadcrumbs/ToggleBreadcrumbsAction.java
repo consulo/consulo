@@ -5,7 +5,7 @@ import consulo.application.ui.UISettings;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import consulo.application.dumb.DumbAware;

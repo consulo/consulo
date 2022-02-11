@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderBase;

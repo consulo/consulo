@@ -15,7 +15,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
+import consulo.editor.colorScheme.CodeInsightColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.markup.GutterIconRenderer;

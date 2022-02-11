@@ -11,7 +11,7 @@ import com.intellij.openapi.editor.impl.view.FontLayoutService;
 import com.intellij.openapi.editor.impl.view.IterationState;
 import consulo.editor.*;
 import consulo.editor.markup.EffectType;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.TextAttributes;
 import consulo.application.util.SystemInfo;

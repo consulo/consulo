@@ -39,7 +39,7 @@ import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.codeStyle.MinusculeMatcher;

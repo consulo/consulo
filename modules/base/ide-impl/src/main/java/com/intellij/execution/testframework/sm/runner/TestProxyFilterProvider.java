@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import com.intellij.execution.filters.Filter;
+import consulo.execution.ui.console.Filter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

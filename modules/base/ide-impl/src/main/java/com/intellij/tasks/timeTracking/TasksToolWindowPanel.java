@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Comparing;
+import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskListenerAdapter;
@@ -24,10 +25,6 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import consulo.application.ui.awt.UIUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.ImageEffects;
 import icons.TasksIcons;
 

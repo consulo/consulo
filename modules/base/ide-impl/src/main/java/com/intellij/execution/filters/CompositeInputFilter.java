@@ -16,7 +16,7 @@
 
 package com.intellij.execution.filters;
 
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;

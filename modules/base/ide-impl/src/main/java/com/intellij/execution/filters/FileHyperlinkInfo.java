@@ -17,12 +17,15 @@
 package com.intellij.execution.filters;
 
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.execution.ui.console.HyperlinkInfo;
+
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  * @since 7.0.3
  */
 public interface FileHyperlinkInfo extends HyperlinkInfo {
-  @javax.annotation.Nullable
+  @Nullable
   OpenFileDescriptor getDescriptor();
 }

@@ -17,13 +17,13 @@ package com.intellij.diagnostic.logging;
 
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.filters.Filter;
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;

@@ -19,7 +19,7 @@ package com.intellij.tools;
 import consulo.process.ExecutionException;
 import consulo.execution.RunnerRegistry;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.process.local.OSProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessListener;

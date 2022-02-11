@@ -18,7 +18,7 @@ package com.intellij.openapi.actionSystem;
 
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.ide.IdeView;
 import consulo.language.Language;

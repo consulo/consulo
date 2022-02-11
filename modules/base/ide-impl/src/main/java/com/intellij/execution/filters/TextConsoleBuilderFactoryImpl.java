@@ -22,10 +22,13 @@
  */
 package com.intellij.execution.filters;
 
+import consulo.content.scope.SearchScope;
+import consulo.execution.ui.console.TextConsoleBuilder;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.project.Project;
-import consulo.language.psi.scope.GlobalSearchScope;
-import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author dyoma
@@ -38,7 +41,7 @@ public class TextConsoleBuilderFactoryImpl extends TextConsoleBuilderFactory {
   }
 
   @Override
-  public TextConsoleBuilder createBuilder(@Nonnull Project project, @Nonnull GlobalSearchScope scope) {
+  public TextConsoleBuilder createBuilder(@Nonnull Project project, @Nonnull SearchScope scope) {
     return new TextConsoleBuilderImpl(project, scope);
   }
 }

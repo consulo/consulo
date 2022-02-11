@@ -21,7 +21,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.language.psi.PsiFile;

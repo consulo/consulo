@@ -20,9 +20,9 @@ import com.intellij.find.FindSettings;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.psi.search.PredefinedSearchScopeProvider;
-import consulo.language.psi.scope.ProjectScope;
+import consulo.project.content.scope.ProjectScopes;
 import com.intellij.psi.search.SearchRequestCollector;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
@@ -61,7 +61,7 @@ public class FindUsagesOptions implements Cloneable {
       }
     }
     if (resultScope == null) {
-      resultScope = ProjectScope.getProjectScope(project);
+      resultScope = ProjectScopes.getProjectScope(project);
     }
     return resultScope;
   }

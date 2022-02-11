@@ -29,7 +29,7 @@ import com.intellij.openapi.ui.Splitter;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.wm.FocusWatcher;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.openapi.wm.impl.IdePanePanel;

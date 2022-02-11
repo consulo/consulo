@@ -26,7 +26,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 
 public class ScopeBasedTodosTreeStructure extends TodoTreeStructure {
   private final ScopeChooserCombo myScopes;

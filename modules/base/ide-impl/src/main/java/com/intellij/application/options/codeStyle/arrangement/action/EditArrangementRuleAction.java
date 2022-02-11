@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle.arrangement.action;
 
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.Toggleable;
+import consulo.ui.ex.action.Toggleable;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.dumb.DumbAware;
 import com.intellij.util.IconUtil;

@@ -26,7 +26,7 @@ import consulo.application.util.function.Computable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import com.intellij.psi.search.PsiElementProcessorAdapter;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.CommonProcessors;

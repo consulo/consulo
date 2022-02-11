@@ -14,7 +14,7 @@ import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import consulo.language.editor.EditorHighlighter;
 import consulo.language.editor.HighlighterIterator;
 import com.intellij.openapi.editor.impl.FontFallbackIterator;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.MarkupModel;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;

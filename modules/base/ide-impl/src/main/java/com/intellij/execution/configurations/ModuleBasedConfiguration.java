@@ -17,6 +17,7 @@
 package com.intellij.execution.configurations;
 
 import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ModuleRunConfiguration;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.language.util.ModuleUtilCore;

@@ -17,10 +17,10 @@ package com.intellij.execution.rmi;
 
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessListener;

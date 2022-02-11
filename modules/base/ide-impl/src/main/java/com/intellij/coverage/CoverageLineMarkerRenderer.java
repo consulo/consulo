@@ -30,7 +30,7 @@ import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.EditorFactory;
 import consulo.editor.ScrollType;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
+import consulo.editor.colorScheme.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorEx;

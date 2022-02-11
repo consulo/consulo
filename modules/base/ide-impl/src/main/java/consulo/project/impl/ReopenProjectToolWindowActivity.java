@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.EmptyRunnable;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;
 

@@ -18,7 +18,8 @@ package com.intellij.execution.ui;
 
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.layout.RunnerLayoutUi;
-import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Gregory.Shrago
@@ -26,6 +27,6 @@ import org.jetbrains.annotations.NonNls;
 public interface ExecutionConsoleEx extends ExecutionConsole {
   void buildUi(final RunnerLayoutUi layoutUi);
 
-  @NonNls @javax.annotation.Nullable
+  @Nullable
   String getExecutionConsoleId();
 }

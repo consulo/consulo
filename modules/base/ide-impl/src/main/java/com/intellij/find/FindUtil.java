@@ -39,7 +39,7 @@ import com.intellij.openapi.editor.event.CaretAdapter;
 import consulo.editor.event.CaretEvent;
 import consulo.editor.event.CaretListener;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;

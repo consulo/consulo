@@ -15,11 +15,13 @@
  */
 package consulo.execution.ui;
 
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.ComponentContainer;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Apr 20, 2004
+ * @since Apr 20, 2004
+ * @see ConsoleView for default implemntation
  */
 public interface ExecutionConsole extends ComponentContainer {
   String CONSOLE_CONTENT_ID = "ConsoleContent";

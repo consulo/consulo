@@ -2,7 +2,7 @@ package com.intellij.remoteServer.configuration.localServer;
 
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguration;

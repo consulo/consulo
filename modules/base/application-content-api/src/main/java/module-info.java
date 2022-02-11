@@ -18,6 +18,7 @@ module consulo.application.content.api {
   exports consulo.content.base;
   exports consulo.content.bundle;
   exports consulo.content.bundle.event;
+  exports consulo.content.scope;
   exports consulo.content.library;
   exports consulo.content.library.ui;
 }

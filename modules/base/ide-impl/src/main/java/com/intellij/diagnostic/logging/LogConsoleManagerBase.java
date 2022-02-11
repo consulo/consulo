@@ -16,18 +16,18 @@
 package com.intellij.diagnostic.logging;
 
 import com.intellij.execution.configurations.RunConfigurationBase;
-import consulo.execution.configuration.RunProfile;
-import consulo.process.ProcessHandler;
-import consulo.execution.ui.layout.RunnerLayoutUi;
-import consulo.project.Project;
-import consulo.ui.ex.ComponentWithActions;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.ContentManagerAdapter;
-import consulo.ui.ex.content.event.ContentManagerEvent;
 import com.intellij.util.ArrayUtil;
+import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.process.ProcessHandler;
+import consulo.project.Project;
+import consulo.ui.ex.ComponentWithActions;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -40,9 +40,9 @@ import java.util.Map;
 public abstract class LogConsoleManagerBase implements LogConsoleManager, Disposable {
   private final Project myProject;
   private final Map<AdditionalTabComponent, Content> myAdditionalContent = new HashMap<AdditionalTabComponent, Content>();
-  private final GlobalSearchScope mySearchScope;
+  private final SearchScope mySearchScope;
 
-  protected LogConsoleManagerBase(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
+  protected LogConsoleManagerBase(@Nonnull Project project, @Nonnull SearchScope searchScope) {
     myProject = project;
     mySearchScope = searchScope;
   }

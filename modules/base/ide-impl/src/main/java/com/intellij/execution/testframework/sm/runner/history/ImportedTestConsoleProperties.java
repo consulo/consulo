@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.testframework.sm.runner.history;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import com.intellij.execution.Location;
 import consulo.execution.configuration.RunProfile;
-import com.intellij.execution.filters.Filter;
+import consulo.execution.ui.console.Filter;
 import consulo.process.ProcessHandler;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.actions.AbstractRerunFailedTestsAction;
@@ -27,7 +27,7 @@ import com.intellij.execution.testframework.sm.runner.OutputToGeneralTestEventsC
 import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.SMTestLocator;
 import com.intellij.execution.testframework.sm.runner.TestProxyFilterProvider;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;

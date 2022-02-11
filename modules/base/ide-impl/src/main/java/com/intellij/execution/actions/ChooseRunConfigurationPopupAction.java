@@ -16,15 +16,15 @@
 
 package com.intellij.execution.actions;
 
-import consulo.execution.Executor;
-import consulo.execution.ExecutorRegistry;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 
 public class ChooseRunConfigurationPopupAction extends AnAction {
   @Override

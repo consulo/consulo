@@ -17,7 +17,7 @@
 package com.intellij.execution.runners;
 
 import consulo.execution.configuration.RunProfile;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import javax.annotation.Nonnull;
 
 /**

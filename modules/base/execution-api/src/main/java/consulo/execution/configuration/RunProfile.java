@@ -15,7 +15,7 @@
  */
 package consulo.execution.configuration;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.process.ExecutionException;
 import consulo.project.Project;

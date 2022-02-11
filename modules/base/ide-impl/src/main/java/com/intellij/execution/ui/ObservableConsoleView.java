@@ -17,6 +17,8 @@
 package com.intellij.execution.ui;
 
 import consulo.disposer.Disposable;
+import consulo.execution.ui.console.ConsoleViewContentType;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

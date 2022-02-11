@@ -16,6 +16,7 @@
 package consulo.execution;
 
 import consulo.execution.configuration.*;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.ProgramRunner;
 
 import javax.annotation.Nonnull;

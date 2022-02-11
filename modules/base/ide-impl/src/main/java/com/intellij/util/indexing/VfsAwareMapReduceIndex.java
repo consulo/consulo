@@ -2,26 +2,26 @@
 
 package com.intellij.util.indexing;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.application.progress.ProgressManager;
-import consulo.index.io.ID;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.language.psi.stub.IdFilter;
-import consulo.util.io.ByteArraySequence;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;
-import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
-import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.*;
 import com.intellij.util.indexing.impl.forward.*;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
+import consulo.index.io.ID;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.IdFilter;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.io.ByteArraySequence;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -246,7 +246,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   @Override
-  public boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
+  public boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
     final Lock lock = getReadLock();
     lock.lock();
     try {

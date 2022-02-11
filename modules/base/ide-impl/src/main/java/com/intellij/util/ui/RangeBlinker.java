@@ -18,11 +18,7 @@ package com.intellij.util.ui;
 
 import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.markup.*;
-import consulo.editor.markup.HighlighterTargetArea;
-import consulo.editor.markup.MarkupModel;
-import consulo.editor.markup.RangeHighlighter;
-import consulo.editor.markup.TextAttributes;
+import consulo.editor.markup.*;
 import consulo.project.Project;
 import consulo.document.util.Segment;
 import consulo.project.ui.util.Alarm;

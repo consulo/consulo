@@ -33,7 +33,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 import consulo.language.psi.PsiElement;

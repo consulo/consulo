@@ -7,7 +7,7 @@ import com.intellij.ide.util.treeView.WeighedItem;
 import consulo.application.ReadAction;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.util.ColoredItem;

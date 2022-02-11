@@ -1,19 +1,18 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing.hash;
 
-import consulo.application.util.function.Computable;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.language.psi.stub.IdFilter;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.application.util.function.Processor;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.AbstractUpdateData;
 import com.intellij.util.indexing.provided.ProvidedIndexExtension;
-import javax.annotation.Nonnull;
-
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.IdFilter;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +94,7 @@ public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Valu
   }
 
   @Override
-  public boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
+  public boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
     return myBaseIndex.processAllKeys(processor, scope, idFilter) && myProvidedIndex.processAllKeys(processor, scope, idFilter);
   }
 

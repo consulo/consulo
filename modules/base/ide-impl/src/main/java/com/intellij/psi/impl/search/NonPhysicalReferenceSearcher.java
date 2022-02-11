@@ -14,7 +14,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;

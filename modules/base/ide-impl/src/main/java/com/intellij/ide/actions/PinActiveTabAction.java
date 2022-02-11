@@ -23,6 +23,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Toggleable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.ui.ex.content.Content;

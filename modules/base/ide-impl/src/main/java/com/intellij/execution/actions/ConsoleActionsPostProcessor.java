@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.actions;
 
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;

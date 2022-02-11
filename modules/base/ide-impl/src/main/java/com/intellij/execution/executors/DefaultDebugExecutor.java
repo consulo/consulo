@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.executors;
 
-import consulo.execution.Executor;
-import consulo.execution.ExecutorRegistry;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
 import consulo.application.AllIcons;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
 import com.intellij.xdebugger.XDebuggerBundle;
 import consulo.ui.image.Image;

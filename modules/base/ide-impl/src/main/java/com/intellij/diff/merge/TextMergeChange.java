@@ -26,7 +26,7 @@ import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.editor.markup.GutterIconRenderer;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.application.util.registry.Registry;

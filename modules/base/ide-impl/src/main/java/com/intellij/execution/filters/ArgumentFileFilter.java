@@ -1,6 +1,7 @@
 package com.intellij.execution.filters;
 
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.execution.ui.console.Filter;
 
 import javax.annotation.Nullable;
 import java.io.File;

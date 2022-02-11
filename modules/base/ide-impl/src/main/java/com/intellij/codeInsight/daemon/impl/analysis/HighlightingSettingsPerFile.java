@@ -16,31 +16,31 @@
 
 package com.intellij.codeInsight.daemon.impl.analysis;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.psi.SingleRootFileViewProvider;
+import com.intellij.psi.util.PsiUtilBase;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.*;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
+import consulo.project.content.scope.ProjectScopes;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import com.intellij.psi.SingleRootFileViewProvider;
-import consulo.language.psi.scope.ProjectScope;
-import com.intellij.psi.util.PsiUtilBase;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 import java.util.*;
 
 @Singleton
@@ -181,7 +181,7 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
     if (ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile)) return false;
 
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    if (ProjectScope.getLibrariesScope(project).contains(virtualFile) && !fileIndex.isInContent(virtualFile)) return false;
+    if (ProjectScopes.getLibrariesScope(project).contains(virtualFile) && !fileIndex.isInContent(virtualFile)) return false;
 
     if (SingleRootFileViewProvider.isTooLargeForIntelligence(virtualFile)) return false;
 

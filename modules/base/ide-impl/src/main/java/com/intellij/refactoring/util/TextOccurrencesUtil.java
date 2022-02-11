@@ -26,7 +26,7 @@ import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.logging.Logger;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.util.function.Computable;

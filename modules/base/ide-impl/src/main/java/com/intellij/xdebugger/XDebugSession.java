@@ -17,7 +17,7 @@
 package com.intellij.xdebugger;
 
 import consulo.execution.configuration.RunProfile;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.application.AllIcons;

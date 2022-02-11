@@ -1,25 +1,27 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing;
 
+import com.intellij.psi.search.EverythingGlobalScope;
+import com.intellij.util.ObjectUtils;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.content.scope.ProjectScopes;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IdFilter;
 import consulo.project.Project;
+import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.virtualFileSystem.HiddenFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.EverythingGlobalScope;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.ProjectScope;
-import com.intellij.util.ObjectUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class FindSymbolParameters {
   private final String myCompletePattern;
   private final String myLocalPatternName;
-  private final GlobalSearchScope mySearchScope;
+  private final ProjectAwareSearchScope mySearchScope;
   private final IdFilter myIdFilter;
 
-  public FindSymbolParameters(@Nonnull String pattern, @Nonnull String name, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) {
+  public FindSymbolParameters(@Nonnull String pattern, @Nonnull String name, @Nonnull ProjectAwareSearchScope scope, @Nullable IdFilter idFilter) {
     myCompletePattern = pattern;
     myLocalPatternName = name;
     mySearchScope = scope;
@@ -49,7 +51,7 @@ public class FindSymbolParameters {
   }
 
   @Nonnull
-  public GlobalSearchScope getSearchScope() {
+  public ProjectAwareSearchScope getSearchScope() {
     return mySearchScope;
   }
 
@@ -80,10 +82,10 @@ public class FindSymbolParameters {
   }
 
   @Nonnull
-  public static GlobalSearchScope searchScopeFor(@Nullable Project project, boolean searchInLibraries) {
-    GlobalSearchScope baseScope = project == null ? new EverythingGlobalScope() : searchInLibraries ? ProjectScope.getAllScope(project) : ProjectScope.getProjectScope(project);
+  public static ProjectAwareSearchScope searchScopeFor(@Nullable Project project, boolean searchInLibraries) {
+    ProjectAwareSearchScope baseScope = project == null ? new EverythingGlobalScope() : searchInLibraries ? ProjectScopes.getAllScope(project) : ProjectScopes.getProjectScope(project);
 
-    return baseScope.intersectWith(new EverythingGlobalScope(project) {
+    return (ProjectAwareSearchScope)baseScope.intersectWith(new EverythingGlobalScope(project) {
       @Override
       public boolean contains(@Nonnull VirtualFile file) {
         return !(file.getFileSystem() instanceof HiddenFileSystem);

@@ -8,7 +8,7 @@ import com.intellij.lang.LangBundle;
 import com.intellij.notification.Notification;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Toggleable;
+import consulo.ui.ex.action.Toggleable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;

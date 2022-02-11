@@ -15,12 +15,12 @@
  */
 package com.intellij.execution.testframework.ui;
 
-import com.intellij.execution.filters.Filter;
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.ProcessHandler;
 import com.intellij.execution.testframework.*;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.execution.ui.ObservableConsoleView;
 import consulo.ui.ex.HelpIdProvider;
 import consulo.disposer.Disposable;

@@ -16,10 +16,12 @@
 package com.intellij.execution;
 
 import com.intellij.execution.actions.RunContextAction;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import com.intellij.execution.impl.ExecutionManagerImpl;
 import consulo.execution.*;
 import consulo.execution.event.ExecutionListener;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;

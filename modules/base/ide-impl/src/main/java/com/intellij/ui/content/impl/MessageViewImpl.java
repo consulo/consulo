@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;
 import com.intellij.ui.content.MessageView;

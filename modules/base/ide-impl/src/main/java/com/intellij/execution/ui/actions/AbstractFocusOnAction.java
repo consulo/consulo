@@ -18,7 +18,7 @@ package com.intellij.execution.ui.actions;
 
 import com.intellij.execution.ui.layout.ViewContext;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.Toggleable;
+import consulo.ui.ex.action.Toggleable;
 import consulo.ui.ex.content.Content;
 import javax.annotation.Nonnull;
 

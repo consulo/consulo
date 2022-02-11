@@ -39,7 +39,7 @@ import com.intellij.psi.impl.source.tree.*;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.resolve.PsiElementProcessor;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.psi.stubs.*;
 import com.intellij.psi.tree.*;
 import consulo.language.psi.util.PsiTreeUtil;

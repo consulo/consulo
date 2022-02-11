@@ -16,7 +16,7 @@
 package com.intellij.remoteServer.impl.configuration.deployment;
 
 import consulo.process.ExecutionException;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.configuration.ConfigurationFactory;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import consulo.execution.configuration.RunProfileState;

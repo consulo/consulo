@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;
 import consulo.execution.configuration.RunConfiguration;
 

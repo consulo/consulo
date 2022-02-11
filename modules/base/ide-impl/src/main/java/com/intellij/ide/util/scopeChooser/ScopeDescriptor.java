@@ -3,7 +3,7 @@ package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.openapi.util.ColoredItem;
 import com.intellij.openapi.util.Comparing;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

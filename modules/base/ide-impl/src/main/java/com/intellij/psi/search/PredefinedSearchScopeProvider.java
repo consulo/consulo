@@ -17,7 +17,7 @@ package com.intellij.psi.search;
 
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

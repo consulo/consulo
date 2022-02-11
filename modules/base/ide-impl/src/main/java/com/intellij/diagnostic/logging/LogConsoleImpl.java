@@ -16,12 +16,13 @@
 
 package com.intellij.diagnostic.logging;
 
-import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.nio.charset.Charset;
 
@@ -55,7 +56,7 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
                         long skippedContents,
                         String title,
                         final boolean buildInActions,
-                        final GlobalSearchScope searchScope) {
+                        final SearchScope searchScope) {
     super(project, getReader(file, charset, skippedContents), title, buildInActions, new DefaultLogFilterModel(project),
           searchScope);
     myPath = file.getAbsolutePath();

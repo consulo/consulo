@@ -20,7 +20,7 @@ import com.intellij.lang.LangBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
 

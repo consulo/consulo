@@ -16,12 +16,12 @@
 package com.intellij.execution.console;
 
 import consulo.execution.ExecutionManager;
-import consulo.execution.Executor;
-import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.ide.scratch.ScratchFileService;

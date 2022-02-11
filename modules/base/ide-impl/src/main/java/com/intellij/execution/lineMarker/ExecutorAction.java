@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.lineMarker;
 
-import consulo.execution.Executor;
-import consulo.execution.ExecutorRegistry;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
 import com.intellij.execution.actions.*;
 import consulo.execution.configuration.LocatableConfiguration;
 import consulo.execution.configuration.RunConfiguration;

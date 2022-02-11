@@ -15,15 +15,19 @@
  */
 package consulo.language.psi.scope;
 
+import consulo.content.scope.BaseSearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.scope.internal.ModuleScopeProvider;
+import consulo.module.content.scope.ModuleScopeProvider;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.UnloadedModuleDescription;
+import consulo.module.content.scope.ModuleAwareSearchScope;
 import consulo.project.Project;
+import consulo.project.content.scope.ProjectScopes;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
@@ -37,7 +41,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public abstract class GlobalSearchScope extends SearchScope implements ProjectAwareFileFilter {
+public abstract class GlobalSearchScope extends BaseSearchScope implements ModuleAwareSearchScope {
   private static final Logger LOG = Logger.getInstance(GlobalSearchScope.class);
   @Nullable
   private final Project myProject;
@@ -69,8 +73,10 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
   // optimization methods:
 
+  @Override
   public abstract boolean isSearchInModuleContent(@Nonnull Module aModule);
 
+  @Override
   public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
     return isSearchInModuleContent(aModule);
   }
@@ -80,8 +86,10 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     return contains(file);
   }
 
+  @Override
   public abstract boolean isSearchInLibraries();
 
+  @Override
   public boolean isForceSearchingInLibrarySources() {
     return false;
   }
@@ -90,11 +98,13 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
    * Returns descriptions of unloaded modules content of whose might be included into this scope if they had been loaded. Actually search in
    * unloaded modules isn't performed, so this method is used to determine whether a warning about possible missing results should be shown.
    */
+  @Override
   @Nonnull
   public Collection<UnloadedModuleDescription> getUnloadedModulesBelongingToScope() {
     return Collections.emptySet();
   }
 
+  @Override
   public boolean isSearchOutsideRootModel() {
     return false;
   }
@@ -194,18 +204,18 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
   @Nonnull
   public static GlobalSearchScope allScope(@Nonnull Project project) {
-    return ProjectScope.getAllScope(project);
+    return (GlobalSearchScope)ProjectScopes.getAllScope(project);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static GlobalSearchScope everythingScope(@Nonnull Project project) {
-    return ProjectScope.getEverythingScope(project);
+    return (GlobalSearchScope)ProjectScopes.getEverythingScope(project);
   }
 
   @Nonnull
   public static GlobalSearchScope projectScope(@Nonnull Project project) {
-    return ProjectScope.getProjectScope(project);
+    return (GlobalSearchScope)ProjectScopes.getProjectScope(project);
   }
 
   @Nonnull
@@ -257,7 +267,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
    */
   @Nonnull
   public static GlobalSearchScope moduleScope(@Nonnull Module module) {
-    return ModuleScopeProvider.getInstance(module).getModuleScope();
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleScope();
   }
 
   /**
@@ -269,12 +279,12 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
    */
   @Nonnull
   public static GlobalSearchScope moduleScope(@Nonnull Module module, boolean includeTests) {
-    return ModuleScopeProvider.getInstance(module).getModuleScope(includeTests);
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleScope(includeTests);
   }
 
   @Nonnull
   public static GlobalSearchScope moduleContentScope(@Nonnull Module module) {
-    return ModuleScopeProvider.getInstance(module).getModuleContentScope();
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleContentScope();
   }
 
   /**
@@ -285,7 +295,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
    */
   @Nonnull
   public static GlobalSearchScope moduleWithLibrariesScope(@Nonnull Module module) {
-    return ModuleScopeProvider.getInstance(module).getModuleWithLibrariesScope();
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithLibrariesScope();
   }
 
   /**
@@ -296,12 +306,12 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
    */
   @Nonnull
   public static GlobalSearchScope moduleWithDependenciesScope(@Nonnull Module module) {
-    return ModuleScopeProvider.getInstance(module).getModuleWithDependenciesScope();
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithDependenciesScope();
   }
 
   @Nonnull
   public static GlobalSearchScope moduleRuntimeScope(@Nonnull Module module, final boolean includeTests) {
-    return ModuleScopeProvider.getInstance(module).getModuleRuntimeScope(includeTests);
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleRuntimeScope(includeTests);
   }
 
   @Nonnull
@@ -311,22 +321,22 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
   @Nonnull
   public static GlobalSearchScope moduleWithDependenciesAndLibrariesScope(@Nonnull Module module, boolean includeTests) {
-    return ModuleScopeProvider.getInstance(module).getModuleWithDependenciesAndLibrariesScope(includeTests);
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithDependenciesAndLibrariesScope(includeTests);
   }
 
   @Nonnull
   public static GlobalSearchScope moduleWithDependentsScope(@Nonnull Module module) {
-    return ModuleScopeProvider.getInstance(module).getModuleWithDependentsScope();
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithDependentsScope();
   }
 
   @Nonnull
   public static GlobalSearchScope moduleTestsWithDependentsScope(@Nonnull Module module) {
-    return ModuleScopeProvider.getInstance(module).getModuleTestsWithDependentsScope();
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleTestsWithDependentsScope();
   }
 
   @Nonnull
   public static GlobalSearchScope moduleContentWithDependenciesScope(@Nonnull Module module) {
-    return ModuleScopeProvider.getInstance(module).getModuleContentWithDependenciesScope();
+    return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleContentWithDependenciesScope();
   }
 
   @Nonnull

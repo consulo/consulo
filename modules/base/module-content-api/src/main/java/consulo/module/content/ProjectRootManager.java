@@ -35,6 +35,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    * @param project the project for which the instance is requested.
    * @return the instance.
    */
+  @Nonnull
   public static ProjectRootManager getInstance(Project project) {
     return project.getComponent(ProjectRootManager.class);
   }

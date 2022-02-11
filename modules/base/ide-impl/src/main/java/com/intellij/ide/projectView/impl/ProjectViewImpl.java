@@ -16,6 +16,7 @@
 
 package com.intellij.ide.projectView.impl;
 
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;
@@ -80,7 +81,6 @@ import consulo.project.ui.wm.ToolWindowContentUiType;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.psi.impl.file.PsiPackageHelper;

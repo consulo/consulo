@@ -39,7 +39,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;

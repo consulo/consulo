@@ -19,8 +19,9 @@ import com.intellij.diagnostic.logging.LogConsoleManagerBase;
 import com.intellij.diagnostic.logging.LogFilesManager;
 import com.intellij.diagnostic.logging.OutputFileUtil;
 import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.content.scope.SearchScope;
 import consulo.execution.configuration.RunProfile;
-import com.intellij.execution.configurations.SearchScopeProvider;
+import consulo.execution.configuration.ExecutionSearchScopeProvider;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.ExecutionConsole;
@@ -46,13 +47,13 @@ public abstract class RunTab implements DataProvider, Disposable {
 
   protected ExecutionEnvironment myEnvironment;
   protected final Project myProject;
-  private final GlobalSearchScope mySearchScope;
+  private final SearchScope mySearchScope;
 
   private LogConsoleManagerBase logConsoleManager;
 
   protected RunTab(@Nonnull ExecutionEnvironment environment, @Nonnull String runnerType) {
     this(environment.getProject(),
-         SearchScopeProvider.createSearchScope(environment.getProject(), environment.getRunProfile()),
+         ExecutionSearchScopeProvider.createSearchScope(environment.getProject(), environment.getRunProfile()),
          runnerType,
          environment.getExecutor().getId(),
          environment.getRunProfile().getName());
@@ -67,7 +68,7 @@ public abstract class RunTab implements DataProvider, Disposable {
     logConsoleManager = null;
   }
 
-  protected RunTab(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope, @Nonnull String runnerType, @Nonnull String runnerTitle, @Nonnull String sessionName) {
+  protected RunTab(@Nonnull Project project, @Nonnull SearchScope searchScope, @Nonnull String runnerType, @Nonnull String runnerTitle, @Nonnull String sessionName) {
     myProject = project;
     mySearchScope = searchScope;
 

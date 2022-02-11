@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.component.messagebus.Topic;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;

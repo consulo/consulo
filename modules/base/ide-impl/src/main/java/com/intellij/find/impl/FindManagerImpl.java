@@ -58,7 +58,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.patterns.StringPattern;
 import com.intellij.psi.*;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import com.intellij.ui.LightweightHint;

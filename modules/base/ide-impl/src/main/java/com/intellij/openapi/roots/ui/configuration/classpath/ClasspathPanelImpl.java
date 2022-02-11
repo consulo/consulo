@@ -49,7 +49,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetHandler;
 import consulo.language.psi.PsiFile;

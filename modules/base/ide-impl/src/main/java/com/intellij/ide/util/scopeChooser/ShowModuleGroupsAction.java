@@ -22,7 +22,7 @@ package com.intellij.ide.util.scopeChooser;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import consulo.ui.ex.action.ToggleAction;
 import com.intellij.packageDependencies.DependencyUISettings;
 
 public class ShowModuleGroupsAction extends ToggleAction {

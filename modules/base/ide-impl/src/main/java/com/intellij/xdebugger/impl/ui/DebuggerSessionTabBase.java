@@ -22,7 +22,7 @@ import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.RunContentBuilder;
 import com.intellij.execution.runners.RunTab;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.ObservableConsoleView;
 import consulo.execution.ui.RunContentManager;

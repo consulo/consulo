@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.impl;
 
-import com.intellij.execution.filters.HyperlinkInfo;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Queue;

@@ -14,7 +14,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.ValidateableNode;
 import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
+import consulo.editor.colorScheme.CodeInsightColors;
 import consulo.module.Module;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;

@@ -5,7 +5,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import consulo.application.util.function.Processor;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 
 import javax.annotation.Nonnull;
 

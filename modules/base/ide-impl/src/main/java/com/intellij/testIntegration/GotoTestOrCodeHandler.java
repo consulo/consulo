@@ -19,7 +19,7 @@ package com.intellij.testIntegration;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.navigation.GotoTargetHandler;
 import com.intellij.codeInsight.navigation.NavigationUtil;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.Shortcut;
 import consulo.editor.Editor;

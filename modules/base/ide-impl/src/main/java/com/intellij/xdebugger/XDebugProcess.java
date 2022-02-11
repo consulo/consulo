@@ -16,7 +16,7 @@
 
 package com.intellij.xdebugger;
 
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.execution.runner.ProgramRunner;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.ExecutionConsole;

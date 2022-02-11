@@ -4,6 +4,7 @@
  */
 module consulo.language.api {
   requires transitive consulo.module.content.api;
+  requires transitive consulo.project.content.api;
   requires transitive consulo.document.api;
   requires transitive consulo.index.io;
   requires transitive consulo.navigation.api;
@@ -26,7 +27,6 @@ module consulo.language.api {
   exports consulo.language.psi.meta;
   exports consulo.language.psi.resolve;
   exports consulo.language.psi.scope;
-  exports consulo.language.psi.scope.internal to consulo.ide.impl;
   exports consulo.language.psi.stub;
 
   exports consulo.language.psi.util;

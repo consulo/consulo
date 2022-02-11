@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.awt.Gray;
 import consulo.application.ui.awt.JBColor;

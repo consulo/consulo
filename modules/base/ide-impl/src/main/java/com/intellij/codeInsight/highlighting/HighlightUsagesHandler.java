@@ -31,7 +31,7 @@ import consulo.editor.Editor;
 import consulo.editor.SelectionModel;
 import com.intellij.openapi.editor.colors.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
-import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;
 import consulo.component.extension.Extensions;

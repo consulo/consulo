@@ -17,9 +17,9 @@ package com.intellij.build;
 
 import com.intellij.build.events.BuildEventsNls;
 import com.intellij.build.process.BuildProcessHandler;
-import com.intellij.execution.filters.Filter;
+import consulo.execution.ui.console.Filter;
 import consulo.execution.runner.ExecutionEnvironment;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.util.Consumer;

@@ -71,9 +71,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.scope.ProjectScope;
+import consulo.project.content.scope.ProjectScopes;
 import com.intellij.psi.search.PsiSearchHelper;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringActionHandler;
@@ -235,7 +235,7 @@ public abstract class InplaceRefactoring {
 
   protected SearchScope getReferencesSearchScope(VirtualFile file) {
     return file == null || ProjectRootManager.getInstance(myProject).getFileIndex().isInContent(file)
-           ? ProjectScope.getProjectScope(myElementToRename.getProject())
+           ? ProjectScopes.getProjectScope(myElementToRename.getProject())
            : new LocalSearchScope(myElementToRename.getContainingFile());
   }
 

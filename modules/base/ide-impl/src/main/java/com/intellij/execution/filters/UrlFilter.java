@@ -1,18 +1,22 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.filters;
 
-import consulo.execution.ExecutionBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.browsers.OpenUrlHyperlinkInfo;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.io.URLUtil;
+import consulo.application.dumb.DumbAware;
+import consulo.content.scope.SearchScope;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ui.console.ConsoleFilterProviderEx;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -96,7 +100,7 @@ public class UrlFilter implements Filter, DumbAware {
   public static class UrlFilterProvider implements ConsoleFilterProviderEx {
     @Override
     @Nonnull
-    public Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull GlobalSearchScope scope) {
+    public Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull SearchScope scope) {
       return new Filter[]{new UrlFilter(project)};
     }
 

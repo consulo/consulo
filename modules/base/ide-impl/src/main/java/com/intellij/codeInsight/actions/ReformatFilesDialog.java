@@ -21,7 +21,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.SearchScope;
+import consulo.content.scope.SearchScope;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

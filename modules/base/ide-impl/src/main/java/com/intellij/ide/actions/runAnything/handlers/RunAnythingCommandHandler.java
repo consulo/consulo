@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions.runAnything.handlers;
 
-import com.intellij.execution.filters.TextConsoleBuilder;
+import consulo.execution.ui.console.TextConsoleBuilder;
 import com.intellij.execution.process.KillableProcessHandler;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;

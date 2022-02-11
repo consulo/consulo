@@ -210,7 +210,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
                                                                                   @Nonnull List<MatchResult> fileNames,
                                                                                   @Nonnull DirectoryPathMatcher dirMatcher,
                                                                                   @Nonnull ProgressIndicator indicator) {
-    GlobalSearchScope scope = dirMatcher.narrowDown(parameters.getSearchScope());
+    GlobalSearchScope scope = dirMatcher.narrowDown((GlobalSearchScope)parameters.getSearchScope());
     FindSymbolParameters adjusted = parameters.withScope(scope);
 
     List<List<MatchResult>> sortedNames = sortAndGroup(fileNames, Comparator.comparing(mr -> StringUtil.toLowerCase(FileUtilRt.getNameWithoutExtension(mr.elementName))));

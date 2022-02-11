@@ -18,26 +18,23 @@ package com.intellij.execution.testframework.ui;
 import com.intellij.execution.impl.ConsoleState;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.impl.ConsoleViewRunningState;
+import consulo.content.scope.SearchScope;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
-import consulo.language.psi.scope.GlobalSearchScope;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
  */
 public class TestsConsoleViewImpl extends ConsoleViewImpl {
-
-  public TestsConsoleViewImpl(final Project project,
-                              final GlobalSearchScope searchScope,
-                              final boolean viewer,
-                              boolean usePredefinedMessageFilter) {
-    super(project, searchScope, viewer,
-          new ConsoleState.NotStartedStated() {
-            @Override
-            public ConsoleState attachTo(ConsoleViewImpl console, ProcessHandler processHandler) {
-              return new ConsoleViewRunningState(console, processHandler, this, false, !viewer);
-            }
-          },
-          usePredefinedMessageFilter);
+  public TestsConsoleViewImpl(final Project project, final SearchScope searchScope, final boolean viewer, boolean usePredefinedMessageFilter) {
+    super(project, searchScope, viewer, new ConsoleState.NotStartedStated() {
+      @Nonnull
+      @Override
+      public ConsoleState attachTo(@Nonnull ConsoleViewImpl console, ProcessHandler processHandler) {
+        return new ConsoleViewRunningState(console, processHandler, this, false, !viewer);
+      }
+    }, usePredefinedMessageFilter);
   }
 }

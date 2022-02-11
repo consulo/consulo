@@ -18,8 +18,8 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.scope.ProjectScope;
-import consulo.language.psi.scope.SearchScope;
+import consulo.project.content.scope.ProjectScopes;
+import consulo.content.scope.SearchScope;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.application.progress.ProgressIndicator;
@@ -617,7 +617,7 @@ public class FindInProjectUtil {
            // because all found usages are guaranteed to be not in excluded dir
            directory != null
            ? forDirectory(project, findModel.isWithSubdirectories(), directory)
-           : module != null ? GlobalSearchScope.moduleContentScope(module) : findModel.isProjectScope() ? ProjectScope.getContentScope(project) : GlobalSearchScope.allScope(project);
+           : module != null ? GlobalSearchScope.moduleContentScope(module) : findModel.isProjectScope() ? ProjectScopes.getContentScope(project) : GlobalSearchScope.allScope(project);
   }
 
   @Nonnull

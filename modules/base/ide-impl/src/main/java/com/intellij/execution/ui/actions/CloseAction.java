@@ -17,7 +17,7 @@ package com.intellij.execution.ui.actions;
 
 import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionManager;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;

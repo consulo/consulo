@@ -15,6 +15,7 @@
  */
 package com.intellij.execution.filters;
 
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
 import javax.annotation.Nonnull;

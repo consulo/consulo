@@ -94,7 +94,7 @@
       <with attribute="instance" implements="com.intellij.application.options.GeneralCodeStyleOptionsProvider"/>
     </extensionPoint>
 
-    <extensionPoint name="module.workingDirectoryProvider" interface="com.intellij.openapi.module.WorkingDirectoryProvider"/>
+    <extensionPoint name="module.workingDirectoryProvider" interface="consulo.execution.WorkingDirectoryProvider"/>
 
     <extensionPoint name="selectInTarget"
                     interface="com.intellij.ide.SelectInTarget"
@@ -759,7 +759,7 @@
                     interface="consulo.execution.runner.ProgramRunner"/>
 
     <extensionPoint name="executor"
-                    interface="consulo.execution.Executor"/>
+                    interface="consulo.execution.executor.Executor"/>
 
     <extensionPoint name="executionTargetProvider"
                     interface="consulo.execution.ExecutionTargetProvider"/>
@@ -771,7 +771,7 @@
 
     <extensionPoint name="utf8BomOptionProvider" interface="com.intellij.openapi.vfs.encoding.Utf8BomOptionProvider"/>
 
-    <extensionPoint name="consoleFilterProvider" interface="com.intellij.execution.filters.ConsoleFilterProvider"/>
+    <extensionPoint name="consoleFilterProvider" interface="consulo.execution.ui.console.ConsoleFilterProvider"/>
     <extensionPoint name="consoleInputFilterProvider" interface="com.intellij.execution.filters.ConsoleInputFilterProvider"/>
     <extensionPoint name="consoleActionsPostProcessor" interface="com.intellij.execution.actions.ConsoleActionsPostProcessor"/>
 
@@ -1114,7 +1114,7 @@
 
     <extensionPoint name="typeIcon" beanClass="com.intellij.ide.TypeIconEP"/>
 
-    <extensionPoint name="analyzeStacktraceFilter" interface="com.intellij.execution.filters.Filter" area="PROJECT"/>
+    <extensionPoint name="analyzeStacktraceFilter" interface="consulo.execution.ui.console.Filter" area="PROJECT"/>
 
     <extensionPoint name="stacktrace.fold" beanClass="com.intellij.execution.console.CustomizableConsoleFoldingBean"/>
     <extensionPoint name="changeSignatureDetector"
@@ -1712,7 +1712,7 @@
     <applicationService serviceInterface="com.intellij.refactoring.RefactoringActionHandlerFactory"
                         serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringActionHandlerFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.execution.filters.TextConsoleBuilderFactory"
+    <applicationService serviceInterface="consulo.execution.ui.console.TextConsoleBuilderFactory"
                         serviceImplementation="com.intellij.execution.filters.TextConsoleBuilderFactoryImpl"/>
 
     <applicationService serviceInterface="consulo.language.parser.PsiBuilderFactory"
@@ -1889,8 +1889,8 @@
     <projectService serviceInterface="com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable"
                     serviceImplementation="com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable"/>
 
-    <projectService serviceInterface="consulo.language.psi.scope.internal.ProjectScopeBuilder"
-                    serviceImplementation="com.intellij.psi.search.ProjectScopeBuilderImpl"/>
+    <projectService serviceInterface="consulo.project.content.scope.ProjectScopeProvider"
+                    serviceImplementation="com.intellij.psi.search.ProjectScopeProviderImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.module.ProjectLoadingErrorsNotifier"
                     serviceImplementation="com.intellij.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>
@@ -1966,7 +1966,7 @@
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
     <moduleService serviceInterface="consulo.module.content.ModuleRootManager"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>
-    <moduleService serviceInterface="consulo.language.psi.scope.internal.ModuleScopeProvider"
+    <moduleService serviceInterface="consulo.module.content.scope.ModuleScopeProvider"
                    serviceImplementation="com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl"/>
     <projectService serviceInterface="consulo.project.content.ProjectRootModificationTracker"
                     serviceImplementation="com.intellij.openapi.roots.ProjectRootModificationTrackerImpl"/>
@@ -2170,7 +2170,7 @@
     <filePropertyPusher implementation="com.intellij.psi.templateLanguages.TemplateDataLanguagePusher"/>
 
     <!-- execution -->
-    <executor implementation="com.intellij.execution.executors.DefaultRunExecutor" order="first" id="run"/>
+    <executor implementation="consulo.execution.executor.DefaultRunExecutor" order="first" id="run"/>
     <executionTargetProvider implementation="com.intellij.execution.DefaultExecutionTargetProvider"/>
     <configurationType implementation="com.intellij.execution.compound.CompoundRunConfigurationType"/>
 

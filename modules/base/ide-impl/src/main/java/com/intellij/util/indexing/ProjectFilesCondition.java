@@ -15,6 +15,7 @@
  */
 package com.intellij.util.indexing;
 
+import consulo.content.scope.SearchScope;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
@@ -23,12 +24,12 @@ import consulo.language.psi.scope.GlobalSearchScope;
 class ProjectFilesCondition implements Condition<VirtualFile> {
   private static final int MAX_FILES_TO_UPDATE_FROM_OTHER_PROJECT = 2;
   private final VirtualFile myRestrictedTo;
-  private final GlobalSearchScope myFilter;
+  private final SearchScope myFilter;
   private int myFilesFromOtherProjects;
   private final FileBasedIndexImpl.ProjectIndexableFilesFilter myIndexableFilesFilter;
 
   public ProjectFilesCondition(FileBasedIndexImpl.ProjectIndexableFilesFilter indexableFilesFilter,
-                               GlobalSearchScope filter,
+                               SearchScope filter,
                                VirtualFile restrictedTo,
                                boolean includeFilesFromOtherProjects
   ) {

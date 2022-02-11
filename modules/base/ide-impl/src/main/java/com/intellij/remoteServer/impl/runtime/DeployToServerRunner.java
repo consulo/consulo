@@ -2,7 +2,7 @@ package com.intellij.remoteServer.impl.runtime;
 
 import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import com.intellij.execution.runners.DefaultProgramRunner;
 import com.intellij.remoteServer.impl.configuration.deployment.DeployToServerRunConfiguration;
 import javax.annotation.Nonnull;

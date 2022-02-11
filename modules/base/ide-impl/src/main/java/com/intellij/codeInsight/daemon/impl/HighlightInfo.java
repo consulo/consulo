@@ -2,6 +2,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.Pass;
+import consulo.editor.colorScheme.*;
 import consulo.editor.markup.GutterMark;
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -10,10 +11,6 @@ import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.colorScheme.TextAttributesScheme;
 import consulo.util.lang.function.Condition;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.annotation.Annotation;
@@ -23,7 +20,6 @@ import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
 import consulo.editor.HighlighterColors;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import consulo.editor.markup.GutterIconRenderer;
 import consulo.editor.markup.RangeHighlighter;

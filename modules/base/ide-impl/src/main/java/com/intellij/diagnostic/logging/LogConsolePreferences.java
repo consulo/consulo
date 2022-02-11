@@ -17,7 +17,7 @@
 package com.intellij.diagnostic.logging;
 
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.ui.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;

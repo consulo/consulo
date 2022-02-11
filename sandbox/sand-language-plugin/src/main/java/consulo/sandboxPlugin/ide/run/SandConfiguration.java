@@ -20,7 +20,7 @@ import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfileState;
 import consulo.process.ExecutionException;
-import consulo.execution.Executor;
+import consulo.execution.executor.Executor;
 import com.intellij.execution.configurations.*;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.application.Application;

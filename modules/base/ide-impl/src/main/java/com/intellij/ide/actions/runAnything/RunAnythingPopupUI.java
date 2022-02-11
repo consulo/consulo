@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions.runAnything;
 
-import consulo.execution.Executor;
-import consulo.execution.ExecutorRegistry;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.executor.DefaultRunExecutor;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
@@ -42,7 +42,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBList;

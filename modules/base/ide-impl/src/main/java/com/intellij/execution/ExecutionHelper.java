@@ -18,7 +18,7 @@ package com.intellij.execution;
 
 import consulo.execution.ExecutionManager;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.executors.DefaultRunExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.process.ProcessHandler;
 import consulo.process.local.ProcessOutput;
 import consulo.execution.ui.RunContentDescriptor;
@@ -39,7 +39,7 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.ListCellRendererWrapper;

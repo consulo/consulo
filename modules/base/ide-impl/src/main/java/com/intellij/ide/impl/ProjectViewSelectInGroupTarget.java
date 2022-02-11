@@ -22,7 +22,7 @@ import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.projectView.ProjectView;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

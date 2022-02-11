@@ -16,7 +16,7 @@
 
 package com.intellij.notification;
 
-import com.intellij.execution.filters.HyperlinkInfo;
+import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import consulo.ui.ex.action.AnAction;
