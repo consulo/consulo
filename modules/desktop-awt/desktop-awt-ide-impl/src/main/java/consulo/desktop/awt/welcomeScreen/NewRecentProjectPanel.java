@@ -21,7 +21,7 @@ import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.util.io.UniqueNameBuilder;
 import consulo.project.ui.IdeFocusManager;

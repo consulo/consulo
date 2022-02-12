@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.actionholder.ActionRef;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.IdeFocusManager;

@@ -15,6 +15,10 @@
  */
 package com.intellij.compiler.impl;
 
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompilerBundle;
+import consulo.compiler.CompilerManager;
+import consulo.compiler.TranslatingCompiler;
 import consulo.content.ContentIterator;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectTopics;

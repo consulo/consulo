@@ -16,7 +16,7 @@
 
 package com.intellij.compiler.impl;
 
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import consulo.application.CommonBundle;
 import com.intellij.build.BuildContentManager;
 import com.intellij.compiler.CompilerMessageImpl;
@@ -30,11 +30,12 @@ import com.intellij.diagnostic.IdeErrorsDialog;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.compiler.Compiler;
+import consulo.compiler.*;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.compiler.ex.CompilerPathsEx;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
+import consulo.compiler.Compiler;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
@@ -71,7 +72,7 @@ import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactCompilerUtil;
 import consulo.language.psi.PsiDocumentManager;
-import com.intellij.util.Chunk;
+import consulo.util.collection.Chunk;
 import com.intellij.util.Function;
 import com.intellij.util.StringBuilderSpinAllocator;
 import consulo.application.util.Semaphore;
@@ -82,9 +83,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.compiler.CompilerConfiguration;
-import consulo.compiler.CompilerSorter;
-import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.impl.AdditionalOutputDirectoriesProvider;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import consulo.compiler.make.DependencyCache;
@@ -593,7 +591,7 @@ public class CompileDriver {
         warningCount = compileContext.getMessageCount(CompilerMessageCategory.WARNING);
         if (!myProject.isDisposed()) {
           final String statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
-          final com.intellij.notification.NotificationType messageType = errorCount > 0 ? com.intellij.notification.NotificationType.ERROR : warningCount > 0 ? com.intellij.notification.NotificationType.WARNING : NotificationType.INFORMATION;
+          final NotificationType messageType = errorCount > 0 ? NotificationType.ERROR : warningCount > 0 ? NotificationType.WARNING : NotificationType.INFORMATION;
           if (duration > ONE_MINUTE_MS) {
             ToolWindowManager.getInstance(myProject).notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType.toUI(), statusMessage);
           }

@@ -2,7 +2,7 @@
 package com.intellij.compiler.progress;
 
 import com.intellij.compiler.impl.ExitStatus;
-import com.intellij.openapi.compiler.CompilerMessage;
+import consulo.compiler.CompilerMessage;
 import consulo.application.progress.ProgressIndicator;
 
 /**

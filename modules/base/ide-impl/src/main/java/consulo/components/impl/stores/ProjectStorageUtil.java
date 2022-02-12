@@ -15,7 +15,6 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.notification.*;
 import consulo.application.ApplicationManager;
 import consulo.application.PathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
@@ -23,6 +22,11 @@ import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.impl.ProjectMacrosUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationsManager;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

@@ -17,15 +17,9 @@ package com.intellij.openapi.vcs.actions;
 
 import com.intellij.diff.DiffDialogHints;
 import com.intellij.diff.util.DiffUserDataKeysEx;
-import consulo.application.AllIcons;
 import com.intellij.idea.ActionsBundle;
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.diff.DiffNavigationContext;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
@@ -40,11 +34,17 @@ import com.intellij.openapi.vcs.changes.ui.ChangesComparator;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.CacheOneStepIterator;
 import com.intellij.vcsUtil.VcsUtil;
-import javax.annotation.Nonnull;
+import consulo.application.AllIcons;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -102,7 +102,7 @@ class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumb
           try {
             final Pair<CommittedChangeList, FilePath> pair = provider.getOneList(myFile, revisionNumber);
             if (pair == null || pair.getFirst() == null) {
-              VcsBalloonProblemNotifier.showOverChangesView(myVcs.getProject(), "Can not load data for show diff", MessageType.ERROR);
+              VcsBalloonProblemNotifier.showOverChangesView(myVcs.getProject(), "Can not load data for show diff", NotificationType.ERROR);
               return;
             }
             targetPath[0] = pair.getSecond() == null ? VcsUtil.getFilePath(myFile) : pair.getSecond();
@@ -119,7 +119,7 @@ class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumb
         public void onSuccess() {
           if (exc[0] != null) {
             VcsBalloonProblemNotifier
-                    .showOverChangesView(myVcs.getProject(), "Can not show diff: " + exc[0].getMessage(), MessageType.ERROR);
+                    .showOverChangesView(myVcs.getProject(), "Can not show diff: " + exc[0].getMessage(), NotificationType.ERROR);
           }
           else if (!changes.isEmpty()) {
             int idx = findSelfInList(changes, targetPath[0]);

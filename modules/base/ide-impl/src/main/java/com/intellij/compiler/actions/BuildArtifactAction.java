@@ -15,14 +15,14 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerManager;
+import consulo.compiler.CompileScope;
+import consulo.compiler.CompilerManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;

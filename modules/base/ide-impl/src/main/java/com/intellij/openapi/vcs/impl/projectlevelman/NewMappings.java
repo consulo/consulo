@@ -15,12 +15,8 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Pair;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
@@ -28,13 +24,17 @@ import com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Functions;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
+import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.util.collection.MultiMap;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -385,7 +385,7 @@ public class NewMappings implements Disposable {
       else {
         final AbstractVcs<?> vcs = allVcses.getByName(vcsName);
         if (vcs == null) {
-          VcsBalloonProblemNotifier.showOverChangesView(myProject, "VCS plugin not found for mapping to : '" + vcsName + "'", MessageType.ERROR);
+          VcsBalloonProblemNotifier.showOverChangesView(myProject, "VCS plugin not found for mapping to : '" + vcsName + "'", NotificationType.ERROR);
           continue;
         }
         filteredFiles = vcs.filterUniqueRoots(objects, fileConvertor);

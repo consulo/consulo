@@ -22,7 +22,7 @@ import com.intellij.diff.merge.MergeRequest;
 import com.intellij.diff.merge.MergeResult;
 import com.intellij.diff.merge.MergeTool;
 import com.intellij.diff.util.DiffUserDataKeysEx;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;

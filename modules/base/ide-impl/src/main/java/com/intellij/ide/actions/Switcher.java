@@ -5,7 +5,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

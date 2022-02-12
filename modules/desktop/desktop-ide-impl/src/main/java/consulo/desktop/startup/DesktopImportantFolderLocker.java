@@ -16,9 +16,9 @@
 package consulo.desktop.startup;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
 import com.intellij.openapi.application.JetBrainsProtocolHandler;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

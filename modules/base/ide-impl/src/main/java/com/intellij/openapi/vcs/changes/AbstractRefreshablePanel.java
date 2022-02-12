@@ -16,7 +16,6 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.progress.BackgroundTaskQueue;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.Details;
 import com.intellij.openapi.vcs.GenericDetailsLoader;
@@ -31,6 +30,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -153,7 +153,7 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
       LOG.info(e);
       String message = cause.getMessage() == null ? e.getMessage() : cause.getMessage();
       message = message == null ? "Unknown error" : message;
-      VcsBalloonProblemNotifier.showOverChangesView((Project)myProject, message, MessageType.ERROR);
+      VcsBalloonProblemNotifier.showOverChangesView((Project)myProject, message, NotificationType.ERROR);
     }
 
     @Override

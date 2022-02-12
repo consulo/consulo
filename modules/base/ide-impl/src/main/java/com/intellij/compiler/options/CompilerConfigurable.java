@@ -16,7 +16,7 @@
 package com.intellij.compiler.options;
 
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
-import com.intellij.openapi.compiler.CompilerBundle;
+import consulo.compiler.CompilerBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;

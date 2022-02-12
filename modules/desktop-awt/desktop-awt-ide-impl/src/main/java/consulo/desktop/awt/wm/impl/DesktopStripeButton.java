@@ -21,7 +21,7 @@ import com.intellij.ide.actions.ActivateToolWindowAction;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;

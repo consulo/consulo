@@ -20,6 +20,11 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.event.NotificationListener;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

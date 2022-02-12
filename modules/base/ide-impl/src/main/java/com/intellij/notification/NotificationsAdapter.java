@@ -15,6 +15,10 @@
  */
 package com.intellij.notification;
 
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.Notifications;
+
 import javax.annotation.Nonnull;
 
 public class NotificationsAdapter implements Notifications {

@@ -18,7 +18,7 @@ package consulo.compiler.impl.resourceCompiler;
 import consulo.application.CommonBundle;
 import com.intellij.compiler.MalformedPatternException;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.compiler.CompilerBundle;
+import consulo.compiler.CompilerBundle;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;

@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.editor.Editor;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service.notification;
 
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import com.intellij.util.ui.MessageCategory;
 import javax.annotation.Nonnull;
 

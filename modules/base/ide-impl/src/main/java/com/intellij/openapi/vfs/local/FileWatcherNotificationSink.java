@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.local;
 
-import com.intellij.notification.NotificationListener;
+import consulo.project.ui.notification.event.NotificationListener;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;
 

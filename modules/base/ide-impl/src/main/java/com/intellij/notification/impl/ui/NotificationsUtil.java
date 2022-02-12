@@ -15,8 +15,8 @@
  */
 package com.intellij.notification.impl.ui;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationListener;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xml.util.XmlStringUtil;

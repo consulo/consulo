@@ -1,7 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.components;
 
-import com.intellij.notification.Notification;
+import consulo.project.ui.notification.Notification;
 import com.intellij.openapi.ui.TypingTarget;
 import consulo.application.util.SystemInfo;
 import consulo.application.ui.awt.JBInsets;

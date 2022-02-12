@@ -17,8 +17,8 @@ package consulo.externalStorage;
 
 import com.intellij.ide.plugins.PluginInstallUtil;
 import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
 import consulo.application.AccessToken;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;

@@ -17,10 +17,10 @@
 package com.intellij.openapi.module.impl;
 
 import consulo.application.CommonBundle;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationListener;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
 import com.intellij.openapi.module.ConfigurationErrorDescription;
 import com.intellij.openapi.module.ConfigurationErrorType;
 import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;

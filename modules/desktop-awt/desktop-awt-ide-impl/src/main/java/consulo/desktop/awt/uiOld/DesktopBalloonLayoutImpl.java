@@ -18,7 +18,7 @@ package consulo.desktop.awt.uiOld;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.notification.EventLog;
-import com.intellij.notification.Notification;
+import consulo.project.ui.notification.Notification;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.ui.BalloonImpl;

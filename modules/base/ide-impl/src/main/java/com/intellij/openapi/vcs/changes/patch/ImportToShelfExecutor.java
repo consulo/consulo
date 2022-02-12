@@ -19,8 +19,6 @@ import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchEP;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import com.intellij.openapi.diff.impl.patch.TextFilePatch;
-import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
@@ -33,11 +31,13 @@ import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.util.Function;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
 import com.intellij.vcsUtil.VcsCatchingRunnable;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.util.collection.MultiMap;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -109,7 +109,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
             }
             catch (PatchSyntaxException e) {
               VcsBalloonProblemNotifier
-                      .showOverChangesView(myProject, "Can not import additional patch info: " + e.getMessage(), MessageType.ERROR);
+                      .showOverChangesView(myProject, "Can not import additional patch info: " + e.getMessage(), NotificationType.ERROR);
             }
           }
           try {

@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.ClipboardSynchronizer;
 import com.intellij.notification.EventLog;
-import com.intellij.notification.Notification;
+import consulo.project.ui.notification.Notification;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;

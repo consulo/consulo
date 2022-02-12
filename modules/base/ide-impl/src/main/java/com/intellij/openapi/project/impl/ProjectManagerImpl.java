@@ -21,7 +21,7 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
-import com.intellij.notification.NotificationsManager;
+import consulo.project.ui.notification.NotificationsManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.WriteAction;

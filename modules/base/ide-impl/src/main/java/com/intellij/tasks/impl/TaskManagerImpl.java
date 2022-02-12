@@ -15,7 +15,6 @@
  */
 package com.intellij.tasks.impl;
 
-import com.intellij.notification.*;
 import com.intellij.openapi.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.*;
@@ -48,6 +47,11 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.collection.MultiMap;
 import com.intellij.util.io.HttpRequests;
 import consulo.application.ui.awt.UIUtil;

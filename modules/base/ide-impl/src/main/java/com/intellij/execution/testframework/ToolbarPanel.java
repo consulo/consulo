@@ -34,7 +34,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.OccurenceNavigator;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.dumb.DumbAware;

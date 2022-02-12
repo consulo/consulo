@@ -1,9 +1,9 @@
 package consulo.builtInServer.impl;
 
 import com.intellij.idea.StartupUtil;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.disposer.Disposable;

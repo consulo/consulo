@@ -18,12 +18,13 @@
 package com.intellij.find.actions;
 
 import com.intellij.find.findInProject.FindInProjectManager;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

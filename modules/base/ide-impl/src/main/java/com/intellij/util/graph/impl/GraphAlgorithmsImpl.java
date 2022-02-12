@@ -18,7 +18,7 @@ package com.intellij.util.graph.impl;
 import consulo.component.util.graph.Graph;
 import consulo.component.util.graph.InboundSemiGraph;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.util.Chunk;
+import consulo.util.collection.Chunk;
 import com.intellij.util.graph.*;
 import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;

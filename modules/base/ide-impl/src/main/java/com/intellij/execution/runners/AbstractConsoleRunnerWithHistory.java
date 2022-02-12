@@ -32,14 +32,11 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.process.local.OSProcessHandler;
 import consulo.project.Project;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.SideBorder;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -19,7 +19,7 @@ package consulo.desktop.awt.welcomeScreen;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import com.intellij.notification.impl.IdeNotificationArea;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.util.function.Computable;

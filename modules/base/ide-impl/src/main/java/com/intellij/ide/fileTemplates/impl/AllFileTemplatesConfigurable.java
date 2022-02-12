@@ -41,10 +41,7 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.*;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 

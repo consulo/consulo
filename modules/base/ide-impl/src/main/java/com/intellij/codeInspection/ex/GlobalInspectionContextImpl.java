@@ -32,59 +32,61 @@ import com.intellij.codeInspection.reference.RefVisitor;
 import com.intellij.codeInspection.ui.DefaultInspectionToolPresentation;
 import com.intellij.codeInspection.ui.InspectionResultsView;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
-import consulo.application.internal.concurrency.JobLauncher;
 import com.intellij.concurrency.JobLauncherImpl;
 import com.intellij.concurrency.SensitiveProgressWrapper;
 import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.notification.NotificationGroup;
-import consulo.ui.ex.action.ToggleAction;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.PathMacroManager;
-import consulo.application.progress.*;
-import consulo.util.lang.function.Condition;
-import consulo.document.Document;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import com.intellij.openapi.project.ProjectUtilCore;
+import com.intellij.openapi.util.EmptyRunnable;
+import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.SingleRootFileViewProvider;
+import com.intellij.ui.content.ContentManagerAdapter;
+import com.intellij.util.ConcurrencyUtil;
+import com.intellij.util.SequentialModalProgressTask;
+import com.intellij.util.TripleFunction;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
+import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.progress.*;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
+import consulo.content.FileIndex;
+import consulo.content.scope.SearchScope;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.language.psi.*;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.logging.Logger;
+import consulo.module.content.ProjectRootManager;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
-import com.intellij.openapi.project.ProjectUtilCore;
-import consulo.content.FileIndex;
-import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.document.util.TextRange;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.psi.*;
-import consulo.language.psi.scope.LocalSearchScope;
-import consulo.content.scope.SearchScope;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.psi.PsiUtilCore;
-import com.intellij.ui.content.*;
-import com.intellij.util.*;
-import com.intellij.util.containers.ContainerUtil;
-import java.util.HashMap;
-import consulo.application.ui.awt.UIUtil;
-import consulo.application.util.function.Computable;
-import consulo.application.util.function.Processor;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -348,7 +350,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
         if (myView != null) {
           if (!myView.update() && !getUIOptions().SHOW_ONLY_DIFF) {
-            NOTIFICATION_GROUP.createNotification(InspectionsBundle.message("inspection.no.problems.message"), MessageType.INFO).notify(getProject());
+            NOTIFICATION_GROUP.createNotification(InspectionsBundle.message("inspection.no.problems.message"), NotificationType.INFORMATION).notify(getProject());
             close(true);
           }
           else {
@@ -930,7 +932,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         @Override
         public void run() {
           if (commandName != null) {
-            NOTIFICATION_GROUP.createNotification(InspectionsBundle.message("inspection.no.problems.message"), MessageType.INFO).notify(getProject());
+            NOTIFICATION_GROUP.createNotification(InspectionsBundle.message("inspection.no.problems.message"), NotificationType.INFORMATION).notify(getProject());
           }
           if (postRunnable != null) {
             postRunnable.run();

@@ -21,6 +21,8 @@ import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -162,6 +164,17 @@ public interface Platform {
 
   @Nonnull
   User user();
+
+  default void browse(String url) {
+    try {
+      browse(new URL(url));
+    }
+    catch (MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  void browse(@Nonnull URL url);
 
   @Nonnull
   default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.compiler;
 
+import consulo.compiler.event.CompilationStatusListener;
 import consulo.component.messagebus.Topic;
 
 /**

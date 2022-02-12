@@ -44,6 +44,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;

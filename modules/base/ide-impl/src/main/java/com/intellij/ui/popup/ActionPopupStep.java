@@ -1,20 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.popup;
 
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.ui.popup.*;
+import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
-import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.util.TextWithMnemonic;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.StatusText;
 import consulo.application.ui.awt.UIUtil;
 import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;

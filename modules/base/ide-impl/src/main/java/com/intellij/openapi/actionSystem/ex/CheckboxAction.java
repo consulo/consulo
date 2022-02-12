@@ -17,7 +17,6 @@
 package com.intellij.openapi.actionSystem.ex;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.application.ui.awt.UIUtil;

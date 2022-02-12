@@ -16,9 +16,9 @@
 package com.intellij.internal.statistic.updater;
 
 import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationListener;
+import consulo.project.ui.notification.NotificationType;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;

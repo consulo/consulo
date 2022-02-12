@@ -18,7 +18,7 @@ package com.intellij.packaging.elements;
 
 import javax.annotation.Nonnull;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.compiler.CompileContext;
+import consulo.compiler.CompileContext;
 
 /**
  * @author nik

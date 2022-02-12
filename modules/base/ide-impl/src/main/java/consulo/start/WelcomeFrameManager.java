@@ -15,7 +15,7 @@
  */
 package consulo.start;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import com.intellij.openapi.application.ModalityState;

@@ -17,7 +17,7 @@ package com.intellij.compiler.actions;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.compiler.CompilerManager;
+import consulo.compiler.CompilerManager;
 import consulo.editor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

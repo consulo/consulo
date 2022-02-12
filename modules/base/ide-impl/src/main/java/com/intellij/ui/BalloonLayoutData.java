@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 

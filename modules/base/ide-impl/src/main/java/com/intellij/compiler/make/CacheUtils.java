@@ -16,9 +16,9 @@
 package com.intellij.compiler.make;
 
 import com.intellij.compiler.impl.ExitException;
-import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.compiler.CompilerMessage;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
+import consulo.compiler.CompilerBundle;
+import consulo.compiler.CompilerMessage;
+import consulo.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.util.Pair;
 import consulo.util.lang.ref.Ref;

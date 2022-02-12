@@ -17,11 +17,19 @@ package consulo.web.platform;
 
 import consulo.platform.impl.PlatformBase;
 
+import javax.annotation.Nonnull;
+import java.net.URL;
+
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
 public class WebPlatformImpl extends PlatformBase {
   public WebPlatformImpl() {
+  }
+
+  @Override
+  public void browse(@Nonnull URL url) {
+    throw new UnsupportedOperationException();
   }
 }

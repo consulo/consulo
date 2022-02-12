@@ -23,6 +23,7 @@ import com.intellij.pom.NavigatableWithText;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.util.OpenSourceUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 

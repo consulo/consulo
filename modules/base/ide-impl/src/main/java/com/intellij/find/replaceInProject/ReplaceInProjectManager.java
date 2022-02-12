@@ -7,46 +7,46 @@ import com.intellij.find.actions.FindInPathAction;
 import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.find.impl.FindManagerImpl;
-import consulo.dataContext.DataManager;
-import com.intellij.notification.NotificationGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.document.Document;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
 import com.intellij.openapi.ui.MessageDialogBuilder;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WindowManager;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.ui.ex.content.Content;
 import com.intellij.usageView.UsageViewContentManager;
 import com.intellij.usages.*;
 import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.util.AdapterProcessor;
-import javax.annotation.Nonnull;
-
-import javax.annotation.Nullable;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
+import consulo.application.progress.ProgressManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.project.ui.IdeFocusManager;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.content.Content;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -545,7 +545,7 @@ public class ReplaceInProjectManager {
       return true;
     }
     if (!success) {
-      NOTIFICATION_GROUP.createNotification("One or more malformed replacement strings", MessageType.ERROR).notify(myProject);
+      NOTIFICATION_GROUP.createNotification("One or more malformed replacement strings", NotificationType.ERROR).notify(myProject);
     }
     return false;
   }

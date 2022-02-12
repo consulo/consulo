@@ -15,22 +15,12 @@
  */
 package com.intellij.vcs.log.impl;
 
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.logging.Logger;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
 import com.intellij.vcs.log.VcsLogFilter;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.VcsLogRefresher;
@@ -38,9 +28,19 @@ import com.intellij.vcs.log.data.*;
 import com.intellij.vcs.log.ui.VcsLogColorManagerImpl;
 import com.intellij.vcs.log.ui.VcsLogPanel;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
+import consulo.application.ApplicationManager;
+import consulo.component.extension.ExtensionPointName;
+import consulo.component.extension.Extensions;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.util.collection.MultiMap;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Map;
@@ -244,7 +244,7 @@ public class VcsLogManager implements Disposable {
 
     @Override
     public void displayFatalErrorMessage(@Nonnull String message) {
-      VcsBalloonProblemNotifier.showOverChangesView(myProject, message, MessageType.ERROR);
+      VcsBalloonProblemNotifier.showOverChangesView(myProject, message, NotificationType.ERROR);
     }
   }
 }

@@ -16,7 +16,9 @@
 
 package com.intellij.openapi.compiler.options;
 
-import com.intellij.openapi.compiler.CompilerBundle;
+import consulo.compiler.CompilerBundle;
+import consulo.compiler.setting.ExcludeEntryDescription;
+import consulo.compiler.setting.ExcludedEntriesConfiguration;
 import consulo.ui.ex.JBColor;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.UnnamedConfigurable;

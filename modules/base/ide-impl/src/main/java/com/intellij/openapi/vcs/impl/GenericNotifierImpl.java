@@ -15,13 +15,16 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.notification.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
 import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.event.NotificationListener;
 
 import javax.annotation.Nonnull;
 

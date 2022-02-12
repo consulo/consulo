@@ -10,7 +10,6 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorBundle;

@@ -13,10 +13,7 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -18,7 +18,7 @@ package com.intellij.ide.hierarchy.actions;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.hierarchy.LanguageMethodHierarchy;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.annotation.RequiredUIAccess;

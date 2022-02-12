@@ -20,7 +20,7 @@ import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.util.Pass;
 import com.intellij.ui.*;

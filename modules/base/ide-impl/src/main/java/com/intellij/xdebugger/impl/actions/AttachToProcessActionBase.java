@@ -2,9 +2,9 @@
 package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.execution.runners.ExecutionUtil;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

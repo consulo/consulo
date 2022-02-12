@@ -17,9 +17,16 @@ package consulo.desktop.swt.platform;
 
 import consulo.platform.impl.PlatformBase;
 
+import javax.annotation.Nonnull;
+import java.net.URL;
+
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
 public class DesktopSwtPlatformImpl extends PlatformBase {
+  @Override
+  public void browse(@Nonnull URL url) {
+    throw new UnsupportedOperationException();
+  }
 }

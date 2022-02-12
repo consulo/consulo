@@ -17,7 +17,7 @@
 package com.intellij.execution.actions;
 
 import com.intellij.execution.impl.EditConfigurationsDialog;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;

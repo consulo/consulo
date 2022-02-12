@@ -27,7 +27,7 @@ package com.intellij.openapi.editor.actions;
 import consulo.editor.*;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
 import com.intellij.openapi.editor.*;
 import consulo.editor.event.EditorMouseEvent;

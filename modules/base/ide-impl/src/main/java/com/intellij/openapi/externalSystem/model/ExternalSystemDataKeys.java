@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import com.intellij.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationGroup;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskPojo;
 import com.intellij.openapi.externalSystem.model.project.ExternalProjectPojo;
 import com.intellij.openapi.externalSystem.service.task.ui.ExternalSystemRecentTasksList;

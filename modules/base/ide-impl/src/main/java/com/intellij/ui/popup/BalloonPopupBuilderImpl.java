@@ -20,7 +20,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.MessageType;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.disposer.Disposer;
 import com.intellij.ui.BalloonImpl;

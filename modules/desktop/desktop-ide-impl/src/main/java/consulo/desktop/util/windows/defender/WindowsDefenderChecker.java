@@ -7,7 +7,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ProcessOutput;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.notification.Notification;
+import consulo.project.ui.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;

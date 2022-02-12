@@ -16,7 +16,6 @@
 package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.ide.actions.QuickSwitchSchemeAction;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.BundledQuickListsProvider;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.RoamingType;
@@ -29,6 +28,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.ThrowableConvertor;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

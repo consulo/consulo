@@ -19,6 +19,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

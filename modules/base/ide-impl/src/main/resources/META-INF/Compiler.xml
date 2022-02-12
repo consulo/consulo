@@ -22,8 +22,8 @@
     <extensionPoint name="compiler.moduleScopeFactory" interface="consulo.compiler.impl.CompileModuleScopeFactory"/>
     <extensionPoint name="compiler.sorter" interface="consulo.compiler.CompilerSorter"/>
 
-    <extensionPoint name="compiler.beforeTask" interface="com.intellij.openapi.compiler.CompileTask"/>
-    <extensionPoint name="compiler.afterTask" interface="com.intellij.openapi.compiler.CompileTask"/>
+    <extensionPoint name="compiler.beforeTask" interface="consulo.compiler.CompileTask"/>
+    <extensionPoint name="compiler.afterTask" interface="consulo.compiler.CompileTask"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
@@ -51,13 +51,13 @@
                     serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactSortingUtilImpl"/>
     <applicationService serviceImplementation="com.intellij.packaging.impl.artifacts.InvalidArtifactType"/>
 
-    <projectService serviceInterface="com.intellij.openapi.compiler.CompilerManager"
+    <projectService serviceInterface="consulo.compiler.CompilerManager"
                     serviceImplementation="consulo.compiler.impl.CompilerManagerImpl"/>
 
     <applicationService serviceInterface="consulo.compiler.impl.BuildViewServiceFactory" serviceImplementation="consulo.compiler.impl.build.BuildViewServiceFactoryImpl"/>
 
     <projectService serviceInterface="consulo.compiler.CompilerConfiguration"
-                    serviceImplementation="consulo.compiler.CompilerConfigurationImpl"/>
+                    serviceImplementation="consulo.compiler.impl.CompilerConfigurationImpl"/>
 
     <projectService serviceInterface="com.intellij.compiler.CompilerEncodingService"
                     serviceImplementation="com.intellij.compiler.CompilerEncodingServiceImpl"/>

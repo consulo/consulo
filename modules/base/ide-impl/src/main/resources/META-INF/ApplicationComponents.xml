@@ -69,7 +69,7 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.notification.NotificationsManager</interface-class>
+      <interface-class>consulo.project.ui.notification.NotificationsManager</interface-class>
       <implementation-class>com.intellij.notification.impl.NotificationsManagerImpl</implementation-class>
     </component>
 

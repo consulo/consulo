@@ -18,10 +18,12 @@ package consulo.virtualFileSystem.util;
 import consulo.logging.Logger;
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +38,10 @@ import java.util.function.Predicate;
  */
 public final class VirtualFileUtil {
   private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);
+
+  public static String pathToUrl(@Nonnull String path) {
+    return VirtualFileManager.constructUrl(URLUtil.FILE_PROTOCOL, path);
+  }
 
   public static boolean iterateChildrenRecursively(@Nonnull final VirtualFile root, @Nullable final VirtualFileFilter filter, @Nonnull final Predicate<VirtualFile> iterator) {
     final VirtualFileVisitor.Result result = visitChildrenRecursively(root, new VirtualFileVisitor() {

@@ -15,8 +15,8 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompilerManager;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompilerManager;
 import com.intellij.openapi.compiler.generic.CompileItem;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
 import com.intellij.openapi.compiler.generic.GenericCompilerInstance;

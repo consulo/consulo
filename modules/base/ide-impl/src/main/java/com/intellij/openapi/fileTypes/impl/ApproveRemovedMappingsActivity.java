@@ -1,10 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileTypes.impl;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationListener;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;

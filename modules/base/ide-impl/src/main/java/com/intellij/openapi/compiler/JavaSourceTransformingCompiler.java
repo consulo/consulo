@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.compiler;
 
+import consulo.compiler.CompileContext;
+import consulo.compiler.Compiler;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

@@ -15,6 +15,7 @@
  */
 package com.intellij.notification;
 
+import consulo.project.ui.notification.Notification;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;

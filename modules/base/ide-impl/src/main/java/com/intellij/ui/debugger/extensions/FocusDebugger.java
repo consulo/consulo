@@ -17,19 +17,15 @@
 package com.intellij.ui.debugger.extensions;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleColoredText;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.debugger.UiDebuggerExtension;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

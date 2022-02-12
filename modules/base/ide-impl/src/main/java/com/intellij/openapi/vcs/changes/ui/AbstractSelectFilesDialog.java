@@ -17,15 +17,11 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;
 

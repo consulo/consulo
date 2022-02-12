@@ -308,7 +308,7 @@ public class VfsUtilCore {
 
   @Nonnull
   public static String pathToUrl(@Nonnull String path) {
-    return VirtualFileManager.constructUrl(URLUtil.FILE_PROTOCOL, path);
+    return VirtualFileUtil.pathToUrl(path);
   }
 
   public static List<File> virtualToIoFiles(@Nonnull Collection<VirtualFile> scope) {

@@ -2,9 +2,9 @@
 package com.intellij.diagnostic;
 
 import consulo.application.AllIcons;
-import com.intellij.notification.Notification;
+import consulo.project.ui.notification.Notification;
 import com.intellij.notification.NotificationAction;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.action.AnActionEvent;

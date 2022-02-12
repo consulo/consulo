@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.notification.Notification;
+import consulo.project.ui.notification.Notification;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import consulo.application.util.SystemInfo;
 import consulo.application.ui.awt.JBDimension;

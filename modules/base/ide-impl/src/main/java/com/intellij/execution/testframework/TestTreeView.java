@@ -32,6 +32,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.application.ui.awt.GraphicsConfig;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.*;

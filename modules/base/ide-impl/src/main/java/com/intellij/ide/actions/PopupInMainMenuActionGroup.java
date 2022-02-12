@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 
 import javax.annotation.Nonnull;
 

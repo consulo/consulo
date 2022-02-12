@@ -26,6 +26,7 @@ import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.*;

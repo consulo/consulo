@@ -31,6 +31,7 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
 import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.action.ActionGroup;

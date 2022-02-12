@@ -16,9 +16,12 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.compiler.impl.generic.GenericCompilerCache;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompilerBundle;
+import consulo.compiler.CompilerMessageCategory;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.compiler.*;
-import com.intellij.openapi.compiler.Compiler;
+import consulo.compiler.Compiler;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
 import consulo.logging.Logger;
 import consulo.project.Project;

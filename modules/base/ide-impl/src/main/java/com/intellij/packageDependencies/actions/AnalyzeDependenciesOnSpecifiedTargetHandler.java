@@ -17,18 +17,18 @@ package com.intellij.packageDependencies.actions;
 
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.analysis.AnalysisScopeBundle;
-import com.intellij.notification.NotificationGroup;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.ForwardDependenciesBuilder;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -64,7 +64,7 @@ public class AnalyzeDependenciesOnSpecifiedTargetHandler extends DependenciesHan
     final String source = StringUtil.decapitalize(builders.get(0).getScope().getDisplayName());
     final String target = StringUtil.decapitalize(myTargetScope.getDisplayName());
     final String message = AnalysisScopeBundle.message("no.dependencies.found.message", source, target);
-    NotificationGroup.toolWindowGroup("Dependencies", ToolWindowId.DEPENDENCIES, true).createNotification(message, MessageType.INFO).notify(myProject);
+    NotificationGroup.toolWindowGroup("Dependencies", ToolWindowId.DEPENDENCIES, true).createNotification(message, NotificationType.INFORMATION).notify(myProject);
     return false;
   }
 

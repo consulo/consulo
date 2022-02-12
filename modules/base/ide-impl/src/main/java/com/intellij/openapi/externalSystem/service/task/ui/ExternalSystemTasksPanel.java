@@ -18,7 +18,7 @@ package com.intellij.openapi.externalSystem.service.task.ui;
 import com.intellij.execution.Location;
 import consulo.execution.executor.DefaultRunExecutor;
 import com.intellij.ide.ui.customization.CustomizationUtil;
-import com.intellij.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;

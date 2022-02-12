@@ -25,7 +25,6 @@ import com.intellij.execution.ui.layout.actions.MinimizeViewAction;
 import com.intellij.execution.ui.layout.actions.RestoreViewAction;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.actions.CloseAction;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataProvider;
 import consulo.execution.ui.layout.LayoutAttractionPolicy;
 import consulo.project.Project;

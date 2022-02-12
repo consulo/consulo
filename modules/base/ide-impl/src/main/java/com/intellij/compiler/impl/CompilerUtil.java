@@ -22,8 +22,8 @@ package com.intellij.compiler.impl;
 
 import consulo.application.CommonBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompilerBundle;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompilerBundle;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

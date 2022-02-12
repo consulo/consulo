@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;

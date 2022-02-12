@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.run;
 
 import consulo.execution.BeforeRunTaskProvider;
-import com.intellij.openapi.compiler.CompilerBundle;
+import consulo.compiler.CompilerBundle;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.packaging.artifacts.*;
 import consulo.application.AllIcons;

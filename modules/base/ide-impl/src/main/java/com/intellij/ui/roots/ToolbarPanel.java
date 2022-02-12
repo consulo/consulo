@@ -17,7 +17,7 @@ package com.intellij.ui.roots;
 
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.application.ui.awt.CustomLineBorder;
 

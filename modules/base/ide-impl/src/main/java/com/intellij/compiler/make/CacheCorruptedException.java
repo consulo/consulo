@@ -21,7 +21,7 @@
  */
 package com.intellij.compiler.make;
 
-import com.intellij.openapi.compiler.CompilerBundle;
+import consulo.compiler.CompilerBundle;
 
 public class CacheCorruptedException extends Exception{
   private static final String DEFAULT_MESSAGE = CompilerBundle.message("error.dependency.info.on.disk.corrupted");

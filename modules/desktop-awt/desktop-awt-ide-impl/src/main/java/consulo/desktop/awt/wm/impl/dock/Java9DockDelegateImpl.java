@@ -18,7 +18,7 @@ package consulo.desktop.awt.wm.impl.dock;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;

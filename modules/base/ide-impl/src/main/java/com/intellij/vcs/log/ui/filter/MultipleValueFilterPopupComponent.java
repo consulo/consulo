@@ -23,7 +23,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.vcs.log.VcsLogFilter;

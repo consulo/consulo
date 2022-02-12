@@ -17,7 +17,6 @@ package com.intellij.designer;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.keymap.KeymapUtil;

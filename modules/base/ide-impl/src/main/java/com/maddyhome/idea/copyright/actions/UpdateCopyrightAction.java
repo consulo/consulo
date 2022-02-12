@@ -24,6 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.util.ModuleUtilCore;
 import consulo.language.psi.*;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import com.maddyhome.idea.copyright.CopyrightManager;

@@ -17,7 +17,7 @@
 package com.intellij.ui.popup;
 
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.ui.ListenerUtil;

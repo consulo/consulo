@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 
-import static com.intellij.openapi.actionSystem.ActionPlaces.KEYBOARD_SHORTCUT;
+import static consulo.ui.ex.action.ActionPlaces.KEYBOARD_SHORTCUT;
 
 public class CopyPathsAction extends AnAction implements DumbAware {
   public CopyPathsAction() {

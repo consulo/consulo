@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.committed;
 
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;

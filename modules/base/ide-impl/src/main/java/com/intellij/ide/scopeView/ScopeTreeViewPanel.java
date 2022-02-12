@@ -36,7 +36,7 @@ import com.intellij.ide.util.DirectoryChooserUtil;
 import com.intellij.ide.util.EditorHelper;
 import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

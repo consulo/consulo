@@ -17,7 +17,7 @@ package com.intellij.openapi.fileEditor.impl.http;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;

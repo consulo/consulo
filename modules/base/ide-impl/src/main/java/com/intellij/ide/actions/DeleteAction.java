@@ -26,6 +26,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

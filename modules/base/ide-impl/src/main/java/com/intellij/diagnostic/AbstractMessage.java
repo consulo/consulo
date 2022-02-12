@@ -15,7 +15,7 @@
  */
 package com.intellij.diagnostic;
 
-import com.intellij.notification.Notification;
+import consulo.project.ui.notification.Notification;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 
 import java.util.Calendar;

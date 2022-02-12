@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.Pair;

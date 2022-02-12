@@ -1,8 +1,8 @@
 package com.intellij.openapi.vcs;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;

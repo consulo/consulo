@@ -18,8 +18,9 @@ package com.intellij.compiler;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.util.Chunk;
+import consulo.util.collection.Chunk;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -32,7 +33,7 @@ public abstract class CompilerEncodingService {
     return ServiceManager.getService(project, CompilerEncodingService.class);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static Charset getPreferredModuleEncoding(Chunk<Module> chunk) {
     CompilerEncodingService service = null;
     for (Module module : chunk.getNodes()) {
@@ -47,7 +48,7 @@ public abstract class CompilerEncodingService {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Charset getPreferredModuleEncoding(@Nonnull Module module);
 
   @Nonnull

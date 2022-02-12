@@ -15,18 +15,18 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchDifferentiatedDialog;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchExecutor;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchMode;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.document.FileDocumentManager;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;
@@ -48,11 +48,11 @@ public class UnshelveWithDialogAction extends AnAction {
 
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(changeLists[0].PATH));
     if (virtualFile == null) {
-      VcsBalloonProblemNotifier.showOverChangesView(project, "Can not find path file", MessageType.ERROR);
+      VcsBalloonProblemNotifier.showOverChangesView(project, "Can not find path file", NotificationType.ERROR);
       return;
     }
     if (! changeLists[0].getBinaryFiles().isEmpty()) {
-      VcsBalloonProblemNotifier.showOverChangesView(project, "Binary file(s) would be skipped.", MessageType.WARNING);
+      VcsBalloonProblemNotifier.showOverChangesView(project, "Binary file(s) would be skipped.", NotificationType.WARNING);
     }
     final ApplyPatchDifferentiatedDialog dialog =
       new ApplyPatchDifferentiatedDialog(project, new ApplyPatchDefaultExecutor(project), Collections.<ApplyPatchExecutor>emptyList(),

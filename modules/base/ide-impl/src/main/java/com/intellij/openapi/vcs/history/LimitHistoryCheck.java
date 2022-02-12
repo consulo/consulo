@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import consulo.application.progress.ProcessCanceledException;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,7 +54,7 @@ public class LimitHistoryCheck {
     if (isOver()) {
       if (! myWarningShown) {
         VcsBalloonProblemNotifier.showOverChangesView(myProject, "File History: only " + myLimit + " revisions were loaded for " + myFilePath +
-          "\nTo change the history limit, go to Settings | Version Control.", MessageType.WARNING);
+          "\nTo change the history limit, go to Settings | Version Control.", NotificationType.WARNING);
         myWarningShown = true;
       }
       throw new ProcessCanceledException();

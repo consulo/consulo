@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.dialog;
 
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.impl.ButtonToolbarImpl;
 import com.intellij.openapi.ui.DialogWrapper;

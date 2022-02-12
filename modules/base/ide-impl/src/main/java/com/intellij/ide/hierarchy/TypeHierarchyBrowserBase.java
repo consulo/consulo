@@ -24,6 +24,7 @@ import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;

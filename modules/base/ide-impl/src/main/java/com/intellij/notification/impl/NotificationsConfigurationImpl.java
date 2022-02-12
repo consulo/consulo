@@ -15,8 +15,8 @@
  */
 package com.intellij.notification.impl;
 
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
 import com.intellij.notification.NotificationsConfiguration;
 import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;

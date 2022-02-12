@@ -1,6 +1,6 @@
 package consulo.builtInServer.impl.ide;
 
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;

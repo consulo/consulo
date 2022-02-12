@@ -16,11 +16,13 @@
 
 package com.intellij.compiler.impl;
 
-import com.intellij.openapi.compiler.CompileScope;
+import consulo.compiler.CompileScope;
+import consulo.compiler.Compiler;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -29,8 +31,8 @@ public abstract class AdditionalCompileScopeProvider {
   public static final ExtensionPointName<AdditionalCompileScopeProvider> EXTENSION_POINT_NAME =
           ExtensionPointName.create("consulo.compiler.additionalCompileScopeProvider");
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract CompileScope getAdditionalScope(@Nonnull CompileScope baseScope,
-                                                  @Nonnull Condition<com.intellij.openapi.compiler.Compiler> filter,
+                                                  @Nonnull Condition<Compiler> filter,
                                                   @Nonnull Project project);
 }

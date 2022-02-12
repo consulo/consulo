@@ -15,23 +15,22 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
-import consulo.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.ex.action.AnActionEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> implements DiffFromHistoryHandler {
@@ -144,7 +143,7 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
 
   protected void showError(@Nonnull VcsException e, @Nonnull String logMessage) {
     LOG.info(logMessage, e);
-    VcsBalloonProblemNotifier.showOverVersionControlView(myProject, e.getMessage(), MessageType.ERROR);
+    VcsBalloonProblemNotifier.showOverVersionControlView(myProject, e.getMessage(), NotificationType.ERROR);
   }
 
   @Nonnull

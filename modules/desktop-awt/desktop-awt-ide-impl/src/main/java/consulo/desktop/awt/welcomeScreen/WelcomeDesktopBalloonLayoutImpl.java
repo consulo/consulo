@@ -16,7 +16,7 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.AllIcons;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import consulo.ui.ex.JBColor;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;

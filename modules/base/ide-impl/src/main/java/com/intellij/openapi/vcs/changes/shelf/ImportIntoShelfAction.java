@@ -15,21 +15,21 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.application.progress.ProgressManager;
 import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class ImportIntoShelfAction extends DumbAwareAction {
             AbstractVcsHelper.getInstance(project).showErrors(exceptions, "Import patches into shelf");
           }
           if (lists.isEmpty() && exceptions.isEmpty()) {
-            VcsBalloonProblemNotifier.showOverChangesView(project, "No patches found", MessageType.WARNING);
+            VcsBalloonProblemNotifier.showOverChangesView(project, "No patches found", NotificationType.WARNING);
           }
         }
       }, "Import patches into shelf", true, project);

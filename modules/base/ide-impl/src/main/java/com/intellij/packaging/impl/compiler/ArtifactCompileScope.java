@@ -16,8 +16,8 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.compiler.impl.ModuleCompileScope;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerManager;
+import consulo.compiler.CompileScope;
+import consulo.compiler.CompilerManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;

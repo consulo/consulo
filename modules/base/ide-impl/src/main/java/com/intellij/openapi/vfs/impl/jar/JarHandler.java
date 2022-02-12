@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vfs.impl.jar;
 
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
 import consulo.index.io.data.DataExternalizer;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

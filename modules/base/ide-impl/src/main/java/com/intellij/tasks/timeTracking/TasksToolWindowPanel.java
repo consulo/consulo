@@ -2,7 +2,6 @@ package com.intellij.tasks.timeTracking;
 
 import consulo.application.AllIcons;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Comparing;

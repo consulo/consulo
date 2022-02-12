@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.compiler;
 
+import consulo.compiler.CompileContext;
+import consulo.compiler.event.CompilationStatusListener;
+
 public class CompilationStatusAdapter implements CompilationStatusListener {
   @Override
   public void compilationFinished(boolean aborted, int errors, int warnings, final CompileContext compileContext) {

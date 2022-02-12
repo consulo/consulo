@@ -37,6 +37,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.update.UiNotifyConnector;

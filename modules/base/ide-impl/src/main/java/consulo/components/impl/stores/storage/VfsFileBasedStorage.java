@@ -15,9 +15,9 @@
  */
 package consulo.components.impl.stores.storage;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.RoamingType;
 import com.intellij.openapi.components.ServiceManager;

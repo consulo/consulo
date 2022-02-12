@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.compiler;
 
+import consulo.compiler.CompileContext;
+
 import javax.annotation.Nullable;
 
 import java.io.File;

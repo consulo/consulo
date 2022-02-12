@@ -24,6 +24,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;

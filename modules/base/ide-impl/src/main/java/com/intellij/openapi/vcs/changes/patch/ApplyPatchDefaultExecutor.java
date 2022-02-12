@@ -17,24 +17,22 @@ package com.intellij.openapi.vcs.changes.patch;
 
 import com.intellij.openapi.diff.impl.patch.*;
 import com.intellij.openapi.diff.impl.patch.formove.PatchApplier;
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import java.util.HashSet;
-import consulo.util.collection.MultiMap;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.component.extension.Extensions;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.MultiMap;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFilePatchInProgress> {
@@ -135,7 +133,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
       }
       catch (PatchSyntaxException e) {
         VcsBalloonProblemNotifier
-                .showOverChangesView(project, "Can not apply additional patch info: " + e.getMessage(), MessageType.ERROR);
+                .showOverChangesView(project, "Can not apply additional patch info: " + e.getMessage(), NotificationType.ERROR);
       }
     }
   }

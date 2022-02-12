@@ -17,7 +17,8 @@ package com.intellij.packaging.impl.compiler;
 
 import com.intellij.compiler.impl.AdditionalCompileScopeProvider;
 import com.intellij.compiler.impl.ModuleCompileScope;
-import com.intellij.openapi.compiler.CompileScope;
+import consulo.compiler.CompileScope;
+import consulo.compiler.Compiler;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.function.ThrowableComputable;
@@ -32,7 +33,7 @@ import java.util.Set;
  */
 public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileScopeProvider {
   @Override
-  public CompileScope getAdditionalScope(@Nonnull final CompileScope baseScope, @Nonnull Condition<com.intellij.openapi.compiler.Compiler> filter, @Nonnull final Project project) {
+  public CompileScope getAdditionalScope(@Nonnull final CompileScope baseScope, @Nonnull Condition<Compiler> filter, @Nonnull final Project project) {
     if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
       return null;
     }

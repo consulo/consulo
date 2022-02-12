@@ -15,10 +15,10 @@
  */
 package com.intellij.packaging.impl.ui.actions;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.compiler.CompilerBundle;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.compiler.CompilerBundle;
 import com.intellij.openapi.deployment.DeploymentUtil;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;

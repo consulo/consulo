@@ -30,6 +30,7 @@ import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
 import javax.swing.*;

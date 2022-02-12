@@ -16,9 +16,9 @@
 package com.intellij.diagnostic;
 
 import com.intellij.diagnostic.VMOptions.MemoryKind;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import consulo.application.util.SystemInfo;

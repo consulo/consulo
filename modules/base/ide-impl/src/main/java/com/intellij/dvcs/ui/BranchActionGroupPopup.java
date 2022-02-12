@@ -12,7 +12,7 @@ import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.popup.ListPopupStep;

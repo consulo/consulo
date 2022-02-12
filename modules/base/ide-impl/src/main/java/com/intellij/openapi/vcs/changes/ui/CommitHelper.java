@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.ui;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.util.DelegatingProgressIndicator;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.NotificationType;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;

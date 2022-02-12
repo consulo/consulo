@@ -8,7 +8,7 @@ import com.intellij.ide.projectView.BaseProjectTreeBuilder;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.ide.util.treeView.*;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.editor.colorScheme.EditorColorsManager;

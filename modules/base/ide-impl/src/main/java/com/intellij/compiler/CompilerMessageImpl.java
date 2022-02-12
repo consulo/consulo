@@ -15,9 +15,9 @@
  */
 package com.intellij.compiler;
 
-import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.compiler.CompilerMessage;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
+import consulo.compiler.CompilerBundle;
+import consulo.compiler.CompilerMessage;
+import consulo.compiler.CompilerMessageCategory;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

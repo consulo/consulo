@@ -49,6 +49,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

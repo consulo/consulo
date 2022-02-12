@@ -1,20 +1,9 @@
 package com.intellij.vcs.log.ui;
 
 import com.google.common.util.concurrent.SettableFuture;
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
 import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.data.*;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties.VcsLogHighlighterProperty;
@@ -25,10 +14,20 @@ import com.intellij.vcs.log.impl.VcsLogImpl;
 import com.intellij.vcs.log.ui.frame.MainFrame;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import com.intellij.vcs.log.ui.tables.GraphTableModel;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.application.ui.awt.UIUtil;
+import consulo.component.extension.ExtensionPointName;
+import consulo.component.extension.Extensions;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.IdeFocusManager;
+import consulo.project.ui.notification.NotificationType;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -217,17 +216,17 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
     }
   }
 
-  private void showMessage(@Nonnull MessageType messageType, @Nonnull String message) {
+  private void showMessage(@Nonnull NotificationType messageType, @Nonnull String message) {
     LOG.info(message);
     VcsBalloonProblemNotifier.showOverChangesView(myProject, message, messageType);
   }
 
   private void commitNotFound(@Nonnull String commitHash) {
     if (myMainFrame.getFilterUi().getFilters().isEmpty()) {
-      showMessage(MessageType.WARNING, "Commit " + commitHash + " not found");
+      showMessage(NotificationType.WARNING, "Commit " + commitHash + " not found");
     }
     else {
-      showMessage(MessageType.WARNING, "Commit " + commitHash + " doesn't exist or doesn't match the active filters");
+      showMessage(NotificationType.WARNING, "Commit " + commitHash + " doesn't exist or doesn't match the active filters");
     }
   }
 

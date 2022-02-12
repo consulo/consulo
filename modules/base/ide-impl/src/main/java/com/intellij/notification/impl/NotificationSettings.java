@@ -15,7 +15,7 @@
  */
 package com.intellij.notification.impl;
 
-import com.intellij.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationDisplayType;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

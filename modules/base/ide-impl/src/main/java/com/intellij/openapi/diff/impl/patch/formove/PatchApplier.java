@@ -18,22 +18,14 @@ package com.intellij.openapi.diff.impl.patch.formove;
 import com.intellij.history.Label;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryException;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diff.impl.patch.ApplyPatchContext;
 import com.intellij.openapi.diff.impl.patch.ApplyPatchStatus;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchAction;
@@ -41,15 +33,23 @@ import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.WaitForProgressToShow;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Computable;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -552,7 +552,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
       showError(project, VcsBundle.message("patch.apply.partially.applied"), false);
     } else if (ApplyPatchStatus.SUCCESS.equals(status)) {
       final String message = VcsBundle.message("patch.apply.success.applied.text");
-      VcsBalloonProblemNotifier.NOTIFICATION_GROUP.createNotification(message, MessageType.INFO).notify(project);
+      VcsBalloonProblemNotifier.NOTIFICATION_GROUP.createNotification(message, NotificationType.INFORMATION).notify(project);
     }
   }
 

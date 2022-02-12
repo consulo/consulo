@@ -16,19 +16,9 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.concurrency.JobScheduler;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
@@ -37,25 +27,35 @@ import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vcs.update.UpdatedFiles;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.MessageBusUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
+import com.intellij.vcs.ProgressManagerQueue;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.util.function.Computable;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.messagebus.Topic;
-import com.intellij.vcs.ProgressManagerQueue;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.util.collection.MultiMap;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -721,7 +721,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
             fireChangesLoaded(location, Collections.<CommittedChangeList>emptyList());
           }
           catch (IOException e) {
-            VcsBalloonProblemNotifier.showOverChangesView(myProject, "Didn't update Repository changes with new message due to error: " + e.getMessage(), MessageType.ERROR);
+            VcsBalloonProblemNotifier.showOverChangesView(myProject, "Didn't update Repository changes with new message due to error: " + e.getMessage(), NotificationType.ERROR);
           }
         }
       }

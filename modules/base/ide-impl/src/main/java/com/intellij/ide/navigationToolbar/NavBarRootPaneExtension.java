@@ -25,7 +25,6 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.ide.ui.customization.CustomisedActionGroup;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;

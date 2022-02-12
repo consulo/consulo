@@ -16,7 +16,7 @@
 package com.intellij.compiler.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.compiler.CompilerManager;
+import consulo.compiler.CompilerManager;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -29,7 +29,7 @@ import consulo.application.util.function.Computable;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.Chunk;
+import consulo.util.collection.Chunk;
 import consulo.virtualFileSystem.util.PathsList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.OrderedSet;

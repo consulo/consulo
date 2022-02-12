@@ -16,7 +16,6 @@
 package com.intellij.ui.tabs.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.IconButton;
@@ -26,6 +25,7 @@ import com.intellij.ui.InplaceButton;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.util.ui.TimedDeadzone;
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

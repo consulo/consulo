@@ -52,6 +52,7 @@ open module consulo.ide.impl {
   requires transitive consulo.process.api;
   requires transitive consulo.execution.api;
   requires transitive consulo.debugger.api;
+  requires transitive consulo.compiler.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -1123,7 +1124,6 @@ open module consulo.ide.impl {
   exports consulo.command.impl;
   exports consulo.command.undo;
   exports consulo.command.undo.impl;
-  exports consulo.compiler;
   exports consulo.compiler.impl;
   exports consulo.compiler.impl.build;
   exports consulo.compiler.impl.packagingCompiler;

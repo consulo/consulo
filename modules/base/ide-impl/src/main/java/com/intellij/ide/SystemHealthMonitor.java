@@ -18,6 +18,8 @@ package com.intellij.ide;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.VMOptions;
 import com.intellij.ide.plugins.UninstallPluginAction;
+import consulo.project.ui.notification.*;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.jna.JnaLoader;
 import com.intellij.notification.*;
 import consulo.ui.ex.action.AnActionEvent;

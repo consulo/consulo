@@ -15,10 +15,11 @@
  */
 package com.intellij.compiler.impl;
 
+import consulo.compiler.Compiler;
 import consulo.compiler.make.impl.CompositeDependencyCache;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerMessage;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
+import consulo.compiler.CompileScope;
+import consulo.compiler.CompilerMessage;
+import consulo.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import consulo.module.Module;
 import consulo.application.progress.ProgressIndicator;
@@ -201,7 +202,7 @@ public class CompileContextExProxy implements CompileContextEx {
   }
 
   @Override
-  public void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, com.intellij.openapi.compiler.Compiler compiler) {
+  public void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, Compiler compiler) {
     myDelegate.assignModule(root, module, isTestSource, compiler);
   }
 }

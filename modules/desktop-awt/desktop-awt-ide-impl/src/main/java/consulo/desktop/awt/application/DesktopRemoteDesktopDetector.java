@@ -16,10 +16,10 @@
 package consulo.desktop.awt.application;
 
 import com.intellij.ide.RemoteDesktopService;
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;

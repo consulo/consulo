@@ -17,7 +17,7 @@
 package com.intellij.history.integration.ui.actions;
 
 import com.intellij.ide.actions.NonTrivialActionGroup;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.dumb.DumbAware;

@@ -19,13 +19,17 @@ import consulo.application.CommonBundle;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.process.CapturingProcessHandler;
 import consulo.process.local.ProcessOutput;
-import com.intellij.notification.*;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.registry.Registry;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.NotificationsManager;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.io.CharsetToolkit;
 import consulo.ui.image.Image;
 
@@ -37,7 +41,7 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
-import static com.intellij.notification.NotificationDisplayType.STICKY_BALLOON;
+import static consulo.project.ui.notification.NotificationDisplayType.STICKY_BALLOON;
 
 /**
  * Validates the given external executable. If it is not valid, shows notification to fix it.
@@ -66,7 +70,7 @@ public abstract class ExecutableValidator {
    *
    * @param notificationErrorTitle       title of the notification about not valid executable.
    * @param notificationErrorDescription description of this notification with a link to fix it (link action is defined by
-   *                                     {@link #showSettingsAndExpireIfFixed(com.intellij.notification.Notification)}
+   *                                     {@link #showSettingsAndExpireIfFixed(Notification)}
    */
   public ExecutableValidator(@Nonnull Project project, @Nonnull String notificationErrorTitle, @Nonnull String notificationErrorDescription) {
     myProject = project;

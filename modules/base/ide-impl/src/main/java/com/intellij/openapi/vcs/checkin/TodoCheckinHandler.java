@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.checkin;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.todo.*;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;

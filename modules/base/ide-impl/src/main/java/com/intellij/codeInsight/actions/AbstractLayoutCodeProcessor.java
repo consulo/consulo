@@ -4,8 +4,8 @@ package com.intellij.codeInsight.actions;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.lang.LanguageFormatting;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

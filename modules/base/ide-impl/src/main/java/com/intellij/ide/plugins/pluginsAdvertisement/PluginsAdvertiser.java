@@ -16,6 +16,10 @@
 package com.intellij.ide.plugins.pluginsAdvertisement;
 
 import com.intellij.notification.*;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;

@@ -15,7 +15,7 @@
  */
 package consulo.compiler.options;
 
-import com.intellij.openapi.compiler.CompilerManager;
+import consulo.compiler.CompilerManager;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfigurable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.Configurable;

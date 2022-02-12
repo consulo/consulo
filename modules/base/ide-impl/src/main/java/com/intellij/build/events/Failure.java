@@ -15,7 +15,7 @@
  */
 package com.intellij.build.events;
 
-import com.intellij.notification.Notification;
+import consulo.project.ui.notification.Notification;
 import consulo.navigation.Navigatable;
 
 import javax.annotation.Nullable;

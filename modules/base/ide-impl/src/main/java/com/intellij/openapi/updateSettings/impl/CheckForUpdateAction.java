@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.updateSettings.impl;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.progress.Task;

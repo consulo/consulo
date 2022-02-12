@@ -19,6 +19,7 @@ import consulo.util.collection.impl.list.LockFreeCopyOnWriteArrayList;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -47,5 +48,11 @@ public final class Lists {
   @Contract(pure = true)
   public static <T> List<T> newLockFreeCopyOnWriteList(@Nonnull Collection<? extends T> c) {
     return new LockFreeCopyOnWriteArrayList<T>(c);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> notNullize(@Nullable List<T> list) {
+    return list == null ? List.of() : list;
   }
 }

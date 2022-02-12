@@ -26,6 +26,7 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

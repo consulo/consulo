@@ -17,7 +17,6 @@ package consulo.roots.ui.configuration;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -32,7 +31,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.function.Computable;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import com.intellij.ui.ColoredListCellRenderer;
@@ -52,9 +51,6 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

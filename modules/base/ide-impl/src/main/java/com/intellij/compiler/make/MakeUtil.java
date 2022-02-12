@@ -20,7 +20,7 @@
  */
 package com.intellij.compiler.make;
 
-import com.intellij.openapi.compiler.CompileContext;
+import consulo.compiler.CompileContext;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;

@@ -23,7 +23,7 @@ import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsListener;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.PropagateSelectionHandler;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.project.Project;

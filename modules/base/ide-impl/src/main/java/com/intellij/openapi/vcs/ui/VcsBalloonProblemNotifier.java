@@ -15,19 +15,18 @@
  */
 package com.intellij.openapi.vcs.ui;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
+import com.intellij.openapi.util.NamedRunnable;
+import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.NamedRunnable;
-import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.event.NotificationListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.event.HyperlinkEvent;
 
 /**
@@ -36,19 +35,22 @@ import javax.swing.event.HyperlinkEvent;
  * Use the special method or supply additional parameter to the constructor to show the balloon over the Version Control View.
  */
 public class VcsBalloonProblemNotifier implements Runnable {
-  public static final NotificationGroup
-    NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Common Version Control Messages", ChangesViewContentManager.TOOLWINDOW_ID, true);
+  public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Common Version Control Messages", ChangesViewContentManager.TOOLWINDOW_ID, true);
   private final Project myProject;
   private final String myMessage;
-  private final MessageType myMessageType;
+  private final NotificationType myMessageType;
   private final boolean myShowOverChangesView;
-  @Nullable private final NamedRunnable[] myNotificationListener;
+  @Nullable
+  private final NamedRunnable[] myNotificationListener;
 
-  public VcsBalloonProblemNotifier(@Nonnull final Project project, @Nonnull final String message, final MessageType messageType) {
+  public VcsBalloonProblemNotifier(@Nonnull final Project project, @Nonnull final String message, final NotificationType messageType) {
     this(project, message, messageType, true, null);
   }
 
-  public VcsBalloonProblemNotifier(@Nonnull final Project project, @Nonnull final String message, final MessageType messageType, boolean showOverChangesView,
+  public VcsBalloonProblemNotifier(@Nonnull final Project project,
+                                   @Nonnull final String message,
+                                   final NotificationType messageType,
+                                   boolean showOverChangesView,
                                    @Nullable final NamedRunnable[] notificationListener) {
     myProject = project;
     myMessage = message;
@@ -57,17 +59,15 @@ public class VcsBalloonProblemNotifier implements Runnable {
     myNotificationListener = notificationListener;
   }
 
-  public static void showOverChangesView(@Nonnull final Project project, @Nonnull final String message, final MessageType type,
-                                         final NamedRunnable... notificationListener) {
+  public static void showOverChangesView(@Nonnull final Project project, @Nonnull final String message, final NotificationType type, final NamedRunnable... notificationListener) {
     show(project, message, type, true, notificationListener);
   }
 
-  public static void showOverVersionControlView(@Nonnull final Project project, @Nonnull final String message, final MessageType type) {
+  public static void showOverVersionControlView(@Nonnull final Project project, @Nonnull final String message, final NotificationType type) {
     show(project, message, type, false, null);
   }
 
-  private static void show(final Project project, final String message, final MessageType type, final boolean showOverChangesView,
-                           @Nullable final NamedRunnable[] notificationListener) {
+  private static void show(final Project project, final String message, final NotificationType type, final boolean showOverChangesView, @Nullable final NamedRunnable[] notificationListener) {
     final Application application = ApplicationManager.getApplication();
     if (application.isHeadlessEnvironment()) return;
     final Runnable showErrorAction = new Runnable() {
@@ -86,20 +86,19 @@ public class VcsBalloonProblemNotifier implements Runnable {
   public void run() {
     final Notification notification;
     if (myNotificationListener != null && myNotificationListener.length > 0) {
-      final NotificationType type = myMessageType.toNotificationType();
       final StringBuilder sb = new StringBuilder(myMessage);
       for (NamedRunnable runnable : myNotificationListener) {
         final String name = runnable.toString();
         sb.append("<br/><a href=\"").append(name).append("\">").append(name).append("</a>");
       }
-      notification = NOTIFICATION_GROUP.createNotification(type.name(), sb.toString(), myMessageType.toNotificationType(),
-        new NotificationListener() {
+      notification = NOTIFICATION_GROUP.createNotification(myMessageType.name(), sb.toString(), myMessageType, new NotificationListener() {
         @Override
         public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
           if (HyperlinkEvent.EventType.ACTIVATED.equals(event.getEventType())) {
             if (myNotificationListener.length == 1) {
               myNotificationListener[0].run();
-            } else {
+            }
+            else {
               final String description = event.getDescription();
               if (description != null) {
                 for (NamedRunnable runnable : myNotificationListener) {
@@ -114,7 +113,8 @@ public class VcsBalloonProblemNotifier implements Runnable {
           }
         }
       });
-    } else {
+    }
+    else {
       notification = NOTIFICATION_GROUP.createNotification(myMessage, myMessageType);
     }
     notification.notify(myProject.isDefault() ? null : myProject);

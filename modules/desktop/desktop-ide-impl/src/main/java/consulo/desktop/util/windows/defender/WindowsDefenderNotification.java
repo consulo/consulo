@@ -15,8 +15,8 @@
  */
 package consulo.desktop.util.windows.defender;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
 import com.intellij.notification.impl.NotificationFullContent;
 
 import javax.annotation.Nonnull;

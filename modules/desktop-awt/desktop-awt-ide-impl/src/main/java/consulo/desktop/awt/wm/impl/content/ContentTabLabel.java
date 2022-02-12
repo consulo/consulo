@@ -12,6 +12,7 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.util.collection.SmartList;

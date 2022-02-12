@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.actions;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;

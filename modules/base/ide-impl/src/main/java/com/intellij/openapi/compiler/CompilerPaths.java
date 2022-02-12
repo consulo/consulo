@@ -17,6 +17,7 @@ package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.PathUtil;
+import consulo.compiler.Compiler;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.module.Module;

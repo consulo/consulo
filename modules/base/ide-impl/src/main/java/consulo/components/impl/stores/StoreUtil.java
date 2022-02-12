@@ -16,8 +16,8 @@
 package consulo.components.impl.stores;
 
 import com.intellij.diagnostic.IdeErrorsDialog;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;

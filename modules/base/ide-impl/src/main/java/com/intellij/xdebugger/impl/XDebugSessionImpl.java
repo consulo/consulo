@@ -17,8 +17,8 @@ package com.intellij.xdebugger.impl;
 
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.OpenFileHyperlinkInfo;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationListener;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.event.NotificationListener;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.EventDispatcher;
@@ -950,7 +950,7 @@ public class XDebugSessionImpl implements XDebugSession {
       }
     };
 
-    NOTIFICATION_GROUP.createNotification("", message, com.intellij.notification.NotificationType.from(type), notificationListener).notify(myProject);
+    NOTIFICATION_GROUP.createNotification("", message, consulo.project.ui.notification.NotificationType.from(type), notificationListener).notify(myProject);
   }
 
   private class MyBreakpointListener implements XBreakpointListener<XBreakpoint<?>> {

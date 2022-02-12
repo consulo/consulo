@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.editor.markup.*;
 import consulo.ui.ex.popup.JBPopup;

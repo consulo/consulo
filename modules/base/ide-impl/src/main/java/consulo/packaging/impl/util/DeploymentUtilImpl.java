@@ -15,9 +15,9 @@
  */
 package consulo.packaging.impl.util;
 
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompilerBundle;
+import consulo.compiler.CompilerMessageCategory;
 import com.intellij.openapi.deployment.DeploymentUtil;
 import consulo.logging.Logger;
 import consulo.application.util.SystemInfo;

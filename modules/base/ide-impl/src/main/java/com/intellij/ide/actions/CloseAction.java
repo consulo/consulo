@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;

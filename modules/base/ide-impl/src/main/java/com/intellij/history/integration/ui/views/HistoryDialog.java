@@ -33,7 +33,6 @@ import consulo.application.AllIcons;
 import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.help.HelpManager;
 import consulo.application.progress.ProgressIndicator;

@@ -15,13 +15,9 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import consulo.application.AllIcons;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import consulo.util.lang.function.Condition;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
@@ -31,17 +27,23 @@ import com.intellij.openapi.vcs.changes.ui.ChangeListChooser;
 import com.intellij.openapi.vcs.changes.ui.ChangesListView;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import javax.annotation.Nonnull;
+import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.lang.function.Condition;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -142,7 +144,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
 
     if (changesList.isEmpty() && unversionedFiles.isEmpty()) {
-      VcsBalloonProblemNotifier.showOverChangesView(project, "Nothing is selected that can be moved", MessageType.INFO);
+      VcsBalloonProblemNotifier.showOverChangesView(project, "Nothing is selected that can be moved", NotificationType.INFORMATION);
       return;
     }
 

@@ -15,22 +15,22 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
+import com.intellij.util.BufferedListConsumer;
+import com.intellij.util.Consumer;
+import com.intellij.util.ContentUtilEx;
+import consulo.application.ApplicationManager;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;
-import com.intellij.util.BufferedListConsumer;
-import com.intellij.util.Consumer;
-import com.intellij.util.ContentUtilEx;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.List;
 
@@ -143,7 +143,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
   public void reportException(VcsException exception) {
     VcsBalloonProblemNotifier.showOverVersionControlView(myVcs.getProject(),
                                                          VcsBundle.message("message.title.could.not.load.file.history") + ": " +
-                                                         exception.getMessage(), MessageType.ERROR);
+                                                         exception.getMessage(), NotificationType.ERROR);
   }
 
   @Override

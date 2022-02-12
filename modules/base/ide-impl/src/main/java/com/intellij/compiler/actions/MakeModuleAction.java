@@ -16,8 +16,8 @@
 package com.intellij.compiler.actions;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.compiler.CompilerManager;
+import consulo.compiler.CompilerBundle;
+import consulo.compiler.CompilerManager;
 import consulo.dataContext.DataContext;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 

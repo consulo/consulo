@@ -16,7 +16,8 @@
 package com.intellij.notification.impl.actions;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.notification.*;
+import consulo.project.ui.notification.*;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

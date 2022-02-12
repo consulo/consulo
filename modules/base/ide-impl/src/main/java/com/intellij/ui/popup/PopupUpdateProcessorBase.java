@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.popup;
 
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 
 /**
  * User: anna

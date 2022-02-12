@@ -25,6 +25,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.ActionGroup;

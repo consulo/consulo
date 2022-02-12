@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.ui;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.openapi.compiler.CompilerBundle;
+import consulo.compiler.CompilerBundle;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.packaging.ui.PackagingElementPresentation;

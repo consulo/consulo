@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.compiler;
 
+import consulo.compiler.ExportableUserDataHolder;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import javax.annotation.Nonnull;
@@ -22,7 +23,7 @@ import javax.annotation.Nullable;
 
 import java.util.*;
 
-public class ExportableUserDataHolderBase extends UserDataHolderBase implements ExportableUserDataHolder{
+public class ExportableUserDataHolderBase extends UserDataHolderBase implements ExportableUserDataHolder {
   private final Set<Key> myKeys = Collections.synchronizedSet(new HashSet<Key>());
 
   @Nonnull

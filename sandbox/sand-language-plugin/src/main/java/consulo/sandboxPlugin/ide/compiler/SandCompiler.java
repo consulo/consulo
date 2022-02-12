@@ -15,14 +15,14 @@
  */
 package consulo.sandboxPlugin.ide.compiler;
 
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
-import com.intellij.openapi.compiler.TranslatingCompiler;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompileScope;
+import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.TranslatingCompiler;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.Chunk;
+import consulo.util.collection.Chunk;
 import consulo.sandboxPlugin.lang.SandFileType;
 
 import javax.annotation.Nonnull;

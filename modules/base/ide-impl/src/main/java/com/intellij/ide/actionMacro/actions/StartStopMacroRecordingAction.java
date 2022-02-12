@@ -20,6 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actionMacro.ActionMacroManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 

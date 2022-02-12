@@ -18,7 +18,7 @@ package com.intellij.diagnostic.logging;
 
 import com.intellij.execution.impl.ConsoleBuffer;
 import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Comparing;

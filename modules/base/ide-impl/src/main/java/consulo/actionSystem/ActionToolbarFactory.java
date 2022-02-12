@@ -16,6 +16,7 @@
 package consulo.actionSystem;
 
 import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
 
 import javax.annotation.Nonnull;
@@ -31,7 +32,7 @@ public interface ActionToolbarFactory {
    *
    * @param place      Determines the place that will be set for {@link AnActionEvent} passed
    *                   when an action from the group is either performed or updated.
-   *                   See {@link com.intellij.openapi.actionSystem.ActionPlaces}
+   *                   See {@link ActionPlaces}
    * @param group      Group from which the actions for the toolbar are taken.
    * @param horizontal The orientation of the toolbar (true - horizontal, false - vertical)
    * @return An instance of <code>ActionToolbar</code>

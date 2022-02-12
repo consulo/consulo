@@ -15,9 +15,9 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationListener;
+import consulo.project.ui.notification.NotificationType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

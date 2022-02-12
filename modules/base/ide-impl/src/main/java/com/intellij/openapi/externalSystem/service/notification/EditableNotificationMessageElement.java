@@ -17,13 +17,14 @@ package com.intellij.openapi.externalSystem.service.notification;
 
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.errorTreeView.*;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationListener;
 import com.intellij.openapi.actionSystem.*;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;

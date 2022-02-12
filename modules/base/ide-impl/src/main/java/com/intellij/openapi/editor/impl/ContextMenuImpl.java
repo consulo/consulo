@@ -1,17 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.document.Document;
 import consulo.editor.event.EditorMouseEvent;
 import consulo.editor.event.EditorMouseListener;
 import consulo.editor.event.EditorMouseMotionListener;
 import consulo.document.FileDocumentManager;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ui.TimerUtil;
 import consulo.desktop.editor.DesktopEditorFloatPanel;

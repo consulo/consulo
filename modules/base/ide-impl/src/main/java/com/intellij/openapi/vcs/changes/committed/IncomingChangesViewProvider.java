@@ -15,13 +15,6 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnAction;
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
@@ -29,13 +22,19 @@ import com.intellij.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.util.Consumer;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.awt.UIUtil;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.AnAction;
 
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
@@ -143,7 +142,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
 
     public void refreshErrorStatusChanged(@Nullable final VcsException lastError) {
       if (lastError != null) {
-        VcsBalloonProblemNotifier.showOverChangesView(myProject, lastError.getMessage(), MessageType.ERROR);
+        VcsBalloonProblemNotifier.showOverChangesView(myProject, lastError.getMessage(), NotificationType.ERROR);
       }
     }
   }

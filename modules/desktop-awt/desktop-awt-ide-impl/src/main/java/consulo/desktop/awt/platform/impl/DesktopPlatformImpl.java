@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.platform.impl;
 
+import com.intellij.ide.BrowserUtil;
 import consulo.application.util.SystemInfo;
 import consulo.desktop.util.windows.WindowsElevationUtil;
 import consulo.platform.impl.PlatformBase;
@@ -26,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.net.URL;
 
 /**
  * @author VISTALL
@@ -53,6 +55,11 @@ class DesktopPlatformImpl extends PlatformBase {
   }
 
   public DesktopPlatformImpl() {
+  }
+
+  @Override
+  public void browse(@Nonnull URL url) {
+    BrowserUtil.browse(url);
   }
 
   @Nonnull

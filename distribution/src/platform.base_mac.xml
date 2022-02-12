@@ -63,6 +63,7 @@
         <include>consulo:consulo-debugger-api</include>
         <include>consulo:consulo-virtual-file-watcher-api</include>
         <include>consulo:consulo-virtual-file-watcher-impl</include>
+        <include>consulo:consulo-compiler-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

@@ -18,7 +18,7 @@ package com.intellij.refactoring.introduce.inplace;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pass;
 import com.intellij.ui.components.JBList;

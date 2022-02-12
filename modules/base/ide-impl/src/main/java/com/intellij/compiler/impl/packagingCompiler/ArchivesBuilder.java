@@ -16,9 +16,9 @@
 
 package com.intellij.compiler.impl.packagingCompiler;
 
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompilerBundle;
+import consulo.compiler.CompilerMessageCategory;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

@@ -17,7 +17,6 @@ package com.intellij.ide.util.scopeChooser;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.DarculaColors;

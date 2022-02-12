@@ -16,6 +16,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.JBCurrentTheme;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
@@ -24,10 +25,6 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ArrayUtil;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.notification.impl.ui;
 
-import com.intellij.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationDisplayType;
 import com.intellij.notification.impl.NotificationParentGroup;
 import com.intellij.notification.impl.NotificationParentGroupBean;
 import com.intellij.notification.impl.NotificationSettings;

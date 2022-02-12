@@ -26,6 +26,7 @@ import consulo.module.extension.impl.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

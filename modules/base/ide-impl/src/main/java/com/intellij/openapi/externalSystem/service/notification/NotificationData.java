@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.service.notification;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.navigation.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

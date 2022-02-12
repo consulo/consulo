@@ -4,7 +4,7 @@ package com.intellij.openapi.vfs.impl.local;
 import consulo.process.local.OSProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import com.intellij.ide.actions.ShowFilePathAction;
-import com.intellij.notification.NotificationListener;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;

@@ -322,7 +322,7 @@
     </extensionPoint>
 
 
-    <extensionPoint name="compiler" area="PROJECT" interface="com.intellij.openapi.compiler.Compiler"/>
+    <extensionPoint name="compiler" area="PROJECT" interface="consulo.compiler.Compiler"/>
 
     <extensionPoint name="projectStructureValidator"
                     interface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator"/>
@@ -1668,7 +1668,7 @@
     <!-- this depends on TemplateLanguageConfigurable which isn't registered in LangExtensions, so it should go here as well -->
     <errorQuickFixProvider implementation="com.intellij.psi.templateLanguages.TemplateLanguageErrorQuickFixProvider"/>
 
-    <roots.watchedRootsProvider implementation="consulo.compiler.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
+    <roots.watchedRootsProvider implementation="consulo.compiler.impl.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
     <projectService serviceInterface="consulo.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
 
@@ -2482,7 +2482,7 @@
     <lang.ast.leafFactory implementation="consulo.psi.tree.impl.DefaultASTLeafFactory" order="last"/>
     <lang.ast.compositeFactory implementation="consulo.psi.tree.impl.DefaultASTCompositeFactory" order="last"/>
     <lang.psi.elementFactory implementation="consulo.psi.tree.impl.DefaultPsiElementFactory" order="last"/>
-    <iconDescriptorUpdater implementation="consulo.compiler.CompilerIconDescriptorUpdater"/>
+    <iconDescriptorUpdater implementation="consulo.compiler.impl.CompilerIconDescriptorUpdater"/>
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
     <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler" order="last"/>
@@ -2802,6 +2802,8 @@
     <applicationService serviceInterface="com.intellij.openapi.help.HelpManager" serviceImplementation="consulo.help.impl.HelpManagerImpl"/>
 
     <applicationService serviceInterface="consulo.process.DefaultCharsetProvider" serviceImplementation="consulo.process.impl.DefaultCharsetProviderImpl"/>
+    <applicationService serviceInterface="consulo.project.ui.notification.internal.NotificationActionInvoker"
+                        serviceImplementation="consulo.project.ui.notification.impl.NotificationActionInvokerImpl"/>
   </extensions>
 
   <applicationListeners>

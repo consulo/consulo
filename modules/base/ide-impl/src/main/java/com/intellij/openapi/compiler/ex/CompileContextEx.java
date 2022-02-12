@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.compiler.ex;
 
+import consulo.compiler.Compiler;
 import consulo.compiler.make.impl.CompositeDependencyCache;
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerMessage;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompileScope;
+import consulo.compiler.CompilerMessage;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
@@ -55,5 +56,5 @@ public interface CompileContextEx extends CompileContext {
 
   boolean isGenerated(VirtualFile file);
 
-  void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @javax.annotation.Nullable com.intellij.openapi.compiler.Compiler compiler);
+  void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @javax.annotation.Nullable Compiler compiler);
 }

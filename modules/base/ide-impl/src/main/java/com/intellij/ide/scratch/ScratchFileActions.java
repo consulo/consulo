@@ -19,6 +19,7 @@ import consulo.language.plain.PlainTextLanguage;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.language.psi.*;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;

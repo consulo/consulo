@@ -26,7 +26,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModuleRootModel;
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.Chunk;
+import consulo.util.collection.Chunk;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.graph.*;
 import javax.annotation.Nullable;

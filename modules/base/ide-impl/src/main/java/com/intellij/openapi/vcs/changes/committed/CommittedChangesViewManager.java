@@ -22,19 +22,19 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import javax.annotation.Nullable;
+import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -132,7 +132,7 @@ public class CommittedChangesViewManager implements ChangesViewContentProvider {
 
     public void refreshErrorStatusChanged(@Nullable final VcsException lastError) {
       if (lastError != null) {
-        VcsBalloonProblemNotifier.showOverChangesView(myProject, lastError.getMessage(), MessageType.ERROR);
+        VcsBalloonProblemNotifier.showOverChangesView(myProject, lastError.getMessage(), NotificationType.ERROR);
       }
     }
   }

@@ -21,8 +21,8 @@
  */
 package com.intellij.diagnostic;
 
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
 
 public class ReportMessages {
 

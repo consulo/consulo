@@ -19,6 +19,7 @@ import com.intellij.openapi.ui.popup.*;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;

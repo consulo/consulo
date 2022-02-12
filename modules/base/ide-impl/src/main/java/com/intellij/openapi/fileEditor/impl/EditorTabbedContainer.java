@@ -41,6 +41,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowType;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;

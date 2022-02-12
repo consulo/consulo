@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.compiler.generic;
 
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.Compiler;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompileScope;
+import consulo.compiler.Compiler;
 import consulo.index.io.data.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;

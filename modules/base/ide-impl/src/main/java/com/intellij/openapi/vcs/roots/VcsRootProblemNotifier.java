@@ -3,7 +3,7 @@ package com.intellij.openapi.vcs.roots;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.notification.Notification;
+import consulo.project.ui.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;

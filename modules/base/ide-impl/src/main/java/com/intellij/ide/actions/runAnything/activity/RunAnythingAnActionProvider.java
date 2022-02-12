@@ -5,7 +5,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.runAnything.RunAnythingUtil;
 import com.intellij.ide.actions.runAnything.items.RunAnythingActionItem;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;

@@ -4,7 +4,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.EditorPopupHandler;
