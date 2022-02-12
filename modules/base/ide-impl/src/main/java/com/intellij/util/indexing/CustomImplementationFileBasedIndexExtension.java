@@ -6,6 +6,8 @@
 package com.intellij.util.indexing;
 
 import com.intellij.util.indexing.impl.IndexStorage;
+import consulo.language.psi.stub.FileContent;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

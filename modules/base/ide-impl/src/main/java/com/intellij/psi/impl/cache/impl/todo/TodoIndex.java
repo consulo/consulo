@@ -22,6 +22,7 @@ import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.application.Application;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.language.file.LanguageFileType;

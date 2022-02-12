@@ -33,6 +33,70 @@ import java.util.function.Predicate;
  * Based on IDEA code
  */
 public class ContainerUtil {
+  private static final int INSERTION_SORT_THRESHOLD = 10;
+
+  public static <T extends Comparable<T>> void sort(@Nonnull List<T> list) {
+    int size = list.size();
+
+    if (size < 2) return;
+    if (size == 2) {
+      T t0 = list.get(0);
+      T t1 = list.get(1);
+
+      if (t0.compareTo(t1) > 0) {
+        list.set(0, t1);
+        list.set(1, t0);
+      }
+    }
+    else if (size < INSERTION_SORT_THRESHOLD) {
+      for (int i = 0; i < size; i++) {
+        for (int j = 0; j < i; j++) {
+          T ti = list.get(i);
+          T tj = list.get(j);
+
+          if (ti.compareTo(tj) < 0) {
+            list.set(i, tj);
+            list.set(j, ti);
+          }
+        }
+      }
+    }
+    else {
+      Collections.sort(list);
+    }
+  }
+
+  public static <T> void sort(@Nonnull List<T> list, @Nonnull Comparator<? super T> comparator) {
+    int size = list.size();
+
+    if (size < 2) return;
+    if (size == 2) {
+      T t0 = list.get(0);
+      T t1 = list.get(1);
+
+      if (comparator.compare(t0, t1) > 0) {
+        list.set(0, t1);
+        list.set(1, t0);
+      }
+    }
+    else if (size < INSERTION_SORT_THRESHOLD) {
+      for (int i = 0; i < size; i++) {
+        for (int j = 0; j < i; j++) {
+          T ti = list.get(i);
+          T tj = list.get(j);
+
+          if (comparator.compare(ti, tj) < 0) {
+            list.set(i, tj);
+            list.set(j, ti);
+          }
+        }
+      }
+    }
+    else {
+      Collections.sort(list, comparator);
+    }
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <T> List<T> findAll(@Nonnull T[] collection, @Nonnull Condition<? super T> condition) {

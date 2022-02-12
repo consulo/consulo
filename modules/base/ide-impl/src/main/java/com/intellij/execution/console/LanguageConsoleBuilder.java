@@ -16,6 +16,7 @@
 package com.intellij.execution.console;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.psi.PsiCodeFragment;
 import consulo.process.ProcessHandler;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.language.Language;
@@ -97,7 +98,7 @@ public final class LanguageConsoleBuilder {
   }
 
   /**
-   * @see {@link com.intellij.psi.PsiCodeFragment}
+   * @see {@link PsiCodeFragment}
    */
   public LanguageConsoleBuilder psiFileFactory(@Nonnull PairFunction<VirtualFile, Project, PsiFile> value) {
     psiFileFactory = value;

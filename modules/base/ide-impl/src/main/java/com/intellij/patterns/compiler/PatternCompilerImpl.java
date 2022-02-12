@@ -28,7 +28,7 @@ import com.intellij.util.Function;
 import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;

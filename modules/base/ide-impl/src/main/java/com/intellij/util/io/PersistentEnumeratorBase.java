@@ -20,10 +20,11 @@ import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.function.CommonProcessors;
 import consulo.index.io.InlineKeyDescriptor;
 import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataEnumeratorEx;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
-import com.intellij.util.containers.SLRUMap;
-import com.intellij.util.containers.ShareableKey;
+import consulo.util.collection.SLRUMap;
+import consulo.util.collection.ShareableKey;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 

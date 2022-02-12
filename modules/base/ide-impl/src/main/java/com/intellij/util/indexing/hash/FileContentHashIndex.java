@@ -7,6 +7,7 @@ import com.intellij.util.indexing.impl.AbstractUpdateData;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.indexing.impl.forward.MapForwardIndexAccessor;
 import com.intellij.util.indexing.impl.forward.PersistentMapBasedForwardIndex;
+import consulo.language.psi.stub.FileContent;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

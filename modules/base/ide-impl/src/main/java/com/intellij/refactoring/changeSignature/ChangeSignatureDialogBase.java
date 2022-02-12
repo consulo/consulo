@@ -34,7 +34,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.psi.PsiCodeFragment;
+import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.BaseRefactoringProcessor;

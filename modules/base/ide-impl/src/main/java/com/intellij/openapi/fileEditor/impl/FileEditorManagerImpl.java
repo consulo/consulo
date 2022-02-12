@@ -95,6 +95,7 @@ import consulo.ui.docking.BaseDockManager;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileEvent;

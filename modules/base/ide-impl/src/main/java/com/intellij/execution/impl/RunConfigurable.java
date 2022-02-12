@@ -49,7 +49,7 @@ import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.labels.ActionLink;

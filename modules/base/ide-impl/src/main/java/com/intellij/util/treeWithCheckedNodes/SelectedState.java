@@ -16,7 +16,7 @@
 package com.intellij.util.treeWithCheckedNodes;
 
 import consulo.application.util.function.Processor;
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
 
 import javax.annotation.Nonnull;
 import java.util.*;

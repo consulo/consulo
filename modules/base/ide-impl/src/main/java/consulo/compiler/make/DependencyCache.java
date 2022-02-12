@@ -21,7 +21,7 @@ import com.intellij.openapi.compiler.ex.CompileContextEx;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Pair;
 import consulo.util.lang.ref.Ref;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
 import javax.annotation.Nonnull;

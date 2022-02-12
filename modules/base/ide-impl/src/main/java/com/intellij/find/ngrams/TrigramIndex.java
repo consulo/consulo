@@ -21,6 +21,7 @@ package com.intellij.find.ngrams;
 
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.openapi.util.text.TrigramBuilder;

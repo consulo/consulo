@@ -4,64 +4,62 @@ package com.intellij.psi.impl.source;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.ide.util.PsiNavigationSupport;
-import consulo.language.impl.ASTFactory;
-import consulo.navigation.ItemPresentation;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.application.progress.ProgressManager;
-import consulo.document.util.FileContentUtilCore;
-import consulo.language.Language;
-import consulo.language.ast.*;
-import consulo.language.file.FileViewProvider;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.ParserDefinition;
-import consulo.language.psi.*;
-import consulo.language.psi.resolve.ResolveState;
-import consulo.language.psi.stub.PsiFileStub;
-import consulo.language.psi.stub.StubElement;
-import consulo.language.util.IncorrectOperationException;
-import consulo.project.Project;
 import com.intellij.openapi.ui.Queryable;
-import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
-import com.intellij.psi.*;
+import com.intellij.psi.AbstractFileViewProvider;
+import com.intellij.psi.PsiLock;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.file.PsiFileImplUtil;
 import com.intellij.psi.impl.file.impl.FileManagerImpl;
 import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.impl.source.tree.*;
-import consulo.language.psi.resolve.PsiScopeProcessor;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.resolve.PsiElementProcessor;
-import consulo.content.scope.SearchScope;
-import com.intellij.psi.stubs.*;
-import com.intellij.psi.tree.*;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.psi.PsiUtilCore;
+import com.intellij.psi.stubs.StubTreeLoader;
 import com.intellij.testFramework.ReadOnlyLightVirtualFile;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.content.scope.SearchScope;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.FileContentUtilCore;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.ast.*;
+import consulo.language.file.FileViewProvider;
 import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.impl.ASTFactory;
+import consulo.language.parser.LanguageParserDefinitions;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.*;
+import consulo.language.psi.internal.PsiFileWithStubSupport;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.*;
+import consulo.language.psi.stub.internal.StubbedSpine;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
-import consulo.language.psi.PsiElementWithSubtreeChangeNotifier;
+import consulo.navigation.ItemPresentation;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SoftReference;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileWithId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -972,6 +970,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return result != null ? result : getStubTree();
   }
 
+  @Override
   @Nonnull
   public StubTree calcStubTree() {
     StubTree tree = derefStub();

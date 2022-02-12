@@ -17,10 +17,7 @@ package com.intellij.psi.impl.source.resolve.reference;
 
 import consulo.language.Language;
 import consulo.language.LanguageExtension;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiReference;
-import consulo.language.psi.PsiReferenceProvider;
-import consulo.language.psi.PsiReferenceService;
+import consulo.language.psi.*;
 import consulo.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.patterns.ElementPattern;

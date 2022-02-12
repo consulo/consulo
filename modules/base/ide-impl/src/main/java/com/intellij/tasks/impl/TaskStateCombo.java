@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import com.intellij.ide.actions.TemplateKindCombo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.tasks.CustomTaskState;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskRepository;

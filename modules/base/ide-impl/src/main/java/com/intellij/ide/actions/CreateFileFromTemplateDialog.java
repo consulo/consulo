@@ -23,7 +23,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.InputValidatorEx;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.TargetAWT;

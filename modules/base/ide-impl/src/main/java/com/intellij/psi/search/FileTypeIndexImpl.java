@@ -3,6 +3,7 @@ package com.intellij.psi.search;
 
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.project.Project;

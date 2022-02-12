@@ -37,7 +37,7 @@ import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.util.collection.MultiMap;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

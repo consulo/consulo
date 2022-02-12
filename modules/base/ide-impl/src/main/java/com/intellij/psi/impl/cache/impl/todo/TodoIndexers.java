@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.indexing.DataIndexer;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;

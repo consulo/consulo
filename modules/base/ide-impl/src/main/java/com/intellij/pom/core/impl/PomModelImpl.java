@@ -52,7 +52,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import com.intellij.util.lang.CompoundRuntimeException;
 import jakarta.inject.Inject;
 

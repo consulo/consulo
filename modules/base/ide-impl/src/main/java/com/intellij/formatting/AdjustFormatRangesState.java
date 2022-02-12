@@ -19,7 +19,7 @@ import com.intellij.formatting.engine.State;
 import consulo.document.util.TextRange;
 import com.intellij.psi.formatter.common.ExtraRangesProvider;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 
 import java.util.ArrayList;
 import java.util.List;

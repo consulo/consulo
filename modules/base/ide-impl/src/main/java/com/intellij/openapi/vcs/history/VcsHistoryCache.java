@@ -19,7 +19,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vcs.annotate.VcsAnnotation;
 import com.intellij.util.Consumer;
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
 import javax.annotation.Nonnull;
 
 import java.io.Serializable;

@@ -30,7 +30,7 @@ import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

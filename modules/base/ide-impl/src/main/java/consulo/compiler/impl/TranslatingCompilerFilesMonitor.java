@@ -21,7 +21,7 @@ import com.intellij.openapi.compiler.TranslatingCompiler;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

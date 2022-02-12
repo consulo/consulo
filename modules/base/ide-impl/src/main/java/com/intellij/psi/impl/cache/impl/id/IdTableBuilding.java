@@ -28,7 +28,7 @@ import com.intellij.psi.CustomHighlighterTokenType;
 import com.intellij.psi.search.UsageSearchContext;
 import consulo.language.ast.TokenSet;
 import consulo.application.util.function.Processor;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 import com.intellij.util.indexing.IdDataConsumer;
 import com.intellij.util.text.CharArrayUtil;
 

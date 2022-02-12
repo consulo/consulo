@@ -12,7 +12,7 @@ import consulo.util.lang.SystemProperties;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.application.ui.awt.internal.EDT;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.Application;

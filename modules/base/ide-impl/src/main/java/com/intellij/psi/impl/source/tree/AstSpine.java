@@ -17,7 +17,7 @@ package com.intellij.psi.impl.source.tree;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.StubBasedPsiElement;
-import com.intellij.psi.impl.source.StubbedSpine;
+import consulo.language.psi.stub.internal.StubbedSpine;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

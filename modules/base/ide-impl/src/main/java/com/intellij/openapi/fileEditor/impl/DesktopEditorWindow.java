@@ -37,7 +37,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;

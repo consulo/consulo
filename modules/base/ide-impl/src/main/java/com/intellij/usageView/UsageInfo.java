@@ -25,7 +25,7 @@ import consulo.document.Document;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

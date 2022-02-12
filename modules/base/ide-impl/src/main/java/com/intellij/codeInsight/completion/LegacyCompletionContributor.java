@@ -23,7 +23,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
-import com.intellij.psi.ReferenceRange;
+import consulo.language.psi.ReferenceRange;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.util.PairConsumer;
 import consulo.annotation.access.RequiredReadAction;

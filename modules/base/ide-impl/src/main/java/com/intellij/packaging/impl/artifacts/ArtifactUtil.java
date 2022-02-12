@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.artifacts;
 
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;

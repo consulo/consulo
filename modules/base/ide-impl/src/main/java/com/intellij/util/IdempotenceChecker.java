@@ -16,6 +16,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.disposer.Disposable;
 import consulo.language.psi.util.CachedValue;
+import consulo.util.lang.Trinity;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

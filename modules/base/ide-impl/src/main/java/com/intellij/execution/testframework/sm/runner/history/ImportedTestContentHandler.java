@@ -21,7 +21,7 @@ import com.intellij.execution.testframework.sm.runner.GeneralTestEventsProcessor
 import com.intellij.execution.testframework.sm.runner.events.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import javax.annotation.Nonnull;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

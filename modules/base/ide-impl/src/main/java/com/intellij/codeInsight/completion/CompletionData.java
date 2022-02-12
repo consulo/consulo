@@ -31,7 +31,6 @@ import consulo.project.IndexNotReadyException;
 import consulo.document.util.TextRange;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.ObjectPattern;
-import com.intellij.psi.*;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.filters.TrueFilter;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;

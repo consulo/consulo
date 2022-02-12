@@ -23,7 +23,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

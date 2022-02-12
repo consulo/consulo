@@ -24,7 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.util.collection.primitive.ints.IntStack;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

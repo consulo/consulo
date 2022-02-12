@@ -34,7 +34,7 @@ import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.tree.IStubFileElementType;
+import consulo.language.psi.stub.IStubFileElementType;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

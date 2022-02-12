@@ -15,8 +15,9 @@
  */
 package com.intellij.util;
 
-import com.intellij.util.containers.UnsignedShortArrayList;
 import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +34,7 @@ public class PausesStat {
   // fields below are guarded by `this`
 
   // stores durations of the event: (timestamp of the event end) - (timestamp of the event start) in milliseconds.
-  private final UnsignedShortArrayList durations = new UnsignedShortArrayList();
+  private final IntList durations =  IntLists.newArrayList();
   private int maxDuration;
   private Object maxDurationDescription;
   private int totalNumberRecorded;

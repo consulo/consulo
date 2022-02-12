@@ -25,6 +25,8 @@ import consulo.index.io.ID;
 import consulo.language.Language;
 import consulo.language.ast.LighterAST;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileContent;
+import consulo.language.psi.stub.PsiDependentFileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import consulo.util.lang.SystemProperties;

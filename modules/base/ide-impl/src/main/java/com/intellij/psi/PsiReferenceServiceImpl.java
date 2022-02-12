@@ -16,16 +16,11 @@
 package com.intellij.psi;
 
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
-import javax.annotation.Nonnull;
-
-import consulo.language.psi.HintedReferenceHost;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiReference;
-import consulo.language.psi.PsiReferenceService;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.*;
 import jakarta.inject.Singleton;
 
-import consulo.annotation.access.RequiredReadAction;
-
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 

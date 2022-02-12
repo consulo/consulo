@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
-import com.intellij.psi.PsiCodeFragment;
+import consulo.language.psi.PsiCodeFragment;
 
 public abstract class ParameterTableModelItemBase<P> {
   public final P parameter;

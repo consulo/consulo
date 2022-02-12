@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.pratt;
 
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import consulo.language.ast.IElementType;
 import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;

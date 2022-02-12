@@ -4,6 +4,7 @@ package com.intellij.psi.impl.include;
 
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

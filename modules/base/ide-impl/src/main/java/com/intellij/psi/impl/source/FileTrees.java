@@ -16,6 +16,8 @@
 package com.intellij.psi.impl.source;
 
 import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.PsiFileStubImpl;
+import consulo.language.psi.stub.StubBase;
 import consulo.language.psi.stub.StubElement;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.language.psi.PsiElement;
@@ -24,6 +26,8 @@ import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.stubs.*;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.psi.stub.StubTree;
+import consulo.language.psi.stub.internal.StubbedSpine;
 import consulo.logging.Logger;
 import consulo.psi.impl.source.internal.SubstrateRefOwner;
 import consulo.util.lang.ref.SoftReference;

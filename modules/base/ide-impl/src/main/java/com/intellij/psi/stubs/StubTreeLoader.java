@@ -15,31 +15,31 @@
  */
 package com.intellij.psi.stubs;
 
-import consulo.language.Language;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.impl.DebugUtil;
+import consulo.application.util.PerApplicationInstance;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.source.PsiFileWithStubSupport;
-import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.util.Function;
-import consulo.application.util.PerApplicationInstance;
+import consulo.language.psi.internal.PsiFileWithStubSupport;
+import consulo.language.psi.stub.*;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author yole
@@ -159,7 +159,7 @@ public abstract class StubTreeLoader {
   private static RuntimeExceptionWithAttachments handleManyProjectsMismatch(@Nonnull String message, Attachment[] attachments, @Nullable Throwable cause) {
     return new ManyProjectsStubIndexMismatch(message, cause, attachments);
   }
-  
+
   private static RuntimeExceptionWithAttachments handleUpToDateMismatch(@Nonnull String message, Attachment[] attachments, @Nullable Throwable cause) {
     return new UpToDateStubIndexMismatch(message, cause, attachments);
   }
@@ -176,19 +176,19 @@ public abstract class StubTreeLoader {
     }
     return attachments.toArray(Attachment.EMPTY_ARRAY);
   }
- 
+
   public static String getFileViewProviderMismatchDiagnostics(@Nonnull FileViewProvider provider) {
     Function<PsiFile, String> fileClassName = file -> file.getClass().getSimpleName();
-    Function<Pair<IStubFileElementType, PsiFile>, String> stubRootToString = pair -> "(" + pair.first.toString() + ", " + pair.first.getLanguage() + " -> " + fileClassName.fun(pair.second) + ")";
+    Function<Pair<IStubFileElementType, PsiFile>, String> stubRootToString = pair -> "(" + pair.first.toString() + ", " + pair.first.getLanguage() + " -> " + fileClassName.apply(pair.second) + ")";
     List<Pair<IStubFileElementType, PsiFile>> roots = StubTreeBuilder.getStubbedRoots(provider);
     return "path = " +
            provider.getVirtualFile().getPath() +
            ", stubBindingRoot = " +
-           fileClassName.fun(provider.getStubBindingRoot()) +
+           fileClassName.apply(provider.getStubBindingRoot()) +
            ", languages = [" +
            StringUtil.join(provider.getLanguages(), Language::getID, ", ") +
            "], fileTypes = [" +
-           StringUtil.join(provider.getAllFiles(), file -> file.getFileType().getName(), ", ") +
+           StringUtil.join(provider.getAllFiles(), file -> file.getFileType().getId(), ", ") +
            "], files = [" +
            StringUtil.join(provider.getAllFiles(), fileClassName, ", ") +
            "], roots = [" +

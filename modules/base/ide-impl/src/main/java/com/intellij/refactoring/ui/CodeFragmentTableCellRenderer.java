@@ -19,7 +19,7 @@ import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.project.Project;
-import com.intellij.psi.PsiCodeFragment;
+import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.IdeBorderFactory;

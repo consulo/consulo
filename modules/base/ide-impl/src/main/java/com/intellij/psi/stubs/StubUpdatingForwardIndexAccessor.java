@@ -2,7 +2,7 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.indexing.UpdatableIndex;
 import com.intellij.util.indexing.impl.InputData;

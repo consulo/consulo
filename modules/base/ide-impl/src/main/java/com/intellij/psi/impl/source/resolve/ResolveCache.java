@@ -24,7 +24,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.RecursionGuard;
 import com.intellij.openapi.util.RecursionManager;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
 import consulo.language.psi.PsiUtilCore;

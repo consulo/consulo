@@ -20,7 +20,7 @@ import com.intellij.lang.LangBundle;
 import consulo.language.parser.PsiBuilder;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import consulo.language.lexer.Lexer;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

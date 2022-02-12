@@ -22,7 +22,7 @@ import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;
 import com.intellij.psi.impl.cache.impl.id.LexerBasedIdIndexer;
 import com.intellij.psi.impl.cache.impl.todo.TodoIndexEntry;
 import com.intellij.psi.search.IndexPattern;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 import com.intellij.util.indexing.IdDataConsumer;
 import consulo.util.dataholder.Key;
 

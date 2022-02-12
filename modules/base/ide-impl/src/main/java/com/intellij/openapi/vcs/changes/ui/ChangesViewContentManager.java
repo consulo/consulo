@@ -20,7 +20,7 @@ import consulo.application.Application;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ui.ex.content.Content;

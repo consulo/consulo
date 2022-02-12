@@ -21,7 +21,7 @@ import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.LighterASTTokenNode;
 import consulo.language.ast.LighterLazyParseableNode;
 import consulo.util.collection.util.WalkingState;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import javax.annotation.Nonnull;
 
 import java.util.List;

@@ -16,7 +16,7 @@
 package com.intellij.execution.compound;
 
 import consulo.execution.configuration.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationTypeBase;
+import consulo.execution.configuration.ConfigurationTypeBase;
 import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.application.AllIcons;

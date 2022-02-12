@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.cache.impl.id;
 
 import com.intellij.psi.search.UsageSearchContext;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 import com.intellij.util.indexing.IdDataConsumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

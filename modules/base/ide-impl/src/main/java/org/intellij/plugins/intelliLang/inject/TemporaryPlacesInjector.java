@@ -20,7 +20,7 @@ import consulo.language.Language;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.psi.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

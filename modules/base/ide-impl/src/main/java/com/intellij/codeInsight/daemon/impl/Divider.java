@@ -27,7 +27,7 @@ import consulo.language.psi.PsiUtilCore;
 import com.intellij.reference.SoftReference;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.primitive.ints.IntStack;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

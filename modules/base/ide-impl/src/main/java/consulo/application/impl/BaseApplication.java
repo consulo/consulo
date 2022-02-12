@@ -48,7 +48,7 @@ import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import com.intellij.util.EventDispatcher;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.AppScheduledExecutorService;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.ui.awt.internal.EDT;
 import consulo.annotation.access.RequiredWriteAction;

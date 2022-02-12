@@ -51,7 +51,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.ui.AppUIUtil;

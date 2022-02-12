@@ -20,7 +20,7 @@ import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;

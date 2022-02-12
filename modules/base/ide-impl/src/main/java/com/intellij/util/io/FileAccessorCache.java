@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
 import consulo.util.collection.HashingStrategy;
 
 import javax.annotation.Nonnull;

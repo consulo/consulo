@@ -35,6 +35,7 @@ import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.compiler.ex.CompilerPathsEx;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
+import consulo.util.lang.Trinity;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.document.FileDocumentManager;

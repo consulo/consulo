@@ -24,10 +24,12 @@ module consulo.language.api {
   exports consulo.language.icon;
   exports consulo.language.psi;
   exports consulo.language.psi.event;
+  exports consulo.language.psi.internal to consulo.ide.impl;
   exports consulo.language.psi.meta;
   exports consulo.language.psi.resolve;
   exports consulo.language.psi.scope;
   exports consulo.language.psi.stub;
+  exports consulo.language.psi.stub.internal to consulo.ide.impl;
 
   exports consulo.language.psi.util;
   opens consulo.language.psi.util to consulo.ide.impl;

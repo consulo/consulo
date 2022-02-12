@@ -28,7 +28,7 @@ import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;

@@ -84,7 +84,7 @@ import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.Query;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.ui.ex.PositionTracker;
 import consulo.application.Result;
 import consulo.ui.ex.awt.TargetAWT;

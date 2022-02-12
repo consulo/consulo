@@ -14,7 +14,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColoredTextContainer;

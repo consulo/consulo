@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;

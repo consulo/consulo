@@ -33,7 +33,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.util.lang.ref.Ref;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;

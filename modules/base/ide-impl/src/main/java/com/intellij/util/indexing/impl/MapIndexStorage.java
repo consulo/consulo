@@ -19,7 +19,7 @@ import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
-import com.intellij.util.containers.SLRUCache;
+import consulo.util.collection.SLRUCache;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.indexing.ValueContainer;
 import com.intellij.util.io.*;

@@ -25,7 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.concurrency.FutureResult;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.application.ui.awt.UIUtil;
 import consulo.util.BombedStringUtil;
 

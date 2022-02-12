@@ -12,7 +12,7 @@ import com.intellij.openapi.progress.impl.CoreProgressManager;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

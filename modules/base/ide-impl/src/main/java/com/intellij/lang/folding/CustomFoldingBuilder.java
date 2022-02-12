@@ -23,7 +23,7 @@ import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;

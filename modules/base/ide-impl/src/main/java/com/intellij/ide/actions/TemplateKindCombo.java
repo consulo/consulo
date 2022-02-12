@@ -19,7 +19,7 @@ import consulo.application.ui.UISettings;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.ComboboxWithBrowseButton;

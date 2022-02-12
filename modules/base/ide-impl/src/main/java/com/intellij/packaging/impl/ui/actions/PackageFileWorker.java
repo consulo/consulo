@@ -22,7 +22,7 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.deployment.DeploymentUtil;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;

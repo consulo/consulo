@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.newclass;
 
 import com.intellij.ide.ui.newItemPopup.NewItemWithTemplatesPopupPanel;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.ui.SimpleListCellRenderer;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBUI;

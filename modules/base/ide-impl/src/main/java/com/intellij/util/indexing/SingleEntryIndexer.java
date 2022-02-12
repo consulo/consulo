@@ -17,6 +17,7 @@
 package com.intellij.util.indexing;
 
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileContent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

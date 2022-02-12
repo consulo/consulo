@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.util.containers.ShareableKey;
+import consulo.util.collection.ShareableKey;
 import javax.annotation.Nonnull;
 
 class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>>, ShareableKey {

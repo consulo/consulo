@@ -20,6 +20,7 @@ import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.stub.FileContent;
 import consulo.logging.Logger;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.io.UnsyncByteArrayOutputStream;

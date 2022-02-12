@@ -22,7 +22,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.PsiCodeFragment;
+import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 

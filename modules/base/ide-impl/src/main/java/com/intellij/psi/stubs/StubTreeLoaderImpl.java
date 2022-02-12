@@ -18,9 +18,8 @@ package com.intellij.psi.stubs;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.*;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.language.psi.stub.PsiFileStub;
-import consulo.language.psi.stub.Stub;
+import consulo.language.psi.stub.*;
+import consulo.language.psi.stub.StubTreeBuilder;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -192,7 +191,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
 
     for (PsiFileStub root : ((PsiFileStubImpl<?>)tree.getRoot()).getStubRoots()) {
       if (root instanceof StubBase) {
-        StubList stubList = ((StubBase)root).myStubList;
+        StubList stubList = ((StubBase)root).getStubList();
         for (int i = 0; i < stubList.size(); i++) {
           StubBase<?> each = stubList.getCachedStub(i);
           PsiElement cachedPsi = each == null ? null : ((StubBase)each).getCachedPsi();

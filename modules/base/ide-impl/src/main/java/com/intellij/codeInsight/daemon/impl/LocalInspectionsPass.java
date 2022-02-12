@@ -49,7 +49,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl;

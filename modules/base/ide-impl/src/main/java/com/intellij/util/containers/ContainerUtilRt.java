@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
 import consulo.annotation.DeprecationInfo;
+import consulo.util.collection.Stack;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -265,19 +266,19 @@ public class ContainerUtilRt {
 
   @Nonnull
   @Contract(pure=true)
-  public static <T> Stack<T> newStack() {
-    return new Stack<T>();
+  public static <T> consulo.util.collection.Stack<T> newStack() {
+    return new consulo.util.collection.Stack<T>();
   }
 
   @Nonnull
   @Contract(pure=true)
-  public static <T> Stack<T> newStack(@Nonnull Collection<T> elements) {
-    return new Stack<T>(elements);
+  public static <T> consulo.util.collection.Stack<T> newStack(@Nonnull Collection<T> elements) {
+    return new consulo.util.collection.Stack<T>(elements);
   }
 
   @Nonnull
   @Contract(pure=true)
-  public static <T> Stack<T> newStack(@Nonnull T... initial) {
+  public static <T> consulo.util.collection.Stack<T> newStack(@Nonnull T... initial) {
     return new Stack<T>(Arrays.asList(initial));
   }
 

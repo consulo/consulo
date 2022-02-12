@@ -32,7 +32,7 @@ import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.Consumer;
 import java.util.HashSet;
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

@@ -42,7 +42,7 @@ import consulo.language.ast.TokenSet;
 import com.intellij.util.codeInsight.CommentUtilCore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.DataIndexer;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 import com.intellij.util.indexing.SubstitutedFileType;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;

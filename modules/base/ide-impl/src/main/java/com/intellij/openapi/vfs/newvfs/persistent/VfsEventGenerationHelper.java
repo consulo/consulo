@@ -19,7 +19,7 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.virtualFileSystem.event.*;
 
 import javax.annotation.Nonnull;

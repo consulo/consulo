@@ -5,7 +5,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceService;
-import com.intellij.psi.ReferenceRange;
+import consulo.language.psi.ReferenceRange;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

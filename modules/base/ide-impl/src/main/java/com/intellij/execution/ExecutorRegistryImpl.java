@@ -31,7 +31,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashMap;
 

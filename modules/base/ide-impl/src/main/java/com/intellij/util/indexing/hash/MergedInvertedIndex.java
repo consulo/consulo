@@ -8,6 +8,7 @@ import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;

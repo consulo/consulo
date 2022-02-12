@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.cache.impl.todo;
 
 import com.intellij.util.indexing.DataIndexer;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 
 public interface VersionedTodoIndexer extends DataIndexer<TodoIndexEntry, Integer, FileContent> {
   default int getVersion() {

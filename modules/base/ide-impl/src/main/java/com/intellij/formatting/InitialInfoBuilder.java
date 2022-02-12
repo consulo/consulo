@@ -8,7 +8,7 @@ import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import consulo.util.collection.LinkedMultiMap;
 import consulo.util.collection.MultiMap;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

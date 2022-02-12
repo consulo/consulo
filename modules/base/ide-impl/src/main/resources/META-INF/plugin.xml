@@ -995,7 +995,7 @@
 
     <extensionPoint name="filetype.stubBuilder"
                     beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.stubs.BinaryFileStubBuilder"/>
+      <with attribute="implementationClass" implements="consulo.language.psi.stub.BinaryFileStubBuilder"/>
     </extensionPoint>
 
     <extensionPoint name="stubElementTypeHolder"

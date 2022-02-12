@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;

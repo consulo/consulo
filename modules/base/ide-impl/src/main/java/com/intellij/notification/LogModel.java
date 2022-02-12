@@ -19,7 +19,7 @@ import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.Topic;

@@ -15,6 +15,10 @@
  */
 package com.intellij.psi.stubs;
 
+import consulo.language.psi.stub.BinaryFileStubBuilders;
+import consulo.language.psi.stub.ObjectStubTree;
+import consulo.language.psi.stub.StubTree;
+import consulo.language.psi.stub.StubTreeBuilder;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -23,8 +27,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.impl.source.PsiFileWithStubSupport;
-import com.intellij.psi.impl.source.StubbedSpine;
+import consulo.language.psi.internal.PsiFileWithStubSupport;
+import consulo.language.psi.stub.internal.StubbedSpine;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;

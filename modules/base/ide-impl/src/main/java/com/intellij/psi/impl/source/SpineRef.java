@@ -4,7 +4,7 @@ package com.intellij.psi.impl.source;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.stub.Stub;
-import com.intellij.psi.stubs.StubTree;
+import consulo.language.psi.stub.StubTree;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

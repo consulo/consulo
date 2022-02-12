@@ -6,7 +6,7 @@ import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import com.intellij.util.text.CharSequenceReader;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;

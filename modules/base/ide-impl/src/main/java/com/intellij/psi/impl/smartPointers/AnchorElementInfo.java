@@ -24,7 +24,7 @@ import consulo.document.util.TextRange;
 import com.intellij.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.PsiFileWithStubSupport;
+import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;

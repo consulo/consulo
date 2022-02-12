@@ -19,7 +19,7 @@ import com.intellij.patterns.StringPattern;
 import com.intellij.psi.impl.cache.impl.IndexPatternUtil;
 import com.intellij.psi.impl.cache.impl.OccurrenceConsumer;
 import com.intellij.psi.search.IndexPattern;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;

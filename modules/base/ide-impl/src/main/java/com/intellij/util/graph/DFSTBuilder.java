@@ -21,7 +21,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.component.util.graph.Graph;
 import consulo.component.util.graph.OutboundSemiGraph;
 import consulo.util.collection.primitive.ints.IntStack;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntArrayList;

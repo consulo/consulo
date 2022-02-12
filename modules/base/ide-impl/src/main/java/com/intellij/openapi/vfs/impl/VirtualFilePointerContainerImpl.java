@@ -4,7 +4,7 @@ package com.intellij.openapi.vfs.impl;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;

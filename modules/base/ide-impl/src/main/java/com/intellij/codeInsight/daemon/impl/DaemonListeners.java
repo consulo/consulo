@@ -3,10 +3,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import consulo.dataContext.DataContext;
 import consulo.editor.event.*;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.psi.PsiManager;
+import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.module.content.ProjectTopics;
 import com.intellij.codeHighlighting.Pass;

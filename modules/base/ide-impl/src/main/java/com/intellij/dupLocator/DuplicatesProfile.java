@@ -21,7 +21,7 @@ import com.intellij.dupLocator.util.PsiFragment;
 import consulo.language.Language;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.indexing.FileContent;
+import consulo.language.psi.stub.FileContent;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

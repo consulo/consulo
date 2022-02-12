@@ -18,15 +18,14 @@ package com.intellij.psi.stubs;
 import consulo.language.Language;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
-import consulo.language.psi.stub.PsiFileStub;
-import consulo.language.psi.stub.Stub;
+import consulo.language.psi.stub.*;
+import consulo.language.psi.stub.StubTreeBuilder;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IFileElementType;
-import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.indexing.FileContentImpl;
 import consulo.annotation.access.RequiredReadAction;
 

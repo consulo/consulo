@@ -17,7 +17,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.*;
 import com.intellij.util.containers.LimitedPool;
-import com.intellij.util.containers.SLRUCache;
+import consulo.util.collection.SLRUCache;
 import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
 import org.jetbrains.annotations.NonNls;

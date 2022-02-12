@@ -38,7 +38,7 @@ import com.intellij.patterns.ElementPattern;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
-import com.intellij.psi.ReferenceRange;
+import consulo.language.psi.ReferenceRange;
 import com.intellij.ui.GuiUtils;
 import com.intellij.ui.LightweightHint;
 import consulo.project.ui.util.Alarm;

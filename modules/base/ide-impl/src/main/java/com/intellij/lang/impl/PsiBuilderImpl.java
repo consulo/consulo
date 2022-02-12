@@ -43,7 +43,7 @@ import com.intellij.util.TripleFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.LimitedPool;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;

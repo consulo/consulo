@@ -20,7 +20,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleColoredRenderer;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.containers.Stack;
+import consulo.util.collection.Stack;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.image.Image;
 

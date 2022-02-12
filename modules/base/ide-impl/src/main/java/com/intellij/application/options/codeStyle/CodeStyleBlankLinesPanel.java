@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle;
 
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.util.Trinity;
+import consulo.util.lang.Trinity;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;

@@ -20,6 +20,7 @@ import com.intellij.util.*;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import consulo.util.collection.*;
+import consulo.util.collection.Stack;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.application.util.function.Processor;
