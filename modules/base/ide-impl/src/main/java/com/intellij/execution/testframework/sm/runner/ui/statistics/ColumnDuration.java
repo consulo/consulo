@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner.ui.statistics;
 
 import com.intellij.ui.ColoredTableCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.TestsPresentationUtil;
 import com.intellij.execution.testframework.sm.SMTestsRunnerBundle;

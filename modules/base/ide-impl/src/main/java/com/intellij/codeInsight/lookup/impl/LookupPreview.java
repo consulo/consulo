@@ -25,7 +25,7 @@ import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
 import consulo.editor.*;

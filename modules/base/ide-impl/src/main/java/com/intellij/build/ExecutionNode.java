@@ -10,7 +10,7 @@ import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.AnimatedIcon;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;

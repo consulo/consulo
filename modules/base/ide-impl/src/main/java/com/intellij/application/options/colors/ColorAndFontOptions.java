@@ -33,7 +33,7 @@ import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.colors.impl.DefaultColorsScheme;
 import com.intellij.openapi.editor.colors.impl.EditorColorsSchemeImpl;
 import com.intellij.openapi.editor.colors.impl.ReadOnlyColorsScheme;
-import consulo.editor.markup.EffectType;
+import consulo.ui.ex.EffectType;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.options.colors.*;

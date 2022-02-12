@@ -2,20 +2,16 @@
 package com.intellij.ide.actions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
-import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
-import consulo.application.ui.UISettings;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.editor.markup.EffectType;
-import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
@@ -24,54 +20,60 @@ import com.intellij.openapi.fileEditor.impl.EditorTabPresentationUtil;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
-import consulo.component.util.Iconable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.*;
-import consulo.application.ui.awt.CustomLineBorder;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.popup.PopupUpdateProcessorBase;
-import consulo.application.ui.awt.JBUIScale;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import consulo.project.ui.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBUI;
 import com.intellij.util.ui.StatusText;
-import consulo.application.ui.awt.UIUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.awt.*;
+import consulo.component.util.Iconable;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.IdeFocusManager;
+import consulo.project.ui.util.Alarm;
+import consulo.project.ui.wm.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.EffectType;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -340,12 +342,12 @@ public class Switcher extends AnAction implements DumbAware {
 
       descriptions = new JPanel(new BorderLayout());
 
-      pathLabel.setBorder(JBUI.CurrentTheme.Advertiser.border());
-      pathLabel.setForeground(JBUI.CurrentTheme.Advertiser.foreground());
-      pathLabel.setBackground(JBUI.CurrentTheme.Advertiser.background());
+      pathLabel.setBorder(JBCurrentTheme.Advertiser.border());
+      pathLabel.setForeground(JBCurrentTheme.Advertiser.foreground());
+      pathLabel.setBackground(JBCurrentTheme.Advertiser.background());
       pathLabel.setOpaque(true);
 
-      descriptions.setBorder(new CustomLineBorder(JBUI.CurrentTheme.Advertiser.borderColor(), JBUI.insetsTop(1)));
+      descriptions.setBorder(new CustomLineBorder(JBCurrentTheme.Advertiser.borderColor(), JBUI.insetsTop(1)));
       descriptions.add(pathLabel, BorderLayout.CENTER);
       twManager = ToolWindowManager.getInstance(project);
       CollectionListModel<Object> twModel = new CollectionListModel<>();
@@ -508,7 +510,7 @@ public class Switcher extends AnAction implements DumbAware {
         files.setAlignmentY(1f);
         final JScrollPane pane = ScrollPaneFactory.createScrollPane(files, true);
         pane.setPreferredSize(new Dimension(Math.max(myTopPanel.getPreferredSize().width - toolWindows.getPreferredSize().width, files.getPreferredSize().width), 20 * 20));
-        pane.setBorder(JBUI.Borders.customLineLeft(JBUI.CurrentTheme.Popup.separatorColor()));
+        pane.setBorder(JBUI.Borders.customLineLeft(JBCurrentTheme.Popup.separatorColor()));
         this.add(pane, BorderLayout.CENTER);
         if (selectionIndex > -1) {
           files.setSelectedIndex(selectionIndex);
@@ -1312,7 +1314,7 @@ public class Switcher extends AnAction implements DumbAware {
 
       boolean hasProblem = WolfTheProblemSolver.getInstance(project).isProblemFile(virtualFile);
       TextAttributes attributes = new TextAttributes(fileStatus.getColor(), null, hasProblem ? StandardColors.RED : null, EffectType.WAVE_UNDERSCORE, Font.PLAIN);
-      append(renderedName, SimpleTextAttributes.fromTextAttributes(attributes));
+      append(renderedName, TextAttributesUtil.fromTextAttributes(attributes));
 
       // calc color the same way editor tabs do this, i.e. including EPs
       Color color = EditorTabPresentationUtil.getFileBackgroundColor(project, virtualFile);

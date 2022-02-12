@@ -31,6 +31,9 @@ import com.intellij.openapi.progress.util.ReadTask;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.ui.*;
 import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.event.DocumentAdapter;
@@ -109,7 +112,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import static com.intellij.ui.SimpleTextAttributes.STYLE_PLAIN;
+import static consulo.ui.ex.SimpleTextAttributes.STYLE_PLAIN;
 import static consulo.application.ui.awt.FontUtil.spaceAndThinSpace;
 import static java.awt.event.InputEvent.ALT_DOWN_MASK;
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
@@ -809,7 +812,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       twoButtons.add(myFilterContextButton);
       JComponent separatorComponent = (JComponent)Box.createRigidArea(new JBDimension(1, 24));
       separatorComponent.setOpaque(true);
-      separatorComponent.setBackground(JBUI.CurrentTheme.CustomFrameDecorations.separatorForeground());
+      separatorComponent.setBackground(JBCurrentTheme.CustomFrameDecorations.separatorForeground());
       twoButtons.add(separatorComponent);
       twoButtons.add(pinButton);
       add(twoButtons, "wrap");
@@ -817,9 +820,9 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     else {
       add(myFilterContextButton, "wrap");
     }
-    mySearchTextArea.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBUI.CurrentTheme.BigPopup.searchFieldBorderColor(), 1, 0, 1, 0), JBUI.Borders.empty(1, 0, 2, 0)));
+    mySearchTextArea.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 1, 0, 1, 0), JBUI.Borders.empty(1, 0, 2, 0)));
     add(mySearchTextArea, "pushx, growx, sx 10, pad 0 -4 0 4, gaptop 4, wrap");
-    myReplaceTextArea.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBUI.CurrentTheme.BigPopup.searchFieldBorderColor(), 0, 0, 1, 0), JBUI.Borders.empty(1, 0, 2, 0)));
+    myReplaceTextArea.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 0, 0, 1, 0), JBUI.Borders.empty(1, 0, 2, 0)));
     add(myReplaceTextArea, "pushx, growx, sx 10, pad 0 -4 0 4, wrap");
     add(scopesPanel, "sx 10, pushx, growx, ax left, wrap, gaptop 4, gapbottom 4");
     add(splitter, "pushx, growx, growy, pushy, sx 10, wrap, pad -4 -4 4 4");

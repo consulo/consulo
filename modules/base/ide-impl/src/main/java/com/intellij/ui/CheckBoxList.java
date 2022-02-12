@@ -21,7 +21,7 @@ import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.BidirectionalMap;
 import consulo.application.ui.awt.EmptyIcon;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;

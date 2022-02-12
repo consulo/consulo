@@ -1,36 +1,36 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util;
 
-import consulo.application.ui.UISettings;
 import com.intellij.ide.util.treeView.NodeRenderer;
-import consulo.navigation.ItemPresentation;
-import consulo.navigation.NavigationItem;
 import com.intellij.navigation.NavigationItemFileStatus;
 import com.intellij.navigation.PsiElementNavigationItem;
-import consulo.editor.markup.EffectType;
-import consulo.editor.markup.TextAttributes;
-import consulo.project.Project;
 import com.intellij.openapi.vcs.FileStatus;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.ColoredListCellRenderer;
-import consulo.application.ui.awt.JBColor;
-import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.IconUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
+import consulo.application.ui.UISettings;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.EffectType;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.style.StandardColors;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -124,13 +124,13 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
           color = status.getColor();
         }
 
-        final TextAttributes textAttributes = NodeRenderer.getSimpleTextAttributes(presentation).toTextAttributes();
+        final TextAttributes textAttributes = TextAttributesUtil.toTextAttributes(NodeRenderer.getSimpleTextAttributes(presentation));
         if (isProblemFile) {
           textAttributes.setEffectType(EffectType.WAVE_UNDERSCORE);
           textAttributes.setEffectColor(StandardColors.RED);
         }
         textAttributes.setForegroundColor(color);
-        SimpleTextAttributes nameAttributes = SimpleTextAttributes.fromTextAttributes(textAttributes);
+        SimpleTextAttributes nameAttributes = TextAttributesUtil.fromTextAttributes(textAttributes);
         SpeedSearchUtil.appendColoredFragmentForMatcher(name, this, nameAttributes, myMatcher, bgColor, selected);
         setIcon(presentation.getIcon(false));
 

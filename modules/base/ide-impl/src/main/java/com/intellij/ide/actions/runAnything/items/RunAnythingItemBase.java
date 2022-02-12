@@ -4,7 +4,7 @@ package com.intellij.ide.actions.runAnything.items;
 import com.intellij.ide.actions.runAnything.groups.RunAnythingGroup;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ObjectUtils;
 import consulo.application.ui.awt.JBUI;
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.intellij.ui.SimpleTextAttributes.*;
+import static consulo.ui.ex.SimpleTextAttributes.*;
 
 public class RunAnythingItemBase extends RunAnythingItem {
   @Nonnull

@@ -21,7 +21,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
-import consulo.application.ui.awt.Gray;
+import consulo.ui.ex.Gray;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;

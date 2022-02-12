@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.update;
 
 import consulo.project.Project;
 import consulo.disposer.Disposer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 
 import java.util.Collections;
 import java.util.List;

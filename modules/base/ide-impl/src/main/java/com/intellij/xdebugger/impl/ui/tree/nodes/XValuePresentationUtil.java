@@ -20,9 +20,10 @@ import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.ui.ColoredTextContainer;
-import consulo.application.ui.awt.JBColor;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import consulo.ui.ex.JBColor;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.debugger.frame.presentation.XValuePresentation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -48,7 +49,7 @@ public class XValuePresentationUtil {
         if (escapeAttributes == null) {
           TextAttributes fromHighlighter = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE);
           if (fromHighlighter != null) {
-            escapeAttributes = SimpleTextAttributes.fromTextAttributes(fromHighlighter);
+            escapeAttributes = TextAttributesUtil.fromTextAttributes(fromHighlighter);
           }
           else {
             escapeAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, JBColor.GRAY);

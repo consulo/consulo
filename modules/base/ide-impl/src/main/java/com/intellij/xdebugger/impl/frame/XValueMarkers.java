@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import com.intellij.xdebugger.frame.XValue;
-import com.intellij.xdebugger.frame.XValueMarkerProvider;
+import consulo.debugger.frame.XValue;
+import consulo.debugger.frame.XValueMarkerProvider;
 import com.intellij.xdebugger.impl.ui.tree.ValueMarkup;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

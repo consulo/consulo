@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree;
 
-import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import consulo.debugger.frame.presentation.XValuePresentation;
 
 /**
  * @author egor

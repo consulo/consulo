@@ -3,7 +3,7 @@ package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.application.ui.awt.GraphicsConfig;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.JBValue;
 import consulo.application.ui.awt.UIUtil;
 

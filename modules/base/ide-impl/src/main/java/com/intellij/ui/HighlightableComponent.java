@@ -2,7 +2,7 @@
 package com.intellij.ui;
 
 import consulo.application.ui.UISettings;
-import consulo.editor.markup.EffectType;
+import consulo.ui.ex.EffectType;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.UIUtil;

@@ -37,7 +37,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.module.Module;

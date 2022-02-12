@@ -15,23 +15,24 @@
  */
 package com.intellij.ide.navigationToolbar;
 
-import consulo.editor.markup.EffectType;
+import com.intellij.openapi.vcs.FileStatus;
+import com.intellij.openapi.vcs.FileStatusManager;
+import com.intellij.problems.WolfTheProblemSolver;
+import com.intellij.ui.ColoredListCellRenderer;
+import consulo.application.ui.awt.UIUtil;
 import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.openapi.vcs.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.problems.WolfTheProblemSolver;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.EffectType;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.style.StandardColors;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,7 +89,7 @@ public class NavBarListCellRenderer extends ColoredListCellRenderer {
     final SimpleTextAttributes nameAttributes;
     if (isProblemFile) {
       TextAttributes attributes = new TextAttributes(color, null, StandardColors.RED, EffectType.WAVE_UNDERSCORE, Font.PLAIN);
-      nameAttributes = SimpleTextAttributes.fromTextAttributes(attributes);
+      nameAttributes = TextAttributesUtil.fromTextAttributes(attributes);
     }
     else {
       nameAttributes = new SimpleTextAttributes(Font.PLAIN, TargetAWT.to(color));

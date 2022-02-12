@@ -17,5 +17,6 @@ module consulo.editor.api {
   exports consulo.editor.colorScheme.event;
   exports consulo.editor.event;
   exports consulo.editor.markup;
+  exports consulo.editor.util;
   exports consulo.editor.internal to consulo.ide.impl;
 }

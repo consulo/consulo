@@ -39,7 +39,7 @@ import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 import com.intellij.ui.debugger.extensions.UiScriptFileType;

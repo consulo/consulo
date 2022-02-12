@@ -17,6 +17,7 @@ package consulo.editor.markup;
 
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.EffectType;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;

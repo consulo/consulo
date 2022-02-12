@@ -38,7 +38,7 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus;
 import com.intellij.openapi.vcs.ex.LineStatusMarkerRenderer;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.TargetAWT;

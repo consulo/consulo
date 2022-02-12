@@ -4,7 +4,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.EffectType;
+import consulo.ui.ex.EffectType;
 import consulo.editor.markup.TextAttributes;
 import consulo.process.ProcessOutputTypes;
 import consulo.ui.color.ColorValue;

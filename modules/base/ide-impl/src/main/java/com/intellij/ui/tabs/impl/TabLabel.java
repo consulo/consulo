@@ -15,9 +15,10 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;

@@ -15,8 +15,8 @@
  */
 package com.intellij.vcs.log.ui;
 
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.data.VcsLogData;
 import javax.annotation.Nonnull;

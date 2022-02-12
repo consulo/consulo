@@ -36,7 +36,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import static consulo.editor.markup.EffectType.LINE_UNDERSCORE;
+import static consulo.ui.ex.EffectType.LINE_UNDERSCORE;
 import static consulo.editor.markup.HighlighterTargetArea.EXACT_RANGE;
 
 public class FocusModeModel implements Disposable {

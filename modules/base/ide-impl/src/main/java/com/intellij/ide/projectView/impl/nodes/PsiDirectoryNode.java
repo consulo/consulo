@@ -39,7 +39,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiPackageHelper;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 

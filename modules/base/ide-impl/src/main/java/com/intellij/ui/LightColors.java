@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 
 import java.awt.Color;
 

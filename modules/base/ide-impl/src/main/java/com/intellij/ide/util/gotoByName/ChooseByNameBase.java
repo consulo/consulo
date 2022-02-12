@@ -38,6 +38,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.event.DocumentAdapter;

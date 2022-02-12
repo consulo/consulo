@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.xdebugger.XDebuggerBundle;
-import com.intellij.xdebugger.frame.XReferrersProvider;
+import consulo.debugger.XDebuggerBundle;
+import consulo.debugger.frame.XReferrersProvider;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XInspectDialog;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;

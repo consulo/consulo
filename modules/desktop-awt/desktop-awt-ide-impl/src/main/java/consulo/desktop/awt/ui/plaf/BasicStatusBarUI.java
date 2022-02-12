@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.JBValue;
 import consulo.application.ui.awt.UIUtil;

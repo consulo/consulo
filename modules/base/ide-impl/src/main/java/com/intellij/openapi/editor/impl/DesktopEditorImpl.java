@@ -59,6 +59,8 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

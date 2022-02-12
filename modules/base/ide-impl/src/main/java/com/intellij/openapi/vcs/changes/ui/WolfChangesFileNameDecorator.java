@@ -18,8 +18,8 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
-import consulo.application.ui.awt.JBColor;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
 import jakarta.inject.Inject;
 
 import jakarta.inject.Singleton;

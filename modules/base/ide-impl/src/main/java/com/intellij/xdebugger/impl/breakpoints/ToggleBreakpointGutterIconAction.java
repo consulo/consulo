@@ -17,8 +17,8 @@ package com.intellij.xdebugger.impl.breakpoints;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.xdebugger.XDebuggerBundle;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import consulo.debugger.XDebuggerBundle;
+import consulo.debugger.breakpoint.XBreakpoint;
 
 /**
 * @author nik

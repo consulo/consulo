@@ -15,7 +15,7 @@
  */
 package consulo.desktop.editor;
 
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.JBUI;
 
 import javax.swing.*;

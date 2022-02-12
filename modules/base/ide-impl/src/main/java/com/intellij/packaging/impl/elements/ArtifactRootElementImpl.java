@@ -25,7 +25,7 @@ import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 
 /**

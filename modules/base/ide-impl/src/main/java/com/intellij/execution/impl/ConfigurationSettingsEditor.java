@@ -35,7 +35,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollingUtil;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.containers.Convertor;
 import org.jetbrains.annotations.NonNls;
 

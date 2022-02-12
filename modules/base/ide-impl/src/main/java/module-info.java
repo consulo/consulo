@@ -51,6 +51,7 @@ open module consulo.ide.impl {
   requires transitive consulo.editor.api;
   requires transitive consulo.process.api;
   requires transitive consulo.execution.api;
+  requires transitive consulo.debugger.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -253,8 +254,6 @@ open module consulo.ide.impl {
   exports com.intellij.coverage;
   exports com.intellij.coverage.actions;
   exports com.intellij.coverage.view;
-  //exports com.intellij.debugger;
-  exports com.intellij.debugger.ui;
   exports com.intellij.designer;
   exports com.intellij.designer.model;
   exports com.intellij.designer.propertyTable;
@@ -1053,14 +1052,8 @@ open module consulo.ide.impl {
   exports com.intellij.vfs;
   //exports com.intellij.webcore;
   exports com.intellij.webcore.packaging;
-  exports com.intellij.xdebugger;
   exports com.intellij.xdebugger.attach;
   exports com.intellij.xdebugger.attach.osHandlers;
-  exports com.intellij.xdebugger.breakpoints;
-  exports com.intellij.xdebugger.breakpoints.ui;
-  exports com.intellij.xdebugger.evaluation;
-  exports com.intellij.xdebugger.frame;
-  exports com.intellij.xdebugger.frame.presentation;
   exports com.intellij.xdebugger.impl;
   exports com.intellij.xdebugger.impl.actions;
   exports com.intellij.xdebugger.impl.actions.handlers;
@@ -1078,9 +1071,6 @@ open module consulo.ide.impl {
   exports com.intellij.xdebugger.impl.ui.tree;
   exports com.intellij.xdebugger.impl.ui.tree.actions;
   exports com.intellij.xdebugger.impl.ui.tree.nodes;
-  exports com.intellij.xdebugger.settings;
-  exports com.intellij.xdebugger.stepping;
-  exports com.intellij.xdebugger.ui;
   exports com.intellij.xml;
   exports com.intellij.xml.util;
   exports com.maddyhome.idea.copyright;
@@ -1341,9 +1331,6 @@ open module consulo.ide.impl {
   exports consulo.wm.impl.layout;
   exports consulo.wm.impl.status;
   exports consulo.wm.impl.welcomeScreen;
-  exports consulo.xdebugger;
-  exports consulo.xdebugger.breakpoints;
-  //exports consulo.xdebugger.impl;
   exports consulo.xdebugger.impl.settings;
   exports icons;
   exports org.intellij.plugins.intelliLang;

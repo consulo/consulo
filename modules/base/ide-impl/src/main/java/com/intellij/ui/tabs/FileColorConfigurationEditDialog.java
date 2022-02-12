@@ -28,7 +28,7 @@ import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.ui.ColorChooser;
 import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.FileColorManager;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.util.ArrayUtil;
 import consulo.application.ui.awt.UIUtil;
 

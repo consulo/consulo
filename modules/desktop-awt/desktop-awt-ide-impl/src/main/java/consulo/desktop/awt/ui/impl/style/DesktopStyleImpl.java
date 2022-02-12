@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.style;
 
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightColors;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;

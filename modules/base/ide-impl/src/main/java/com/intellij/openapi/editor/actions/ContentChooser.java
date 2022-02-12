@@ -36,6 +36,7 @@ import consulo.project.ui.util.Alarm;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
 import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 

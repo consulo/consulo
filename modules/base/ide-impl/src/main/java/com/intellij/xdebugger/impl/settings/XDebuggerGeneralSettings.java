@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.settings;
 
 import consulo.util.xml.serializer.annotation.Tag;
-import com.intellij.xdebugger.evaluation.EvaluationMode;
+import consulo.debugger.evaluation.EvaluationMode;
 
 /**
  * @author egor

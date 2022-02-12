@@ -16,10 +16,10 @@
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import consulo.project.Project;
-import com.intellij.xdebugger.XExpression;
-import com.intellij.xdebugger.breakpoints.XBreakpointManager;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import consulo.debugger.breakpoint.XExpression;
+import consulo.debugger.XBreakpointManager;
+import consulo.debugger.breakpoint.XLineBreakpoint;
+import consulo.debugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;

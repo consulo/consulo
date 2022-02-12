@@ -21,7 +21,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.border.IdeaTitledBorder;
 import com.intellij.ui.components.JBLabel;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.debugger.XDebuggerBundle;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

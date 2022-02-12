@@ -6,7 +6,7 @@
       <xy x="20" y="20" width="537" height="60"/>
     </constraints>
     <properties/>
-    <border type="etched" title-resource-bundle="messages/XDebuggerBundle" title-key="suspend.policy.panel.title"/>
+    <border type="etched" title-resource-bundle="consulo/debugger/XDebuggerBundle" title-key="suspend.policy.panel.title"/>
     <children>
       <hspacer id="d9eab">
         <constraints>

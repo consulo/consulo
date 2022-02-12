@@ -7,6 +7,8 @@ import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.application.ApplicationManager;
@@ -947,7 +949,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
         offset = ActionToolbarImpl.this.getWidth() - getMaxButtonWidth() - 1;
       }
 
-      g.setColor(JBUI.CurrentTheme.CustomFrameDecorations.separatorForeground());
+      g.setColor(JBCurrentTheme.CustomFrameDecorations.separatorForeground());
       if (myOrientation == SwingConstants.HORIZONTAL) {
         int y2 = ActionToolbarImpl.this.getHeight() - gap * 2 - offset;
         LinePainter2D.paint((Graphics2D)g, center, gap, center, y2);

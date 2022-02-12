@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.update;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.ui.ex.awt.TargetAWT;

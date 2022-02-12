@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.IconDeferrer;
 import consulo.ui.ex.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.content.AlertIcon;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
@@ -110,8 +110,8 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
 
   public TabInfo setText(String text) {
     List<SimpleTextAttributes> attributes = myText.getAttributes();
-    TextAttributes textAttributes = attributes.size() == 1 ? attributes.get(0).toTextAttributes() : null;
-    TextAttributes defaultAttributes = getDefaultAttributes().toTextAttributes();
+    TextAttributes textAttributes = attributes.size() == 1 ? TextAttributesUtil.toTextAttributes(attributes.get(0)) : null;
+    TextAttributes defaultAttributes = TextAttributesUtil.toTextAttributes(getDefaultAttributes());
     if (!myText.toString().equals(text) || !Comparing.equal(textAttributes, defaultAttributes)) {
       clearText(false);
       append(text, getDefaultAttributes());

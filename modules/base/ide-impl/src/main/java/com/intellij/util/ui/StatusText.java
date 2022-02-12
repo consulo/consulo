@@ -4,7 +4,7 @@ package com.intellij.util.ui;
 
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBViewport;
 import consulo.application.ui.awt.JBUIScale;

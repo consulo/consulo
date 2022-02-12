@@ -16,7 +16,7 @@
 package consulo.desktop.awt.startup.customize;
 
 import com.intellij.openapi.ui.ex.MultiLineLabel;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

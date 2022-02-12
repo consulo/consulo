@@ -17,7 +17,7 @@ package com.intellij.openapi.keymap.impl.ui;
 
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.application.util.SystemInfo;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.mac.MacGestureSupportForMouseShortcutPanel;
 
 import java.awt.BorderLayout;

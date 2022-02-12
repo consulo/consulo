@@ -31,7 +31,7 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.SourceItemPresentation;
 import com.intellij.packaging.ui.SourceItemWeights;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 
 import java.util.List;

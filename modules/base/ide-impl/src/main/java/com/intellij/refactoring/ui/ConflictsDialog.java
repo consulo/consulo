@@ -28,7 +28,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.util.ArrayUtil;
@@ -235,7 +235,7 @@ public class ConflictsDialog extends DialogWrapper{
         public TextChunk[] getText() {
           final TextChunk[] chunks = usagePresentation.getText();
           return ArrayUtil
-            .append(chunks, new TextChunk(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES.toTextAttributes(), conflictDescription));
+            .append(chunks, new TextChunk(TextAttributesUtil.toTextAttributes(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES), conflictDescription));
         }
 
         @Override

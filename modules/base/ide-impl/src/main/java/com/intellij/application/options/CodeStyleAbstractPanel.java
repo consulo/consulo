@@ -30,6 +30,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.EditorHighlighter;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import consulo.document.Document;
+import consulo.ui.ex.EffectType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;

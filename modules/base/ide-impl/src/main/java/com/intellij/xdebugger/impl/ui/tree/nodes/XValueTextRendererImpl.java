@@ -16,11 +16,13 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.ui.ColoredTextContainer;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.ui.ColoredTextContainer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.ui.ex.SimpleTextAttributes;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -42,14 +44,14 @@ public class XValueTextRendererImpl extends XValueTextRendererBase {
   @Override
   protected void renderRawValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
     TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(key);
-    SimpleTextAttributes attributes = SimpleTextAttributes.fromTextAttributes(textAttributes);
+    SimpleTextAttributes attributes = TextAttributesUtil.fromTextAttributes(textAttributes);
     myText.append(value, attributes);
   }
 
   @Override
   public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
     TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DefaultLanguageHighlighterColors.STRING);
-    SimpleTextAttributes attributes = SimpleTextAttributes.fromTextAttributes(textAttributes);
+    SimpleTextAttributes attributes = TextAttributesUtil.fromTextAttributes(textAttributes);
     myText.append(String.valueOf(quoteChar), attributes);
     XValuePresentationUtil.renderValue(value, myText, attributes, maxLength, additionalSpecialCharsToHighlight);
     myText.append(String.valueOf(quoteChar), attributes);

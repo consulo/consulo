@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.actions.handlers;
 
-import com.intellij.xdebugger.XDebugSession;
+import consulo.debugger.XDebugSession;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**

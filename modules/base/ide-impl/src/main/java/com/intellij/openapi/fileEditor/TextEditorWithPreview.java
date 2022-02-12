@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.Pair;
 import consulo.project.ui.IdeFocusManager;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.OnePixelSplitter;
 import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;

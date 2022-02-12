@@ -28,7 +28,7 @@ import com.intellij.openapi.util.*;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
-import consulo.application.ui.awt.Gray;
+import consulo.ui.ex.Gray;
 import com.intellij.ui.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.switcher.QuickActionProvider;

@@ -15,6 +15,10 @@
  */
 package com.intellij.xdebugger.impl;
 
+import consulo.debugger.*;
+import consulo.debugger.breakpoint.*;
+import consulo.debugger.event.XBreakpointListener;
+import consulo.debugger.event.XDebugSessionListener;
 import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
@@ -46,12 +50,10 @@ import com.intellij.util.EventDispatcher;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.SmartHashSet;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.xdebugger.*;
-import com.intellij.xdebugger.breakpoints.*;
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XStackFrame;
-import com.intellij.xdebugger.frame.XSuspendContext;
-import com.intellij.xdebugger.frame.XValueMarkerProvider;
+import consulo.debugger.frame.XExecutionStack;
+import consulo.debugger.frame.XStackFrame;
+import consulo.debugger.frame.XSuspendContext;
+import consulo.debugger.frame.XValueMarkerProvider;
 import com.intellij.xdebugger.impl.breakpoints.*;
 import com.intellij.xdebugger.impl.evaluate.XDebuggerEditorLinePainter;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
@@ -61,8 +63,8 @@ import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionData;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
-import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
-import com.intellij.xdebugger.stepping.XSmartStepIntoVariant;
+import consulo.debugger.step.XSmartStepIntoHandler;
+import consulo.debugger.step.XSmartStepIntoVariant;
 import consulo.application.AccessRule;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

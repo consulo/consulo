@@ -25,13 +25,13 @@ import consulo.language.psi.PsiManager;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.FileColorManager;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.ui.TextTransferable;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.xdebugger.XDebuggerBundle;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.frame.XStackFrame;
+import consulo.debugger.XDebuggerBundle;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.frame.XStackFrame;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

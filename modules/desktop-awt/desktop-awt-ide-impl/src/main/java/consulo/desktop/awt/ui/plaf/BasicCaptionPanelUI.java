@@ -16,8 +16,8 @@
 package consulo.desktop.awt.ui.plaf;
 
 import com.intellij.ui.CaptionPanel;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;

@@ -29,7 +29,7 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.popup.util.DetailView;
 import com.intellij.ui.popup.util.ItemWrapper;
-import com.intellij.xdebugger.ui.DebuggerColors;
+import consulo.debugger.ui.DebuggerColors;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;

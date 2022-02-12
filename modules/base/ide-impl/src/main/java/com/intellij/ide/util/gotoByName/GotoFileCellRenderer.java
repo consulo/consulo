@@ -3,24 +3,25 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.ide.util.PsiElementListCellRenderer;
-import consulo.navigation.ItemPresentation;
-import consulo.navigation.NavigationItem;
-import consulo.editor.markup.TextAttributes;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.component.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.util.ui.FilePathSplittingPolicy;
+import consulo.ui.ex.JBColor;
+import consulo.component.util.Iconable;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;
-import com.intellij.ui.ColoredListCellRenderer;
-import consulo.application.ui.awt.JBColor;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ui.FilePathSplittingPolicy;
+import consulo.module.content.ProjectFileIndex;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -97,7 +98,7 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
 
     NavigationItem item = (NavigationItem)value;
 
-    SimpleTextAttributes nameAttributes = attributes != null ? SimpleTextAttributes.fromTextAttributes(attributes) : null;
+    SimpleTextAttributes nameAttributes = attributes != null ? TextAttributesUtil.fromTextAttributes(attributes) : null;
 
     Color color = list.getForeground();
     if (nameAttributes == null) nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);

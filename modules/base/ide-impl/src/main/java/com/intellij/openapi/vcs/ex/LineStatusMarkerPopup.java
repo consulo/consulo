@@ -41,7 +41,7 @@ import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.HintListener;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightweightHint;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.ex.awt.TargetAWT;

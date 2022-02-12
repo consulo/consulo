@@ -39,6 +39,25 @@ public class StringUtil {
   private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
   private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
 
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String shortenTextWithEllipsis(@Nonnull final String text, final int maxLength, final int suffixLength) {
+    return shortenTextWithEllipsis(text, maxLength, suffixLength, false);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimMiddle(@Nonnull String text, int maxLength, boolean useEllipsisSymbol) {
+    return shortenTextWithEllipsis(text, maxLength, maxLength >> 1, useEllipsisSymbol);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimMiddle(@Nonnull String text, int maxLength) {
+    return shortenTextWithEllipsis(text, maxLength, maxLength >> 1, true);
+  }
+
   /**
    * Converts line separators to <code>"\n"</code>
    */

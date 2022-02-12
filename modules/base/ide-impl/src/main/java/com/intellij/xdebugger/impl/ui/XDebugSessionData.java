@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.ui;
 
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.xdebugger.XExpression;
+import consulo.debugger.breakpoint.XExpression;
 import javax.annotation.Nonnull;
 
 /**

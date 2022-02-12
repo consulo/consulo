@@ -18,7 +18,7 @@ import consulo.project.ui.wm.ToolWindow;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;

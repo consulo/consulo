@@ -21,7 +21,7 @@ package com.intellij.application.options.colors;
 
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.EffectType;
+import consulo.ui.ex.EffectType;
 import consulo.editor.markup.TextAttributes;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;

@@ -4,6 +4,7 @@ package com.intellij.find;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.find.editorHeaderActions.Utils;
 import consulo.application.AllIcons;
+import consulo.application.ui.awt.*;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
@@ -14,16 +15,13 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextArea;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ArrayUtil;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbar;
@@ -245,7 +243,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
       }
       myExtraActionsPanel.setLayout(new BorderLayout());
       myExtraActionsPanel.add(buttonsGrid, BorderLayout.NORTH);
-      myExtraActionsPanel.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBUI.CurrentTheme.CustomFrameDecorations.separatorForeground(), 0, 1, 0, 0), JBUI.Borders.emptyLeft(4)));
+      myExtraActionsPanel.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBCurrentTheme.CustomFrameDecorations.separatorForeground(), 0, 1, 0, 0), JBUI.Borders.emptyLeft(4)));
     }
     return addedButtons;
   }

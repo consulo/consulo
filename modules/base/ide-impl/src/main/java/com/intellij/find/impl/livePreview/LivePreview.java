@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.editor.event.VisibleAreaEvent;
 import consulo.editor.event.VisibleAreaListener;
-import consulo.editor.markup.EffectType;
+import consulo.ui.ex.EffectType;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;
 import consulo.editor.event.SelectionEvent;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.application.ui.awt.Gray;
+import consulo.ui.ex.Gray;
 
 import javax.swing.*;
 import java.awt.*;

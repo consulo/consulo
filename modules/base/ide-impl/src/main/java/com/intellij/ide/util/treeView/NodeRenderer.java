@@ -17,17 +17,18 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.navigation.ColoredItemPresentation;
-import consulo.navigation.ItemPresentation;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.ColoredTreeCellRenderer;
+import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ColoredTreeCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.navigation.ItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -74,7 +75,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
             if (textAttributesKey != null) {
               final TextAttributes forcedAttributes = getColorsScheme().getAttributes(textAttributesKey);
               if (forcedAttributes != null) {
-                simpleTextAttributes = SimpleTextAttributes.merge(SimpleTextAttributes.fromTextAttributes(forcedAttributes), simpleTextAttributes);
+                simpleTextAttributes = SimpleTextAttributes.merge(TextAttributesUtil.fromTextAttributes(forcedAttributes), simpleTextAttributes);
               }
             }
             first = false;
@@ -122,9 +123,9 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
 
   private SimpleTextAttributes addColorToSimpleTextAttributes(SimpleTextAttributes simpleTextAttributes, ColorValue color) {
     if (color != null) {
-      final TextAttributes textAttributes = simpleTextAttributes.toTextAttributes();
+      final TextAttributes textAttributes = TextAttributesUtil.toTextAttributes(simpleTextAttributes);
       textAttributes.setForegroundColor(color);
-      simpleTextAttributes = SimpleTextAttributes.fromTextAttributes(textAttributes);
+      simpleTextAttributes = TextAttributesUtil.fromTextAttributes(textAttributes);
     }
     return simpleTextAttributes;
   }
@@ -140,7 +141,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
       final TextAttributesKey textAttributesKey = ((ColoredItemPresentation) presentation).getTextAttributesKey();
       if (textAttributesKey == null) return SimpleTextAttributes.REGULAR_ATTRIBUTES;
       final TextAttributes textAttributes = colorsScheme.getAttributes(textAttributesKey);
-      return textAttributes == null ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.fromTextAttributes(textAttributes);
+      return textAttributes == null ? SimpleTextAttributes.REGULAR_ATTRIBUTES : TextAttributesUtil.fromTextAttributes(textAttributes);
     }
     return SimpleTextAttributes.REGULAR_ATTRIBUTES;
   }

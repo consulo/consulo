@@ -3,7 +3,7 @@ package com.intellij.execution.console;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,7 +15,7 @@ import consulo.editor.markup.LineMarkerRenderer;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.IdeFocusManager;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.LinePainter2D;
 import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ObjectUtils;

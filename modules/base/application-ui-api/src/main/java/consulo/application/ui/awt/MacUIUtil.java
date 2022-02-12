@@ -18,6 +18,7 @@ package consulo.application.ui.awt;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.registry.Registry;
+import consulo.ui.ex.Gray;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

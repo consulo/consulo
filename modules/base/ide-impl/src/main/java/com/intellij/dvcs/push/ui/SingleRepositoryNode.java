@@ -17,7 +17,7 @@ package com.intellij.dvcs.push.ui;
 
 import com.intellij.dvcs.push.PushTargetPanel;
 import com.intellij.ui.ColoredTreeCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
 

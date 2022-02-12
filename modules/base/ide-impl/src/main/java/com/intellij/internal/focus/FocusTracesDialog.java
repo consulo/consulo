@@ -19,7 +19,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.impl.FocusRequestInfo;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.table.JBTable;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;

@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.MessageType;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;

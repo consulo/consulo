@@ -17,8 +17,8 @@ package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.openapi.actionSystem.ActionButtonComponent;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
 import consulo.desktop.awt.ui.plaf.intellij.ActionButtonUI;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class DarculaActionButtonUI extends ActionButtonUI {
     Rectangle rect = new Rectangle(button.getSize());
     JBInsets.removeFrom(rect, button.getInsets());
 
-    Color color = state == ActionButtonComponent.PUSHED ? JBUI.CurrentTheme.ActionButton.pressedBackground() : JBUI.CurrentTheme.ActionButton.hoverBackground();
+    Color color = state == ActionButtonComponent.PUSHED ? JBCurrentTheme.ActionButton.pressedBackground() : JBCurrentTheme.ActionButton.hoverBackground();
     Graphics2D g2 = (Graphics2D)g.create();
 
     try {
@@ -70,7 +70,7 @@ public class DarculaActionButtonUI extends ActionButtonUI {
     g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
 
     try {
-      Color color = state == ActionButtonComponent.PUSHED ? JBUI.CurrentTheme.ActionButton.pressedBorder() : JBUI.CurrentTheme.ActionButton.hoverBorder();
+      Color color = state == ActionButtonComponent.PUSHED ? JBCurrentTheme.ActionButton.pressedBorder() : JBCurrentTheme.ActionButton.hoverBorder();
 
       g2.setColor(color);
 

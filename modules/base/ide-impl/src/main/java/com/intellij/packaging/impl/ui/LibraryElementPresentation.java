@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 
 /**

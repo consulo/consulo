@@ -17,15 +17,14 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.debugger.frame.*;
 import consulo.util.concurrent.AsyncResult;
-import com.intellij.util.ThreeState;
-import com.intellij.xdebugger.Obsolescent;
-import com.intellij.xdebugger.XExpression;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.evaluation.XInstanceEvaluator;
-import com.intellij.xdebugger.frame.*;
-import com.intellij.xdebugger.frame.presentation.XErrorValuePresentation;
-import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import consulo.debugger.Obsolescent;
+import consulo.debugger.breakpoint.XExpression;
+import consulo.debugger.evaluation.XDebuggerEvaluator;
+import consulo.debugger.evaluation.XInstanceEvaluator;
+import consulo.debugger.frame.presentation.XErrorValuePresentation;
+import consulo.debugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import javax.annotation.Nonnull;
@@ -173,8 +172,8 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
 
     @Override
     @Nonnull
-    public ThreeState computeInlineDebuggerData(@Nonnull XInlineDebuggerDataCallback callback) {
-      return ThreeState.NO;
+    public consulo.util.lang.ThreeState computeInlineDebuggerData(@Nonnull XInlineDebuggerDataCallback callback) {
+      return consulo.util.lang.ThreeState.NO;
     }
 
     @Override

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.ui.CaptionPanel;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.desktop.awt.ui.plaf.BasicCaptionPanelUI;
 
 import javax.swing.*;
@@ -39,7 +39,7 @@ public class DarculaCaptionPanelUI extends BasicCaptionPanelUI {
     final Graphics2D g2d = (Graphics2D)g;
     CaptionPanel panel = (CaptionPanel)c;
 
-    g2d.setPaint(JBUI.CurrentTheme.Popup.headerBackground(panel.isActive()));
+    g2d.setPaint(JBCurrentTheme.Popup.headerBackground(panel.isActive()));
     g2d.fillRect(0, 0, panel.getWidth(), panel.getHeight());
   }
 }

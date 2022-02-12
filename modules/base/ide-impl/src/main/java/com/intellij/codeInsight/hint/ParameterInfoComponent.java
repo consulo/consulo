@@ -17,7 +17,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.Function;
 import consulo.application.ui.awt.JBUI;

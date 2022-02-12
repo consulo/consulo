@@ -17,8 +17,8 @@ package com.intellij.vcs.log.ui.frame;
 
 import consulo.application.ui.awt.GraphicsConfig;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AsyncProcessIcon;
 import consulo.application.ui.awt.GraphicsUtil;

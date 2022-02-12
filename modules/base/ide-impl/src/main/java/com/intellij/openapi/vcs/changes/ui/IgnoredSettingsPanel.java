@@ -33,6 +33,7 @@ import com.intellij.openapi.vcs.changes.IgnoredFileBean;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.SimpleTextAttributes;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

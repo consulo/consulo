@@ -21,6 +21,7 @@ import consulo.editor.CaretModel;
 import consulo.editor.FoldRegion;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.EffectType;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;

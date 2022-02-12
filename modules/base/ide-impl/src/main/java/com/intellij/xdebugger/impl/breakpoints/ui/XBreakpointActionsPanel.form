@@ -17,7 +17,7 @@
         <clientProperties>
           <BorderFactoryClass class="java.lang.String" value="com.intellij.ui.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
-        <border type="etched" title-resource-bundle="messages/XDebuggerBundle" title-key="xbreakpoints.properties.actions.group.title"/>
+        <border type="etched" title-resource-bundle="consulo/debugger/XDebuggerBundle" title-key="xbreakpoints.properties.actions.group.title"/>
         <children>
           <component id="26324" class="javax.swing.JCheckBox" binding="myLogMessageCheckBox">
             <constraints>

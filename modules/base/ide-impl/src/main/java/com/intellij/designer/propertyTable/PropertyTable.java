@@ -22,26 +22,28 @@ import com.intellij.designer.model.PropertyContext;
 import com.intellij.designer.propertyTable.renderers.LabelPropertyRenderer;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.lang.annotation.HighlightSeverity;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
-import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.PairFunction;
-import consulo.application.util.function.ThrowableRunnable;
 import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.application.util.function.ThrowableRunnable;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.util.TextAttributesUtil;
 import consulo.logging.Logger;
+import consulo.project.ui.IdeFocusManager;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.util.ui.ToolwindowPaintUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.TableUI;
@@ -55,8 +57,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Alexander Lobas
@@ -1280,7 +1282,7 @@ public abstract class PropertyTable extends JBTable {
 
         ErrorInfo errorInfo = getErrorInfoForRow(row);
         if (errorInfo != null) {
-          SimpleTextAttributes template = SimpleTextAttributes.fromTextAttributes(
+          SimpleTextAttributes template = TextAttributesUtil.fromTextAttributes(
             EditorColorsManager.getInstance().getGlobalScheme().getAttributes(getErrorAttributes(errorInfo.getLevel().getSeverity())));
 
           int style = ((template.getStyle() & SimpleTextAttributes.STYLE_WAVED) != 0 ? SimpleTextAttributes.STYLE_WAVED : 0)

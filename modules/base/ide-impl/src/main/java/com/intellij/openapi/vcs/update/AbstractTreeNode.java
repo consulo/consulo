@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSetBase;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

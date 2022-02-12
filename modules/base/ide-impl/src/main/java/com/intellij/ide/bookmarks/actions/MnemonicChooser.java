@@ -21,8 +21,8 @@ package com.intellij.ide.bookmarks.actions;
 
 import consulo.ui.ex.action.ActionToolbar;
 import com.intellij.ui.ClickListener;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightColors;
 import consulo.application.ui.awt.CustomLineBorder;
 import com.intellij.ui.components.panels.HorizontalLayout;

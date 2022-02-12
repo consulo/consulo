@@ -22,6 +22,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import com.intellij.openapi.vcs.ui.FontUtil;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBPanel;
@@ -222,7 +224,7 @@ class CommitPanel extends JBPanel {
       Document document = getDocument();
       if (document instanceof HTMLDocument) {
         StyleSheet styleSheet = ((HTMLDocument)document).getStyleSheet();
-        String linkColor = "#" + ColorUtil.toHex(JBUI.CurrentTheme.Link.linkColor());
+        String linkColor = "#" + ColorUtil.toHex(JBCurrentTheme.Link.linkColor());
         styleSheet.addRule("a { color: " + linkColor + "; text-decoration: none;}");
       }
     }

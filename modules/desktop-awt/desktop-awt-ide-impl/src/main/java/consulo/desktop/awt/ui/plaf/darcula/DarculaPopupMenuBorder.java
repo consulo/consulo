@@ -2,8 +2,8 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.desktop.awt.ui.plaf.intellij.IdeaPopupMenuUI;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
 

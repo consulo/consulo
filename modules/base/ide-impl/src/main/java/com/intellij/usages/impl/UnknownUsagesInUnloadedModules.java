@@ -17,7 +17,7 @@ package com.intellij.usages.impl;
 
 import consulo.application.AllIcons;
 import consulo.module.UnloadedModuleDescription;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.usages.TextChunk;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsagePresentation;
@@ -47,7 +47,7 @@ public class UnknownUsagesInUnloadedModules extends UsageAdapter implements Usag
       @Nonnull
       @Override
       public TextChunk[] getText() {
-        return new TextChunk[]{new TextChunk(SimpleTextAttributes.REGULAR_ATTRIBUTES.toTextAttributes(), myExplanationText)};
+        return new TextChunk[]{new TextChunk(TextAttributesUtil.toTextAttributes(SimpleTextAttributes.REGULAR_ATTRIBUTES), myExplanationText)};
       }
 
       @Nonnull

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 
 public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {

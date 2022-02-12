@@ -32,6 +32,7 @@ import com.intellij.util.text.CharArrayUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.editor.*;
+import consulo.ui.ex.EffectType;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;

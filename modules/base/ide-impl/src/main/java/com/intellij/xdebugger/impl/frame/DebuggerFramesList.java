@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.frame;
 
 import com.intellij.ide.OccurenceNavigator;
 import com.intellij.ui.components.JBList;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.debugger.XDebuggerBundle;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

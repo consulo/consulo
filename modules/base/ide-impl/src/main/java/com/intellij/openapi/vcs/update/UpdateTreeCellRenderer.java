@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.ui.ColoredTreeCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.swing.*;
 

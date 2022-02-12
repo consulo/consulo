@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
-import consulo.editor.markup.EffectType;
+import consulo.ui.ex.EffectType;
 import consulo.editor.markup.TextAttributes;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;

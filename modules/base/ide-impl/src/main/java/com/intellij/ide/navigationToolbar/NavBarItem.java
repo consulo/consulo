@@ -9,7 +9,7 @@ import consulo.dataContext.DataProvider;
 import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.collection.JBIterable;
 import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;

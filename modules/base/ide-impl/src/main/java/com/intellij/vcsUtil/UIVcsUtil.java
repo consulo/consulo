@@ -16,7 +16,7 @@
 package com.intellij.vcsUtil;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;

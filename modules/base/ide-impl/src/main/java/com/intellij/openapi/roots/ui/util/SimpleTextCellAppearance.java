@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.util;
 
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

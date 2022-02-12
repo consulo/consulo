@@ -19,6 +19,7 @@
  */
 package consulo.editor.markup;
 
+import consulo.ui.ex.EffectType;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;

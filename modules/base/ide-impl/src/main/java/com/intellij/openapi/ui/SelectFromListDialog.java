@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;

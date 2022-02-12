@@ -2,21 +2,19 @@
 package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
+import consulo.application.ui.awt.*;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.WindowMoveListener;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.BorderLayoutPanel;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.border.BorderStyle;
@@ -122,7 +120,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
   }
 
   public void init() {
-    withBackground(JBUI.CurrentTheme.BigPopup.headerBackground());
+    withBackground(JBCurrentTheme.BigPopup.headerBackground());
 
     myResultsList = createList();
 
@@ -147,7 +145,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     top.setOpaque(false);
     top.add(topLeftPanel, BorderLayout.WEST);
     top.add(settingsPanel, BorderLayout.EAST);
-    top.setBorder(JBUI.Borders.customLine(JBUI.CurrentTheme.BigPopup.searchFieldBorderColor(), 0, 0, 1, 0));
+    top.setBorder(JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 0, 0, 1, 0));
 
     JPanel topPanel = new JPanel(new BorderLayout());
     topPanel.setOpaque(false);
@@ -200,14 +198,14 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
   private JPanel createSuggestionsPanel() {
     JPanel pnl = new JPanel(new BorderLayout());
     pnl.setOpaque(false);
-    pnl.setBorder(JBUI.Borders.customLine(JBUI.CurrentTheme.BigPopup.searchFieldBorderColor(), 1, 0, 0, 0));
+    pnl.setBorder(JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 1, 0, 0, 0));
 
     JScrollPane resultsScroll = new JBScrollPane(myResultsList);
     resultsScroll.setBorder(null);
     resultsScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     UIUtil.putClientProperty(resultsScroll.getVerticalScrollBar(), JBScrollPane.IGNORE_SCROLLBAR_IN_INSETS, true);
 
-    resultsScroll.setPreferredSize(JBUI.size(670, JBUI.CurrentTheme.BigPopup.maxListHeight()));
+    resultsScroll.setPreferredSize(JBUI.size(670, JBCurrentTheme.BigPopup.maxListHeight()));
     pnl.add(resultsScroll, BorderLayout.CENTER);
 
     myHintLabel = createHint();
@@ -219,9 +217,9 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
   @Nonnull
   private JLabel createHint() {
     String hint = getInitialHint();
-    JLabel hintLabel = HintUtil.createAdComponent(hint, JBUI.CurrentTheme.BigPopup.advertiserBorder(), SwingConstants.LEFT);
-    hintLabel.setForeground(JBUI.CurrentTheme.BigPopup.advertiserForeground());
-    hintLabel.setBackground(JBUI.CurrentTheme.BigPopup.advertiserBackground());
+    JLabel hintLabel = HintUtil.createAdComponent(hint, JBCurrentTheme.BigPopup.advertiserBorder(), SwingConstants.LEFT);
+    hintLabel.setForeground(JBCurrentTheme.BigPopup.advertiserForeground());
+    hintLabel.setBackground(JBCurrentTheme.BigPopup.advertiserBackground());
     hintLabel.setOpaque(true);
     Dimension size = hintLabel.getPreferredSize();
     size.height = JBUIScale.scale(17);

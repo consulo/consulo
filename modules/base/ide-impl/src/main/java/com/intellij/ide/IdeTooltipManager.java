@@ -4,6 +4,8 @@ package com.intellij.ide;
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.application.ui.awt.Html;
 import consulo.application.ui.awt.*;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
@@ -462,7 +464,7 @@ public final class IdeTooltipManager implements Disposable, AWTEventListener {
 
   @SuppressWarnings({"UnusedParameters"})
   public Color getLinkForeground(boolean awtTooltip) {
-    return JBUI.CurrentTheme.Link.linkColor();
+    return JBCurrentTheme.Link.linkColor();
   }
 
   @SuppressWarnings({"UnusedParameters"})
@@ -479,7 +481,7 @@ public final class IdeTooltipManager implements Disposable, AWTEventListener {
   @SuppressWarnings({"UnusedParameters"})
   @Deprecated(forRemoval = true)
   public Color getBorderColor(boolean awtTooltip) {
-    return JBUI.CurrentTheme.Tooltip.borderColor();
+    return JBCurrentTheme.Tooltip.borderColor();
   }
 
   @SuppressWarnings({"UnusedParameters"})

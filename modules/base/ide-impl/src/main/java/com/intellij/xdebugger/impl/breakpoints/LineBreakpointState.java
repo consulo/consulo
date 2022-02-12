@@ -16,10 +16,10 @@
 package com.intellij.xdebugger.impl.breakpoints;
 
 import consulo.util.xml.serializer.annotation.Tag;
-import com.intellij.xdebugger.breakpoints.SuspendPolicy;
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
+import consulo.debugger.breakpoint.SuspendPolicy;
+import consulo.debugger.breakpoint.XBreakpointProperties;
+import consulo.debugger.breakpoint.XLineBreakpoint;
+import consulo.debugger.breakpoint.XLineBreakpointType;
 import javax.annotation.Nonnull;
 
 /**

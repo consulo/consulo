@@ -16,7 +16,7 @@
 package com.intellij.ui.paint;
 
 import com.intellij.util.ui.RegionPainter;
-import consulo.editor.markup.EffectType;
+import consulo.ui.ex.EffectType;
 
 import java.awt.*;
 

@@ -2,7 +2,7 @@
 package com.intellij.openapi.vcs.ui;
 
 import com.intellij.ui.ErrorLabel;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.ui.popup.list.IconListPopupRenderer;
 import com.intellij.ui.popup.list.ListPopupImpl;

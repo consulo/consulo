@@ -6,6 +6,7 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.NotificationsManagerImpl;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
@@ -19,7 +20,6 @@ import com.intellij.ui.BalloonLayoutData;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import consulo.ui.ex.concurrent.EdtExecutorService;
-import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;
 
@@ -208,9 +208,9 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
 
     BalloonLayoutData layoutData = BalloonLayoutData.createEmpty();
     layoutData.fadeoutTime = 5000;
-    layoutData.textColor = JBUI.CurrentTheme.Notification.Error.FOREGROUND;
-    layoutData.fillColor = JBUI.CurrentTheme.Notification.Error.BACKGROUND;
-    layoutData.borderColor = JBUI.CurrentTheme.Notification.Error.BORDER_COLOR;
+    layoutData.textColor = JBCurrentTheme.Notification.Error.FOREGROUND;
+    layoutData.fillColor = JBCurrentTheme.Notification.Error.BACKGROUND;
+    layoutData.borderColor = JBCurrentTheme.Notification.Error.BORDER_COLOR;
 
     assert myBalloon == null;
     myBalloon = NotificationsManagerImpl.createBalloon(myFrame, notification, false, false, new Ref<>(layoutData), project);

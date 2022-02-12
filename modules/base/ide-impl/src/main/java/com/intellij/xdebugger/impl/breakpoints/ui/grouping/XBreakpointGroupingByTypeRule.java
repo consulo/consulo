@@ -15,9 +15,9 @@
  */
 package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointsGroupingPriorities;
+import consulo.debugger.breakpoint.XBreakpoint;
+import consulo.debugger.breakpoint.ui.XBreakpointGroupingRule;
+import consulo.debugger.breakpoint.ui.XBreakpointsGroupingPriorities;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

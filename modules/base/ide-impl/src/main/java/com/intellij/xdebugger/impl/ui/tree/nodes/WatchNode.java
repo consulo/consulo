@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
-import com.intellij.xdebugger.Obsolescent;
-import com.intellij.xdebugger.XExpression;
+import consulo.debugger.Obsolescent;
+import consulo.debugger.breakpoint.XExpression;
 import javax.annotation.Nonnull;
 
 import javax.swing.tree.TreeNode;

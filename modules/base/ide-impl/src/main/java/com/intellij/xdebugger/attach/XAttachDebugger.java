@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.attach;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.debugger.XDebuggerBundle;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessInfo;
 import consulo.project.Project;

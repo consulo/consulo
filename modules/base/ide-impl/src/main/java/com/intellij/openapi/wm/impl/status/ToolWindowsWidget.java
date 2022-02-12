@@ -20,7 +20,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBList;
 import consulo.project.ui.util.Alarm;

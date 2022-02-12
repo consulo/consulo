@@ -16,8 +16,8 @@
 package com.intellij.openapi.wm.impl;
 
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.JBPanel;
 import consulo.application.ui.awt.UIUtil;
 

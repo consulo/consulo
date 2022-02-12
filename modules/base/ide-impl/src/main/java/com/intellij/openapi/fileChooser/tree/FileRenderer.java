@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.fileChooser.tree;
 
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import consulo.ui.image.Image;

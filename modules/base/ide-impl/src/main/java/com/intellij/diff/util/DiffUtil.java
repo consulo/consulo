@@ -90,7 +90,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.HyperlinkAdapter;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLabel;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.components.panels;
 
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;

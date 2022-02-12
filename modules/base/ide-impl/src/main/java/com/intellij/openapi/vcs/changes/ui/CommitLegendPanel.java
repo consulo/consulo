@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.ui;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;

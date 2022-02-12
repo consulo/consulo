@@ -28,7 +28,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

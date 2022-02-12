@@ -24,7 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.LocalSearchScope;
 import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.usageView.UsageViewUtil;
 import javax.annotation.Nonnull;
 

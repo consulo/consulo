@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.image.libraryImage;
 
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.ImageUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.ex.awt.TargetAWT;

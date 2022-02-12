@@ -1,6 +1,6 @@
 package consulo.desktop.awt.ui.impl.image.libraryImage;
 
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
 import consulo.application.ui.awt.internal.RetinaImage;
 import com.intellij.util.io.UnsyncByteArrayInputStream;

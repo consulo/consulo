@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
@@ -469,7 +470,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
       myHoveredComponent.setBackground(null);
     }
     if (component != null && component.isEnabled()) {
-      component.setBackground(JBUI.CurrentTheme.StatusBar.hoverBackground());
+      component.setBackground(JBCurrentTheme.StatusBar.hoverBackground());
     }
     repaint();
   }
@@ -587,7 +588,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
     if (myHoveredComponent != null && myHoveredComponent.isEnabled() && !(myHoveredComponent instanceof MemoryUsagePanel)) {
       Rectangle bounds = myHoveredComponent.getBounds();
       Point point = new RelativePoint(myHoveredComponent.getParent(), bounds.getLocation()).getPoint(this);
-      g.setColor(JBUI.CurrentTheme.StatusBar.hoverBackground());
+      g.setColor(JBCurrentTheme.StatusBar.hoverBackground());
       g.fillRect(point.x, point.y, bounds.width, bounds.height);
     }
   }

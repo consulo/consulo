@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+import consulo.debugger.setting.XDebuggerSettingsManager;
 
 public class ValueTooltipAutoShowAction extends ToggleAction {
   @Override

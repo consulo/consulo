@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.application.ui.awt.VerticalFlowLayout;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextArea;
 import com.intellij.ui.components.panels.HorizontalLayout;

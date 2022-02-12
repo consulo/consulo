@@ -17,9 +17,9 @@ package com.intellij.xdebugger.impl.frame;
 
 import consulo.project.Project;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.intellij.xdebugger.frame.XStackFrame;
+import consulo.debugger.XDebugSession;
+import consulo.debugger.evaluation.XDebuggerEditorsProvider;
+import consulo.debugger.frame.XStackFrame;
 import javax.annotation.Nonnull;
 
 /**

@@ -42,6 +42,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.UIBundle;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBOptionButton;

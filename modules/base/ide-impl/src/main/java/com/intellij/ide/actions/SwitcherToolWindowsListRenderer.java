@@ -2,8 +2,9 @@
 package com.intellij.ide.actions;
 
 import consulo.application.AllIcons;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.ui.awt.GraphicsConfig;

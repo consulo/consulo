@@ -18,7 +18,7 @@ package com.intellij.openapi.actionSystem.impl;
 import com.intellij.openapi.actionSystem.ActionButtonComponent;
 import consulo.application.ui.awt.GraphicsConfig;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.Gray;
+import consulo.ui.ex.Gray;
 import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

@@ -22,8 +22,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
+import consulo.debugger.XDebugSession;
+import consulo.debugger.XDebuggerManager;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import javax.annotation.Nonnull;
 

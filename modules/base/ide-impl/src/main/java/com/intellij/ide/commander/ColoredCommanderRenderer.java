@@ -19,16 +19,17 @@ package com.intellij.ide.commander;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeDescriptor;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.UIUtil;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.editor.util.TextAttributesUtil;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -76,13 +77,13 @@ final class ColoredCommanderRenderer extends ColoredListCellRenderer {
         if (attributesKey != null) {
           final TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(attributesKey);
 
-          if (textAttributes != null) attributes = SimpleTextAttributes.fromTextAttributes(textAttributes);
+          if (textAttributes != null) attributes = TextAttributesUtil.fromTextAttributes(textAttributes);
         }
         locationString = treeNode.getPresentation().getLocationString();
 
         final PresentationData presentation = treeNode.getPresentation();
         if (presentation.hasSeparatorAbove() && !selected) {
-          setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, JBUI.CurrentTheme.CustomFrameDecorations.separatorForeground()),
+          setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, JBCurrentTheme.CustomFrameDecorations.separatorForeground()),
                                                        BorderFactory.createEmptyBorder(0, 0, 1, 0)));
         }
       }

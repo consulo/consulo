@@ -13,7 +13,10 @@ import com.intellij.ide.util.ElementsChooser;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
 import com.intellij.ide.util.gotoByName.SearchEverywhereConfiguration;
 import com.intellij.openapi.actionSystem.*;
-import consulo.application.ui.awt.JBColor;
+import consulo.application.ui.awt.*;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import consulo.application.ApplicationManager;
@@ -48,7 +51,6 @@ import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.PopupUpdateProcessor;
-import consulo.application.ui.awt.JBUIScale;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.usages.impl.UsageViewManagerImpl;
@@ -60,9 +62,6 @@ import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.text.MatcherHolder;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
 import javax.annotation.Nonnull;
@@ -90,7 +89,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
   public static final int MULTIPLE_CONTRIBUTORS_ELEMENTS_LIMIT = 15;
   public static final int THROTTLING_TIMEOUT = 100;
 
-  private static final SimpleTextAttributes SMALL_LABEL_ATTRS = new SimpleTextAttributes(SimpleTextAttributes.STYLE_SMALLER, JBUI.CurrentTheme.BigPopup.listTitleLabelForeground());
+  private static final SimpleTextAttributes SMALL_LABEL_ATTRS = new SimpleTextAttributes(SimpleTextAttributes.STYLE_SMALLER, JBCurrentTheme.BigPopup.listTitleLabelForeground());
 
   private final List<? extends SearchEverywhereContributor<?>> myShownContributors;
 
@@ -468,7 +467,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
         actions = new ArrayList<>(contributor.getActions(onChanged));
       }
       everywhereAction = (SearchEverywhereToggleAction)ContainerUtil.find(actions, o -> o instanceof SearchEverywhereToggleAction);
-      Insets insets = JBUI.CurrentTheme.BigPopup.tabInsets();
+      Insets insets = JBCurrentTheme.BigPopup.tabInsets();
       setBorder(JBUI.Borders.empty(insets.top, insets.left, insets.bottom, insets.right));
       addMouseListener(new MouseAdapter() {
         @Override
@@ -503,12 +502,12 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
     @Override
     public Color getBackground() {
-      return mySelectedTab == this ? JBUI.CurrentTheme.BigPopup.selectedTabColor() : super.getBackground();
+      return mySelectedTab == this ? JBCurrentTheme.BigPopup.selectedTabColor() : super.getBackground();
     }
 
     @Override
     public Color getForeground() {
-      return mySelectedTab == this ? JBUI.CurrentTheme.BigPopup.selectedTabTextColor() : super.getForeground();
+      return mySelectedTab == this ? JBCurrentTheme.BigPopup.selectedTabTextColor() : super.getForeground();
     }
   }
 
@@ -942,7 +941,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
     GroupTitleRenderer() {
       setLayout(new BorderLayout());
-      SeparatorComponent separatorComponent = new SeparatorComponent(titleLabel.getPreferredSize().height / 2, JBUI.CurrentTheme.BigPopup.listSeparatorColor(), null);
+      SeparatorComponent separatorComponent = new SeparatorComponent(titleLabel.getPreferredSize().height / 2, JBCurrentTheme.BigPopup.listSeparatorColor(), null);
 
       JPanel topPanel = JBUI.Panels.simplePanel(5, 0).addToCenter(separatorComponent).addToLeft(titleLabel).withBorder(JBUI.Borders.empty(1, 7)).withBackground(UIUtil.getListBackground());
       add(topPanel, BorderLayout.NORTH);

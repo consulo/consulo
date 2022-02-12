@@ -19,7 +19,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.util.Producer;
 import consulo.application.ui.awt.JBUI;

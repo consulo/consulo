@@ -16,7 +16,7 @@
 package com.intellij.application.options;
 
 import consulo.application.AllIcons;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.module.*;
 import com.intellij.openapi.module.impl.LoadedModuleDescriptionImpl;
 import consulo.module.Module;

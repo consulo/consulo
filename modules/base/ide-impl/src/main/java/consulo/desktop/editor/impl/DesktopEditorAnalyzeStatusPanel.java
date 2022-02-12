@@ -18,11 +18,13 @@ package consulo.desktop.editor.impl;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import consulo.application.AllIcons;
 import com.intellij.ide.ActivityTracker;
+import consulo.application.ui.awt.*;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
@@ -44,22 +46,18 @@ import consulo.dataContext.DataContext;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.ComponentUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.labels.DropDownLink;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.popup.util.PopupState;
-import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.Function;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.GridBag;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import com.intellij.xml.util.XmlStringUtil;
@@ -654,7 +652,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
         if (levels.size() == 1) {
           JLabel highlightLabel = new JLabel(EditorBundle.message("iw.highlight.label") + " ");
-          highlightLabel.setForeground(JBUI.CurrentTheme.Link.linkColor());
+          highlightLabel.setForeground(JBCurrentTheme.Link.linkColor());
 
           panel.add(highlightLabel, gc.next().anchor(GridBagConstraints.LINE_START));
           panel.add(createDropDownLink(levels.get(0), controller), gc.next());
@@ -662,7 +660,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         else if (levels.size() > 1) {
           for (LanguageHighlightLevel level : levels) {
             JLabel highlightLabel = new JLabel(level.getLangID() + ": ");
-            highlightLabel.setForeground(JBUI.CurrentTheme.Link.linkColor());
+            highlightLabel.setForeground(JBCurrentTheme.Link.linkColor());
 
             panel.add(highlightLabel, gc.next().anchor(GridBagConstraints.LINE_START).gridx > 0 ? gc.insetLeft(8) : gc);
             panel.add(createDropDownLink(level, controller), gc.next());
@@ -756,9 +754,9 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
   private static final int DELTA_X = 6;
   private static final int DELTA_Y = 6;
 
-  private static final EditorColorKey HOVER_BACKGROUND = EditorColorKey.createColorKey("ActionButton.hoverBackground", TargetAWT.from(JBUI.CurrentTheme.ActionButton.hoverBackground()));
+  private static final EditorColorKey HOVER_BACKGROUND = EditorColorKey.createColorKey("ActionButton.hoverBackground", TargetAWT.from(JBCurrentTheme.ActionButton.hoverBackground()));
 
-  private static final EditorColorKey PRESSED_BACKGROUND = EditorColorKey.createColorKey("ActionButton.pressedBackground", TargetAWT.from(JBUI.CurrentTheme.ActionButton.pressedBackground()));
+  private static final EditorColorKey PRESSED_BACKGROUND = EditorColorKey.createColorKey("ActionButton.pressedBackground", TargetAWT.from(JBCurrentTheme.ActionButton.pressedBackground()));
 
   private static final EditorColorKey ICON_TEXT_COLOR = EditorColorKey.createColorKey("ActionButton.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
 

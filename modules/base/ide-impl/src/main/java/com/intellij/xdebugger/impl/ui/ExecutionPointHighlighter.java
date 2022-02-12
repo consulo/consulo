@@ -21,11 +21,11 @@ import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.DocumentUtil;
-import com.intellij.xdebugger.XSourcePosition;
+import consulo.debugger.XSourcePosition;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import com.intellij.xdebugger.ui.DebuggerColors;
+import consulo.debugger.ui.DebuggerColors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

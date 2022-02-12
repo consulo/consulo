@@ -41,7 +41,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.EditorTextField;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 
 public class LanguagePanel extends AbstractInjectionPanel<BaseInjection>
 {

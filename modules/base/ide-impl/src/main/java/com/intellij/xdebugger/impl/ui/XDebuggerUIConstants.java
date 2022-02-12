@@ -16,10 +16,10 @@
 package com.intellij.xdebugger.impl.ui;
 
 import consulo.application.AllIcons;
-import consulo.application.ui.awt.DarculaColors;
-import consulo.application.ui.awt.JBColor;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.ui.ex.DarculaColors;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.debugger.XDebuggerBundle;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

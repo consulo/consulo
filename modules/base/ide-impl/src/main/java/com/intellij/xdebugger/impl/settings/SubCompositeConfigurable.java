@@ -20,7 +20,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
+import consulo.debugger.setting.DebuggerSettingsCategory;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

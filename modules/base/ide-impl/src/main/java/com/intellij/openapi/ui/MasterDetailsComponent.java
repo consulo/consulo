@@ -24,6 +24,7 @@ import com.intellij.openapi.options.MasterDetails;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;

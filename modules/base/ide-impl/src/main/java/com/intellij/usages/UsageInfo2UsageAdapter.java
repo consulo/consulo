@@ -40,7 +40,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.impl.rules.UsageType;
@@ -128,7 +128,7 @@ public class UsageInfo2UsageAdapter
       // element over light virtual file
       PsiElement element = getElement();
       if (element == null) {
-        chunks = new TextChunk[]{new TextChunk(SimpleTextAttributes.ERROR_ATTRIBUTES.toTextAttributes(), UsageViewBundle.message("node.invalid"))};
+        chunks = new TextChunk[]{new TextChunk(TextAttributesUtil.toTextAttributes(SimpleTextAttributes.ERROR_ATTRIBUTES), UsageViewBundle.message("node.invalid"))};
       }
       else {
         chunks = new TextChunk[]{new TextChunk(new TextAttributes(), element.getText())};

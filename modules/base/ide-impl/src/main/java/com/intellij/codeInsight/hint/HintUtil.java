@@ -3,14 +3,14 @@ package com.intellij.codeInsight.hint;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeTooltipManager;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.editor.colorScheme.EditorColorKey;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.util.lang.ref.Ref;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 import consulo.application.ui.awt.Html;
-import consulo.application.ui.awt.JBColor;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
@@ -193,8 +193,8 @@ public class HintUtil {
     JLabel label = new JLabel();
     label.setText(bottomText);
     label.setHorizontalAlignment(alignment);
-    label.setForeground(JBUI.CurrentTheme.Advertiser.foreground());
-    label.setBackground(JBUI.CurrentTheme.Advertiser.background());
+    label.setForeground(JBCurrentTheme.Advertiser.foreground());
+    label.setBackground(JBCurrentTheme.Advertiser.background());
     label.setOpaque(true);
     label.setFont(label.getFont().deriveFont((float)(label.getFont().getSize() - 2)));
     if (bottomText != null) {

@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.xdebugger.XExpression;
+import consulo.debugger.breakpoint.XExpression;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

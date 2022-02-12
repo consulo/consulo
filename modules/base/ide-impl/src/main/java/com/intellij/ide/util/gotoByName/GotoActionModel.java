@@ -34,7 +34,7 @@ import com.intellij.psi.codeStyle.WordPrefixMatcher;
 import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.LightColors;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ArrayUtilRt;
@@ -65,8 +65,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.intellij.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
-import static com.intellij.ui.SimpleTextAttributes.STYLE_PLAIN;
-import static com.intellij.ui.SimpleTextAttributes.STYLE_SEARCH_MATCH;
+import static consulo.ui.ex.SimpleTextAttributes.STYLE_PLAIN;
+import static consulo.ui.ex.SimpleTextAttributes.STYLE_SEARCH_MATCH;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 

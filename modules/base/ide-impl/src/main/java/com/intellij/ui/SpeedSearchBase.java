@@ -3,8 +3,8 @@ package com.intellij.ui;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.application.AllIcons;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.action.AnAction;

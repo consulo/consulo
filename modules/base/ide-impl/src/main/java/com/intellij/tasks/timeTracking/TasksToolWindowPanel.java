@@ -16,7 +16,7 @@ import com.intellij.tasks.actions.GotoTaskAction;
 import com.intellij.tasks.actions.SwitchTaskAction;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;

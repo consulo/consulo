@@ -2,7 +2,7 @@ package com.intellij.coverage;
 
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ui.ColoredTreeCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 
 /**
  * @author Roman.Chernyatchik

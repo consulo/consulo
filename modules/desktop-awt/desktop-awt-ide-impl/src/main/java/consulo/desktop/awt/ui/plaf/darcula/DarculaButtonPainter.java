@@ -1,11 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import consulo.application.ui.awt.JBColor;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.MacUIUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.*;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -41,7 +39,7 @@ public class DarculaButtonPainter implements Border, UIResource {
       Rectangle r = new Rectangle(x, y, width, height);
       boolean paintComboFocus = isSmallComboButton && c.isFocusable() && c.hasFocus();
       if (paintComboFocus) { // a11y support
-        g2.setColor(JBUI.CurrentTheme.Focus.focusColor());
+        g2.setColor(JBCurrentTheme.Focus.focusColor());
 
         Path2D border = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         border.append(new RoundRectangle2D.Float(r.x, r.y, r.width, r.height, arc + lw, arc + lw), false);

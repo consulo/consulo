@@ -17,9 +17,9 @@ package com.intellij.xdebugger.impl.actions.handlers;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.frame.XValue;
+import consulo.debugger.XDebugSession;
+import consulo.debugger.XDebuggerManager;
+import consulo.debugger.frame.XValue;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.MarkObjectActionHandler;
 import com.intellij.xdebugger.impl.frame.XValueMarkers;

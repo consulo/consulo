@@ -21,26 +21,25 @@ import com.intellij.application.options.codeStyle.arrangement.animation.Arrangem
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.util.InsetsPanel;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
-import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.RoundedLineBorder;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
-import consulo.ui.color.ColorValue;
-import consulo.ui.image.Image;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
 import consulo.ui.Size;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -151,7 +150,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
       myText = condition.getValue().toString();
     }
     myTextControl.setTextAlign(SwingConstants.CENTER);
-    myTextControl.append(myText, SimpleTextAttributes.fromTextAttributes(colorsProvider.getTextAttributes(type, false)));
+    myTextControl.append(myText, TextAttributesUtil.fromTextAttributes(colorsProvider.getTextAttributes(type, false)));
     myTextControl.setOpaque(false);
     int maxWidth = manager.getWidth(type);
     if (!StdArrangementTokenType.REG_EXP.is(type) && maxWidth > 0) {
@@ -305,7 +304,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
   private TextAttributes updateComponentText(boolean selected) {
     myTextControl.clear();
     TextAttributes attributes = myColorsProvider.getTextAttributes(myCondition.getType(), selected);
-    myTextControl.append(getComponentText(), SimpleTextAttributes.fromTextAttributes(attributes));
+    myTextControl.append(getComponentText(), TextAttributesUtil.fromTextAttributes(attributes));
     return attributes;
   }
 

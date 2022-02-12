@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.labels.LinkLabel;

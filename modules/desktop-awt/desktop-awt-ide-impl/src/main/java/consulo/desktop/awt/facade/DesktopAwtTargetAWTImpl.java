@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.facade;
 
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.BitUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.ex.awt.TargetAWT;

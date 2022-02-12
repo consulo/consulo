@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.frame;
 
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.xdebugger.frame.XExecutionStack;
+import consulo.debugger.frame.XExecutionStack;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

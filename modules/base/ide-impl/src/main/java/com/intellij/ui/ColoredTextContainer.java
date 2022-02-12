@@ -1,5 +1,6 @@
 package com.intellij.ui;
 
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

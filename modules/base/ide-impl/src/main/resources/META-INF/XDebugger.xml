@@ -16,7 +16,7 @@
 <consulo-plugin>
   <project-components>
     <component>
-      <interface-class>com.intellij.xdebugger.XDebuggerManager</interface-class>
+      <interface-class>consulo.debugger.XDebuggerManager</interface-class>
       <implementation-class>com.intellij.xdebugger.impl.XDebuggerManagerImpl</implementation-class>
     </component>
   </project-components>
@@ -29,11 +29,11 @@
   </actions>
 
   <extensionPoints>
-    <extensionPoint name="xdebugger.settings" interface="com.intellij.xdebugger.settings.XDebuggerSettings"/>
-    <extensionPoint name="xdebugger.breakpointType" interface="com.intellij.xdebugger.breakpoints.XBreakpointType"/>
+    <extensionPoint name="xdebugger.settings" interface="consulo.debugger.setting.XDebuggerSettings"/>
+    <extensionPoint name="xdebugger.breakpointType" interface="consulo.debugger.breakpoint.XBreakpointType"/>
     <extensionPoint name="xdebugger.debuggerSupport" interface="com.intellij.xdebugger.impl.DebuggerSupport"/>
     <extensionPoint name="xdebugger.lineBreakpointTypeResolver" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver"/>
+      <with attribute="implementationClass" implements="consulo.debugger.breakpoint.XLineBreakpointTypeResolver"/>
     </extensionPoint>
     <extensionPoint name="xdebugger.localAttachDebuggerProvider" interface="com.intellij.xdebugger.attach.XLocalAttachDebuggerProvider"/>
     <extensionPoint name="xdebugger.attachDebuggerProvider" interface="com.intellij.xdebugger.attach.XAttachDebuggerProvider"/>
@@ -48,10 +48,10 @@
 
     <colorSettingsPage implementation="com.intellij.xdebugger.impl.ui.DebuggerColorsPage"/>
 
-    <applicationService serviceInterface="com.intellij.xdebugger.settings.XDebuggerSettingsManager"
+    <applicationService serviceInterface="consulo.debugger.setting.XDebuggerSettingsManager"
                         serviceImplementation="com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.xdebugger.XDebuggerUtil"
+    <applicationService serviceInterface="consulo.debugger.XDebuggerUtil"
                         serviceImplementation="com.intellij.xdebugger.impl.XDebuggerUtilImpl"/>
 
     <projectService serviceImplementation="com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager"/>

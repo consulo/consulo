@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.frame;
 
 import consulo.util.dataholder.Key;
-import com.intellij.xdebugger.XExpression;
+import consulo.debugger.breakpoint.XExpression;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import javax.annotation.Nonnull;
 

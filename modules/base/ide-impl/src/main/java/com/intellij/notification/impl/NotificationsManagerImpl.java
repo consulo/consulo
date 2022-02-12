@@ -56,6 +56,9 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.AnAction;
@@ -392,7 +395,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         return factory;
       }
     };
-    kit.getStyleSheet().addRule("a {color: " + ColorUtil.toHtmlColor(JBUI.CurrentTheme.Link.linkColor()) + "}");
+    kit.getStyleSheet().addRule("a {color: " + ColorUtil.toHtmlColor(JBCurrentTheme.Link.linkColor()) + "}");
     text.setEditorKit(kit);
     text.setForeground(layoutData.textColor);
 

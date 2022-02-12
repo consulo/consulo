@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.settings;
 
 import consulo.util.xml.serializer.annotation.Tag;
-import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+import consulo.debugger.setting.XDebuggerSettingsManager;
 
 /**
  * @author nik

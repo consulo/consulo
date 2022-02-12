@@ -37,6 +37,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

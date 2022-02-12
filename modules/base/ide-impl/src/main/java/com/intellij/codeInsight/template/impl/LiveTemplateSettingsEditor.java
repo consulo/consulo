@@ -23,7 +23,7 @@ import com.intellij.codeInsight.template.TemplateContextType;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.EditorFactory;

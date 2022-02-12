@@ -7,6 +7,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.notification.EventLog;
 import consulo.application.ui.awt.*;
 import consulo.application.util.SystemInfo;
+import consulo.ui.ex.Gray;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;

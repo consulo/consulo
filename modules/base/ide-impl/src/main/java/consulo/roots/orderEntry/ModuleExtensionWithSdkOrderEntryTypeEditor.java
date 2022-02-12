@@ -21,7 +21,7 @@ import consulo.content.bundle.Sdk;
 import com.intellij.openapi.roots.impl.ModuleExtensionWithSdkOrderEntryImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.content.bundle.SdkUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 

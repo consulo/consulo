@@ -47,7 +47,7 @@ import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.HintHint;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.text.StringSearcher;
 import consulo.application.ui.awt.UIUtil;

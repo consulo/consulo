@@ -3,11 +3,9 @@ package com.intellij.codeInsight.lookup.impl;
 
 import consulo.application.ApplicationManager;
 import com.intellij.ui.ClickListener;
-import consulo.application.ui.awt.JBUIScale;
+import consulo.application.ui.awt.*;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -35,7 +33,7 @@ public class Advertiser {
   public Advertiser() {
     myNextLabel = new JLabel("Next Tip");
     myNextLabel.setFont(adFont());
-    myNextLabel.setForeground(JBUI.CurrentTheme.Link.linkColor());
+    myNextLabel.setForeground(JBCurrentTheme.Link.linkColor());
     new ClickListener() {
       @Override
       public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
@@ -50,8 +48,8 @@ public class Advertiser {
     myComponent.add(myTextPanel);
     myComponent.add(myNextLabel);
     myComponent.setOpaque(true);
-    myComponent.setBackground(JBUI.CurrentTheme.Advertiser.background());
-    myComponent.setBorder(JBUI.CurrentTheme.Advertiser.border());
+    myComponent.setBackground(JBCurrentTheme.Advertiser.background());
+    myComponent.setBorder(JBCurrentTheme.Advertiser.border());
   }
 
   private void updateAdvertisements() {
@@ -63,7 +61,7 @@ public class Advertiser {
     else {
       myTextPanel.setText("");
       myTextPanel.setIcon(null);
-      myTextPanel.setForeground(JBUI.CurrentTheme.Advertiser.foreground());
+      myTextPanel.setForeground(JBCurrentTheme.Advertiser.foreground());
     }
     myComponent.revalidate();
     myComponent.repaint();
@@ -72,7 +70,7 @@ public class Advertiser {
   private static JLabel createLabel() {
     JLabel label = new JLabel();
     label.setFont(adFont());
-    label.setForeground(JBUI.CurrentTheme.Advertiser.foreground());
+    label.setForeground(JBCurrentTheme.Advertiser.foreground());
     return label;
   }
 
@@ -101,7 +99,7 @@ public class Advertiser {
   }
 
   public void setBackground(@Nullable Color background) {
-    myComponent.setBackground(background != null ? background : JBUI.CurrentTheme.Advertiser.background());
+    myComponent.setBackground(background != null ? background : JBCurrentTheme.Advertiser.background());
   }
 
   public JComponent getAdComponent() {
@@ -181,7 +179,7 @@ public class Advertiser {
     private void setForLabel(JLabel label) {
       label.setText(toString());
       label.setIcon(TargetAWT.to(icon));
-      label.setForeground(icon != null ? UIManager.getColor("Label.foreground") : JBUI.CurrentTheme.Advertiser.foreground());
+      label.setForeground(icon != null ? UIManager.getColor("Label.foreground") : JBCurrentTheme.Advertiser.foreground());
     }
 
     @Override

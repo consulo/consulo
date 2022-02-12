@@ -16,16 +16,16 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.ObjectUtils;
+import consulo.debugger.frame.*;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SortedList;
-import com.intellij.xdebugger.evaluation.InlineDebuggerHelper;
-import com.intellij.xdebugger.frame.*;
+import consulo.debugger.evaluation.InlineDebuggerHelper;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+import consulo.debugger.setting.XDebuggerSettingsManager;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XStackFrame;
+import consulo.debugger.frame.XExecutionStack;
+import consulo.debugger.frame.XStackFrame;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,8 +16,8 @@
 package com.intellij.ui;
 
 import consulo.application.ui.UISettings;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 
@@ -43,8 +43,8 @@ public class SeparatorWithText extends JComponent implements Accessible {
     setBorder(BorderFactory.createEmptyBorder(getVgap(), 0, getVgap(), 0));
     setFont(UIUtil.getLabelFont());
     setFont(getFont().deriveFont(Font.BOLD));
-    setForeground(JBUI.CurrentTheme.Popup.separatorColor());
-    setTextForeground(JBUI.CurrentTheme.Popup.separatorTextColor());
+    setForeground(JBCurrentTheme.Popup.separatorColor());
+    setTextForeground(JBCurrentTheme.Popup.separatorTextColor());
   }
 
   public Color getTextForeground() {

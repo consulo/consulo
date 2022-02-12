@@ -18,6 +18,9 @@ import com.intellij.lang.documentation.DocumentationMarkup;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.lang.documentation.ExternalDocumentationHandler;
 import com.intellij.openapi.actionSystem.*;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
@@ -572,7 +575,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   private static Color getLinkColor() {
-    return JBUI.CurrentTheme.Link.linkColor();
+    return JBCurrentTheme.Link.linkColor();
   }
 
   @Override

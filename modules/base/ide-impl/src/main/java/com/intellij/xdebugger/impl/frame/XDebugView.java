@@ -23,8 +23,8 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.content.ContentManager;
 import com.intellij.util.SingleAlarm;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XSourcePosition;
+import consulo.debugger.XDebugSession;
+import consulo.debugger.XSourcePosition;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

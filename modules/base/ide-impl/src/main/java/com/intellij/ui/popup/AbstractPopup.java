@@ -34,6 +34,7 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.*;
 import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.mac.touchbar.TouchBarsManager;
@@ -399,7 +400,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   @Override
   public void setAdText(@Nonnull final String s, int alignment) {
     if (myAdComponent == null) {
-      myAdComponent = HintUtil.createAdComponent(s, JBUI.CurrentTheme.Advertiser.border(), alignment);
+      myAdComponent = HintUtil.createAdComponent(s, JBCurrentTheme.Advertiser.border(), alignment);
       JPanel wrapper = new JPanel(new BorderLayout());
       wrapper.setOpaque(false);
       wrapper.add(myAdComponent, BorderLayout.CENTER);
@@ -1212,7 +1213,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     if (mySpeedSearchAlwaysShown) {
       setHeaderComponent(mySpeedSearchPatternField);
-      mySpeedSearchPatternField.setBorder(JBUI.Borders.customLine(JBUI.CurrentTheme.BigPopup.searchFieldBorderColor(), 1, 0, 1, 0));
+      mySpeedSearchPatternField.setBorder(JBUI.Borders.customLine(JBCurrentTheme.BigPopup.searchFieldBorderColor(), 1, 0, 1, 0));
       mySpeedSearchPatternField.getTextEditor().setBorder(JBUI.Borders.empty());
     }
 

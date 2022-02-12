@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -17,7 +17,7 @@ package com.intellij.openapi.ui;
 
 import consulo.application.AllIcons;
 import com.intellij.notification.NotificationType;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -26,15 +26,15 @@ import java.awt.*;
 public class MessageType {
 
   public static final MessageType ERROR =
-          new MessageType(AllIcons.General.NotificationError, JBUI.CurrentTheme.NotificationError.backgroundColor(), JBUI.CurrentTheme.NotificationError.foregroundColor(),
-                          JBUI.CurrentTheme.NotificationError.borderColor());
+          new MessageType(AllIcons.General.NotificationError, JBCurrentTheme.NotificationError.backgroundColor(), JBCurrentTheme.NotificationError.foregroundColor(),
+                          JBCurrentTheme.NotificationError.borderColor());
 
-  public static final MessageType INFO = new MessageType(AllIcons.General.NotificationInfo, JBUI.CurrentTheme.NotificationInfo.backgroundColor(), JBUI.CurrentTheme.NotificationInfo.foregroundColor(),
-                                                         JBUI.CurrentTheme.NotificationInfo.borderColor());
+  public static final MessageType INFO = new MessageType(AllIcons.General.NotificationInfo, JBCurrentTheme.NotificationInfo.backgroundColor(), JBCurrentTheme.NotificationInfo.foregroundColor(),
+                                                         JBCurrentTheme.NotificationInfo.borderColor());
 
   public static final MessageType WARNING =
-          new MessageType(AllIcons.General.NotificationWarning, JBUI.CurrentTheme.NotificationWarning.backgroundColor(), JBUI.CurrentTheme.NotificationWarning.foregroundColor(),
-                          JBUI.CurrentTheme.NotificationWarning.borderColor());
+          new MessageType(AllIcons.General.NotificationWarning, JBCurrentTheme.NotificationWarning.backgroundColor(), JBCurrentTheme.NotificationWarning.foregroundColor(),
+                          JBCurrentTheme.NotificationWarning.borderColor());
 
   private final Image myDefaultIcon;
   private final Color myPopupBackground;

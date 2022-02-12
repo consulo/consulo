@@ -23,7 +23,7 @@ package com.intellij.execution.testframework;
 import consulo.execution.ExecutionBundle;
 import com.intellij.history.LocalHistory;
 import consulo.project.Project;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 
 import java.awt.*;
 

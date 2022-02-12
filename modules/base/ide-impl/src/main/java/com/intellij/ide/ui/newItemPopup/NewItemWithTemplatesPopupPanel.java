@@ -4,6 +4,7 @@ package com.intellij.ide.ui.newItemPopup;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.ex.awt.TargetAWT;
@@ -28,7 +29,7 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
   private final Collection<TemplatesListVisibilityListener> myVisibilityListeners = new ArrayList<>();
 
   public NewItemWithTemplatesPopupPanel(List<T> templatesList, ListCellRenderer<T> renderer) {
-    setBackground(JBUI.CurrentTheme.NewClassDialog.panelBackground());
+    setBackground(JBCurrentTheme.NewClassDialog.panelBackground());
 
     myTemplatesListModel = new MyListModel(templatesList);
     myTemplatesList = createTemplatesList(myTemplatesListModel, renderer);
@@ -41,7 +42,7 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     templatesListHolder = new Box(BoxLayout.Y_AXIS);
     Border border = JBUI.Borders
-            .merge(JBUI.Borders.emptyTop(JBUI.CurrentTheme.NewClassDialog.fieldsSeparatorWidth()), JBUI.Borders.customLine(JBUI.CurrentTheme.NewClassDialog.bordersColor(), 1, 0, 0, 0), true);
+            .merge(JBUI.Borders.emptyTop(JBCurrentTheme.NewClassDialog.fieldsSeparatorWidth()), JBUI.Borders.customLine(JBCurrentTheme.NewClassDialog.bordersColor(), 1, 0, 0, 0), true);
 
     templatesListHolder.setBorder(border);
     templatesListHolder.add(scrollPane);
@@ -83,7 +84,7 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
     list.setFocusable(false);
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    Border border = JBUI.Borders.merge(JBUI.Borders.emptyLeft(JBUIScale.scale(5)), JBUI.Borders.customLine(JBUI.CurrentTheme.NewClassDialog.bordersColor(), 1, 0, 0, 0), true);
+    Border border = JBUI.Borders.merge(JBUI.Borders.emptyLeft(JBUIScale.scale(5)), JBUI.Borders.customLine(JBCurrentTheme.NewClassDialog.bordersColor(), 1, 0, 0, 0), true);
     list.setBorder(border);
     return list;
   }

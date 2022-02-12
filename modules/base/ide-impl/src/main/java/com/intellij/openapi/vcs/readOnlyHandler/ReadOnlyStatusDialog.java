@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.ColoredListCellRenderer;
-import consulo.application.ui.awt.JBColor;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.ui.OptionsDialog;
 import consulo.application.ui.awt.UIUtil;
 

@@ -16,7 +16,7 @@ import com.intellij.ui.popup.async.AsyncPopupStep;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.StatusText;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.debugger.XDebuggerBundle;
 import com.intellij.xdebugger.attach.*;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.PerformInBackgroundOption;

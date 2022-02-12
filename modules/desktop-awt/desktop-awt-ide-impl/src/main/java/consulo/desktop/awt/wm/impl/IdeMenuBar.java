@@ -34,7 +34,7 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.status.ClockPanel;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.Gray;
+import consulo.ui.ex.Gray;
 import com.intellij.ui.ScreenUtil;
 import consulo.application.ui.awt.CustomLineBorder;
 import com.intellij.util.ui.Animator;

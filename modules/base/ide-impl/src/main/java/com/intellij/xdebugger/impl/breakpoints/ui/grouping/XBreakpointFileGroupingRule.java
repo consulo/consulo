@@ -17,11 +17,11 @@ package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
 import consulo.application.AllIcons;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.xdebugger.XDebuggerBundle;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointsGroupingPriorities;
+import consulo.debugger.XDebuggerBundle;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.breakpoint.XLineBreakpoint;
+import consulo.debugger.breakpoint.ui.XBreakpointGroupingRule;
+import consulo.debugger.breakpoint.ui.XBreakpointsGroupingPriorities;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -2,8 +2,8 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.openapi.progress.util.ColorProgressBar;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBInsets;
 

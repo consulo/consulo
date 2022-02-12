@@ -22,7 +22,7 @@ import consulo.editor.Editor;
 import consulo.editor.markup.GutterIconRenderer;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import consulo.debugger.breakpoint.XBreakpoint;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;

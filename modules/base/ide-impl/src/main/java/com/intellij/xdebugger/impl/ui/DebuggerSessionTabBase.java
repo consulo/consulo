@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui;
 
-import com.intellij.debugger.ui.DebuggerContentInfo;
+import consulo.debugger.ui.DebuggerContentInfo;
 import consulo.execution.ExecutionManager;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import consulo.execution.configuration.RunProfile;
@@ -36,7 +36,7 @@ import consulo.project.ui.wm.ToolWindow;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.ex.content.Content;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.debugger.XDebuggerBundle;
 import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.annotation.Nonnull;

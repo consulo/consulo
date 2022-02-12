@@ -41,6 +41,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.popup.Balloon;

@@ -5,7 +5,7 @@ import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.ide.CopyPasteDelegator;
 import com.intellij.ide.CopyPasteSupport;
-import consulo.application.ui.awt.Gray;
+import consulo.ui.ex.Gray;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeView;
@@ -33,6 +33,7 @@ import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -429,7 +430,8 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         SimpleTextAttributes modelAttributes2 = myPresentation.getTextAttributes(eachElement, false);
         SimpleTextAttributes labelAttributes = eachLabel.getAttributes();
 
-        if (!modelAttributes1.toTextAttributes().equals(labelAttributes.toTextAttributes()) && !modelAttributes2.toTextAttributes().equals(labelAttributes.toTextAttributes())) {
+        if (!TextAttributesUtil.toTextAttributes(modelAttributes1).equals(TextAttributesUtil.toTextAttributes(labelAttributes)) && !TextAttributesUtil.toTextAttributes(modelAttributes2)
+                .equals(TextAttributesUtil.toTextAttributes(labelAttributes))) {
           return true;
         }
         index++;

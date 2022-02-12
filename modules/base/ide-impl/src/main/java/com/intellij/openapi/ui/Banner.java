@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;

@@ -15,23 +15,24 @@
  */
 package com.intellij.usages.impl;
 
-import consulo.navigation.ItemPresentation;
-import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.ui.ColoredTreeCellRenderer;
-import consulo.application.ui.awt.DarculaColors;
-import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
+import consulo.ui.ex.DarculaColors;
 import consulo.application.ui.awt.FontUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.document.util.TextRange;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.util.TextAttributesUtil;
 import consulo.logging.Logger;
+import consulo.navigation.ItemPresentation;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -45,12 +46,9 @@ import java.awt.*;
 class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   private static final Logger LOG = Logger.getInstance(UsageViewTreeCellRenderer.class);
   private static final EditorColorsScheme ourColorsScheme = UsageTreeColorsScheme.getInstance().getScheme();
-  private static final SimpleTextAttributes ourInvalidAttributes =
-          SimpleTextAttributes.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.INVALID_PREFIX));
-  private static final SimpleTextAttributes ourReadOnlyAttributes =
-          SimpleTextAttributes.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.READONLY_PREFIX));
-  private static final SimpleTextAttributes ourNumberOfUsagesAttribute =
-          SimpleTextAttributes.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.NUMBER_OF_USAGES));
+  private static final SimpleTextAttributes ourInvalidAttributes = TextAttributesUtil.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.INVALID_PREFIX));
+  private static final SimpleTextAttributes ourReadOnlyAttributes = TextAttributesUtil.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.READONLY_PREFIX));
+  private static final SimpleTextAttributes ourNumberOfUsagesAttribute = TextAttributesUtil.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.NUMBER_OF_USAGES));
   private static final SimpleTextAttributes ourInvalidAttributesDarcula =
           new SimpleTextAttributes(null, DarculaColors.RED, null, ourInvalidAttributes.getStyle());
   private static final Insets STANDARD_IPAD_NOWIFI = new Insets(1, 2, 1, 2);

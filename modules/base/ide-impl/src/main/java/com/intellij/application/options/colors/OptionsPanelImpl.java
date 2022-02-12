@@ -21,7 +21,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.Settings;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.EventDispatcher;

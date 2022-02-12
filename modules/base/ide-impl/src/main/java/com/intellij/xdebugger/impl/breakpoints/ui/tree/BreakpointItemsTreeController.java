@@ -19,8 +19,8 @@ import com.intellij.ide.util.treeView.TreeState;
 import consulo.project.Project;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.util.ui.tree.TreeUtil;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
+import consulo.debugger.breakpoint.ui.XBreakpointGroup;
+import consulo.debugger.breakpoint.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import consulo.ui.decorator.SwingUIDecorator;
 

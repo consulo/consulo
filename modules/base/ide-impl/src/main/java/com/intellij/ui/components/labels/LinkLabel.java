@@ -3,12 +3,12 @@ package com.intellij.ui.components.labels;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.JBRectangle;
-import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.ui.ex.awt.TargetAWT;
@@ -271,19 +271,19 @@ public class LinkLabel<T> extends JLabel {
   }
 
   protected Color getVisited() {
-    return JBUI.CurrentTheme.Link.linkVisitedColor();
+    return JBCurrentTheme.Link.linkVisitedColor();
   }
 
   protected Color getActive() {
-    return JBUI.CurrentTheme.Link.linkPressedColor();
+    return JBCurrentTheme.Link.linkPressedColor();
   }
 
   protected Color getNormal() {
-    return JBUI.CurrentTheme.Link.linkColor();
+    return JBCurrentTheme.Link.linkColor();
   }
 
   protected Color getHover() {
-    return JBUI.CurrentTheme.Link.linkHoverColor();
+    return JBCurrentTheme.Link.linkHoverColor();
   }
 
   public void entered(MouseEvent e) {

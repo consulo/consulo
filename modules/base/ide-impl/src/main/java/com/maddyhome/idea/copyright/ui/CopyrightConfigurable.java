@@ -29,7 +29,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
 import consulo.application.ui.awt.JBUI;

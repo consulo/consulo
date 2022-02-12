@@ -18,7 +18,7 @@ package com.intellij.packaging.ui;
 import javax.annotation.Nonnull;
 
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 
 /**
  * @author nik

@@ -17,7 +17,7 @@ package consulo.desktop.awt.uiOld;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.ui.ex.popup.Balloon;
-import consulo.application.ui.awt.Gray;
+import consulo.ui.ex.Gray;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.RelativePoint;

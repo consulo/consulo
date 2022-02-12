@@ -16,7 +16,7 @@
 package consulo.xdebugger.impl.settings;
 
 import consulo.configurable.Configurable;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.debugger.XDebuggerBundle;
 import com.intellij.xdebugger.impl.settings.XDebuggerGeneralSettings;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.disposer.Disposable;

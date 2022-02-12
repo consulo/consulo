@@ -26,13 +26,12 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.DialogWrapper;
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.application.ui.awt.*;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.StripeTable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
-import consulo.application.ui.awt.CustomLineBorder;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
@@ -42,11 +41,10 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColorIcon;
-import consulo.application.ui.awt.JBFont;
-import consulo.application.ui.awt.JBColor;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.JBColor;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.JBCurrentTheme;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
@@ -651,7 +649,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
           changed = ((InspectorTableModel)model).myProperties.get(row).changed;
         }
 
-        final Color fg = isSelected ? table.getSelectionForeground() : changed ? JBUI.CurrentTheme.Link.linkColor() : table.getForeground();
+        final Color fg = isSelected ? table.getSelectionForeground() : changed ? JBCurrentTheme.Link.linkColor() : table.getForeground();
         final JBFont font = JBUI.Fonts.label();
         setFont(changed ? font.asBold() : font);
         setForeground(fg);

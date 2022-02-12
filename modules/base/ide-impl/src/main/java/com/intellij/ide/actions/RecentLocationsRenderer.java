@@ -2,38 +2,38 @@
 package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import consulo.application.ui.UISettings;
-import consulo.editor.CaretState;
-import consulo.editor.Editor;
-import consulo.editor.HighlighterColors;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
-import consulo.editor.colorScheme.CodeInsightColors;
-import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.markup.HighlighterLayer;
-import consulo.editor.markup.HighlighterTargetArea;
-import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
-import consulo.project.Project;
-import consulo.application.ui.awt.VerticalFlowLayout;
-import consulo.component.util.Iconable;
-import consulo.application.util.SystemInfo;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.*;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.speedSearch.SpeedSearch;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import consulo.application.ui.awt.FontUtil;
 import com.intellij.util.text.DateFormatUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.awt.*;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
+import consulo.component.util.Iconable;
+import consulo.document.util.TextRange;
+import consulo.editor.CaretState;
+import consulo.editor.Editor;
+import consulo.editor.HighlighterColors;
+import consulo.editor.colorScheme.CodeInsightColors;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.markup.HighlighterLayer;
+import consulo.editor.markup.HighlighterTargetArea;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -187,7 +187,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     TextAttributes textAttributes = createDefaultTextAttributesWithBackground(colorsScheme, getBackgroundColor(colorsScheme, selected));
     textAttributes.setFontType(Font.BOLD);
 
-    return SimpleTextAttributes.fromTextAttributes(textAttributes);
+    return TextAttributesUtil.fromTextAttributes(textAttributes);
   }
 
   @Nonnull
@@ -197,11 +197,11 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     if (attributes != null) {
       ColorValue unusedForeground = attributes.getForegroundColor();
       if (unusedForeground != null) {
-        return SimpleTextAttributes.fromTextAttributes(new TextAttributes(unusedForeground, backgroundColor, null, null, Font.PLAIN));
+        return TextAttributesUtil.fromTextAttributes(new TextAttributes(unusedForeground, backgroundColor, null, null, Font.PLAIN));
       }
     }
 
-    return SimpleTextAttributes.fromTextAttributes(createDefaultTextAttributesWithBackground(colorsScheme, backgroundColor));
+    return TextAttributesUtil.fromTextAttributes(createDefaultTextAttributesWithBackground(colorsScheme, backgroundColor));
   }
 
   @Nonnull
@@ -219,7 +219,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   @Nonnull
   private static TextAttributes createEmptyTextForegroundTextAttributes(@Nonnull EditorColorsScheme colorsScheme) {
     TextAttributes unusedAttributes = colorsScheme.getAttributes(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES);
-    return unusedAttributes != null ? unusedAttributes : SimpleTextAttributes.GRAYED_ATTRIBUTES.toTextAttributes();
+    return unusedAttributes != null ? unusedAttributes : TextAttributesUtil.toTextAttributes(SimpleTextAttributes.GRAYED_ATTRIBUTES);
   }
 
   @Override

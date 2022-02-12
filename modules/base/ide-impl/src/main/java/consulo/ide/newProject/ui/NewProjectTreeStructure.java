@@ -19,7 +19,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.newProject.node.NewModuleContextGroup;
 import consulo.ide.newProject.node.NewModuleContextNode;

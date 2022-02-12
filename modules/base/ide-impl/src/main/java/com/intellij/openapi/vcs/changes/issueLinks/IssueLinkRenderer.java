@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.IssueNavigationConfiguration;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 
 import java.util.ArrayList;

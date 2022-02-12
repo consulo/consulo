@@ -38,6 +38,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
 import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

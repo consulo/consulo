@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.application.util.SystemInfo;
 import com.intellij.ui.paint.RectanglePainter;
 import consulo.application.ui.awt.JBUI;
@@ -40,7 +41,7 @@ public interface PopupBorder extends Border {
     @Nonnull
     public static PopupBorder create(boolean active, boolean windowWithShadow) {
       boolean visible = !(SystemInfo.isMac && windowWithShadow) || UIManager.getBoolean("Popup.paintBorder") == Boolean.TRUE;
-      PopupBorder border = new BaseBorder(visible, JBUI.CurrentTheme.Popup.borderColor(true), JBUI.CurrentTheme.Popup.borderColor(false));
+      PopupBorder border = new BaseBorder(visible, JBCurrentTheme.Popup.borderColor(true), JBCurrentTheme.Popup.borderColor(false));
       border.setActive(active);
       return border;
     }

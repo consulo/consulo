@@ -3,6 +3,7 @@ package com.intellij.openapi.ui;
 
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import consulo.application.ui.awt.*;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
@@ -38,7 +39,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static consulo.application.ui.awt.JBUI.CurrentTheme.Validator.*;
+import static consulo.ui.ex.JBCurrentTheme.Validator.*;
 
 public class ComponentValidator {
   private static final String PROPERTY_NAME = "JComponent.componentValidator";
@@ -259,10 +260,10 @@ public class ComponentValidator {
     if (kit instanceof HTMLEditorKit) {
       StyleSheet css = ((HTMLEditorKit)kit).getStyleSheet();
 
-      css.addRule("a, a:link {color:#" + ColorUtil.toHex(JBUI.CurrentTheme.Link.linkColor()) + ";}");
-      css.addRule("a:visited {color:#" + ColorUtil.toHex(JBUI.CurrentTheme.Link.linkVisitedColor()) + ";}");
-      css.addRule("a:hover {color:#" + ColorUtil.toHex(JBUI.CurrentTheme.Link.linkHoverColor()) + ";}");
-      css.addRule("a:active {color:#" + ColorUtil.toHex(JBUI.CurrentTheme.Link.linkPressedColor()) + ";}");
+      css.addRule("a, a:link {color:#" + ColorUtil.toHex(JBCurrentTheme.Link.linkColor()) + ";}");
+      css.addRule("a:visited {color:#" + ColorUtil.toHex(JBCurrentTheme.Link.linkVisitedColor()) + ";}");
+      css.addRule("a:hover {color:#" + ColorUtil.toHex(JBCurrentTheme.Link.linkHoverColor()) + ";}");
+      css.addRule("a:active {color:#" + ColorUtil.toHex(JBCurrentTheme.Link.linkPressedColor()) + ";}");
       css.addRule("body {background-color:#" + ColorUtil.toHex(info.warning ? warningBackgroundColor() : errorBackgroundColor()) + ";}");
     }
 

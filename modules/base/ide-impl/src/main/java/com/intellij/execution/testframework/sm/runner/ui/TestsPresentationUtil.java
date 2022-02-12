@@ -30,7 +30,7 @@ import consulo.application.AllIcons;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTableCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

@@ -24,6 +24,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
 import consulo.application.ui.awt.internal.RetinaImage;
 import consulo.logging.Logger;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;

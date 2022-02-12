@@ -22,7 +22,7 @@ package com.intellij.openapi.editor.colors.impl;
 import consulo.application.ui.UISettings;
 import consulo.editor.HighlighterColors;
 import consulo.editor.colorScheme.*;
-import consulo.editor.markup.EffectType;
+import consulo.ui.ex.EffectType;
 import consulo.editor.markup.TextAttributes;
 import consulo.editor.colorScheme.FontSize;
 import com.intellij.openapi.util.Comparing;

@@ -15,10 +15,12 @@
  */
 package com.intellij.usages;
 
+import com.intellij.usages.impl.rules.UsageType;
 import consulo.editor.markup.AttributesFlyweight;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.usages.impl.rules.UsageType;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.ui.ex.SimpleTextAttributes;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -59,7 +61,7 @@ public class TextChunk {
 
   @Nonnull
   public SimpleTextAttributes getSimpleAttributesIgnoreBackground() {
-    SimpleTextAttributes simples = SimpleTextAttributes.fromTextAttributes(getAttributes());
+    SimpleTextAttributes simples = TextAttributesUtil.fromTextAttributes(getAttributes());
     simples = new SimpleTextAttributes(null, simples.getFgColor(), simples.getWaveColor(), simples.getStyle());
     return simples;
   }

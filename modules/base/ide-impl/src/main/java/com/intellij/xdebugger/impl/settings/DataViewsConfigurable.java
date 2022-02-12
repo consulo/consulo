@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.settings;
 
 import consulo.configurable.Configurable;
-import com.intellij.xdebugger.XDebuggerBundle;
-import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
+import consulo.debugger.XDebuggerBundle;
+import consulo.debugger.setting.DebuggerSettingsCategory;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

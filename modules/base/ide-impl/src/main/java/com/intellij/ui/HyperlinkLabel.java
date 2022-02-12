@@ -17,11 +17,11 @@
 package com.intellij.ui;
 
 import com.intellij.ide.BrowserUtil;
-import consulo.editor.markup.EffectType;
+import consulo.ui.ex.JBCurrentTheme;
+import consulo.ui.ex.EffectType;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBColor;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
@@ -253,7 +253,7 @@ public class HyperlinkLabel extends HighlightableComponent {
     public ColorValue getForegroundColor() {
       return TargetAWT.from(!isEnabled()
                             ? UIManager.getColor("Label.disabledForeground")
-                            : myMousePressed ? JBUI.CurrentTheme.Link.linkPressedColor() : myMouseHover ? JBUI.CurrentTheme.Link.linkHoverColor() : JBUI.CurrentTheme.Link.linkColor());
+                            : myMousePressed ? JBCurrentTheme.Link.linkPressedColor() : myMouseHover ? JBCurrentTheme.Link.linkHoverColor() : JBCurrentTheme.Link.linkColor());
     }
 
     @Override

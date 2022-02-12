@@ -21,7 +21,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.impl.elements.ArtifactElementType;
 import com.intellij.packaging.ui.*;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

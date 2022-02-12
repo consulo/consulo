@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.roots.ui.util;
 
-import consulo.application.AllIcons;
-import consulo.logging.Logger;
-import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.application.AllIcons;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.logging.Logger;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -43,7 +44,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
     synchronized (mySections) {
       for (TextSection section : mySections) {
         final TextAttributes attributes = section.getTextAttributes();
-        component.append(section.getText(), SimpleTextAttributes.fromTextAttributes(attributes));
+        component.append(section.getText(), TextAttributesUtil.fromTextAttributes(attributes));
       }
       component.setIcon(myIcon);
     }
@@ -181,7 +182,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
 
   public abstract class DequeEnd {
     public void addText(String text, SimpleTextAttributes textAttributes) {
-      addText(text, textAttributes.toTextAttributes());
+      addText(text, TextAttributesUtil.toTextAttributes(textAttributes));
     }
 
     public void addText(String text) {

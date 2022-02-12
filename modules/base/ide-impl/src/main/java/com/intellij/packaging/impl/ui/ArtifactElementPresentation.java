@@ -22,7 +22,7 @@ import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.packaging.ui.TreeNodePresentation;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

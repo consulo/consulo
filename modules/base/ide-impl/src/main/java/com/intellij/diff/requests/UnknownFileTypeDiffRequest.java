@@ -24,7 +24,7 @@ import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;

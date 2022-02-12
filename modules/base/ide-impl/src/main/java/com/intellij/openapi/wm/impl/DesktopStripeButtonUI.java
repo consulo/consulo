@@ -3,8 +3,8 @@ package com.intellij.openapi.wm.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.project.ui.wm.ToolWindowAnchor;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

@@ -95,7 +95,7 @@ import static com.intellij.build.BuildConsoleUtils.getMessageTitle;
 import static com.intellij.build.BuildView.CONSOLE_VIEW_NAME;
 import static com.intellij.openapi.util.text.StringUtil.isEmpty;
 import static com.intellij.ui.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
-import static com.intellij.ui.SimpleTextAttributes.GRAYED_ATTRIBUTES;
+import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
 import static com.intellij.ui.render.RenderingHelper.SHRINK_LONG_RENDERER;
 import static com.intellij.ui.tree.ui.DefaultTreeUI.AUTO_EXPAND_ALLOWED;
 import static com.intellij.util.ObjectUtils.chooseNotNull;

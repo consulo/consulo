@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.MutableErrorTreeView;
 

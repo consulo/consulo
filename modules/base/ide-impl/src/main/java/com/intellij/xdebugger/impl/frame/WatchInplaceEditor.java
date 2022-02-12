@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.frame;
 
 import com.intellij.util.ui.tree.TreeUtil;
-import com.intellij.xdebugger.XExpression;
+import consulo.debugger.breakpoint.XExpression;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeInplaceEditor;
 import com.intellij.xdebugger.impl.ui.tree.nodes.WatchNode;

@@ -17,7 +17,7 @@
 package com.intellij.ui;
 
 import com.intellij.find.FindManager;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;

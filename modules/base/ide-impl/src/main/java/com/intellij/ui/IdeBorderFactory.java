@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.ui.border.IdeaTitledBorder;
 import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.SideBorder;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;

@@ -20,7 +20,7 @@ import consulo.execution.executor.ExecutorRegistry;
 import consulo.application.AllIcons;
 import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.debugger.XDebuggerBundle;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

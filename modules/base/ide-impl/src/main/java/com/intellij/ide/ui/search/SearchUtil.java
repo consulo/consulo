@@ -17,12 +17,13 @@
 package com.intellij.ide.ui.search;
 
 import com.intellij.application.options.SkipSelfSearchComponent;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.configurable.Configurable;
 import com.intellij.openapi.options.MasterDetails;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.GlassPanel;
 import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.util.lang.function.Condition;

@@ -16,8 +16,6 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts.nodes;
 
 import com.intellij.ide.projectView.PresentationData;
-import consulo.editor.markup.EffectType;
-import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactProblemDescription;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
@@ -25,12 +23,15 @@ import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.ArrayUtil;
-import consulo.util.collection.SmartList;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.ui.ex.EffectType;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.style.StandardColors;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -116,10 +117,10 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
   }
 
   private static SimpleTextAttributes addErrorHighlighting(boolean error, SimpleTextAttributes attributes) {
-    final TextAttributes textAttributes = attributes.toTextAttributes();
+    final TextAttributes textAttributes = TextAttributesUtil.toTextAttributes(attributes);
     textAttributes.setEffectType(EffectType.WAVE_UNDERSCORE);
     textAttributes.setEffectColor(error ? StandardColors.RED : StandardColors.GRAY);
-    return SimpleTextAttributes.fromTextAttributes(textAttributes);
+    return TextAttributesUtil.fromTextAttributes(textAttributes);
   }
 
   void addElement(PackagingElement<?> element, CompositePackagingElement parentElement, Collection<PackagingNodeSource> nodeSource) {

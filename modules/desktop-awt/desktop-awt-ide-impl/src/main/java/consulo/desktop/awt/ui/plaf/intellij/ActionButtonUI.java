@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.application.ui.awt.GraphicsConfig;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.Gray;
+import consulo.ui.ex.Gray;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.JBUI;

@@ -24,7 +24,7 @@ import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.Gray;
+import consulo.ui.ex.Gray;
 import com.intellij.ui.ScreenUtil;
 import consulo.application.ui.awt.LinePainter2D;
 import consulo.application.ui.awt.UIUtil;

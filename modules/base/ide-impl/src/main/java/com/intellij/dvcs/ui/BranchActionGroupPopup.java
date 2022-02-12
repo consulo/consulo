@@ -2,7 +2,7 @@
 package com.intellij.dvcs.ui;
 
 import consulo.application.AllIcons;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;

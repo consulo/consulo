@@ -17,8 +17,8 @@ package consulo.desktop.awt.ui.plaf.intellij;
 
 import consulo.application.ui.awt.GraphicsConfig;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.Gray;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.LinePainter2D;
 import com.intellij.ui.paint.RectanglePainter2D;
 import com.intellij.ui.tabs.JBTabsPosition;

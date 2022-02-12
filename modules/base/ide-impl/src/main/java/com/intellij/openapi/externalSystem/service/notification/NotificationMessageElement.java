@@ -20,7 +20,7 @@ import com.intellij.ide.errorTreeView.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.LoadingNode;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ui.JBHtmlEditorKit;

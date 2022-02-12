@@ -27,6 +27,9 @@ import consulo.component.util.localize.BundleBase;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.image.ImageKey;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -996,7 +999,7 @@ public class UIUtil {
    */
   @Nonnull
   public static Color getTreeForeground() {
-    return JBUI.CurrentTheme.Tree.FOREGROUND;
+    return JBCurrentTheme.Tree.FOREGROUND;
   }
 
   /**
@@ -1004,7 +1007,7 @@ public class UIUtil {
    */
   @Nonnull
   public static Color getTreeSelectionForeground(boolean focused) {
-    return JBUI.CurrentTheme.Tree.Selection.foreground(focused);
+    return JBCurrentTheme.Tree.Selection.foreground(focused);
   }
 
   /**
@@ -2449,7 +2452,7 @@ public class UIUtil {
   }
 
   public static Color getHeaderActiveColor() {
-    return JBUI.CurrentTheme.Focus.focusColor();
+    return JBCurrentTheme.Focus.focusColor();
   }
 
   public static Color getHeaderInactiveColor() {

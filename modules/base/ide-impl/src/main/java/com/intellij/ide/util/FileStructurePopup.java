@@ -14,6 +14,7 @@ import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
 import com.intellij.ide.structureView.newStructureView.TreeActionWrapper;
 import com.intellij.ide.structureView.newStructureView.TreeActionsOwner;
 import com.intellij.ide.structureView.newStructureView.TreeModelWrapper;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.application.ui.awt.SideBorder;
 import consulo.application.ui.event.UISettingsListener;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -530,15 +531,15 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     topPanel.add(createSettingsButton(), BorderLayout.EAST);
 
-    topPanel.setBackground(JBUI.CurrentTheme.Popup.toolbarPanelColor());
+    topPanel.setBackground(JBCurrentTheme.Popup.toolbarPanelColor());
     Dimension prefSize = topPanel.getPreferredSize();
-    prefSize.height = JBUI.CurrentTheme.Popup.toolbarHeight();
+    prefSize.height = JBCurrentTheme.Popup.toolbarHeight();
     topPanel.setPreferredSize(prefSize);
     topPanel.setBorder(JBUI.Borders.emptyLeft(UIUtil.DEFAULT_HGAP));
 
     panel.add(topPanel, BorderLayout.NORTH);
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree);
-    scrollPane.setBorder(IdeBorderFactory.createBorder(JBUI.CurrentTheme.Popup.toolbarBorderColor(), SideBorder.TOP | SideBorder.BOTTOM));
+    scrollPane.setBorder(IdeBorderFactory.createBorder(JBCurrentTheme.Popup.toolbarBorderColor(), SideBorder.TOP | SideBorder.BOTTOM));
     panel.add(scrollPane, BorderLayout.CENTER);
     DataManager.registerDataProvider(panel, dataId -> {
       if (CommonDataKeys.PROJECT == dataId) {

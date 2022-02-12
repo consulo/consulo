@@ -45,6 +45,7 @@ import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.Pair;
+import consulo.ui.ex.EffectType;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.ref.Ref;
 import consulo.document.Document;

@@ -18,8 +18,8 @@ package com.intellij.xdebugger.impl.breakpoints.ui.tree;
 import consulo.project.Project;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.ColoredTreeCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.debugger.breakpoint.ui.XBreakpointGroup;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 
 import javax.swing.*;

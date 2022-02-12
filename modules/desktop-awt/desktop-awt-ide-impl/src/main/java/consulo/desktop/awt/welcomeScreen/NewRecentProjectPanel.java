@@ -27,7 +27,7 @@ import com.intellij.openapi.util.io.UniqueNameBuilder;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;

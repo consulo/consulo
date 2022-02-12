@@ -19,7 +19,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

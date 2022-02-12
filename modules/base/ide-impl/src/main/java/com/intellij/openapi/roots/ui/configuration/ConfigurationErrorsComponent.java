@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.application.ui.awt.GraphicsConfig;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.CollectionListModel;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.*;

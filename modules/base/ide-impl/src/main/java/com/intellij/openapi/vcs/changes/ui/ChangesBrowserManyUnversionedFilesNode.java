@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.ui;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.ChangeListOwner;
 import com.intellij.openapi.vcs.changes.UnversionedViewDialog;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 
 public class ChangesBrowserManyUnversionedFilesNode extends ChangesBrowserNode {
   private final Project myProject;

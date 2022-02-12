@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebugSessionListener;
+import consulo.debugger.XDebugSession;
+import consulo.debugger.event.XDebugSessionListener;
 import javax.annotation.Nonnull;
 
 /**

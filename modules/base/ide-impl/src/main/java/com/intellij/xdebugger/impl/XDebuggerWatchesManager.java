@@ -21,7 +21,7 @@ import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
-import com.intellij.xdebugger.XExpression;
+import consulo.debugger.breakpoint.XExpression;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionState;
 import javax.annotation.Nonnull;
 

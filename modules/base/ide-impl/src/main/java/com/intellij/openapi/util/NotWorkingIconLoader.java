@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.util.ExceptionUtil;
 import consulo.application.ui.awt.internal.ImageLoader;
 import com.intellij.util.ReflectionUtil;

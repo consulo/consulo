@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.changes.ChangeListOwner;
 import com.intellij.openapi.vcs.changes.ChangeProvider;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 
 import java.awt.*;
 import java.util.ArrayList;

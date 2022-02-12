@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import consulo.application.ApplicationManager;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.xdebugger.frame.XValueGroup;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.debugger.frame.XValueGroup;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

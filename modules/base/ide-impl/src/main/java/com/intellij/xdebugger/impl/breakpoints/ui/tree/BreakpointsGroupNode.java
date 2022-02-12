@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints.ui.tree;
 
 import com.intellij.ui.CheckedTreeNode;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
+import consulo.debugger.breakpoint.ui.XBreakpointGroup;
 
 class BreakpointsGroupNode<G extends XBreakpointGroup> extends CheckedTreeNode {
   private final G myGroup;

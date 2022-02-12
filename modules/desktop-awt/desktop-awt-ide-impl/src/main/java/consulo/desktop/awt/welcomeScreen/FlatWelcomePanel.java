@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.util.function.Computable;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.ClickListener;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;

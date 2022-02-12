@@ -16,11 +16,12 @@
 package com.intellij.xdebugger.impl;
 
 import com.intellij.xdebugger.impl.ui.XDebugSessionData;
+import consulo.debugger.XDebugProcessStarter;
 
 /**
  * @author avu
  * @since 22/05/14
  */
-public abstract class XDebugProcessConfiguratorStarter implements consulo.xdebugger.XDebugProcessStarter {
+public abstract class XDebugProcessConfiguratorStarter implements XDebugProcessStarter {
   public abstract void configure(XDebugSessionData data);
 }

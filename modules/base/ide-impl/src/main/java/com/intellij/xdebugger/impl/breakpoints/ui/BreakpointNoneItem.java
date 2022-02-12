@@ -19,7 +19,7 @@ package com.intellij.xdebugger.impl.breakpoints.ui;
 import consulo.project.Project;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.popup.util.DetailView;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.debugger.XDebuggerBundle;
 import consulo.ui.image.Image;
 
 public class BreakpointNoneItem extends BreakpointItem {

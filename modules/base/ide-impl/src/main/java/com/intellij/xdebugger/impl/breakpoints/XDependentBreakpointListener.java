@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import consulo.debugger.breakpoint.XBreakpoint;
 
 import java.util.EventListener;
 

@@ -19,7 +19,7 @@ import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ObjectUtils;
 import consulo.application.util.function.Processor;

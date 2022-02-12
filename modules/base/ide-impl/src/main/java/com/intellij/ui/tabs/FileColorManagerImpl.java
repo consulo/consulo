@@ -26,7 +26,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.FileColorManager;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.component.persist.PersistentStateComponent;

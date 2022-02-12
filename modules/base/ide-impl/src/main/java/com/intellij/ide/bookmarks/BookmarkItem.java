@@ -15,19 +15,24 @@
  */
 package com.intellij.ide.bookmarks;
 
-import consulo.editor.markup.EffectType;
-import consulo.editor.markup.TextAttributes;
-import consulo.project.Project;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.ColoredTreeCellRenderer;
+import com.intellij.ui.FileColorManager;
+import com.intellij.ui.SimpleColoredComponent;
+import com.intellij.ui.popup.util.DetailView;
+import com.intellij.ui.popup.util.ItemWrapper;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.*;
-import com.intellij.ui.popup.util.DetailView;
-import com.intellij.ui.popup.util.ItemWrapper;
-import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.project.Project;
+import consulo.ui.ex.EffectType;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +80,7 @@ public class BookmarkItem extends ItemWrapper {
 
     FileStatus fileStatus = FileStatusManager.getInstance(project).getStatus(file);
     TextAttributes attributes = new TextAttributes(fileStatus.getColor(), null, null, EffectType.LINE_UNDERSCORE, Font.PLAIN);
-    renderer.append(file.getName(), SimpleTextAttributes.fromTextAttributes(attributes));
+    renderer.append(file.getName(), TextAttributesUtil.fromTextAttributes(attributes));
     if (bookmark.getLine() >= 0) {
       renderer.append(":", SimpleTextAttributes.GRAYED_ATTRIBUTES);
       renderer.append(String.valueOf(bookmark.getLine() + 1), SimpleTextAttributes.GRAYED_ATTRIBUTES);

@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.application.ui.awt.CustomLineBorder;

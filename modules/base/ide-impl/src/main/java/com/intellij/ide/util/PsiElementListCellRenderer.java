@@ -1,43 +1,44 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util;
 
-import consulo.application.ui.UISettings;
 import com.intellij.navigation.ColoredItemPresentation;
-import consulo.navigation.ItemPresentation;
-import consulo.navigation.NavigationItem;
-import consulo.application.ReadAction;
-import consulo.ui.ex.awt.TargetAWT;
-import consulo.logging.Logger;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.TextAttributes;
-import consulo.project.Project;
 import com.intellij.openapi.ui.popup.IPopupChooserBuilder;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import consulo.component.util.Iconable;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.ColoredListCellRenderer;
-import consulo.application.ui.awt.JBColor;
-import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
+import consulo.application.ReadAction;
+import consulo.application.ui.UISettings;
+import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.UIUtil;
+import consulo.application.util.registry.Registry;
+import consulo.component.util.Iconable;
+import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.editor.markup.TextAttributes;
+import consulo.editor.util.TextAttributesUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.logging.Logger;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
@@ -128,7 +129,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         String name = ((PsiElement)value).isValid() ? getElementText(element) : "INVALID";
 
         TextAttributes attributes = element.isValid() ? getNavigationItemAttributes(value) : null;
-        SimpleTextAttributes nameAttributes = attributes != null ? SimpleTextAttributes.fromTextAttributes(attributes) : null;
+        SimpleTextAttributes nameAttributes = attributes != null ? TextAttributesUtil.fromTextAttributes(attributes) : null;
         if (nameAttributes == null) nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
 
         if (name == null) {

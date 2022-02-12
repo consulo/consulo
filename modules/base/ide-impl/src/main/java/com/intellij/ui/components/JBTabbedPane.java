@@ -16,7 +16,7 @@
 package com.intellij.ui.components;
 
 import consulo.application.util.SystemInfo;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScreenUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;

@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.MixedColorProducer;
 import com.intellij.ui.paint.RectanglePainter;
 import com.intellij.util.ui.RegionPainter;

@@ -31,7 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.ClickListener;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.project.ui.util.Alarm;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.ui.ex.awt.TargetAWT;

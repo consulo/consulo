@@ -20,6 +20,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;

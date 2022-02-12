@@ -3,7 +3,7 @@ package com.intellij.openapi.ui;
 
 import consulo.application.AllIcons;
 import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScreenUtil;
 import consulo.application.ui.awt.GraphicsUtil;
 import com.intellij.util.ui.TimerUtil;

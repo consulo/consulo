@@ -5,18 +5,16 @@ import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.openapi.ui.ErrorBorderCapable;
 import com.intellij.openapi.util.ColoredItem;
 import com.intellij.openapi.util.Comparing;
+import consulo.application.ui.awt.*;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.IdeBorderFactory;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import com.intellij.ui.SimpleColoredComponent;
-import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ObjectUtils;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.ui.ex.awt.TargetAWT;
 import javax.annotation.Nonnull;
 
@@ -165,7 +163,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
             innerShape.lineTo(lw, r.height - bw - lw);
             innerShape.closePath();
 
-            g2.setColor(JBUI.CurrentTheme.Arrow.backgroundColor(comboBox.isEnabled(), comboBox.isEditable()));
+            g2.setColor(JBCurrentTheme.Arrow.backgroundColor(comboBox.isEnabled(), comboBox.isEditable()));
             g2.fill(innerShape);
 
             // Paint vertical line
@@ -193,14 +191,14 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
   }
 
   protected void paintArrow(Graphics2D g2, JButton btn) {
-    g2.setColor(JBUI.CurrentTheme.Arrow.foregroundColor(comboBox.isEnabled()));
+    g2.setColor(JBCurrentTheme.Arrow.foregroundColor(comboBox.isEnabled()));
     g2.fill(getArrowShape(btn));
   }
 
   @SuppressWarnings("unused")
   @Deprecated(forRemoval = true)
   protected Color getArrowButtonFillColor(Color defaultColor) {
-    return JBUI.CurrentTheme.Arrow.backgroundColor(comboBox.isEnabled(), comboBox.isEditable());
+    return JBCurrentTheme.Arrow.backgroundColor(comboBox.isEnabled(), comboBox.isEditable());
   }
 
   @Nonnull

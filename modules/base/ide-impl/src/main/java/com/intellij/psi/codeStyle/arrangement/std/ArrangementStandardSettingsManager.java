@@ -20,8 +20,8 @@ import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementEntryMatcher;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.editor.util.TextAttributesUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
@@ -217,11 +217,11 @@ public class ArrangementStandardSettingsManager {
   private int parseWidth(@Nonnull ArrangementSettingsToken token, @Nonnull SimpleColoredComponent renderer) {
     renderer.clear();
     final String value = getPresentationValue(token);
-    renderer.append(value, SimpleTextAttributes.fromTextAttributes(myColorsProvider.getTextAttributes(token, true)));
+    renderer.append(value, TextAttributesUtil.fromTextAttributes(myColorsProvider.getTextAttributes(token, true)));
     int result = renderer.getPreferredSize().width;
 
     renderer.clear();
-    renderer.append(value, SimpleTextAttributes.fromTextAttributes(myColorsProvider.getTextAttributes(token, false)));
+    renderer.append(value, TextAttributesUtil.fromTextAttributes(myColorsProvider.getTextAttributes(token, false)));
     return Math.max(result, renderer.getPreferredSize().width);
   }
 

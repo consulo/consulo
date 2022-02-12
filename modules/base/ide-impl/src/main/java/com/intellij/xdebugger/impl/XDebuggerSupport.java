@@ -17,9 +17,9 @@ package com.intellij.xdebugger.impl;
 
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.xdebugger.AbstractDebuggerSession;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
+import consulo.debugger.AbstractDebuggerSession;
+import consulo.debugger.XDebugSession;
+import consulo.debugger.XDebuggerManager;
 import com.intellij.xdebugger.impl.actions.*;
 import com.intellij.xdebugger.impl.actions.handlers.*;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointPanelProvider;

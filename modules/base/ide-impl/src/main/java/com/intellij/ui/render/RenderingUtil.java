@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.render;
 
-import consulo.application.ui.awt.JBUI.CurrentTheme;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.util.dataholder.Key;
@@ -60,13 +60,13 @@ public final class RenderingUtil {
   @Nonnull
   public static Color getBackground(@Nonnull JList<?> list) {
     Color background = list.getBackground();
-    return background != null ? background : CurrentTheme.List.BACKGROUND;
+    return background != null ? background : JBCurrentTheme.List.BACKGROUND;
   }
 
   @Nonnull
   public static Color getBackground(@Nonnull JTable table) {
     Color background = table.getBackground();
-    return background != null ? background : CurrentTheme.Table.BACKGROUND;
+    return background != null ? background : JBCurrentTheme.Table.BACKGROUND;
   }
 
   @Nonnull
@@ -74,20 +74,20 @@ public final class RenderingUtil {
     JTable table = getTableFor(tree);
     if (table != null) return getBackground(table); // tree table
     Color background = tree.getBackground();
-    return background != null ? background : CurrentTheme.Tree.BACKGROUND;
+    return background != null ? background : JBCurrentTheme.Tree.BACKGROUND;
   }
 
 
   @Nonnull
   public static Color getSelectionBackground(@Nonnull JList<?> list) {
     Color background = getCustomSelectionBackground(list);
-    return background != null ? background : CurrentTheme.List.Selection.background(isFocused(list));
+    return background != null ? background : JBCurrentTheme.List.Selection.background(isFocused(list));
   }
 
   @Nonnull
   public static Color getSelectionBackground(@Nonnull JTable table) {
     Color background = getCustomSelectionBackground(table);
-    return background != null ? background : CurrentTheme.Table.Selection.background(isFocused(table));
+    return background != null ? background : JBCurrentTheme.Table.Selection.background(isFocused(table));
   }
 
   @Nonnull
@@ -95,7 +95,7 @@ public final class RenderingUtil {
     JTable table = getTableFor(tree);
     if (table != null) return getSelectionBackground(table); // tree table
     Color background = getCustomSelectionBackground(tree);
-    return background != null ? background : CurrentTheme.Tree.Selection.background(isFocused(tree));
+    return background != null ? background : JBCurrentTheme.Tree.Selection.background(isFocused(tree));
   }
 
 
@@ -118,13 +118,13 @@ public final class RenderingUtil {
   @Nonnull
   public static Color getForeground(@Nonnull JList<?> list) {
     Color foreground = list.getForeground();
-    return foreground != null ? foreground : CurrentTheme.List.FOREGROUND;
+    return foreground != null ? foreground : JBCurrentTheme.List.FOREGROUND;
   }
 
   @Nonnull
   public static Color getForeground(@Nonnull JTable table) {
     Color foreground = table.getForeground();
-    return foreground != null ? foreground : CurrentTheme.Table.FOREGROUND;
+    return foreground != null ? foreground : JBCurrentTheme.Table.FOREGROUND;
   }
 
   @Nonnull
@@ -132,24 +132,24 @@ public final class RenderingUtil {
     JTable table = getTableFor(tree);
     if (table != null) return getForeground(table); // tree table
     Color foreground = tree.getForeground();
-    return foreground != null ? foreground : CurrentTheme.Tree.FOREGROUND;
+    return foreground != null ? foreground : JBCurrentTheme.Tree.FOREGROUND;
   }
 
   @Nonnull
   public static Color getSelectionForeground(@Nonnull JList<?> list) {
-    return CurrentTheme.List.Selection.foreground(isFocused(list));
+    return JBCurrentTheme.List.Selection.foreground(isFocused(list));
   }
 
   @Nonnull
   public static Color getSelectionForeground(@Nonnull JTable table) {
-    return CurrentTheme.Table.Selection.foreground(isFocused(table));
+    return JBCurrentTheme.Table.Selection.foreground(isFocused(table));
   }
 
   @Nonnull
   public static Color getSelectionForeground(@Nonnull JTree tree) {
     JTable table = getTableFor(tree);
     if (table != null) return getSelectionForeground(table); // tree table
-    return CurrentTheme.Tree.Selection.foreground(isFocused(tree));
+    return JBCurrentTheme.Tree.Selection.foreground(isFocused(tree));
   }
 
   public static boolean isHoverPaintingDisabled(@Nonnull JComponent component) {
@@ -160,14 +160,14 @@ public final class RenderingUtil {
   @Nullable
   Color getHoverBackground(@Nonnull JList<?> list) {
     if (isHoverPaintingDisabled(list)) return null;
-    return CurrentTheme.List.Hover.background(isFocused(list));
+    return JBCurrentTheme.List.Hover.background(isFocused(list));
   }
 
   public static
   @Nullable
   Color getHoverBackground(@Nonnull JTable table) {
     if (isHoverPaintingDisabled(table)) return null;
-    return CurrentTheme.Table.Hover.background(isFocused(table));
+    return JBCurrentTheme.Table.Hover.background(isFocused(table));
   }
 
   public static
@@ -176,7 +176,7 @@ public final class RenderingUtil {
     JTable table = getTableFor(tree);
     if (table != null) return getHoverBackground(table); // tree table
     if (isHoverPaintingDisabled(tree)) return null;
-    return CurrentTheme.Tree.Hover.background(isFocused(tree));
+    return JBCurrentTheme.Tree.Hover.background(isFocused(tree));
   }
 
 

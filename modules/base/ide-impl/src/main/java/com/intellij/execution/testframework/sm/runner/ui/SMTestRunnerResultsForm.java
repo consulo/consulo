@@ -42,7 +42,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
 import consulo.navigation.Navigatable;
-import consulo.application.ui.awt.JBColor;
+import consulo.ui.ex.JBColor;
 import consulo.project.ui.util.Alarm;
 import com.intellij.util.OpenSourceUtil;
 import com.intellij.util.PathUtil;

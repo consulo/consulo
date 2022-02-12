@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.plaf.windows;
 import com.intellij.openapi.actionSystem.ActionButtonComponent;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.ui.paint.RectanglePainter2D;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.JBCurrentTheme;
 import consulo.desktop.awt.ui.plaf.intellij.ActionButtonUI;
 
 import javax.swing.*;
@@ -40,11 +40,11 @@ public class WinIntelliJActionButtonUI extends ActionButtonUI {
   @Override
   public void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.PUSHED) {
-      g.setColor(JBUI.CurrentTheme.ActionButton.pressedBackground());
+      g.setColor(JBCurrentTheme.ActionButton.pressedBackground());
       RectanglePainter2D.FILL.paint((Graphics2D)g, 0, 0, size.getWidth(), size.getHeight());
     }
     else if(state == ActionButtonComponent.POPPED) {
-      g.setColor(JBUI.CurrentTheme.ActionButton.hoverBackground());
+      g.setColor(JBCurrentTheme.ActionButton.hoverBackground());
       RectanglePainter2D.FILL.paint((Graphics2D)g, 0, 0, size.getWidth(), size.getHeight());
     }
   }

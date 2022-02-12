@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import consulo.editor.colorScheme.TextAttributesKey;
-import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import consulo.debugger.frame.presentation.XValuePresentation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

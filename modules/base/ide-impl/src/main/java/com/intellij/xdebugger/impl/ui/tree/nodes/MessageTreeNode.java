@@ -17,11 +17,11 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTextContainer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.IJSwingUtilities;
 import consulo.util.collection.SmartList;
-import com.intellij.xdebugger.XDebuggerBundle;
-import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
+import consulo.debugger.XDebuggerBundle;
+import consulo.debugger.frame.XDebuggerTreeNodeHyperlink;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ui.image.Image;

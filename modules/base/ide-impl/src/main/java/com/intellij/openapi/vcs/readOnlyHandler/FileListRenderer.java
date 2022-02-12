@@ -19,7 +19,7 @@ import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

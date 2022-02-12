@@ -3,6 +3,7 @@ package consulo.editor.markup;
 
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.EffectType;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -14,7 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import static consulo.editor.markup.EffectType.*;
+import static consulo.ui.ex.EffectType.*;
 import static consulo.editor.markup.TextAttributesEffectsBuilder.EffectSlot.*;
 
 /**
