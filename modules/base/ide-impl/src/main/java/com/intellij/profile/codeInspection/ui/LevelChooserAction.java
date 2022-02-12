@@ -28,6 +28,7 @@ import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.profile.codeInspection.SeverityProvider;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 

@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex;
 
+import consulo.ui.ex.util.LafProperty;
 import consulo.util.lang.Comparing;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
@@ -49,10 +50,10 @@ public final class SimpleTextAttributes {
   public static final SimpleTextAttributes ERROR_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, JBColor.red);
   public static final SimpleTextAttributes ERROR_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_BOLD, JBColor.red);
 
-  public static final SimpleTextAttributes GRAYED_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, UIUtil.getInactiveTextColor());
-  public static final SimpleTextAttributes GRAYED_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_BOLD, UIUtil.getInactiveTextColor());
-  public static final SimpleTextAttributes GRAYED_ITALIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, UIUtil.getInactiveTextColor());
-  public static final SimpleTextAttributes GRAYED_SMALL_ATTRIBUTES = new SimpleTextAttributes(STYLE_SMALLER, UIUtil.getInactiveTextColor());
+  public static final SimpleTextAttributes GRAYED_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, LafProperty.getInactiveTextColor());
+  public static final SimpleTextAttributes GRAYED_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_BOLD, LafProperty.getInactiveTextColor());
+  public static final SimpleTextAttributes GRAYED_ITALIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, LafProperty.getInactiveTextColor());
+  public static final SimpleTextAttributes GRAYED_SMALL_ATTRIBUTES = new SimpleTextAttributes(STYLE_SMALLER, LafProperty.getInactiveTextColor());
 
   public static final SimpleTextAttributes SYNTHETIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, JBColor.blue);
   public static final SimpleTextAttributes GRAY_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, Color.GRAY);
@@ -60,7 +61,7 @@ public final class SimpleTextAttributes {
   public static final SimpleTextAttributes DARK_TEXT = new SimpleTextAttributes(STYLE_PLAIN, new Color(112, 112, 164));
   public static final SimpleTextAttributes SIMPLE_CELL_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, new JBColor(Gray._0, Gray._187));
   public static final SimpleTextAttributes SELECTED_SIMPLE_CELL_ATTRIBUTES =
-          new SimpleTextAttributes(STYLE_PLAIN, UIUtil.getListSelectionForeground());
+          new SimpleTextAttributes(STYLE_PLAIN, LafProperty.getListSelectionForeground());
   public static final SimpleTextAttributes EXCLUDED_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, Color.GRAY);
 
   public static final SimpleTextAttributes LINK_ATTRIBUTES = new SimpleTextAttributes(STYLE_UNDERLINE, JBColor.blue);
@@ -73,7 +74,7 @@ public final class SimpleTextAttributes {
   private final int myStyle;
 
   /**
-   * @param style   style of the text fragment.                                       5
+   * @param style   style of the text fragment.
    * @param fgColor color of the text fragment. <code>color</code> can be
    *                <code>null</code>. In that case <code>SimpleColoredComponent</code> will
    *                use its foreground to paint the text fragment.

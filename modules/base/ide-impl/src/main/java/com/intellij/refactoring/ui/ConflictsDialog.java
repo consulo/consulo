@@ -22,19 +22,20 @@ package com.intellij.refactoring.ui;
 
 import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
-import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.ScrollPaneFactory;
-import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.util.ArrayUtil;
-import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.UIUtil;
+import consulo.editor.util.TextAttributesUtil;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
+import consulo.util.collection.MultiMap;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

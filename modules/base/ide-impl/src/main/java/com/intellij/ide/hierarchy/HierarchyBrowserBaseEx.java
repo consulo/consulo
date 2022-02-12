@@ -37,6 +37,7 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;

@@ -19,7 +19,7 @@ import com.intellij.ide.CommonActionsManager;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;

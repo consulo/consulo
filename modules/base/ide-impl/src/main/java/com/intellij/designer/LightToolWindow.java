@@ -38,6 +38,7 @@ import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowType;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.util.ui.ToolwindowPaintUtil;

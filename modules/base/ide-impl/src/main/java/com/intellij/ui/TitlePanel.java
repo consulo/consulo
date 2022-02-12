@@ -17,7 +17,7 @@
 package com.intellij.ui;
 
 import com.intellij.ui.components.JBLabel;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.JBUI;

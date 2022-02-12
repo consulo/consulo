@@ -7,7 +7,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.ScrollingUtil;

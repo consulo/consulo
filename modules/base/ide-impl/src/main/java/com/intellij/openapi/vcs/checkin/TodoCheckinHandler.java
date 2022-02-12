@@ -20,7 +20,7 @@ import com.intellij.ide.todo.*;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;

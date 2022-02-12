@@ -20,6 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

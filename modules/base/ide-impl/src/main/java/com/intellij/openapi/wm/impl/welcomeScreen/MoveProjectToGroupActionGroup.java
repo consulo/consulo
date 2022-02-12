@@ -19,7 +19,7 @@ import com.intellij.ide.ProjectGroup;
 import com.intellij.ide.RecentProjectsManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

@@ -30,6 +30,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.util.lang.function.Conditions;

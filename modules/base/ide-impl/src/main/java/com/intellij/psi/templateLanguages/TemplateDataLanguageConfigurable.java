@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.ColoredTextContainer;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.tree.PerFileConfigurableBase;

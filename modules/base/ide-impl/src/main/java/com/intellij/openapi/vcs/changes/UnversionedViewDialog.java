@@ -16,6 +16,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.actionSystem.*;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.actionSystem.impl.Utils;

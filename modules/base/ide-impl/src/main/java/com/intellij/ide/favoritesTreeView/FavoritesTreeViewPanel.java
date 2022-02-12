@@ -44,6 +44,7 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.configurable.ConfigurationException;
 import consulo.application.progress.PerformInBackgroundOption;

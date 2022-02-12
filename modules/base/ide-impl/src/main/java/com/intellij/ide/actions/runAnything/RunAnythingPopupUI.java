@@ -37,6 +37,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;

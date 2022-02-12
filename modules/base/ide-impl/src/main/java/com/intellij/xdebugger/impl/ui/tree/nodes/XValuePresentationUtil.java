@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.ui.ColoredTextContainer;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.JBColor;
 import consulo.editor.util.TextAttributesUtil;
 import consulo.ui.ex.SimpleTextAttributes;

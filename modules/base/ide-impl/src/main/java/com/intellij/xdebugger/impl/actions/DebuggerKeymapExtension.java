@@ -21,6 +21,8 @@ import com.intellij.openapi.keymap.KeymapExtension;
 import com.intellij.openapi.keymap.KeymapGroup;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionStub;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

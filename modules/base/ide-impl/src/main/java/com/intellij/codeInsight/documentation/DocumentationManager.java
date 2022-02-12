@@ -18,6 +18,7 @@ import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.project.ui.wm.*;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Conditions;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;

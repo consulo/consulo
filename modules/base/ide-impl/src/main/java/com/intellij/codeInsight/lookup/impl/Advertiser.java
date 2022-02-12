@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.ui.ClickListener;
 import consulo.application.ui.awt.*;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.image.Image;
 

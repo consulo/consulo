@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import consulo.application.ui.UISettings;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;

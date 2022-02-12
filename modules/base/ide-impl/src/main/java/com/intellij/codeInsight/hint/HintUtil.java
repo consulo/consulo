@@ -3,7 +3,7 @@ package com.intellij.codeInsight.hint;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeTooltipManager;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.editor.colorScheme.EditorColorKey;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.util.lang.ref.Ref;

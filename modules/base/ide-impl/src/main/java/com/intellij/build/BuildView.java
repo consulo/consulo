@@ -26,6 +26,7 @@ import consulo.application.ApplicationManager;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.util.Consumer;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;

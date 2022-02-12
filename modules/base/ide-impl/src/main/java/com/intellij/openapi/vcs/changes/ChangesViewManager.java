@@ -27,6 +27,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.SideBorder;
 import consulo.component.persist.State;

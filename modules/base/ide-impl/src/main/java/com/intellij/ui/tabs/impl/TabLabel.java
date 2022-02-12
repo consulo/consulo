@@ -21,7 +21,7 @@ import consulo.application.ui.UISettings;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.util.Pass;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.Wrapper;

@@ -43,6 +43,7 @@ import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;

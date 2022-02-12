@@ -9,6 +9,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

@@ -5,7 +5,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.configurable.BaseConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

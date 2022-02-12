@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.DarculaColors;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
 import consulo.component.extension.Extensions;
 import consulo.module.Module;

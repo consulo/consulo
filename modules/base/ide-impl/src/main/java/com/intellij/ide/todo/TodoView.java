@@ -2,7 +2,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

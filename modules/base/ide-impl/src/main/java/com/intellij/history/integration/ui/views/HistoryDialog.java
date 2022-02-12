@@ -41,6 +41,7 @@ import consulo.application.progress.Task;
 import consulo.application.ui.awt.SideBorder;
 import consulo.project.Project;
 import com.intellij.openapi.ui.*;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

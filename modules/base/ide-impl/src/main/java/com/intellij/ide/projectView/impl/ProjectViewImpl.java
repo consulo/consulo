@@ -17,6 +17,7 @@
 package com.intellij.ide.projectView.impl;
 
 import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;

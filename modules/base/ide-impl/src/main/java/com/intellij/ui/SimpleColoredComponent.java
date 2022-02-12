@@ -25,6 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.*;
 import consulo.application.ui.awt.UIUtil;
 import consulo.logging.Logger;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.ui.CaptionPanel;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.desktop.awt.ui.plaf.BasicCaptionPanelUI;
 
 import javax.swing.*;

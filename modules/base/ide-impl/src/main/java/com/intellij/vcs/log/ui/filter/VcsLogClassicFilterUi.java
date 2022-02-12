@@ -17,7 +17,7 @@ package com.intellij.vcs.log.ui.filter;
 
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.application.ApplicationManager;

@@ -16,7 +16,7 @@
 package consulo.web.wm.impl;
 
 import consulo.ui.ex.action.ActionGroup;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;

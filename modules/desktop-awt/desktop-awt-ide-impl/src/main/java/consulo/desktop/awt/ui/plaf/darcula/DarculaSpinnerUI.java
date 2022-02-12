@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.application.ui.awt.*;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;

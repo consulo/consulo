@@ -15,7 +15,7 @@
  */
 package consulo.ide.settings.impl;
 
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;

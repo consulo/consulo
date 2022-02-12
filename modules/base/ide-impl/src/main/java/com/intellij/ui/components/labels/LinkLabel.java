@@ -3,7 +3,7 @@ package com.intellij.ui.components.labels;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.StatusBar;

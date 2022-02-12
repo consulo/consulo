@@ -16,12 +16,12 @@
 
 package consulo.debugger.frame;
 
-import com.intellij.ui.ColoredTextContainer;
-import com.intellij.ui.SimpleTextAttributes;
 import consulo.application.AllIcons;
 import consulo.debugger.XDebuggerBundle;
 import consulo.debugger.XSourcePosition;
 import consulo.debugger.evaluation.XDebuggerEvaluator;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nullable;
 

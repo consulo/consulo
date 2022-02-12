@@ -30,6 +30,7 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Factory;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;

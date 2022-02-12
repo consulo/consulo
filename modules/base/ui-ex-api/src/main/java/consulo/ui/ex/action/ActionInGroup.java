@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.actionSystem;
+package consulo.ui.ex.action;
 
-import consulo.container.plugin.PluginId;
+public class ActionInGroup {
 
-/**
- * from kotlin
- */
-public interface ActionStubBase {
-  String getId();
+  private final DefaultActionGroup myGroup;
+  private final AnAction myAction;
 
-  PluginId getPluginId();
+  ActionInGroup(DefaultActionGroup group, AnAction action) {
+    myGroup = group;
+    myAction = action;
+  }
 
-  String getIconPath();
+  public ActionInGroup setAsSecondary(boolean isSecondary) {
+    myGroup.setAsPrimary(myAction, !isSecondary);
+    return this;
+  }
+
+  public ActionGroup getGroup() {
+    return myGroup;
+  }
 }

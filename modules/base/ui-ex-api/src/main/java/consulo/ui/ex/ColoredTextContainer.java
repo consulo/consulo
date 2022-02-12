@@ -1,4 +1,4 @@
-package com.intellij.ui;
+package consulo.ui.ex;
 
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;

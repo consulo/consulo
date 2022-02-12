@@ -16,6 +16,7 @@
 package consulo.debugger.frame;
 
 import consulo.debugger.Obsolescent;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

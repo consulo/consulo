@@ -6,7 +6,7 @@ import consulo.application.ui.awt.*;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import com.intellij.util.ui.table.JBTableRowEditor;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

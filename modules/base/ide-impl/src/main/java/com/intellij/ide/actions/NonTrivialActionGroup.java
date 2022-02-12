@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.ActionGroupUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.application.dumb.DumbAware;
 

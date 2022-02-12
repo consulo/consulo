@@ -18,6 +18,7 @@ package com.intellij.ui;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.IconUtil;

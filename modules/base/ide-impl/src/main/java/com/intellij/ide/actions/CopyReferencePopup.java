@@ -8,6 +8,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;

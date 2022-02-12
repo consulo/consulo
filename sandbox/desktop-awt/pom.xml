@@ -93,7 +93,11 @@
       <artifactId>consulo-injecting-pico-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-virtual-file-watcher-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-logging-slf4j-binding-impl</artifactId>

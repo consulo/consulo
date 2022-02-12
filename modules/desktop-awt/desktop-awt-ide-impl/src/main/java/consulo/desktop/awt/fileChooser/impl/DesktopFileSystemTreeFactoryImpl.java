@@ -18,7 +18,7 @@ package consulo.desktop.awt.fileChooser.impl;
 import com.intellij.ide.actions.SynchronizeAction;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileSystemTree;

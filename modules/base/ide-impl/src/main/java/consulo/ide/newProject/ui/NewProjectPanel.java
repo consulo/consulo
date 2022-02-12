@@ -15,6 +15,7 @@
  */
 package consulo.ide.newProject.ui;
 
+import consulo.application.Application;
 import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
@@ -120,7 +121,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
   protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable) {
     NewModuleContext context = new NewModuleContext();
 
-    NewModuleBuilder.EP_NAME.composite().setupContext(context);
+    NewModuleBuilder.EP.forEachExtensionSafe(Application.get(), it -> it.setupContext(context));
 
     myTree = new Tree(new AsyncTreeModel(new StructureTreeModel<>(new NewProjectTreeStructure(context), parentDisposable), parentDisposable));
     myTree.setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));

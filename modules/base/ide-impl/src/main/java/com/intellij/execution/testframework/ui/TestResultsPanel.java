@@ -31,6 +31,7 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.*;
 import com.intellij.util.Producer;
 import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;

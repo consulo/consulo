@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.keymap.KeyMapBundle;
 import com.intellij.openapi.keymap.KeymapExtension;
 import com.intellij.openapi.keymap.KeymapGroup;
@@ -23,12 +22,9 @@ import com.intellij.openapi.keymap.KeymapGroupFactory;
 import com.intellij.openapi.keymap.impl.ui.ActionsTreeUtil;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnSeparator;
 
 /**
  * @author yole

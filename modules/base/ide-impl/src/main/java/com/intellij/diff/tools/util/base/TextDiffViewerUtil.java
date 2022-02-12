@@ -35,6 +35,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorPopupHandler;
 import com.intellij.openapi.editor.impl.ContextMenuPopupHandler;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;
 import com.intellij.ui.ToggleActionButton;
 import com.intellij.util.Function;

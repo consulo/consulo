@@ -5,7 +5,7 @@ import com.intellij.codeInsight.hint.HintUtil;
 import consulo.application.ui.awt.Html;
 import consulo.application.ui.awt.*;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;

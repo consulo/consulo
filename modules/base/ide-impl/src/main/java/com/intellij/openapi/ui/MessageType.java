@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.ui;
 
-import consulo.application.AllIcons;
 import com.intellij.notification.NotificationType;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.AllIcons;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -25,9 +25,8 @@ import java.awt.*;
 
 public class MessageType {
 
-  public static final MessageType ERROR =
-          new MessageType(AllIcons.General.NotificationError, JBCurrentTheme.NotificationError.backgroundColor(), JBCurrentTheme.NotificationError.foregroundColor(),
-                          JBCurrentTheme.NotificationError.borderColor());
+  public static final MessageType ERROR = new MessageType(AllIcons.General.NotificationError, JBCurrentTheme.NotificationError.backgroundColor(), JBCurrentTheme.NotificationError.foregroundColor(),
+                                                          JBCurrentTheme.NotificationError.borderColor());
 
   public static final MessageType INFO = new MessageType(AllIcons.General.NotificationInfo, JBCurrentTheme.NotificationInfo.backgroundColor(), JBCurrentTheme.NotificationInfo.foregroundColor(),
                                                          JBCurrentTheme.NotificationInfo.borderColor());
@@ -71,5 +70,19 @@ public class MessageType {
   @Nonnull
   public NotificationType toNotificationType() {
     return this == ERROR ? NotificationType.ERROR : this == WARNING ? NotificationType.WARNING : NotificationType.INFORMATION;
+  }
+
+  @Nonnull
+  public static MessageType from(consulo.ui.NotificationType type) {
+    switch (type) {
+      case INFO:
+        return INFO;
+      case WARNING:
+        return WARNING;
+      case ERROR:
+        return ERROR;
+      default:
+        throw new UnsupportedOperationException();
+    }
   }
 }

@@ -33,6 +33,7 @@ import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineRange;
 import consulo.dataContext.DataManager;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;

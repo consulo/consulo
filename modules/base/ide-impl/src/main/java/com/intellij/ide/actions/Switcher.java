@@ -68,7 +68,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.EffectType;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.style.StandardColors;

@@ -26,7 +26,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.ExecutionConsole;
 import com.intellij.execution.util.StoringPropertyContainer;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.language.psi.scope.GlobalSearchScope;

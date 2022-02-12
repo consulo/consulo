@@ -46,6 +46,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.application.impl.WholeWestDialogWrapper;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;

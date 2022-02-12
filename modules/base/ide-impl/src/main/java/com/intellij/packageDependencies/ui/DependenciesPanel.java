@@ -25,6 +25,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.ExporterToTextFile;
 import com.intellij.ide.actions.ContextHelpAction;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;

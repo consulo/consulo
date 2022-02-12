@@ -19,7 +19,7 @@ import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.component.persist.PersistentStateComponent;

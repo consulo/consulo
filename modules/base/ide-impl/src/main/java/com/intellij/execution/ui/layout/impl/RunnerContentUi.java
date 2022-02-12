@@ -30,6 +30,7 @@ import consulo.dataContext.DataProvider;
 import consulo.execution.ui.layout.LayoutAttractionPolicy;
 import consulo.project.Project;
 import com.intellij.openapi.ui.AbstractPainter;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;

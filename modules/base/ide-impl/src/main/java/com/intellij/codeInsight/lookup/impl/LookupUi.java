@@ -33,6 +33,7 @@ import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;

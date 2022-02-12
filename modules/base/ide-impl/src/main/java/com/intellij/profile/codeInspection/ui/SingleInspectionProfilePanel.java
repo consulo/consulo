@@ -71,6 +71,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.UserActivityWatcher;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.event.UserActivityListener;

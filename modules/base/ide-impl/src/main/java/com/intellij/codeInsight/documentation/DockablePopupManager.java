@@ -20,6 +20,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.content.*;
 import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.update.UiNotifyConnector;

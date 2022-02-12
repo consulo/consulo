@@ -3,7 +3,6 @@ package com.intellij.build;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;
@@ -12,6 +11,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;

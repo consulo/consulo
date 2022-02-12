@@ -18,7 +18,7 @@ package com.intellij.build;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.LangBundle;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;

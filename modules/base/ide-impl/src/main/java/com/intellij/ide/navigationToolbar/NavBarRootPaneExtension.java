@@ -35,6 +35,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.JBSwingUtilities;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;

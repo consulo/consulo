@@ -1171,8 +1171,6 @@ open module consulo.ide.impl {
   exports consulo.execution.testframework.thrift.runner;
   exports consulo.execution.ui.editor;
   exports consulo.execution.ui.impl;
-  //exports consulo.extension;
-  exports consulo.extension.ui;
   exports consulo.extensions;
   //exports consulo.external;
   exports consulo.external.api;
@@ -1340,6 +1338,7 @@ open module consulo.ide.impl {
   exports org.jetbrains.ide;
   exports org.jetbrains.ide.script;
   exports org.jetbrains.io;
+  exports consulo.module.extension.ui;
 
   exports consulo.ui.ex.toolWindow;
   exports consulo.options.impl;

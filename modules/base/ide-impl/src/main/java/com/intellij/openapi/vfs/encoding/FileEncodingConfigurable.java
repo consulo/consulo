@@ -17,7 +17,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.Trinity;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.ColoredTextContainer;
+import consulo.ui.ex.ColoredTextContainer;
 import com.intellij.ui.EnumComboBoxModel;
 import com.intellij.ui.HyperlinkLabel;
 import consulo.ui.ex.SimpleTextAttributes;

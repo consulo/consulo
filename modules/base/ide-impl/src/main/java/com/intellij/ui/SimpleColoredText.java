@@ -17,6 +17,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 

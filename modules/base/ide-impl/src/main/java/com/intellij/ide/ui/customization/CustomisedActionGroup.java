@@ -18,7 +18,7 @@ package com.intellij.ide.ui.customization;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

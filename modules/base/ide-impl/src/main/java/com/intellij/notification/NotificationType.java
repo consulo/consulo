@@ -15,13 +15,15 @@
  */
 package com.intellij.notification;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author spleaner
  */
 public enum NotificationType {
   INFORMATION,
   WARNING,
-  ERROR ;
+  ERROR;
 
   public consulo.ui.NotificationType toUI() {
     switch (this) {
@@ -35,4 +37,17 @@ public enum NotificationType {
 
     throw new UnsupportedOperationException();
   }
-}
+
+  @Nonnull
+  public static NotificationType from(consulo.ui.NotificationType type) {
+    switch (type) {
+      case INFO:
+        return INFORMATION;
+      case WARNING:
+        return WARNING;
+      case ERROR:
+        return ERROR;
+      default:
+        throw new UnsupportedOperationException();
+    }
+  }}

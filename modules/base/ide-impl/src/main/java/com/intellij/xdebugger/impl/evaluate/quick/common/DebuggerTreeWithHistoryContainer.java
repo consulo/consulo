@@ -29,6 +29,7 @@ import com.intellij.ui.treeStructure.Tree;
 import consulo.debugger.XDebuggerBundle;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

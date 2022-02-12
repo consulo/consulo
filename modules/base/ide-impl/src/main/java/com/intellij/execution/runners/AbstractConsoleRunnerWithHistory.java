@@ -32,6 +32,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.process.local.OSProcessHandler;
 import consulo.project.Project;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.SideBorder;
 import com.intellij.util.containers.ContainerUtil;

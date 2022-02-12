@@ -24,7 +24,7 @@ import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import com.intellij.lang.annotation.HighlightSeverity;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.Toggleable;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;

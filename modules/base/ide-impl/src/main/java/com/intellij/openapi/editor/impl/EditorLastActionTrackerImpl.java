@@ -18,6 +18,7 @@ package com.intellij.openapi.editor.impl;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
+import consulo.ui.ex.action.ActionStub;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;
 import consulo.editor.Editor;

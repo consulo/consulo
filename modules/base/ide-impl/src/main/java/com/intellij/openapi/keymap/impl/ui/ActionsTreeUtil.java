@@ -29,6 +29,7 @@ import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.keymap.impl.KeymapImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

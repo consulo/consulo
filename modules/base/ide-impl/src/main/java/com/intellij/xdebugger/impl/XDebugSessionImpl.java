@@ -15,45 +15,13 @@
  */
 package com.intellij.xdebugger.impl;
 
-import consulo.debugger.*;
-import consulo.debugger.breakpoint.*;
-import consulo.debugger.event.XBreakpointListener;
-import consulo.debugger.event.XDebugSessionListener;
-import consulo.execution.ExecutionManager;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.executors.DefaultDebugExecutor;
-import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.filters.OpenFileHyperlinkInfo;
-import consulo.process.event.ProcessAdapter;
-import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.ui.console.ConsoleView;
-import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.execution.ui.layout.RunnerLayoutUi;
-import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationListener;
-import consulo.ui.ex.action.AnAction;
-import consulo.application.ApplicationManager;
-import consulo.editor.markup.GutterIconRenderer;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.EventDispatcher;
-import consulo.util.collection.SmartList;
-import consulo.util.collection.SmartHashSet;
-import consulo.application.ui.awt.UIUtil;
-import consulo.debugger.frame.XExecutionStack;
-import consulo.debugger.frame.XStackFrame;
-import consulo.debugger.frame.XSuspendContext;
-import consulo.debugger.frame.XValueMarkerProvider;
 import com.intellij.xdebugger.impl.breakpoints.*;
 import com.intellij.xdebugger.impl.evaluate.XDebuggerEditorLinePainter;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
@@ -63,13 +31,45 @@ import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionData;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import consulo.application.AccessRule;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.dataContext.DataManager;
+import consulo.debugger.*;
+import consulo.debugger.breakpoint.*;
+import consulo.debugger.event.XBreakpointListener;
+import consulo.debugger.event.XDebugSessionListener;
+import consulo.debugger.frame.XExecutionStack;
+import consulo.debugger.frame.XStackFrame;
+import consulo.debugger.frame.XSuspendContext;
+import consulo.debugger.frame.XValueMarkerProvider;
 import consulo.debugger.step.XSmartStepIntoHandler;
 import consulo.debugger.step.XSmartStepIntoVariant;
-import consulo.application.AccessRule;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.editor.markup.GutterIconRenderer;
+import consulo.execution.ExecutionManager;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.logging.Logger;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
+import consulo.util.collection.SmartHashSet;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -943,23 +943,14 @@ public class XDebugSessionImpl implements XDebugSession {
   }
 
   @Override
-  public void reportError(@Nonnull final String message) {
-    reportMessage(message, MessageType.ERROR);
-  }
-
-  @Override
-  public void reportMessage(@Nonnull final String message, @Nonnull final MessageType type) {
-    reportMessage(message, type, null);
-  }
-
-  @Override
-  public void reportMessage(@Nonnull final String message, @Nonnull final MessageType type, @Nullable final HyperlinkListener listener) {
+  public void reportMessage(@Nonnull final String message, @Nonnull final NotificationType type, @Nullable final HyperlinkListener listener) {
     NotificationListener notificationListener = listener == null ? null : (notification, event) -> {
       if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         listener.hyperlinkUpdate(event);
       }
     };
-    NOTIFICATION_GROUP.createNotification("", message, type.toNotificationType(), notificationListener).notify(myProject);
+
+    NOTIFICATION_GROUP.createNotification("", message, com.intellij.notification.NotificationType.from(type), notificationListener).notify(myProject);
   }
 
   private class MyBreakpointListener implements XBreakpointListener<XBreakpoint<?>> {

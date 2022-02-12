@@ -3,6 +3,7 @@ package com.intellij.find;
 
 import com.intellij.find.editorHeaderActions.*;
 import consulo.application.AllIcons;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;

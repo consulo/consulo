@@ -60,6 +60,9 @@
         <include>consulo:consulo-editor-api</include>
         <include>consulo:consulo-process-api</include>
         <include>consulo:consulo-execution-api</include>
+        <include>consulo:consulo-debugger-api</include>
+        <include>consulo:consulo-virtual-file-watcher-api</include>
+        <include>consulo:consulo-virtual-file-watcher-impl</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

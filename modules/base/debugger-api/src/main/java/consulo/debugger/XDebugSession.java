@@ -162,9 +162,13 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   void removeSessionListener(@Nonnull XDebugSessionListener listener);
 
-  void reportError(@Nonnull String message);
+  default void reportError(@Nonnull final String message) {
+    reportMessage(message, NotificationType.ERROR);
+  }
 
-  void reportMessage(@Nonnull String message, @Nonnull NotificationType type);
+  default void reportMessage(@Nonnull final String message, @Nonnull final NotificationType type) {
+    reportMessage(message, type, null);
+  }
 
   void reportMessage(@Nonnull String message, @Nonnull NotificationType type, @Nullable HyperlinkListener listener);
 

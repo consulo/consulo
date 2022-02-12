@@ -14,7 +14,7 @@ import consulo.ui.ex.JBColor;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ObjectUtils;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.TargetAWT;
 import javax.annotation.Nonnull;
 

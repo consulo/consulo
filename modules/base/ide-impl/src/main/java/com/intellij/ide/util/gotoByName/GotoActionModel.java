@@ -34,6 +34,7 @@ import com.intellij.psi.codeStyle.WordPrefixMatcher;
 import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.LightColors;
 import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;

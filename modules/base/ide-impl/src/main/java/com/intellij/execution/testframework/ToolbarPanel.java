@@ -36,7 +36,7 @@ import com.intellij.ide.OccurenceNavigator;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
 import com.intellij.util.config.DumbAwareToggleBooleanProperty;

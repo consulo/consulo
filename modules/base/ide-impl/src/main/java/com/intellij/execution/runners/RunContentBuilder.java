@@ -21,7 +21,7 @@ import com.intellij.execution.ui.ExecutionConsoleEx;
 import com.intellij.execution.ui.ObservableConsoleView;
 import com.intellij.execution.ui.RunContentManagerImpl;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import consulo.application.AllIcons;

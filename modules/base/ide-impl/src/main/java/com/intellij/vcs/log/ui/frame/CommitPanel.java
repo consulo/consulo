@@ -23,7 +23,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import com.intellij.openapi.vcs.ui.FontUtil;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.JBPanel;

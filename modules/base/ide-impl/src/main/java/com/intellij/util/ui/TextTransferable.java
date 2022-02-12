@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.ui.ColoredTextContainer;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;

@@ -37,6 +37,7 @@ import consulo.dataContext.DataProvider;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.AppIcon;
 import com.intellij.ui.AppUIUtil;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
@@ -51,9 +52,6 @@ import com.intellij.xdebugger.impl.frame.*;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.debugger.ui.XDebugTabLayouter;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 

@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.ide.module.extension;
 
 import consulo.content.bundle.Sdk;
 import consulo.disposer.Disposable;
-import consulo.extension.ui.ModuleExtensionBundleBoxBuilder;
+import consulo.module.extension.ui.ModuleExtensionBundleBoxBuilder;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.module.content.layer.ModuleRootLayer;

@@ -1,17 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.actionSystem;
+package consulo.ui.ex.action;
 
 import consulo.application.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.FunctionUtil;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import consulo.ui.ex.action.*;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -43,11 +42,11 @@ public class DefaultActionGroup extends ActionGroup {
   /**
    * Contains instances of AnAction
    */
-  private final List<AnAction> mySortedChildren = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<AnAction> mySortedChildren = Lists.newLockFreeCopyOnWriteList();
   /**
    * Contains instances of Pair
    */
-  private final List<Pair<AnAction, Constraints>> myPairs = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<Pair<AnAction, Constraints>> myPairs = Lists.newLockFreeCopyOnWriteList();
 
   public DefaultActionGroup() {
     this(null, false);
@@ -365,7 +364,7 @@ public class DefaultActionGroup extends ActionGroup {
     }
 
     if (hasNulls) {
-      return ContainerUtil.mapNotNull(children, FunctionUtil.id(), AnAction.EMPTY_ARRAY);
+      return ContainerUtil.mapNotNull(children, Function.identity(), AnAction.EMPTY_ARRAY);
     }
     return children;
   }

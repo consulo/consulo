@@ -17,7 +17,7 @@
 package com.intellij.ui;
 
 import com.intellij.ide.BrowserUtil;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.EffectType;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;

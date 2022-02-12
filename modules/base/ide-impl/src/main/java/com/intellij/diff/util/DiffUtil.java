@@ -43,7 +43,7 @@ import consulo.editor.*;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;

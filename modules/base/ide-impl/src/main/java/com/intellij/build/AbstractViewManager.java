@@ -7,7 +7,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.lang.LangBundle;
 import com.intellij.notification.Notification;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Toggleable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAwareAction;

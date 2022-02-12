@@ -8,7 +8,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.project.DumbAwareToggleAction;
 import consulo.project.Project;
 import consulo.ui.ex.content.Content;

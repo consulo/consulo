@@ -32,6 +32,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;

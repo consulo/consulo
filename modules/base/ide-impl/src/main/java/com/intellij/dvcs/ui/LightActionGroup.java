@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.dvcs.ui;
 
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -13,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Lightweight alternative to {@link com.intellij.openapi.actionSystem.DefaultActionGroup}.
+ * Lightweight alternative to {@link DefaultActionGroup}.
  * Does not use `createLockFreeCopyOnWriteList` and action order constraints, making it suitable for use cases with many (10k+) children actions.
  */
 public class LightActionGroup extends ActionGroup {

@@ -19,6 +19,7 @@ package org.intellij.plugins.intelliLang;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.lang.function.Condition;
 import consulo.dataContext.DataContext;

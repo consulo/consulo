@@ -24,7 +24,7 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;

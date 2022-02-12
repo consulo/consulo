@@ -15,18 +15,17 @@
  */
 package consulo.debugger.evaluation;
 
-import consulo.debugger.evaluation.EvaluationMode;
-import consulo.language.Language;
+import consulo.debugger.XDebuggerUtil;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.breakpoint.XExpression;
 import consulo.document.Document;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
-import com.intellij.xdebugger.XDebuggerUtil;
-import consulo.debugger.breakpoint.XExpression;
-import consulo.debugger.XSourcePosition;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.Collections;
 

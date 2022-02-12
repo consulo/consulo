@@ -18,7 +18,7 @@ package com.intellij.designer;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;

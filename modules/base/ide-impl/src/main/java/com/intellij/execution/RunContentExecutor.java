@@ -24,6 +24,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 

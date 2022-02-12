@@ -22,7 +22,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.editor.markup.GutterIconRenderer;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.Function;

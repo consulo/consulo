@@ -17,6 +17,7 @@ import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.language.psi.PsiDocumentManager;

@@ -22,6 +22,7 @@ import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;

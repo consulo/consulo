@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;

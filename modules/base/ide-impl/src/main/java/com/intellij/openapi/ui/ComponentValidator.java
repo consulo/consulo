@@ -3,7 +3,7 @@ package com.intellij.openapi.ui;
 
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import consulo.application.ui.awt.*;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static consulo.ui.ex.JBCurrentTheme.Validator.*;
+import static consulo.application.ui.awt.JBCurrentTheme.Validator.*;
 
 public class ComponentValidator {
   private static final String PROPERTY_NAME = "JComponent.componentValidator";

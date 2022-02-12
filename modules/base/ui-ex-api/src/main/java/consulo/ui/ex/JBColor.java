@@ -16,6 +16,7 @@
 package consulo.ui.ex;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.ui.ex.util.LafProperty;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.ObjectUtil;
 
@@ -243,18 +244,18 @@ public class JBColor extends Color {
   public static final JBColor blue = new JBColor(Color.blue, DarculaColors.BLUE);
   public static final JBColor BLUE = blue;
 
-  public static final JBColor white = new JBColor(Color.white, UIUtil.getListBackground()) {
+  public static final JBColor white = new JBColor(Color.white, LafProperty.getListBackground()) {
     @Override
     Color getDarkVariant() {
-      return UIUtil.getListBackground();
+      return LafProperty.getListBackground();
     }
   };
   public static final JBColor WHITE = white;
 
-  public static final JBColor black = new JBColor(Color.black, UIUtil.getListForeground()) {
+  public static final JBColor black = new JBColor(Color.black, LafProperty.getListForeground()) {
     @Override
     Color getDarkVariant() {
-      return UIUtil.getListForeground();
+      return LafProperty.getListForeground();
     }
   };
   public static final JBColor BLACK = black;
@@ -289,11 +290,11 @@ public class JBColor extends Color {
   @Deprecated
   @DeprecationInfo("ComponentColors#TEXT_FOREGROUND")
   public static Color foreground() {
-    return new JBColor(() -> UIUtil.getLabelForeground());
+    return new JBColor(LafProperty::getLabelForeground);
   }
 
   public static Color background() {
-    return new JBColor(() -> UIUtil.getListBackground());
+    return new JBColor(LafProperty::getListBackground);
   }
 
   public static Color border() {

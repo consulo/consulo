@@ -27,6 +27,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import consulo.application.ui.awt.VerticalFlowLayout;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;

@@ -36,6 +36,7 @@ import consulo.application.ui.awt.MorphColor;
 import consulo.disposer.Disposable;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.wm.impl.ToolWindowManagerBase;

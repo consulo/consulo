@@ -29,7 +29,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.ui.ex.util.LafProperty;
 import consulo.ui.image.ImageKey;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -856,7 +856,7 @@ public class UIUtil {
   }
 
   public static Color getLabelForeground() {
-    return JBColor.namedColor("Label.foreground", new JBColor(Gray._0, Gray.xBB));
+    return LafProperty.getLabelForeground();
   }
 
   public static Color getErrorForeground() {
@@ -946,11 +946,11 @@ public class UIUtil {
   }
 
   public static Color getActiveTextColor() {
-    return UIManager.getColor("textActiveText");
+    return LafProperty.getActiveTextColor();
   }
 
   public static Color getInactiveTextColor() {
-    return UIManager.getColor("textInactiveText");
+    return LafProperty.getInactiveTextColor();
   }
 
   public static Color getSlightlyDarkerColor(Color c) {
@@ -1110,13 +1110,7 @@ public class UIUtil {
   }
 
   public static Color getListBackground() {
-    if (isUnderNimbusLookAndFeel()) {
-      final Color color = UIManager.getColor("List.background");
-      //noinspection UseJBColor
-      return new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-    }
-    // Under GTK+ L&F "Table.background" often has main panel color, which looks ugly
-    return isUnderGTKLookAndFeel() ? getTreeTextBackground() : UIManager.getColor("List.background");
+    return LafProperty.getListBackground();
   }
 
   public static Color getListBackground(boolean isSelected) {
@@ -1124,7 +1118,7 @@ public class UIUtil {
   }
 
   public static Color getListForeground() {
-    return UIManager.getColor("List.foreground");
+    return LafProperty.getListForeground();
   }
 
   public static Color getListForeground(boolean isSelected) {

@@ -28,6 +28,7 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.process.ProcessHandler;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.newProject;
+package consulo.ui.ex.action;
 
-import consulo.application.Application;
-import consulo.component.extension.ExtensionList;
-import consulo.component.extension.ExtensionType;
-
-import javax.annotation.Nonnull;
+import consulo.container.plugin.PluginId;
 
 /**
- * @author VISTALL
- * @since 05.06.14
+ * from kotlin
  */
-@ExtensionType(value = "newModuleBuilder", component = Application.class)
-public interface NewModuleBuilder {
-  ExtensionList<NewModuleBuilder, Application> EP = ExtensionList.of(NewModuleBuilder.class);
+public interface ActionStubBase {
+  String getId();
 
-  void setupContext(@Nonnull NewModuleContext context);
+  PluginId getPluginId();
+
+  String getIconPath();
 }

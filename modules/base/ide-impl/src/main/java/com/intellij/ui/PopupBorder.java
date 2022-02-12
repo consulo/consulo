@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.ui.ex.JBCurrentTheme;
+import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.application.util.SystemInfo;
 import com.intellij.ui.paint.RectanglePainter;
 import consulo.application.ui.awt.JBUI;
