@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.backgroundTaskByVfsChange;
+package consulo.virtualFileSystem.fileWatcher.impl;
 
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileWatcher.impl.ui.BackgroundTaskPsiFileTreeNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.backgroundTaskByVfsChange.tree.BackgroundTaskPsiFileTreeNode;
-import javax.annotation.Nullable;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
 import jakarta.inject.Inject;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**

@@ -13,37 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.backgroundTaskByVfsChange;
+package consulo.virtualFileSystem.fileWatcher.impl;
 
 import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.build.progress.BuildProgress;
 import com.intellij.build.progress.BuildProgressDescriptor;
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.application.Application;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
-import consulo.application.progress.ProgressManager;
-import consulo.process.local.ProcessHandlerFactory;
-import consulo.process.ProcessOutputTypes;
-import consulo.process.event.ProcessAdapter;
-import consulo.process.event.ProcessEvent;
-import consulo.process.local.OSProcessHandler;
-import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtilRt;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessOutputTypes;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.process.local.OSProcessHandler;
+import consulo.process.local.ProcessHandlerFactory;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -176,7 +179,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     expandMacroToPathMap.addMacroExpand("FileName", myVirtualFilePointer.getFileName());
     expandMacroToPathMap.addMacroExpand("FilePath", myVirtualFilePointer.getPresentableUrl());
 
-    File parentFile = FileUtilRt.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
+    File parentFile = FileUtil.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
     expandMacroToPathMap.addMacroExpand("FileParentPath", parentFile.getAbsolutePath());
     return expandMacroToPathMap;
   }
@@ -187,7 +190,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     expandMacroToPathMap.addMacroExpand("FilePath", myVirtualFilePointer.getPresentableUrl());
     expandMacroToPathMap.addMacroExpand("OutPath", myParameters.getOutPath());
 
-    File parentFile = FileUtilRt.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
+    File parentFile = FileUtil.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
     expandMacroToPathMap.addMacroExpand("FileParentPath", parentFile.getAbsolutePath());
     return expandMacroToPathMap;
   }
@@ -197,7 +200,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     replacePathToMacroMap.put(myVirtualFilePointer.getFileName(), "$FileName$");
     replacePathToMacroMap.addMacroReplacement(myVirtualFilePointer.getPresentableUrl(), "FilePath");
 
-    File parentFile = FileUtilRt.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
+    File parentFile = FileUtil.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
     replacePathToMacroMap.addMacroReplacement(parentFile.getAbsolutePath(), "FileParentPath");
     return replacePathToMacroMap;
   }

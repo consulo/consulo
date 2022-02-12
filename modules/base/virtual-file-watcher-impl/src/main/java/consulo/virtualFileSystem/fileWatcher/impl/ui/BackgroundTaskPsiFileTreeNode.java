@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.backgroundTaskByVfsChange.tree;
+package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode;
@@ -22,8 +22,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
 
 import java.util.ArrayList;
 import java.util.Collection;

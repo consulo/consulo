@@ -15,14 +15,14 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="taskByVfsChange" interface="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider" />
+    <extensionPoint name="taskByVfsChange" interface="consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <treeStructureProvider implementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsProjectViewProvider" order="last" />
-    <generatedSourcesFilter implementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsGeneratedSourcesFilter" />
-    <projectService serviceInterface="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager"
-                    serviceImplementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManagerImpl"/>
-    <editorNotificationProvider implementation="consulo.backgroundTaskByVfsChange.ui.BackgroundTaskEditorNotificationProvider" />
+    <treeStructureProvider implementation="consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsProjectViewProvider" order="last" />
+    <generatedSourcesFilter implementation="consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsGeneratedSourcesFilter" />
+    <projectService serviceInterface="consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager"
+                    serviceImplementation="consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsChangeManagerImpl"/>
+    <editorNotificationProvider implementation="consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskEditorNotificationProvider" />
   </extensions>
 </consulo-plugin>

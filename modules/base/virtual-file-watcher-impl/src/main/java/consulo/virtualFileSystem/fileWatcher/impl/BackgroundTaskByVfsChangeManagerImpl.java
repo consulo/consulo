@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.backgroundTaskByVfsChange;
+package consulo.virtualFileSystem.fileWatcher.impl;
 
 import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.build.BuildViewManager;
@@ -33,10 +33,13 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
+import consulo.virtualFileSystem.fileWatcher.impl.ui.BackgroundTaskByVfsChangeManageDialog;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.util.xml.serializer.XmlSerializer;
-import consulo.backgroundTaskByVfsChange.ui.BackgroundTaskByVfsChangeManageDialog;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposable;
 import consulo.platform.base.icon.PlatformIconGroup;

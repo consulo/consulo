@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.backgroundTaskByVfsChange;
+package consulo.virtualFileSystem.fileWatcher.impl;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

@@ -13,27 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.backgroundTaskByVfsChange.ui;
+package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
-import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.ListPopupStep;
-import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.ToolbarDecorator;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.backgroundTaskByVfsChange.*;
-import javax.annotation.Nonnull;
+import consulo.application.ui.awt.VerticalFlowLayout;
+import consulo.project.Project;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
+import consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsChangeProviders;
+import consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsParametersImpl;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;

@@ -19,8 +19,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsParameters;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 
 /**
  * @author VISTALL

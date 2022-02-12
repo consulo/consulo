@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.backgroundTaskByVfsChange;
+package consulo.virtualFileSystem.fileWatcher;
 
-import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 /**
@@ -31,7 +29,7 @@ import java.util.List;
 public abstract class BackgroundTaskByVfsChangeManager {
   @Nonnull
   public static BackgroundTaskByVfsChangeManager getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, BackgroundTaskByVfsChangeManager.class);
+    return project.getInstance(BackgroundTaskByVfsChangeManager.class);
   }
 
   /**

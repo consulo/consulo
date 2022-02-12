@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.backgroundTaskByVfsChange.ui;
+package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
 import com.intellij.execution.ui.CommonProgramParametersPanel;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsParameters;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsParametersImpl;
-import javax.annotation.Nonnull;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
+import consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsParametersImpl;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 public class BackgroundTaskByVfsChangePanel extends JPanel {

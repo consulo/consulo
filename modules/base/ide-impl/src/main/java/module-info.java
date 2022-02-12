@@ -1086,9 +1086,6 @@ open module consulo.ide.impl {
   exports consulo.application.impl;
   exports consulo.application.options;
   exports consulo.async.ex;
-  exports consulo.backgroundTaskByVfsChange;
-  exports consulo.backgroundTaskByVfsChange.tree;
-  exports consulo.backgroundTaskByVfsChange.ui;
   exports consulo.builtInServer;
   exports consulo.builtInServer.binary;
   exports consulo.builtInServer.custom;

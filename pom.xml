@@ -79,6 +79,8 @@
     <module>modules/base/process-api</module>
     <module>modules/base/execution-api</module>
     <module>modules/base/debugger-api</module>
+    <module>modules/base/virtual-file-watcher-api</module>
+    <module>modules/base/virtual-file-watcher-impl</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

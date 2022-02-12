@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.backgroundTaskByVfsChange.ui;
+package consulo.virtualFileSystem.fileWatcher.impl;
 
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.application.dumb.DumbAware;
@@ -23,10 +23,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import consulo.ui.ex.Gray;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProviders;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
+import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
 import consulo.editor.notifications.EditorNotificationProvider;
 import jakarta.inject.Inject;
 
