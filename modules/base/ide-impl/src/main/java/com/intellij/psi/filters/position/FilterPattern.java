@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.filters.position;
 
-import com.intellij.patterns.ObjectPattern;
-import com.intellij.patterns.InitialPatternCondition;
+import consulo.language.pattern.ObjectPattern;
+import consulo.language.pattern.InitialPatternCondition;
 import consulo.language.util.ProcessingContext;
 import com.intellij.psi.filters.ElementFilter;
 import consulo.language.psi.PsiElement;

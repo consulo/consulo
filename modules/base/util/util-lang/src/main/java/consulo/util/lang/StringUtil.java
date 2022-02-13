@@ -31,6 +31,61 @@ import java.util.function.Function;
  * Based on IDEA code
  */
 public class StringUtil {
+  /**
+   * Expirable CharSequence. Very useful to control external library execution time,
+   * i.e. when java.util.regex.Pattern match goes out of control.
+   */
+  public abstract static class BombedCharSequence implements CharSequence {
+    private final CharSequence delegate;
+    private int i;
+    private boolean myDefused;
+
+    public BombedCharSequence(@Nonnull CharSequence sequence) {
+      delegate = sequence;
+    }
+
+    @Override
+    public int length() {
+      check();
+      return delegate.length();
+    }
+
+    @Override
+    public char charAt(int i) {
+      check();
+      return delegate.charAt(i);
+    }
+
+    protected void check() {
+      if (myDefused) {
+        return;
+      }
+      if ((++i & 1023) == 0) {
+        checkCanceled();
+      }
+    }
+
+    public final void defuse() {
+      myDefused = true;
+    }
+
+    @Nonnull
+    @Override
+    public String toString() {
+      check();
+      return delegate.toString();
+    }
+
+    protected abstract void checkCanceled();
+
+    @Nonnull
+    @Override
+    public CharSequence subSequence(int i, int i1) {
+      check();
+      return delegate.subSequence(i, i1);
+    }
+  }
+
   private static final Logger LOG = LoggerFactory.getLogger(StringUtil.class);
 
   private static final String[] MN_QUOTED = {"&&", "__"};
@@ -39,6 +94,31 @@ public class StringUtil {
   private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
   private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
 
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeToRegexp(@Nonnull String text) {
+    final StringBuilder result = new StringBuilder(text.length());
+    return escapeToRegexp(text, result).toString();
+  }
+
+  @Nonnull
+  public static StringBuilder escapeToRegexp(@Nonnull CharSequence text, @Nonnull StringBuilder builder) {
+    for (int i = 0; i < text.length(); i++) {
+      final char c = text.charAt(i);
+      if (c == ' ' || Character.isLetter(c) || Character.isDigit(c) || c == '_') {
+        builder.append(c);
+      }
+      else if (c == '\n') {
+        builder.append("\\n");
+      }
+      else {
+        builder.append('\\').append(c);
+      }
+    }
+
+    return builder;
+  }
 
   @Nonnull
   @Contract(pure = true)

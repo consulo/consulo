@@ -21,7 +21,7 @@
 package com.intellij.codeInspection.offlineViewer;
 
 import com.intellij.codeInspection.offline.OfflineProblemDescriptor;
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefEntity;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import com.intellij.codeInspection.ui.RefElementNode;
 import javax.annotation.Nonnull;

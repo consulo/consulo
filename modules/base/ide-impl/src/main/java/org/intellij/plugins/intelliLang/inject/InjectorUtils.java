@@ -17,9 +17,10 @@
 package org.intellij.plugins.intelliLang.inject;
 
 import consulo.language.Language;
+import consulo.language.psi.ElementManipulators;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
-import com.intellij.lang.injection.MultiHostRegistrar;
+import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -30,7 +31,6 @@ import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.injection.ReferenceInjector;
 import consulo.language.psi.util.PsiTreeUtil;

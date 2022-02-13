@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInspection;
 
+import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

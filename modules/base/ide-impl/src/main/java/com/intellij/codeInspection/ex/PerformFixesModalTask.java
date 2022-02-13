@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.CommonProblemDescriptor;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.QuickFix;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.QuickFix;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;

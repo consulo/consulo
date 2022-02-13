@@ -15,11 +15,14 @@
  */
 package com.intellij.codeInspection.reference;
 
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefManager;
+
 /**
  * A node in the reference graph corresponding to a project. A single instance of this
  * node exists in the graph.
  *
- * @see RefManager#getRefProject() 
+ * @see RefManager#getRefProject()
  */
 public interface RefProject extends RefEntity {
 }

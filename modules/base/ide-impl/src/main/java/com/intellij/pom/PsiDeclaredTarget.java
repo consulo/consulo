@@ -18,6 +18,8 @@ package com.intellij.pom;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiTarget;
 
+import javax.annotation.Nullable;
+
 /**
  * @author peter
  */
@@ -26,7 +28,7 @@ public interface PsiDeclaredTarget extends PsiTarget {
   /**
    * @return the range containing name. Range should be relative to {@link #getNavigationElement()} result
    */
-  @javax.annotation.Nullable
+  @Nullable
   TextRange getNameIdentifierRange();
 
 }

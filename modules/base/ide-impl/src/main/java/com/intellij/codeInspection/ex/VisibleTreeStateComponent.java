@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.util.xml.serializer.annotation.Property;
 

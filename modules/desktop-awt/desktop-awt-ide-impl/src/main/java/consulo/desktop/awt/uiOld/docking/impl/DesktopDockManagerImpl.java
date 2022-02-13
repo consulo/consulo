@@ -21,7 +21,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;

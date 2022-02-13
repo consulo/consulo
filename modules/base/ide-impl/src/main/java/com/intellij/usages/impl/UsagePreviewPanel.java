@@ -19,7 +19,7 @@ package com.intellij.usages.impl;
 import com.intellij.find.FindManager;
 import com.intellij.find.FindModel;
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;

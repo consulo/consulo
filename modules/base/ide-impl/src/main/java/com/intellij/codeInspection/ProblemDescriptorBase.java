@@ -15,8 +15,11 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.lang.annotation.ProblemGroup;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.editor.annotation.ProblemGroup;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;

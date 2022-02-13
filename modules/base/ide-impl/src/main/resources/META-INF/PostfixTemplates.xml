@@ -16,7 +16,7 @@
 <consulo-plugin>
   <extensionPoints>
     <extensionPoint name="codeInsight.template.postfixTemplateProvider"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider"/>
     </extensionPoint>
   </extensionPoints>

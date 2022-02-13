@@ -15,11 +15,11 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.analysis.AnalysisScope;
+import consulo.language.editor.AnalysisScope;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.analysis.AnalysisUIOptions;
 import com.intellij.analysis.BaseAnalysisActionDialog;
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.actions.CleanupIntention;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;

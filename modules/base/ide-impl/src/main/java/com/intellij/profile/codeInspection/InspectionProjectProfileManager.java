@@ -15,16 +15,16 @@
  */
 package com.intellij.profile.codeInspection;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInspection.InspectionProfile;
+import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import consulo.project.Project;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.profile.DefaultProjectProfileManager;
-import com.intellij.profile.Profile;
+import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.psi.PsiElement;
 import org.jdom.Element;
 

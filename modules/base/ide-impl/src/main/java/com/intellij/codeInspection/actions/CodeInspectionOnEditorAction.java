@@ -16,10 +16,10 @@
 
 package com.intellij.codeInspection.actions;
 
-import com.intellij.analysis.AnalysisScope;
+import consulo.language.editor.AnalysisScope;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.codeInspection.InspectionManager;
-import com.intellij.codeInspection.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.codeInspection.ex.GlobalInspectionContextImpl;
 import com.intellij.codeInspection.ex.InspectionManagerEx;
 import com.intellij.openapi.actionSystem.*;

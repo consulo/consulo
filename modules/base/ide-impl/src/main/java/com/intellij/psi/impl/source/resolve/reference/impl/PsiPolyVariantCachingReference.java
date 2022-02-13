@@ -15,12 +15,9 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl;
 
-import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiPolyVariantReference;
-import consulo.language.psi.ResolveResult;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

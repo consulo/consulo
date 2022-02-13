@@ -20,6 +20,7 @@ import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.library.LibraryTable;

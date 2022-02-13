@@ -2,10 +2,10 @@
 
 package com.intellij.codeInspection.lang;
 
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.reference.RefElement;
-import com.intellij.codeInspection.reference.RefEntity;
-import com.intellij.codeInspection.reference.RefVisitor;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.language.Language;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;

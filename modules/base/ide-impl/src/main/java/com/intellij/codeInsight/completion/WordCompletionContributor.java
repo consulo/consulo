@@ -18,19 +18,16 @@ package com.intellij.codeInsight.completion;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import consulo.language.ast.ASTNode;
+import consulo.language.psi.ElementManipulators;
 import consulo.language.parser.LanguageParserDefinitions;
 import com.intellij.lang.LanguageWordCompletion;
 import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.parser.ParserDefinition;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiRecursiveElementWalkingVisitor;
-import consulo.language.psi.PsiReference;
+import consulo.language.psi.*;
 import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.psi.*;
+import consulo.language.pattern.ElementPattern;
 import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -43,7 +40,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static consulo.language.pattern.PlatformPatterns.psiElement;
 
 /**
  * @author peter

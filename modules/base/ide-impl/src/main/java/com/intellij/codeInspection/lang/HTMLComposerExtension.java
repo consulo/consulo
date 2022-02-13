@@ -20,7 +20,7 @@
  */
 package com.intellij.codeInspection.lang;
 
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.Language;
 import consulo.util.dataholder.Key;
 

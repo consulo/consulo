@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInsight.template.impl.actions;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.dataContext.DataContext;

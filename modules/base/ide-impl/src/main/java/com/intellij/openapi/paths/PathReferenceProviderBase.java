@@ -3,7 +3,7 @@ package com.intellij.openapi.paths;
 
 import consulo.component.extension.Extensions;
 import consulo.document.util.TextRange;
-import com.intellij.psi.ElementManipulators;
+import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.logging.Logger;

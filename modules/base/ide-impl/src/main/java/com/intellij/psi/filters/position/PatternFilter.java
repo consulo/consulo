@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.filters.position;
 
-import com.intellij.patterns.ElementPattern;
+import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.filters.ElementFilter;
 

@@ -19,7 +19,7 @@ import consulo.language.Language;
 import consulo.application.Application;
 import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.PsiReferenceContributor;
+import consulo.language.psi.PsiReferenceContributor;
 import consulo.component.extension.KeyedLazyInstance;
 import consulo.util.xml.serializer.annotation.Attribute;
 

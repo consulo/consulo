@@ -20,9 +20,14 @@
  */
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
 import com.intellij.codeInspection.reference.*;
 import com.intellij.codeInspection.ui.*;
+import consulo.language.editor.inspection.reference.RefDirectory;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefModule;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;

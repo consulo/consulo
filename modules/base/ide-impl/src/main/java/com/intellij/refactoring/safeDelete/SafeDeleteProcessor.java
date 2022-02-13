@@ -18,7 +18,7 @@ package com.intellij.refactoring.safeDelete;
 
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
 import com.intellij.lang.LanguageRefactoringSupport;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.*;

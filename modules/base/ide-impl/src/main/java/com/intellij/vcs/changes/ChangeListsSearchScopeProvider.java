@@ -19,7 +19,7 @@ import consulo.project.Project;
 import com.intellij.psi.search.DefaultSearchScopeProviders;
 import consulo.content.scope.SearchScope;
 import com.intellij.psi.search.SearchScopeProvider;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
+import consulo.language.psi.search.scope.NamedScope;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

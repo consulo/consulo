@@ -15,6 +15,10 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.language.psi.search.scope.PackageSet;
+import consulo.language.psi.search.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

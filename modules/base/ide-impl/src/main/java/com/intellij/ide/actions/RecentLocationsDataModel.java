@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import consulo.application.ui.UISettings;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;

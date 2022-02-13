@@ -20,12 +20,13 @@ import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInManager;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.impl.ProjectViewSelectInTarget;
+import consulo.language.psi.search.scope.*;
+import consulo.language.psi.search.scope.impl.NamedScopeManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.util.ArrayUtil;
 
 /**

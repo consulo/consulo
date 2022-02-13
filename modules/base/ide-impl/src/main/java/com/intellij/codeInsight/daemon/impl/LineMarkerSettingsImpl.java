@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.daemon.GutterIconDescriptor;
-import com.intellij.codeInsight.daemon.LineMarkerSettings;
+import consulo.language.editor.gutter.GutterIconDescriptor;
+import consulo.language.editor.gutter.LineMarkerSettings;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;

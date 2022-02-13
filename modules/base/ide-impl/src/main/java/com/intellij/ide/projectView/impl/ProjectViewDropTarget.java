@@ -17,7 +17,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringActionHandlerFactory;
 import com.intellij.refactoring.actions.BaseRefactoringAction;
 import com.intellij.refactoring.copy.CopyHandler;

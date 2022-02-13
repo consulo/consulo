@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.macro;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.template.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;

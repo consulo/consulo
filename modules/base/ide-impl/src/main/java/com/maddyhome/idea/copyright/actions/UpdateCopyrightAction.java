@@ -16,7 +16,7 @@
 
 package com.maddyhome.idea.copyright.actions;
 
-import com.intellij.analysis.AnalysisScope;
+import consulo.language.editor.AnalysisScope;
 import com.intellij.analysis.BaseAnalysisAction;
 import com.intellij.openapi.actionSystem.*;
 import consulo.editor.Editor;

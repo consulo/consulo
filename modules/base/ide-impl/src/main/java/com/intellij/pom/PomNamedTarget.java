@@ -15,6 +15,8 @@
  */
 package com.intellij.pom;
 
+import consulo.language.pom.PomTarget;
+
 /**
  * @author peter
  */

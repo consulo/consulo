@@ -11,7 +11,7 @@ import com.intellij.openapi.command.impl.FocusBasedCurrentEditorProvider;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.EditorFactory;

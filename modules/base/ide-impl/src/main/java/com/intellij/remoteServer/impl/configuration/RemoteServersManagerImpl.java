@@ -8,6 +8,7 @@ import com.intellij.remoteServer.configuration.RemoteServerListener;
 import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.remoteServer.configuration.ServerConfiguration;
 import consulo.component.messagebus.MessageBus;
+import consulo.component.persist.StoragePathMacros;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.component.persist.PersistentStateComponent;

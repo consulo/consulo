@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.application.extension.KeyedExtensionCollector;
 import com.intellij.openapi.util.Pair;
-import com.intellij.patterns.ElementPattern;
+import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiUtilCore;

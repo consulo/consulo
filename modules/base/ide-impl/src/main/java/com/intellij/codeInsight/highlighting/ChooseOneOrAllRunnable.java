@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.highlighting;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.application.ApplicationManager;
 import consulo.editor.Editor;

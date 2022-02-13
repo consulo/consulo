@@ -15,11 +15,11 @@
  */
 package com.intellij.profile.codeInspection.ui.inspectionsTree;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import com.intellij.codeInspection.ex.ScopeToolState;
+import consulo.language.editor.inspection.scheme.ScopeToolState;
 import com.intellij.codeInspection.ex.ToolsImpl;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;

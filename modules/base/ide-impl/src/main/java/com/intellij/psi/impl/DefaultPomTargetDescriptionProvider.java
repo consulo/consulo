@@ -19,7 +19,7 @@ import com.intellij.ide.TypePresentationService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.PomDescriptionProvider;
 import com.intellij.pom.PomNamedTarget;
-import com.intellij.pom.PomTarget;
+import consulo.language.pom.PomTarget;
 import com.intellij.psi.ElementDescriptionLocation;
 import consulo.language.psi.PsiElement;
 import com.intellij.usageView.UsageViewNodeTextLocation;

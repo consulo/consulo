@@ -17,11 +17,14 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
-import com.intellij.codeInspection.reference.RefElement;
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.application.AllIcons;
 import com.intellij.openapi.vcs.FileStatus;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.PsiElement;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ui.image.Image;

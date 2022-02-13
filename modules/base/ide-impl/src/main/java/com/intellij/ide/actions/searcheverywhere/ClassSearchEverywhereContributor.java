@@ -9,7 +9,7 @@ import com.intellij.ide.actions.GotoClassPresentationUpdater;
 import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
 import com.intellij.ide.util.gotoByName.GotoClassModel2;
 import com.intellij.ide.util.gotoByName.GotoClassSymbolConfiguration;
-import com.intellij.lang.DependentLanguage;
+import consulo.language.DependentLanguage;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;

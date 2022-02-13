@@ -15,7 +15,7 @@
  */
 package com.intellij.packageDependencies.actions;
 
-import com.intellij.analysis.AnalysisScope;
+import consulo.language.editor.AnalysisScope;
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

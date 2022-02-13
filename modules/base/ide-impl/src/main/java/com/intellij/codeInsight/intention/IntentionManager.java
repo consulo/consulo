@@ -15,11 +15,12 @@
  */
 package com.intellij.codeInsight.intention;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
+import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;

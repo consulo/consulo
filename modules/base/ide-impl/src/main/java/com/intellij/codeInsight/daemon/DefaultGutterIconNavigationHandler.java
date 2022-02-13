@@ -2,6 +2,7 @@ package com.intellij.codeInsight.daemon;
 
 import com.intellij.codeInsight.daemon.impl.PsiElementListNavigator;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
+import consulo.language.editor.gutter.GutterIconNavigationHandler;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;

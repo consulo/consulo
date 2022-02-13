@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon.impl.analysis;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.util.PsiUtilBase;
 import consulo.application.ApplicationManager;

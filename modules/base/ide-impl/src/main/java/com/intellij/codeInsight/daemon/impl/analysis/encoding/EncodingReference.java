@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.daemon.impl.analysis.encoding;
 
-import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.psi.EmptyResolveMessageProvider;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import consulo.document.util.TextRange;

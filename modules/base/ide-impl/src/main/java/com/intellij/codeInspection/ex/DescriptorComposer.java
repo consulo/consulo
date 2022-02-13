@@ -17,9 +17,13 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.reference.RefElement;
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.QuickFix;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.logging.Logger;
 import consulo.document.Document;

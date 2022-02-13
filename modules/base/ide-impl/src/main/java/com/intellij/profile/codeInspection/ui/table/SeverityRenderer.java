@@ -15,9 +15,9 @@
  */
 package com.intellij.profile.codeInspection.ui.table;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
+import consulo.language.editor.HighlightDisplayLevel;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.profile.codeInspection.SeverityProvider;

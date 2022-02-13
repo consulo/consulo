@@ -16,7 +16,8 @@
 
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
 

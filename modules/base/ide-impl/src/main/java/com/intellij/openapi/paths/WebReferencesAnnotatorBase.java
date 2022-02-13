@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.paths;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.lang.annotation.Annotation;
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.ExternalAnnotator;
+import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.annotation.Annotation;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.annotation.ExternalAnnotator;
 import consulo.document.util.TextRange;
 import com.intellij.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;

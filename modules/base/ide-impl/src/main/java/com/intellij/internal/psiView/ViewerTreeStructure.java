@@ -24,7 +24,7 @@ package com.intellij.internal.psiView;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.language.ast.TokenType;
 import consulo.language.psi.PsiElement;

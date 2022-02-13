@@ -4,7 +4,7 @@ package com.intellij.application.options.codeStyle.excludedFiles;
 import com.intellij.formatting.fileSet.FileSetDescriptor;
 import com.intellij.formatting.fileSet.NamedScopeDescriptor;
 import consulo.project.Project;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
+import consulo.language.psi.search.scope.NamedScope;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

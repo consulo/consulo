@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInspection;
 
+import consulo.language.editor.inspection.InspectionsBundle;
+
 public class DeprecationUtil {
   public static final String DEPRECATION_SHORT_NAME = "Deprecation";
   public static final String DEPRECATION_DISPLAY_NAME = InspectionsBundle.message("inspection.deprecated.display.name");

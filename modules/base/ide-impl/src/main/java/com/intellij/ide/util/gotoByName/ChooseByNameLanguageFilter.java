@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.lang.DependentLanguage;
+import consulo.language.DependentLanguage;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import consulo.language.file.LanguageFileType;

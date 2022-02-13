@@ -20,7 +20,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.navigation.Navigatable;
 import com.intellij.pom.NavigatableWithText;
-import com.intellij.pom.PomTargetPsiElement;
+import consulo.language.pom.PomTargetPsiElement;
 import com.intellij.util.OpenSourceUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;

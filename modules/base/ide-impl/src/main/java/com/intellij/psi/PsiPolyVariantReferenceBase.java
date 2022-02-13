@@ -19,6 +19,7 @@ package com.intellij.psi;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiPolyVariantReference;
+import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.ResolveResult;
 
 import javax.annotation.Nullable;

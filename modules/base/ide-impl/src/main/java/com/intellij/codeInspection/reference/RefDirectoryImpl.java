@@ -18,6 +18,10 @@ package com.intellij.codeInspection.reference;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
+import consulo.language.editor.inspection.reference.RefDirectory;
+import consulo.language.editor.inspection.reference.RefManager;
+import consulo.language.editor.inspection.reference.RefModule;
+import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;

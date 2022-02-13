@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.keymap.impl;
 
-import com.intellij.openapi.components.*;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;

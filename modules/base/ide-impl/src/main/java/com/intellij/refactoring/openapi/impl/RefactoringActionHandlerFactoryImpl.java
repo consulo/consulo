@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.openapi.impl;
 
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringActionHandlerFactory;
 import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.refactoring.rename.PsiElementRenameHandler;

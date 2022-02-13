@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util.scopeChooser;
 
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
@@ -24,6 +24,10 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.language.psi.search.scope.PackageSet;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.ui.*;

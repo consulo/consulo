@@ -29,6 +29,7 @@ import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.components.impl.stores.StreamProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposable;

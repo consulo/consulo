@@ -20,7 +20,7 @@ import consulo.language.LanguageExtension;
 import consulo.language.psi.*;
 import consulo.project.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.patterns.ElementPattern;
+import consulo.language.pattern.ElementPattern;
 import com.intellij.psi.*;
 import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;

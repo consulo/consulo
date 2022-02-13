@@ -10,7 +10,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import com.intellij.lang.PerFileMappings;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.editor.Caret;
 import consulo.editor.Editor;

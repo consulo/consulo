@@ -43,7 +43,7 @@ import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
+import consulo.language.psi.search.scope.NamedScope;
 import com.intellij.util.WaitForProgressToShow;
 import consulo.util.collection.MultiMap;
 import com.intellij.util.ui.OptionsDialog;

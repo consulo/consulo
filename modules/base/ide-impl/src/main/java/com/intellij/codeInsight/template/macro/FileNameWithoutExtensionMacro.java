@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.macro;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.template.TextResult;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

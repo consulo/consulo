@@ -16,13 +16,13 @@
 
 package com.intellij.codeInspection.actions;
 
-import com.intellij.analysis.AnalysisScope;
+import consulo.language.editor.AnalysisScope;
 import com.intellij.codeInsight.FileModificationService;
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.LowPriorityAction;
-import com.intellij.codeInspection.InspectionManager;
-import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.GlobalInspectionContextBase;
 import consulo.editor.Editor;
 import consulo.project.Project;

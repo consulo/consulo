@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import com.intellij.patterns.*;
+import consulo.language.pattern.*;
 
 import java.util.Collection;
 import java.util.HashSet;

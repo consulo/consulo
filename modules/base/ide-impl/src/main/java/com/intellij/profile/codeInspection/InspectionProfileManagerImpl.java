@@ -15,15 +15,15 @@
  */
 package com.intellij.profile.codeInspection;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
+import consulo.language.editor.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.InspectionProfileConvertor;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolRegistrar;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.Application;
@@ -39,7 +39,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.profile.Profile;
+import consulo.language.editor.inspection.scheme.Profile;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;

@@ -19,7 +19,7 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.ui.search.SearchUtil;
 import consulo.dataContext.DataContext;

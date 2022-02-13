@@ -16,7 +16,8 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.HighlightInfoFilter;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import consulo.editor.markup.TextAttributes;
 import consulo.language.psi.PsiFile;

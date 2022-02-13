@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.generation.actions;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.editor.Editor;
 import com.intellij.openapi.project.DumbAwareAction;

@@ -20,7 +20,7 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.codeInspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefElement;
 import consulo.util.dataholder.Key;
 import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;

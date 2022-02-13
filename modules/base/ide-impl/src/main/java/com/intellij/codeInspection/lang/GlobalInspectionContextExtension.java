@@ -20,9 +20,9 @@
  */
 package com.intellij.codeInspection.lang;
 
-import com.intellij.codeInspection.GlobalInspectionContext;
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
-import com.intellij.codeInspection.ex.Tools;
+import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.Tools;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

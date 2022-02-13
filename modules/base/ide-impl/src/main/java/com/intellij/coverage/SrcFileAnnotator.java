@@ -4,7 +4,7 @@
 
 package com.intellij.coverage;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.history.FileRevisionTimestampComparator;
 import com.intellij.history.LocalHistory;
 import consulo.application.AllIcons;

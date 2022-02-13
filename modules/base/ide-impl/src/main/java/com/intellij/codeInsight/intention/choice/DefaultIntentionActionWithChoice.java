@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.intention.choice;
 
 import com.intellij.codeInsight.intention.IntentionActionWithChoice;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.QuickFix;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.QuickFix;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

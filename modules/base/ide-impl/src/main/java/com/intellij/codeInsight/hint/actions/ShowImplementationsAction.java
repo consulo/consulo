@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.hint.actions;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.ImplementationViewComponent;
 import com.intellij.codeInsight.lookup.LookupManager;
@@ -45,7 +45,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.PomTargetPsiElement;
+import consulo.language.pom.PomTargetPsiElement;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;

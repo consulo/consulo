@@ -19,7 +19,7 @@ package com.intellij.refactoring.actions;
 import consulo.language.Language;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.move.MoveHandler;
 import javax.annotation.Nonnull;
 

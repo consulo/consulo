@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ui;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
+import consulo.language.editor.HighlightDisplayLevel;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.image.Image;

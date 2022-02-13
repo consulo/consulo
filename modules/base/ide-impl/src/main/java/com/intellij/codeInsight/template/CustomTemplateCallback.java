@@ -5,7 +5,7 @@ import com.intellij.codeInsight.template.impl.TemplateImpl;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.diagnostic.AttachmentFactory;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.document.Document;
 import consulo.editor.Editor;

@@ -18,6 +18,7 @@ package com.intellij.codeInsight.daemon;
 
 import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
+import consulo.language.editor.gutter.LineMarkerProvider;
 
 /**
  * @author yole

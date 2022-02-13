@@ -16,6 +16,8 @@
 package com.intellij.psi.search;
 
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.scope.*;
+import consulo.language.psi.search.scope.impl.NamedScopeManager;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
@@ -28,7 +30,6 @@ import consulo.language.psi.PsiBundle;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import consulo.ui.image.Image;

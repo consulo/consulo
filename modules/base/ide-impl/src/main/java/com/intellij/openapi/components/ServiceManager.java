@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.components;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -51,6 +52,8 @@ public class ServiceManager {
    * @return Key instance.
    */
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use ComponentUtil.createLazyInject")
   public static <T> NotNullLazyKey<T, Project> createLazyKey(@Nonnull final Class<T> serviceClass) {
     return NotNullLazyKey.create("Service: " + serviceClass.getName(), project -> getService(project, serviceClass));
   }

@@ -12,7 +12,7 @@ import com.intellij.ide.todo.TodoFilter;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.language.file.inject.DocumentWindow;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.language.psi.*;
 import consulo.project.IndexNotReadyException;

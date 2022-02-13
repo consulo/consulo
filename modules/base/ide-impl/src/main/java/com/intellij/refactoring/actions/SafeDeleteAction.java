@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.editor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.safeDelete.SafeDeleteHandler;
 import com.intellij.refactoring.safeDelete.SafeDeleteProcessor;
 import javax.annotation.Nonnull;

@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.application.util.LowMemoryWatcher;
 import com.intellij.openapi.util.RecursionGuard;
 import com.intellij.openapi.util.RecursionManager;
-import com.intellij.patterns.ElementPattern;
+import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;

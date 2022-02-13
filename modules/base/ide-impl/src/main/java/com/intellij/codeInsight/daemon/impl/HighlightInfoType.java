@@ -15,11 +15,11 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.codeInspection.DeprecationUtil;
-import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.editor.colorScheme.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColors;
 import consulo.editor.colorScheme.TextAttributesKey;

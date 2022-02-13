@@ -8,10 +8,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
-import com.intellij.psi.search.scope.packageSet.PackageSet;
-import com.intellij.psi.search.scope.packageSet.PackageSetBase;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.language.psi.search.scope.PackageSet;
+import consulo.language.psi.search.scope.PackageSetBase;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

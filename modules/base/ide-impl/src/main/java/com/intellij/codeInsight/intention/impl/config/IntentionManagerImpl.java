@@ -16,16 +16,17 @@
 
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.impl.CleanupOnScopeIntention;
 import com.intellij.codeInsight.daemon.impl.EditCleanupProfileIntentionAction;
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionBean;
 import com.intellij.codeInsight.intention.IntentionManager;
-import com.intellij.codeInspection.GlobalInspectionTool;
+import consulo.language.editor.inspection.GlobalInspectionTool;
 import com.intellij.codeInspection.GlobalSimpleInspectionTool;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.codeInspection.actions.CleanupAllIntention;
 import com.intellij.codeInspection.actions.CleanupInspectionIntention;
 import com.intellij.codeInspection.actions.RunInspectionIntention;

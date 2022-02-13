@@ -7,7 +7,7 @@ import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.lang.folding.LanguageFolding;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.editor.Editor;
 import consulo.editor.FoldingModel;
 import com.intellij.openapi.editor.ex.DocumentEx;

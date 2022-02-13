@@ -16,6 +16,7 @@
 package com.intellij.profile;
 
 import consulo.component.messagebus.Topic;
+import consulo.language.editor.inspection.scheme.Profile;
 
 import javax.annotation.Nullable;
 

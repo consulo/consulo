@@ -17,6 +17,7 @@ package com.intellij.codeInspection.reference;
 
 import com.intellij.codeInsight.daemon.ImplicitUsageProvider;
 import com.intellij.openapi.util.Comparing;
+import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 

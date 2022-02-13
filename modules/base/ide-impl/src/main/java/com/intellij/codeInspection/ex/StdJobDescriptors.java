@@ -15,7 +15,8 @@
  */
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.JobDescriptor;
 
 public class StdJobDescriptors {
   public final JobDescriptor BUILD_GRAPH = new JobDescriptor(InspectionsBundle.message("inspection.processing.job.descriptor"));

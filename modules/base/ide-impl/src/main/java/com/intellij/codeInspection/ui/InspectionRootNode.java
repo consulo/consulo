@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ui;
 
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.ui.image.Image;

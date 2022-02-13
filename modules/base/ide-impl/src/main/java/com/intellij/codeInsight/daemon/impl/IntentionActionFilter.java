@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

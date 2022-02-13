@@ -34,7 +34,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.PomTargetPsiElement;
+import consulo.language.pom.PomTargetPsiElement;
 import com.intellij.psi.*;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;

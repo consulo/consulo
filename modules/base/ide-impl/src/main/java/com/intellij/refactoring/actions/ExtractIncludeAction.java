@@ -22,7 +22,7 @@ import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.lang.LanguageExtractInclude;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

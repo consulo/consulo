@@ -5,7 +5,7 @@ package com.intellij.psi.impl;
 import com.intellij.AppTopics;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.document.Document;

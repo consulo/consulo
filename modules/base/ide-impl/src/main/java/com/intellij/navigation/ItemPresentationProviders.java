@@ -15,7 +15,7 @@
  */
 package com.intellij.navigation;
 
-import com.intellij.openapi.util.ClassExtension;
+import consulo.application.extension.ClassExtension;
 import consulo.container.plugin.PluginIds;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;

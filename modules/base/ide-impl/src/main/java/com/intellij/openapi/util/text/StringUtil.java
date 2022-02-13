@@ -3233,61 +3233,6 @@ public class StringUtil extends StringUtilRt {
     return sb.toString();
   }
 
-  /**
-   * Expirable CharSequence. Very useful to control external library execution time,
-   * i.e. when java.util.regex.Pattern match goes out of control.
-   */
-  public abstract static class BombedCharSequence implements CharSequence {
-    private final CharSequence delegate;
-    private int i;
-    private boolean myDefused;
-
-    public BombedCharSequence(@Nonnull CharSequence sequence) {
-      delegate = sequence;
-    }
-
-    @Override
-    public int length() {
-      check();
-      return delegate.length();
-    }
-
-    @Override
-    public char charAt(int i) {
-      check();
-      return delegate.charAt(i);
-    }
-
-    protected void check() {
-      if (myDefused) {
-        return;
-      }
-      if ((++i & 1023) == 0) {
-        checkCanceled();
-      }
-    }
-
-    public final void defuse() {
-      myDefused = true;
-    }
-
-    @Nonnull
-    @Override
-    public String toString() {
-      check();
-      return delegate.toString();
-    }
-
-    protected abstract void checkCanceled();
-
-    @Nonnull
-    @Override
-    public CharSequence subSequence(int i, int i1) {
-      check();
-      return delegate.subSequence(i, i1);
-    }
-  }
-
 
   /**
    * @return {@code text} with some characters replaced with standard XML entities, e.g. '<' replaced with '{@code &lt;}'

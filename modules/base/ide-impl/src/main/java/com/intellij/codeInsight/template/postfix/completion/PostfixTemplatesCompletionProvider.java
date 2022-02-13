@@ -10,7 +10,7 @@ import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettin
 import com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import consulo.editor.Editor;
 import consulo.application.progress.ProgressManager;
-import com.intellij.patterns.StandardPatterns;
+import consulo.language.pattern.StandardPatterns;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.ProcessingContext;
 import consulo.codeInsight.completion.CompletionProvider;

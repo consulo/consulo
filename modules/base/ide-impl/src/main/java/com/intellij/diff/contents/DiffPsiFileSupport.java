@@ -16,12 +16,12 @@
 package com.intellij.diff.contents;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoFilter;
+import consulo.language.editor.HighlightInfoFilter;
 import com.intellij.codeInsight.daemon.impl.IntentionActionFilter;
 import com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
-import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;

@@ -21,7 +21,7 @@
 package com.intellij.codeInspection.lang;
 
 import com.intellij.codeInspection.HTMLComposer;
-import com.intellij.codeInspection.reference.RefManager;
+import consulo.language.editor.inspection.reference.RefManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

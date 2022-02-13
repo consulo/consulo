@@ -3,8 +3,8 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import consulo.application.progress.ProgressManager;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.StandardPatterns;
+import consulo.language.pattern.ElementPattern;
+import consulo.language.pattern.StandardPatterns;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

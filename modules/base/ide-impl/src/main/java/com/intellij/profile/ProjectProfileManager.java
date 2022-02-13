@@ -15,6 +15,8 @@
  */
 package com.intellij.profile;
 
+import consulo.language.editor.inspection.scheme.ProfileManager;
+
 import javax.annotation.Nullable;
 
 /**

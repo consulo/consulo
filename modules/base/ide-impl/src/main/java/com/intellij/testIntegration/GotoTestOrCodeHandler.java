@@ -16,7 +16,7 @@
 
 package com.intellij.testIntegration;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.navigation.GotoTargetHandler;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import consulo.execution.executor.DefaultRunExecutor;

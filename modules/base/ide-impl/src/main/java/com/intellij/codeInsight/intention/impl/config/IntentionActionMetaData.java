@@ -19,7 +19,7 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionAction;
 import com.intellij.util.io.URLUtil;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.logging.Logger;

@@ -15,16 +15,16 @@
  */
 package com.intellij.codeInspection.ui;
 
-import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.codeInspection.CommonProblemDescriptor;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
 import com.intellij.codeInspection.ProblemDescriptionsProcessor;
-import com.intellij.codeInspection.QuickFix;
+import consulo.language.editor.inspection.QuickFix;
 import com.intellij.codeInspection.ex.GlobalInspectionContextImpl;
 import com.intellij.codeInspection.ex.HTMLComposerImpl;
 import com.intellij.codeInspection.ex.InspectionRVContentProvider;
 import com.intellij.codeInspection.ex.QuickFixAction;
-import com.intellij.codeInspection.reference.RefEntity;
-import com.intellij.codeInspection.reference.RefModule;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefModule;
 import com.intellij.openapi.vcs.FileStatus;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

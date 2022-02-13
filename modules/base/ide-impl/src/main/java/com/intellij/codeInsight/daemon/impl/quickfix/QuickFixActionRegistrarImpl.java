@@ -16,10 +16,10 @@
 
 package com.intellij.codeInsight.daemon.impl.quickfix;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.QuickFixActionRegistrar;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.lang;
 
-import com.intellij.lang.annotation.ExternalAnnotator;
+import consulo.language.editor.annotation.ExternalAnnotator;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 

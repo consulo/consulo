@@ -19,10 +19,10 @@
  */
 package com.intellij.codeInsight.daemon.impl.quickfix;
 
-import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.document.Document;

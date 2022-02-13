@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.editor.Editor;
 import consulo.editor.ScrollType;
+import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;

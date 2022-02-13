@@ -3,7 +3,7 @@
  */
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.lang.injection.MultiHostRegistrar;
+import consulo.language.inject.MultiHostRegistrar;
 import com.intellij.openapi.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;

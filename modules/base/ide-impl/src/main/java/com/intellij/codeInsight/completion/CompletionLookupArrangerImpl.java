@@ -14,7 +14,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
-import com.intellij.patterns.StandardPatterns;
+import consulo.language.pattern.StandardPatterns;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;

@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.editor.Editor;
 import consulo.editor.ScrollType;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

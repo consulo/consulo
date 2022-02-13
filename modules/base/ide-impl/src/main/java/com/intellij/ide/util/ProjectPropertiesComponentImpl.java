@@ -18,7 +18,7 @@ package com.intellij.ide.util;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.util.ProjectPropertiesComponent;
 
 import jakarta.inject.Singleton;

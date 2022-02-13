@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.actions;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.formatting.FormattingProgressTask;
 import consulo.logging.Logger;
 import consulo.document.Document;

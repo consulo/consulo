@@ -21,7 +21,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
 import com.intellij.lang.ExternalLanguageAnnotators;
 import consulo.language.Language;
-import com.intellij.lang.annotation.ExternalAnnotator;
+import consulo.language.editor.annotation.ExternalAnnotator;
 import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
 import consulo.project.Project;

@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.intention.impl;
 
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionAction;
 import com.intellij.ide.scratch.ScratchFileService;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;

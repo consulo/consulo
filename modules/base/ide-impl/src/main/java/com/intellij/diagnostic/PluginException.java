@@ -61,18 +61,18 @@ public class PluginException extends consulo.container.PluginException {
    *
    * @param pluginClass a problematic class which caused the error
    */
+  @Deprecated
   public static void logPluginError(@Nonnull Logger logger, @Nonnull String errorMessage, @Nullable Throwable cause, @Nonnull Class<?> pluginClass) {
     PluginExceptionUtil.logPluginError(logger, errorMessage, cause, pluginClass);
   }
 
+  @Deprecated
   public static void reportDeprecatedUsage(@Nonnull String signature, @Nonnull String details) {
-    String message = "'" + signature + "' is deprecated and going to be removed soon. " + details;
-    Logger.getInstance(PluginException.class).error(message);
+    PluginExceptionUtil.reportDeprecatedUsage(signature, details);
   }
 
+  @Deprecated
   public static void reportDeprecatedDefault(@Nonnull Class<?> violator, @Nonnull String methodName, @Nonnull String details) {
-    String message = "The default implementation of method '" + methodName + "' is deprecated, you need to override it in '" + violator + "'. " + details;
-    Logger logger = Logger.getInstance(violator);
-    PluginExceptionUtil.logPluginError(logger, message, null, violator);
+    PluginExceptionUtil.reportDeprecatedDefault(violator, methodName, details);
   }
 }

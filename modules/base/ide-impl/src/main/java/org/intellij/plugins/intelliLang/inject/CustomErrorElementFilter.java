@@ -16,10 +16,10 @@
 package org.intellij.plugins.intelliLang.inject;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoFilter;
+import consulo.language.editor.HighlightInfoFilter;
 import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
-import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
 

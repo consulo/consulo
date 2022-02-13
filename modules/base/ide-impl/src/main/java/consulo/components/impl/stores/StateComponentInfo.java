@@ -19,7 +19,7 @@ import com.intellij.ide.plugins.PluginManagerCore;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import consulo.project.Project;
 import consulo.util.xml.serializer.JDOMExternalizable;

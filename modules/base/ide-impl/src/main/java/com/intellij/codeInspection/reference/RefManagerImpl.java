@@ -2,19 +2,20 @@
 
 package com.intellij.codeInspection.reference;
 
-import com.intellij.analysis.AnalysisScope;
-import com.intellij.codeInspection.GlobalInspectionContext;
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
 import com.intellij.codeInspection.lang.RefManagerExtension;
 import consulo.language.Language;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import consulo.document.Document;
+import consulo.language.editor.inspection.reference.*;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.module.Module;

@@ -17,12 +17,16 @@ package com.intellij.codeInspection;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.editor.colorScheme.CodeInsightColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.util.Couple;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.PsiElement;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;

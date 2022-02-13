@@ -19,7 +19,7 @@ package com.intellij.psi.util;
 import consulo.dataContext.DataManager;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.editor.Caret;

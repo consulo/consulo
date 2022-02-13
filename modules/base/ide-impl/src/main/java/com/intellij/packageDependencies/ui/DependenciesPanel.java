@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import consulo.application.CommonBundle;
-import com.intellij.analysis.AnalysisScope;
+import consulo.language.editor.AnalysisScope;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
 import com.intellij.codeInsight.hint.HintUtil;
@@ -58,8 +58,8 @@ import com.intellij.packageDependencies.actions.BackwardDependenciesHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.psi.search.scope.packageSet.PackageSet;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.PackageSet;
 import com.intellij.ui.*;
 import consulo.ui.ex.content.Content;
 import com.intellij.ui.treeStructure.Tree;

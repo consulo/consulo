@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.cache.impl.todo;
 
-import com.intellij.patterns.StringPattern;
+import consulo.language.pattern.StringPattern;
 import com.intellij.psi.impl.cache.impl.IndexPatternUtil;
 import com.intellij.psi.impl.cache.impl.OccurrenceConsumer;
 import com.intellij.psi.search.IndexPattern;

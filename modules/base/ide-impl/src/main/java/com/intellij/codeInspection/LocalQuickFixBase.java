@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInspection;
 
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

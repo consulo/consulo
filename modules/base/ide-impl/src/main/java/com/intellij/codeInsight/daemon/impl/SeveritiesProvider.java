@@ -20,7 +20,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;
 import consulo.component.extension.ExtensionPointName;

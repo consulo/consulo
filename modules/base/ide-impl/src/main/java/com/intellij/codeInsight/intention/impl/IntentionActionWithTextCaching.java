@@ -5,6 +5,8 @@ package com.intellij.codeInsight.intention.impl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.intention.*;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
+import consulo.language.editor.inspection.FileModifier;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.editor.Editor;

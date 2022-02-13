@@ -19,6 +19,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.ApplicationManager;
+import consulo.language.psi.search.scope.*;
 import consulo.ui.ex.DarculaColors;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;

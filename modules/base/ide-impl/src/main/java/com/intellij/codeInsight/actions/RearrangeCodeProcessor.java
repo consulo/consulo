@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.actions;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;

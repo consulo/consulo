@@ -21,7 +21,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.language.CompositeLanguage;
 import consulo.language.Language;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.*;

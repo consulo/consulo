@@ -17,13 +17,13 @@ package com.intellij.profile.codeInspection;
 
 import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.util.DisposerUtil;
 import com.intellij.profile.ApplicationProfileManager;
-import com.intellij.profile.Profile;
+import consulo.language.editor.inspection.scheme.Profile;
 import com.intellij.profile.ProfileChangeAdapter;
 import com.intellij.profile.ProfileEx;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
+import consulo.language.psi.search.scope.NamedScope;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import org.jdom.JDOMException;

@@ -22,6 +22,10 @@ module consulo.language.api {
   exports consulo.language.plain.ast;
   exports consulo.language.plain.psi;
   exports consulo.language.icon;
+  exports consulo.language.pattern;
+  exports consulo.language.inject;
+  exports consulo.language.pom;
+  exports consulo.language.pom.event;
   exports consulo.language.psi;
   exports consulo.language.psi.event;
   exports consulo.language.psi.internal to consulo.ide.impl;
@@ -29,6 +33,7 @@ module consulo.language.api {
   exports consulo.language.psi.resolve;
   exports consulo.language.psi.scope;
   exports consulo.language.psi.stub;
+  exports consulo.language.psi.search.scope;
   exports consulo.language.psi.stub.internal to consulo.ide.impl;
 
   exports consulo.language.psi.util;

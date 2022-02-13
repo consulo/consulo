@@ -18,7 +18,7 @@ package com.intellij.ide.passwordSafe.config;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import jakarta.inject.Singleton;
 
 /**

@@ -16,6 +16,8 @@
 package com.intellij.pom;
 
 import com.intellij.psi.ElementDescriptionProvider;
+import consulo.language.pom.PomTarget;
+import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.ElementDescriptionLocation;
 import javax.annotation.Nonnull;

@@ -15,14 +15,14 @@
  */
 package com.intellij.profile.codeInspection.ui.filter;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
+import consulo.language.editor.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import com.intellij.codeInspection.ex.ScopeToolState;
+import consulo.language.editor.inspection.scheme.ScopeToolState;
 import consulo.application.AllIcons;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;

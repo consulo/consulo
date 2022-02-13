@@ -21,6 +21,10 @@ import consulo.language.lexer.Lexer;
 import consulo.component.extension.Extensions;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopesLexer;
+import consulo.language.psi.search.scope.ComplementPackageSet;
+import consulo.language.psi.search.scope.PackageSet;
+import consulo.language.psi.search.scope.PackageSetFactory;
+import consulo.language.psi.search.scope.ParsingException;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 

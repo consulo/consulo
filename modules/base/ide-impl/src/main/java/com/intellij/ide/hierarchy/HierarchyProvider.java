@@ -16,7 +16,7 @@
 
 package com.intellij.ide.hierarchy;
 
-import com.intellij.lang.LanguageExtensionPoint;
+import consulo.language.LanguageExtensionPoint;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;

@@ -16,20 +16,20 @@
 
 package com.intellij.codeInspection.actions;
 
-import com.intellij.analysis.AnalysisScope;
+import consulo.language.editor.AnalysisScope;
 import com.intellij.analysis.BaseAnalysisAction;
 import com.intellij.analysis.BaseAnalysisActionDialog;
-import com.intellij.codeInspection.InspectionManager;
-import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.GlobalInspectionContextImpl;
 import com.intellij.codeInspection.ex.InspectionManagerEx;
 import consulo.application.AllIcons;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
-import com.intellij.profile.Profile;
-import com.intellij.profile.ProfileManager;
+import consulo.language.editor.inspection.scheme.Profile;
+import consulo.language.editor.inspection.scheme.ProfileManager;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;

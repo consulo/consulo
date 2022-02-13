@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInspection;
 
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

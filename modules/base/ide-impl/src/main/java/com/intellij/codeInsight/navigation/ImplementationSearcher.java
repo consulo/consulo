@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.navigation;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
 import consulo.application.progress.ProgressManager;

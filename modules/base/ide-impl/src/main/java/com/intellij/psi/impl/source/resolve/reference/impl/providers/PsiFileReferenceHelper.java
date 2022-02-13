@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.codeInsight.daemon.quickFix.FileReferenceQuickFixProvider;
-import com.intellij.codeInspection.LocalQuickFix;
+import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;

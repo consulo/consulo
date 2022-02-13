@@ -22,7 +22,7 @@ import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.project.Project;

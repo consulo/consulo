@@ -15,11 +15,12 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.ModifiableModel;
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.ModifiableModel;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.profile.codeInspection.InspectionProfileManager;

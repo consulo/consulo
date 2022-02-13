@@ -17,12 +17,13 @@ package com.intellij.profile;
 
 import com.intellij.openapi.components.MainConfigurationStateSplitter;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.language.editor.inspection.scheme.Profile;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
+import consulo.language.psi.search.scope.NamedScopesHolder;
 import com.intellij.util.ArrayUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;

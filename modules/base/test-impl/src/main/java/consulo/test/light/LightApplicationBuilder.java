@@ -19,7 +19,7 @@ import consulo.application.internal.concurrency.JobLauncher;
 import com.intellij.ide.UiActivityMonitor;
 import consulo.application.ui.UISettings;
 import com.intellij.ide.util.treeView.TreeAnchorizer;
-import com.intellij.lang.LanguageExtensionPoint;
+import consulo.language.LanguageExtensionPoint;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.PsiBuilderFactory;
 import com.intellij.lang.impl.PsiBuilderFactoryImpl;

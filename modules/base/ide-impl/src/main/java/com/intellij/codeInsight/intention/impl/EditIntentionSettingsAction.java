@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.intention.impl;
 
 import com.intellij.codeInsight.intention.HighPriorityAction;
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.config.IntentionSettingsConfigurable;
 import consulo.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;

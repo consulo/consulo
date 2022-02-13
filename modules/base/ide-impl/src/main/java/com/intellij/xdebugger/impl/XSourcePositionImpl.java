@@ -10,7 +10,7 @@ import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import consulo.navigation.Navigatable;
-import com.intellij.pom.NonNavigatable;
+import consulo.navigation.NonNavigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;

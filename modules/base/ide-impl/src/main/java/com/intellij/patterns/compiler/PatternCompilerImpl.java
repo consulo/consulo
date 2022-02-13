@@ -16,13 +16,14 @@
 
 package com.intellij.patterns.compiler;
 
+import consulo.language.pattern.compiler.PatternCompiler;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.ElementPatternCondition;
-import com.intellij.patterns.InitialPatternCondition;
+import consulo.language.pattern.ElementPattern;
+import consulo.language.pattern.ElementPatternCondition;
+import consulo.language.pattern.InitialPatternCondition;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import consulo.language.util.ProcessingContext;

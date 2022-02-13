@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.hint;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.find.FindUtil;
 import consulo.application.AllIcons;
 import com.intellij.ide.highlighter.HighlighterFactory;

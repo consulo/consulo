@@ -18,12 +18,12 @@ package com.intellij.codeInspection.ex;
 
 import consulo.application.CommonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.ModifiableModel;
+import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.scheme.ModifiableModel;
 import consulo.application.AllIcons;
 import consulo.editor.Editor;
 import consulo.project.Project;

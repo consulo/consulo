@@ -15,10 +15,10 @@
  */
 package com.intellij.codeStyle;
 
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.ProblemsHolder;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemsHolder;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

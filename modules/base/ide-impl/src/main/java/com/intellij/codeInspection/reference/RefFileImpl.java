@@ -17,6 +17,10 @@ package com.intellij.codeInspection.reference;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.PathMacroManager;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefFile;
+import consulo.language.editor.inspection.reference.RefManager;
+import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiDirectory;

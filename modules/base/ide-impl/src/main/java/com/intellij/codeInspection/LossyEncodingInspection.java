@@ -23,7 +23,7 @@
 package com.intellij.codeInspection;
 
 import consulo.dataContext.DataManager;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.bootstrap.charset.Native2AsciiCharset;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
@@ -33,6 +33,8 @@ import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.project.Project;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.document.util.TextRange;

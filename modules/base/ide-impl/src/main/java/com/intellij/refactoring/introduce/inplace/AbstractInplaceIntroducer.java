@@ -46,7 +46,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.ex.PositionTracker;

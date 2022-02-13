@@ -6,7 +6,7 @@ import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.parser.LanguageParserDefinitions;
-import com.intellij.lang.injection.MultiHostRegistrar;
+import consulo.language.inject.MultiHostRegistrar;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.DocumentEx;

@@ -17,6 +17,9 @@ package com.intellij.packageDependencies;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.scratch.ScratchesNamedScope;
+import consulo.language.psi.search.scope.AbstractPackageSet;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;

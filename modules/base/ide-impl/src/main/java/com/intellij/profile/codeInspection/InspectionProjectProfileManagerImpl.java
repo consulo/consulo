@@ -16,23 +16,23 @@
 package com.intellij.profile.codeInspection;
 
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
-import com.intellij.codeInspection.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.profile.Profile;
+import consulo.language.editor.inspection.scheme.Profile;
 import com.intellij.profile.ProfileEx;
-import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
+import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.application.ui.awt.UIUtil;
 import org.jdom.Element;
 

@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.configurable.Configurable;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
 import consulo.project.Project;
-import com.intellij.profile.Profile;
+import consulo.language.editor.inspection.scheme.Profile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

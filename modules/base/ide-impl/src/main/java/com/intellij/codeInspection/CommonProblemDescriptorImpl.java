@@ -3,6 +3,9 @@ package com.intellij.codeInspection;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.QuickFix;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -17,8 +17,8 @@ package com.intellij.refactoring.rename;
 
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.project.Project;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.PlatformPatterns;
+import consulo.language.pattern.ElementPattern;
+import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

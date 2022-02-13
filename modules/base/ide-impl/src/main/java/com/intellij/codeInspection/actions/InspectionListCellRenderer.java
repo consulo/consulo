@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.actions;
 
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;

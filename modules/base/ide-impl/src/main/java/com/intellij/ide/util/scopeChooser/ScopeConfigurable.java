@@ -22,10 +22,10 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
-import com.intellij.psi.search.scope.packageSet.PackageSet;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.language.psi.search.scope.PackageSet;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

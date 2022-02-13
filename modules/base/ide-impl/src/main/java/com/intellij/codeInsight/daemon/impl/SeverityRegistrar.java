@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;

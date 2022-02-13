@@ -15,15 +15,13 @@
  */
 package consulo.components.impl.stores;
 
+import consulo.component.persist.*;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import consulo.component.persist.RoamingType;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
 import consulo.project.Project;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Pair;
@@ -35,7 +33,6 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.MessageBus;
 import consulo.application.AccessRule;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.components.impl.stores.storage.ProjectStateStorageManager;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.VfsFileBasedStorage;

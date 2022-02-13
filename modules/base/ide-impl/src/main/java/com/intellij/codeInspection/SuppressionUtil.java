@@ -21,6 +21,7 @@ import com.intellij.lang.Commenter;
 import consulo.language.Language;
 import com.intellij.lang.LanguageCommenters;
 import consulo.application.ApplicationManager;
+import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.NullableComputable;

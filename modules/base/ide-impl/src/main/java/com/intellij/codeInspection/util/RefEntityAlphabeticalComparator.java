@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInspection.util;
 
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefEntity;
 import javax.annotation.Nonnull;
 
 import java.util.Comparator;

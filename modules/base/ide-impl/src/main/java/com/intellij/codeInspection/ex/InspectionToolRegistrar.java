@@ -18,6 +18,12 @@ package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInspection.*;
 import com.intellij.openapi.components.ServiceManager;
+import consulo.language.editor.inspection.GlobalInspectionTool;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.scheme.InspectionEP;
+import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Factory;

@@ -15,7 +15,10 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.GlobalInspectionTool;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

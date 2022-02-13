@@ -16,7 +16,8 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.InspectionProfile;
+import consulo.component.persist.StoragePathMacros;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;

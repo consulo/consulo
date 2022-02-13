@@ -15,7 +15,7 @@
  */
 package com.intellij.profile.codeInspection.ui.inspectionsTree;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.Descriptor;
 import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.profile.codeInspection.ui.ToolDescriptors;

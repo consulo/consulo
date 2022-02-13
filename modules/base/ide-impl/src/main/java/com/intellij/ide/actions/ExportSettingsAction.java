@@ -31,7 +31,7 @@ import consulo.application.Application;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.configurable.OptionsBundle;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.Messages;

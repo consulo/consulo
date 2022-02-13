@@ -18,7 +18,7 @@ package com.intellij.psi.impl.search;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;

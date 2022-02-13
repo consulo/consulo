@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import com.intellij.pom.PomTargetPsiElement;
+import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;

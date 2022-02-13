@@ -15,6 +15,8 @@
  */
 package com.intellij.packageDependencies.ui;
 
+import consulo.language.psi.search.scope.*;
+import consulo.language.psi.search.scope.impl.NamedScopeManager;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

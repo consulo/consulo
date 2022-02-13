@@ -17,6 +17,11 @@ package com.intellij.codeInspection;
 
 import com.intellij.codeInsight.daemon.impl.actions.AbstractBatchSuppressByNoInspectionCommentFix;
 import consulo.editor.Editor;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.SuppressQuickFix;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.Function;

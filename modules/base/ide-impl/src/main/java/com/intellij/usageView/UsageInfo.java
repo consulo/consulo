@@ -16,7 +16,7 @@
 package com.intellij.usageView;
 
 import consulo.language.file.inject.VirtualFileWindow;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.psi.*;

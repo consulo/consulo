@@ -15,13 +15,16 @@
  */
 package com.intellij.codeInsight.intention;
 
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.inspection.LocalQuickFix;
+
 /**
  * Marker interface for intentions and quick fixes.
  * Marked actions are shown higher in the list of available quick fixes.
  *
  * @author Dmitry Avdeev
- * @see com.intellij.codeInsight.intention.IntentionAction
- * @see com.intellij.codeInspection.LocalQuickFix
+ * @see IntentionAction
+ * @see LocalQuickFix
  */
 public interface HighPriorityAction {
 }

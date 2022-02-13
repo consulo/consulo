@@ -15,9 +15,9 @@
  */
 package com.intellij.profile.codeInspection.ui.inspectionsTree;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
+import consulo.language.editor.HighlightDisplayLevel;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.profile.codeInspection.ui.ScopeOrderComparator;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;

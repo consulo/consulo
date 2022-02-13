@@ -15,10 +15,11 @@
  */
 package com.intellij.psi.impl.source.resolve.reference;
 
-import com.intellij.patterns.*;
+import consulo.language.pattern.*;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReferenceContributor;
 import consulo.language.psi.PsiReferenceProvider;
-import com.intellij.psi.PsiReferenceRegistrar;
+import consulo.language.psi.PsiReferenceRegistrar;
 import consulo.language.psi.PsiReferenceService;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.filters.position.FilterPattern;
@@ -111,7 +112,7 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
   }
 
   /**
-   * @deprecated {@link com.intellij.psi.PsiReferenceContributor}
+   * @deprecated {@link PsiReferenceContributor}
    */
   public void registerReferenceProvider(@Nullable ElementFilter elementFilter,
                                         @Nonnull Class scope,
@@ -147,7 +148,7 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
   }
 
   /**
-   * @see com.intellij.psi.PsiReferenceContributor
+   * @see PsiReferenceContributor
    * @deprecated
    */
   public void registerReferenceProvider(@Nonnull Class scope, @Nonnull PsiReferenceProvider provider) {

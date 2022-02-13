@@ -27,7 +27,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.component.extension.Extensions;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.DumbService;

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.lang.LanguageExtensionPoint;
+import consulo.language.LanguageExtensionPoint;
 
 /**
  * @author peter

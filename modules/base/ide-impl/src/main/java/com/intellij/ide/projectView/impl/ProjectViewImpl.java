@@ -49,7 +49,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.editor.Editor;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;

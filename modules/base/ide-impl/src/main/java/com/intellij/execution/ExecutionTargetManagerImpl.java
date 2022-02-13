@@ -20,7 +20,7 @@ import consulo.application.ReadAction;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.execution.*;
 import consulo.execution.event.RunManagerListener;
 import consulo.project.Project;

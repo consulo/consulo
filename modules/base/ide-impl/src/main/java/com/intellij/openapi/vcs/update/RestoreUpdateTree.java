@@ -16,16 +16,13 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.openapi.components.*;
-import consulo.component.persist.RoamingType;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
+import consulo.component.persist.*;
 import consulo.project.Project;
 import com.intellij.openapi.project.ProjectReloadState;
 import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesCache;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.ui.UIAccess;
 import org.jdom.Element;
 

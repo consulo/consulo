@@ -156,7 +156,7 @@
       <with attribute="handlerClass" implements="com.intellij.codeInsight.highlighting.TooltipLinkHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="codeInsight.parameterNameHints" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="codeInsight.parameterNameHints" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.hints.InlayParameterHintsProvider"/>
     </extensionPoint>
 
@@ -297,6 +297,8 @@
     <extensionPoint name="compiler.additionalCompileScopeProvider"
                     interface="com.intellij.compiler.impl.AdditionalCompileScopeProvider"/>
 
+    <extensionPoint name="namedScopesHolderProvider" area="PROJECT" interface="consulo.language.psi.search.scope.NamedScopesHolderProvider"/>
+
     <extensionPoint name="compiler.translatingHelper"
                     interface="consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper"/>
 
@@ -317,7 +319,7 @@
 
     <extensionPoint name="moduleImportProvider" interface="consulo.moduleImport.ModuleImportProvider"/>
 
-    <extensionPoint name="codeInsight.wordCompletionFilter" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="codeInsight.wordCompletionFilter" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.WordCompletionElementFilter"/>
     </extensionPoint>
 
@@ -347,7 +349,7 @@
 
     <!-- Code Insight -->
     <extensionPoint name="highlightVisitor"
-                    interface="com.intellij.codeInsight.daemon.impl.HighlightVisitor"
+                    interface="consulo.language.editor.HighlightVisitor"
                     area="PROJECT"/>
     <extensionPoint name="highlightErrorFilter"
                     interface="com.intellij.codeInsight.highlighting.HighlightErrorFilter"
@@ -369,7 +371,7 @@
 
     <extensionPoint name="intentionAction"
                     beanClass="com.intellij.codeInsight.intention.IntentionActionBean">
-      <with tag="className" implements="com.intellij.codeInsight.intention.IntentionAction"/>
+      <with tag="className" implements="consulo.language.editor.intention.IntentionAction"/>
     </extensionPoint>
 
     <extensionPoint name="codeInsight.unresolvedReferenceQuickFixProvider"
@@ -382,11 +384,11 @@
     </extensionPoint>
 
     <extensionPoint name="bidiRegionsSeparator"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.bidi.BidiRegionsSeparator"/>
     </extensionPoint>
 
-    <extensionPoint name="wordBoundaryFilter" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="wordBoundaryFilter" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.actions.WordBoundaryFilter"/>
     </extensionPoint>
 
@@ -405,10 +407,10 @@
                     interface="com.intellij.codeInsight.editorActions.JoinLinesHandlerDelegate"/>
     <extensionPoint name="enterHandlerDelegate" interface="com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegate"/>
     <extensionPoint name="backspaceHandlerDelegate" interface="com.intellij.codeInsight.editorActions.BackspaceHandlerDelegate"/>
-    <extensionPoint name="editor.backspaceModeOverride" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="editor.backspaceModeOverride" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.BackspaceModeOverride"/>
     </extensionPoint>
-    <extensionPoint name="enterBetweenBracesDelegate" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="enterBetweenBracesDelegate" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.enter.EnterBetweenBracesDelegate"/>
     </extensionPoint>
 
@@ -419,7 +421,7 @@
                     interface="consulo.psi.impl.source.codeStyle.IndentHelperExtension"/>
 
     <extensionPoint name="daemon.highlightInfoFilter"
-                    interface="com.intellij.codeInsight.daemon.impl.HighlightInfoFilter"/>
+                    interface="consulo.language.editor.HighlightInfoFilter"/>
 
     <extensionPoint name="daemon.intentionActionFilter"
                     interface="com.intellij.codeInsight.daemon.impl.IntentionActionFilter"/>
@@ -439,79 +441,79 @@
     <extensionPoint name="daemon.changeLocalityDetector"
                     interface="com.intellij.codeInsight.daemon.ChangeLocalityDetector"/>
 
-    <extensionPoint name="languageInjector" interface="consulo.language.psi.LanguageInjector"/>
+    <extensionPoint name="languageInjector" interface="consulo.language.inject.LanguageInjector"/>
     <extensionPoint name="concatenationAwareInjector" interface="com.intellij.lang.injection.ConcatenationAwareInjector" area="PROJECT"/>
     <extensionPoint name="multiHostInjector"
-                    beanClass="consulo.lang.injection.MultiHostInjectorExtensionPoint"
+                    beanClass="consulo.language.inject.MultiHostInjectorExtensionPoint"
                     area="PROJECT">
       <with attribute="forClass" implements="consulo.language.psi.PsiElement"/>
-      <with attribute="implementationClass" implements="com.intellij.lang.injection.MultiHostInjector"/>
+      <with attribute="implementationClass" implements="consulo.language.inject.MultiHostInjector"/>
     </extensionPoint>
 
     <extensionPoint name="annotator"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.annotation.Annotator"/>
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.annotation.Annotator"/>
     </extensionPoint>
 
     <extensionPoint name="externalAnnotator"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.annotation.ExternalAnnotator"/>
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.annotation.ExternalAnnotator"/>
     </extensionPoint>
 
     <extensionPoint name="lang.refactoringSupport"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.refactoring.RefactoringSupportProvider"/>
     </extensionPoint>
 
     <extensionPoint name="lang.refactoringSupport.classMembersRefactoringSupport"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.refactoring.classMembers.ClassMembersRefactoringSupport"/>
     </extensionPoint>
 
     <extensionPoint name="lang.documentationProvider"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.documentation.DocumentationProvider"/>
     </extensionPoint>
 
     <extensionPoint name="lang.namesValidator"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.refactoring.NamesValidator"/>
     </extensionPoint>
 
     <extensionPoint name="lang.findUsagesProvider"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.findUsages.FindUsagesProvider"/>
     </extensionPoint>
 
     <extensionPoint name="lang.commenter"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.Commenter"/>
     </extensionPoint>
 
     <extensionPoint name="lang.inspectionSuppressor"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInspection.InspectionSuppressor"/>
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.inspection.InspectionSuppressor"/>
     </extensionPoint>
 
     <extensionPoint name="lang.braceMatcher"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.PairedBraceMatcher"/>
     </extensionPoint>
 
     <extensionPoint name="lang.quoteHandler"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.QuoteHandler"/>
     </extensionPoint>
 
     <extensionPoint name="lang.foldingBuilder"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.folding.FoldingBuilder"/>
     </extensionPoint>
 
     <extensionPoint name="customFoldingProvider"
                     interface="com.intellij.lang.folding.CustomFoldingProvider"/>
     <extensionPoint name="lang.psiStructureViewFactory"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.PsiStructureViewFactory"/>
     </extensionPoint>
 
@@ -526,58 +528,58 @@
 
     <extensionPoint name="lang.ast.compositeFactory" interface="consulo.psi.tree.ASTCompositeFactory"/>
 
-    <extensionPoint name="lang.formatter" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.formatter" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.formatting.FormattingModelBuilder"/>
     </extensionPoint>
 
     <extensionPoint name="externalFormatProcessor" interface="com.intellij.psi.codeStyle.ExternalFormatProcessor"/>
 
     <extensionPoint name="lang.formatter.restriction" interface="com.intellij.lang.LanguageFormattingRestriction"/>
-    <extensionPoint name="lang.importOptimizer" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.ImportOptimizer"/>
+    <extensionPoint name="lang.importOptimizer" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.ImportOptimizer"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.rearranger" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.rearranger" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.psi.codeStyle.arrangement.Rearranger"/>
     </extensionPoint>
     <extensionPoint name="rearranger.ui" interface="com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent$Factory"/>
 
-    <extensionPoint name="lang.surroundDescriptor" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.surroundDescriptor" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.surroundWith.SurroundDescriptor"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.unwrapDescriptor" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.unwrapDescriptor" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.unwrap.UnwrapDescriptor"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.parserDefinition" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.parserDefinition" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.parser.ParserDefinition"/>
     </extensionPoint>
 
     <extensionPoint name="metaLanguage" interface="consulo.language.MetaLanguage"/>
 
-    <extensionPoint name="lang.versionResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.versionResolver" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.version.LanguageVersionResolver"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.defineVersion" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.defineVersion" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.version.LanguageVersion"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.treePatcher" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.treePatcher" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.psi.templateLanguages.TreePatcher"/>
     </extensionPoint>
 
-    <extensionPoint name="outerLanguageRangePatcher" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="outerLanguageRangePatcher" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.psi.templateLanguages.TemplateDataElementType$OuterLanguageRangePatcher"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.tokenSeparatorGenerator" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.tokenSeparatorGenerator" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.TokenSeparatorGenerator"/>
     </extensionPoint>
 
 
-    <extensionPoint name="lang.fileViewProviderFactory" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.fileViewProviderFactory" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.file.FileViewProviderFactory"/>
     </extensionPoint>
 
@@ -655,16 +657,16 @@
 
     <extensionPoint name="localInspection"
                     beanClass="com.intellij.codeInspection.LocalInspectionEP">
-      <with attribute="implementationClass" implements="com.intellij.codeInspection.LocalInspectionTool"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.inspection.LocalInspectionTool"/>
     </extensionPoint>
 
     <extensionPoint name="globalInspection"
-                    beanClass="com.intellij.codeInspection.InspectionEP">
-      <with attribute="implementationClass" implements="com.intellij.codeInspection.GlobalInspectionTool"/>
+                    beanClass="consulo.language.editor.inspection.scheme.InspectionEP">
+      <with attribute="implementationClass" implements="consulo.language.editor.inspection.GlobalInspectionTool"/>
     </extensionPoint>
     <!-- please use localInspection or globalInspection instead-->
     <extensionPoint name="specialTool"
-                    beanClass="com.intellij.codeInspection.InspectionEP"/>
+                    beanClass="consulo.language.editor.inspection.scheme.InspectionEP"/>
     <extensionPoint name="inspectionToolProvider"
                     interface="com.intellij.codeInspection.InspectionToolProvider"/>
     <extensionPoint name="inspectionToolsFactory"
@@ -706,7 +708,7 @@
                     interface="com.intellij.ide.favoritesTreeView.FavoritesListProvider"
                     area="PROJECT"/>
 
-    <extensionPoint name="lang.emacs" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.emacs" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.emacs.EmacsProcessingHandler"/>
     </extensionPoint>
 
@@ -723,15 +725,15 @@
 
 
     <extensionPoint name="refactoring.helper" interface="com.intellij.refactoring.RefactoringHelper"/>
-    <extensionPoint name="refactoring.inlineHandler" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="refactoring.inlineHandler" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.refactoring.InlineHandler"/>
     </extensionPoint>
 
     <extensionPoint name="refactoring.safeDeleteProcessor" interface="com.intellij.refactoring.safeDelete.SafeDeleteProcessorDelegate"/>
 
     <extensionPoint name="refactoring.extractIncludeHandler"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.refactoring.RefactoringActionHandler"/>
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.RefactoringActionHandler"/>
     </extensionPoint>
 
     <extensionPoint name="refactoring.changeSignatureUsageProcessor"
@@ -782,7 +784,7 @@
 
     <extensionPoint name="runConfigurationProducer" interface="com.intellij.execution.actions.RunConfigurationProducer"/>
 
-    <extensionPoint name="runLineMarkerContributor" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="runLineMarkerContributor" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.execution.lineMarker.RunLineMarkerContributor"/>
     </extensionPoint>
 
@@ -803,7 +805,7 @@
     </extensionPoint>
 
     <extensionPoint name="lang.elementManipulator" beanClass="com.intellij.openapi.util.ClassExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.ElementManipulator"/>
+      <with attribute="implementationClass" implements="consulo.language.psi.ElementManipulator"/>
     </extensionPoint>
 
     <extensionPoint name="fileContextProvider" interface="com.intellij.psi.FileContextProvider" area="PROJECT"/>
@@ -811,7 +813,7 @@
                     interface="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelper"/>
 
     <extensionPoint name="psi.referenceContributor" beanClass="com.intellij.psi.impl.source.resolve.reference.PsiReferenceContributorEP">
-      <with attribute="implementation" implements="com.intellij.psi.PsiReferenceContributor"/>
+      <with attribute="implementation" implements="consulo.language.psi.PsiReferenceContributor"/>
     </extensionPoint>
 
     <extensionPoint name="psi.referenceProvider" beanClass="com.intellij.psi.PsiReferenceProviderBean"/>
@@ -853,22 +855,22 @@
     <extensionPoint name="library.type" interface="consulo.content.library.LibraryType"/>
 
     <extensionPoint name="lang.implementationTextSelectioner"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.hint.ImplementationTextSelectioner"/>
     </extensionPoint>
 
     <extensionPoint name="lang.lineWrapStrategy"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.LineWrapPositionStrategy"/>
     </extensionPoint>
 
     <extensionPoint name="lang.whiteSpaceFormattingStrategy"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.psi.formatter.WhiteSpaceFormattingStrategy"/>
     </extensionPoint>
 
     <extensionPoint name="lang.indentStrategy"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.IndentStrategy"/>
     </extensionPoint>
 
@@ -884,7 +886,7 @@
 
     <extensionPoint name="navbar" interface="com.intellij.ide.navigationToolbar.NavBarModelExtension"/>
 
-    <extensionPoint name="renameHandler" interface="com.intellij.refactoring.rename.RenameHandler"/>
+    <extensionPoint name="renameHandler" interface="consulo.language.editor.refactoring.rename.RenameHandler"/>
     <extensionPoint name="renamePsiElementProcessor" interface="com.intellij.refactoring.rename.RenamePsiElementProcessor"/>
     <extensionPoint name="updateAddedFileProcessor" interface="com.intellij.psi.impl.file.UpdateAddedFileProcessor"/>
     <extensionPoint name="moveFileHandler" interface="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler"/>
@@ -893,7 +895,7 @@
     <extensionPoint name="vetoRenameCondition" interface="consulo.util.lang.function.Condition"/>
 
     <extensionPoint name="rename.inplace.resolveSnapshotProvider"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.refactoring.rename.ResolveSnapshotProvider"/>
     </extensionPoint>
 
@@ -913,11 +915,11 @@
     <extensionPoint name="colorAndFontPanelFactory" interface="com.intellij.application.options.colors.ColorAndFontPanelFactory"/>
     <extensionPoint name="colorAndFontDescriptorProvider" interface="com.intellij.openapi.options.colors.ColorAndFontDescriptorsProvider"/>
 
-    <extensionPoint name="codeInsight.parameterInfo" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="codeInsight.parameterInfo" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.parameterInfo.ParameterInfoHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="codeInsight.typeInfo" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="codeInsight.typeInfo" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.ExpressionTypeProvider"/>
     </extensionPoint>
 
@@ -925,7 +927,7 @@
 
     <extensionPoint name="codeInsight.containerProvider" interface="com.intellij.codeInsight.ContainerProvider"/>
 
-    <extensionPoint name="codeInsight.fillParagraph" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="codeInsight.fillParagraph" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.fillParagraph.ParagraphFillHandler"/>
     </extensionPoint>
 
@@ -963,30 +965,30 @@
     <extensionPoint name="defaultLiveTemplatesProvider"
                     interface="com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider"/>
 
-    <extensionPoint name="codeInsight.implementMethod" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="codeInsight.implementMethod" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.LanguageCodeInsightActionHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="codeInsight.overrideMethod" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="codeInsight.overrideMethod" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.LanguageCodeInsightActionHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="codeInsight.delegateMethods" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="codeInsight.delegateMethods" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.LanguageCodeInsightActionHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="codeInsight.gotoSuper" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="codeInsight.gotoSuper" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.LanguageCodeInsightActionHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="codeInsight.lineMarkerProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.daemon.LineMarkerProvider"/>
+    <extensionPoint name="codeInsight.lineMarkerProvider" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.gutter.LineMarkerProvider"/>
     </extensionPoint>
 
     <extensionPoint name="codeInsight.surroundWithRangeAdjuster"
                     interface="com.intellij.codeInsight.generation.surroundWith.SurroundWithRangeAdjuster"/>
 
-    <extensionPoint name="lang.substitutor" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.substitutor" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.psi.LanguageSubstitutor"/>
     </extensionPoint>
 
@@ -1017,23 +1019,23 @@
                     interface="com.intellij.execution.testframework.TestStatusListener"/>
 
     <extensionPoint name="testCreator"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.testIntegration.TestCreator"/>
     </extensionPoint>
 
     <extensionPoint name="lang.smartEnterProcessor"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor"/>
     </extensionPoint>
 
-    <extensionPoint name="callHierarchyProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="callHierarchyProvider" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.ide.hierarchy.HierarchyProvider"/>
     </extensionPoint>
-    <extensionPoint name="methodHierarchyProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="methodHierarchyProvider" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.ide.hierarchy.HierarchyProvider"/>
     </extensionPoint>
 
-    <extensionPoint name="typeHierarchyProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="typeHierarchyProvider" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.ide.hierarchy.HierarchyProvider"/>
     </extensionPoint>
 
@@ -1046,7 +1048,7 @@
     <extensionPoint name="documentationProvider"
                     interface="com.intellij.lang.documentation.DocumentationProvider"/>
 
-    <extensionPoint name="lang.documentationFixer" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="lang.documentationFixer" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.documentation.DocCommentFixer"/>
     </extensionPoint>
 
@@ -1057,7 +1059,7 @@
 
     <extensionPoint name="statementUpDownMover" interface="com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover"/>
 
-    <extensionPoint name="moveLeftRightHandler" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="moveLeftRightHandler" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass"
             implements="com.intellij.codeInsight.editorActions.moveLeftRight.MoveElementLeftRightHandler"/>
     </extensionPoint>
@@ -1118,7 +1120,7 @@
 
     <extensionPoint name="stacktrace.fold" beanClass="com.intellij.execution.console.CustomizableConsoleFoldingBean"/>
     <extensionPoint name="changeSignatureDetector"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.refactoring.changeSignature.inplace.LanguageChangeSignatureDetector"/>
     </extensionPoint>
 
@@ -1142,7 +1144,7 @@
                     area="PROJECT"/>
 
     <extensionPoint name="codeBlockProvider"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
+                    beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.CodeBlockProvider"/>
     </extensionPoint>
 
@@ -1360,7 +1362,7 @@
 
     <applicationService serviceImplementation="com.intellij.util.net.ssl.CertificateManager"/>
 
-    <applicationService serviceInterface="com.intellij.codeInsight.daemon.LineMarkerSettings"
+    <applicationService serviceInterface="consulo.language.editor.gutter.LineMarkerSettings"
                         serviceImplementation="com.intellij.codeInsight.daemon.impl.LineMarkerSettingsImpl"/>
 
     <applicationService serviceInterface="com.intellij.remote.ext.CredentialsManager"
@@ -1445,7 +1447,7 @@
     <applicationService serviceInterface="com.intellij.openapi.options.colors.ColorSettingsPages"
                         serviceImplementation="com.intellij.openapi.options.colors.pages.ColorSettingsPagesImpl"/>
 
-    <applicationService serviceInterface="com.intellij.psi.search.scope.packageSet.PackageSetFactory"
+    <applicationService serviceInterface="consulo.language.psi.search.scope.PackageSetFactory"
                         serviceImplementation="com.intellij.psi.search.scope.packageSet.PackageSetFactoryImpl"/>
 
     <scopeParserExtension implementation="com.intellij.psi.search.scope.packageSet.FilePackageSetParserExtension"/>
@@ -1819,7 +1821,7 @@
     <applicationService serviceInterface="consulo.language.psi.PsiReferenceService"
                         serviceImplementation="com.intellij.psi.PsiReferenceServiceImpl"/>
 
-    <applicationService serviceInterface="com.intellij.patterns.compiler.PatternCompilerFactory"
+    <applicationService serviceInterface="consulo.language.pattern.compiler.PatternCompilerFactory"
                         serviceImplementation="com.intellij.patterns.compiler.PatternCompilerFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.ide.PowerSaveMode"
@@ -1878,7 +1880,7 @@
                     serviceImplementation="com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.codeStyle.CodeStyleManager"
                     serviceImplementation="com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl"/>
-    <projectService serviceInterface="com.intellij.pom.PomModel"
+    <projectService serviceInterface="consulo.language.pom.PomModel"
                     serviceImplementation="com.intellij.pom.core.impl.PomModelImpl"/>
     <projectService serviceInterface="com.intellij.psi.impl.include.FileIncludeManager"
                     serviceImplementation="com.intellij.psi.impl.include.FileIncludeManagerImpl"/>
@@ -1936,10 +1938,14 @@
     <projectService serviceInterface="com.intellij.ide.hierarchy.HierarchyBrowserManager"
                     serviceImplementation="com.intellij.ide.hierarchy.HierarchyBrowserManager"/>
 
-    <projectService serviceInterface="com.intellij.psi.search.scope.packageSet.NamedScopeManager"
-                    serviceImplementation="com.intellij.psi.search.scope.packageSet.NamedScopeManager"/>
+    <projectService serviceInterface="consulo.language.psi.search.scope.impl.NamedScopeManager"
+                    serviceImplementation="consulo.language.psi.search.scope.impl.NamedScopeManager"/>
+    <namedScopesHolderProvider implementation="consulo.language.psi.search.scope.impl.DefaultNamedScopesHolderProvider"/>
+
     <projectService serviceInterface="com.intellij.packageDependencies.DependencyValidationManager"
                     serviceImplementation="com.intellij.packageDependencies.DependencyValidationManagerImpl"/>
+    <namedScopesHolderProvider implementation="com.intellij.packageDependencies.DependencyValidationNamedScopesHolderProvider"/>
+
     <projectService serviceInterface="com.intellij.packageDependencies.DependenciesToolWindow"
                     serviceImplementation="com.intellij.packageDependencies.DependenciesToolWindow"/>
 
@@ -2296,7 +2302,7 @@
                     serviceImplementation="com.intellij.ide.todo.TodoView"/>
     <projectService serviceInterface="com.intellij.ide.structureView.StructureViewFactory"
                     serviceImplementation="com.intellij.ide.structureView.impl.StructureViewFactoryImpl"/>
-    <projectService serviceInterface="com.intellij.codeInspection.InspectionManager"
+    <projectService serviceInterface="consulo.language.editor.inspection.scheme.InspectionManager"
                     serviceImplementation="com.intellij.codeInspection.ex.InspectionManagerEx"/>
 
     <projectService serviceImplementation="com.intellij.usageView.UsageViewManager"/>
@@ -2456,7 +2462,7 @@
     <projectService serviceInterface="com.intellij.refactoring.RefactoringFactory"
                     serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringFactoryImpl"/>
 
-    <projectService serviceInterface="com.intellij.lang.injection.InjectedLanguageManager"
+    <projectService serviceInterface="consulo.language.inject.InjectedLanguageManager"
                     serviceImplementation="com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.vcs.changes.patch.PatchBaseDirectoryDetector"
                     serviceImplementation="com.intellij.openapi.vcs.changes.patch.PsiPatchBaseDirectoryDetector"/>

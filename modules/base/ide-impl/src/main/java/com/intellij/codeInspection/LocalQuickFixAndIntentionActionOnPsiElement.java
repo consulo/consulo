@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

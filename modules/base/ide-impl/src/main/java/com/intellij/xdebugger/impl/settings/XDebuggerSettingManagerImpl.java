@@ -17,6 +17,7 @@ package com.intellij.xdebugger.impl.settings;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.JDOMUtil;
+import consulo.component.persist.StoragePathMacros;
 import consulo.util.collection.SmartList;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.ui;
 
-import com.intellij.codeInspection.InspectionProfileEntry;
+import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.ui.ex.event.DocumentAdapter;
 import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;

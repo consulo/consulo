@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInspection.actions.CodeCleanupAction;
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;

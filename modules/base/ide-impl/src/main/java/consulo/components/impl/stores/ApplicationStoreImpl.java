@@ -17,7 +17,7 @@ package consulo.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
 import consulo.application.Application;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import consulo.component.messagebus.MessageBus;

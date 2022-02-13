@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.checkin;
 
 import consulo.application.CommonBundle;
 import com.intellij.codeInsight.CodeSmellInfo;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.logging.Logger;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.DumbService;

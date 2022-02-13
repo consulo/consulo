@@ -4,10 +4,11 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.diagnostic.PluginException;
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.annotation.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
+import consulo.language.editor.annotation.AnnotationSession;
+import consulo.language.editor.annotation.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

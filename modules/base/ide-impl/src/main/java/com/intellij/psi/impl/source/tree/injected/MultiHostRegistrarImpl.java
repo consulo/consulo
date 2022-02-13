@@ -2,7 +2,7 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import consulo.language.Language;
-import com.intellij.lang.injection.MultiHostRegistrar;
+import consulo.language.inject.MultiHostRegistrar;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInspection.reference;
 
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

@@ -15,7 +15,6 @@
  */
 package com.intellij.dupLocator.index;
 
-import com.intellij.codeInspection.*;
 import com.intellij.dupLocator.DuplicatesProfile;
 import com.intellij.dupLocator.DuplocateVisitor;
 import com.intellij.dupLocator.DuplocatorState;
@@ -26,6 +25,11 @@ import consulo.language.ast.LighterAST;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.TreeBackedLighterAST;
 import consulo.application.progress.ProgressManager;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.project.Project;
 import consulo.content.FileIndex;
 import consulo.project.content.GeneratedSourcesFilter;

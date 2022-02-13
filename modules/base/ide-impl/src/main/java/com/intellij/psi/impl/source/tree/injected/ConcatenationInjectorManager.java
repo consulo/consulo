@@ -2,8 +2,8 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.lang.injection.ConcatenationAwareInjector;
-import com.intellij.lang.injection.MultiHostInjector;
-import com.intellij.lang.injection.MultiHostRegistrar;
+import consulo.language.inject.MultiHostInjector;
+import consulo.language.inject.MultiHostRegistrar;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;

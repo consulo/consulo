@@ -26,6 +26,7 @@ package com.intellij.codeInspection;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
+import consulo.language.editor.inspection.InspectionsBundle;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

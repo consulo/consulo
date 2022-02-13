@@ -13,7 +13,7 @@ import consulo.editor.Editor;
 import consulo.editor.ScrollType;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.lang.*;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;

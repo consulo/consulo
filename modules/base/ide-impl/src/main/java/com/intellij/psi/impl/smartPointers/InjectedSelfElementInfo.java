@@ -19,7 +19,7 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.*;
 import consulo.language.util.LanguageUtil;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.project.Project;
 import com.intellij.openapi.util.ProperTextRange;

@@ -15,10 +15,10 @@
  */
 package com.intellij.pom.impl;
 
-import com.intellij.pom.PomManager;
-import com.intellij.pom.PomModelAspect;
-import com.intellij.pom.PomTransaction;
-import com.intellij.pom.event.PomModelEvent;
+import consulo.language.pom.PomManager;
+import consulo.language.pom.PomModelAspect;
+import consulo.language.pom.PomTransaction;
+import consulo.language.pom.event.PomModelEvent;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nullable;

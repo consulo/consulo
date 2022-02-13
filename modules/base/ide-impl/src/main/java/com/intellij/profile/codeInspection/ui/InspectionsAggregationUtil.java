@@ -15,7 +15,7 @@
  */
 package com.intellij.profile.codeInspection.ui;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Queue;

@@ -17,7 +17,7 @@
 package org.intellij.plugins.intelliLang.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.patterns.StringPattern;
+import consulo.language.pattern.StringPattern;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 

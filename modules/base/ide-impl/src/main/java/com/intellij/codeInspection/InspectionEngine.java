@@ -15,15 +15,17 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.analysis.AnalysisScope;
+import consulo.language.editor.AnalysisScope;
 import com.intellij.codeInsight.daemon.impl.Divider;
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
-import com.intellij.codeInspection.reference.RefElement;
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
 import com.intellij.codeInspection.reference.RefManagerImpl;
-import com.intellij.codeInspection.reference.RefVisitor;
+import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.application.internal.concurrency.JobLauncher;
 import consulo.language.Language;
 import com.intellij.openapi.progress.EmptyProgressIndicator;

@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.editor.EditorFactory;
 import consulo.editor.colorScheme.event.EditorColorsListener;
 import consulo.editor.colorScheme.EditorColorsManager;

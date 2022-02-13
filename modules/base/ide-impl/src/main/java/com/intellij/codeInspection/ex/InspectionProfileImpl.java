@@ -16,14 +16,12 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.InspectionProfileConvertor;
-import com.intellij.codeInspection.InspectionEP;
-import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.InspectionProfileEntry;
-import com.intellij.codeInspection.ModifiableModel;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.inspection.scheme.InspectionEP;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
@@ -34,11 +32,10 @@ import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.profile.DefaultProjectProfileManager;
 import com.intellij.profile.ProfileEx;
-import com.intellij.profile.ProfileManager;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.SeverityProvider;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
+import consulo.language.psi.search.scope.NamedScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;

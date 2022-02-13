@@ -46,7 +46,7 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import com.intellij.pom.NonNavigatable;
+import consulo.navigation.NonNavigatable;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ui.ex.RelativePoint;

@@ -11,7 +11,7 @@ import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
-import com.intellij.patterns.ElementPattern;
+import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.Weigher;
 import com.intellij.psi.WeighingService;

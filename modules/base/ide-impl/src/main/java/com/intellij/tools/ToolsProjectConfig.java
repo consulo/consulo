@@ -18,6 +18,7 @@ package com.intellij.tools;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.project.Project;
 import consulo.util.xml.serializer.annotation.Tag;
 

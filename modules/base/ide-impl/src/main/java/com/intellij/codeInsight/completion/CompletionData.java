@@ -29,8 +29,8 @@ import consulo.document.Document;
 import com.intellij.openapi.paths.PsiDynaReference;
 import consulo.project.IndexNotReadyException;
 import consulo.document.util.TextRange;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.ObjectPattern;
+import consulo.language.pattern.ElementPattern;
+import consulo.language.pattern.ObjectPattern;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.filters.TrueFilter;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
@@ -42,8 +42,8 @@ import javax.annotation.Nullable;
 
 import java.util.*;
 
-import static com.intellij.patterns.StandardPatterns.character;
-import static com.intellij.patterns.StandardPatterns.not;
+import static consulo.language.pattern.StandardPatterns.character;
+import static consulo.language.pattern.StandardPatterns.not;
 
 /**
  * @deprecated see {@link CompletionContributor}

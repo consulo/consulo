@@ -15,7 +15,7 @@
  */
 package com.intellij.framework.detection;
 
-import com.intellij.patterns.*;
+import consulo.language.pattern.*;
 import consulo.language.util.ProcessingContext;
 import consulo.language.psi.stub.FileContent;
 import com.intellij.util.text.CharArrayUtil;

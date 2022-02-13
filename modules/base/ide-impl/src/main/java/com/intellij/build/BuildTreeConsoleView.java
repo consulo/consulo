@@ -46,7 +46,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import com.intellij.pom.NonNavigatable;
+import consulo.navigation.NonNavigatable;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.NonOpaquePanel;

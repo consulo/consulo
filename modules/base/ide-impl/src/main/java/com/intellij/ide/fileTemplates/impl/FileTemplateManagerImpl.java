@@ -26,7 +26,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.logging.Logger;
 import consulo.component.extension.Extensions;

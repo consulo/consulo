@@ -29,15 +29,16 @@ import javax.annotation.Nullable;
 /**
  * A reference to a PSI element. For example, the variable name used in an expression.
  * The "Go to Declaration" action can be used to go from a reference to the element it references.
- * Generally returned from {@link PsiElement#getReferences()} and {@link com.intellij.psi.PsiReferenceService#getReferences},
- * but may be contributed to some elements by third party plugins via {@link com.intellij.psi.PsiReferenceContributor}
+ * Generally returned from {@link PsiElement#getReferences()} and {@link PsiReferenceService#getReferences},
+ * but may be contributed to some elements by third party plugins via {@link PsiReferenceContributor}
  *
  * @see PsiPolyVariantReference
  * @see PsiElement#getReference()
  * @see PsiElement#getReferences()
- * @see com.intellij.psi.PsiReferenceService#getReferences(PsiElement, com.intellij.psi.PsiReferenceService.Hints)
- * @see com.intellij.psi.PsiReferenceBase
- * @see com.intellij.psi.PsiReferenceContributor
+ * @see PsiReferenceService#getReferences(PsiElement, PsiReferenceService.Hints)
+ * @see PsiReferenceBase
+ * @see PsiReferenceContributor
+ * @see EmptyResolveMessageProvider
  */
 public interface PsiReference {
   public static final PsiReference[] EMPTY_ARRAY = new PsiReference[0];

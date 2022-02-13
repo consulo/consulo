@@ -15,8 +15,8 @@
  */
 package com.intellij.internal;
 
-import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;

@@ -17,7 +17,7 @@
 package com.intellij.psi.util;
 
 import consulo.document.util.TextRange;
-import com.intellij.psi.ElementManipulators;
+import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import javax.annotation.Nonnull;

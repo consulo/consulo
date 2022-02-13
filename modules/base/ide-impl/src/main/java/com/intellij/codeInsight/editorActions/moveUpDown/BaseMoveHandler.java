@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.editorActions.moveUpDown;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.DependentLanguage;
+import consulo.language.DependentLanguage;
 import consulo.dataContext.DataContext;
 import consulo.editor.Caret;
 import consulo.document.Document;

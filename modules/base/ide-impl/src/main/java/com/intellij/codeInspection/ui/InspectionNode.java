@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ui;
 
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

@@ -15,6 +15,7 @@
  */
 package com.intellij.execution.testframework.sm;
 
+import consulo.component.persist.StoragePathMacros;
 import consulo.execution.configuration.ConfigurationType;
 import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;

@@ -24,7 +24,7 @@ import jakarta.inject.Singleton;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.TaskRepository;
 import consulo.util.xml.serializer.annotation.AbstractCollection;

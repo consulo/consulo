@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.evaluate.quick.common;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.concurrency.ResultConsumer;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;

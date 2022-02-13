@@ -1,5 +1,7 @@
 package com.intellij.codeInspection;
 
+import consulo.language.editor.inspection.SuppressQuickFix;
+import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.ThreeState;
 import javax.annotation.Nonnull;

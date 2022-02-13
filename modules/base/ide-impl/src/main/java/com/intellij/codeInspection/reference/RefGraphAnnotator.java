@@ -16,6 +16,8 @@
 package com.intellij.codeInspection.reference;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.inspection.GlobalInspectionTool;
+import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.psi.PsiElement;
 
 /**
@@ -23,7 +25,7 @@ import consulo.language.psi.PsiElement;
  * inspection run.
  *
  * @author anna
- * @see com.intellij.codeInspection.GlobalInspectionTool#getAnnotator
+ * @see GlobalInspectionTool#getAnnotator
  */
 public abstract class RefGraphAnnotator {
   public static final ExtensionPointName<RefGraphAnnotator> EP_NAME = ExtensionPointName.create("consulo.refGraphAnnotator");

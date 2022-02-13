@@ -19,6 +19,7 @@
  */
 package com.intellij.lang;
 
+import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.language.LanguageExtension;
 import consulo.language.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;

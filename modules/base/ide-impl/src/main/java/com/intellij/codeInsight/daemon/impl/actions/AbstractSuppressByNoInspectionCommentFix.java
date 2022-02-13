@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.daemon.impl.actions;
 
 import com.intellij.codeInsight.FileModificationService;
-import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.codeInspection.SuppressIntentionAction;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.intention.SuppressIntentionAction;
 import com.intellij.codeInspection.SuppressionUtil;
 import consulo.language.Language;
 import consulo.application.ApplicationManager;

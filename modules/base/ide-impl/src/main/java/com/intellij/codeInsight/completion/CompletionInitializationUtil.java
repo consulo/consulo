@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.language.file.inject.DocumentWindow;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.application.WriteAction;
 import consulo.editor.Caret;
 import consulo.document.Document;

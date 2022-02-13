@@ -16,7 +16,7 @@ import consulo.project.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.PomTargetPsiElement;
+import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ArrayUtil;

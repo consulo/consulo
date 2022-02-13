@@ -15,10 +15,10 @@
  */
 package com.intellij.psi.impl.source.resolve.reference;
 
-import com.intellij.patterns.PlatformPatterns;
+import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiComment;
-import com.intellij.psi.PsiReferenceContributor;
-import com.intellij.psi.PsiReferenceRegistrar;
+import consulo.language.psi.PsiReferenceContributor;
+import consulo.language.psi.PsiReferenceRegistrar;
 import com.intellij.psi.ReferenceProviderType;
 import javax.annotation.Nonnull;
 

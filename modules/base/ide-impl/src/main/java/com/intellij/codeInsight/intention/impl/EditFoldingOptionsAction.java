@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.intention.impl;
 
 import com.intellij.application.options.editor.CodeFoldingConfigurable;
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionAction;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;

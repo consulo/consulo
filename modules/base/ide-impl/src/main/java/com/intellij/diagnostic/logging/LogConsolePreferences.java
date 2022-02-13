@@ -21,7 +21,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;

@@ -17,7 +17,7 @@
   <extensionPoints>
     <extensionPoint name="scratch.rootType" interface="com.intellij.ide.scratch.RootType"/>
 
-    <extensionPoint name="scratch.creationHelper" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="scratch.creationHelper" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.ide.scratch.ScratchFileCreationHelper"/>
     </extensionPoint>
   </extensionPoints>

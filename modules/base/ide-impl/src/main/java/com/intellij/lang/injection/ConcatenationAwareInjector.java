@@ -23,6 +23,7 @@
 package com.intellij.lang.injection;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;

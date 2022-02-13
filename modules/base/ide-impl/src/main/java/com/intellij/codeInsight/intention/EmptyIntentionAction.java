@@ -16,9 +16,10 @@
 
 package com.intellij.codeInsight.intention;
 
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.application.AllIcons;
 import consulo.editor.Editor;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiFile;

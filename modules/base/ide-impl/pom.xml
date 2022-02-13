@@ -127,6 +127,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-language-editor-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-module-api</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -299,10 +304,6 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>microba</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>dk.brics.automaton</groupId>
-      <artifactId>automaton</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>

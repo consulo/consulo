@@ -4,7 +4,7 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.disposer.Disposable;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;

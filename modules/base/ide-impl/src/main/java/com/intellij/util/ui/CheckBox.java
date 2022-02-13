@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.codeInspection.InspectionProfileEntry;
+import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

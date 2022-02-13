@@ -15,6 +15,8 @@
  */
 package com.intellij.profile;
 
+import consulo.language.editor.inspection.scheme.Profile;
+import consulo.language.editor.inspection.scheme.ProfileManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;

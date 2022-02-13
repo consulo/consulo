@@ -22,6 +22,7 @@ import consulo.compiler.CompilerBundle;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.project.Project;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.ui.InputValidator;

@@ -127,7 +127,6 @@
         <include>com.github.markusbernhardt:proxy-vole</include>
         <include>org.apache.commons:commons-imaging</include>
         <include>com.google.code.gson:gson</include>
-        <include>dk.brics.automaton:automaton</include>
         <include>net.bytebuddy:byte-buddy</include>
         <include>org.apache.commons:commons-compress</include>
         <include>commons-codec:commons-codec</include>

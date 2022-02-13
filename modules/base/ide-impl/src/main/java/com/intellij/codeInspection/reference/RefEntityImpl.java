@@ -20,6 +20,9 @@ import consulo.application.ApplicationManager;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefManager;
+import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

@@ -18,7 +18,7 @@ package com.intellij.openapi.project.impl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.project.ProjectReloadState;
 import javax.annotation.Nullable;
 import jakarta.inject.Singleton;

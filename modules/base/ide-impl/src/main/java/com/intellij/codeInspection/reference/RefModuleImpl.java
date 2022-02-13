@@ -17,6 +17,10 @@ package com.intellij.codeInspection.reference;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefManager;
+import consulo.language.editor.inspection.reference.RefModule;
+import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.ui.image.Image;

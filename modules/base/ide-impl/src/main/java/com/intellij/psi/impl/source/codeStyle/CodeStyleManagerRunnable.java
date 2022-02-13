@@ -23,7 +23,7 @@ import com.intellij.formatting.FormattingModelBuilder;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.LanguageFormatting;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.CodeStyleSettings;

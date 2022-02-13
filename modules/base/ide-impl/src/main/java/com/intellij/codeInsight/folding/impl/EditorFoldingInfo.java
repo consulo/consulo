@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.folding.impl;
 
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.editor.Editor;
 import consulo.editor.FoldRegion;
 import consulo.document.util.TextRange;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.lang.LanguageExtensionPoint;
+import consulo.language.LanguageExtensionPoint;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.annotation.DeprecationInfo;
 

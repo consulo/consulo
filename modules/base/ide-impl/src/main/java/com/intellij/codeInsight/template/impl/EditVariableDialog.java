@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import consulo.application.CommonBundle;
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.template.Macro;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.codeInsight.template.macro.MacroFactory;

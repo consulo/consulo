@@ -15,6 +15,8 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
+import consulo.language.psi.search.scope.PackageSetBase;
+
 /**
  * User: anna
  * Date: Jul 26, 2010

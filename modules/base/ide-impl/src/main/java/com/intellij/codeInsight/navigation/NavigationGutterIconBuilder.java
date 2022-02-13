@@ -20,8 +20,9 @@ import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.ide.TypePresentationService;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.PsiElementListCellRenderer;
-import com.intellij.lang.annotation.Annotation;
-import com.intellij.lang.annotation.AnnotationHolder;
+import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.annotation.Annotation;
+import consulo.language.editor.annotation.AnnotationHolder;
 import com.intellij.navigation.GotoRelatedItem;
 import consulo.editor.markup.GutterIconRenderer;
 import consulo.project.Project;
@@ -44,7 +45,7 @@ import java.util.*;
 
 /**
  * DOM-specific builder for {@link GutterIconRenderer}
- * and {@link com.intellij.codeInsight.daemon.LineMarkerInfo}.
+ * and {@link LineMarkerInfo}.
  *
  * @author peter
  */

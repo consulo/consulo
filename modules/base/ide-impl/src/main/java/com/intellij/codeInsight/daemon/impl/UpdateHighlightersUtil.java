@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import consulo.editor.markup.GutterMark;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;

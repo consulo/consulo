@@ -15,15 +15,17 @@
  */
 package com.intellij.profile;
 
-import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.disposer.Disposable;
+import consulo.language.editor.inspection.scheme.Profile;
+import consulo.language.editor.inspection.scheme.ProfileManager;
 
 /**
  * User: anna
  * Date: 29-Nov-2005
  */
-public abstract class ApplicationProfileManager implements ProfileManager{
+public abstract class ApplicationProfileManager implements ProfileManager {
   public abstract Profile createProfile();
 
   public abstract void addProfileChangeListener(ProfileChangeAdapter listener);

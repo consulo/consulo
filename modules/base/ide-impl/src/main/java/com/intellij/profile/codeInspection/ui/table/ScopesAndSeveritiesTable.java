@@ -15,13 +15,13 @@
  */
 package com.intellij.profile.codeInspection.ui.table;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.Descriptor;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import com.intellij.codeInspection.ex.ScopeToolState;
+import consulo.language.editor.inspection.scheme.ScopeToolState;
 import consulo.dataContext.DataManager;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -30,7 +30,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.profile.codeInspection.ui.ScopeOrderComparator;
 import com.intellij.profile.codeInspection.ui.ScopesChooser;
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
+import consulo.language.psi.search.scope.NamedScope;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ArrayUtil;

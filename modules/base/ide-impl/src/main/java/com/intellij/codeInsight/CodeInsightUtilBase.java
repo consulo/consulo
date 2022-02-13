@@ -23,6 +23,7 @@ import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;

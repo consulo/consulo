@@ -16,10 +16,12 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.GlobalInspectionContext;
-import com.intellij.codeInspection.InspectionProfile;
+import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.codeInspection.LocalInspectionEP;
-import com.intellij.codeInspection.LocalInspectionTool;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;

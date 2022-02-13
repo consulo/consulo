@@ -15,7 +15,7 @@
  */
 package com.intellij.packageDependencies.actions;
 
-import com.intellij.analysis.AnalysisScope;
+import consulo.language.editor.AnalysisScope;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packageDependencies.DependenciesBuilder;

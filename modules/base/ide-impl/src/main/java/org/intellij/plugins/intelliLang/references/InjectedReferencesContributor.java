@@ -15,19 +15,16 @@
  */
 package org.intellij.plugins.intelliLang.references;
 
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.*;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
-import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.*;
+import consulo.language.pattern.PlatformPatterns;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.impl.source.tree.injected.InjectedReferenceVisitor;
 import com.intellij.psi.injection.ReferenceInjector;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.language.psi.PsiReference;
-import consulo.language.psi.PsiReferenceProvider;
 import consulo.util.dataholder.Key;
 import org.intellij.plugins.intelliLang.Configuration;
 import org.intellij.plugins.intelliLang.inject.InjectedLanguage;

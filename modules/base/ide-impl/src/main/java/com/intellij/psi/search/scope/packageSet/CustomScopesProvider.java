@@ -22,6 +22,8 @@ package com.intellij.psi.search.scope.packageSet;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.psi.search.scope.NamedScope;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;

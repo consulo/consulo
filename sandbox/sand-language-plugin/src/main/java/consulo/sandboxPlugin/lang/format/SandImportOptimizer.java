@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.lang.format;
 
-import com.intellij.lang.ImportOptimizer;
+import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.language.psi.PsiFile;
 import consulo.sandboxPlugin.lang.psi.SandFile;
 

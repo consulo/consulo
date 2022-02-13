@@ -6,7 +6,7 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.application.progress.ProgressManager;
 import consulo.document.util.FileContentUtilCore;
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.document.Document;

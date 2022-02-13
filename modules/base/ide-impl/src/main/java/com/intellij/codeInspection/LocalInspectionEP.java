@@ -16,6 +16,8 @@
 package com.intellij.codeInspection;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.scheme.InspectionEP;
 import consulo.util.xml.serializer.annotation.Attribute;
 
 /**

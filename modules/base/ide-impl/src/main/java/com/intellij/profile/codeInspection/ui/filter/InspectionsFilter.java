@@ -16,11 +16,11 @@
 package com.intellij.profile.codeInspection.ui.filter;
 
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
-import com.intellij.codeInspection.ex.ScopeToolState;
-import com.intellij.codeInspection.ex.Tools;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.ScopeToolState;
+import consulo.language.editor.inspection.scheme.Tools;
 import consulo.language.Language;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

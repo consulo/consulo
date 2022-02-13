@@ -15,17 +15,20 @@
  */
 package com.intellij.codeInspection.ui;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.inspection.*;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
 import com.intellij.codeInspection.reference.*;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.components.PathMacroManager;
 import consulo.editor.Editor;
+import consulo.language.editor.inspection.reference.*;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;

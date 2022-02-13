@@ -16,8 +16,9 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
 import consulo.editor.Editor;
 import consulo.project.Project;

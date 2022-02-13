@@ -17,6 +17,8 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.search.scope.NamedScope;
+
 import javax.annotation.Nonnull;
 
 @FunctionalInterface

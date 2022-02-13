@@ -17,8 +17,8 @@
 package com.intellij.pom.tree.events.impl;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.pom.PomModelAspect;
-import com.intellij.pom.event.PomChangeSet;
+import consulo.language.pom.PomModelAspect;
+import consulo.language.pom.event.PomChangeSet;
 import com.intellij.pom.tree.events.TreeChange;
 import com.intellij.pom.tree.events.TreeChangeEvent;
 import consulo.language.psi.PsiFile;

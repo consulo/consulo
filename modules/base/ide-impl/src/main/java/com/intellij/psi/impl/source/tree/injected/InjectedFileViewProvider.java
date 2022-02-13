@@ -4,7 +4,7 @@ package com.intellij.psi.impl.source.tree.injected;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.Language;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.Segment;

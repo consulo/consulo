@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.source.codeStyle;
 
 import consulo.component.persist.RoamingType;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;

@@ -15,8 +15,8 @@
  */
 package com.intellij.pom.tree;
 
-import com.intellij.pom.PomModel;
-import com.intellij.pom.event.PomModelEvent;
+import consulo.language.pom.PomModel;
+import consulo.language.pom.event.PomModelEvent;
 import com.intellij.pom.tree.events.TreeChangeEvent;
 
 public class TreeAspectEvent extends PomModelEvent {

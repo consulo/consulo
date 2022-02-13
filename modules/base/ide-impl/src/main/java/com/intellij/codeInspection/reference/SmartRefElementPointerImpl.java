@@ -16,6 +16,9 @@
 
 package com.intellij.codeInspection.reference;
 
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefManager;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;

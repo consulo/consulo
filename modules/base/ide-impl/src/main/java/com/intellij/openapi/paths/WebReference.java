@@ -18,7 +18,7 @@ package com.intellij.openapi.paths;
 import com.intellij.ide.BrowserUtil;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.PsiReferenceBase;
+import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.SyntheticElement;
 import com.intellij.psi.impl.FakePsiElement;
 import javax.annotation.Nonnull;

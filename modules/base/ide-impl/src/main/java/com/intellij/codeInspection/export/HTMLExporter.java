@@ -24,10 +24,10 @@
  */
 package com.intellij.codeInspection.export;
 
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.HTMLComposerImpl;
-import com.intellij.codeInspection.reference.RefElement;
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import java.util.HashMap;

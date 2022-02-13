@@ -56,7 +56,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.patterns.StringPattern;
+import consulo.language.pattern.StringPattern;
 import com.intellij.psi.*;
 import consulo.content.scope.SearchScope;
 import consulo.language.ast.IElementType;

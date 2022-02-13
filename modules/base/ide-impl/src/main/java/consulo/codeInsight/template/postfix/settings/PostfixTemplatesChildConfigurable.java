@@ -21,7 +21,7 @@ import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettin
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
 import consulo.language.Language;
-import com.intellij.lang.LanguageExtensionPoint;
+import consulo.language.LanguageExtensionPoint;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.ui.CheckBoxList;

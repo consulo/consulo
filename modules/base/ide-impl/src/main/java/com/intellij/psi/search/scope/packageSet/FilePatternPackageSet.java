@@ -20,6 +20,8 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
+import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.language.psi.search.scope.PackageSet;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;

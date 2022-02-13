@@ -20,10 +20,11 @@
  */
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.CommonProblemDescriptor;
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.reference.RefEntity;
 import com.intellij.codeInspection.ui.*;
 import consulo.application.ApplicationManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

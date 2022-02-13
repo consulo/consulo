@@ -5,6 +5,8 @@ import com.intellij.codeInspection.InspectionsReportConverter;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.Tools;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

@@ -18,7 +18,7 @@ import consulo.editor.event.*;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.LangBundle;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;

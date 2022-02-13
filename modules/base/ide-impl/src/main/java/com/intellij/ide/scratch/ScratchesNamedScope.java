@@ -4,9 +4,9 @@ package com.intellij.ide.scratch;
 import com.intellij.ide.IdeBundle;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
+import consulo.language.psi.search.scope.AbstractPackageSet;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.annotation.Nonnull;

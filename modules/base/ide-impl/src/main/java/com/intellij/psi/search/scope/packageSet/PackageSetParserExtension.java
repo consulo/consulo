@@ -22,6 +22,9 @@ package com.intellij.psi.search.scope.packageSet;
 
 import consulo.language.lexer.Lexer;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.search.scope.PackageSet;
+import consulo.language.psi.search.scope.ParsingException;
+
 import javax.annotation.Nullable;
 
 public interface PackageSetParserExtension {

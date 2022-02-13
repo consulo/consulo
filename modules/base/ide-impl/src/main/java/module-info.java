@@ -102,7 +102,6 @@ open module consulo.ide.impl {
 
   requires org.lz4.java;
 
-  requires automaton;
   requires miglayout;
   requires microba;
   requires imgscalr.lib;
@@ -494,7 +493,6 @@ open module consulo.ide.impl {
   exports com.intellij.internal.tree;
   exports com.intellij.internal.validation;
   exports com.intellij.lang;
-  exports com.intellij.lang.annotation;
   exports com.intellij.lang.cacheBuilder;
   exports com.intellij.lang.customFolding;
   exports com.intellij.lang.documentation;
@@ -754,7 +752,6 @@ open module consulo.ide.impl {
   exports com.intellij.packaging.impl.ui;
   exports com.intellij.packaging.impl.ui.actions;
   exports com.intellij.packaging.ui;
-  exports com.intellij.patterns;
   exports com.intellij.patterns.compiler;
   exports com.intellij.peer.impl;
   exports com.intellij.platform;
@@ -1228,7 +1225,6 @@ open module consulo.ide.impl {
   //exports consulo.internal;
   exports consulo.internal.actions;
   exports consulo.internal.statistic;
-  exports consulo.lang.injection;
   //exports consulo.language;
   exports consulo.module.bundle;
   exports consulo.module.extension.impl;

@@ -26,6 +26,7 @@ import consulo.editor.ScrollType;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
+import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

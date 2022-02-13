@@ -25,6 +25,7 @@ import consulo.component.persist.Storage;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.component.persist.StoragePathMacros;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.ui.Messages;

@@ -19,7 +19,7 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 

@@ -13,8 +13,8 @@ import consulo.project.Project;
 import com.intellij.openapi.util.ColoredItem;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.NamedScopesHolder;
 import com.intellij.ui.FileColorManager;
 import com.intellij.util.TreeItem;
 

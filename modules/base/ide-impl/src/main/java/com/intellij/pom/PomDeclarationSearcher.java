@@ -15,6 +15,7 @@
  */
 package com.intellij.pom;
 
+import consulo.language.pom.PomTarget;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.Consumer;
 import consulo.component.extension.ExtensionPointName;

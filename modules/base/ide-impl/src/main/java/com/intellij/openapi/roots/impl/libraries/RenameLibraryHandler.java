@@ -34,7 +34,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.refactoring.rename.RenameHandler;
+import consulo.language.editor.refactoring.rename.RenameHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

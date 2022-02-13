@@ -10,7 +10,7 @@ import consulo.editor.ScrollType;
 import consulo.editor.VisualPosition;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.lang.*;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;

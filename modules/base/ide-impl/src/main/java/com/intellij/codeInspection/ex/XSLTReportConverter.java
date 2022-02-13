@@ -18,6 +18,8 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.InspectionApplication;
 import com.intellij.codeInspection.InspectionsReportConverter;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.language.editor.inspection.scheme.Tools;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.daemon.impl.actions;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import javax.annotation.Nonnull;

@@ -21,6 +21,8 @@
 package com.intellij.codeInspection;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.inspection.scheme.InspectionEP;
+import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 
 /**
  * This will be removed in future versions.

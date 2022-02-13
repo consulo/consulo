@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.checkin;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.actions.RearrangeCodeProcessor;
 import consulo.document.FileDocumentManager;
 import consulo.project.DumbService;

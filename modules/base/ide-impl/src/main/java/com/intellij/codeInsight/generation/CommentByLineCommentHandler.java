@@ -30,7 +30,7 @@ import consulo.editor.FoldRegion;
 import consulo.editor.LogicalPosition;
 import consulo.language.Language;
 import com.intellij.lang.LanguageCommenters;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;

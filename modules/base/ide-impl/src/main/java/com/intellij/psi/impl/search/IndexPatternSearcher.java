@@ -19,7 +19,7 @@ import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import consulo.application.progress.ProgressManager;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.patterns.StringPattern;
+import consulo.language.pattern.StringPattern;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.cache.CacheUtil;
 import com.intellij.psi.impl.cache.TodoCacheManager;

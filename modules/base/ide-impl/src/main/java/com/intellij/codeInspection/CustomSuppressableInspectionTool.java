@@ -16,6 +16,9 @@
 
 package com.intellij.codeInspection;
 
+import consulo.language.editor.inspection.GlobalInspectionTool;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

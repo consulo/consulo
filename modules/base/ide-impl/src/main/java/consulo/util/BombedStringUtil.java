@@ -16,7 +16,7 @@
 package consulo.util;
 
 import consulo.application.progress.ProcessCanceledException;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

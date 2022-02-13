@@ -1,18 +1,18 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.LocalQuickFixAsIntentionAdapter;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.ProblemHighlightType;
+import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.LocalQuickFixAsIntentionAdapter;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
 import com.intellij.diagnostic.PluginException;
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.annotation.Annotation;
-import com.intellij.lang.annotation.AnnotationBuilder;
-import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.lang.annotation.ProblemGroup;
+import consulo.language.editor.annotation.Annotation;
+import consulo.language.editor.annotation.AnnotationBuilder;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.ProblemGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;

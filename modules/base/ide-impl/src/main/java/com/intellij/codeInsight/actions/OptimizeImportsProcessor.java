@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.actions;
 
-import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.lang.ImportOptimizer;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.refactoring.ImportOptimizer;
 import com.intellij.lang.LanguageImportStatements;
 import consulo.module.Module;
 import consulo.project.DumbService;

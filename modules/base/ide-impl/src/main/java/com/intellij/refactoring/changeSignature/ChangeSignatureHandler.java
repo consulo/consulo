@@ -20,7 +20,7 @@ import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,15 +31,15 @@ import javax.annotation.Nullable;
 public interface ChangeSignatureHandler extends RefactoringActionHandler {
   String REFACTORING_NAME = RefactoringBundle.message("changeSignature.refactoring.name");
 
-  @javax.annotation.Nullable
+  @Nullable
   PsiElement findTargetMember(PsiFile file, Editor editor);
 
   @Nullable
   PsiElement findTargetMember(PsiElement element);
 
   @Override
-  void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @javax.annotation.Nullable DataContext dataContext);
+  void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @Nullable DataContext dataContext);
 
-  @javax.annotation.Nullable
+  @Nullable
   String getTargetNotFoundMessage();
 }

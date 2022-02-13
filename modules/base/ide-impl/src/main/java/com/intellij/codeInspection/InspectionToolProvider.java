@@ -17,6 +17,7 @@ package com.intellij.codeInspection;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.annotation.DeprecationInfo;
+import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 
 @Deprecated
 @DeprecationInfo("Use globalInspection")

@@ -1,7 +1,7 @@
 package com.intellij.coverage;
 
 import consulo.application.CommonBundle;
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.coverage.view.CoverageViewManager;
 import com.intellij.coverage.view.CoverageViewSuiteListener;
 import com.intellij.execution.configurations.RunConfigurationBase;
@@ -14,7 +14,7 @@ import com.intellij.ide.projectView.ProjectView;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.EditorFactory;

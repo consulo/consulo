@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon.quickFix;
 
 import com.intellij.codeInsight.daemon.impl.quickfix.RenameFileFix;
-import com.intellij.codeInspection.LocalQuickFix;
+import consulo.language.editor.inspection.LocalQuickFix;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.actions.CreateFromTemplateActionBase;

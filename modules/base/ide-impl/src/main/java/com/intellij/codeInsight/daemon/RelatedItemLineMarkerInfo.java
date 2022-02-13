@@ -19,6 +19,8 @@ import com.intellij.navigation.GotoRelatedItem;
 import consulo.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.document.util.TextRange;
+import consulo.language.editor.gutter.GutterIconNavigationHandler;
+import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.Function;
 import consulo.ui.image.Image;

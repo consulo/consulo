@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl;
 
-import com.intellij.psi.ElementManipulator;
-import com.intellij.psi.ElementManipulators;
+import consulo.language.psi.ElementManipulator;
+import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.ResolveCache;

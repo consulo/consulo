@@ -15,19 +15,15 @@
  */
 package com.intellij.execution.impl;
 
+import consulo.component.persist.*;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.configurations.UnknownRunConfiguration;
-import com.intellij.openapi.components.*;
-import consulo.component.persist.State;
-import consulo.component.persist.StateSplitterEx;
-import consulo.component.persist.Storage;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 import consulo.util.lang.Pair;

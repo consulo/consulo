@@ -18,9 +18,9 @@ package com.intellij.packageDependencies;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.search.scope.packageSet.ComplementPackageSet;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.psi.search.scope.packageSet.PackageSet;
+import consulo.language.psi.search.scope.ComplementPackageSet;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.PackageSet;
 import javax.annotation.Nullable;
 
 public class DependencyRule {

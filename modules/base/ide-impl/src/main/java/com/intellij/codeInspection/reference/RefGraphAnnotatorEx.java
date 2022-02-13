@@ -16,6 +16,8 @@
 
 package com.intellij.codeInspection.reference;
 
+import consulo.language.editor.inspection.reference.RefManager;
+
 public class RefGraphAnnotatorEx extends RefGraphAnnotator {
   /**
    * @param refManager to ask for additional flags {@link RefManager#getLastUsedMask()}

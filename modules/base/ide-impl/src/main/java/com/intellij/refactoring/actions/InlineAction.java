@@ -32,7 +32,7 @@ import consulo.component.extension.Extensions;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.inline.InlineRefactoringActionHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -24,8 +24,8 @@
  */
 package com.intellij.codeInspection.export;
 
-import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.codeInspection.ex.InspectionToolWrapper;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;

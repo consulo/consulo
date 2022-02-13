@@ -19,7 +19,7 @@
  */
 package com.intellij.lang;
 
-import com.intellij.lang.annotation.Annotator;
+import consulo.language.editor.annotation.Annotator;
 import consulo.container.plugin.PluginIds;
 import consulo.language.LanguageExtension;
 

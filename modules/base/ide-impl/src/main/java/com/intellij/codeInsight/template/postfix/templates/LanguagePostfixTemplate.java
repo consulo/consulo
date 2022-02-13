@@ -17,7 +17,7 @@ package com.intellij.codeInsight.template.postfix.templates;
 
 import consulo.language.Language;
 import consulo.language.LanguageExtension;
-import com.intellij.lang.LanguageExtensionPoint;
+import consulo.language.LanguageExtensionPoint;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.container.plugin.PluginIds;

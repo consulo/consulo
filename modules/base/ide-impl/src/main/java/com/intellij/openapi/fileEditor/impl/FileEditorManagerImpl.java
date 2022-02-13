@@ -35,7 +35,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.editor.Editor;
 import consulo.editor.ScrollType;
 import com.intellij.openapi.fileEditor.*;

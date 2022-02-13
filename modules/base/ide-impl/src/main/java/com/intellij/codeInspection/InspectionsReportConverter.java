@@ -1,6 +1,6 @@
 package com.intellij.codeInspection;
 
-import com.intellij.codeInspection.ex.Tools;
+import consulo.language.editor.inspection.scheme.Tools;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -22,6 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.component.extension.Extensions;
 import consulo.application.progress.ProcessCanceledException;
+import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.util.dataholder.Key;

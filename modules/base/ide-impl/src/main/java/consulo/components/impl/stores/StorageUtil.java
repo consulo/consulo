@@ -20,7 +20,7 @@ import consulo.project.ui.notification.NotificationsManager;
 import consulo.application.Application;
 import consulo.component.persist.RoamingType;
 import com.intellij.openapi.components.StateStorage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;

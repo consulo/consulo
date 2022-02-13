@@ -18,7 +18,7 @@ package com.intellij.dvcs.push;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import consulo.component.persist.StoragePathMacros;
 import consulo.util.lang.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;

@@ -18,6 +18,7 @@ package com.intellij.psi;
 import com.intellij.pom.PsiDeclaredTarget;
 import com.intellij.pom.PomRenameableTarget;
 import consulo.document.util.TextRange;
+import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;

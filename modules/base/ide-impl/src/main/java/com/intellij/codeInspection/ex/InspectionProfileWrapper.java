@@ -16,9 +16,8 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.InspectionProfileEntry;
+import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.inspection.scheme.*;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

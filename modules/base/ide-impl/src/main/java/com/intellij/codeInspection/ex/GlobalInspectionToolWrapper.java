@@ -15,13 +15,16 @@
  */
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.GlobalInspectionContext;
-import com.intellij.codeInspection.GlobalInspectionTool;
-import com.intellij.codeInspection.InspectionEP;
-import com.intellij.codeInspection.LocalInspectionTool;
+import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.GlobalInspectionTool;
+import consulo.language.editor.inspection.scheme.InspectionEP;
+import consulo.language.editor.inspection.LocalInspectionTool;
 import com.intellij.codeInspection.reference.RefGraphAnnotator;
 import com.intellij.codeInspection.reference.RefManagerImpl;
 import com.intellij.util.ArrayUtil;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.JobDescriptor;
+
 import javax.annotation.Nonnull;
 
 /**

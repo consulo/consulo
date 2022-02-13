@@ -16,7 +16,7 @@
 package com.intellij.lang.refactoring;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.changeSignature.ChangeSignatureHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,77 +48,77 @@ public abstract class RefactoringSupportProvider {
 
   /**
    * @return handler for introducing local variables in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public RefactoringActionHandler getIntroduceVariableHandler() { return null; }
 
   /**
    * @return handler for extracting methods in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public RefactoringActionHandler getExtractMethodHandler() { return null; }
 
   /**
    * @return handler for introducing constants in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public RefactoringActionHandler getIntroduceConstantHandler() { return null; }
 
   /**
    * @return handler for introducing fields in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public RefactoringActionHandler getIntroduceFieldHandler() { return null; }
 
   /**
    * @return  handler for introducing parameters in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public RefactoringActionHandler getIntroduceParameterHandler() { return null; }
 
   /**
    * @return  handler for pulling up members in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @javax.annotation.Nullable
   public RefactoringActionHandler getPullUpHandler() { return null; }
 
   /**
    * @return  handler for pushing down members in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public RefactoringActionHandler getPushDownHandler() { return null; }
 
   /**
    * @return  handler for extracting members to an interface in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @javax.annotation.Nullable
   public RefactoringActionHandler getExtractInterfaceHandler() { return null; }
 
   /**
    * @return  handler for extracting members to some module in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public RefactoringActionHandler getExtractModuleHandler() { return null; }
 
   /**
    * @return  handler for extracting super class in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public RefactoringActionHandler getExtractSuperClassHandler() { return null; }
 
   /**
    * @return  handler for changing signature in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public ChangeSignatureHandler getChangeSignatureHandler() { return null; }
@@ -131,7 +131,7 @@ public abstract class RefactoringSupportProvider {
 
   /**
    * @return  handler for extracting [delegate] class in this language
-   * @see com.intellij.refactoring.RefactoringActionHandler
+   * @see RefactoringActionHandler
    */
   @Nullable
   public RefactoringActionHandler getExtractClassHandler() {

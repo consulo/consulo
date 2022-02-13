@@ -33,9 +33,9 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
-import static com.intellij.patterns.PlatformPatterns.psiFile;
-import static com.intellij.patterns.StandardPatterns.instanceOf;
+import static consulo.language.pattern.PlatformPatterns.psiElement;
+import static consulo.language.pattern.PlatformPatterns.psiFile;
+import static consulo.language.pattern.StandardPatterns.instanceOf;
 
 /**
  * @author yole

@@ -50,7 +50,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.lang.LanguageFormatting;
 import consulo.language.version.LanguageVersion;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.AccessToken;

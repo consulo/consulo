@@ -23,6 +23,9 @@ package com.intellij.psi.search.scope.packageSet;
 import com.intellij.analysis.AnalysisScopeBundle;
 import consulo.language.lexer.Lexer;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
+import consulo.language.psi.search.scope.PackageSet;
+import consulo.language.psi.search.scope.ParsingException;
+
 import javax.annotation.Nullable;
 
 public class FilePackageSetParserExtension implements PackageSetParserExtension {

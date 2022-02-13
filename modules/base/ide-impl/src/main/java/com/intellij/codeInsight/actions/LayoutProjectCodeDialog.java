@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.actions;
 
-import com.intellij.codeInsight.CodeInsightBundle;
+import consulo.language.editor.CodeInsightBundle;
 import com.intellij.find.FindSettings;
 import com.intellij.find.impl.FindDialog;
 import com.intellij.find.impl.FindInProjectUtil;

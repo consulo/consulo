@@ -3,8 +3,8 @@
 package com.intellij.codeInsight.problems;
 
 import com.intellij.codeInsight.daemon.impl.*;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.HighlightInfoHolder;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;

@@ -15,7 +15,7 @@
  */
 package com.intellij.profile.codeInspection.ui.table;
 
-import com.intellij.lang.annotation.HighlightSeverity;
+import consulo.language.editor.annotation.HighlightSeverity;
 
 /**
  * @author Dmitry Batkovich

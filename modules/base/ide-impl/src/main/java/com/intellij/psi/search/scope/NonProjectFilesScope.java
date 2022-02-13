@@ -20,9 +20,9 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.content.scope.ProjectScopes;
-import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
+import consulo.language.psi.search.scope.AbstractPackageSet;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.application.ui.awt.Colored;
 import com.intellij.util.ArrayUtil;
 

@@ -32,7 +32,7 @@ import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.navigation.Navigatable;
 import com.intellij.pom.PomDeclarationSearcher;
-import com.intellij.pom.PomTarget;
+import consulo.language.pom.PomTarget;
 import com.intellij.pom.PsiDeclaredTarget;
 import com.intellij.pom.references.PomService;
 import com.intellij.psi.search.PsiSearchHelper;

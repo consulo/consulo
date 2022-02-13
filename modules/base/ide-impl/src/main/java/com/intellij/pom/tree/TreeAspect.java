@@ -15,9 +15,9 @@
  */
 package com.intellij.pom.tree;
 
-import com.intellij.pom.PomModel;
-import com.intellij.pom.PomModelAspect;
-import com.intellij.pom.event.PomModelEvent;
+import consulo.language.pom.PomModel;
+import consulo.language.pom.PomModelAspect;
+import consulo.language.pom.event.PomModelEvent;
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

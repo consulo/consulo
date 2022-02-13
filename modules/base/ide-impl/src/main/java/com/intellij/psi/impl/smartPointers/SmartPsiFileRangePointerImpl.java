@@ -16,7 +16,7 @@
 package com.intellij.psi.impl.smartPointers;
 
 import consulo.language.Language;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.ProperTextRange;

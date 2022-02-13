@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import consulo.language.Language;
 import com.intellij.lang.LanguageAnnotators;
-import com.intellij.lang.annotation.Annotator;
+import consulo.language.editor.annotation.Annotator;
 import com.intellij.util.containers.ContainerUtil;
 import jakarta.inject.Singleton;
 

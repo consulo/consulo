@@ -18,7 +18,7 @@ package com.intellij.refactoring.actions;
 
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import javax.annotation.Nonnull;
 
 public class IntroduceConstantAction extends BasePlatformRefactoringAction {

@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.pom;
 
+import consulo.language.pom.PomTarget;
+import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.PsiTarget;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;

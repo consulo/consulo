@@ -17,12 +17,17 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.codeInsight.FileModificationService;
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import consulo.language.editor.HighlightDisplayKey;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
-import com.intellij.codeInspection.reference.RefElement;
-import com.intellij.codeInspection.reference.RefEntity;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
 import com.intellij.codeInspection.ui.actions.SuppressActionWrapper;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.QuickFix;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.ui.ex.action.AnAction;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;

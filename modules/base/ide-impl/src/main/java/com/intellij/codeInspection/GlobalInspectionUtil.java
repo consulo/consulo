@@ -17,12 +17,16 @@
 package com.intellij.codeInspection;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.intention.IntentionAction;
+import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInspection.ex.GlobalInspectionContextUtil;
-import com.intellij.lang.annotation.ProblemGroup;
+import consulo.language.editor.annotation.ProblemGroup;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 

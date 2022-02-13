@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.codeInsight.template.impl.ConstantNode;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.editor.Editor;

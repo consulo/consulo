@@ -6,7 +6,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import consulo.editor.Caret;
 import consulo.editor.Editor;
 import consulo.project.Project;
-import com.intellij.patterns.ElementPattern;
+import consulo.language.pattern.ElementPattern;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 

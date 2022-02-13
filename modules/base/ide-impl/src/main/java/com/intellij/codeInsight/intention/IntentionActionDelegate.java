@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInsight.intention;
 
+import consulo.language.editor.intention.IntentionAction;
+
 import javax.annotation.Nonnull;
 
 public interface IntentionActionDelegate {

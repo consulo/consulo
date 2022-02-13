@@ -15,17 +15,16 @@
  */
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.GlobalInspectionContext;
-import com.intellij.codeInspection.InspectionProfileEntry;
+import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.scheme.*;
 import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
-import com.intellij.codeInspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefElementImpl;
-import com.intellij.lang.injection.InjectedLanguageManager;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.project.Project;
-import com.intellij.profile.ProfileManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.search.scope.packageSet.NamedScope;
+import consulo.language.psi.search.scope.NamedScope;
 
 import javax.annotation.Nonnull;
 

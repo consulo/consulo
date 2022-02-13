@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInspection;
 
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.profile.codeInspection.InspectionProfileManager;

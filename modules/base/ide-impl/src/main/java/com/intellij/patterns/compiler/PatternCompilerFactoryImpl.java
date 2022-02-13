@@ -20,6 +20,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 
 import javax.annotation.Nonnull;
+
+import consulo.language.pattern.compiler.PatternCompiler;
+import consulo.language.pattern.compiler.PatternCompilerFactory;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;

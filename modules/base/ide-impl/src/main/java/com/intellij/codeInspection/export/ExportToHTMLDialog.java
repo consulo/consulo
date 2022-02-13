@@ -17,7 +17,7 @@
 package com.intellij.codeInspection.export;
 
 import com.intellij.codeEditor.printing.ExportToHTMLSettings;
-import com.intellij.codeInspection.InspectionsBundle;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;

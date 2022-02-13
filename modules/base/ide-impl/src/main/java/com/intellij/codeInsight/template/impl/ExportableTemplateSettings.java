@@ -15,12 +15,8 @@
  */
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.openapi.components.*;
+import consulo.component.persist.*;
 import consulo.util.collection.SmartList;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.component.persist.RoamingType;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;

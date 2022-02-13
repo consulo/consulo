@@ -2,34 +2,29 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.file.inject.VirtualFileWindow;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.lang.injection.MultiHostInjector;
-import com.intellij.lang.injection.MultiHostRegistrar;
-import consulo.document.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.*;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.document.util.Segment;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
-import com.intellij.util.ArrayUtil;
-import consulo.application.util.function.Processor;
-import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
+import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;
-import consulo.lang.injection.MultiHostInjectorExtensionPoint;
+import consulo.document.Document;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.inject.*;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.util.collection.MultiMap;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -323,42 +318,42 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
 
   private final Map<Class<?>, MultiHostInjector[]> myInjectorsClone = new HashMap<>();
 
-  @TestOnly
-  public static void pushInjectors(@Nonnull Project project) {
-    InjectedLanguageManagerImpl cachedManager = (InjectedLanguageManagerImpl)project.getUserData(INSTANCE_CACHE);
-    if (cachedManager == null) return;
-    try {
-      assert cachedManager.myInjectorsClone.isEmpty() : cachedManager.myInjectorsClone;
-    }
-    finally {
-      cachedManager.myInjectorsClone.clear();
-    }
-    cachedManager.myInjectorsClone.putAll(cachedManager.getInjectorMap().getBackingMap());
-  }
-
-  @TestOnly
-  public static void checkInjectorsAreDisposed(@Nullable Project project) {
-    InjectedLanguageManagerImpl cachedManager = project == null ? null : (InjectedLanguageManagerImpl)project.getUserData(INSTANCE_CACHE);
-    if (cachedManager == null) return;
-
-    try {
-      ClassMapCachingNulls<MultiHostInjector> cached = cachedManager.cachedInjectors;
-      if (cached == null) return;
-      for (Map.Entry<Class<?>, MultiHostInjector[]> entry : cached.getBackingMap().entrySet()) {
-        Class<?> key = entry.getKey();
-        if (cachedManager.myInjectorsClone.isEmpty()) return;
-        MultiHostInjector[] oldInjectors = cachedManager.myInjectorsClone.get(key);
-        for (MultiHostInjector injector : entry.getValue()) {
-          if (ArrayUtil.indexOf(oldInjectors, injector) == -1) {
-            throw new AssertionError("Injector was not disposed: " + key + " -> " + injector);
-          }
-        }
-      }
-    }
-    finally {
-      cachedManager.myInjectorsClone.clear();
-    }
-  }
+  //@TestOnly
+  //public static void pushInjectors(@Nonnull Project project) {
+  //  InjectedLanguageManagerImpl cachedManager = (InjectedLanguageManagerImpl)project.getUserData(INSTANCE_CACHE);
+  //  if (cachedManager == null) return;
+  //  try {
+  //    assert cachedManager.myInjectorsClone.isEmpty() : cachedManager.myInjectorsClone;
+  //  }
+  //  finally {
+  //    cachedManager.myInjectorsClone.clear();
+  //  }
+  //  cachedManager.myInjectorsClone.putAll(cachedManager.getInjectorMap().getBackingMap());
+  //}
+  //
+  //@TestOnly
+  //public static void checkInjectorsAreDisposed(@Nullable Project project) {
+  //  InjectedLanguageManagerImpl cachedManager = project == null ? null : (InjectedLanguageManagerImpl)project.getUserData(INSTANCE_CACHE);
+  //  if (cachedManager == null) return;
+  //
+  //  try {
+  //    ClassMapCachingNulls<MultiHostInjector> cached = cachedManager.cachedInjectors;
+  //    if (cached == null) return;
+  //    for (Map.Entry<Class<?>, MultiHostInjector[]> entry : cached.getBackingMap().entrySet()) {
+  //      Class<?> key = entry.getKey();
+  //      if (cachedManager.myInjectorsClone.isEmpty()) return;
+  //      MultiHostInjector[] oldInjectors = cachedManager.myInjectorsClone.get(key);
+  //      for (MultiHostInjector injector : entry.getValue()) {
+  //        if (ArrayUtil.indexOf(oldInjectors, injector) == -1) {
+  //          throw new AssertionError("Injector was not disposed: " + key + " -> " + injector);
+  //        }
+  //      }
+  //    }
+  //  }
+  //  finally {
+  //    cachedManager.myInjectorsClone.clear();
+  //  }
+  //}
 
   InjectionResult processInPlaceInjectorsFor(@Nonnull PsiFile hostPsiFile, @Nonnull PsiElement element) {
     MultiHostInjector[] infos = getInjectorMap().get(element.getClass());
