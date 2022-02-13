@@ -43,9 +43,4 @@ public class PsiNavigationSupportImpl extends PsiNavigationSupport {
   public void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus) {
     ProjectViewSelectInTarget.select(psiDirectory.getProject(), this, ProjectViewPane.ID, null, psiDirectory.getVirtualFile(), requestFocus);
   }
-
-  @Override
-  public void openDirectoryInSystemFileManager(@Nonnull File file) {
-    ShowFilePathAction.openDirectory(file);
-  }
 }

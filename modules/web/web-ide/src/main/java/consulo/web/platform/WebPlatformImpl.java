@@ -18,6 +18,7 @@ package consulo.web.platform;
 import consulo.platform.impl.PlatformBase;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.net.URL;
 
 /**
@@ -30,6 +31,16 @@ public class WebPlatformImpl extends PlatformBase {
 
   @Override
   public void openInBrowser(@Nonnull URL url) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void openFileInFileManager(@Nonnull File file) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void openDirectoryInFileManager(@Nonnull File file) {
     throw new UnsupportedOperationException();
   }
 }

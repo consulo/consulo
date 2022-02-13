@@ -32,6 +32,6 @@ public abstract class PsiNavigationSupport {
   public abstract void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus);
 
   public void openDirectoryInSystemFileManager(@Nonnull File file) {
-    Platform.current().openInFileManager(file);
+    Platform.current().openDirectoryInFileManager(file);
   }
 }

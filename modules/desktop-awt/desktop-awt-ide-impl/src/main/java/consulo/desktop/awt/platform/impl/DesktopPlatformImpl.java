@@ -64,8 +64,13 @@ class DesktopPlatformImpl extends PlatformBase {
   }
 
   @Override
-  public void openInFileManager(@Nonnull File file) {
+  public void openFileInFileManager(@Nonnull File file) {
     ShowFilePathAction.openFile(file);
+  }
+
+  @Override
+  public void openDirectoryInFileManager(@Nonnull File file) {
+    ShowFilePathAction.openDirectory(file);
   }
 
   @Nonnull

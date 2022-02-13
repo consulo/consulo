@@ -176,11 +176,17 @@ public interface Platform {
 
   void openInBrowser(@Nonnull URL url);
 
-  default void openInFileManager(@Nonnull Path path) {
-    openInFileManager(path.toFile());
+  default void openFileInFileManager(@Nonnull Path path) {
+    openFileInFileManager(path.toFile());
   }
 
-  void openInFileManager(@Nonnull File file);
+  void openFileInFileManager(@Nonnull File file);
+
+  default void openDirectoryInFileManager(@Nonnull Path path) {
+    openFileInFileManager(path.toFile());
+  }
+
+  void openDirectoryInFileManager(@Nonnull File file);
 
   @Nonnull
   default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {

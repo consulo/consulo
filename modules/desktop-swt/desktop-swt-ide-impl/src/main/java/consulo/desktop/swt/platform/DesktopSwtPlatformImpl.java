@@ -18,6 +18,7 @@ package consulo.desktop.swt.platform;
 import consulo.platform.impl.PlatformBase;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.net.URL;
 
 /**
@@ -27,6 +28,16 @@ import java.net.URL;
 public class DesktopSwtPlatformImpl extends PlatformBase {
   @Override
   public void openInBrowser(@Nonnull URL url) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void openFileInFileManager(@Nonnull File file) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void openDirectoryInFileManager(@Nonnull File file) {
     throw new UnsupportedOperationException();
   }
 }
