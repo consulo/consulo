@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.language.psi.search.scope.PackageSet;
 

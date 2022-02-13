@@ -3,7 +3,9 @@
 package com.intellij.codeInsight.problems;
 
 import com.intellij.codeInsight.daemon.impl.*;
-import consulo.language.editor.HighlightInfoHolder;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoHolder;
+import consulo.language.editor.highlight.HighlightInfoType;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ReadAction;
 import consulo.document.Document;
@@ -24,7 +26,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatusListener;
@@ -238,7 +240,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     final Document document = FileDocumentManager.getInstance().getDocument(file);
     if (document == null) return false;
 
-    final AtomicReference<HighlightInfo> error = new AtomicReference<>();
+    final AtomicReference<HighlightInfoImpl> error = new AtomicReference<>();
     final AtomicBoolean hasErrorElement = new AtomicBoolean();
     try {
       GeneralHighlightingPass pass =
@@ -247,7 +249,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
                 protected HighlightInfoHolder createInfoHolder(@Nonnull final PsiFile file) {
                   return new HighlightInfoHolder(file) {
                     @Override
-                    public boolean add(@Nullable HighlightInfo info) {
+                    public boolean add(@Nullable HighlightInfoImpl info) {
                       if (info != null && info.getSeverity() == HighlightSeverity.ERROR) {
                         error.set(info);
                         hasErrorElement.set(myHasErrorElement);
@@ -388,10 +390,10 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   @Override
   public Problem convertToProblem(@Nullable final VirtualFile virtualFile, final int line, final int column, @Nonnull final String[] message) {
     if (virtualFile == null || virtualFile.isDirectory() || virtualFile.getFileType().isBinary()) return null;
-    HighlightInfo info = ReadAction.compute(() -> {
+    HighlightInfoImpl info = ReadAction.compute(() -> {
       TextRange textRange = getTextRange(virtualFile, line, column);
       String description = StringUtil.join(message, "\n");
-      return HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(textRange).descriptionAndTooltip(description).create();
+      return HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(textRange).descriptionAndTooltip(description).create();
     });
     if (info == null) return null;
     return new ProblemImpl(virtualFile, info, false);

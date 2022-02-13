@@ -9,7 +9,7 @@ import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.AbstractFileViewProvider;

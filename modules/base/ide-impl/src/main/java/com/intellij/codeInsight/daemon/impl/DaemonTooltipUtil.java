@@ -27,6 +27,8 @@ import com.intellij.openapi.editor.ex.ErrorStripTooltipRendererProvider;
 import com.intellij.openapi.editor.ex.TooltipAction;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.HintHint;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -38,7 +40,7 @@ import java.awt.*;
 public class DaemonTooltipUtil {
   private static final TooltipGroup DAEMON_INFO_GROUP = new TooltipGroup("DAEMON_INFO_GROUP", 0);
 
-  public static void showInfoTooltip(HighlightInfo info, Editor editor, int defaultOffset) {
+  public static void showInfoTooltip(HighlightInfoImpl info, Editor editor, int defaultOffset) {
     showInfoTooltip(info, editor, defaultOffset, -1);
   }
 
@@ -46,12 +48,12 @@ public class DaemonTooltipUtil {
     TooltipController.getInstance().cancelTooltip(DAEMON_INFO_GROUP, null, true);
   }
 
-  private static void showInfoTooltip(@Nonnull final HighlightInfo info, @Nonnull Editor editor, final int defaultOffset, final int currentWidth) {
+  private static void showInfoTooltip(@Nonnull final HighlightInfoImpl info, @Nonnull Editor editor, final int defaultOffset, final int currentWidth) {
     showInfoTooltip(info, editor, defaultOffset, currentWidth, false, false);
   }
 
 
-  static void showInfoTooltip(@Nonnull final HighlightInfo info, @Nonnull Editor editor, final int defaultOffset, final int currentWidth, final boolean requestFocus, final boolean showImmediately) {
+  static void showInfoTooltip(@Nonnull final HighlightInfoImpl info, @Nonnull Editor editor, final int defaultOffset, final int currentWidth, final boolean requestFocus, final boolean showImmediately) {
     if (Registry.is("editor.new.mouse.hover.popups")) {
       EditorMouseHoverPopupManager.getInstance().showInfoTooltip(editor, info, defaultOffset, requestFocus, showImmediately);
       return;

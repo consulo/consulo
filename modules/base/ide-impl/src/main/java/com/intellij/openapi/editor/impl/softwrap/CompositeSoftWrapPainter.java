@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl.softwrap;
 import consulo.logging.Logger;
 import consulo.editor.LogicalPosition;
 import consulo.editor.VisualPosition;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.ColorProvider;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;

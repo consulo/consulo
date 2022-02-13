@@ -345,11 +345,11 @@
                     interface="com.intellij.util.indexing.GlobalIndexFilter"/>
 
     <extensionPoint name="refGraphAnnotator"
-                    interface="com.intellij.codeInspection.reference.RefGraphAnnotator"/>
+                    interface="consulo.language.editor.inspection.reference.RefGraphAnnotator"/>
 
     <!-- Code Insight -->
     <extensionPoint name="highlightVisitor"
-                    interface="consulo.language.editor.HighlightVisitor"
+                    interface="consulo.language.editor.highlight.HighlightVisitor"
                     area="PROJECT"/>
     <extensionPoint name="highlightErrorFilter"
                     interface="com.intellij.codeInsight.highlighting.HighlightErrorFilter"
@@ -370,7 +370,7 @@
 
 
     <extensionPoint name="intentionAction"
-                    beanClass="com.intellij.codeInsight.intention.IntentionActionBean">
+                    beanClass="consulo.language.editor.intention.IntentionActionBean">
       <with tag="className" implements="consulo.language.editor.intention.IntentionAction"/>
     </extensionPoint>
 
@@ -421,7 +421,7 @@
                     interface="consulo.psi.impl.source.codeStyle.IndentHelperExtension"/>
 
     <extensionPoint name="daemon.highlightInfoFilter"
-                    interface="consulo.language.editor.HighlightInfoFilter"/>
+                    interface="consulo.language.editor.highlight.HighlightInfoFilter"/>
 
     <extensionPoint name="daemon.intentionActionFilter"
                     interface="com.intellij.codeInsight.daemon.impl.IntentionActionFilter"/>
@@ -487,7 +487,7 @@
 
     <extensionPoint name="lang.commenter"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.Commenter"/>
+      <with attribute="implementationClass" implements="consulo.language.Commenter"/>
     </extensionPoint>
 
     <extensionPoint name="lang.inspectionSuppressor"
@@ -672,7 +672,7 @@
     <extensionPoint name="inspectionToolsFactory"
                     interface="com.intellij.codeInspection.InspectionToolsFactory"/>
     <extensionPoint name="inspectionElementsMerger" interface="com.intellij.codeInspection.ex.InspectionElementsMerger"/>
-    <extensionPoint name="codeInspection.InspectionExtension" interface="com.intellij.codeInspection.lang.InspectionExtensionsFactory"/>
+    <extensionPoint name="codeInspection.InspectionExtension" interface="consulo.language.editor.inspection.InspectionExtensionsFactory"/>
 
     <extensionPoint name="customPasteProvider" interface="com.intellij.ide.PasteProvider"/>
 
@@ -1080,7 +1080,7 @@
 
     <extensionPoint name="problemFileHighlightFilter" interface="consulo.util.lang.function.Condition" area="PROJECT"/>
 
-    <extensionPoint name="problemHighlightFilter" interface="com.intellij.codeInsight.daemon.ProblemHighlightFilter"/>
+    <extensionPoint name="problemHighlightFilter" interface="consulo.language.editor.ProblemHighlightFilter"/>
 
     <extensionPoint name="uiDebuggerExtension" interface="com.intellij.ui.debugger.UiDebuggerExtension"/>
 
@@ -1686,7 +1686,7 @@
     <applicationService serviceInterface="com.intellij.lang.cacheBuilder.CacheBuilderRegistry"
                         serviceImplementation="com.intellij.lang.cacheBuilder.CacheBuilderRegistryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.codeInsight.intention.IntentionManager"
+    <applicationService serviceInterface="consulo.language.editor.intention.IntentionManager"
                         serviceImplementation="com.intellij.codeInsight.intention.impl.config.IntentionManagerImpl"/>
 
     <applicationService serviceInterface="consulo.application.internal.concurrency.JobLauncher"
@@ -1938,8 +1938,8 @@
     <projectService serviceInterface="com.intellij.ide.hierarchy.HierarchyBrowserManager"
                     serviceImplementation="com.intellij.ide.hierarchy.HierarchyBrowserManager"/>
 
-    <projectService serviceInterface="consulo.language.psi.search.scope.impl.NamedScopeManager"
-                    serviceImplementation="consulo.language.psi.search.scope.impl.NamedScopeManager"/>
+    <projectService serviceInterface="consulo.language.editor.scope.NamedScopeManager"
+                    serviceImplementation="consulo.language.editor.scope.NamedScopeManager"/>
     <namedScopesHolderProvider implementation="consulo.language.psi.search.scope.impl.DefaultNamedScopesHolderProvider"/>
 
     <projectService serviceInterface="com.intellij.packageDependencies.DependencyValidationManager"
@@ -2440,7 +2440,7 @@
     <toolsProvider implementation="com.intellij.tools.LocalToolsProvider"/>
 
     <favoritesListProvider implementation="com.intellij.ide.bookmarks.BookmarksFavoriteListProvider"/>
-    <applicationService serviceInterface="com.intellij.codeInsight.FileModificationService"
+    <applicationService serviceInterface="consulo.language.editor.FileModificationService"
                         serviceImplementation="com.intellij.codeInsight.CodeInsightUtilBase"/>
     <applicationService serviceInterface="com.intellij.ide.util.treeView.TreeAnchorizer"
                         serviceImplementation="com.intellij.ide.projectView.impl.nodes.PsiTreeAnchorizer"/>

@@ -4,7 +4,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler;

@@ -17,9 +17,9 @@
 package com.intellij.psi.impl;
 
 import consulo.language.impl.ASTFactory;
-import com.intellij.lang.Commenter;
+import consulo.language.Commenter;
 import consulo.language.Language;
-import com.intellij.lang.LanguageCommenters;
+import consulo.language.LanguageCommenters;
 import consulo.language.file.LanguageFileType;
 import com.intellij.psi.impl.source.DummyHolderFactory;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;

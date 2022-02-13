@@ -826,6 +826,28 @@ public class StringUtil {
 
   @Nonnull
   @Contract(pure = true)
+  public static <T> String join(@Nonnull T[] items, @Nonnull java.util.function.Function<T, String> f, @Nonnull @NonNls String separator) {
+    return join(Arrays.asList(items), f, separator);
+  }
+
+  public static <T> void join(@Nonnull Iterable<? extends T> items, @Nonnull java.util.function.Function<? super T, String> f, @Nonnull String separator, @Nonnull StringBuilder result) {
+    boolean isFirst = true;
+    for (T item : items) {
+      String string = f.apply(item);
+      if (!isEmpty(string)) {
+        if (isFirst) {
+          isFirst = false;
+        }
+        else {
+          result.append(separator);
+        }
+        result.append(string);
+      }
+    }
+  }
+
+  @Nonnull
+  @Contract(pure = true)
   public static <T> String join(@Nonnull Iterable<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull String separator) {
     final StringBuilder result = new StringBuilder();
     for (T item : items) {

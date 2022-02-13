@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.codeHighlighting.Pass;
+import consulo.language.editor.Pass;
 import com.intellij.codeInsight.daemon.*;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.editor.Editor;

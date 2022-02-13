@@ -17,10 +17,10 @@
 package com.intellij.codeInspection.ui;
 
 import consulo.application.CommonBundle;
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.analysis.AnalysisUIOptions;
-import consulo.language.editor.HighlightDisplayLevel;
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
@@ -40,7 +40,7 @@ import consulo.language.file.inject.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileEditorManager;

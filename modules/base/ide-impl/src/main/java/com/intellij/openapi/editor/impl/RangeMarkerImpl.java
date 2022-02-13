@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.util.dataholder.UserDataHolderBase;

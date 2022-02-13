@@ -19,7 +19,7 @@ import consulo.language.Language;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import javax.annotation.Nonnull;
 

@@ -13,6 +13,7 @@ import com.intellij.openapi.editor.ex.ErrorStripTooltipRendererProvider;
 import com.intellij.openapi.editor.ex.TooltipAction;
 import com.intellij.openapi.editor.impl.TrafficTooltipRenderer;
 import consulo.editor.markup.RangeHighlighter;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
 import consulo.util.collection.SmartList;
@@ -36,13 +37,13 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
   @Override
   public TooltipRenderer calcTooltipRenderer(@Nonnull final Collection<? extends RangeHighlighter> highlighters) {
     LineTooltipRenderer bigRenderer = null;
-    List<HighlightInfo> infos = new SmartList<>();
+    List<HighlightInfoImpl> infos = new SmartList<>();
     Collection<String> tooltips = new HashSet<>(); //do not show same tooltip twice
     for (RangeHighlighter marker : highlighters) {
       final Object tooltipObject = marker.getErrorStripeTooltip();
       if (tooltipObject == null) continue;
-      if (tooltipObject instanceof HighlightInfo) {
-        HighlightInfo info = (HighlightInfo)tooltipObject;
+      if (tooltipObject instanceof HighlightInfoImpl) {
+        HighlightInfoImpl info = (HighlightInfoImpl)tooltipObject;
         if (info.getToolTip() != null && tooltips.add(info.getToolTip())) {
           infos.add(info);
         }

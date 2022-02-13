@@ -17,8 +17,8 @@
 package com.intellij.packageDependencies.ui;
 
 import consulo.application.CommonBundle;
-import consulo.language.editor.AnalysisScope;
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.application.AllIcons;

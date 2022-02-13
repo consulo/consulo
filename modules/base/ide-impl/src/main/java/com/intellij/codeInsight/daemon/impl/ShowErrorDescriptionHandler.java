@@ -19,6 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import consulo.editor.Editor;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -39,7 +40,7 @@ public class ShowErrorDescriptionHandler implements CodeInsightActionHandler {
   public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     int offset = editor.getCaretModel().getOffset();
     DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
-    HighlightInfo info = ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(editor.getDocument(), offset, false);
+    HighlightInfoImpl info = ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(editor.getDocument(), offset, false);
     if (info != null) {
       DaemonTooltipUtil.showInfoTooltip(info, editor, editor.getCaretModel().getOffset(), myWidth, myRequestFocus, true);
     }

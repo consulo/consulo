@@ -16,13 +16,14 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.codeHighlighting.RainbowHighlighter;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import consulo.language.editor.HighlightVisitor;
-import consulo.language.editor.HighlightInfoHolder;
 import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.util.dataholder.UserDataHolderEx;
+import consulo.language.editor.highlight.HighlightInfo;
+import consulo.language.editor.highlight.HighlightInfoHolder;
+import consulo.language.editor.highlight.HighlightVisitor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.util.dataholder.UserDataHolderEx;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

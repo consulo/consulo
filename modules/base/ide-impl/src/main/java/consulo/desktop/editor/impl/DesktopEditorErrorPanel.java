@@ -33,7 +33,7 @@ import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.PopupHandler;

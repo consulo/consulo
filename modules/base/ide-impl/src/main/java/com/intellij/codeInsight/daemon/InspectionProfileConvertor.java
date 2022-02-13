@@ -15,11 +15,11 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.ModifiableModel;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;

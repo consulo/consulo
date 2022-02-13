@@ -18,6 +18,7 @@ package com.intellij.codeInsight.intention.impl;
 import com.intellij.codeInsight.editorActions.CopyPastePreProcessor;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.template.TemplateManager;
+import consulo.document.util.ProperTextRange;
 import consulo.editor.*;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.file.inject.DocumentWindow;

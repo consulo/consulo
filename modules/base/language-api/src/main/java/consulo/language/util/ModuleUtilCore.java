@@ -28,6 +28,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.ModulePointerManager;
+import consulo.module.content.util.ModuleContentUtil;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -88,8 +89,7 @@ public class ModuleUtilCore {
 
   @Nullable
   public static Module findModuleForFile(@Nonnull VirtualFile file, @Nonnull Project project) {
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    return fileIndex.getModuleForFile(file);
+    return ModuleContentUtil.findModuleForFile(file, project);
   }
 
   @Nullable

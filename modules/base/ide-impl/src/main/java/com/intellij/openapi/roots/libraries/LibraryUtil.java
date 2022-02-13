@@ -20,34 +20,26 @@
 package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.PathUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.StringTokenizer;
-import consulo.application.util.function.Processor;
 import consulo.content.base.BinariesOrderRootType;
-import consulo.content.base.SourcesOrderRootType;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.OrderEnumerator;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.library.util.ModuleContentLibraryUtil;
 import consulo.project.Project;
+import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class LibraryUtil {
   private LibraryUtil() {
@@ -120,58 +112,25 @@ public class LibraryUtil {
   }
 
   public static VirtualFile[] getLibraryRoots(final Module[] modules, final boolean includeSourceFiles, final boolean includeSdk) {
-    Set<VirtualFile> roots = new HashSet<VirtualFile>();
-    for (Module module : modules) {
-      final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-      final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
-      for (OrderEntry entry : orderEntries) {
-        if (entry instanceof LibraryOrderEntry) {
-          final Library library = ((LibraryOrderEntry)entry).getLibrary();
-          if (library != null) {
-            VirtualFile[] files = includeSourceFiles ? library.getFiles(SourcesOrderRootType.getInstance()) : null;
-            if (files == null || files.length == 0) {
-              files = library.getFiles(BinariesOrderRootType.getInstance());
-            }
-            ContainerUtil.addAll(roots, files);
-          }
-        }
-        else if (includeSdk && entry instanceof ModuleExtensionWithSdkOrderEntry) {
-          VirtualFile[] files = includeSourceFiles ? entry.getFiles(SourcesOrderRootType.getInstance()) : null;
-          if (files == null || files.length == 0) {
-            files = entry.getFiles(BinariesOrderRootType.getInstance());
-          }
-          ContainerUtil.addAll(roots, files);
-        }
-      }
-    }
-    return VfsUtilCore.toVirtualFileArray(roots);
+    return ModuleContentLibraryUtil.getLibraryRoots(modules, includeSourceFiles, includeSdk);
   }
 
   @Nullable
   public static Library findLibrary(@Nonnull Module module, @Nonnull final String name) {
     final Ref<Library> result = Ref.create(null);
-    OrderEnumerator.orderEntries(module).forEachLibrary(new Processor<Library>() {
-      @Override
-      public boolean process(Library library) {
-        if (name.equals(library.getName())) {
-          result.set(library);
-          return false;
-        }
-        return true;
+    OrderEnumerator.orderEntries(module).forEachLibrary(library -> {
+      if (name.equals(library.getName())) {
+        result.set(library);
+        return false;
       }
+      return true;
     });
     return result.get();
   }
 
   @Nullable
   public static OrderEntry findLibraryEntry(VirtualFile file, final Project project) {
-    List<OrderEntry> entries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
-    for (OrderEntry entry : entries) {
-      if (entry instanceof LibraryOrderEntry || entry instanceof ModuleExtensionWithSdkOrderEntry) {
-        return entry;
-      }
-    }
-    return null;
+    return ModuleContentLibraryUtil.findLibraryEntry(file, project);
   }
 
   @Nonnull

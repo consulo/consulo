@@ -13,7 +13,7 @@ import com.intellij.psi.search.PredefinedSearchScopeProvider;
 import consulo.content.scope.SearchScope;
 import com.intellij.psi.search.SearchScopeProvider;
 import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ComboboxWithBrowseButton;

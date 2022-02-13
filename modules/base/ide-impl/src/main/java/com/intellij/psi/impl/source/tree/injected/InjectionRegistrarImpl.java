@@ -17,7 +17,7 @@ import com.intellij.openapi.fileTypes.EditorHighlighterProvider;
 import com.intellij.openapi.fileTypes.FileTypeEditorHighlighterProviders;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.AbstractFileViewProvider;
 import consulo.language.psi.LanguageSubstitutors;

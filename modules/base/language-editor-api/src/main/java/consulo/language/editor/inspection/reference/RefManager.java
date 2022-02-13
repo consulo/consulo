@@ -1,19 +1,19 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.inspection.reference;
 
-import com.intellij.analysis.AnalysisScope;
 import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiNamedElement;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiManager;
-import consulo.language.psi.PsiNamedElement;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**

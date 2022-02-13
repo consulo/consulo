@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.navigationToolbar;
 
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.*;
 import consulo.module.Module;

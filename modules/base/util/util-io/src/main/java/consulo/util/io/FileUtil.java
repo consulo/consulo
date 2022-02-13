@@ -289,6 +289,11 @@ public class FileUtil {
   }
 
   @Nonnull
+  public static String getNameWithoutExtension(@Nonnull File file) {
+    return getNameWithoutExtension(file.getName());
+  }
+
+  @Nonnull
   public static CharSequence getNameWithoutExtension(@Nonnull CharSequence name) {
     int i = StringUtil.lastIndexOf(name, '.', 0, name.length());
     return i < 0 ? name : name.subSequence(0, i);

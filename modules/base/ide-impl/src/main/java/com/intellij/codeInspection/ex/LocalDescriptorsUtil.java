@@ -15,14 +15,10 @@
  */
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.*;
-import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefManagerImpl;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
-import consulo.language.editor.inspection.CommonProblemDescriptor;
-import consulo.language.editor.inspection.GlobalInspectionContext;
-import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import com.intellij.util.TripleFunction;

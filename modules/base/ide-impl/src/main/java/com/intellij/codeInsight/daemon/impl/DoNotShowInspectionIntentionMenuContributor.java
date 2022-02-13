@@ -1,9 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.HighlightDisplayLevel;
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
@@ -124,8 +125,8 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
               if (fixes != null) {
                 for (int k = 0; k < fixes.length; k++) {
                   final IntentionAction intentionAction = QuickFixWrapper.wrap(problemDescriptor, k);
-                  final HighlightInfo.IntentionActionDescriptor actionDescriptor =
-                          new HighlightInfo.IntentionActionDescriptor(intentionAction, null, displayName, null, key, null, HighlightSeverity.INFORMATION);
+                  final HighlightInfoImpl.IntentionActionDescriptor actionDescriptor =
+                          new HighlightInfoImpl.IntentionActionDescriptor(intentionAction, null, displayName, null, key, null, HighlightSeverity.INFORMATION);
                   (problemDescriptor.getHighlightType() == ProblemHighlightType.ERROR ? intentions.errorFixesToShow : intentions.intentionsToShow).add(actionDescriptor);
                 }
               }

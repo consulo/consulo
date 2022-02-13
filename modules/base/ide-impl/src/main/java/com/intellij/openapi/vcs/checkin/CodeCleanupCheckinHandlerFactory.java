@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.checkin;
 
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.codeInspection.ex.GlobalInspectionContextBase;
 import consulo.project.DumbService;
 import consulo.project.Project;

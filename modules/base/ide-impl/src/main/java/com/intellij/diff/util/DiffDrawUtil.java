@@ -18,7 +18,7 @@ package com.intellij.diff.util;
 import com.intellij.diff.fragments.DiffFragment;
 import consulo.document.Document;
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;

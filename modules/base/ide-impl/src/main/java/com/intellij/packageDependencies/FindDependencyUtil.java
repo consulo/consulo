@@ -16,7 +16,7 @@
 
 package com.intellij.packageDependencies;
 
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

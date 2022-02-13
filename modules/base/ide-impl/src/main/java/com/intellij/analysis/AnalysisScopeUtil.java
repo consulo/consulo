@@ -15,7 +15,7 @@
  */
 package com.intellij.analysis;
 
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import consulo.util.dataholder.Key;
 
 public class AnalysisScopeUtil {

@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.problems;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.problems.Problem;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -27,10 +27,10 @@ import javax.annotation.Nonnull;
  */
 public class ProblemImpl implements Problem {
   private final VirtualFile virtualFile;
-  private final HighlightInfo highlightInfo;
+  private final HighlightInfoImpl highlightInfo;
   private final boolean isSyntax;
 
-  public ProblemImpl(@Nonnull VirtualFile virtualFile, @Nonnull HighlightInfo highlightInfo, final boolean isSyntax) {
+  public ProblemImpl(@Nonnull VirtualFile virtualFile, @Nonnull HighlightInfoImpl highlightInfo, final boolean isSyntax) {
     this.isSyntax = isSyntax;
     this.virtualFile = virtualFile;
     this.highlightInfo = highlightInfo;

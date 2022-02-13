@@ -22,7 +22,7 @@ import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.ide.TooltipEvent;
 import consulo.logging.Logger;
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.event.EditorMouseEvent;

@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.impl.FrozenDocument;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.PsiDocumentManagerBase;

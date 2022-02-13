@@ -7,7 +7,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.LogicalPosition;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;

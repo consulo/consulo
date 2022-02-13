@@ -2,6 +2,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.execution.lineMarker.LineMarkerActionWrapper;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
@@ -46,13 +47,13 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
 
   private static void addActions(@Nonnull Project project,
                                  @Nonnull RangeHighlighterEx info,
-                                 @Nonnull List<? super HighlightInfo.IntentionActionDescriptor> descriptors,
+                                 @Nonnull List<? super HighlightInfoImpl.IntentionActionDescriptor> descriptors,
                                  @Nonnull DataContext dataContext) {
     final GutterIconRenderer r = info.getGutterIconRenderer();
     if (r == null || DumbService.isDumb(project) && !DumbService.isDumbAware(r)) {
       return;
     }
-    List<HighlightInfo.IntentionActionDescriptor> list = new ArrayList<>();
+    List<HighlightInfoImpl.IntentionActionDescriptor> list = new ArrayList<>();
     AtomicInteger order = new AtomicInteger();
     AnAction[] actions = new AnAction[]{r.getClickAction(), r.getMiddleButtonClickAction(), r.getRightButtonClickAction()};
     if (r.getPopupMenuActions() != null) {
@@ -67,7 +68,7 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
   }
 
   private static void addActions(@Nonnull AnAction action,
-                                 @Nonnull List<? super HighlightInfo.IntentionActionDescriptor> descriptors,
+                                 @Nonnull List<? super HighlightInfoImpl.IntentionActionDescriptor> descriptors,
                                  @Nonnull GutterIconRenderer renderer,
                                  AtomicInteger order,
                                  @Nonnull DataContext dataContext) {
@@ -95,7 +96,7 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
     if (icon == null) icon = Image.empty(Image.DEFAULT_ICON_SIZE);
     final GutterIntentionAction gutterAction = new GutterIntentionAction(action, order.getAndIncrement(), icon);
     if (!gutterAction.isAvailable(dataContext)) return;
-    descriptors.add(new HighlightInfo.IntentionActionDescriptor(gutterAction, Collections.emptyList(), null, icon) {
+    descriptors.add(new HighlightInfoImpl.IntentionActionDescriptor(gutterAction, Collections.emptyList(), null, icon) {
       @Nonnull
       @Override
       public String getDisplayName() {

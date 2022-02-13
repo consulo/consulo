@@ -2,16 +2,13 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeHighlighting.Pass;
+import consulo.language.editor.*;
 import com.intellij.codeHighlighting.RainbowHighlighter;
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.RainbowVisitor;
-import consulo.language.editor.HighlightInfoFilter;
-import consulo.language.editor.HighlightInfoHolder;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.codeInsight.problems.ProblemImpl;
-import consulo.language.editor.HighlightVisitor;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -21,6 +18,8 @@ import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.TextAttributesScheme;
 import consulo.editor.markup.TextAttributes;
+import consulo.language.editor.highlight.*;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.psi.*;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
@@ -29,7 +28,7 @@ import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -256,7 +255,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
 
   @Override
   @Nonnull
-  public List<HighlightInfo> getInfos() {
+  public List<HighlightInfoImpl> getInfos() {
     return new ArrayList<>(myHighlights);
   }
 
@@ -277,7 +276,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
 
     boolean success = analyzeByVisitors(visitors, holder, 0, () -> {
       Stack<TextRange> nestedRange = new Stack<>();
-      Stack<List<HighlightInfo>> nestedInfos = new Stack<>();
+      Stack<List<HighlightInfoImpl>> nestedInfos = new Stack<>();
       runVisitors(elements1, ranges1, chunkSize, skipParentsSet, holder, insideResult, outsideResult, forceHighlightParents, visitors, nestedRange, nestedInfos);
       final TextRange priorityIntersection = myPriorityRange.intersection(myRestrictRange);
       if ((!elements1.isEmpty() || !insideResult.isEmpty()) && priorityIntersection != null) { // do not apply when there were no elements to highlight
@@ -285,7 +284,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
       }
       runVisitors(elements2, ranges2, chunkSize, skipParentsSet, holder, insideResult, outsideResult, forceHighlightParents, visitors, nestedRange, nestedInfos);
     });
-    List<HighlightInfo> postInfos = new ArrayList<>(holder.size());
+    List<HighlightInfoImpl> postInfos = new ArrayList<>(holder.size());
     // there can be extra highlights generated in PostHighlightVisitor
     for (int j = 0; j < holder.size(); j++) {
       final HighlightInfo info = holder.get(j);
@@ -358,7 +357,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
       }
 
       TextRange elementRange = ranges.get(i);
-      List<HighlightInfo> infosForThisRange = holder.size() == 0 ? null : new ArrayList<>(holder.size());
+      List<HighlightInfoImpl> infosForThisRange = holder.size() == 0 ? null : new ArrayList<>(holder.size());
       for (int j = 0; j < holder.size(); j++) {
         final HighlightInfo info = holder.get(j);
 
@@ -386,7 +385,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
       while (true) {
         if (!nestedRange.isEmpty() && elementRange.contains(nestedRange.peek())) {
           TextRange oldRange = nestedRange.pop();
-          List<HighlightInfo> oldInfos = nestedInfos.pop();
+          List<HighlightInfoImpl> oldInfos = nestedInfos.pop();
           if (elementRange.equals(oldRange)) {
             if (infosForThisRange == null) {
               infosForThisRange = oldInfos;
@@ -487,8 +486,8 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                              int startOffset,
                              int endOffset,
                              @Nonnull ProperTextRange priorityRange,
-                             @Nonnull Collection<? super HighlightInfo> insideResult,
-                             @Nonnull Collection<? super HighlightInfo> outsideResult) {
+                             @Nonnull Collection<? super HighlightInfoImpl> insideResult,
+                             @Nonnull Collection<? super HighlightInfoImpl> outsideResult) {
     PsiTodoSearchHelper helper = PsiTodoSearchHelper.getInstance(file.getProject());
     if (helper == null || !shouldHighlightTodos(helper, file)) return;
     TodoItem[] todoItems = helper.findTodoItems(file, startOffset, endOffset);
@@ -520,15 +519,15 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   private static void addTodoItem(int restrictStartOffset,
                                   int restrictEndOffset,
                                   @Nonnull ProperTextRange priorityRange,
-                                  @Nonnull Collection<? super HighlightInfo> insideResult,
-                                  @Nonnull Collection<? super HighlightInfo> outsideResult,
+                                  @Nonnull Collection<? super HighlightInfoImpl> insideResult,
+                                  @Nonnull Collection<? super HighlightInfoImpl> outsideResult,
                                   @Nonnull TextAttributes attributes,
                                   @Nonnull String description,
                                   @Nonnull String tooltip,
                                   @Nonnull TextRange range) {
     if (range.getStartOffset() >= restrictEndOffset || range.getEndOffset() <= restrictStartOffset) return;
-    HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.TODO).range(range).textAttributes(attributes).description(description).escapedToolTip(tooltip).createUnconditionally();
-    Collection<? super HighlightInfo> result = priorityRange.containsRange(info.getStartOffset(), info.getEndOffset()) ? insideResult : outsideResult;
+    HighlightInfoImpl info = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.TODO).range(range).textAttributes(attributes).description(description).escapedToolTip(tooltip).createUnconditionally();
+    Collection<? super HighlightInfoImpl> result = priorityRange.containsRange(info.getStartOffset(), info.getEndOffset()) ? insideResult : outsideResult;
     result.add(info);
   }
 
@@ -556,9 +555,9 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   }
 
   @Nonnull
-  private static List<Problem> convertToProblems(@Nonnull Collection<? extends HighlightInfo> infos, @Nonnull VirtualFile file, final boolean hasErrorElement) {
+  private static List<Problem> convertToProblems(@Nonnull Collection<? extends HighlightInfoImpl> infos, @Nonnull VirtualFile file, final boolean hasErrorElement) {
     List<Problem> problems = new SmartList<>();
-    for (HighlightInfo info : infos) {
+    for (HighlightInfoImpl info : infos) {
       if (info.getSeverity() == HighlightSeverity.ERROR) {
         Problem problem = new ProblemImpl(file, info, hasErrorElement);
         problems.add(problem);

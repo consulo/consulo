@@ -20,7 +20,7 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.hint.HintManager;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.markup.TextAttributes;
 import consulo.document.util.TextRange;

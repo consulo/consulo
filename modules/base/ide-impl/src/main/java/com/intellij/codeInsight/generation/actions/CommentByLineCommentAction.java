@@ -19,7 +19,7 @@ package com.intellij.codeInsight.generation.actions;
 import com.intellij.codeInsight.actions.MultiCaretCodeInsightAction;
 import com.intellij.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import com.intellij.codeInsight.generation.CommentByLineCommentHandler;
-import com.intellij.lang.LanguageCommenters;
+import consulo.language.LanguageCommenters;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.editor.Caret;
 import consulo.editor.Editor;

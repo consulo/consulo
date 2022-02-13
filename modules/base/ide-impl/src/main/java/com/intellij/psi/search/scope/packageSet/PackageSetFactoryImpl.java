@@ -16,7 +16,7 @@
 
 package com.intellij.psi.search.scope.packageSet;
 
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.lexer.Lexer;
 import consulo.component.extension.Extensions;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopeTokenTypes;

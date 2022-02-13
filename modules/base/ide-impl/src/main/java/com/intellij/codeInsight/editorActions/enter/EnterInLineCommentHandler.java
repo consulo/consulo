@@ -21,6 +21,8 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.ast.ASTNode;

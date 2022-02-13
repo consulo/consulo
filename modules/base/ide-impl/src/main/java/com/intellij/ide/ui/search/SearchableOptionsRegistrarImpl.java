@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ResourceUtil;
+import consulo.util.io.ResourceUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
 import consulo.container.plugin.PluginDescriptor;

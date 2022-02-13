@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.actions;
 
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

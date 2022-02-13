@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
@@ -35,12 +35,12 @@ class SequentialCleanupTask implements SequentialTask {
   private static final Logger LOG = Logger.getInstance(SequentialCleanupTask.class);
 
   private final Project myProject;
-  private final LinkedHashMap<PsiFile, List<HighlightInfo>> myResults;
+  private final LinkedHashMap<PsiFile, List<HighlightInfoImpl>> myResults;
   private Iterator<PsiFile> myFileIterator;
   private final SequentialModalProgressTask myProgressTask;
   private int myCount = 0;
 
-  public SequentialCleanupTask(Project project, LinkedHashMap<PsiFile, List<HighlightInfo>> results, SequentialModalProgressTask task) {
+  public SequentialCleanupTask(Project project, LinkedHashMap<PsiFile, List<HighlightInfoImpl>> results, SequentialModalProgressTask task) {
     myProject = project;
     myResults = results;
     myProgressTask = task;
@@ -62,10 +62,10 @@ class SequentialCleanupTask implements SequentialTask {
       indicator.setFraction((double) myCount++/myResults.size());
     }
     final PsiFile file = myFileIterator.next();
-    final List<HighlightInfo> infos = myResults.get(file);
+    final List<HighlightInfoImpl> infos = myResults.get(file);
     Collections.reverse(infos); //sort bottom - top
-    for (HighlightInfo info : infos) {
-      for (final Pair<HighlightInfo.IntentionActionDescriptor, TextRange> actionRange : info.quickFixActionRanges) {
+    for (HighlightInfoImpl info : infos) {
+      for (final Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> actionRange : info.quickFixActionRanges) {
         try {
           actionRange.getFirst().getAction().invoke(myProject, null, file);
         }

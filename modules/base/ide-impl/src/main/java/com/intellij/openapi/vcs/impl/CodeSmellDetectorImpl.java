@@ -17,9 +17,11 @@ package com.intellij.openapi.vcs.impl;
 
 import com.intellij.codeInsight.CodeSmellInfo;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.impl.*;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoType;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
@@ -174,7 +176,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
             if (psiFile == null || document == null) {
               return;
             }
-            List<HighlightInfo> infos = codeAnalyzer.runMainPasses(psiFile, document, daemonIndicator);
+            List<HighlightInfoImpl> infos = codeAnalyzer.runMainPasses(psiFile, document, daemonIndicator);
             convertErrorsAndWarnings(infos, result, document);
           }
         });
@@ -184,10 +186,10 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     return result;
   }
 
-  private void convertErrorsAndWarnings(@Nonnull Collection<HighlightInfo> highlights,
+  private void convertErrorsAndWarnings(@Nonnull Collection<HighlightInfoImpl> highlights,
                                         @Nonnull List<CodeSmellInfo> result,
                                         @Nonnull Document document) {
-    for (HighlightInfo highlightInfo : highlights) {
+    for (HighlightInfoImpl highlightInfo : highlights) {
       final HighlightSeverity severity = highlightInfo.getSeverity();
       if (SeverityRegistrar.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
         result.add(new CodeSmellInfo(document, getDescription(highlightInfo),
@@ -196,7 +198,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     }
   }
 
-  private static String getDescription(@Nonnull HighlightInfo highlightInfo) {
+  private static String getDescription(@Nonnull HighlightInfoImpl highlightInfo) {
     final String description = highlightInfo.getDescription();
     final HighlightInfoType type = highlightInfo.type;
     if (type instanceof HighlightInfoType.HighlightInfoTypeSeverityByKey) {

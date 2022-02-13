@@ -55,7 +55,7 @@ import com.intellij.openapi.command.undo.UndoManager;
 import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.impl.GenericDataProvider;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;

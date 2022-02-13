@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeHighlighting.Pass;
+import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
 import com.intellij.codeInsight.daemon.DaemonBundle;
@@ -26,7 +26,7 @@ import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import consulo.editor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.language.editor.inspection.scheme.Profile;
 import com.intellij.profile.ProfileChangeAdapter;
 import consulo.language.psi.PsiElement;

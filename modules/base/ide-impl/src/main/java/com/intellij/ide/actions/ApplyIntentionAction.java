@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.ShowIntentionActionsHandler;
@@ -36,7 +36,7 @@ public class ApplyIntentionAction extends AnAction {
   private final Editor myEditor;
   private final PsiFile myFile;
 
-  public ApplyIntentionAction(final HighlightInfo.IntentionActionDescriptor descriptor, String text, Editor editor, PsiFile file) {
+  public ApplyIntentionAction(final HighlightInfoImpl.IntentionActionDescriptor descriptor, String text, Editor editor, PsiFile file) {
     this(descriptor.getAction(), text, editor, file);
   }
 
@@ -72,14 +72,14 @@ public class ApplyIntentionAction extends AnAction {
     });
     if (info.isEmpty()) return null;
 
-    final List<HighlightInfo.IntentionActionDescriptor> actions = new ArrayList<HighlightInfo.IntentionActionDescriptor>();
+    final List<HighlightInfoImpl.IntentionActionDescriptor> actions = new ArrayList<HighlightInfoImpl.IntentionActionDescriptor>();
     actions.addAll(info.errorFixesToShow);
     actions.addAll(info.inspectionFixesToShow);
     actions.addAll(info.intentionsToShow);
 
     final ApplyIntentionAction[] result = new ApplyIntentionAction[actions.size()];
     for (int i = 0; i < result.length; i++) {
-      final HighlightInfo.IntentionActionDescriptor descriptor = actions.get(i);
+      final HighlightInfoImpl.IntentionActionDescriptor descriptor = actions.get(i);
       final String actionText = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
         @Override
         public String compute() {

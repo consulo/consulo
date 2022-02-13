@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.intention.impl;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.intention.*;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import consulo.language.editor.inspection.FileModifier;
@@ -42,7 +42,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     });
   }
 
-  IntentionActionWithTextCaching(@Nonnull HighlightInfo.IntentionActionDescriptor descriptor, @Nonnull BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> markInvoked) {
+  IntentionActionWithTextCaching(@Nonnull HighlightInfoImpl.IntentionActionDescriptor descriptor, @Nonnull BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> markInvoked) {
     this(descriptor.getAction(), descriptor.getDisplayName(), descriptor.getIcon(), markInvoked);
   }
 

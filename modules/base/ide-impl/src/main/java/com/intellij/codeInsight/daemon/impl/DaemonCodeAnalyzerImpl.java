@@ -8,6 +8,9 @@ import com.intellij.codeInsight.intention.impl.FileLevelIntentionComponent;
 import com.intellij.codeInsight.intention.impl.IntentionHintComponent;
 import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.ide.PowerSaveMode;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.Application;
@@ -81,7 +84,7 @@ import java.util.stream.Collectors;
 public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(DaemonCodeAnalyzerImpl.class);
 
-  private static final Key<List<HighlightInfo>> FILE_LEVEL_HIGHLIGHTS = Key.create("FILE_LEVEL_HIGHLIGHTS");
+  private static final Key<List<HighlightInfoImpl>> FILE_LEVEL_HIGHLIGHTS = Key.create("FILE_LEVEL_HIGHLIGHTS");
   private final Project myProject;
   private final DaemonCodeAnalyzerSettings mySettings;
   @Nonnull
@@ -158,8 +161,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
   @Nonnull
   @TestOnly
-  public static List<HighlightInfo> getHighlights(@Nonnull Document document, @Nullable HighlightSeverity minSeverity, @Nonnull Project project) {
-    List<HighlightInfo> infos = new ArrayList<>();
+  public static List<HighlightInfoImpl> getHighlights(@Nonnull Document document, @Nullable HighlightSeverity minSeverity, @Nonnull Project project) {
+    List<HighlightInfoImpl> infos = new ArrayList<>();
     processHighlights(document, project, minSeverity, 0, document.getTextLength(), Processors.cancelableCollectProcessor(infos));
     return infos;
   }
@@ -167,7 +170,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   @Override
   @Nonnull
   @TestOnly
-  public List<HighlightInfo> getFileLevelHighlights(@Nonnull Project project, @Nonnull PsiFile file) {
+  public List<HighlightInfoImpl> getFileLevelHighlights(@Nonnull Project project, @Nonnull PsiFile file) {
     VirtualFile vFile = file.getViewProvider().getVirtualFile();
     return Arrays.stream(FileEditorManager.getInstance(project).getEditors(vFile)).map(fileEditor -> fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS)).filter(Objects::nonNull).flatMap(Collection::stream)
             .collect(Collectors.toList());
@@ -180,10 +183,10 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     VirtualFile vFile = provider.getVirtualFile();
     final FileEditorManager manager = FileEditorManager.getInstance(project);
     for (FileEditor fileEditor : manager.getEditors(vFile)) {
-      final List<HighlightInfo> infos = fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS);
+      final List<HighlightInfoImpl> infos = fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS);
       if (infos == null) continue;
-      List<HighlightInfo> infosToRemove = new ArrayList<>();
-      for (HighlightInfo info : infos) {
+      List<HighlightInfoImpl> infosToRemove = new ArrayList<>();
+      for (HighlightInfoImpl info : infos) {
         if (info.getGroup() == group) {
           manager.removeTopComponent(fileEditor, info.fileLevelComponent);
           infosToRemove.add(info);
@@ -194,7 +197,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   }
 
   @Override
-  public void addFileLevelHighlight(@Nonnull final Project project, final int group, @Nonnull final HighlightInfo info, @Nonnull final PsiFile psiFile) {
+  public void addFileLevelHighlight(@Nonnull final Project project, final int group, @Nonnull final HighlightInfoImpl info, @Nonnull final PsiFile psiFile) {
     VirtualFile vFile = psiFile.getViewProvider().getVirtualFile();
     final FileEditorManager manager = FileEditorManager.getInstance(project);
     for (FileEditor fileEditor : manager.getEditors(vFile)) {
@@ -202,7 +205,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
         FileLevelIntentionComponent component = new FileLevelIntentionComponent(info.getDescription(), info.getSeverity(), info.getGutterIconRenderer(), info.quickFixActionRanges, project, psiFile,
                                                                                 ((TextEditor)fileEditor).getEditor(), info.getToolTip());
         manager.addTopComponent(fileEditor, component);
-        List<HighlightInfo> fileLevelInfos = fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS);
+        List<HighlightInfoImpl> fileLevelInfos = fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS);
         if (fileLevelInfos == null) {
           fileLevelInfos = new ArrayList<>();
           fileEditor.putUserData(FILE_LEVEL_HIGHLIGHTS, fileLevelInfos);
@@ -216,7 +219,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
   @Override
   @Nonnull
-  public List<HighlightInfo> runMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document, @Nonnull final ProgressIndicator progress) {
+  public List<HighlightInfoImpl> runMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document, @Nonnull final ProgressIndicator progress) {
     if (ApplicationManager.getApplication().isDispatchThread()) {
       throw new IllegalStateException("Must not run highlighting from under EDT");
     }
@@ -232,7 +235,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     stopProcess(false, "disable background daemon");
     myPassExecutorService.cancelAll(true);
 
-    final List<HighlightInfo> result;
+    final List<HighlightInfoImpl> result;
     try {
       result = new ArrayList<>();
       final VirtualFile virtualFile = psiFile.getVirtualFile();
@@ -605,7 +608,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
                                              @Nonnull final HighlightSeverity minSeverity,
                                              final int offset,
                                              final boolean includeFixRange,
-                                             @Nonnull final Processor<? super HighlightInfo> processor) {
+                                             @Nonnull final Processor<? super HighlightInfoImpl> processor) {
     return processHighlights(document, project, null, 0, document.getTextLength(), info -> {
       if (!isOffsetInsideHighlightInfo(offset, info, includeFixRange)) return true;
 
@@ -615,19 +618,19 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   }
 
   @Nullable
-  public HighlightInfo findHighlightByOffset(@Nonnull Document document, final int offset, final boolean includeFixRange) {
+  public HighlightInfoImpl findHighlightByOffset(@Nonnull Document document, final int offset, final boolean includeFixRange) {
     return findHighlightByOffset(document, offset, includeFixRange, HighlightSeverity.INFORMATION);
   }
 
   @Nullable
-  HighlightInfo findHighlightByOffset(@Nonnull Document document, final int offset, final boolean includeFixRange, @Nonnull HighlightSeverity minSeverity) {
-    final List<HighlightInfo> foundInfoList = new SmartList<>();
+  HighlightInfoImpl findHighlightByOffset(@Nonnull Document document, final int offset, final boolean includeFixRange, @Nonnull HighlightSeverity minSeverity) {
+    final List<HighlightInfoImpl> foundInfoList = new SmartList<>();
     processHighlightsNearOffset(document, myProject, minSeverity, offset, includeFixRange, info -> {
       if (info.getSeverity() == HighlightInfoType.ELEMENT_UNDER_CARET_SEVERITY || info.type == HighlightInfoType.TODO) {
         return true;
       }
       if (!foundInfoList.isEmpty()) {
-        HighlightInfo foundInfo = foundInfoList.get(0);
+        HighlightInfoImpl foundInfo = foundInfoList.get(0);
         int compare = foundInfo.getSeverity().compareTo(info.getSeverity());
         if (compare < 0) {
           foundInfoList.clear();
@@ -645,7 +648,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     return HighlightInfoComposite.create(foundInfoList);
   }
 
-  private static boolean isOffsetInsideHighlightInfo(int offset, @Nonnull HighlightInfo info, boolean includeFixRange) {
+  private static boolean isOffsetInsideHighlightInfo(int offset, @Nonnull HighlightInfoImpl info, boolean includeFixRange) {
     RangeHighlighterEx highlighter = info.getHighlighter();
     if (highlighter == null || !highlighter.isValid()) return false;
     int startOffset = highlighter.getStartOffset();

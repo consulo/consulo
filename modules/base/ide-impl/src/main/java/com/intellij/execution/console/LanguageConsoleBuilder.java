@@ -24,7 +24,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.VisualPosition;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentBulkUpdateListener;

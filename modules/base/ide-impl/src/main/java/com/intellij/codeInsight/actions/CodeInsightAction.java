@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
-import com.intellij.codeInsight.FileModificationService;
+import consulo.language.editor.FileModificationService;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;

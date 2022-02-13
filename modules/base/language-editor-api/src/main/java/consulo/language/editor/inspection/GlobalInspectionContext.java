@@ -19,6 +19,7 @@ package consulo.language.editor.inspection;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.scheme.JobDescriptor;
+import consulo.language.editor.inspection.scheme.StdJobDescriptors;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

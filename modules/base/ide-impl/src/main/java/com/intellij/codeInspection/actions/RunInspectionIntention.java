@@ -16,11 +16,11 @@
 
 package com.intellij.codeInspection.actions;
 
-import consulo.language.editor.AnalysisScope;
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import com.intellij.analysis.AnalysisUIOptions;
 import com.intellij.analysis.BaseAnalysisActionDialog;
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import com.intellij.codeInsight.intention.HighPriorityAction;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.InspectionManager;

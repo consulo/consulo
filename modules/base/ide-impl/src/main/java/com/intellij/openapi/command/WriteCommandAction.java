@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command;
 
-import com.intellij.codeInsight.FileModificationService;
+import consulo.language.editor.FileModificationService;
 import consulo.application.*;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;

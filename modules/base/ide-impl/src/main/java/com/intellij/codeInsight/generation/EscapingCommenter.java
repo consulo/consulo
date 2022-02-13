@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.generation;
 
-import com.intellij.lang.Commenter;
+import consulo.language.Commenter;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 

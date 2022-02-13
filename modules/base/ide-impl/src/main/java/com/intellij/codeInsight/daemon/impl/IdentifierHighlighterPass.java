@@ -25,6 +25,8 @@ import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesHandler;
 import com.intellij.find.findUsages.FindUsagesManager;
 import com.intellij.find.impl.FindManagerImpl;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoType;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;
@@ -195,11 +197,11 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   @Override
   public void doApplyInformationToEditor() {
     final boolean virtSpace = TargetElementUtil.inVirtualSpace(myEditor, myEditor.getCaretModel().getOffset());
-    final List<HighlightInfo> infos = virtSpace ? Collections.<HighlightInfo>emptyList() : getHighlights();
+    final List<HighlightInfoImpl> infos = virtSpace ? Collections.<HighlightInfoImpl>emptyList() : getHighlights();
     UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
   }
 
-  private List<HighlightInfo> getHighlights() {
+  private List<HighlightInfoImpl> getHighlights() {
     if (myReadAccessRanges.isEmpty() && myWriteAccessRanges.isEmpty()) {
       return Collections.emptyList();
     }
@@ -208,7 +210,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
       existingMarkupTooltips.add(Pair.create(highlighter.getErrorStripeTooltip(), new TextRange(highlighter.getStartOffset(), highlighter.getEndOffset())));
     }
 
-    List<HighlightInfo> result = new ArrayList<>(myReadAccessRanges.size() + myWriteAccessRanges.size());
+    List<HighlightInfoImpl> result = new ArrayList<>(myReadAccessRanges.size() + myWriteAccessRanges.size());
     for (TextRange range: myReadAccessRanges) {
       ContainerUtil.addIfNotNull(result, createHighlightInfo(range, HighlightInfoType.ELEMENT_UNDER_CARET_READ, existingMarkupTooltips));
     }
@@ -218,11 +220,11 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     return result;
   }
 
-  private HighlightInfo createHighlightInfo(TextRange range, HighlightInfoType type, Set<Pair<Object, TextRange>> existingMarkupTooltips) {
+  private HighlightInfoImpl createHighlightInfo(TextRange range, HighlightInfoType type, Set<Pair<Object, TextRange>> existingMarkupTooltips) {
     int start = range.getStartOffset();
     String tooltip = start <= myDocument.getTextLength() ? HighlightHandlerBase.getLineTextErrorStripeTooltip(myDocument, start, false) : null;
     String unescapedTooltip = existingMarkupTooltips.contains(new Pair<Object, TextRange>(tooltip, range)) ? null : tooltip;
-    HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(type).range(range);
+    HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(type).range(range);
     if (unescapedTooltip != null) {
       builder.unescapedToolTip(unescapedTooltip);
     }
@@ -233,10 +235,10 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     MarkupModel markupModel = DocumentMarkupModel.forDocument(document, project, true);
     for (RangeHighlighter highlighter : markupModel.getAllHighlighters()) {
       Object tooltip = highlighter.getErrorStripeTooltip();
-      if (!(tooltip instanceof HighlightInfo)) {
+      if (!(tooltip instanceof HighlightInfoImpl)) {
         continue;
       }
-      HighlightInfo info = (HighlightInfo)tooltip;
+      HighlightInfoImpl info = (HighlightInfoImpl)tooltip;
       if (info.type == HighlightInfoType.ELEMENT_UNDER_CARET_READ || info.type == HighlightInfoType.ELEMENT_UNDER_CARET_WRITE) {
         highlighter.dispose();
       }

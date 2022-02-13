@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.ShowErrorDescriptionHandler;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
@@ -58,7 +58,7 @@ public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements
 
   private static boolean isEnabledForFile(Project project, Editor editor, PsiFile file) {
     DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
-    HighlightInfo info =
+    HighlightInfoImpl info =
       ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(editor.getDocument(), editor.getCaretModel().getOffset(), false);
     return info != null && info.getDescription() != null;
   }

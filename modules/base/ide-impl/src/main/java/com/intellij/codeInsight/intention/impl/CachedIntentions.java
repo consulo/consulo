@@ -1,14 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.intention.impl;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import com.intellij.codeInsight.intention.PriorityAction;
 import com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings;
-import com.intellij.codeInspection.SuppressIntentionActionFromFix;
+import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import com.intellij.codeInspection.ex.QuickFixWrapper;
 import com.intellij.concurrency.ConcurrentCollectionFactory;
 import consulo.application.AllIcons;
@@ -154,22 +154,22 @@ public class CachedIntentions {
     return changed;
   }
 
-  private boolean addActionsTo(@Nonnull List<? extends HighlightInfo.IntentionActionDescriptor> newDescriptors, @Nonnull Set<? super IntentionActionWithTextCaching> cachedActions) {
+  private boolean addActionsTo(@Nonnull List<? extends HighlightInfoImpl.IntentionActionDescriptor> newDescriptors, @Nonnull Set<? super IntentionActionWithTextCaching> cachedActions) {
     boolean changed = false;
-    for (HighlightInfo.IntentionActionDescriptor descriptor : newDescriptors) {
+    for (HighlightInfoImpl.IntentionActionDescriptor descriptor : newDescriptors) {
       changed |= cachedActions.add(wrapAction(descriptor, myFile, myFile, myEditor));
     }
     return changed;
   }
 
-  private boolean wrapActionsTo(@Nonnull List<? extends HighlightInfo.IntentionActionDescriptor> newDescriptors,
+  private boolean wrapActionsTo(@Nonnull List<? extends HighlightInfoImpl.IntentionActionDescriptor> newDescriptors,
                                 @Nonnull Set<IntentionActionWithTextCaching> cachedActions,
                                 boolean shouldCallIsAvailable) {
     if (cachedActions.isEmpty() && newDescriptors.isEmpty()) return false;
     boolean changed = false;
     if (myEditor == null) {
       LOG.assertTrue(!shouldCallIsAvailable);
-      for (HighlightInfo.IntentionActionDescriptor descriptor : newDescriptors) {
+      for (HighlightInfoImpl.IntentionActionDescriptor descriptor : newDescriptors) {
         changed |= cachedActions.add(wrapAction(descriptor, myFile, myFile, null));
       }
       return changed;
@@ -214,7 +214,7 @@ public class CachedIntentions {
     }
 
     Set<IntentionActionWithTextCaching> wrappedNew = Sets.newHashSet(newDescriptors.size(), ACTION_TEXT_AND_CLASS_EQUALS);
-    for (HighlightInfo.IntentionActionDescriptor descriptor : newDescriptors) {
+    for (HighlightInfoImpl.IntentionActionDescriptor descriptor : newDescriptors) {
       final IntentionAction action = descriptor.getAction();
       if (element != null && element != hostElement && (!shouldCallIsAvailable || ShowIntentionActionsHandler.availableFor(injectedFile, injectedEditor, action))) {
         IntentionActionWithTextCaching cachedAction = wrapAction(descriptor, element, injectedFile, injectedEditor);
@@ -239,7 +239,7 @@ public class CachedIntentions {
   }
 
   @Nonnull
-  IntentionActionWithTextCaching wrapAction(@Nonnull HighlightInfo.IntentionActionDescriptor descriptor,
+  IntentionActionWithTextCaching wrapAction(@Nonnull HighlightInfoImpl.IntentionActionDescriptor descriptor,
                                             @Nonnull PsiElement element,
                                             @Nonnull PsiFile containingFile,
                                             @Nullable Editor containingEditor) {

@@ -16,15 +16,15 @@
 
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.analysis.AnalysisUIOptions;
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
-import com.intellij.codeInsight.FileModificationService;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoProcessor;
 import com.intellij.codeInsight.daemon.impl.LocalInspectionsPass;
 import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.lang.GlobalInspectionContextExtension;
+import consulo.language.editor.inspection.GlobalInspectionContextExtension;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
@@ -41,7 +41,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.project.ProjectUtilCore;
+import consulo.module.content.util.ProjectUtilCore;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.NotNullLazyValue;
@@ -860,7 +860,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
     final List<LocalInspectionToolWrapper> lTools = new ArrayList<LocalInspectionToolWrapper>();
 
-    final LinkedHashMap<PsiFile, List<HighlightInfo>> results = new LinkedHashMap<PsiFile, List<HighlightInfo>>();
+    final LinkedHashMap<PsiFile, List<HighlightInfoImpl>> results = new LinkedHashMap<PsiFile, List<HighlightInfoImpl>>();
 
     final SearchScope searchScope = scope.toSearchScope();
     final TextRange range;
@@ -912,10 +912,10 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             }
           };
           ApplicationManager.getApplication().runReadAction(runnable);
-          final List<HighlightInfo> infos = pass.getInfos();
+          final List<HighlightInfoImpl> infos = pass.getInfos();
           if (searchScope instanceof LocalSearchScope) {
-            for (Iterator<HighlightInfo> iterator = infos.iterator(); iterator.hasNext(); ) {
-              final HighlightInfo info = iterator.next();
+            for (Iterator<HighlightInfoImpl> iterator = infos.iterator(); iterator.hasNext(); ) {
+              final HighlightInfoImpl info = iterator.next();
               final TextRange infoRange = new TextRange(info.getStartOffset(), info.getEndOffset());
               if (!((LocalSearchScope)searchScope).containsRange(file, infoRange)) {
                 iterator.remove();

@@ -18,7 +18,7 @@ package com.intellij.codeInspection.ex;
 
 import consulo.application.CommonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.InspectionsBundle;

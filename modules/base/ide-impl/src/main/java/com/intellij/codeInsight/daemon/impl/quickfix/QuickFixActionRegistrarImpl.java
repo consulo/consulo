@@ -16,9 +16,9 @@
 
 package com.intellij.codeInsight.daemon.impl.quickfix;
 
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.QuickFixActionRegistrar;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
@@ -26,9 +26,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class QuickFixActionRegistrarImpl implements QuickFixActionRegistrar {
-  private final HighlightInfo myInfo;
+  private final HighlightInfoImpl myInfo;
 
-  public QuickFixActionRegistrarImpl(@Nullable HighlightInfo info) {
+  public QuickFixActionRegistrarImpl(@Nullable HighlightInfoImpl info) {
     myInfo = info;
   }
 

@@ -16,6 +16,8 @@
 package com.intellij.util.codeInsight;
 
 import com.intellij.lang.*;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.psi.PsiComment;
 import consulo.language.ast.ASTNode;

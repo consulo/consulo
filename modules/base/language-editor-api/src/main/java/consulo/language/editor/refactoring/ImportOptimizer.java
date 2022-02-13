@@ -16,19 +16,18 @@
 
 package consulo.language.editor.refactoring;
 
-import com.intellij.idea.ActionsBundle;
-import consulo.language.psi.PsiFile;
 import consulo.application.Application;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Implementers of the interface encapsulate optimize imports process for the language.
- * Should be registered as "com.intellij.lang.importOptimizer" extension.
+ * Should be registered as "lang.importOptimizer" extension.
  *
  * @author max
- * @see LanguageImportStatements
  */
 public interface ImportOptimizer {
   /**
@@ -60,7 +59,7 @@ public interface ImportOptimizer {
    */
   @Nonnull
   default String getActionName() {
-    return ActionsBundle.message("not.action.OptimizeImports.text");
+    return CodeInsightBundle.message("not.action.OptimizeImports.text");
   }
 
   /**
@@ -68,7 +67,7 @@ public interface ImportOptimizer {
    */
   @Nonnull
   default String getActionDescription() {
-    return ActionsBundle.message("not.action.OptimizeImports.description");
+    return CodeInsightBundle.message("not.action.OptimizeImports.description");
   }
 
   /**

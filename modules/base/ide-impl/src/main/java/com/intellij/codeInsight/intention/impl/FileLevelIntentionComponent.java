@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.intention.impl;
 
 import consulo.editor.markup.GutterMark;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;
@@ -39,7 +39,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
   public FileLevelIntentionComponent(final String description,
                                      @Nonnull HighlightSeverity severity,
                                      @Nullable GutterMark gutterMark,
-                                     @Nullable final List<Pair<HighlightInfo.IntentionActionDescriptor, TextRange>> intentions,
+                                     @Nullable final List<Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange>> intentions,
                                      @Nonnull final Project project,
                                      @Nonnull final PsiFile psiFile,
                                      @Nonnull final Editor editor, @Nullable String tooltip) {
@@ -49,8 +49,8 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
     final ShowIntentionsPass.IntentionsInfo info = new ShowIntentionsPass.IntentionsInfo();
 
     if (intentions != null) {
-      for (Pair<HighlightInfo.IntentionActionDescriptor, TextRange> intention : intentions) {
-        final HighlightInfo.IntentionActionDescriptor descriptor = intention.getFirst();
+      for (Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> intention : intentions) {
+        final HighlightInfoImpl.IntentionActionDescriptor descriptor = intention.getFirst();
         info.intentionsToShow.add(descriptor);
         final IntentionAction action = descriptor.getAction();
         if (action instanceof EmptyIntentionAction) {
@@ -78,7 +78,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
         public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
           CachedIntentions cachedIntentions = new CachedIntentions(project, psiFile, editor);
           IntentionListStep step = new IntentionListStep(null, editor, psiFile, project, cachedIntentions);
-          HighlightInfo.IntentionActionDescriptor descriptor = intentions.get(0).getFirst();
+          HighlightInfoImpl.IntentionActionDescriptor descriptor = intentions.get(0).getFirst();
           IntentionActionWithTextCaching actionWithTextCaching = cachedIntentions.wrapAction(descriptor, psiFile, psiFile, editor);
           if (step.hasSubstep(actionWithTextCaching)) {
             step = step.getSubStep(actionWithTextCaching, null);

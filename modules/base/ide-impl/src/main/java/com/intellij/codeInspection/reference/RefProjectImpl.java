@@ -26,6 +26,7 @@ package com.intellij.codeInspection.reference;
 
 import consulo.application.Application;
 import consulo.language.editor.inspection.reference.RefManager;
+import consulo.language.editor.inspection.reference.RefProject;
 import consulo.ui.image.Image;
 
 public class RefProjectImpl extends RefEntityImpl implements RefProject {

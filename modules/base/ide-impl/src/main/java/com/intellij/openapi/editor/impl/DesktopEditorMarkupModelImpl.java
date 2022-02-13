@@ -24,7 +24,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.hint.*;
 import consulo.application.ui.UISettings;
 import consulo.application.Application;
@@ -41,7 +41,7 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.util.DisposerUtil;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
@@ -444,7 +444,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
         final Object tooltipObject = highlighter.getErrorStripeTooltip();
         if (tooltipObject == null) continue;
 
-        final String text = tooltipObject instanceof HighlightInfo ? ((HighlightInfo)tooltipObject).getToolTip() : tooltipObject.toString();
+        final String text = tooltipObject instanceof HighlightInfoImpl ? ((HighlightInfoImpl)tooltipObject).getToolTip() : tooltipObject.toString();
         if (text == null) continue;
 
         if (tooltips == null) {

@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
@@ -38,6 +39,14 @@ import java.util.function.Predicate;
  */
 public final class VirtualFileUtil {
   private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);
+
+  @Nonnull
+  public static VirtualFile[] toVirtualFileArray(@Nonnull Collection<? extends VirtualFile> files) {
+    int size = files.size();
+    if (size == 0) return VirtualFile.EMPTY_ARRAY;
+    //noinspection SSBasedInspection
+    return files.toArray(new VirtualFile[size]);
+  }
 
   public static String pathToUrl(@Nonnull String path) {
     return VirtualFileManager.constructUrl(URLUtil.FILE_PROTOCOL, path);

@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.unwrap;
 
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.MarkupModel;

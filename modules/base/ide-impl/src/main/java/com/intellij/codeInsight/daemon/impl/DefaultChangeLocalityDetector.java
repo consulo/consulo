@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.ChangeLocalityDetector;
-import com.intellij.codeInspection.SuppressionUtil;
+import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;

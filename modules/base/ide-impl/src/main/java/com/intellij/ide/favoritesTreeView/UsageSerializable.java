@@ -18,7 +18,7 @@ package com.intellij.ide.favoritesTreeView;
 import com.intellij.codeInsight.folding.impl.GenericElementSignatureProvider;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

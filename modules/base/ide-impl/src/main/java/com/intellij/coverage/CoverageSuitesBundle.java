@@ -8,7 +8,7 @@ import consulo.project.content.ProjectRootModificationTracker;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScopesCore;
+import consulo.language.editor.scope.GlobalSearchScopesCore;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;

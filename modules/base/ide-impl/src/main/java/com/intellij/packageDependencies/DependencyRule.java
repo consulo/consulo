@@ -15,7 +15,7 @@
  */
 package com.intellij.packageDependencies;
 
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.scope.ComplementPackageSet;

@@ -25,14 +25,14 @@ public class CodeInsightBundle extends AbstractBundle {
   private static final CodeInsightBundle ourInstance = new CodeInsightBundle();
 
   private CodeInsightBundle() {
-    super("messages.CodeInsightBundle");
+    super("consulo.language.editor.CodeInsightBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.CodeInsightBundle") String key) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.language.editor.CodeInsightBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.CodeInsightBundle") String key, Object... params) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.language.editor.CodeInsightBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }

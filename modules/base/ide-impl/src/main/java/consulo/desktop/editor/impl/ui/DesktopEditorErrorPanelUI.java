@@ -15,13 +15,13 @@
  */
 package consulo.desktop.editor.impl.ui;
 
-import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
 import com.intellij.openapi.editor.ex.MarkupIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

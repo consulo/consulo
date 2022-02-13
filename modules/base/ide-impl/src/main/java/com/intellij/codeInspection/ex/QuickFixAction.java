@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInsight.FileModificationService;
+import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.ProblemDescriptor;

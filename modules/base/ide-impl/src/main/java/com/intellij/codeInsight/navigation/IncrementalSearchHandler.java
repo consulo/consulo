@@ -37,7 +37,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import com.intellij.openapi.editor.event.*;
 import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.HighlighterTargetArea;

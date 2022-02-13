@@ -16,6 +16,7 @@
 
 package com.intellij.codeInspection.reference;
 
+import consulo.language.editor.inspection.reference.RefGraphAnnotator;
 import consulo.language.editor.inspection.reference.RefManager;
 
 public class RefGraphAnnotatorEx extends RefGraphAnnotator {

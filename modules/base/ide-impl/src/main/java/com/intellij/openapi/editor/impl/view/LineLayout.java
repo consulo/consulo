@@ -2,9 +2,9 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.lang.CodeDocumentationAwareCommenter;
-import com.intellij.lang.Commenter;
+import consulo.language.Commenter;
 import consulo.language.Language;
-import com.intellij.lang.LanguageCommenters;
+import consulo.language.LanguageCommenters;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.bidi.BidiRegionsSeparator;

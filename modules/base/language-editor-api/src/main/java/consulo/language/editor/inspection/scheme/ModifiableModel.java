@@ -16,8 +16,8 @@
 
 package consulo.language.editor.inspection.scheme;
 
-import consulo.language.editor.HighlightDisplayKey;
-import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.project.Project;

@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.intention.impl;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.AbstractEmptyIntentionAction;
@@ -113,13 +113,13 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
   IntentionListStep getSubStep(@Nonnull IntentionActionWithTextCaching action, final String title) {
     ShowIntentionsPass.IntentionsInfo intentions = new ShowIntentionsPass.IntentionsInfo();
     for (final IntentionAction optionIntention : action.getOptionIntentions()) {
-      intentions.intentionsToShow.add(new HighlightInfo.IntentionActionDescriptor(optionIntention, getIcon(optionIntention)));
+      intentions.intentionsToShow.add(new HighlightInfoImpl.IntentionActionDescriptor(optionIntention, getIcon(optionIntention)));
     }
     for (final IntentionAction optionFix : action.getOptionErrorFixes()) {
-      intentions.errorFixesToShow.add(new HighlightInfo.IntentionActionDescriptor(optionFix, getIcon(optionFix)));
+      intentions.errorFixesToShow.add(new HighlightInfoImpl.IntentionActionDescriptor(optionFix, getIcon(optionFix)));
     }
     for (final IntentionAction optionFix : action.getOptionInspectionFixes()) {
-      intentions.inspectionFixesToShow.add(new HighlightInfo.IntentionActionDescriptor(optionFix, getIcon(optionFix)));
+      intentions.inspectionFixesToShow.add(new HighlightInfoImpl.IntentionActionDescriptor(optionFix, getIcon(optionFix)));
     }
 
     return new IntentionListStep(myIntentionHintComponent, myEditor, myFile, myProject, CachedIntentions.create(myProject, myFile, myEditor, intentions)) {

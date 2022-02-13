@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 
 public class TextRangeInterval extends ProperTextRange implements Interval {
   public TextRangeInterval(int startOffset, int endOffset) {

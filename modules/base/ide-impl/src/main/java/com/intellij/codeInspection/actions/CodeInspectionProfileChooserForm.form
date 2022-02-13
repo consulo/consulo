@@ -17,7 +17,7 @@
         <clientProperties>
           <BorderFactoryClass class="java.lang.String" value="com.intellij.ui.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
-        <border type="none" title-resource-bundle="messages/InspectionsBundle" title-key="inspection.action.profile.label"/>
+        <border type="none" title-resource-bundle="consulo/language/editor/inspection/InspectionsBundle" title-key="inspection.action.profile.label"/>
         <children>
           <component id="aba18" class="com.intellij.ui.ComboboxWithBrowseButton" binding="myBrowseProfilesCombo">
             <constraints>

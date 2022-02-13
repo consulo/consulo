@@ -15,9 +15,9 @@
  */
 package com.intellij.profile.codeInspection;
 
-import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.InspectionProfileConvertor;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import consulo.language.editor.highlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import consulo.language.editor.inspection.InspectionsBundle;

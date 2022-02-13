@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import com.intellij.codeInsight.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.scheme.InspectionProfile;

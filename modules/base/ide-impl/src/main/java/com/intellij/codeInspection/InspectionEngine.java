@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection;
 
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.codeInsight.daemon.impl.Divider;
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.*;

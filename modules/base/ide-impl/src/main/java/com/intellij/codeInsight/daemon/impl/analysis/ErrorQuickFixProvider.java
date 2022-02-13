@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl.analysis;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiErrorElement;
 
@@ -26,5 +26,5 @@ import consulo.language.psi.PsiErrorElement;
 public interface ErrorQuickFixProvider {
   ExtensionPointName<ErrorQuickFixProvider> EP_NAME = ExtensionPointName.create("consulo.errorQuickFixProvider");
   
-  void registerErrorQuickFix(PsiErrorElement errorElement, HighlightInfo highlightInfo);
+  void registerErrorQuickFix(PsiErrorElement errorElement, HighlightInfoImpl highlightInfo);
 }

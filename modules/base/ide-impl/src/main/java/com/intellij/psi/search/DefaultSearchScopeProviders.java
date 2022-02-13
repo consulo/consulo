@@ -8,6 +8,7 @@ import consulo.application.ReadAction;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
+import consulo.language.editor.scope.GlobalSearchScopesCore;
 import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.util.ColoredItem;

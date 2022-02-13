@@ -18,7 +18,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.editor.*;
 import consulo.editor.colorScheme.EditorColorKey;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorFontType;
 import consulo.editor.*;
 import consulo.editor.event.EditorMouseEventArea;

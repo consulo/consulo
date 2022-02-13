@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.classpath;
 
 import consulo.application.CommonBundle;
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.find.FindBundle;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;

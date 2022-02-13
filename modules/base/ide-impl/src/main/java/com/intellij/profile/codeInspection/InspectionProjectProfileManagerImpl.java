@@ -31,7 +31,7 @@ import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.editor.inspection.scheme.Profile;
 import com.intellij.profile.ProfileEx;
-import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.application.ui.awt.UIUtil;
 import org.jdom.Element;

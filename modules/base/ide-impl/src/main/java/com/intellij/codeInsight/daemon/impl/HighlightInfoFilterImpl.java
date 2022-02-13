@@ -16,7 +16,8 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.HighlightInfoFilter;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoFilter;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import consulo.editor.markup.TextAttributes;
@@ -27,7 +28,7 @@ public class HighlightInfoFilterImpl implements HighlightInfoFilter {
   private static final boolean ourTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
   @Override
-  public boolean accept(@Nonnull HighlightInfo info, PsiFile file) {
+  public boolean accept(@Nonnull HighlightInfoImpl info, PsiFile file) {
     if (ourTestMode) return true; // Tests need to verify highlighting is applied no matter what attributes are defined for this kind of highlighting
 
     TextAttributes attributes = info.getTextAttributes(file, null);

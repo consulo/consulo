@@ -16,10 +16,10 @@
 
 package com.intellij.codeInsight.daemon.impl.actions;
 
-import com.intellij.codeInsight.FileModificationService;
+import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.intention.SuppressIntentionAction;
-import com.intellij.codeInspection.SuppressionUtil;
+import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.language.Language;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.UndoUtil;

@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.richcopy;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoType;
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
@@ -343,7 +343,7 @@ public final class SyntaxInfoBuilder {
           continue; // overlapping ranges withing document markup model are not supported currently
         }
         TextAttributes attributes = null;
-        HighlightInfo info = HighlightInfo.fromRangeHighlighter(highlighter);
+        HighlightInfoImpl info = HighlightInfoImpl.fromRangeHighlighter(highlighter);
         if (info != null) {
           TextAttributesKey key = info.forcedTextAttributesKey;
           if (key == null) {

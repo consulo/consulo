@@ -15,9 +15,10 @@
  */
 package com.intellij.codeInspection;
 
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.GlobalInspectionTool;
+import consulo.language.editor.inspection.ProblemDescriptionsProcessor;
 import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.psi.PsiFile;

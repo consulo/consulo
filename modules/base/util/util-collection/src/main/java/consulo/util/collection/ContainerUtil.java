@@ -21,12 +21,12 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.function.IntFunction;
-import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -34,6 +34,61 @@ import java.util.function.Predicate;
  */
 public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Object[] map2Array(@Nonnull T[] array, @Nonnull Function<T, Object> mapper) {
+    return map2Array(array, Object.class, mapper);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Object[] map2Array(@Nonnull Collection<T> array, @Nonnull Function<T, Object> mapper) {
+    return map2Array(array, Object.class, mapper);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> V[] map2Array(@Nonnull T[] array, @Nonnull Class<? super V> aClass, @Nonnull Function<T, V> mapper) {
+    return map2Array(Arrays.asList(array), aClass, mapper);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> V[] map2Array(@Nonnull Collection<? extends T> collection, @Nonnull Class<? super V> aClass, @Nonnull Function<T, V> mapper) {
+    final List<V> list = map2List(collection, mapper);
+    @SuppressWarnings("unchecked") V[] array = (V[])Array.newInstance(aClass, list.size());
+    return list.toArray(array);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> V[] map2Array(@Nonnull Collection<? extends T> collection, @Nonnull V[] to, @Nonnull Function<T, V> mapper) {
+    return map2List(collection, mapper).toArray(to);
+  }
+
+  /**
+   * @return read-only list consisting of the elements from array converted by mapper
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> List<V> map2List(@Nonnull T[] array, @Nonnull Function<T, V> mapper) {
+    return map2List(Arrays.asList(array), mapper);
+  }
+
+  /**
+   * @return read-only list consisting of the elements from collection converted by mapper
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> List<V> map2List(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, V> mapper) {
+    if (collection.isEmpty()) return List.of();
+    List<V> list = new ArrayList<V>(collection.size());
+    for (final T t : collection) {
+      list.add(mapper.apply(t));
+    }
+    return list;
+  }
 
   public static <T extends Comparable<T>> void sort(@Nonnull List<T> list) {
     int size = list.size();
@@ -182,6 +237,19 @@ public class ContainerUtil {
       result.add(mapping.apply(t));
     }
     return result;
+  }
+
+  /**
+   * @return read-only list consisting of the elements from the array converted by mapping
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> List<V> map(@Nonnull T[] array, @Nonnull Function<T, V> mapping) {
+    List<V> result = new ArrayList<V>(array.length);
+    for (T t : array) {
+      result.add(mapping.apply(t));
+    }
+    return result.isEmpty() ? List.of() : result;
   }
 
   @Nonnull

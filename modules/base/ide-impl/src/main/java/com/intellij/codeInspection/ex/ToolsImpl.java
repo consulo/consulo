@@ -20,7 +20,7 @@
  */
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.project.Project;

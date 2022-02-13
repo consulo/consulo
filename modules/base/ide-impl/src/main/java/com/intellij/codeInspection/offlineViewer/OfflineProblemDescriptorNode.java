@@ -23,7 +23,6 @@ package com.intellij.codeInspection.offlineViewer;
 import com.intellij.codeInsight.daemon.impl.CollectHighlightsUtil;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import consulo.language.editor.inspection.*;
-import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.codeInspection.ex.QuickFixWrapper;
 import com.intellij.codeInspection.offline.OfflineProblemDescriptor;

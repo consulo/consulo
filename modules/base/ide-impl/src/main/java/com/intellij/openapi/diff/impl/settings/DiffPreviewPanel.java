@@ -18,7 +18,7 @@ import com.intellij.diff.util.ThreeSide;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.editor.Editor;
 import consulo.editor.FoldRegion;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.event.CaretEvent;
 import consulo.editor.event.CaretListener;

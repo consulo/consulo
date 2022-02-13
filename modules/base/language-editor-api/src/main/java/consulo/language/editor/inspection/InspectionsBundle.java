@@ -25,14 +25,14 @@ public class InspectionsBundle extends AbstractBundle {
   private static final InspectionsBundle ourInstance = new InspectionsBundle();
 
   private InspectionsBundle() {
-    super("messages.InspectionsBundle");
+    super("consulo.language.editor.inspection.InspectionsBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.InspectionsBundle") String key) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.language.editor.inspection.InspectionsBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.InspectionsBundle") String key, Object... params) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.language.editor.inspection.InspectionsBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }

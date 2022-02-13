@@ -39,7 +39,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
 import consulo.application.extension.KeyedExtensionCollector;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

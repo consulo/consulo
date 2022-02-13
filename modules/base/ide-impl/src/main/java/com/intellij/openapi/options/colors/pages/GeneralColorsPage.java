@@ -16,12 +16,12 @@
 package com.intellij.openapi.options.colors.pages;
 
 import com.intellij.application.options.colors.InspectionColorSettingsPage;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import consulo.language.editor.highlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.codeInsight.template.impl.TemplateColors;
 import consulo.editor.HighlighterColors;
 import consulo.editor.colorScheme.CodeInsightColors;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;

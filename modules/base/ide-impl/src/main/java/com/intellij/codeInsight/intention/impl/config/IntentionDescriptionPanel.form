@@ -18,7 +18,7 @@
         <properties>
           <alignmentY value="0.2"/>
         </properties>
-        <border type="none" title-resource-bundle="messages/CodeInsightBundle" title-key="dialog.intention.settings.description.panel.title"/>
+        <border type="none" title-resource-bundle="consulo/language/editor/CodeInsightBundle" title-key="dialog.intention.settings.description.panel.title"/>
         <children>
           <scrollpane id="f9e30" class="com.intellij.ui.components.JBScrollPane">
             <constraints>

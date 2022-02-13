@@ -21,6 +21,7 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.internal.InspectionToolsRegistrarCore;
 import consulo.language.editor.inspection.scheme.InspectionEP;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;

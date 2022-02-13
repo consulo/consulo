@@ -3,12 +3,14 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.AnnotatorStatisticsCollector;
 import com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
-import consulo.language.editor.HighlightInfoHolder;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoHolder;
 import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
 import com.intellij.diagnostic.PluginException;
 import consulo.language.Language;
 import com.intellij.lang.LanguageAnnotators;
-import consulo.language.editor.HighlightVisitor;
+import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.highlight.HighlightVisitor;
 import consulo.language.util.LanguageUtil;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.Annotator;
@@ -79,7 +81,7 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
           //noinspection ForLoopReplaceableByForEach
           for (int i = 0; i < size(); i++) {
             Annotation annotation = get(i);
-            holder.add(HighlightInfo.fromAnnotation(annotation, myBatchMode));
+            holder.add(HighlightInfoImpl.fromAnnotation(annotation, myBatchMode));
           }
           holder.queueToUpdateIncrementally();
           clear();
@@ -143,8 +145,8 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     myHolder.add(createErrorElementInfo(element));
   }
 
-  private static HighlightInfo createErrorElementInfo(@Nonnull PsiErrorElement element) {
-    HighlightInfo info = createInfoWithoutFixes(element);
+  private static HighlightInfoImpl createErrorElementInfo(@Nonnull PsiErrorElement element) {
+    HighlightInfoImpl info = createInfoWithoutFixes(element);
     if (info != null) {
       for (ErrorQuickFixProvider provider : ErrorQuickFixProvider.EP_NAME.getExtensionList()) {
         provider.registerErrorQuickFix(element, info);
@@ -153,11 +155,11 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     return info;
   }
 
-  private static HighlightInfo createInfoWithoutFixes(@Nonnull PsiErrorElement element) {
+  private static HighlightInfoImpl createInfoWithoutFixes(@Nonnull PsiErrorElement element) {
     TextRange range = element.getTextRange();
     LocalizeValue errorDescription = element.getErrorDescriptionValue();
     if (!range.isEmpty()) {
-      return HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(range).descriptionAndTooltip(errorDescription).create();
+      return HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(range).descriptionAndTooltip(errorDescription).create();
     }
     int offset = range.getStartOffset();
     PsiFile containingFile = element.getContainingFile();
@@ -166,7 +168,7 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     PsiElement elementAtOffset = viewProvider.findElementAt(offset, LanguageUtil.getRootLanguage(element));
     String text = elementAtOffset == null ? null : elementAtOffset.getText();
     if (offset < fileLength && text != null && !StringUtil.startsWithChar(text, '\n') && !StringUtil.startsWithChar(text, '\r')) {
-      HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(offset, offset + 1);
+      HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(offset, offset + 1);
       builder.descriptionAndTooltip(errorDescription);
       return builder.create();
     }
@@ -180,7 +182,7 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
       start = offset;
       end = offset < fileLength ? offset + 1 : offset;
     }
-    HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(element, start, end);
+    HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(element, start, end);
     builder.descriptionAndTooltip(errorDescription);
     builder.endOfLine();
     return builder.create();

@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
@@ -16,6 +16,7 @@ import consulo.editor.Editor;
 import consulo.editor.EditorKind;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.language.Language;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.ui.ex.action.AnAction;
@@ -147,7 +148,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   private void incErrorCount(RangeHighlighter highlighter, int delta) {
-    HighlightInfo info = HighlightInfo.fromRangeHighlighter(highlighter);
+    HighlightInfoImpl info = HighlightInfoImpl.fromRangeHighlighter(highlighter);
     if (info == null) return;
     HighlightSeverity infoSeverity = info.getSeverity();
     if (infoSeverity.myVal <= HighlightSeverity.INFORMATION.myVal) return;

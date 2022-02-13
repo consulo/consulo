@@ -16,11 +16,12 @@
 
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.inspection.SuppressionUtil;
+import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
 import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.lang.GlobalInspectionContextExtension;
-import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
+import consulo.language.editor.inspection.GlobalInspectionContextExtension;
+import consulo.language.editor.inspection.InspectionExtensionsFactory;
 import com.intellij.codeInspection.reference.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

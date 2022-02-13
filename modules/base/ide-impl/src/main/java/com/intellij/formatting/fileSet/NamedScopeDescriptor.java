@@ -2,7 +2,7 @@
 package com.intellij.formatting.fileSet;
 
 import consulo.language.psi.search.scope.*;
-import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.util.Pair;

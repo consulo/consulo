@@ -15,16 +15,18 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.HighlightInfoHolder;
-import consulo.language.editor.annotation.AnnotationSession;
 import consulo.editor.colorScheme.TextAttributesScheme;
-import consulo.project.Project;
+import consulo.language.editor.annotation.AnnotationSession;
+import consulo.language.editor.highlight.HighlightInfo;
+import consulo.language.editor.highlight.HighlightInfoHolder;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
@@ -62,7 +64,7 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
   @Override
   public boolean add(@Nullable HighlightInfo info) {
     if (info == null) return false;
-    PsiElement psiElement = info.psiElement;
+    PsiElement psiElement = ((HighlightInfoImpl)info).getPsiElement();
     if (psiElement != null && !PsiTreeUtil.isAncestor(myLevel, psiElement, false)) {
       throw new RuntimeException("Info: '" + info + "' reported for the element '" + psiElement + "'; but it was at the level " + myLevel);
     }

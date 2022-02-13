@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.actions;
 
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.analysis.BaseAnalysisAction;
 import com.intellij.analysis.BaseAnalysisActionDialog;
 import consulo.language.editor.inspection.scheme.InspectionManager;

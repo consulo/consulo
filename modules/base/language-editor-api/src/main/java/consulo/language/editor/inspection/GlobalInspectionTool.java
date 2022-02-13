@@ -15,14 +15,14 @@
  */
 package consulo.language.editor.inspection;
 
-import com.intellij.analysis.AnalysisScope;
-import consulo.language.editor.inspection.scheme.JobDescriptor;
+import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.inspection.reference.RefEntity;
-import com.intellij.codeInspection.reference.RefGraphAnnotator;
+import consulo.language.editor.inspection.reference.RefGraphAnnotator;
 import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
+import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

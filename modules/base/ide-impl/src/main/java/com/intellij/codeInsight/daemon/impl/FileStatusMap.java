@@ -2,9 +2,9 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.DirtyScopeTrackingHighlightingPassFactory;
-import com.intellij.codeHighlighting.Pass;
+import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
-import com.intellij.codeInsight.daemon.ProblemHighlightFilter;
+import consulo.language.editor.ProblemHighlightFilter;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.document.RangeMarker;

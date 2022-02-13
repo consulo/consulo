@@ -16,8 +16,9 @@
 
 package com.intellij.codeInspection;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.ProblemDescriptionsProcessor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInspection.ex.GlobalInspectionContextUtil;
@@ -48,7 +49,7 @@ public class GlobalInspectionUtil {
   }
 
   public static void createProblem(@Nonnull PsiElement elt,
-                                   @Nonnull HighlightInfo info,
+                                   @Nonnull HighlightInfoImpl info,
                                    TextRange range,
                                    @javax.annotation.Nullable ProblemGroup problemGroup,
                                    @Nonnull InspectionManager manager,
@@ -56,7 +57,7 @@ public class GlobalInspectionUtil {
                                    @Nonnull GlobalInspectionContext globalContext) {
     List<LocalQuickFix> fixes = new ArrayList<LocalQuickFix>();
     if (info.quickFixActionRanges != null) {
-      for (Pair<HighlightInfo.IntentionActionDescriptor, TextRange> actionRange : info.quickFixActionRanges) {
+      for (Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> actionRange : info.quickFixActionRanges) {
         final IntentionAction action = actionRange.getFirst().getAction();
         if (action instanceof LocalQuickFix) {
           fixes.add((LocalQuickFix)action);
@@ -64,7 +65,7 @@ public class GlobalInspectionUtil {
       }
     }
     ProblemDescriptor descriptor = manager.createProblemDescriptor(elt, range, createInspectionMessage(StringUtil.notNullize(info.getDescription())),
-                                                                   HighlightInfo.convertType(info.type), false,
+                                                                   HighlightInfoImpl.convertType(info.type), false,
                                                                    fixes.isEmpty() ? null : fixes.toArray(new LocalQuickFix[fixes.size()]));
     descriptor.setProblemGroup(problemGroup);
     problemDescriptionsProcessor.addProblemElement(

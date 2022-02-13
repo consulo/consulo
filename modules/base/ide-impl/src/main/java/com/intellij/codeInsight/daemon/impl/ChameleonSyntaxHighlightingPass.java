@@ -14,8 +14,11 @@ import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import consulo.application.progress.ProgressIndicator;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.Pass;
 import consulo.project.Project;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -76,8 +79,8 @@ class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
 
     List<PsiElement> lazyOutside = new ArrayList<>(100);
     List<PsiElement> lazyInside = new ArrayList<>(100);
-    List<HighlightInfo> outside = new ArrayList<>(100);
-    List<HighlightInfo> inside = new ArrayList<>(100);
+    List<HighlightInfoImpl> outside = new ArrayList<>(100);
+    List<HighlightInfoImpl> inside = new ArrayList<>(100);
 
     for (PsiElement e : s) {
       (e.getTextRange().intersects(myPriorityRange) ? lazyInside : lazyOutside).add(e);
@@ -94,7 +97,7 @@ class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
     myHighlights.addAll(outside);
   }
 
-  private void collectHighlights(@Nonnull PsiElement element, @Nonnull List<? super HighlightInfo> inside, @Nonnull List<? super HighlightInfo> outside, @Nonnull ProperTextRange priorityRange) {
+  private void collectHighlights(@Nonnull PsiElement element, @Nonnull List<? super HighlightInfoImpl> inside, @Nonnull List<? super HighlightInfoImpl> outside, @Nonnull ProperTextRange priorityRange) {
     EditorColorsScheme scheme = ObjectUtils.notNull(getColorsScheme(), EditorColorsManager.getInstance().getGlobalScheme());
     TextAttributes defaultAttrs = scheme.getAttributes(HighlighterColors.TEXT);
 
@@ -117,12 +120,12 @@ class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
         }
       }
       TextAttributes forcedAttributes;
-      List<? super HighlightInfo> result = priorityRange.contains(tr) ? inside : outside;
+      List<? super HighlightInfoImpl> result = priorityRange.contains(tr) ? inside : outside;
       if (attributes == null || attributes.isEmpty() || attributes.equals(defaultAttrs)) {
         forcedAttributes = TextAttributes.ERASE_MARKER;
       }
       else {
-        HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT).
+        HighlightInfoImpl info = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT).
                 range(tr).
                 textAttributes(TextAttributes.ERASE_MARKER).
                 createUnconditionally();
@@ -131,7 +134,7 @@ class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
         forcedAttributes = new TextAttributes(attributes.getForegroundColor(), attributes.getBackgroundColor(), attributes.getEffectColor(), attributes.getEffectType(), attributes.getFontType());
       }
 
-      HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT).
+      HighlightInfoImpl info = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT).
               range(tr).
               textAttributes(forcedAttributes).
               createUnconditionally();

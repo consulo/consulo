@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

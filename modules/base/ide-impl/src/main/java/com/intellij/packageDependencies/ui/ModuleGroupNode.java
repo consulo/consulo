@@ -16,7 +16,7 @@
 
 package com.intellij.packageDependencies.ui;
 
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.AllIcons;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import consulo.project.Project;

@@ -2,14 +2,15 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeHighlighting.Pass;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.ReferenceImporter;
 import consulo.language.editor.intention.IntentionAction;
-import com.intellij.codeInspection.HintAction;
+import consulo.language.editor.intention.HintAction;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ui.ex.action.ActionManager;
@@ -76,14 +77,14 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
     int caretOffset = myEditor.getCaretModel().getOffset();
     importUnambiguousImports(caretOffset);
-    List<HighlightInfo> visibleHighlights = getVisibleHighlights(myStartOffset, myEndOffset, myProject, myEditor, hasDirtyTextRange);
+    List<HighlightInfoImpl> visibleHighlights = getVisibleHighlights(myStartOffset, myEndOffset, myProject, myEditor, hasDirtyTextRange);
 
     for (int i = visibleHighlights.size() - 1; i >= 0; i--) {
-      HighlightInfo info = visibleHighlights.get(i);
+      HighlightInfoImpl info = visibleHighlights.get(i);
       if (info.startOffset <= caretOffset && showAddImportHint(info)) return;
     }
 
-    for (HighlightInfo visibleHighlight : visibleHighlights) {
+    for (HighlightInfoImpl visibleHighlight : visibleHighlights) {
       if (visibleHighlight.startOffset > caretOffset && showAddImportHint(visibleHighlight)) return;
     }
   }
@@ -93,7 +94,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     if (!DaemonCodeAnalyzer.getInstance(myProject).isImportHintsEnabled(myFile)) return;
 
     Document document = myEditor.getDocument();
-    final List<HighlightInfo> infos = new ArrayList<>();
+    final List<HighlightInfoImpl> infos = new ArrayList<>();
     DaemonCodeAnalyzerEx.processHighlights(document, myProject, null, 0, document.getTextLength(), info -> {
       if (info.hasHint() && info.getSeverity() == HighlightSeverity.ERROR && !info.getFixTextRange().containsOffset(caretOffset)) {
         infos.add(info);
@@ -102,7 +103,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     });
 
     List<ReferenceImporter> importers = ReferenceImporter.EP_NAME.getExtensionList();
-    for (HighlightInfo info : infos) {
+    for (HighlightInfoImpl info : infos) {
       for (HintAction action : extractHints(info)) {
         if (action.isAvailable(myProject, myEditor, myFile) && action.fixSilently(myEditor)) {
           break;
@@ -116,8 +117,8 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
   }
 
   @Nonnull
-  private static List<HighlightInfo> getVisibleHighlights(final int startOffset, final int endOffset, @Nonnull Project project, @Nonnull Editor editor, boolean isDirty) {
-    final List<HighlightInfo> highlights = new ArrayList<>();
+  private static List<HighlightInfoImpl> getVisibleHighlights(final int startOffset, final int endOffset, @Nonnull Project project, @Nonnull Editor editor, boolean isDirty) {
+    final List<HighlightInfoImpl> highlights = new ArrayList<>();
     int offset = editor.getCaretModel().getOffset();
     DaemonCodeAnalyzerEx.processHighlights(editor.getDocument(), project, null, startOffset, endOffset, info -> {
       //no changes after escape => suggest imports under caret only
@@ -132,7 +133,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     return highlights;
   }
 
-  private boolean showAddImportHint(@Nonnull HighlightInfo info) {
+  private boolean showAddImportHint(@Nonnull HighlightInfoImpl info) {
     if (!DaemonCodeAnalyzerSettings.getInstance().isImportHintEnabled()) return false;
     if (!DaemonCodeAnalyzer.getInstance(myProject).isImportHintsEnabled(myFile)) return false;
     PsiElement element = myFile.findElementAt(info.startOffset);
@@ -147,12 +148,12 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
   }
 
   @Nonnull
-  private static List<HintAction> extractHints(@Nonnull HighlightInfo info) {
-    List<Pair<HighlightInfo.IntentionActionDescriptor, TextRange>> list = info.quickFixActionRanges;
+  private static List<HintAction> extractHints(@Nonnull HighlightInfoImpl info) {
+    List<Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange>> list = info.quickFixActionRanges;
     if (list == null) return Collections.emptyList();
 
     List<HintAction> hintActions = new SmartList<>();
-    for (Pair<HighlightInfo.IntentionActionDescriptor, TextRange> pair : list) {
+    for (Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> pair : list) {
       IntentionAction action = pair.getFirst().getAction();
       if (action instanceof HintAction) {
         hintActions.add((HintAction)action);

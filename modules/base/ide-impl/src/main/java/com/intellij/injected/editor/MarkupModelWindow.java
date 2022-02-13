@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.disposer.Disposable;
 import consulo.language.file.inject.DocumentWindow;

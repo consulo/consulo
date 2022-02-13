@@ -8,6 +8,8 @@ import consulo.editor.CaretModel;
 import consulo.editor.Editor;
 import consulo.editor.ScrollType;
 import consulo.editor.VisualPosition;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.lang.*;
 import consulo.language.inject.InjectedLanguageManager;

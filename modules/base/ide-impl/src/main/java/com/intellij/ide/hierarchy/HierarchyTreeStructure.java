@@ -29,7 +29,7 @@ import com.intellij.psi.search.GlobalSearchScopes;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.language.psi.search.scope.PackageSet;
 import consulo.language.psi.util.PsiTreeUtil;

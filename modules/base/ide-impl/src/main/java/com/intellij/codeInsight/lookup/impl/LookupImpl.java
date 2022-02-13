@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.AutoPopupController;
-import com.intellij.codeInsight.FileModificationService;
+import consulo.language.editor.FileModificationService;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;

@@ -20,6 +20,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.document.Document;
@@ -59,7 +60,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
 
     for (int idx = maxSeverity; idx >= 0; idx--) {
       final HighlightSeverity minSeverity = severityRegistrar.getSeverityByIndex(idx);
-      HighlightInfo infoToGo = findInfo(project, editor, caretOffset, minSeverity);
+      HighlightInfoImpl infoToGo = findInfo(project, editor, caretOffset, minSeverity);
       if (infoToGo != null) {
         navigateToError(project, editor, infoToGo);
         return;
@@ -68,14 +69,14 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     showMessageWhenNoHighlights(project, file, editor);
   }
 
-  private HighlightInfo findInfo(Project project, Editor editor, final int caretOffset, HighlightSeverity minSeverity) {
+  private HighlightInfoImpl findInfo(Project project, Editor editor, final int caretOffset, HighlightSeverity minSeverity) {
     final Document document = editor.getDocument();
-    final HighlightInfo[][] infoToGo = new HighlightInfo[2][2]; //HighlightInfo[luck-noluck][skip-noskip]
+    final HighlightInfoImpl[][] infoToGo = new HighlightInfoImpl[2][2]; //HighlightInfo[luck-noluck][skip-noskip]
     final int caretOffsetIfNoLuck = myGoForward ? -1 : document.getTextLength();
 
-    DaemonCodeAnalyzerEx.processHighlights(document, project, minSeverity, 0, document.getTextLength(), new Processor<HighlightInfo>() {
+    DaemonCodeAnalyzerEx.processHighlights(document, project, minSeverity, 0, document.getTextLength(), new Processor<HighlightInfoImpl>() {
       @Override
-      public boolean process(HighlightInfo info) {
+      public boolean process(HighlightInfoImpl info) {
         int startOffset = getNavigationPositionFor(info, document);
         if (SeverityRegistrar.isGotoBySeverityEnabled(info.getSeverity())) {
           infoToGo[0][0] = getBetterInfoThan(infoToGo[0][0], caretOffset, startOffset, info);
@@ -92,14 +93,14 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     return infoToGo[0][0];
   }
 
-  private HighlightInfo getBetterInfoThan(HighlightInfo infoToGo, int caretOffset, int startOffset, HighlightInfo info) {
+  private HighlightInfoImpl getBetterInfoThan(HighlightInfoImpl infoToGo, int caretOffset, int startOffset, HighlightInfoImpl info) {
     if (isBetterThan(infoToGo, caretOffset, startOffset)) {
       infoToGo = info;
     }
     return infoToGo;
   }
 
-  private boolean isBetterThan(HighlightInfo oldInfo, int caretOffset, int newOffset) {
+  private boolean isBetterThan(HighlightInfoImpl oldInfo, int caretOffset, int newOffset) {
     if (oldInfo == null) return true;
     int oldOffset = getNavigationPositionFor(oldInfo, oldInfo.highlighter.getDocument());
     if (myGoForward) {
@@ -118,7 +119,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     HintManager.getInstance().showInformationHint(editor, message);
   }
 
-  static void navigateToError(Project project, final Editor editor, HighlightInfo info) {
+  static void navigateToError(Project project, final Editor editor, HighlightInfoImpl info) {
     int oldOffset = editor.getCaretModel().getOffset();
 
     final int offset = getNavigationPositionFor(info, editor.getDocument());
@@ -148,7 +149,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
   }
 
-  private static int getNavigationPositionFor(HighlightInfo info, Document document) {
+  private static int getNavigationPositionFor(HighlightInfoImpl info, Document document) {
     int start = info.getActualStartOffset();
     if (start >= document.getTextLength()) return document.getTextLength();
     char c = document.getCharsSequence().charAt(start);

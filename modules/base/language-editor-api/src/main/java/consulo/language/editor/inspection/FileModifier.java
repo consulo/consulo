@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.inspection;
 
-import com.intellij.codeInspection.LocalInspectionTool;
 import consulo.application.WriteActionAware;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiElement;
@@ -67,18 +66,24 @@ public interface FileModifier extends WriteActionAware {
   @Nullable
   default FileModifier getFileModifierForPreview(@Nonnull PsiFile target) {
     if (!startInWriteAction()) return null;
-    for (Field field : ReflectionUtil.collectFields(((Object)this).getClass())) {
-      if (Modifier.isStatic(field.getModifiers())) continue;
+
+    Field targetField = ReflectionUtil.processFields(((Object)this).getClass(), field -> {
+      if (Modifier.isStatic(field.getModifiers())) return false;
       Class<?> type = field.getType();
-      if (field.getAnnotation(SafeFieldForPreview.class) != null) continue;
+      if (field.getAnnotation(SafeFieldForPreview.class) != null) return false;
       while (type.isArray()) type = type.getComponentType();
       if (type.isPrimitive() || type.isEnum() || type.equals(String.class) || type.equals(Class.class) || type.equals(Integer.class) || type.equals(Boolean.class) ||
           // Back-link to the parent inspection looks safe, as inspection should not depend on the file
           (field.isSynthetic() && field.getName().equals("this$0") && LocalInspectionTool.class.isAssignableFrom(type))) {
-        continue;
+        return false;
       }
+      return true;
+    });
+
+    if (targetField != null) {
       return null;
     }
+    
     // No PSI-specific state: it's safe to apply this action to a file copy
     return this;
   }

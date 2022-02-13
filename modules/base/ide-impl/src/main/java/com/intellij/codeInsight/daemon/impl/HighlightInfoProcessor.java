@@ -15,11 +15,12 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.editor.Editor;
 import consulo.document.util.TextRange;
+import consulo.editor.Editor;
+import consulo.language.editor.highlight.HighlightInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 // IMPL class hardcoding logic to react to errors/warnings found during highlighting

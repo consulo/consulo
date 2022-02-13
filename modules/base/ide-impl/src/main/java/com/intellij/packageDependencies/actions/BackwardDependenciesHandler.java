@@ -16,8 +16,8 @@
 
 package com.intellij.packageDependencies.actions;
 
-import consulo.language.editor.AnalysisScope;
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.project.Project;
 import com.intellij.packageDependencies.BackwardDependenciesBuilder;
 import com.intellij.packageDependencies.DependenciesBuilder;

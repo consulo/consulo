@@ -15,15 +15,12 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import consulo.language.editor.HighlightDisplayLevel;
-import consulo.language.editor.inspection.BatchSuppressableTool;
-import consulo.language.editor.inspection.InspectionSuppressor;
-import consulo.language.editor.inspection.LanguageInspectionSuppressors;
-import consulo.language.editor.inspection.SuppressQuickFix;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.inspection.*;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.io.ResourceUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;
@@ -96,7 +93,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
 
   }
 
-  interface DefaultNameProvider {
+  public interface DefaultNameProvider {
     @Nullable
     String getDefaultShortName();
 

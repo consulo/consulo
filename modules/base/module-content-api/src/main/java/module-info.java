@@ -9,7 +9,9 @@ module consulo.module.content.api {
 
   exports consulo.module.content;
   exports consulo.module.content.scope;
+  exports consulo.module.content.util;
   exports consulo.module.content.library;
+  exports consulo.module.content.library.util;
   exports consulo.module.content.layer;
   exports consulo.module.content.layer.event;
   exports consulo.module.content.layer.orderEntry;

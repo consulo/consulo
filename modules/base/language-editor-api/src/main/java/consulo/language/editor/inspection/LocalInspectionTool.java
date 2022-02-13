@@ -22,9 +22,9 @@ import consulo.logging.Logger;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
 
   private static final Logger LOG = Logger.getInstance(LocalInspectionTool.class);
 
-  interface LocalDefaultNameProvider extends DefaultNameProvider {
+  public interface LocalDefaultNameProvider extends DefaultNameProvider {
     @Nullable
     String getDefaultID();
 
@@ -46,7 +46,8 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
   /**
    * Pattern used for inspection ID validation.
    */
-  @NonNls @Language("RegExp")
+  @NonNls
+  @Language("RegExp")
   public static final String VALID_ID_PATTERN = "[a-zA-Z_0-9.-]+";
 
   public static boolean isValidID(@Nonnull String id) {
@@ -159,23 +160,25 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
 
   @Nullable
   public PsiNamedElement getProblemElement(PsiElement psiElement) {
-    while (psiElement!=null && !(psiElement instanceof PsiFile)) {
+    while (psiElement != null && !(psiElement instanceof PsiFile)) {
       psiElement = psiElement.getParent();
     }
     return (PsiFile)psiElement;
   }
 
-  public void inspectionStarted(@Nonnull LocalInspectionToolSession session, boolean isOnTheFly) {}
+  public void inspectionStarted(@Nonnull LocalInspectionToolSession session, boolean isOnTheFly) {
+  }
 
   public void inspectionFinished(@Nonnull LocalInspectionToolSession session, @Nonnull ProblemsHolder problemsHolder) {
     inspectionFinished(session);
   }
 
   @Deprecated()
-  public void inspectionFinished(@Nonnull LocalInspectionToolSession session) {}
+  public void inspectionFinished(@Nonnull LocalInspectionToolSession session) {
+  }
+
   @Nonnull
-  public List<ProblemDescriptor> processFile(@Nonnull PsiFile file,
-                                             @Nonnull InspectionManager manager) {
+  public List<ProblemDescriptor> processFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager) {
     final ProblemsHolder holder = new ProblemsHolder(manager, file, false);
     LocalInspectionToolSession session = new LocalInspectionToolSession(file, 0, file.getTextLength());
     final PsiElementVisitor customVisitor = buildVisitor(holder, false, session);

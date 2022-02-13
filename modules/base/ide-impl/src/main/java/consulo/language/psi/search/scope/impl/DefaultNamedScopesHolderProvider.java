@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.search.scope.impl;
 
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.language.psi.search.scope.NamedScopesHolderProvider;
 import jakarta.inject.Inject;

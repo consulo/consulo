@@ -16,7 +16,8 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightInfoType;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.editor.markup.TextAttributes;
 import consulo.project.Project;

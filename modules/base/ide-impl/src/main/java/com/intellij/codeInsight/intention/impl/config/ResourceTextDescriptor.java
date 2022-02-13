@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ResourceUtil;
+import consulo.util.io.ResourceUtil;
 import com.intellij.util.io.URLUtil;
 
 import javax.annotation.Nonnull;

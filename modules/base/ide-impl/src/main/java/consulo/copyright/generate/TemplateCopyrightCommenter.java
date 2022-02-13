@@ -15,7 +15,7 @@
  */
 package consulo.copyright.generate;
 
-import com.intellij.lang.Commenter;
+import consulo.language.Commenter;
 
 import javax.annotation.Nullable;
 

@@ -16,9 +16,9 @@
 package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
-import com.intellij.lang.Commenter;
+import consulo.language.Commenter;
 import consulo.language.Language;
-import com.intellij.lang.LanguageCommenters;
+import consulo.language.LanguageCommenters;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;

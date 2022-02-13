@@ -97,7 +97,7 @@ public class ReflectionUtil {
     throw new NoSuchFieldException("Class: " + clazz + " fieldName: " + fieldName + " fieldType: " + fieldType);
   }
 
-  private static Field processFields(@Nonnull Class clazz, @Nonnull Predicate<Field> checker) {
+  public static Field processFields(@Nonnull Class clazz, @Nonnull Predicate<Field> checker) {
     SimpleReference<Field> fieldRef = SimpleReference.create();
 
     processClasses(clazz, it -> {

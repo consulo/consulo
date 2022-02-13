@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.reference;
 
-import com.intellij.codeInspection.SuppressionUtil;
+import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.component.util.Iconable;

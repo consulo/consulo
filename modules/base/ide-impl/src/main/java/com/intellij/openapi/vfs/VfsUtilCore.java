@@ -289,10 +289,7 @@ public class VfsUtilCore {
 
   @Nonnull
   public static VirtualFile[] toVirtualFileArray(@Nonnull Collection<? extends VirtualFile> files) {
-    int size = files.size();
-    if (size == 0) return VirtualFile.EMPTY_ARRAY;
-    //noinspection SSBasedInspection
-    return files.toArray(new VirtualFile[size]);
+    return VirtualFileUtil.toVirtualFileArray(files);
   }
 
   @Nonnull

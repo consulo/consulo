@@ -16,10 +16,10 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import com.intellij.lang.CodeDocumentationAwareCommenter;
-import com.intellij.lang.Commenter;
-import com.intellij.lang.LanguageCommenters;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
 import consulo.document.util.TextRange;
 import consulo.language.psi.LiteralTextEscaper;
 import com.intellij.psi.impl.source.tree.PsiCommentImpl;

@@ -23,7 +23,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import consulo.editor.Editor;
 import consulo.editor.LogicalPosition;
 import consulo.editor.ScrollType;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;

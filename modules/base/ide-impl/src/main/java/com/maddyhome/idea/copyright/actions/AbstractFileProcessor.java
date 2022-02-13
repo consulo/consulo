@@ -16,7 +16,7 @@
 
 package com.maddyhome.idea.copyright.actions;
 
-import com.intellij.codeInsight.FileModificationService;
+import consulo.language.editor.FileModificationService;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.module.Module;

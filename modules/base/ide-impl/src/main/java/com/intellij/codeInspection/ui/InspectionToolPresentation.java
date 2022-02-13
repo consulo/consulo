@@ -17,7 +17,7 @@ package com.intellij.codeInspection.ui;
 
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
-import com.intellij.codeInspection.ProblemDescriptionsProcessor;
+import consulo.language.editor.inspection.ProblemDescriptionsProcessor;
 import consulo.language.editor.inspection.QuickFix;
 import com.intellij.codeInspection.ex.GlobalInspectionContextImpl;
 import com.intellij.codeInspection.ex.HTMLComposerImpl;

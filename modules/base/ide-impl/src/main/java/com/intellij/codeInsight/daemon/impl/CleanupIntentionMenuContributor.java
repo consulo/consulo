@@ -1,8 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.intention.IntentionManager;
+import consulo.language.editor.intention.IntentionManager;
 import consulo.editor.Editor;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
@@ -17,11 +18,11 @@ public class CleanupIntentionMenuContributor implements IntentionMenuContributor
     }
   }
 
-  private static boolean appendCleanupCode(@Nonnull List<HighlightInfo.IntentionActionDescriptor> actionDescriptors, @Nonnull PsiFile file) {
-    for (HighlightInfo.IntentionActionDescriptor descriptor : actionDescriptors) {
+  private static boolean appendCleanupCode(@Nonnull List<HighlightInfoImpl.IntentionActionDescriptor> actionDescriptors, @Nonnull PsiFile file) {
+    for (HighlightInfoImpl.IntentionActionDescriptor descriptor : actionDescriptors) {
       if (descriptor.canCleanup(file)) {
         IntentionManager manager = IntentionManager.getInstance();
-        actionDescriptors.add(new HighlightInfo.IntentionActionDescriptor(manager.createCleanupAllIntention(), manager.getCleanupIntentionOptions(), "Code Cleanup Options"));
+        actionDescriptors.add(new HighlightInfoImpl.IntentionActionDescriptor(manager.createCleanupAllIntention(), manager.getCleanupIntentionOptions(), "Code Cleanup Options"));
         return true;
       }
     }

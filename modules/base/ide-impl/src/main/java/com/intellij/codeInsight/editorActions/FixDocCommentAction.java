@@ -2,7 +2,9 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.application.options.CodeStyle;
-import com.intellij.codeInsight.FileModificationService;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
+import consulo.language.editor.FileModificationService;
 import com.intellij.codeInsight.documentation.DocCommentFixer;
 import com.intellij.lang.*;
 import com.intellij.lang.documentation.CodeDocumentationProvider;

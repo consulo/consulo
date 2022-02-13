@@ -20,6 +20,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.lang.ExternalLanguageAnnotators;
 import consulo.language.Language;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationSession;
 import consulo.language.editor.annotation.ExternalAnnotator;
@@ -151,7 +152,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
                 }
 
                 myDocument.removeDocumentListener(myDocumentListener);
-                final List<HighlightInfo> infos = getHighlights();
+                final List<HighlightInfoImpl> infos = getHighlights();
                 UpdateHighlightersUtil
                   .setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, infos, getColorsScheme(), getId());
               }
@@ -180,10 +181,10 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
     }
   }
 
-  private List<HighlightInfo> getHighlights() {
-    List<HighlightInfo> infos = new ArrayList<HighlightInfo>();
+  private List<HighlightInfoImpl> getHighlights() {
+    List<HighlightInfoImpl> infos = new ArrayList<HighlightInfoImpl>();
     for (Annotation annotation : myAnnotationHolder) {
-      infos.add(HighlightInfo.fromAnnotation(annotation));
+      infos.add(HighlightInfoImpl.fromAnnotation(annotation));
     }
     return infos;
   }
@@ -203,7 +204,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
       @Override
       public void run() {
         if (!myProject.isDisposed()) {
-          UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, Collections.<HighlightInfo>emptyList(),
+          UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, Collections.<HighlightInfoImpl>emptyList(),
                                                          getColorsScheme(), getId());
         }
       }

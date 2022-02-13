@@ -20,7 +20,7 @@ import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.ui.InspectionResultsView;
 import consulo.application.AllIcons;
 import consulo.component.persist.StoragePathMacros;
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;

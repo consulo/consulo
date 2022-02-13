@@ -4,7 +4,7 @@ package com.intellij.psi.impl.source.tree.injected;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.editor.*;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

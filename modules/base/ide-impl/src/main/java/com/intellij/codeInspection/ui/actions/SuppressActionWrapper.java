@@ -4,10 +4,10 @@
  */
 package com.intellij.codeInspection.ui.actions;
 
-import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.GlobalInspectionContextImpl;
 import com.intellij.codeInspection.ex.InspectionManagerEx;
 import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.reference.RefElement;

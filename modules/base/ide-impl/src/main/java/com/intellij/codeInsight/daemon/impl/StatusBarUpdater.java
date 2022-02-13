@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -104,7 +105,7 @@ public class StatusBarUpdater implements Disposable {
 
     int offset = editor.getCaretModel().getOffset();
     DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(myProject);
-    HighlightInfo info = ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(document, offset, false, HighlightSeverity.WARNING);
+    HighlightInfoImpl info = ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(document, offset, false, HighlightSeverity.WARNING);
     String text = info != null && info.getDescription() != null ? info.getDescription() : "";
 
     StatusBar statusBar = WindowManager.getInstance().getStatusBar(contentUIComponent, myProject);

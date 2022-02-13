@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.lang.CodeDocumentationAwareCommenter;
-import com.intellij.lang.Commenter;
-import com.intellij.lang.LanguageCommenters;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

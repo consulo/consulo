@@ -26,7 +26,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorBundle;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.project.Project;
 import consulo.component.util.Iconable;

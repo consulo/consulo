@@ -17,20 +17,21 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import com.intellij.codeInsight.intention.AbstractEmptyIntentionAction;
-import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import com.intellij.codeInsight.intention.impl.CachedIntentions;
 import com.intellij.codeInsight.intention.impl.IntentionActionWithTextCaching;
-import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
-import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.TooltipAction;
-import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.application.ApplicationManager;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
+import consulo.editor.Editor;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,7 +44,7 @@ import java.util.List;
 public class DaemonTooltipActionProvider implements TooltipActionProvider {
   @Nullable
   @Override
-  public TooltipAction getTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
+  public TooltipAction getTooltipAction(@Nonnull HighlightInfoImpl info, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
     IntentionAction intention = extractMostPriorityFixFromHighlightInfo(info, editor, psiFile);
 
     if(intention == null) return null;
@@ -51,19 +52,19 @@ public class DaemonTooltipActionProvider implements TooltipActionProvider {
     return wrapIntentionToTooltipAction(intention, info);
   }
 
-  private TooltipAction wrapIntentionToTooltipAction(IntentionAction intention, HighlightInfo info) {
-    Pair<HighlightInfo.IntentionActionDescriptor, RangeMarker> pair = ContainerUtil.find(info.quickFixActionMarkers, it -> it.getFirst().getAction() == intention);
+  private TooltipAction wrapIntentionToTooltipAction(IntentionAction intention, HighlightInfoImpl info) {
+    Pair<HighlightInfoImpl.IntentionActionDescriptor, RangeMarker> pair = ContainerUtil.find(info.quickFixActionMarkers, it -> it.getFirst().getAction() == intention);
 
     int offset = pair != null && pair.getSecond().isValid() ? pair.getSecond().getStartOffset() : info.getActualStartOffset();
 
      return new DaemonTooltipAction(intention.getText(), offset);
   }
 
-  private static IntentionAction extractMostPriorityFixFromHighlightInfo(HighlightInfo highlightInfo, Editor editor, PsiFile psiFile) {
+  private static IntentionAction extractMostPriorityFixFromHighlightInfo(HighlightInfoImpl highlightInfo, Editor editor, PsiFile psiFile) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
-    List<HighlightInfo.IntentionActionDescriptor> fixes = new ArrayList<>();
-    List<Pair<HighlightInfo.IntentionActionDescriptor, TextRange>> quickFixActionMarkers = highlightInfo.quickFixActionRanges;
+    List<HighlightInfoImpl.IntentionActionDescriptor> fixes = new ArrayList<>();
+    List<Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange>> quickFixActionMarkers = highlightInfo.quickFixActionRanges;
     if (quickFixActionMarkers == null || quickFixActionMarkers.isEmpty()) return null;
 
     fixes.addAll(ContainerUtil.map(quickFixActionMarkers, (it) -> it.getFirst()));

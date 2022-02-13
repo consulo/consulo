@@ -3,6 +3,8 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.application.options.CodeStyle;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegate;

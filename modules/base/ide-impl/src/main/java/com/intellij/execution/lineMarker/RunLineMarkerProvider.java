@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.lineMarker;
 
-import com.intellij.codeHighlighting.Pass;
+import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.gutter.LineMarkerProviderDescriptor;
 import consulo.application.AllIcons;

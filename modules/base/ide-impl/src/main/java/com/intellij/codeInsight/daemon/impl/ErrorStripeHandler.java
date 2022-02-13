@@ -19,6 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.openapi.editor.ex.ErrorStripeAdapter;
 import com.intellij.openapi.editor.ex.ErrorStripeEvent;
 import consulo.editor.markup.RangeHighlighter;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 
@@ -33,15 +34,15 @@ public class ErrorStripeHandler extends ErrorStripeAdapter {
   public void errorMarkerClicked(@Nonnull ErrorStripeEvent e) {
     RangeHighlighter highlighter = e.getHighlighter();
     if (!highlighter.isValid()) return;
-    HighlightInfo info = findInfo(highlighter);
+    HighlightInfoImpl info = findInfo(highlighter);
     if (info != null) {
       GotoNextErrorHandler.navigateToError(myProject, e.getEditor(), info);
     }
   }
 
-  private static HighlightInfo findInfo(final RangeHighlighter highlighter) {
+  private static HighlightInfoImpl findInfo(final RangeHighlighter highlighter) {
     Object o = highlighter.getErrorStripeTooltip();
-    if (o instanceof HighlightInfo) return (HighlightInfo)o;
+    if (o instanceof HighlightInfoImpl) return (HighlightInfoImpl)o;
     return null;
   }
 }

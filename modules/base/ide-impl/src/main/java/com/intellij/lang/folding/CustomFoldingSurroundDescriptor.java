@@ -16,9 +16,9 @@
 package com.intellij.lang.folding;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.Commenter;
+import consulo.language.Commenter;
 import consulo.language.Language;
-import com.intellij.lang.LanguageCommenters;
+import consulo.language.LanguageCommenters;
 import com.intellij.lang.surroundWith.SurroundDescriptor;
 import com.intellij.lang.surroundWith.Surrounder;
 import consulo.editor.Editor;

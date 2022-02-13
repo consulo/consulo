@@ -32,6 +32,7 @@ import consulo.application.ApplicationManager;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;

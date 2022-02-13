@@ -53,6 +53,7 @@ open module consulo.ide.impl {
   requires transitive consulo.execution.api;
   requires transitive consulo.debugger.api;
   requires transitive consulo.compiler.api;
+  requires transitive consulo.language.editor.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -230,7 +231,6 @@ open module consulo.ide.impl {
   exports com.intellij.codeInspection.actions;
   exports com.intellij.codeInspection.ex;
   exports com.intellij.codeInspection.export;
-  exports com.intellij.codeInspection.lang;
   exports com.intellij.codeInspection.offline;
   exports com.intellij.codeInspection.offlineViewer;
   exports com.intellij.codeInspection.reference;
@@ -758,7 +758,6 @@ open module consulo.ide.impl {
   exports com.intellij.platform.templates.github;
   exports com.intellij.pom;
   exports com.intellij.pom.core.impl;
-  exports com.intellij.pom.event;
   exports com.intellij.pom.impl;
   exports com.intellij.pom.references;
   exports com.intellij.pom.tree;

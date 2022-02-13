@@ -12,7 +12,7 @@ import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.EditorGutter;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.event.CaretEvent;
 import consulo.editor.event.CaretListener;

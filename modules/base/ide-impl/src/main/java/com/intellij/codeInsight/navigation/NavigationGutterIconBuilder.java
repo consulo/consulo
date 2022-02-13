@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.navigation;
 
-import com.intellij.codeHighlighting.Pass;
+import consulo.language.editor.Pass;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.ide.TypePresentationService;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;

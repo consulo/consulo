@@ -15,22 +15,22 @@
  */
 package com.intellij.codeHighlighting;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
-import consulo.language.Language;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.options.SchemeMetaInfo;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.awt.ColorUtil;
+import consulo.application.util.registry.Registry;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.colorScheme.TextAttributesScheme;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.openapi.options.SchemeMetaInfo;
-import consulo.application.util.registry.Registry;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.Language;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.highlight.HighlightInfo;
+import consulo.language.editor.highlight.HighlightInfoType;
 import consulo.language.psi.PsiElement;
-import consulo.application.ui.awt.ColorUtil;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.util.LightDarkColorValue;

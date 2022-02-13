@@ -15,20 +15,22 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.document.Document;
-import consulo.document.RangeMarker;
-import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.TransferToEDTQueue;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.language.editor.highlight.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -132,13 +134,14 @@ public class HighlightingSessionImpl implements HighlightingSession {
   void queueHighlightInfo(@Nonnull HighlightInfo info, @Nonnull TextRange restrictedRange, int groupId) {
     applyInEDT(() -> {
       final EditorColorsScheme colorsScheme = getColorsScheme();
-      UpdateHighlightersUtil.addHighlighterToEditorIncrementally(myProject, getDocument(), getPsiFile(), restrictedRange.getStartOffset(), restrictedRange.getEndOffset(), info, colorsScheme, groupId,
-                                                                 myRanges2markersCache);
+      UpdateHighlightersUtil
+              .addHighlighterToEditorIncrementally(myProject, getDocument(), getPsiFile(), restrictedRange.getStartOffset(), restrictedRange.getEndOffset(), (HighlightInfoImpl)info, colorsScheme,
+                                                   groupId, myRanges2markersCache);
     });
   }
 
   void queueDisposeHighlighterFor(@Nonnull HighlightInfo info) {
-    RangeHighlighterEx highlighter = info.getHighlighter();
+    RangeHighlighterEx highlighter = ((HighlightInfoImpl)info).getHighlighter();
     if (highlighter == null) return;
     // that highlighter may have been reused for another info
     applyInEDT(() -> {

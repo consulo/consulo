@@ -31,7 +31,7 @@ import com.intellij.openapi.keymap.impl.DefaultKeymap;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.ResourceUtil;
+import consulo.util.io.ResourceUtil;
 import com.intellij.util.ui.JBHtmlEditorKit;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

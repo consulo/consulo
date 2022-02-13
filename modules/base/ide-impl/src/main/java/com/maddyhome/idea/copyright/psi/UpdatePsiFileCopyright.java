@@ -16,8 +16,8 @@
 
 package com.maddyhome.idea.copyright.psi;
 
-import com.intellij.lang.Commenter;
-import com.intellij.lang.LanguageCommenters;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;

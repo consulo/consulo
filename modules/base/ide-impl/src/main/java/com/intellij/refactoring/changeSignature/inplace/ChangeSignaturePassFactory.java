@@ -17,8 +17,8 @@ package com.intellij.refactoring.changeSignature.inplace;
 
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.UpdateHighlightersUtil;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import consulo.editor.Editor;
@@ -72,7 +72,7 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
 
     @Override
     public void doApplyInformationToEditor() {
-      HighlightInfo info = null;
+      HighlightInfoImpl info = null;
       final InplaceChangeSignature currentRefactoring = InplaceChangeSignature.getCurrentRefactoring(myEditor);
       if (currentRefactoring != null) {
         final ChangeInfo changeInfo = currentRefactoring.getStableChange();
@@ -87,13 +87,13 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
                                                        myEditor.getColorsScheme().getAttributes(CodeInsightColors.WEAK_WARNING_ATTRIBUTES)
                                                                .getEffectColor(),
                                                        null, Font.PLAIN);
-        HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(range);
+        HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.INFORMATION).range(range);
         builder.textAttributes(attributes);
         builder.descriptionAndTooltip(SIGNATURE_SHOULD_BE_POSSIBLY_CHANGED);
         info = builder.createUnconditionally();
         QuickFixAction.registerQuickFixAction(info, new ApplyChangeSignatureAction(currentRefactoring.getInitialName()));
       }
-      Collection<HighlightInfo> infos = info != null ? Collections.singletonList(info) : Collections.emptyList();
+      Collection<HighlightInfoImpl> infos = info != null ? Collections.singletonList(info) : Collections.emptyList();
       UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
     }
   }

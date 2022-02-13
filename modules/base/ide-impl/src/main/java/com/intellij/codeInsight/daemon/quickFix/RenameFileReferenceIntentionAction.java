@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.daemon.quickFix;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.FileModificationService;
+import consulo.language.editor.FileModificationService;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;

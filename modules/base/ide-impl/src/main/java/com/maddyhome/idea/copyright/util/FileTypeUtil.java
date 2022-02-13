@@ -16,8 +16,8 @@
 
 package com.maddyhome.idea.copyright.util;
 
-import com.intellij.lang.Commenter;
-import com.intellij.lang.LanguageCommenters;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.util.text.StringUtil;

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.templateLanguages;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import consulo.language.editor.intention.IntentionAction;
@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
 public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvider{
 
   @Override
-  public void registerErrorQuickFix(final PsiErrorElement errorElement, final HighlightInfo highlightInfo) {
+  public void registerErrorQuickFix(final PsiErrorElement errorElement, final HighlightInfoImpl highlightInfo) {
     final PsiFile psiFile = errorElement.getContainingFile();
     final FileViewProvider provider = psiFile.getViewProvider();
     if (!(provider instanceof TemplateLanguageFileViewProvider)) return;

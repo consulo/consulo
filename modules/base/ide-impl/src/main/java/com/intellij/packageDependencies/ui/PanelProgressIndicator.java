@@ -16,7 +16,7 @@
 
 package com.intellij.packageDependencies.ui;
 
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.Consumer;
 import consulo.ui.ex.concurrent.EdtExecutorService;

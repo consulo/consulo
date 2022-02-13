@@ -3,10 +3,11 @@ package com.intellij.codeInsight.daemon.impl;
 
 import consulo.dataContext.DataContext;
 import consulo.editor.event.*;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.module.content.ProjectTopics;
-import com.intellij.codeHighlighting.Pass;
+import consulo.language.editor.Pass;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.folding.impl.FoldingUtil;
@@ -307,7 +308,7 @@ public final class DaemonListeners implements Disposable {
     eventMulticaster.addErrorStripeListener(e -> {
       RangeHighlighter highlighter = e.getHighlighter();
       if (!highlighter.isValid()) return;
-      HighlightInfo info = HighlightInfo.fromRangeHighlighter(highlighter);
+      HighlightInfoImpl info = HighlightInfoImpl.fromRangeHighlighter(highlighter);
       if (info != null) {
         GotoNextErrorHandler.navigateToError(myProject, e.getEditor(), info);
       }
@@ -566,7 +567,7 @@ public final class DaemonListeners implements Disposable {
             EditorUtil.isPointOverText(editor, e.getMouseEvent().getPoint())) {
           LogicalPosition logical = editor.xyToLogicalPosition(e.getMouseEvent().getPoint());
           int offset = editor.logicalPositionToOffset(logical);
-          HighlightInfo info = myDaemonCodeAnalyzer.findHighlightByOffset(editor.getDocument(), offset, false);
+          HighlightInfoImpl info = myDaemonCodeAnalyzer.findHighlightByOffset(editor.getDocument(), offset, false);
           if (info == null || info.getDescription() == null || info.getHighlighter() != null && FoldingUtil.isHighlighterFolded(editor, info.getHighlighter())) {
             IdeTooltipManager.getInstance().hideCurrent(e.getMouseEvent());
             return;

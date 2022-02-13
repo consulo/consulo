@@ -2,11 +2,11 @@
 
 package com.intellij.codeInspection.reference;
 
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.InspectionsBundle;
-import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
-import com.intellij.codeInspection.lang.RefManagerExtension;
+import consulo.language.editor.inspection.InspectionExtensionsFactory;
+import consulo.language.editor.inspection.reference.RefManagerExtension;
 import consulo.language.Language;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
@@ -24,7 +24,7 @@ import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import com.intellij.openapi.project.ProjectUtilCore;
+import consulo.module.content.util.ProjectUtilCore;
 import com.intellij.openapi.util.NullableFactory;
 import consulo.document.util.Segment;
 import consulo.application.util.registry.Registry;

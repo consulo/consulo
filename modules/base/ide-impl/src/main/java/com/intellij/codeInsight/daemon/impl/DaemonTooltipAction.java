@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import consulo.editor.Editor;
@@ -62,9 +63,9 @@ public class DaemonTooltipAction implements TooltipAction {
       return;
     }
 
-    List<HighlightInfo.IntentionActionDescriptor> intentions = ShowIntentionsPass.getAvailableFixes(editor, psiFile, -1, myActualOffset);
+    List<HighlightInfoImpl.IntentionActionDescriptor> intentions = ShowIntentionsPass.getAvailableFixes(editor, psiFile, -1, myActualOffset);
 
-    for (HighlightInfo.IntentionActionDescriptor descriptor : intentions) {
+    for (HighlightInfoImpl.IntentionActionDescriptor descriptor : intentions) {
       IntentionAction action = descriptor.getAction();
 
       if (myFixText.equals(action.getText())) {

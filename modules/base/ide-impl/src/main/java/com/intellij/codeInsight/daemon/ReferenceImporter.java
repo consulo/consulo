@@ -18,6 +18,7 @@ package com.intellij.codeInsight.daemon;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.editor.Editor;
+import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 
@@ -30,7 +31,7 @@ public interface ReferenceImporter {
   boolean autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file);
 
   /**
-   * @deprecated implement {@link com.intellij.codeInspection.HintAction#fixSilently(Editor)} instead.
+   * @deprecated implement {@link HintAction#fixSilently(Editor)} instead.
    */
   @Deprecated
   default boolean autoImportReferenceAt(@Nonnull Editor editor, @Nonnull PsiFile file, int offset) {

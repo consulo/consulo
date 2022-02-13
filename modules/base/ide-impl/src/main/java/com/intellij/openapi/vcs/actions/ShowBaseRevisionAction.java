@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.actions;
 
 import consulo.project.Project;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

@@ -10,7 +10,7 @@ import consulo.editor.VisualPosition;
 import consulo.editor.event.SelectionListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

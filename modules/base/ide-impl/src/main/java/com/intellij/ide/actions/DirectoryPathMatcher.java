@@ -31,7 +31,7 @@ import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScopesCore;
+import consulo.language.editor.scope.GlobalSearchScopesCore;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;

@@ -33,7 +33,7 @@ import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.editor.colorScheme.EditorColors;
 import consulo.document.event.DocumentAdapter;
 import consulo.editor.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.event.*;

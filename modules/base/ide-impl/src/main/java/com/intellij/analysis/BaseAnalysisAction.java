@@ -17,7 +17,8 @@
 package com.intellij.analysis;
 
 import consulo.dataContext.DataContext;
-import consulo.language.editor.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

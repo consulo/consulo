@@ -19,7 +19,7 @@ package com.intellij.moduleDependencies;
 import consulo.application.CommonBundle;
 import consulo.dataContext.DataProvider;
 import consulo.module.content.ProjectTopics;
-import com.intellij.analysis.AnalysisScopeBundle;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;

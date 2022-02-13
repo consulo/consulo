@@ -3,7 +3,7 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.document.Document;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.application.progress.ProgressIndicator;
@@ -118,7 +118,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
   }
 
   @Nonnull
-  public List<HighlightInfo> getInfos() {
+  public List<HighlightInfoImpl> getInfos() {
     return Collections.emptyList();
   }
 

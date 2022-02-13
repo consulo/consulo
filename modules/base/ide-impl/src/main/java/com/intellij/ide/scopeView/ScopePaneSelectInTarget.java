@@ -21,7 +21,7 @@ import com.intellij.ide.SelectInManager;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.impl.ProjectViewSelectInTarget;
 import consulo.language.psi.search.scope.*;
-import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;

@@ -4,7 +4,7 @@ package com.intellij.openapi.fileTypes.impl;
 import com.intellij.ide.highlighter.FileTypeRegistrator;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.ide.highlighter.custom.impl.CustomFileTypeEditor;
-import com.intellij.lang.Commenter;
+import consulo.language.Commenter;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.ex.ExternalizableFileType;
 import com.intellij.openapi.options.ExternalInfo;

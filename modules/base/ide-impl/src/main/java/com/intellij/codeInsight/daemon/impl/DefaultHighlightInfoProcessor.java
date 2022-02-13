@@ -1,24 +1,26 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.editor.Editor;
-import consulo.editor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import consulo.editor.markup.MarkupModel;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import com.intellij.openapi.util.ProperTextRange;
+import com.intellij.psi.util.PsiUtilBase;
+import consulo.application.ApplicationManager;
+import consulo.document.Document;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.editor.Editor;
+import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.editor.markup.MarkupModel;
+import consulo.language.editor.Pass;
+import consulo.language.editor.highlight.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.project.ui.util.Alarm;
 
 import javax.annotation.Nonnull;
@@ -40,7 +42,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     if (document == null) return;
     final long modificationStamp = document.getModificationStamp();
     final TextRange priorityIntersection = priorityRange.intersection(restrictRange);
-    List<? extends HighlightInfo> infoCopy = new ArrayList<>(infos);
+    List<? extends HighlightInfoImpl> infoCopy = new ArrayList<>(infos);
     ((HighlightingSessionImpl)session).applyInEDT(() -> {
       if (modificationStamp != document.getModificationStamp()) return;
       if (priorityIntersection != null) {
@@ -102,7 +104,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
 
   private static void killAbandonedHighlightsUnder(@Nonnull PsiFile psiFile,
                                                    @Nonnull final TextRange range,
-                                                   @Nullable final List<? extends HighlightInfo> infos,
+                                                   @Nullable final List<? extends HighlightInfoImpl> infos,
                                                    @Nonnull final HighlightingSession highlightingSession) {
     final Project project = psiFile.getProject();
     final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
@@ -110,7 +112,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     DaemonCodeAnalyzerEx.processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), existing -> {
       if (existing.isBijective() && existing.getGroup() == Pass.UPDATE_ALL && range.equalsToRange(existing.getActualStartOffset(), existing.getActualEndOffset())) {
         if (infos != null) {
-          for (HighlightInfo created : infos) {
+          for (HighlightInfoImpl created : infos) {
             if (existing.equalsByActualOffset(created)) return true;
           }
         }

@@ -18,6 +18,7 @@ package com.intellij.codeInsight;
 import consulo.language.Language;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.language.editor.FileModificationService;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

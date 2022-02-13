@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.contents;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import consulo.language.editor.HighlightInfoFilter;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.highlight.HighlightInfoFilter;
 import com.intellij.codeInsight.daemon.impl.IntentionActionFilter;
 import com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
@@ -34,7 +34,7 @@ public class DiffPsiFileSupport {
 
   public static class HighlightFilter implements HighlightInfoFilter {
     @Override
-    public boolean accept(@Nonnull HighlightInfo info, @Nullable PsiFile file) {
+    public boolean accept(@Nonnull HighlightInfoImpl info, @Nullable PsiFile file) {
       if (!isDiffFile(file)) return true;
       if (info.getSeverity() == HighlightSeverity.ERROR) return false;
       return true;

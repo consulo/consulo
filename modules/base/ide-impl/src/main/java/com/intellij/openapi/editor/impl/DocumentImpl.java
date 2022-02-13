@@ -35,7 +35,7 @@ import consulo.editor.internal.PrioritizedDocumentListener;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import com.intellij.openapi.util.ShutDownTracker;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

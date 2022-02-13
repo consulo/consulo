@@ -25,19 +25,16 @@
 package com.intellij.codeInspection.ex;
 
 import consulo.language.editor.inspection.CommonProblemDescriptor;
-import com.intellij.codeInspection.HTMLComposer;
+import consulo.language.editor.inspection.HTMLComposer;
 import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.export.HTMLExporter;
-import com.intellij.codeInspection.lang.HTMLComposerExtension;
-import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
+import consulo.language.editor.inspection.HTMLComposerExtension;
+import consulo.language.editor.inspection.InspectionExtensionsFactory;
 import com.intellij.codeInspection.reference.*;
 import consulo.language.Language;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.project.ProjectUtilCore;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.language.editor.inspection.reference.RefFile;
-import consulo.language.editor.inspection.reference.RefVisitor;
+import consulo.language.editor.inspection.reference.*;
+import consulo.module.content.util.ProjectUtilCore;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

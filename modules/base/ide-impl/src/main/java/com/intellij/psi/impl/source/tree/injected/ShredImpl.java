@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.openapi.util.ProperTextRange;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl;

@@ -17,6 +17,8 @@
 package com.intellij.codeInsight.generation;
 
 import com.intellij.application.options.CodeStyle;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.CommentUtil;
 import com.intellij.codeInsight.actions.MultiCaretCodeInsightActionHandler;

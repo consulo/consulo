@@ -20,11 +20,12 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import consulo.language.editor.HighlightDisplayLevel;
+import consulo.language.editor.highlight.HighlightDisplayLevel;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

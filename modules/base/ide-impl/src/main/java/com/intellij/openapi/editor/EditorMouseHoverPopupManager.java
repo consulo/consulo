@@ -3,7 +3,7 @@ package com.intellij.openapi.editor;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import consulo.language.editor.highlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import com.intellij.codeInsight.documentation.DocumentationComponent;
 import com.intellij.codeInsight.documentation.DocumentationManager;
@@ -308,7 +308,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
   private static Context createContext(Editor editor, int offset) {
     Project project = Objects.requireNonNull(editor.getProject());
 
-    HighlightInfo info = null;
+    HighlightInfoImpl info = null;
     if (!Registry.is("ide.disable.editor.tooltips")) {
       info = ((DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project)).findHighlightByOffset(editor.getDocument(), offset, false);
     }
@@ -363,7 +363,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
     return hint;
   }
 
-  public void showInfoTooltip(@Nonnull Editor editor, @Nonnull HighlightInfo info, int offset, boolean requestFocus, boolean showImmediately) {
+  public void showInfoTooltip(@Nonnull Editor editor, @Nonnull HighlightInfoImpl info, int offset, boolean requestFocus, boolean showImmediately) {
     cancelProcessingAndCloseHint();
     Context context = new Context(offset, info, null) {
       @Override
@@ -376,10 +376,10 @@ public final class EditorMouseHoverPopupManager implements Disposable {
 
   private static class Context {
     private final int targetOffset;
-    private final WeakReference<HighlightInfo> highlightInfo;
+    private final WeakReference<HighlightInfoImpl> highlightInfo;
     private final WeakReference<PsiElement> elementForQuickDoc;
 
-    private Context(int targetOffset, HighlightInfo highlightInfo, PsiElement elementForQuickDoc) {
+    private Context(int targetOffset, HighlightInfoImpl highlightInfo, PsiElement elementForQuickDoc) {
       this.targetOffset = targetOffset;
       this.highlightInfo = highlightInfo == null ? null : new WeakReference<>(highlightInfo);
       this.elementForQuickDoc = elementForQuickDoc == null ? null : new WeakReference<>(elementForQuickDoc);
@@ -389,13 +389,13 @@ public final class EditorMouseHoverPopupManager implements Disposable {
       return SoftReference.dereference(elementForQuickDoc);
     }
 
-    private HighlightInfo getHighlightInfo() {
+    private HighlightInfoImpl getHighlightInfo() {
       return SoftReference.dereference(highlightInfo);
     }
 
     private Relation compareTo(Context other) {
       if (other == null) return Relation.DIFFERENT;
-      HighlightInfo highlightInfo = getHighlightInfo();
+      HighlightInfoImpl highlightInfo = getHighlightInfo();
       if (!Objects.equals(highlightInfo, other.getHighlightInfo())) return Relation.DIFFERENT;
       return Objects.equals(getElementForQuickDoc(), other.getElementForQuickDoc()) ? Relation.SAME : highlightInfo == null ? Relation.DIFFERENT : Relation.SIMILAR;
     }
@@ -406,7 +406,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
 
     @Nonnull
     private VisualPosition getPopupPosition(Editor editor) {
-      HighlightInfo highlightInfo = getHighlightInfo();
+      HighlightInfoImpl highlightInfo = getHighlightInfo();
       if (highlightInfo == null) {
         int offset = targetOffset;
         PsiElement elementForQuickDoc = getElementForQuickDoc();
@@ -428,7 +428,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
 
     @Nullable
     private Info calcInfo(@Nonnull Editor editor) {
-      HighlightInfo info = getHighlightInfo();
+      HighlightInfoImpl info = getHighlightInfo();
       if (info != null && (info.getDescription() == null || info.getToolTip() == null)) {
         info = null;
       }
@@ -472,13 +472,13 @@ public final class EditorMouseHoverPopupManager implements Disposable {
   }
 
   private static class Info {
-    private final HighlightInfo highlightInfo;
+    private final HighlightInfoImpl highlightInfo;
 
     private final String quickDocMessage;
     private final WeakReference<PsiElement> quickDocElement;
 
 
-    private Info(HighlightInfo highlightInfo, String quickDocMessage, PsiElement quickDocElement) {
+    private Info(HighlightInfoImpl highlightInfo, String quickDocMessage, PsiElement quickDocElement) {
       assert highlightInfo != null || quickDocMessage != null;
       this.highlightInfo = highlightInfo;
       this.quickDocMessage = quickDocMessage;

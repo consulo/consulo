@@ -20,7 +20,7 @@ import com.intellij.codeInsight.editorActions.TypedHandler;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
 import com.intellij.ide.highlighter.FileTypeRegistrator;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
-import com.intellij.lang.Commenter;
+import consulo.language.Commenter;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;

@@ -17,7 +17,7 @@ package com.intellij.codeInspection.ex;
 
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.scheme.*;
-import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
+import consulo.language.editor.inspection.InspectionExtensionsFactory;
 import consulo.language.editor.inspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefElementImpl;
 import consulo.language.inject.InjectedLanguageManager;

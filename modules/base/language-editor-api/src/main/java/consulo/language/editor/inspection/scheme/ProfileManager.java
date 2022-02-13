@@ -15,11 +15,9 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
-import consulo.language.editor.inspection.scheme.Profile;
+import consulo.language.psi.search.scope.NamedScopesHolder;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collection;
 
 /**

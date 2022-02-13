@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.impl.NamedScopeManager;
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import com.intellij.ui.ColorChooser;
 import consulo.application.ui.awt.ColorUtil;

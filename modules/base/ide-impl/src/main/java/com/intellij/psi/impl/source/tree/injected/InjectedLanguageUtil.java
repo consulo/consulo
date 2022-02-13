@@ -3,6 +3,7 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.extapi.psi.PsiFileBase;
+import consulo.document.util.ProperTextRange;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.language.file.inject.VirtualFileWindow;

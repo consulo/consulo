@@ -23,7 +23,7 @@ import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.GutterIconRenderer;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;
-import consulo.language.editor.HighlightDisplayKey;
+import consulo.language.editor.highlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.LocalQuickFixAsIntentionAdapter;
 import consulo.language.editor.inspection.ProblemDescriptor;
