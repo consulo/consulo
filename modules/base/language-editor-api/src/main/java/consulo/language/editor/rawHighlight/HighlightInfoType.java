@@ -23,6 +23,7 @@ import consulo.language.editor.DeprecationUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
@@ -110,7 +111,7 @@ public interface HighlightInfoType {
     private boolean myNeedsUpdateOnTyping;
 
     //read external only
-    HighlightInfoTypeImpl(@Nonnull Element element) {
+    public HighlightInfoTypeImpl(@Nonnull Element element) {
       mySeverity = new HighlightSeverity(element);
       myAttributesKey = new TextAttributesKey(element);
     }

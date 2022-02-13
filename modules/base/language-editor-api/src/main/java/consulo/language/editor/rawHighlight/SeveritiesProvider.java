@@ -18,9 +18,8 @@
  * User: anna
  * Date: 17-Jun-2009
  */
-package com.intellij.codeInsight.daemon.impl;
+package consulo.language.editor.rawHighlight;
 
-import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;

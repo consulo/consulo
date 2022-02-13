@@ -15,11 +15,13 @@
  */
 package com.intellij.profile.codeInspection;
 
+import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.InspectionProfileConvertor;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import consulo.language.editor.rawHighlight.SeveritiesProvider;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolRegistrar;
@@ -69,7 +71,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   private final InspectionToolRegistrar myRegistrar;
   private final SchemesManager<Profile, InspectionProfileImpl> mySchemesManager;
   private final AtomicBoolean myProfilesAreInitialized = new AtomicBoolean(false);
-  private final SeverityRegistrar mySeverityRegistrar;
+  private final SeverityRegistrarImpl mySeverityRegistrar;
 
   protected static final Logger LOG = Logger.getInstance(InspectionProfileManagerImpl.class);
 
@@ -140,7 +142,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         return immutableElement.getName();
       }
     }, RoamingType.PER_USER);
-    mySeverityRegistrar = new SeverityRegistrar(application.getMessageBus());
+    mySeverityRegistrar = new SeverityRegistrarImpl(application.getMessageBus());
   }
 
   @Nonnull
@@ -152,7 +154,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     SeveritiesProvider.EP_NAME.forEachExtensionSafe(provider -> {
       for (HighlightInfoType t : provider.getSeveritiesHighlightInfoTypes()) {
         HighlightSeverity highlightSeverity = t.getSeverity(null);
-        SeverityRegistrar.registerStandard(t, highlightSeverity);
+        SeverityRegistrarImpl.registerStandard(t, highlightSeverity);
         TextAttributesKey attributesKey = t.getAttributesKey();
         Image icon = t instanceof HighlightInfoType.Iconable ? ((HighlightInfoType.Iconable)t).getIcon() : null;
         HighlightDisplayLevel.registerSeverity(highlightSeverity, attributesKey, icon);
@@ -243,13 +245,13 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
   @Nonnull
   @Override
-  public SeverityRegistrar getSeverityRegistrar() {
+  public SeverityRegistrarImpl getSeverityRegistrar() {
     return mySeverityRegistrar;
   }
 
   @Nonnull
   @Override
-  public SeverityRegistrar getOwnSeverityRegistrar() {
+  public SeverityRegistrarImpl getOwnSeverityRegistrar() {
     return mySeverityRegistrar;
   }
 

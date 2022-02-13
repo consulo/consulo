@@ -34,7 +34,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl;
-import com.intellij.profile.codeInspection.SeverityProvider;
+import consulo.language.editor.rawHighlight.SeverityProvider;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Function;
@@ -93,7 +93,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
   private static final String PRESENTABLE_NAME = DaemonBundle.message("pass.inspection");
   private volatile List<HighlightInfoImpl> myInfos = Collections.emptyList();
   private final String myShortcutText;
-  private final SeverityRegistrar mySeverityRegistrar;
+  private final SeverityRegistrarImpl mySeverityRegistrar;
   private final InspectionProfileWrapper myProfileWrapper;
   private boolean myFailFastOnAcquireReadAction;
 

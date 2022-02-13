@@ -22,7 +22,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.codeInspection.ex.GlobalInspectionContextBase;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.project.Project;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 

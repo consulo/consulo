@@ -3,10 +3,10 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import consulo.language.editor.*;
-import com.intellij.codeHighlighting.RainbowHighlighter;
+import consulo.language.editor.rawHighlight.RainbowHighlighter;
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.codeInsight.daemon.RainbowVisitor;
+import consulo.language.editor.rawHighlight.RainbowVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.codeInsight.problems.ProblemImpl;
 import consulo.language.editor.annotation.HighlightSeverity;

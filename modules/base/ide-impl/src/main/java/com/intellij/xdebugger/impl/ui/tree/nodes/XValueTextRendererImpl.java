@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.TextAttributesKey;

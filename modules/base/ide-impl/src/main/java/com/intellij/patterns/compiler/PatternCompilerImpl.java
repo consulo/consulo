@@ -19,7 +19,7 @@ package com.intellij.patterns.compiler;
 import consulo.language.pattern.compiler.PatternCompiler;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
-import com.intellij.openapi.util.text.StringHash;
+import consulo.util.lang.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.ElementPatternCondition;

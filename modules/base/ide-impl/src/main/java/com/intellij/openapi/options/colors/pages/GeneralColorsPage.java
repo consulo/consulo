@@ -17,7 +17,7 @@ package com.intellij.openapi.options.colors.pages;
 
 import com.intellij.application.options.colors.InspectionColorSettingsPage;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
+import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import com.intellij.codeInsight.template.impl.TemplateColors;
 import consulo.editor.HighlighterColors;
 import consulo.editor.colorScheme.CodeInsightColors;

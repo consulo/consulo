@@ -4,7 +4,7 @@ package com.intellij.codeInsight.intention.impl;
 
 import consulo.editor.markup.GutterMark;
 import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
@@ -95,11 +95,11 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
 
   @Nonnull
   private static Color getColor(@Nonnull Project project, @Nonnull HighlightSeverity severity) {
-    if (SeverityRegistrar.getSeverityRegistrar(project).compare(severity, HighlightSeverity.ERROR) >= 0) {
+    if (SeverityRegistrarImpl.getSeverityRegistrar(project).compare(severity, HighlightSeverity.ERROR) >= 0) {
       return LightColors.RED;
     }
 
-    if (SeverityRegistrar.getSeverityRegistrar(project).compare(severity, HighlightSeverity.WARNING) >= 0) {
+    if (SeverityRegistrarImpl.getSeverityRegistrar(project).compare(severity, HighlightSeverity.WARNING) >= 0) {
       return LightColors.YELLOW;
     }
 

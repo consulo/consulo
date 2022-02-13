@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight.daemon;
+package consulo.language.editor.rawHighlight;
 
-import com.intellij.codeHighlighting.RainbowHighlighter;
 import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoHolder;
-import consulo.language.editor.rawHighlight.HighlightVisitor;
+import consulo.language.editor.util.UsedColors;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.UserDataHolderEx;

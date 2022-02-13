@@ -16,7 +16,7 @@
 package com.intellij.profile.codeInspection.ui.filter;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.ScopeToolState;
 import consulo.application.AllIcons;
@@ -32,7 +32,7 @@ import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.profile.codeInspection.SeverityProvider;
+import consulo.language.editor.rawHighlight.SeverityProvider;
 import com.intellij.profile.codeInspection.ui.LevelChooserAction;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
 import com.intellij.util.containers.ContainerUtil;
@@ -49,7 +49,7 @@ import java.util.TreeSet;
  */
 public class InspectionFilterAction extends DefaultActionGroup implements Toggleable, DumbAware {
 
-  private final SeverityRegistrar mySeverityRegistrar;
+  private final SeverityRegistrarImpl mySeverityRegistrar;
   private final InspectionsFilter myInspectionsFilter;
 
   public InspectionFilterAction(final InspectionProfileImpl profile,

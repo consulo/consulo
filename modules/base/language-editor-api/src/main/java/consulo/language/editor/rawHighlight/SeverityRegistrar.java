@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.profile;
+package consulo.language.editor.rawHighlight;
 
-import consulo.component.messagebus.Topic;
-import consulo.language.editor.inspection.scheme.Profile;
+import consulo.editor.markup.TextAttributes;
+import consulo.language.editor.annotation.HighlightSeverity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Comparator;
 
-public interface ProfileChangeAdapter {
-  Topic<ProfileChangeAdapter> TOPIC = new Topic<>("ProfileChangeAdapter", ProfileChangeAdapter.class);
+/**
+ * @author VISTALL
+ * @since 13-Feb-22
+ */
+public interface SeverityRegistrar extends Comparator<HighlightSeverity> {
+  int getSeveritiesCount();
 
-  default void profileChanged(@Nullable Profile profile) {
-  }
+  @Nullable
+  HighlightSeverity getSeverityByIndex(final int i);
 
-  default void profileActivated(@Nullable Profile oldProfile, @javax.annotation.Nullable Profile profile) {
-  }
-
-  default void profilesInitialized() {
-  }
-
-  default void profilesShutdown() {
-  }
+  @Nullable
+  TextAttributes getTextAttributesBySeverity(@Nonnull HighlightSeverity severity);
 }

@@ -20,19 +20,21 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.hint.HintManager;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.annotation.HighlightSeverity;
+import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.application.util.function.Processor;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.editor.ScrollType;
 import consulo.editor.ScrollingModel;
-import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.project.Project;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
-import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 public class GotoNextErrorHandler implements CodeInsightActionHandler {
   private final boolean myGoForward;
@@ -54,7 +56,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
   }
 
   private void gotoNextError(Project project, Editor editor, PsiFile file, int caretOffset) {
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
+    final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
     DaemonCodeAnalyzerSettings settings = DaemonCodeAnalyzerSettings.getInstance();
     int maxSeverity = settings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST ? severityRegistrar.getSeveritiesCount() - 1 : 0;
 
@@ -78,7 +80,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
       @Override
       public boolean process(HighlightInfoImpl info) {
         int startOffset = getNavigationPositionFor(info, document);
-        if (SeverityRegistrar.isGotoBySeverityEnabled(info.getSeverity())) {
+        if (SeverityRegistrarImpl.isGotoBySeverityEnabled(info.getSeverity())) {
           infoToGo[0][0] = getBetterInfoThan(infoToGo[0][0], caretOffset, startOffset, info);
           infoToGo[1][0] = getBetterInfoThan(infoToGo[1][0], caretOffsetIfNoLuck, startOffset, info);
         }
@@ -102,7 +104,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
 
   private boolean isBetterThan(HighlightInfoImpl oldInfo, int caretOffset, int newOffset) {
     if (oldInfo == null) return true;
-    int oldOffset = getNavigationPositionFor(oldInfo, oldInfo.highlighter.getDocument());
+    int oldOffset = getNavigationPositionFor(oldInfo, oldInfo.getHighlighter().getDocument());
     if (myGoForward) {
       return caretOffset < oldOffset != caretOffset < newOffset ? caretOffset < newOffset : newOffset < oldOffset;
     }
@@ -153,7 +155,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     int start = info.getActualStartOffset();
     if (start >= document.getTextLength()) return document.getTextLength();
     char c = document.getCharsSequence().charAt(start);
-    int shift = info.isAfterEndOfLine() && c != '\n' ? 1 : info.navigationShift;
+    int shift = info.isAfterEndOfLine() && c != '\n' ? 1 : info.getNavigationShift();
 
     int offset = info.getActualStartOffset() + shift;
     return Math.min(offset, document.getTextLength());

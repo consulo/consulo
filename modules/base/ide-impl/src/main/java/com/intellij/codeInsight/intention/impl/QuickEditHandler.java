@@ -56,7 +56,7 @@ import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.text.StringHash;
+import consulo.util.lang.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;

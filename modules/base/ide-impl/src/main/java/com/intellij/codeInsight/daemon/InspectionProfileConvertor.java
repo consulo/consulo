@@ -23,7 +23,7 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jdom.Document;

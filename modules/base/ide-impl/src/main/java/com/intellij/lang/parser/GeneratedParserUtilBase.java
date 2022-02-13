@@ -32,7 +32,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringHash;
+import consulo.util.lang.StringHash;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;

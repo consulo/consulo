@@ -27,7 +27,7 @@ import consulo.editor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.profile.codeInspection.ui.IDEInspectionToolsConfigurable;

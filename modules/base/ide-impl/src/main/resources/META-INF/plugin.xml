@@ -430,7 +430,7 @@
                     interface="com.intellij.lang.ExternalAnnotatorsFilter"/>
 
     <extensionPoint name="severitiesProvider"
-                    interface="com.intellij.codeInsight.daemon.impl.SeveritiesProvider"/>
+                    interface="consulo.language.editor.rawHighlight.SeveritiesProvider"/>
 
     <extensionPoint name="implicitUsageProvider"
                     interface="com.intellij.codeInsight.daemon.ImplicitUsageProvider"/>
@@ -2504,14 +2504,14 @@
     <search.topHitProvider implementation="com.intellij.platform.DefaultPlatformTopHitProvider"/>
     <search.topHitProvider implementation="com.intellij.ide.ui.UISimpleSettingsProvider"/>
 
-    <applicationService serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"
+    <applicationService serviceInterface="consulo.language.editor.inspection.scheme.InspectionProfileManager"
                         serviceImplementation="com.intellij.profile.codeInspection.InspectionProfileManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.execution.filters.HyperlinkInfoFactory"
                         serviceImplementation="com.intellij.execution.filters.impl.HyperlinkInfoFactoryImpl"/>
     <consoleFilterProvider implementation="com.intellij.execution.filters.UrlFilter$UrlFilterProvider"/>
 
-    <schemeOwner serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
+    <schemeOwner serviceInterface="consulo.language.editor.inspection.scheme.InspectionProfileManager"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager"
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile"/>

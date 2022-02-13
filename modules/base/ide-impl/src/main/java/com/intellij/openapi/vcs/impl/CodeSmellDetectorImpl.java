@@ -17,41 +17,42 @@ package com.intellij.openapi.vcs.impl;
 
 import com.intellij.codeInsight.CodeSmellInfo;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import com.intellij.codeInsight.daemon.impl.*;
+import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
+import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
+import com.intellij.openapi.vcs.AbstractVcsHelper;
+import com.intellij.openapi.vcs.CodeSmellDetector;
+import com.intellij.openapi.vcs.VcsBundle;
+import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import com.intellij.util.ExceptionUtil;
+import com.intellij.util.ui.MessageCategory;
+import consulo.application.ApplicationManager;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.vcs.AbstractVcsHelper;
-import com.intellij.openapi.vcs.CodeSmellDetector;
-import com.intellij.openapi.vcs.VcsBundle;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.ui.MessageCategory;
 import consulo.logging.Logger;
-
-import javax.annotation.Nonnull;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -191,7 +192,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
                                         @Nonnull Document document) {
     for (HighlightInfoImpl highlightInfo : highlights) {
       final HighlightSeverity severity = highlightInfo.getSeverity();
-      if (SeverityRegistrar.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
+      if (SeverityRegistrarImpl.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
         result.add(new CodeSmellInfo(document, getDescription(highlightInfo),
                                      new TextRange(highlightInfo.startOffset, highlightInfo.endOffset), severity));
       }

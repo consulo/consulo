@@ -60,7 +60,7 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.language.editor.inspection.scheme.Profile;
-import com.intellij.profile.ProfileChangeAdapter;
+import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiManagerEx;
 import consulo.application.Application;
@@ -324,7 +324,7 @@ public final class DaemonListeners implements Disposable {
       }
     }, this);
 
-    connection.subscribe(SeverityRegistrar.SEVERITIES_CHANGED_TOPIC, () -> stopDaemonAndRestartAllFiles("Severities changed"));
+    connection.subscribe(SeverityRegistrarImpl.SEVERITIES_CHANGED_TOPIC, () -> stopDaemonAndRestartAllFiles("Severities changed"));
 
     if (RefResolveService.ENABLED) {
       RefResolveService resolveService = RefResolveService.getInstance(project);

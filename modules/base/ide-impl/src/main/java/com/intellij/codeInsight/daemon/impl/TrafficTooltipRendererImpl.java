@@ -47,7 +47,7 @@ class TrafficTooltipRendererImpl extends ComparableObject.Impl implements Traffi
   @Override
   public void repaintTooltipWindow() {
     if (myPanel != null) {
-      SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(myTrafficLightRenderer.getProject());
+      SeverityRegistrarImpl severityRegistrar = (SeverityRegistrarImpl)SeverityRegistrarImpl.getSeverityRegistrar(myTrafficLightRenderer.getProject());
       TrafficLightRenderer.DaemonCodeAnalyzerStatus status = myTrafficLightRenderer.getDaemonCodeAnalyzerStatus(severityRegistrar);
       myPanel.updatePanel(status, false);
     }

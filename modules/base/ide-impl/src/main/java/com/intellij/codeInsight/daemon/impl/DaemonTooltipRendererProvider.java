@@ -63,7 +63,7 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
     if (!infos.isEmpty()) {
       // show errors first
       ContainerUtil.quickSort(infos, (o1, o2) -> {
-        int i = SeverityRegistrar.getSeverityRegistrar(myProject).compare(o2.getSeverity(), o1.getSeverity());
+        int i = SeverityRegistrarImpl.getSeverityRegistrar(myProject).compare(o2.getSeverity(), o1.getSeverity());
         if (i != 0) return i;
         return o1.getToolTip().compareTo(o2.getToolTip());
       });

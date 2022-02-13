@@ -18,7 +18,7 @@ package com.intellij.usages;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.lexer.Lexer;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.document.Document;
 import consulo.editor.HighlighterColors;
 import consulo.document.RangeMarker;

@@ -18,7 +18,7 @@ package org.jetbrains.ide.script;
 import com.intellij.openapi.util.ClassLoaderUtil;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.openapi.util.text.StringHash;
+import consulo.util.lang.StringHash;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;

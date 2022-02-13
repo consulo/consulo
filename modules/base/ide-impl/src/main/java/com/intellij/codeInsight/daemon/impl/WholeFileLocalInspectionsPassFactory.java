@@ -28,7 +28,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.document.util.ProperTextRange;
 import consulo.language.editor.inspection.scheme.Profile;
-import com.intellij.profile.ProfileChangeAdapter;
+import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;

@@ -21,7 +21,7 @@ import com.intellij.application.options.colors.ColorAndFontOptions;
 import com.intellij.application.options.colors.InspectionColorSettingsPage;
 import com.intellij.application.options.colors.TextAttributesDescription;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInsight.daemon.impl.SeverityUtil;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.dataContext.DataManager;
@@ -62,7 +62,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.*;
 
-import static com.intellij.codeInsight.daemon.impl.SeverityRegistrar.SeverityBasedTextAttributes;
+import static com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl.SeverityBasedTextAttributes;
 
 /**
  * User: anna
@@ -76,7 +76,7 @@ public class SeverityEditorDialog extends DialogWrapper {
 
   private SeverityBasedTextAttributes myCurrentSelection;
   private static final Logger LOG = Logger.getInstance(SeverityEditorDialog.class);
-  private final SeverityRegistrar mySeverityRegistrar;
+  private final SeverityRegistrarImpl mySeverityRegistrar;
   private final CardLayout myCard;
   private final JPanel myRightPanel;
   @NonNls
@@ -84,7 +84,7 @@ public class SeverityEditorDialog extends DialogWrapper {
   @NonNls
   private static final String EDITABLE = "EDITABLE";
 
-  public SeverityEditorDialog(Project project, final HighlightSeverity severity, final SeverityRegistrar severityRegistrar) {
+  public SeverityEditorDialog(Project project, final HighlightSeverity severity, final SeverityRegistrarImpl severityRegistrar) {
     super(project, true);
     mySeverityRegistrar = severityRegistrar;
     myOptionsList.setCellRenderer(new DefaultListCellRenderer() {

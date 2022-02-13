@@ -22,7 +22,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.logging.Logger;
 import consulo.editor.Editor;
 import consulo.project.Project;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

@@ -13,27 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeHighlighting;
+package consulo.language.editor.rawHighlight;
 
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.options.SchemeMetaInfo;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
-import consulo.application.ui.awt.ColorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.colorScheme.TextAttributesScheme;
 import consulo.editor.markup.TextAttributes;
 import consulo.language.Language;
+import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.util.ColorGenerator;
 import consulo.language.psi.PsiElement;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.ui.util.ColorValueUtil;
 import consulo.ui.util.LightDarkColorValue;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -41,7 +39,6 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 public class RainbowHighlighter {
   private static final ColorValue[] RAINBOW_JB_COLORS_DEFAULT = {
@@ -85,14 +82,11 @@ public class RainbowHighlighter {
 
   @Nullable
   @Contract("_, null -> !null")
-  public static Boolean isRainbowEnabled(@javax.annotation.Nullable TextAttributesScheme colorsScheme, @Nullable Language language) {
-    if (colorsScheme instanceof SchemeMetaInfo) {
-      String value = ((SchemeMetaInfo)colorsScheme).getMetaProperties().getProperty(getKey(language), INHERITED);
-      if (String.valueOf(true).equals(value)) return Boolean.TRUE;
-      if (String.valueOf(false).equals(value)) return Boolean.FALSE;
-      return language == null ? DEFAULT_RAINBOW_ON : null;
-    }
-    return false;
+  public static Boolean isRainbowEnabled(@Nullable TextAttributesScheme colorsScheme, @Nullable Language language) {
+    Object value = colorsScheme == null ? null : colorsScheme.getMetaProperties().getOrDefault(getKey(language), INHERITED);
+    if (String.valueOf(true).equals(value)) return Boolean.TRUE;
+    if (String.valueOf(false).equals(value)) return Boolean.FALSE;
+    return language == null ? DEFAULT_RAINBOW_ON : null;
   }
 
   public static boolean isRainbowEnabledWithInheritance(@Nullable TextAttributesScheme colorsScheme, @Nullable Language language) {
@@ -100,14 +94,14 @@ public class RainbowHighlighter {
     return rainbowEnabled != null ? rainbowEnabled : isRainbowEnabled(colorsScheme, null);
   }
 
-  public static void setRainbowEnabled(@Nonnull SchemeMetaInfo colorsScheme, @Nullable Language language, @Nullable Boolean enabled) {
-    Properties properties = colorsScheme.getMetaProperties();
+  public static void setRainbowEnabled(@Nonnull TextAttributesScheme colorsScheme, @Nullable Language language, @Nullable Boolean enabled) {
+    Map<String, Object> properties = colorsScheme.getMetaProperties();
     String key = getKey(language);
     if (enabled == null || (language == null && enabled == DEFAULT_RAINBOW_ON)) {
       properties.remove(key);
     }
     else {
-      properties.setProperty(key, String.valueOf(enabled));
+      properties.put(key, String.valueOf(enabled));
     }
   }
 
@@ -150,7 +144,7 @@ public class RainbowHighlighter {
 
     final List<String> registryColors = StringUtil.split(colorDump, ",");
     if (!registryColors.isEmpty()) {
-      return registryColors.stream().map(s -> ColorUtil.fromHex(s.trim())).toArray(ColorValue[]::new);
+      return registryColors.stream().map(s -> ColorValueUtil.fromHex(s.trim())).toArray(ColorValue[]::new);
     }
 
     List<ColorValue> stopColors = ContainerUtil.map(RAINBOW_COLOR_KEYS, key -> colorsScheme.getAttributes(key).getForegroundColor());

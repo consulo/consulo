@@ -23,7 +23,7 @@
 package com.intellij.profile.codeInspection.ui.header;
 
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.ModifiableModel;
 import com.intellij.codeInspection.ex.InspectionManagerEx;
@@ -53,7 +53,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.ProfileManager;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
@@ -359,7 +359,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
                   for (String level : levels) {
                     final TextAttributes textAttributes = CodeInsightColors.WARNINGS_ATTRIBUTES.getDefaultAttributes();
                     HighlightInfoType.HighlightInfoTypeImpl info = new HighlightInfoType.HighlightInfoTypeImpl(new HighlightSeverity(level, 50), TextAttributesKey.createTextAttributesKey(level));
-                    myProfileManager.getOwnSeverityRegistrar().registerSeverity(new SeverityRegistrar.SeverityBasedTextAttributes(textAttributes.clone(), info), textAttributes.getErrorStripeColor());
+                    myProfileManager.getOwnSeverityRegistrar().registerSeverity(new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes.clone(), info), textAttributes.getErrorStripeColor());
                   }
                 }
               }

@@ -9,7 +9,7 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Progressive;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.text.StringHash;
+import consulo.util.lang.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.tree.TreeVisitor;

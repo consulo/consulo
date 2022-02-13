@@ -30,7 +30,7 @@ import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.ProfileManager;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.profile.codeInspection.ui.IDEInspectionToolsConfigurable;

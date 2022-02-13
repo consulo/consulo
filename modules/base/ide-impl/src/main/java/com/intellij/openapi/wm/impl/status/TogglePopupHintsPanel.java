@@ -17,7 +17,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.language.editor.inspection.scheme.Profile;
-import com.intellij.profile.ProfileChangeAdapter;
+import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;

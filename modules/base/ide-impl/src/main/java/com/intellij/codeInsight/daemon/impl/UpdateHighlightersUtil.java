@@ -9,7 +9,6 @@ import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.RedBlackTree;
 import com.intellij.openapi.editor.impl.SweepProcessor;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Pair;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
@@ -22,6 +21,7 @@ import consulo.document.util.TextRange;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.markup.*;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiDocumentManager;
@@ -29,6 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,7 +82,7 @@ public class UpdateHighlightersUtil {
     if (info.getStartOffset() < startOffset || info.getEndOffset() > endOffset) return;
 
     MarkupModel markup = DocumentMarkupModel.forDocument(document, project, true);
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
+    final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
     final boolean myInfoIsError = isSevere(info, severityRegistrar);
     Processor<HighlightInfoImpl> otherHighlightInTheWayProcessor = oldInfo -> {
       if (!myInfoIsError && isCovered(info, severityRegistrar, oldInfo)) {
@@ -156,7 +157,7 @@ public class UpdateHighlightersUtil {
     final MarkupModel markup = DocumentMarkupModel.forDocument(document, project, true);
     assertMarkupConsistent(markup, project);
 
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
+    final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
     final HighlightersRecycler infosToRemove = new HighlightersRecycler();
     ContainerUtil.quickSort(infos, BY_START_OFFSET_NODUPS);
     Set<HighlightInfoImpl> infoSet = new HashSet<>(infos);
@@ -223,7 +224,7 @@ public class UpdateHighlightersUtil {
                                      final int group) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
+    final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
     final HighlightersRecycler infosToRemove = new HighlightersRecycler();
     DaemonCodeAnalyzerEx.processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), info -> {
       if (info.getGroup() == group) {

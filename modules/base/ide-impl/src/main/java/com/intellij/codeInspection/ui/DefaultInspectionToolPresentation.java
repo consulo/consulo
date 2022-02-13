@@ -18,7 +18,7 @@ package com.intellij.codeInspection.ui;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.*;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
@@ -150,7 +150,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     if (highlightType == ProblemHighlightType.LIKE_UNUSED_SYMBOL) {
       return HighlightInfoType.UNUSED_SYMBOL.getAttributesKey().getExternalName();
     }
-    SeverityRegistrar registrar = InspectionProjectProfileManagerImpl.getInstanceImpl(project).getSeverityRegistrar();
+    SeverityRegistrarImpl registrar = InspectionProjectProfileManagerImpl.getInstanceImpl(project).getSeverityRegistrar();
     return registrar.getHighlightInfoTypeBySeverity(severity).getAttributesKey().getExternalName();
   }
 

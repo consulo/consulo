@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.profile;
+package consulo.language.editor.inspection.scheme;
 
-import consulo.language.editor.inspection.scheme.Profile;
-import consulo.language.editor.inspection.scheme.ProfileManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;

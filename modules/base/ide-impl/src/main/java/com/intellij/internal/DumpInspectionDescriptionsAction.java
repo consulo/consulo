@@ -27,7 +27,7 @@ import consulo.logging.Logger;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.util.io.ResourceUtil;
 import com.intellij.util.containers.ContainerUtil;
 

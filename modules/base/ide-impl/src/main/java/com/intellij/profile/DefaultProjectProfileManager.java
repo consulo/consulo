@@ -17,7 +17,10 @@ package com.intellij.profile;
 
 import com.intellij.openapi.components.MainConfigurationStateSplitter;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.language.editor.inspection.scheme.ApplicationProfileManager;
 import consulo.language.editor.inspection.scheme.Profile;
+import consulo.language.editor.inspection.scheme.ProjectProfileManager;
+import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;

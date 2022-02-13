@@ -74,7 +74,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   @Nonnull
   private final Document myDocument;
   private final DaemonCodeAnalyzerImpl myDaemonCodeAnalyzer;
-  private final SeverityRegistrar mySeverityRegistrar;
+  private final SeverityRegistrarImpl mySeverityRegistrar;
   private Image icon;
   String statistics;
   String statusLabel;
@@ -105,7 +105,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     myProject = project;
     myDaemonCodeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project);
     myDocument = document;
-    mySeverityRegistrar = SeverityRegistrar.getSeverityRegistrar(myProject);
+    mySeverityRegistrar = (SeverityRegistrarImpl)SeverityRegistrarImpl.getSeverityRegistrar(myProject);
 
     refresh(null);
 
@@ -133,7 +133,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   @Nonnull
-  public SeverityRegistrar getSeverityRegistrar() {
+  public SeverityRegistrarImpl getSeverityRegistrar() {
     return mySeverityRegistrar;
   }
 
@@ -189,7 +189,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   @Nonnull
-  protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@Nonnull SeverityRegistrar severityRegistrar) {
+  protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@Nonnull SeverityRegistrarImpl severityRegistrar) {
     DaemonCodeAnalyzerStatus status = new DaemonCodeAnalyzerStatus();
     PsiFile psiFile = getPsiFile();
     if (psiFile == null) {
@@ -265,7 +265,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     return status;
   }
 
-  protected void fillDaemonCodeAnalyzerErrorsStatus(@Nonnull DaemonCodeAnalyzerStatus status, @Nonnull SeverityRegistrar severityRegistrar) {
+  protected void fillDaemonCodeAnalyzerErrorsStatus(@Nonnull DaemonCodeAnalyzerStatus status, @Nonnull SeverityRegistrarImpl severityRegistrar) {
   }
 
   @Nonnull

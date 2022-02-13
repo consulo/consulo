@@ -22,7 +22,7 @@ import consulo.language.editor.inspection.scheme.ScopeToolState;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.gotoByName.SimpleChooseByNameModel;
 import consulo.project.Project;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.util.ArrayUtil;
 
 import javax.swing.*;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeHighlighting;
+package consulo.language.editor.util;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;

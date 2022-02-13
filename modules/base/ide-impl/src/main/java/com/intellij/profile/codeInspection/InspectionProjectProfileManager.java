@@ -15,6 +15,8 @@
  */
 package com.intellij.profile.codeInspection;
 
+import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.scheme.InspectionProfile;

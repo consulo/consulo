@@ -2,7 +2,7 @@
 package consulo.language.editor.rawHighlight.impl;
 
 import com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
@@ -26,11 +26,8 @@ import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.annotation.SuppressableProblemGroup;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoFilter;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.inspection.SuppressQuickFix;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
@@ -39,9 +36,12 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoFilter;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -109,7 +109,7 @@ public class HighlightInfoImpl implements HighlightInfo {
    * null means it the same as highlighter
    */
   @Nullable
-  RangeMarker fixMarker;
+  public RangeMarker fixMarker;
   volatile RangeHighlighterEx highlighter; // modified in EDT only
   PsiElement psiElement;
 
@@ -133,6 +133,10 @@ public class HighlightInfoImpl implements HighlightInfo {
 
   public PsiElement getPsiElement() {
     return psiElement;
+  }
+
+  public int getNavigationShift() {
+    return navigationShift;
   }
 
   @Nullable
@@ -234,7 +238,7 @@ public class HighlightInfoImpl implements HighlightInfo {
   }
 
   public static TextAttributes getAttributesByType(@Nullable PsiElement element, @Nonnull HighlightInfoType type, @Nonnull TextAttributesScheme colorsScheme) {
-    SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(element != null ? element.getProject() : null);
+    SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(element != null ? element.getProject() : null);
     TextAttributes textAttributes = severityRegistrar.getTextAttributesBySeverity(type.getSeverity(element));
     if (textAttributes != null) return textAttributes;
     TextAttributesKey key = type.getAttributesKey();
@@ -248,7 +252,7 @@ public class HighlightInfoImpl implements HighlightInfo {
    */
   @Nullable
   @SuppressWarnings("deprecation")
-  ColorValue getErrorStripeMarkColor(@Nonnull PsiElement element, @Nullable EditorColorsScheme colorsScheme) {
+  public ColorValue getErrorStripeMarkColor(@Nonnull PsiElement element, @Nullable EditorColorsScheme colorsScheme) {
     if (forcedTextAttributes != null) {
       return forcedTextAttributes.getErrorStripeColor();
     }
@@ -295,7 +299,7 @@ public class HighlightInfoImpl implements HighlightInfo {
     return unescapedTooltip == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(unescapedTooltip));
   }
 
-  boolean needUpdateOnTyping() {
+  public boolean needUpdateOnTyping() {
     return isFlagSet(NEEDS_UPDATE_ON_TYPING_MASK);
   }
 
@@ -407,91 +411,8 @@ public class HighlightInfoImpl implements HighlightInfo {
     return new B(type);
   }
 
-  void setGroup(int group) {
+  public void setGroup(int group) {
     this.group = group;
-  }
-
-  public interface Builder {
-    // only one 'range' call allowed
-    @Nonnull
-    Builder range(@Nonnull TextRange textRange);
-
-    @Nonnull
-    Builder range(@Nonnull ASTNode node);
-
-    @Nonnull
-    Builder range(@Nonnull PsiElement element);
-
-    @Nonnull
-    Builder range(@Nonnull PsiElement element, @Nonnull TextRange rangeInElement);
-
-    @Nonnull
-    Builder range(@Nonnull PsiElement element, int start, int end);
-
-    @Nonnull
-    Builder range(int start, int end);
-
-    @Nonnull
-    Builder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer);
-
-    @Nonnull
-    Builder problemGroup(@Nonnull ProblemGroup problemGroup);
-
-    @Nonnull
-    Builder inspectionToolId(@Nonnull String inspectionTool);
-
-    // only one allowed
-    @Nonnull
-    Builder description(@Nonnull String description);
-
-    @Nonnull
-    Builder descriptionAndTooltip(@Nonnull String description);
-
-    @Nonnull
-    default Builder descriptionAndTooltip(@Nonnull LocalizeValue description) {
-      return descriptionAndTooltip(description.get());
-    }
-
-    // only one allowed
-    @Nonnull
-    Builder textAttributes(@Nonnull TextAttributes attributes);
-
-    @Nonnull
-    Builder textAttributes(@Nonnull TextAttributesKey attributesKey);
-
-    // only one allowed
-    @Nonnull
-    Builder unescapedToolTip(@Nonnull String unescapedToolTip);
-
-    @Nonnull
-    Builder escapedToolTip(@Nonnull String escapedToolTip);
-
-    @Nonnull
-    Builder endOfLine();
-
-    @Nonnull
-    Builder needsUpdateOnTyping(boolean update);
-
-    @Nonnull
-    Builder severity(@Nonnull HighlightSeverity severity);
-
-    @Nonnull
-    Builder fileLevelAnnotation();
-
-    @Nonnull
-    Builder navigationShift(int navigationShift);
-
-    @Nonnull
-    Builder group(int group);
-
-    /**
-     * @return null means filtered out
-     */
-    @Nullable
-    HighlightInfoImpl create();
-
-    @Nonnull
-    HighlightInfoImpl createUnconditionally();
   }
 
   private static boolean isAcceptedByFilters(@Nonnull HighlightInfoImpl info, @Nullable PsiElement psiElement) {

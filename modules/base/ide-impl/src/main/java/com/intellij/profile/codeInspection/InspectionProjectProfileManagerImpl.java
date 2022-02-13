@@ -15,7 +15,7 @@
  */
 package com.intellij.profile.codeInspection;
 
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
 import consulo.application.Application;
@@ -24,13 +24,14 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.application.dumb.DumbAwareRunnable;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.editor.inspection.scheme.Profile;
-import com.intellij.profile.ProfileEx;
+import consulo.language.editor.inspection.scheme.ProfileEx;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.application.ui.awt.UIUtil;
@@ -53,7 +54,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class InspectionProjectProfileManagerImpl extends InspectionProjectProfileManager {
   private final Map<String, InspectionProfileWrapper> myName2Profile = new ConcurrentHashMap<String, InspectionProfileWrapper>();
-  private final SeverityRegistrar mySeverityRegistrar;
+  private final SeverityRegistrarImpl mySeverityRegistrar;
   private final NamedScopeManager myLocalScopesHolder;
   private NamedScopesHolder.ScopeListener myScopeListener;
 
@@ -64,7 +65,7 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
                                              @Nonnull NamedScopeManager localScopesHolder) {
     super(project, inspectionProfileManager, holder);
     myLocalScopesHolder = localScopesHolder;
-    mySeverityRegistrar = new SeverityRegistrar(project.getMessageBus());
+    mySeverityRegistrar = new SeverityRegistrarImpl(project.getMessageBus());
   }
 
   public static InspectionProjectProfileManagerImpl getInstanceImpl(Project project) {
@@ -178,13 +179,13 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
 
   @Nonnull
   @Override
-  public SeverityRegistrar getSeverityRegistrar() {
+  public SeverityRegistrarImpl getSeverityRegistrar() {
     return mySeverityRegistrar;
   }
 
   @Nonnull
   @Override
-  public SeverityRegistrar getOwnSeverityRegistrar() {
+  public SeverityRegistrarImpl getOwnSeverityRegistrar() {
     return mySeverityRegistrar;
   }
 

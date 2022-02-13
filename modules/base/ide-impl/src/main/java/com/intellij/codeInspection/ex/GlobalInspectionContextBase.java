@@ -40,7 +40,7 @@ import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.scope.NamedScope;

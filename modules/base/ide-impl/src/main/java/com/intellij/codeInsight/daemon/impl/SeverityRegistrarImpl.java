@@ -16,26 +16,28 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.editor.markup.TextAttributes;
-import consulo.project.Project;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.util.xml.serializer.JDOMExternalizableStringList;
-import consulo.util.xml.serializer.WriteExternalException;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
+import consulo.editor.markup.TextAttributes;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.SeveritiesProvider;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.JDOMExternalizableStringList;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -47,7 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * User: anna
  * Date: 24-Feb-2006
  */
-public class SeverityRegistrar implements JDOMExternalizable, Comparator<HighlightSeverity> {
+public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<HighlightSeverity>, SeverityRegistrar {
   private static final String INFO_TAG = "info";
   private static final String COLOR_ATTRIBUTE = "color";
 
@@ -62,7 +64,7 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
 
   private static final Map<String, HighlightInfoType> STANDARD_SEVERITIES = new ConcurrentHashMap<>();
 
-  public SeverityRegistrar(@Nonnull MessageBus messageBus) {
+  public SeverityRegistrarImpl(@Nonnull MessageBus messageBus) {
     myMessageBus = messageBus;
   }
 
@@ -121,6 +123,7 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
     return myMap.get(severity.getName());
   }
 
+  @Override
   @Nullable
   public TextAttributes getTextAttributesBySeverity(@Nonnull HighlightSeverity severity) {
     final SeverityBasedTextAttributes infoType = getAttributesBySeverity(severity);
@@ -129,7 +132,6 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
     }
     return null;
   }
-
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {
@@ -225,10 +227,12 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
     return list;
   }
 
+  @Override
   public int getSeveritiesCount() {
     return createCurrentSeverityNames().size();
   }
 
+  @Override
   @Nullable
   public HighlightSeverity getSeverityByIndex(final int i) {
     for (ObjectIntMap.Entry<HighlightSeverity> entry : getOrderMap().entrySet()) {
@@ -309,7 +313,7 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
     return orderMap;
   }
 
-  private static final AtomicFieldUpdater<SeverityRegistrar, ObjectIntMap> ORDER_MAP_UPDATER = AtomicFieldUpdater.forFieldOfType(SeverityRegistrar.class, ObjectIntMap.class);
+  private static final AtomicFieldUpdater<SeverityRegistrarImpl, ObjectIntMap> ORDER_MAP_UPDATER = AtomicFieldUpdater.forFieldOfType(SeverityRegistrarImpl.class, ObjectIntMap.class);
 
   @Nonnull
   private static ObjectIntMap<HighlightSeverity> fromList(@Nonnull List<HighlightSeverity> orderList) {

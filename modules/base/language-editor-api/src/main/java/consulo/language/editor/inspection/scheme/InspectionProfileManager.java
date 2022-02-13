@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.profile.codeInspection;
+package consulo.language.editor.inspection.scheme;
 
-import consulo.disposer.Disposable;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.application.Application;
 import consulo.component.persist.StoragePathMacros;
-import com.intellij.openapi.util.DisposerUtil;
-import com.intellij.profile.ApplicationProfileManager;
-import consulo.language.editor.inspection.scheme.Profile;
-import com.intellij.profile.ProfileChangeAdapter;
-import com.intellij.profile.ProfileEx;
+import consulo.disposer.Disposable;
+import consulo.disposer.util.DisposerUtil;
+import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.language.psi.search.scope.NamedScope;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.util.collection.Lists;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -38,15 +35,15 @@ import java.util.List;
  * Date: 29-Nov-2005
  */
 public abstract class InspectionProfileManager extends ApplicationProfileManager implements SeverityProvider {
-  @NonNls public static final String INSPECTION_DIR = "inspection";
-  @NonNls protected static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + '/' + INSPECTION_DIR;
+  public static final String INSPECTION_DIR = "inspection";
+  protected static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + '/' + INSPECTION_DIR;
 
-  private final List<ProfileChangeAdapter> myProfileChangeAdapters = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<ProfileChangeAdapter> myProfileChangeAdapters = Lists.newLockFreeCopyOnWriteList();
 
   protected static final Logger LOG = Logger.getInstance(InspectionProfileManager.class);
 
   public static InspectionProfileManager getInstance() {
-    return ServiceManager.getService(InspectionProfileManager.class);
+    return Application.get().getInstance(InspectionProfileManager.class);
   }
 
   public InspectionProfileManager() {

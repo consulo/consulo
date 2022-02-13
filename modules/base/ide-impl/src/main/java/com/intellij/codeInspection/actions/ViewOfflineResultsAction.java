@@ -55,7 +55,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.inspection.scheme.Profile;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.ui.tree.TreeUtil;

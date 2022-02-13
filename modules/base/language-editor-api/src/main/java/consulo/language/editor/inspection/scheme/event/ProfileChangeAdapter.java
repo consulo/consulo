@@ -13,13 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options;
+package consulo.language.editor.inspection.scheme.event;
 
-import javax.annotation.Nonnull;
+import consulo.component.messagebus.Topic;
+import consulo.language.editor.inspection.scheme.Profile;
 
-import java.util.Properties;
+import javax.annotation.Nullable;
 
-public interface SchemeMetaInfo {
-  @Nonnull
-  Properties getMetaProperties();
+public interface ProfileChangeAdapter {
+  Topic<ProfileChangeAdapter> TOPIC = new Topic<>("ProfileChangeAdapter", ProfileChangeAdapter.class);
+
+  default void profileChanged(@Nullable Profile profile) {
+  }
+
+  default void profileActivated(@Nullable Profile oldProfile, @Nullable Profile profile) {
+  }
+
+  default void profilesInitialized() {
+  }
+
+  default void profilesShutdown() {
+  }
 }

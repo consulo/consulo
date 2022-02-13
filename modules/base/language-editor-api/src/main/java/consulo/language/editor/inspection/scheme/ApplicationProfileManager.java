@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.profile;
+package consulo.language.editor.inspection.scheme;
 
+import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.disposer.Disposable;
-import consulo.language.editor.inspection.scheme.Profile;
-import consulo.language.editor.inspection.scheme.ProfileManager;
 
 /**
  * User: anna

@@ -25,7 +25,7 @@ import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.util.xml.serializer.WriteExternalException;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProfileManagerImpl;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;

@@ -15,7 +15,7 @@
  */
 package com.intellij.profile.codeInspection.ui;
 
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import jakarta.inject.Inject;
 

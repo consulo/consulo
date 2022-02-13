@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.profile;
 
-import consulo.language.editor.inspection.scheme.ProfileManager;
-
-import javax.annotation.Nullable;
-
-/**
+/*
  * User: anna
- * Date: 30-Nov-2005
+ * Date: 31-Jul-2007
  */
-public abstract class ProjectProfileManager implements ProfileManager {
-  public abstract String getProfileName();
+package consulo.language.editor.rawHighlight;
 
-  public abstract String getProjectProfile();
+public interface SeverityProvider {
+  SeverityRegistrar getSeverityRegistrar();
 
-  public abstract void setProjectProfile(@Nullable String projectProfile);
+  SeverityRegistrar getOwnSeverityRegistrar();
 }

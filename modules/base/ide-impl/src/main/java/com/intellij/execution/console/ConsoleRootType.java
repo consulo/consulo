@@ -16,7 +16,7 @@
 package com.intellij.execution.console;
 
 import com.intellij.ide.scratch.RootType;
-import com.intellij.openapi.util.text.StringHash;
+import consulo.util.lang.StringHash;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

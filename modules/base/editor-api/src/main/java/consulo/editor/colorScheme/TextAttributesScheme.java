@@ -25,4 +25,8 @@ public interface TextAttributesScheme {
 
   default void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
   }
+
+  default Map<String, Object> getMetaProperties() {
+    return Map.of();
+  }
 }

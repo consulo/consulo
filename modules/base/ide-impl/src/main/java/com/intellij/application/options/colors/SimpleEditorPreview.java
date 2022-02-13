@@ -18,10 +18,10 @@ package com.intellij.application.options.colors;
 
 import com.intellij.application.options.colors.highlighting.HighlightData;
 import com.intellij.application.options.colors.highlighting.HighlightsExtractor;
-import com.intellij.codeHighlighting.RainbowHighlighter;
-import com.intellij.codeInsight.daemon.UsedColors;
+import consulo.language.editor.DefaultLanguageHighlighterColors;
+import consulo.language.editor.rawHighlight.RainbowHighlighter;
+import consulo.language.editor.util.UsedColors;
 import com.intellij.ide.highlighter.HighlighterFactory;
-import com.intellij.openapi.editor.*;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.event.CaretAdapter;

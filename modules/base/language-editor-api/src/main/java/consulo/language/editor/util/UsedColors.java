@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight.daemon;
+package consulo.language.editor.util;
 
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import com.intellij.openapi.util.text.StringHash;
-import com.intellij.util.ArrayUtil;
+import consulo.util.lang.StringHash;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class UsedColors {

@@ -20,7 +20,7 @@ import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import com.intellij.profile.codeInspection.SeverityProvider;
+import consulo.language.editor.rawHighlight.SeverityProvider;
 import com.intellij.profile.codeInspection.ui.LevelChooserAction;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
 import com.intellij.util.containers.ContainerUtil;

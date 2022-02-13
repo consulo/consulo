@@ -26,20 +26,20 @@ import java.util.Collection;
 
 public class SeverityUtil {
   @Nonnull
-  public static Collection<SeverityRegistrar.SeverityBasedTextAttributes> getRegisteredHighlightingInfoTypes(@Nonnull SeverityRegistrar registrar) {
-    Collection<SeverityRegistrar.SeverityBasedTextAttributes> collection = registrar.allRegisteredAttributes();
+  public static Collection<SeverityRegistrarImpl.SeverityBasedTextAttributes> getRegisteredHighlightingInfoTypes(@Nonnull SeverityRegistrarImpl registrar) {
+    Collection<SeverityRegistrarImpl.SeverityBasedTextAttributes> collection = registrar.allRegisteredAttributes();
     for (HighlightInfoType type : registrar.standardSeverities()) {
       collection.add(getSeverityBasedTextAttributes(registrar, type));
     }
     return collection;
   }
 
-  private static SeverityRegistrar.SeverityBasedTextAttributes getSeverityBasedTextAttributes(@Nonnull SeverityRegistrar registrar, @Nonnull HighlightInfoType type) {
+  private static SeverityRegistrarImpl.SeverityBasedTextAttributes getSeverityBasedTextAttributes(@Nonnull SeverityRegistrarImpl registrar, @Nonnull HighlightInfoType type) {
     final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     final TextAttributes textAttributes = scheme.getAttributes(type.getAttributesKey());
     if (textAttributes != null) {
-      return new SeverityRegistrar.SeverityBasedTextAttributes(textAttributes, (HighlightInfoType.HighlightInfoTypeImpl)type);
+      return new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes, (HighlightInfoType.HighlightInfoTypeImpl)type);
     }
-    return new SeverityRegistrar.SeverityBasedTextAttributes(registrar.getTextAttributesBySeverity(type.getSeverity(null)), (HighlightInfoType.HighlightInfoTypeImpl)type);
+    return new SeverityRegistrarImpl.SeverityBasedTextAttributes(registrar.getTextAttributesBySeverity(type.getSeverity(null)), (HighlightInfoType.HighlightInfoTypeImpl)type);
   }
 }

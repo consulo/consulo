@@ -16,7 +16,7 @@
 package com.intellij.codeInspection;
 
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.editor.colorScheme.CodeInsightColors;
 import consulo.editor.colorScheme.TextAttributesKey;
@@ -142,7 +142,7 @@ public class ProblemDescriptorUtil {
   @Nonnull
   public static HighlightInfoType highlightTypeFromDescriptor(@Nonnull ProblemDescriptor problemDescriptor,
                                                               @Nonnull HighlightSeverity severity,
-                                                              @Nonnull SeverityRegistrar severityRegistrar) {
+                                                              @Nonnull SeverityRegistrarImpl severityRegistrar) {
     final ProblemHighlightType highlightType = problemDescriptor.getHighlightType();
     switch (highlightType) {
       case GENERIC_ERROR_OR_WARNING:

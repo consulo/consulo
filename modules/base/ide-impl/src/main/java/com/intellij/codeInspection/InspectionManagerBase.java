@@ -19,7 +19,7 @@ import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;

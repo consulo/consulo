@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
@@ -58,14 +59,14 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
                                           @Nonnull final Processor<HighlightInfoImpl> processor) {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
+    final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
     MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
     return model.processRangeHighlightersOverlappingWith(startOffset, endOffset, marker -> {
       Object tt = marker.getErrorStripeTooltip();
       if (!(tt instanceof HighlightInfoImpl)) return true;
       HighlightInfoImpl info = (HighlightInfoImpl)tt;
       return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
-             || info.highlighter == null
+             || info.getHighlighter() == null
              || processor.process(info);
     });
   }
@@ -88,14 +89,14 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
                                                      @Nonnull final Processor<HighlightInfoImpl> processor) {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
+    final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
     MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
     return model.processRangeHighlightersOutside(startOffset, endOffset, marker -> {
       Object tt = marker.getErrorStripeTooltip();
       if (!(tt instanceof HighlightInfoImpl)) return true;
       HighlightInfoImpl info = (HighlightInfoImpl)tt;
       return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
-             || info.highlighter == null
+             || info.getHighlighter() == null
              || processor.process(info);
     });
   }

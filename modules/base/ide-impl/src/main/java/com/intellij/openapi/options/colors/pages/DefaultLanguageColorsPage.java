@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options.colors.pages;
 
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.editor.HighlighterColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;

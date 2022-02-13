@@ -17,7 +17,7 @@ package com.intellij.profile.codeInspection.ui;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInsight.daemon.impl.SeverityUtil;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.SeverityEditorDialog;
@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.profile.codeInspection.SeverityProvider;
+import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
@@ -42,14 +42,14 @@ import java.util.TreeSet;
  */
 public abstract class LevelChooserAction extends ComboBoxAction implements DumbAware {
 
-  private final SeverityRegistrar mySeverityRegistrar;
+  private final SeverityRegistrarImpl mySeverityRegistrar;
   private HighlightSeverity myChosen = null;
 
   public LevelChooserAction(final InspectionProfileImpl profile) {
     this(((SeverityProvider)profile.getProfileManager()).getOwnSeverityRegistrar());
   }
 
-  public LevelChooserAction(final SeverityRegistrar severityRegistrar) {
+  public LevelChooserAction(final SeverityRegistrarImpl severityRegistrar) {
     mySeverityRegistrar = severityRegistrar;
   }
 
@@ -83,9 +83,9 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
     return group;
   }
 
-  public static SortedSet<HighlightSeverity> getSeverities(final SeverityRegistrar severityRegistrar) {
+  public static SortedSet<HighlightSeverity> getSeverities(final SeverityRegistrarImpl severityRegistrar) {
     final SortedSet<HighlightSeverity> severities = new TreeSet<HighlightSeverity>(severityRegistrar);
-    for (final SeverityRegistrar.SeverityBasedTextAttributes type : SeverityUtil.getRegisteredHighlightingInfoTypes(severityRegistrar)) {
+    for (final SeverityRegistrarImpl.SeverityBasedTextAttributes type : SeverityUtil.getRegisteredHighlightingInfoTypes(severityRegistrar)) {
       severities.add(type.getSeverity());
     }
     severities.add(HighlightSeverity.ERROR);

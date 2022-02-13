@@ -19,7 +19,7 @@ package com.intellij.profile.codeInspection.ui;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInsight.daemon.impl.SeverityUtil;
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.language.editor.inspection.scheme.*;
@@ -47,11 +47,11 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.profile.ApplicationProfileManager;
+import consulo.language.editor.inspection.scheme.ApplicationProfileManager;
 import com.intellij.profile.DefaultProjectProfileManager;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.profile.codeInspection.SeverityProvider;
+import consulo.language.editor.rawHighlight.SeverityProvider;
 import com.intellij.profile.codeInspection.ui.filter.InspectionFilterAction;
 import com.intellij.profile.codeInspection.ui.filter.InspectionsFilter;
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
@@ -316,7 +316,7 @@ public class SingleInspectionProfilePanel extends JPanel {
   }
 
   private static void copyUsedSeveritiesIfUndefined(final ModifiableModel selectedProfile, final ProfileManager profileManager) {
-    final SeverityRegistrar registrar = ((SeverityProvider)profileManager).getSeverityRegistrar();
+    final SeverityRegistrarImpl registrar = ((SeverityProvider)profileManager).getSeverityRegistrar();
     final Set<HighlightSeverity> severities = ((InspectionProfileImpl)selectedProfile).getUsedSeverities();
     for (Iterator<HighlightSeverity> iterator = severities.iterator(); iterator.hasNext();) {
       HighlightSeverity severity = iterator.next();
@@ -326,7 +326,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     }
 
     if (!severities.isEmpty()) {
-      final SeverityRegistrar oppositeRegister = ((SeverityProvider)selectedProfile.getProfileManager()).getSeverityRegistrar();
+      final SeverityRegistrarImpl oppositeRegister = ((SeverityProvider)selectedProfile.getProfileManager()).getSeverityRegistrar();
       for (HighlightSeverity severity : severities) {
         final TextAttributesKey attributesKey = TextAttributesKey.find(severity.getName());
         final TextAttributes textAttributes = oppositeRegister.getTextAttributesBySeverity(severity);
@@ -334,7 +334,7 @@ public class SingleInspectionProfilePanel extends JPanel {
           continue;
         }
         HighlightInfoType.HighlightInfoTypeImpl info = new HighlightInfoType.HighlightInfoTypeImpl(severity, attributesKey);
-        registrar.registerSeverity(new SeverityRegistrar.SeverityBasedTextAttributes(textAttributes.clone(), info),
+        registrar.registerSeverity(new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes.clone(), info),
                                    textAttributes.getErrorStripeColor());
       }
     }
@@ -745,14 +745,14 @@ public class SingleInspectionProfilePanel extends JPanel {
 
   private JPopupMenu compoundPopup() {
     final DefaultActionGroup group = new DefaultActionGroup();
-    final SeverityRegistrar severityRegistrar = ((SeverityProvider)mySelectedProfile.getProfileManager()).getOwnSeverityRegistrar();
+    final SeverityRegistrarImpl severityRegistrar = ((SeverityProvider)mySelectedProfile.getProfileManager()).getOwnSeverityRegistrar();
     TreeSet<HighlightSeverity> severities = new TreeSet<HighlightSeverity>(severityRegistrar);
     severities.add(HighlightSeverity.ERROR);
     severities.add(HighlightSeverity.WARNING);
     severities.add(HighlightSeverity.WEAK_WARNING);
-    final Collection<SeverityRegistrar.SeverityBasedTextAttributes> infoTypes =
+    final Collection<SeverityRegistrarImpl.SeverityBasedTextAttributes> infoTypes =
             SeverityUtil.getRegisteredHighlightingInfoTypes(severityRegistrar);
-    for (SeverityRegistrar.SeverityBasedTextAttributes info : infoTypes) {
+    for (SeverityRegistrarImpl.SeverityBasedTextAttributes info : infoTypes) {
       severities.add(info.getSeverity());
     }
     for (HighlightSeverity severity : severities) {
