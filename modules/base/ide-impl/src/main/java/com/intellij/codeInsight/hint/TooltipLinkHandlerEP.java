@@ -19,7 +19,7 @@ import com.intellij.codeInsight.highlighting.TooltipLinkHandler;
 import consulo.editor.Editor;
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.util.LazyInstance;
+import consulo.application.extension.LazyInstance;
 import consulo.util.xml.serializer.annotation.Attribute;
 import javax.annotation.Nonnull;
 

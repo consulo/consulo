@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.util;
+package consulo.application.extension;
 
+import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 
 import javax.annotation.Nonnull;
-
-import java.lang.reflect.Constructor;
+import java.util.function.Supplier;
 
 /**
  * @author peter
  */
-public abstract class LazyInstance<T> extends NotNullLazyValue<T> {
+public abstract class LazyInstance<T> implements Supplier<T> {
   @Nonnull
   public static <T> LazyInstance<T> createInstance(@Nonnull final ThrowableComputable<Class<T>, ClassNotFoundException> value) {
-    return new LazyInstance<T>() {
+    return new LazyInstance<>() {
       @Nonnull
       @Override
       protected Class<T> getInstanceClass() throws ClassNotFoundException {
@@ -37,29 +37,38 @@ public abstract class LazyInstance<T> extends NotNullLazyValue<T> {
     };
   }
 
+  private volatile T myValue;
+
   @Nonnull
   protected abstract Class<T> getInstanceClass() throws ClassNotFoundException;
 
   @Override
+  public T get() {
+    T value = myValue;
+    if (value != null) {
+      return value;
+    }
+    synchronized (this) {
+      value = myValue;
+      if (value == null) {
+        myValue = value = compute();
+      }
+    }
+    return value;
+  }
+
   @Nonnull
   protected final T compute() {
     try {
       Class<T> tClass = getInstanceClass();
-      Constructor<T> constructor = tClass.getConstructor();
-      constructor.setAccessible(true);
-      return tClass.newInstance();
-    }
-    catch (InstantiationException e) {
-      throw new RuntimeException(e);
-    }
-    catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
+      return Application.get().getInjectingContainer().getUnbindedInstance(tClass);
     }
     catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
-    catch (NoSuchMethodException e) {
-      throw new RuntimeException(e);
-    }
+  }
+
+  public T getValue() {
+    return get();
   }
 }

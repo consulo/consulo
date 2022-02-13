@@ -17,7 +17,7 @@ package com.intellij.openapi.options;
 
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.util.LazyInstance;
+import consulo.application.extension.LazyInstance;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.component.util.pointer.Named;
 import javax.annotation.Nonnull;

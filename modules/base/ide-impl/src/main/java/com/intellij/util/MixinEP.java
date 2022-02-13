@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import consulo.component.extension.AbstractExtensionPointBean;
-import com.intellij.openapi.util.LazyInstance;
+import consulo.application.extension.LazyInstance;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.util.xml.serializer.annotation.Attribute;
 import javax.annotation.Nonnull;
@@ -46,6 +46,7 @@ public class MixinEP<T> extends AbstractExtensionPointBean {
   };
 
   private final LazyInstance<T> myHandler = new LazyInstance<T>() {
+    @Override
     protected Class<T> getInstanceClass() throws ClassNotFoundException {
       return findClass(implementationClass);
     }

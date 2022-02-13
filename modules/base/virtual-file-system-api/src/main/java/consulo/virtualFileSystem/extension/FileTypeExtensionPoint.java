@@ -19,27 +19,24 @@
  */
 package consulo.virtualFileSystem.extension;
 
+import consulo.application.extension.LazyInstance;
 import consulo.component.extension.AbstractExtensionPointBean;
-import com.intellij.openapi.util.LazyInstance;
 import consulo.component.extension.KeyedLazyInstance;
-import consulo.util.lang.lazy.LazyValue;
 import consulo.util.xml.serializer.annotation.Attribute;
-
-import java.util.function.Supplier;
 
 public class FileTypeExtensionPoint<T> extends AbstractExtensionPointBean implements KeyedLazyInstance<T> {
 
-  // these must be public for scrambling compatibility
   @Attribute("filetype")
   public String filetype;
 
   @Attribute("implementationClass")
   public String implementationClass;
 
-  private final Supplier<T> myHandler = LazyValue.<T>notNull(() -> findClass(implementationClass));
+  private final LazyInstance<T> myHandler = LazyInstance.createInstance(() -> findClass(implementationClass));
+
   @Override
   public T getInstance() {
-    return myHandler.get();
+    return myHandler.getValue();
   }
 
   @Override
