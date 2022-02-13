@@ -26,7 +26,7 @@ import java.net.URL;
  */
 public class DesktopSwtPlatformImpl extends PlatformBase {
   @Override
-  public void browse(@Nonnull URL url) {
+  public void openInBrowser(@Nonnull URL url) {
     throw new UnsupportedOperationException();
   }
 }

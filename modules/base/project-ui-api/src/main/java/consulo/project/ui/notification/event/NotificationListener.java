@@ -49,10 +49,10 @@ public interface NotificationListener {
     protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
       URL url = event.getURL();
       if (url == null) {
-        Platform.current().browse(event.getDescription());
+        Platform.current().openInBrowser(event.getDescription());
       }
       else {
-        Platform.current().browse(url);
+        Platform.current().openInBrowser(url);
       }
       if (myExpireNotification) {
         notification.expire();

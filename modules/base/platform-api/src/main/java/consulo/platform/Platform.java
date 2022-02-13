@@ -165,16 +165,22 @@ public interface Platform {
   @Nonnull
   User user();
 
-  default void browse(String url) {
+  default void openInBrowser(String url) {
     try {
-      browse(new URL(url));
+      openInBrowser(new URL(url));
     }
     catch (MalformedURLException e) {
       throw new RuntimeException(e);
     }
   }
 
-  void browse(@Nonnull URL url);
+  void openInBrowser(@Nonnull URL url);
+
+  default void openInFileManager(@Nonnull Path path) {
+    openInFileManager(path.toFile());
+  }
+
+  void openInFileManager(@Nonnull File file);
 
   @Nonnull
   default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {

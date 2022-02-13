@@ -16,6 +16,7 @@
 package consulo.desktop.awt.platform.impl;
 
 import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.actions.ShowFilePathAction;
 import consulo.application.util.SystemInfo;
 import consulo.desktop.util.windows.WindowsElevationUtil;
 import consulo.platform.impl.PlatformBase;
@@ -58,8 +59,13 @@ class DesktopPlatformImpl extends PlatformBase {
   }
 
   @Override
-  public void browse(@Nonnull URL url) {
+  public void openInBrowser(@Nonnull URL url) {
     BrowserUtil.browse(url);
+  }
+
+  @Override
+  public void openInFileManager(@Nonnull File file) {
+    ShowFilePathAction.openFile(file);
   }
 
   @Nonnull

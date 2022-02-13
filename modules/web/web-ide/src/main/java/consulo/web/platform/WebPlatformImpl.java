@@ -29,7 +29,7 @@ public class WebPlatformImpl extends PlatformBase {
   }
 
   @Override
-  public void browse(@Nonnull URL url) {
+  public void openInBrowser(@Nonnull URL url) {
     throw new UnsupportedOperationException();
   }
 }

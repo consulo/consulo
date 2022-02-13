@@ -2,6 +2,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
@@ -30,5 +31,7 @@ public abstract class PsiNavigationSupport {
 
   public abstract void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus);
 
-  public abstract void openDirectoryInSystemFileManager(@Nonnull File file);
+  public void openDirectoryInSystemFileManager(@Nonnull File file) {
+    Platform.current().openInFileManager(file);
+  }
 }
