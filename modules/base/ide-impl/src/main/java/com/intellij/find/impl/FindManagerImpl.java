@@ -29,6 +29,9 @@ import consulo.editor.FoldRegion;
 import consulo.editor.FoldingModel;
 import consulo.editor.ScrollType;
 import consulo.language.Language;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.LanguageFileType;
@@ -45,7 +48,6 @@ import com.intellij.openapi.editor.ex.FoldingModelEx;
 import consulo.editor.markup.RangeHighlighter;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
-import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.language.psi.*;
@@ -739,7 +741,7 @@ public class FindManagerImpl extends FindManager {
   @Nullable
   SyntaxHighlighter getHighlighter(VirtualFile file, @Nullable Language lang) {
     SyntaxHighlighter syntaxHighlighter = lang != null ? SyntaxHighlighterFactory.getSyntaxHighlighter(lang, null, file) : null;
-    if (lang == null || syntaxHighlighter instanceof PlainSyntaxHighlighter) {
+    if (lang == null || syntaxHighlighter instanceof DefaultSyntaxHighlighter) {
       syntaxHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(file.getFileType(), null, file);
     }
 

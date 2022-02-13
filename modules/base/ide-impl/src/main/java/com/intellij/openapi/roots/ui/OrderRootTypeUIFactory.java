@@ -26,7 +26,7 @@ import consulo.component.extension.KeyedFactoryEPBean;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.util.KeyedExtensionFactory;
+import consulo.application.extension.KeyedExtensionFactory;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

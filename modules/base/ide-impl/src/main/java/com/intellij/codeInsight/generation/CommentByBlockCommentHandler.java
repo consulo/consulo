@@ -36,7 +36,7 @@ import consulo.editor.ScrollType;
 import consulo.language.lexer.Lexer;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.language.Language;

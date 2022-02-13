@@ -17,11 +17,11 @@ package com.intellij.openapi.vcs.impl;
 
 import com.intellij.codeInsight.CodeSmellInfo;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import consulo.language.editor.highlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.impl.*;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
-import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;

@@ -2,7 +2,7 @@ package com.intellij.psi.templateLanguages;
 
 import consulo.language.lexer.Lexer;
 import consulo.editor.colorScheme.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 

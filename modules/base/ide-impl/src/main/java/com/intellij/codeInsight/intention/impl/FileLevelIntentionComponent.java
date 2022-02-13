@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.intention.impl;
 
 import consulo.editor.markup.GutterMark;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;

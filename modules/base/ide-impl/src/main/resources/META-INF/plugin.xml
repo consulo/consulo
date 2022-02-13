@@ -136,11 +136,11 @@
 
     <extensionPoint name="syntaxHighlighter"
                     beanClass="consulo.component.extension.KeyedFactoryEPBean">
-      <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighter"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.highlight.SyntaxHighlighter"/>
     </extensionPoint>
 
     <extensionPoint name="lang.syntaxHighlighterFactory" beanClass="com.intellij.openapi.fileTypes.SyntaxHighlighterFactoryEP">
-      <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighterFactory"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.highlight.SyntaxHighlighterFactory"/>
     </extensionPoint>
 
     <extensionPoint name="lang.elementIcon" beanClass="consulo.language.LanguageElementIcon"/>
@@ -171,7 +171,7 @@
     <extensionPoint name="http.fileEditorActionProvider"
                     interface="com.intellij.openapi.fileEditor.impl.http.RemoteFileEditorActionProvider"/>
 
-    <extensionPoint name="filetype.decompiler" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
+    <extensionPoint name="filetype.decompiler" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.file.BinaryFileDecompiler"/>
     </extensionPoint>
 
@@ -214,7 +214,7 @@
 
     <extensionPoint name="statistics.usagesCollector" interface="com.intellij.internal.statistic.UsagesCollector"/>
 
-    <extensionPoint name="editorHighlighterProvider" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
+    <extensionPoint name="editorHighlighterProvider" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.EditorHighlighterProvider"/>
     </extensionPoint>
 
@@ -349,7 +349,7 @@
 
     <!-- Code Insight -->
     <extensionPoint name="highlightVisitor"
-                    interface="consulo.language.editor.highlight.HighlightVisitor"
+                    interface="consulo.language.editor.rawHighlight.HighlightVisitor"
                     area="PROJECT"/>
     <extensionPoint name="highlightErrorFilter"
                     interface="com.intellij.codeInsight.highlighting.HighlightErrorFilter"
@@ -379,8 +379,8 @@
 
 
     <extensionPoint name="braceMatcher"
-                    beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.highlighting.BraceMatcher"/>
+                    beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.highlight.BraceMatcher"/>
     </extensionPoint>
 
     <extensionPoint name="bidiRegionsSeparator"
@@ -421,7 +421,7 @@
                     interface="consulo.psi.impl.source.codeStyle.IndentHelperExtension"/>
 
     <extensionPoint name="daemon.highlightInfoFilter"
-                    interface="consulo.language.editor.highlight.HighlightInfoFilter"/>
+                    interface="consulo.language.editor.rawHighlight.HighlightInfoFilter"/>
 
     <extensionPoint name="daemon.intentionActionFilter"
                     interface="com.intellij.codeInsight.daemon.impl.IntentionActionFilter"/>
@@ -497,7 +497,7 @@
 
     <extensionPoint name="lang.braceMatcher"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.PairedBraceMatcher"/>
+      <with attribute="implementationClass" implements="consulo.language.PairedBraceMatcher"/>
     </extensionPoint>
 
     <extensionPoint name="lang.quoteHandler"
@@ -583,7 +583,7 @@
       <with attribute="implementationClass" implements="consulo.language.file.FileViewProviderFactory"/>
     </extensionPoint>
 
-    <extensionPoint name="fileType.fileViewProviderFactory" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
+    <extensionPoint name="fileType.fileViewProviderFactory" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.file.FileViewProviderFactory"/>
     </extensionPoint>
 
@@ -996,7 +996,7 @@
                     interface="com.intellij.ide.fileTemplates.CreateFromTemplateActionReplacer"/>
 
     <extensionPoint name="filetype.stubBuilder"
-                    beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
+                    beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.psi.stub.BinaryFileStubBuilder"/>
     </extensionPoint>
 
@@ -1066,11 +1066,11 @@
 
     <extensionPoint name="fileLookupInfoProvider" interface="com.intellij.psi.file.FileLookupInfoProvider"/>
 
-    <extensionPoint name="idIndexer" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
+    <extensionPoint name="idIndexer" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.psi.impl.cache.impl.id.IdIndexer"/>
     </extensionPoint>
 
-    <extensionPoint name="todoIndexer" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
+    <extensionPoint name="todoIndexer" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.util.indexing.DataIndexer"/>
     </extensionPoint>
 

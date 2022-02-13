@@ -5,7 +5,7 @@ import com.intellij.codeInsight.editorActions.EnterHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.Language;
 import consulo.editor.Editor;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;

@@ -4,7 +4,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionManager;
 import com.intellij.codeInsight.intention.impl.CachedIntentions;

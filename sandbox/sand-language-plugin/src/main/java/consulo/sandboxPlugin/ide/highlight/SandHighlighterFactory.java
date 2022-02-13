@@ -15,11 +15,12 @@
  */
 package consulo.sandboxPlugin.ide.highlight;
 
+import consulo.language.editor.highlight.LanguageVersionableSyntaxHighlighterFactory;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.version.LanguageVersion;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
-import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandLanguage;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

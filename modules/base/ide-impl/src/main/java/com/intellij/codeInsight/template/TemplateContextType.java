@@ -4,7 +4,7 @@ package com.intellij.codeInsight.template;
 import consulo.document.Document;
 import consulo.editor.EditorFactory;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.project.Project;
 import com.intellij.openapi.util.VolatileNullableLazyValue;
 import consulo.language.psi.PsiFile;

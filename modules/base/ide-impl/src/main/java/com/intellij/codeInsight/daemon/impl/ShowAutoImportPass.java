@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.DaemonBundle;

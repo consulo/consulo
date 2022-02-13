@@ -20,12 +20,12 @@ import consulo.language.lexer.Lexer;
 import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.util.LayeredHighlighterIterator;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import consulo.language.editor.HighlighterIterator;
-import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
+import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.impl.search.LexerEditorHighlighterLexer;
@@ -42,7 +42,7 @@ public class SyntaxHighlighterOverEditorHighlighter implements SyntaxHighlighter
 
   public SyntaxHighlighterOverEditorHighlighter(SyntaxHighlighter _highlighter, VirtualFile file, Project project) {
     if (file.getFileType() == PlainTextFileType.INSTANCE) { // optimization for large files, PlainTextSyntaxHighlighterFactory is slow
-      highlighter = new PlainSyntaxHighlighter();
+      highlighter = new DefaultSyntaxHighlighter();
       lexer = highlighter.getHighlightingLexer();
     } else {
       highlighter = _highlighter;

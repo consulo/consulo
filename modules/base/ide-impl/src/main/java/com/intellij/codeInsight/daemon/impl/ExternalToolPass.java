@@ -20,7 +20,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.lang.ExternalLanguageAnnotators;
 import consulo.language.Language;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationSession;
 import consulo.language.editor.annotation.ExternalAnnotator;

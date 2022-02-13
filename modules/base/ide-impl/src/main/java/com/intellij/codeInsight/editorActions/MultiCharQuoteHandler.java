@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.editor.Editor;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -2,13 +2,13 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.GlobalInspectionContextBase;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
-import consulo.language.editor.highlight.HighlightVisitor;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;

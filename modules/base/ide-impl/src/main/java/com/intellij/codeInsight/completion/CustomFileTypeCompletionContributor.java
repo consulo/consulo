@@ -23,7 +23,7 @@ import com.intellij.psi.CustomHighlighterTokenType;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeInsight.completion.CompletionProvider;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;

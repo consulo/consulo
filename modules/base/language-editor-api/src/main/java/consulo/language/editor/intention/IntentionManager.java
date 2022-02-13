@@ -17,7 +17,7 @@ package consulo.language.editor.intention;
 
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.editor.highlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.psi.PsiElement;

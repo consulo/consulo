@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.richcopy;
 
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
-import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
@@ -11,8 +11,8 @@ import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.MarkupIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import consulo.language.editor.EditorHighlighter;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.language.editor.highlight.HighlighterIterator;
 import com.intellij.openapi.editor.impl.FontFallbackIterator;
 import consulo.editor.markup.HighlighterLayer;
 import consulo.editor.markup.MarkupModel;

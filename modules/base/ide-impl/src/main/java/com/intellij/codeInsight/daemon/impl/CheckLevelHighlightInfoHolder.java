@@ -17,9 +17,9 @@ package com.intellij.codeInsight.daemon.impl;
 
 import consulo.editor.colorScheme.TextAttributesScheme;
 import consulo.language.editor.annotation.AnnotationSession;
-import consulo.language.editor.highlight.HighlightInfo;
-import consulo.language.editor.highlight.HighlightInfoHolder;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoHolder;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;

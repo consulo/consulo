@@ -16,8 +16,8 @@
 
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.highlight.HighlightDisplayLevel;
-import consulo.language.editor.highlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.InspectionProfileConvertor;
 import consulo.language.editor.inspection.scheme.InspectionEP;
 import consulo.language.editor.inspection.scheme.*;

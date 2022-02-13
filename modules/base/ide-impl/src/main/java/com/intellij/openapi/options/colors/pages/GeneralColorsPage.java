@@ -16,7 +16,7 @@
 package com.intellij.openapi.options.colors.pages;
 
 import com.intellij.application.options.colors.InspectionColorSettingsPage;
-import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.codeInsight.template.impl.TemplateColors;
 import consulo.editor.HighlighterColors;
@@ -24,8 +24,8 @@ import consulo.editor.colorScheme.CodeInsightColors;
 import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.configurable.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
@@ -180,7 +180,7 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
   @Override
   @Nonnull
   public SyntaxHighlighter getHighlighter() {
-    return new PlainSyntaxHighlighter();
+    return new DefaultSyntaxHighlighter();
   }
 
   @Override

@@ -19,7 +19,7 @@ import com.intellij.ide.highlighter.custom.CustomFileHighlighter;
 import com.intellij.ide.highlighter.custom.CustomHighlighterColors;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import consulo.editor.colorScheme.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.configurable.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;

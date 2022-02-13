@@ -22,7 +22,7 @@ import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import consulo.editor.markup.TextAttributes;

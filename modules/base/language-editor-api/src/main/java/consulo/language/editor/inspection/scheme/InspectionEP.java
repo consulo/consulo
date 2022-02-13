@@ -20,7 +20,7 @@ import consulo.application.CommonBundle;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.language.LanguageExtensionPoint;
-import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;

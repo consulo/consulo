@@ -16,8 +16,8 @@
 package com.intellij.psi.impl.search;
 
 import consulo.language.lexer.LexerBase;
-import consulo.language.editor.EditorHighlighter;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import com.intellij.util.text.CharSequenceSubSequence;
 import javax.annotation.Nonnull;

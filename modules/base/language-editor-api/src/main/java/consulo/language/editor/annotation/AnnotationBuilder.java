@@ -6,7 +6,7 @@ import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.GutterIconRenderer;
 import consulo.editor.markup.TextAttributes;
 import consulo.language.ast.ASTNode;
-import consulo.language.editor.highlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;

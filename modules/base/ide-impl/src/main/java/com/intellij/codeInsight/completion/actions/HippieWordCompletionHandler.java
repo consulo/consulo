@@ -25,7 +25,7 @@ import consulo.editor.Editor;
 import consulo.editor.colorScheme.EditorColors;
 import consulo.editor.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;

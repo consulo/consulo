@@ -53,7 +53,7 @@ import consulo.editor.colorScheme.EditorColors;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

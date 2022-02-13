@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.ShowErrorDescriptionHandler;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;

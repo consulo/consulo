@@ -7,7 +7,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

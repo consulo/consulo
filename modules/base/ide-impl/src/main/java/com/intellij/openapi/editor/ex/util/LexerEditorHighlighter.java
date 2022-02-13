@@ -11,13 +11,13 @@ import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.document.event.DocumentEvent;
 import consulo.editor.internal.PrioritizedDocumentListener;
-import consulo.language.editor.EditorHighlighter;
-import consulo.language.editor.HighlighterClient;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.language.editor.highlight.HighlighterClient;
+import consulo.language.editor.highlight.HighlighterIterator;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
@@ -89,7 +89,7 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
   }
 
   public boolean isPlain() {
-    return myHighlighter instanceof PlainSyntaxHighlighter;
+    return myHighlighter instanceof DefaultSyntaxHighlighter;
   }
 
   @Nullable

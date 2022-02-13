@@ -20,7 +20,7 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.logging.Logger;

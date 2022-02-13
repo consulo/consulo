@@ -15,8 +15,8 @@
  */
 package org.intellij.plugins.intelliLang.inject;
 
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
-import consulo.language.editor.highlight.HighlightInfoFilter;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.inject.InjectedLanguageManager;

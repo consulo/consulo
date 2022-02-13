@@ -20,7 +20,7 @@ import com.intellij.application.options.colors.ColorAndFontDescriptionPanel;
 import com.intellij.application.options.colors.ColorAndFontOptions;
 import com.intellij.application.options.colors.InspectionColorSettingsPage;
 import com.intellij.application.options.colors.TextAttributesDescription;
-import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInsight.daemon.impl.SeverityUtil;
 import consulo.language.editor.inspection.InspectionsBundle;

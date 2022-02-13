@@ -22,7 +22,7 @@
  */
 package com.intellij.profile.codeInspection.ui.header;
 
-import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.ModifiableModel;

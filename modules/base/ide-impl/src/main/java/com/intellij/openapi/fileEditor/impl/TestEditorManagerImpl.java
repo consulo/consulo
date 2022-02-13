@@ -25,7 +25,7 @@ import consulo.editor.Editor;
 import consulo.editor.EditorFactory;
 import consulo.editor.LogicalPosition;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;

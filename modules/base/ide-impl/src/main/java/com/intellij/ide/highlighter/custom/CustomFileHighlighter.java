@@ -19,7 +19,7 @@ import consulo.language.lexer.Lexer;
 import consulo.language.lexer.LayeredLexer;
 import consulo.language.lexer.StringLiteralLexer;
 import consulo.editor.colorScheme.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
+import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import com.intellij.psi.CustomHighlighterTokenType;
 import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.IElementType;

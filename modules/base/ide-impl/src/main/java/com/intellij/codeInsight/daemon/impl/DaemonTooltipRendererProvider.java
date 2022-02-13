@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.ex.ErrorStripTooltipRendererProvider;
 import com.intellij.openapi.editor.ex.TooltipAction;
 import com.intellij.openapi.editor.impl.TrafficTooltipRenderer;
 import consulo.editor.markup.RangeHighlighter;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
 import consulo.util.collection.SmartList;

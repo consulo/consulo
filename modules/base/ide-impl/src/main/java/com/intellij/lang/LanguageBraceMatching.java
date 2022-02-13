@@ -18,6 +18,7 @@ package com.intellij.lang;
 
 import consulo.container.plugin.PluginIds;
 import consulo.language.LanguageExtension;
+import consulo.language.PairedBraceMatcher;
 
 /**
  * @author yole

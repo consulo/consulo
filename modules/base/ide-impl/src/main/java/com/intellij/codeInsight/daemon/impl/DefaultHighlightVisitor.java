@@ -3,14 +3,14 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.AnnotatorStatisticsCollector;
 import com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
-import consulo.language.editor.highlight.HighlightInfoHolder;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
 import com.intellij.diagnostic.PluginException;
 import consulo.language.Language;
 import com.intellij.lang.LanguageAnnotators;
-import consulo.language.editor.highlight.HighlightInfoType;
-import consulo.language.editor.highlight.HighlightVisitor;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.util.LanguageUtil;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.Annotator;

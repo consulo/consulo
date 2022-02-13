@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.contents;
 
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
-import consulo.language.editor.highlight.HighlightInfoFilter;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import com.intellij.codeInsight.daemon.impl.IntentionActionFilter;
 import com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;

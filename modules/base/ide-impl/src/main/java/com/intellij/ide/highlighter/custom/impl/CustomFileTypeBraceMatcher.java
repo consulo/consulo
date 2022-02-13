@@ -17,8 +17,8 @@
 package com.intellij.ide.highlighter.custom.impl;
 
 import com.intellij.codeInsight.highlighting.PairedBraceMatcherAdapter;
-import com.intellij.lang.BracePair;
-import com.intellij.lang.PairedBraceMatcher;
+import consulo.language.BracePair;
+import consulo.language.PairedBraceMatcher;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;

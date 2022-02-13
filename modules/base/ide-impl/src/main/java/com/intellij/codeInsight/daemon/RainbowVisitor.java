@@ -17,9 +17,9 @@ package com.intellij.codeInsight.daemon;
 
 import com.intellij.codeHighlighting.RainbowHighlighter;
 import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.language.editor.highlight.HighlightInfo;
-import consulo.language.editor.highlight.HighlightInfoHolder;
-import consulo.language.editor.highlight.HighlightVisitor;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoHolder;
+import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.UserDataHolderEx;

@@ -15,7 +15,7 @@
  */
 package com.intellij.designer.model;
 
-import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

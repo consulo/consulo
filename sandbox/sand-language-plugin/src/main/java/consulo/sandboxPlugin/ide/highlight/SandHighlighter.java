@@ -15,13 +15,14 @@
  */
 package consulo.sandboxPlugin.ide.highlight;
 
-import consulo.language.version.LanguageVersion;
-import consulo.language.lexer.Lexer;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.language.ast.IElementType;
-import consulo.fileTypes.LanguageVersionableSyntaxHighlighter;
-import javax.annotation.Nonnull;
+import consulo.language.editor.highlight.LanguageVersionableSyntaxHighlighter;
+import consulo.language.lexer.Lexer;
+import consulo.language.version.LanguageVersion;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

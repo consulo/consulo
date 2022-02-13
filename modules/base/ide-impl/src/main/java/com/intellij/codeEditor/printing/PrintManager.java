@@ -27,7 +27,7 @@ import consulo.application.progress.*;
 import consulo.logging.Logger;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.DocumentEx;
-import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;

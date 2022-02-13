@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.codeInsight.highlighting.BraceMatcher;
+import consulo.language.editor.highlight.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;
@@ -33,7 +33,7 @@ import consulo.document.util.TextRange;
 import consulo.editor.Caret;
 import consulo.editor.Editor;
 import consulo.editor.LogicalPosition;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

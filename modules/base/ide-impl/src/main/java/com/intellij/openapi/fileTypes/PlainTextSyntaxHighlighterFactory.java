@@ -21,6 +21,9 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.ide.highlighter.custom.AbstractCustomLexer;
 import com.intellij.ide.highlighter.custom.tokens.*;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterBase;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
 import consulo.editor.colorScheme.TextAttributesKey;

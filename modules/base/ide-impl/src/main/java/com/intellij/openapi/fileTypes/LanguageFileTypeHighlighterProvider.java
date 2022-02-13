@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.language.editor.highlight.SyntaxHighlighterProvider;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;

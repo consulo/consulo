@@ -16,11 +16,11 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
-import consulo.language.editor.highlight.HighlightInfoHolder;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import consulo.application.internal.concurrency.JobLauncher;
-import consulo.language.editor.highlight.HighlightInfoType;
-import consulo.language.editor.highlight.HighlightVisitor;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;

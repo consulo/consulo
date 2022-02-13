@@ -18,7 +18,7 @@ package consulo.language.editor.inspection.scheme;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.language.Language;
-import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.inspection.CleanupLocalInspectionTool;
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.internal.InspectionToolsRegistrarCore;

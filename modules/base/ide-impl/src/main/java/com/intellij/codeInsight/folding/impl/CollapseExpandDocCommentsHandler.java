@@ -23,7 +23,7 @@ import consulo.language.LanguageCommenters;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.editor.Editor;
 import consulo.editor.FoldRegion;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.language.psi.PsiDocCommentBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

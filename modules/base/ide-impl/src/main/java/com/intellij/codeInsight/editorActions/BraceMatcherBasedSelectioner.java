@@ -16,11 +16,11 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.codeInsight.highlighting.BraceMatcher;
+import consulo.language.editor.highlight.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
 import consulo.util.lang.Trinity;

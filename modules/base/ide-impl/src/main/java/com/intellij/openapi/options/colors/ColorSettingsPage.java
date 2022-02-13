@@ -17,7 +17,7 @@ package com.intellij.openapi.options.colors;
 
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

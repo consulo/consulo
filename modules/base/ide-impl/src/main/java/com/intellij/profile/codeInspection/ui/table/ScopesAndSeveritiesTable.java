@@ -15,8 +15,8 @@
  */
 package com.intellij.profile.codeInspection.ui.table;
 
-import consulo.language.editor.highlight.HighlightDisplayLevel;
-import consulo.language.editor.highlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.Descriptor;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.ScopeToolState;

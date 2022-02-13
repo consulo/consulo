@@ -16,9 +16,9 @@
 
 package com.intellij.profile.codeInspection.ui;
 
-import consulo.language.editor.highlight.HighlightDisplayLevel;
-import consulo.language.editor.highlight.HighlightDisplayKey;
-import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInsight.daemon.impl.SeverityUtil;
 import com.intellij.codeInsight.hint.HintUtil;

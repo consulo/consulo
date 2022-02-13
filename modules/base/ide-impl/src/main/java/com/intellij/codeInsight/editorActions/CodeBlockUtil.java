@@ -31,7 +31,7 @@ import consulo.editor.LogicalPosition;
 import consulo.editor.ScrollType;
 import consulo.language.Language;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;

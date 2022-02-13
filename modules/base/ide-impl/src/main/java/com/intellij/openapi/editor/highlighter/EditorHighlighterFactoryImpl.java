@@ -15,8 +15,11 @@
  */
 package com.intellij.openapi.editor.highlighter;
 
-import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.Language;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.file.LanguageFileType;
 import consulo.logging.Logger;
 import consulo.editor.colorScheme.EditorColorsManager;
@@ -42,7 +45,7 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
   @Nonnull
   @Override
   public EditorHighlighter createEditorHighlighter(SyntaxHighlighter highlighter, @Nonnull final EditorColorsScheme colors) {
-    if (highlighter == null) highlighter = new PlainSyntaxHighlighter();
+    if (highlighter == null) highlighter = new DefaultSyntaxHighlighter();
     return new LexerEditorHighlighter(highlighter, colors);
   }
 

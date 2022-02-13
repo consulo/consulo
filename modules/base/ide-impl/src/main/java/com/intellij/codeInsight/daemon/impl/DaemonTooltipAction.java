@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import consulo.editor.Editor;

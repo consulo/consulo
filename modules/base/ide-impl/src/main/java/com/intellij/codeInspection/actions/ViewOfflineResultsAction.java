@@ -22,8 +22,8 @@ package com.intellij.codeInspection.actions;
 
 import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
-import consulo.language.editor.highlight.HighlightDisplayLevel;
-import consulo.language.editor.highlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInspection.InspectionApplication;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;

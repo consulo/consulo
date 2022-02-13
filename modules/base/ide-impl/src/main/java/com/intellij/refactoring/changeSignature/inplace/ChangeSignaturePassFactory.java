@@ -17,8 +17,8 @@ package com.intellij.refactoring.changeSignature.inplace;
 
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
-import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.UpdateHighlightersUtil;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import consulo.editor.Editor;

@@ -18,7 +18,7 @@ package com.intellij.ide.structureView;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.KeyedFactoryEPBean;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileTypes.FileTypeExtensionFactory;
+import consulo.virtualFileSystem.extension.FileTypeExtensionFactory;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

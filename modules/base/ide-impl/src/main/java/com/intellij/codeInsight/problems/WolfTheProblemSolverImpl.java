@@ -3,9 +3,9 @@
 package com.intellij.codeInsight.problems;
 
 import com.intellij.codeInsight.daemon.impl.*;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
-import consulo.language.editor.highlight.HighlightInfoHolder;
-import consulo.language.editor.highlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfoHolder;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ReadAction;
 import consulo.document.Document;

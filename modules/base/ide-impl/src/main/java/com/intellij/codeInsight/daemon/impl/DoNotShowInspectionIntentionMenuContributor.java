@@ -1,10 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.highlight.HighlightDisplayLevel;
-import consulo.language.editor.highlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;

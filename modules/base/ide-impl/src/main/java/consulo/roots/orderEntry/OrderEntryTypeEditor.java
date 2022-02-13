@@ -25,7 +25,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
-import com.intellij.openapi.util.KeyedExtensionFactory;
+import consulo.application.extension.KeyedExtensionFactory;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;

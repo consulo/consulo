@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import consulo.document.util.TextRange;
 import consulo.editor.Editor;
-import consulo.language.editor.highlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

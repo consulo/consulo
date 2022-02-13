@@ -3,7 +3,7 @@ package com.intellij.openapi.editor;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import com.intellij.codeInsight.documentation.DocumentationComponent;
 import com.intellij.codeInsight.documentation.DocumentationManager;

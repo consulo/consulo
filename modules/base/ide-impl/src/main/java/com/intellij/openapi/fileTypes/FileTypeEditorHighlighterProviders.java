@@ -16,8 +16,9 @@
 package com.intellij.openapi.fileTypes;
 
 import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
@@ -50,7 +51,7 @@ public class FileTypeEditorHighlighterProviders extends FileTypeExtension<Editor
                                                       @Nullable VirtualFile virtualFile,
                                                       @Nonnull EditorColorsScheme colors) {
           return EditorHighlighterFactory.getInstance().createEditorHighlighter(
-            SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, project, virtualFile), colors);
+                  SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, project, virtualFile), colors);
         }
       };
       return Collections.singletonList(defaultProvider);

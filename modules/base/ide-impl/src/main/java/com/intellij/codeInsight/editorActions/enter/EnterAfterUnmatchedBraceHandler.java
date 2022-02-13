@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions.enter;
 
 import com.intellij.codeInsight.CodeInsightSettings;
-import com.intellij.codeInsight.highlighting.BraceMatcher;
+import consulo.language.editor.highlight.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
@@ -27,8 +27,8 @@ import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.editor.EditorHighlighter;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

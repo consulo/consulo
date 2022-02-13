@@ -21,6 +21,10 @@ import com.intellij.codeInsight.template.impl.TemplateColors;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterBase;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
 import consulo.document.Document;
@@ -35,7 +39,7 @@ import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.LayerDescriptor;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
@@ -410,7 +414,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
 
     SyntaxHighlighter originalHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, null, null);
     if (originalHighlighter == null) {
-      originalHighlighter = new PlainSyntaxHighlighter();
+      originalHighlighter = new DefaultSyntaxHighlighter();
     }
 
     final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();

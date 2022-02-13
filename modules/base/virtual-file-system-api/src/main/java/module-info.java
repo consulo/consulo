@@ -16,6 +16,7 @@ module consulo.virtual.file.system.api {
   exports consulo.virtualFileSystem.event;
   exports consulo.virtualFileSystem.fileType;
   exports consulo.virtualFileSystem.encoding;
+  exports consulo.virtualFileSystem.extension;
   exports consulo.virtualFileSystem.archive;
   exports consulo.virtualFileSystem.pointer;
   exports consulo.virtualFileSystem.light;

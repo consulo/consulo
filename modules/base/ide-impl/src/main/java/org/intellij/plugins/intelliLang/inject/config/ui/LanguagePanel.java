@@ -34,9 +34,9 @@ import consulo.language.Language;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ColoredListCellRenderer;
@@ -127,8 +127,8 @@ public class LanguagePanel extends AbstractInjectionPanel<BaseInjection>
 		final Language language = InjectedLanguage.findLanguageById(getLanguage());
 		if(language == null)
 		{
-			editor.setHighlighter(new LexerEditorHighlighter(new PlainSyntaxHighlighter(), editor.getColorsScheme()));
-			editor2.setHighlighter(new LexerEditorHighlighter(new PlainSyntaxHighlighter(), editor.getColorsScheme()));
+			editor.setHighlighter(new LexerEditorHighlighter(new DefaultSyntaxHighlighter(), editor.getColorsScheme()));
+			editor2.setHighlighter(new LexerEditorHighlighter(new DefaultSyntaxHighlighter(), editor.getColorsScheme()));
 		}
 		else
 		{

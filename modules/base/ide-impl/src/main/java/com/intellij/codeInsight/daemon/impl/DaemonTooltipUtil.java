@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.ex.ErrorStripTooltipRendererProvider;
 import com.intellij.openapi.editor.ex.TooltipAction;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.HintHint;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 
 import javax.annotation.Nonnull;
 

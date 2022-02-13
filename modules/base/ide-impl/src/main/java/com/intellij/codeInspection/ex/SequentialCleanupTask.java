@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;

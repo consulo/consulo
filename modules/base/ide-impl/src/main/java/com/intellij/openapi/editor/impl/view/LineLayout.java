@@ -9,7 +9,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.bidi.BidiRegionsSeparator;
 import com.intellij.openapi.editor.bidi.LanguageBidiRegionsSeparator;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import com.intellij.openapi.editor.impl.FontFallbackIterator;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.util.text.StringUtil;

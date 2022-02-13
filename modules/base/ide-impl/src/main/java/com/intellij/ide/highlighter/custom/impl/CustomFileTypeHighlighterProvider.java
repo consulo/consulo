@@ -16,8 +16,8 @@
 
 package com.intellij.ide.highlighter.custom.impl;
 
-import com.intellij.openapi.fileTypes.SyntaxHighlighterProvider;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterProvider;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;

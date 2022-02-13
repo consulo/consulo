@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.language.ast.TokenSet;
 import consulo.language.ast.IElementType;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.editor.Editor;
 import consulo.document.Document;
 

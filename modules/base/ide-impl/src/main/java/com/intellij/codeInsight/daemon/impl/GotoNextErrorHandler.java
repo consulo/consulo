@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.hint.HintManager;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.document.Document;

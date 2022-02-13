@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection;
 
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.ProblemDescriptionsProcessor;
 import consulo.language.editor.inspection.scheme.InspectionManager;

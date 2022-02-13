@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.editor.HighlighterColors;
 import consulo.editor.markup.*;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.util.ArrayUtilRt;
 import consulo.application.util.function.CommonProcessors;

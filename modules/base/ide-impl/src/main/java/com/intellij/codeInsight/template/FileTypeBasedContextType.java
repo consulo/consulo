@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.template;
 
 import consulo.language.file.LanguageFileType;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 
 import javax.annotation.Nonnull;
 

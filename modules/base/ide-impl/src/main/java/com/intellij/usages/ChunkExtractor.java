@@ -26,9 +26,9 @@ import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.TextAttributesKey;
 import consulo.editor.markup.TextAttributes;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
@@ -116,7 +116,7 @@ public class ChunkExtractor {
     LOG.assertTrue(myDocument != null);
     final FileType fileType = file.getFileType();
     SyntaxHighlighter highlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, project, file.getVirtualFile());
-    highlighter = highlighter == null ? new PlainSyntaxHighlighter() : highlighter;
+    highlighter = highlighter == null ? new DefaultSyntaxHighlighter() : highlighter;
     myHighlighter = new SyntaxHighlighterOverEditorHighlighter(highlighter, file.getVirtualFile(), project);
     myDocumentStamp = -1;
   }

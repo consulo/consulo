@@ -19,7 +19,7 @@ package com.intellij.ide.highlighter.custom.impl;
 import com.intellij.codeInsight.editorActions.QuoteHandler;
 import consulo.document.Document;
 import consulo.editor.Editor;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 import com.intellij.psi.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
 

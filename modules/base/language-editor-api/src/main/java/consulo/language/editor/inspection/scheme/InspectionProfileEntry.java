@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.inspection.*;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;

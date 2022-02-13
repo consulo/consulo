@@ -20,7 +20,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.analysis.AnalysisUIOptions;
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoProcessor;
 import com.intellij.codeInsight.daemon.impl.LocalInspectionsPass;
 import com.intellij.codeInspection.*;

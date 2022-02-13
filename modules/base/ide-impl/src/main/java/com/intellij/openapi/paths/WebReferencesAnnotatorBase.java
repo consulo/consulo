@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.paths;
 
-import consulo.language.editor.highlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationHolder;

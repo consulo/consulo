@@ -23,7 +23,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;

@@ -4,7 +4,7 @@ package com.intellij.codeInsight.editorActions;
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.lang.LanguageQuoteHandling;
 import consulo.editor.Editor;
-import consulo.language.editor.HighlighterIterator;
+import consulo.language.editor.highlight.HighlighterIterator;
 
 /**
  * Implement this interface for {@link QuoteHandlerEP} to provide "Insert pair quote" functionality

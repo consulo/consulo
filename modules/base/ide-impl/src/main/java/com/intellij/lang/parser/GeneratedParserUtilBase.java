@@ -18,6 +18,8 @@ package com.intellij.lang.parser;
 
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
 import com.intellij.lang.*;
+import consulo.language.BracePair;
+import consulo.language.PairedBraceMatcher;
 import consulo.language.parser.PsiBuilderAdapter;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import consulo.language.lexer.Lexer;

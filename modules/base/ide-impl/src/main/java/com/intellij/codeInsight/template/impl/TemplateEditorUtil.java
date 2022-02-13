@@ -32,12 +32,12 @@ import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
-import consulo.language.editor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.ast.IElementType;
@@ -103,7 +103,7 @@ public class TemplateEditorUtil {
       }
     }
     if (baseHighlighter == null) {
-      baseHighlighter = new PlainSyntaxHighlighter();
+      baseHighlighter = new DefaultSyntaxHighlighter();
     }
 
     SyntaxHighlighter highlighter = createTemplateTextHighlighter(baseHighlighter);

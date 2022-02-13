@@ -24,7 +24,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import consulo.language.editor.highlight.impl.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.hint.*;
 import consulo.application.ui.UISettings;
 import consulo.application.Application;
