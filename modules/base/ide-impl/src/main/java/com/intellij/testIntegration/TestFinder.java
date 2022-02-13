@@ -19,13 +19,14 @@ package com.intellij.testIntegration;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
 public interface TestFinder {
   ExtensionPointName<TestFinder> EP_NAME = ExtensionPointName.create("consulo.testFinder");
 
-  @javax.annotation.Nullable
+  @Nullable
   PsiElement findSourceElement(@Nonnull PsiElement from);
 
   @Nonnull

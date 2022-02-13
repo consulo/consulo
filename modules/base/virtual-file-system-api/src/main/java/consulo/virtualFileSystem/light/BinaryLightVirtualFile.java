@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.testFramework;
+package consulo.virtualFileSystem.light;
 
-import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
-import consulo.virtualFileSystem.light.LightVirtualFileBase;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,13 +64,13 @@ public class BinaryLightVirtualFile extends LightVirtualFileBase {
 
   @Override
   public InputStream getInputStream() throws IOException {
-    return VfsUtilCore.byteStreamSkippingBOM(myContent, this);
+    return VirtualFileUtil.byteStreamSkippingBOM(myContent, this);
   }
 
   @Override
   @Nonnull
   public OutputStream getOutputStream(Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
-    return VfsUtilCore.outputStreamAddingBOM(new ByteArrayOutputStream() {
+    return VirtualFileUtil.outputStreamAddingBOM(new ByteArrayOutputStream() {
       @Override
       public void close() {
         setModificationStamp(newModificationStamp);

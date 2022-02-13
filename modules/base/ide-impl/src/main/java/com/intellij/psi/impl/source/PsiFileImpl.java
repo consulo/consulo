@@ -16,7 +16,7 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.impl.source.tree.*;
 import com.intellij.psi.stubs.StubTreeLoader;
-import com.intellij.testFramework.ReadOnlyLightVirtualFile;
+import consulo.language.file.light.ReadOnlyLightVirtualFile;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.text.CharArrayUtil;

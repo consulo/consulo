@@ -908,7 +908,6 @@ open module consulo.ide.impl {
   exports com.intellij.tasks.timeTracking;
   exports com.intellij.tasks.timeTracking.model;
   exports com.intellij.tasks.ui;
-  exports com.intellij.testFramework;
   exports com.intellij.testIntegration;
   exports com.intellij.tools;
   exports com.intellij.ui;

@@ -11,7 +11,7 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import consulo.language.ast.IElementType;
-import com.intellij.testFramework.ReadOnlyLightVirtualFile;
+import consulo.language.file.light.ReadOnlyLightVirtualFile;
 import consulo.language.util.CharTable;
 import consulo.application.ApplicationManager;
 import consulo.document.util.TextRange;
