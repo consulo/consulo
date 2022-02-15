@@ -33,7 +33,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.text.CharSequenceSubSequence;
+import consulo.util.lang.CharSequenceSubSequence;
 import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

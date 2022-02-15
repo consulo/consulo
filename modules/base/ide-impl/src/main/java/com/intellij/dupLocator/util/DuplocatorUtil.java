@@ -13,7 +13,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiWhiteSpace;
-import com.intellij.psi.impl.source.tree.LeafElement;
+import consulo.language.impl.ast.LeafElement;
 import consulo.language.ast.IElementType;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

@@ -24,7 +24,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.SingleRootFileViewProvider;
+import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.project.content.scope.ProjectScopes;
 import javax.annotation.Nonnull;
 

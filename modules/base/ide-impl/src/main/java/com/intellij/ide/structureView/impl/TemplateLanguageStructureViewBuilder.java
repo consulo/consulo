@@ -12,7 +12,7 @@ import consulo.language.util.LanguageUtil;
 import com.intellij.lang.PsiStructureViewFactory;
 import consulo.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;

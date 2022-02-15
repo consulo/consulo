@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import consulo.application.Application;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
-import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
+import consulo.document.DocCommandGroupId;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import consulo.language.editor.highlight.HighlighterIterator;

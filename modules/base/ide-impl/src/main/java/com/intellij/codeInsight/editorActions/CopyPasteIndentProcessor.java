@@ -21,7 +21,7 @@ import consulo.document.Document;
 import consulo.editor.Editor;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
-import com.intellij.openapi.editor.impl.DocumentImpl;
+import consulo.document.impl.DocumentImpl;
 import consulo.component.extension.Extensions;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
+import consulo.document.impl.DocumentImpl;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.dataContext.DataContext;
 import consulo.application.Application;
@@ -15,7 +16,7 @@ import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.event.EditorEventMulticaster;
 import consulo.editor.event.EditorFactoryEvent;
 import consulo.editor.event.EditorFactoryListener;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;

@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.TextResult;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.LanguageTokenSeparatorGenerators;
+import consulo.language.impl.psi.internal.LanguageTokenSeparatorGenerators;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.StartMarkAction;

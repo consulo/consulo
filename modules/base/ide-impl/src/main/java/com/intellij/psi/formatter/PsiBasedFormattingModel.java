@@ -29,7 +29,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.impl.source.SourceTreeToPsiMap;
+import consulo.language.impl.psi.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

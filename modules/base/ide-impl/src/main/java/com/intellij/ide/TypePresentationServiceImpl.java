@@ -21,6 +21,7 @@ import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
@@ -223,13 +224,13 @@ public class TypePresentationServiceImpl extends TypePresentationService {
       }
     };
 
-    private final NullableLazyValue<PresentationProvider> myPresentationProvider = new NullableLazyValue<PresentationProvider>() {
+    private final NullableLazyValue<PresentationProvider> myPresentationProvider = new NullableLazyValue<>() {
       @Override
       protected PresentationProvider compute() {
         Class<? extends PresentationProvider> aClass = myPresentation.provider();
 
         try {
-          return aClass == PresentationProvider.class ? null : aClass.newInstance();
+          return aClass == PresentationProvider.class ? null : Application.get().getInjectingContainer().getUnbindedInstance(aClass);
         }
         catch (Exception e) {
           return null;

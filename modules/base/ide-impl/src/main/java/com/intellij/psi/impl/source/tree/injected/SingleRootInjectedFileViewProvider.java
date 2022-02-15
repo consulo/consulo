@@ -23,7 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.SingleRootFileViewProvider;
+import consulo.language.impl.file.SingleRootFileViewProvider;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

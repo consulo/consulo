@@ -23,7 +23,7 @@ import consulo.application.ApplicationManager;
 import consulo.editor.Editor;
 import consulo.editor.FoldRegion;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingListener;
 import com.intellij.openapi.editor.ex.FoldingModelEx;

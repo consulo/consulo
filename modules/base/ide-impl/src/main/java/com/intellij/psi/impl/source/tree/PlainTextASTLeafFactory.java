@@ -19,7 +19,8 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import consulo.psi.tree.ASTLeafFactory;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.ast.ASTLeafFactory;
 import consulo.language.version.LanguageVersion;
 import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.ast.IElementType;

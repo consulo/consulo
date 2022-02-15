@@ -1,12 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.impl.local;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.io.*;
+import com.intellij.openapi.util.io.FileSystemUtil;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.DiskQueryRelay;
+import com.intellij.openapi.vfs.LocalFileOperationsHandler;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.SafeWriteRequestor;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
@@ -14,19 +16,18 @@ import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PathUtil;
-import consulo.util.io.FileTooBigException;
-import consulo.util.lang.function.ThrowableConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.SafeFileOutputStream;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.util.io.FileAttributes;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VfsBundle;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.util.io.FileTooBigException;
+import consulo.util.lang.function.ThrowableConsumer;
+import consulo.virtualFileSystem.*;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.file.*;
@@ -395,7 +396,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   public byte[] contentsToByteArray(@Nonnull VirtualFile file) throws IOException {
     try (InputStream stream = new FileInputStream(convertToIOFileAndCheck(file))) {
       long l = file.getLength();
-      if (l >= FileUtilRt.LARGE_FOR_CONTENT_LOADING) throw new FileTooBigException(file.getPath());
+      if (RawFileLoader.getInstance().isLargeForContentLoading(l)) throw new FileTooBigException(file.getPath());
       int length = (int)l;
       if (length < 0) throw new IOException("Invalid file length: " + length + ", " + file);
       // io_util.c#readBytes allocates custom native stack buffer for io operation with malloc if io request > 8K

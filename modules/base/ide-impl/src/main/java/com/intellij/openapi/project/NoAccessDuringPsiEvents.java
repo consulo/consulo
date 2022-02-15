@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.psi.impl.DebugUtil;
+import consulo.language.impl.DebugUtil;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.component.messagebus.MessageBus;
 

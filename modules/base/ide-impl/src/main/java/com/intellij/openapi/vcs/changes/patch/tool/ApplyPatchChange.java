@@ -26,7 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.document.Document;
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import consulo.editor.markup.GutterIconRenderer;

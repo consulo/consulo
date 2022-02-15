@@ -15,20 +15,21 @@
  */
 package consulo.components.impl.stores.storage;
 
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
-import consulo.application.ApplicationManager;
-import consulo.component.persist.RoamingType;
-import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.util.io.CharsetToolkit;
 import com.intellij.util.LineSeparator;
+import consulo.application.ApplicationManager;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.StoragePathMacros;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.components.impl.stores.StreamProvider;
 import consulo.disposer.Disposable;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.RawFileLoader;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -141,7 +142,7 @@ public final class IoFileBasedStorage extends XmlElementStorage {
         return processReadException(null);
       }
 
-      CharBuffer charBuffer = CharsetToolkit.UTF8_CHARSET.decode(ByteBuffer.wrap(FileUtil.loadFileBytes(myFile)));
+      CharBuffer charBuffer = CharsetToolkit.UTF8_CHARSET.decode(ByteBuffer.wrap(RawFileLoader.getInstance().loadFileBytes(myFile)));
       myLineSeparator = StorageUtil.detectLineSeparators(charBuffer, isUseLfLineSeparatorByDefault() ? null : LineSeparator.LF);
       return JDOMUtil.loadDocument(charBuffer).getRootElement();
     }

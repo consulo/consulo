@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.editor.actionSystem;
 
+import consulo.document.DocCommandGroupId;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

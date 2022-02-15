@@ -30,7 +30,7 @@ import consulo.application.util.function.Computable;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.psi.search.PsiFileSystemItemProcessor;
+import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.psi.PsiUtilCore;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.application.util.function.Processor;

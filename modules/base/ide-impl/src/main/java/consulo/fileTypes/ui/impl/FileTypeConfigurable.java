@@ -42,6 +42,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

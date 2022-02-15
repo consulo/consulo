@@ -19,6 +19,7 @@ import consulo.fileTypes.ZipArchiveFileType;
 import com.intellij.openapi.fileTypes.*;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 
 import javax.annotation.Nonnull;
 

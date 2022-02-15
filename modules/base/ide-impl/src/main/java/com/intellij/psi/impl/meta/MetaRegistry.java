@@ -16,6 +16,7 @@
 
 package com.intellij.psi.impl.meta;
 
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.disposer.Disposer;
@@ -79,16 +80,7 @@ public class MetaRegistry extends MetaDataRegistrar {
             ensureContributorsLoaded();
             for (final MyBinding binding : ourBindings) {
               if (binding.myFilter.isClassAcceptable(element.getClass()) && binding.myFilter.isAcceptable(element, element.getParent())) {
-                final PsiMetaData data;
-                try {
-                  data = binding.myDataClass.newInstance();
-                }
-                catch (InstantiationException e) {
-                  throw new RuntimeException("failed to instantiate " + binding.myDataClass, e);
-                }
-                catch (IllegalAccessException e) {
-                  throw new RuntimeException("failed to instantiate " + binding.myDataClass, e);
-                }
+                final PsiMetaData data = Application.get().getInjectingContainer().getUnbindedInstance(binding.myDataClass);
                 data.init(element);
                 return new Result<PsiMetaData>(data, data.getDependences());
               }

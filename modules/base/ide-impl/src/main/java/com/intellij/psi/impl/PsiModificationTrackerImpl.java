@@ -4,8 +4,11 @@ package com.intellij.psi.impl;
 import consulo.language.Language;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
+import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
+import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.language.psi.event.PsiTreeChangePreprocessor;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
@@ -23,7 +26,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.Map;
 
-import static com.intellij.psi.impl.PsiTreeChangeEventImpl.PsiEventType.*;
+import static consulo.language.impl.psi.internal.PsiTreeChangeEventImpl.PsiEventType.*;
 
 /**
  * @author mike
@@ -78,12 +81,12 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   }
 
   @Override
-  public void treeChanged(@Nonnull PsiTreeChangeEventImpl event) {
-    if (!canAffectPsi(event)) {
+  public void treeChanged(@Nonnull PsiTreeChangeEvent event) {
+    if (!canAffectPsi((PsiTreeChangeEventImpl)event)) {
       return;
     }
 
-    incLanguageCounters(event);
+    incLanguageCounters((PsiTreeChangeEventImpl)event);
     incCountersInner();
   }
 

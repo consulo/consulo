@@ -25,7 +25,7 @@ import consulo.application.ApplicationManager;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;

@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import consulo.document.ReadonlyFragmentModificationHandler;
+import consulo.document.impl.DocumentImpl;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.editor.EditorBundle;
-import com.intellij.openapi.editor.ReadOnlyFragmentModificationException;
+import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.document.Document;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.ui.Messages;

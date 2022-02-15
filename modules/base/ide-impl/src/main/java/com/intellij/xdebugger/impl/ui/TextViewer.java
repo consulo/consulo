@@ -3,7 +3,7 @@ package com.intellij.xdebugger.impl.ui;
 import consulo.document.Document;
 import consulo.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.impl.DocumentImpl;
+import consulo.document.impl.DocumentImpl;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;
 import com.intellij.ui.EditorTextField;

@@ -71,7 +71,7 @@ import com.intellij.usages.impl.SyntaxHighlighterOverEditorHighlighter;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
-import com.intellij.util.text.ImmutableCharSequence;
+import consulo.util.lang.ImmutableCharSequence;
 import com.intellij.util.text.StringSearcher;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

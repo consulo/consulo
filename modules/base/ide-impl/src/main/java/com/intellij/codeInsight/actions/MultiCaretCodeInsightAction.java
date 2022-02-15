@@ -25,7 +25,7 @@ import consulo.editor.Caret;
 import consulo.editor.CaretAction;
 import consulo.editor.Editor;
 import consulo.editor.ScrollType;
-import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
+import consulo.document.DocCommandGroupId;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiDocumentManager;

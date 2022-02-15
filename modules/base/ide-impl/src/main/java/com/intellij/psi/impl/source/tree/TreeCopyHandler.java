@@ -21,6 +21,7 @@ package com.intellij.psi.impl.source.tree;
 
 import consulo.language.ast.ASTNode;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.impl.ast.TreeElement;
 
 import java.util.Map;
 

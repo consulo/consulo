@@ -25,7 +25,8 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.RawFileLoader;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -310,7 +311,7 @@ public class VcsUtil {
   @javax.annotation.Nullable
   public static byte[] getFileByteContent(@Nonnull File file) {
     try {
-      return FileUtil.loadFileBytes(file);
+      return RawFileLoader.getInstance().loadFileBytes(file);
     }
     catch (IOException e) {
       LOG.info(e);

@@ -21,10 +21,14 @@ import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.psi.ForeignLeafPsiElement;
+import consulo.language.impl.psi.internal.RecursiveTreeElementWalkingVisitor;
+import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.source.tree.*;
+import consulo.language.impl.DebugUtil;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 

@@ -18,7 +18,7 @@ package com.intellij.codeInspection.actions;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;

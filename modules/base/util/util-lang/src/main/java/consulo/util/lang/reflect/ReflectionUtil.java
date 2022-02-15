@@ -36,6 +36,16 @@ public class ReflectionUtil {
     return ancestor == descendant || ancestor.isAssignableFrom(descendant);
   }
 
+  @Nonnull
+  public static <T> T createInstance(@Nonnull Constructor<T> constructor, @Nonnull Object... args) {
+    try {
+      return constructor.newInstance(args);
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   @Nullable
   public static Class getGrandCallerClass() {
     int stackFrameCount = 3;

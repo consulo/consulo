@@ -17,6 +17,8 @@ package com.intellij.util.text;
 
 import consulo.document.util.TextRange;
 import consulo.annotation.internal.MigratedExtensionsTo;
+import consulo.util.lang.ImmutableCharSequence;
+import consulo.util.lang.ImmutableText;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

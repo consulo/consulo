@@ -5,12 +5,13 @@ package com.intellij.psi.impl;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
+import consulo.language.impl.psi.PsiElementBase;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.resolve.PsiElementProcessor;
-import com.intellij.psi.search.PsiFileSystemItemProcessor;
+import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import com.intellij.util.ArrayUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredWriteAction;

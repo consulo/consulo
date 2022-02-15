@@ -6,14 +6,7 @@ import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.util.PropertiesComponent;
-import consulo.component.persist.*;
-import consulo.document.util.FileContentUtilCore;
-import consulo.language.Language;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.application.ReadAction;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.ex.ExternalizableFileType;
@@ -23,45 +16,53 @@ import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
-import consulo.language.file.LanguageFileType;
-import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
-import consulo.util.io.ByteArraySequence;
-import consulo.util.io.ByteSequence;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.fileType.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFileWithId;
-import consulo.virtualFileSystem.event.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.FileSystemInterface;
-import consulo.virtualFileSystem.event.VFileCreateEvent;
-import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile;
-import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.*;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.util.concurrent.BoundedTaskExecutor;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import com.intellij.util.containers.ConcurrentPackedBitsArray;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSetQueue;
 import com.intellij.util.io.URLUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.component.persist.*;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
+import consulo.document.util.FileContentUtilCore;
+import consulo.language.Language;
+import consulo.language.file.LanguageFileType;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.ApplicationPropertiesComponent;
+import consulo.util.concurrent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
+import consulo.util.io.ByteArraySequence;
+import consulo.util.io.ByteSequence;
 import consulo.util.lang.DeprecatedMethodException;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.event.BulkFileListener;
+import consulo.virtualFileSystem.event.VFileCreateEvent;
+import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.fileType.*;
+import consulo.virtualFileSystem.impl.RawFileLoaderImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -249,16 +250,27 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
           VirtualFile file = event instanceof VFileCreateEvent ? /* avoid expensive find child here */ null : event.getFile();
           VirtualFile filtered = file != null && wasAutoDetectedBefore(file) && isDetectable(file) ? file : null;
           if (toLog()) {
-            log("F: after() VFS event " + event +
-                "; filtered file: " + filtered +
-                " (file: " + file +
-                "; wasAutoDetectedBefore(file): " + (file == null ? null : wasAutoDetectedBefore(file)) +
-                "; isDetectable(file): " + (file == null ? null : isDetectable(file)) +
-                "; file.getLength(): " + (file == null ? null : file.getLength()) +
-                "; file.isValid(): " + (file == null ? null : file.isValid()) +
-                "; file.is(VFileProperty.SPECIAL): " + (file == null ? null : file.is(VFileProperty.SPECIAL)) +
-                "; packedFlags.get(id): " + (file instanceof VirtualFileWithId ? readableFlags(packedFlags.get(((VirtualFileWithId)file).getId())) : null) +
-                "; file.getFileSystem():" + (file == null ? null : file.getFileSystem()) + ")");
+            log("F: after() VFS event " +
+                event +
+                "; filtered file: " +
+                filtered +
+                " (file: " +
+                file +
+                "; wasAutoDetectedBefore(file): " +
+                (file == null ? null : wasAutoDetectedBefore(file)) +
+                "; isDetectable(file): " +
+                (file == null ? null : isDetectable(file)) +
+                "; file.getLength(): " +
+                (file == null ? null : file.getLength()) +
+                "; file.isValid(): " +
+                (file == null ? null : file.isValid()) +
+                "; file.is(VFileProperty.SPECIAL): " +
+                (file == null ? null : file.is(VFileProperty.SPECIAL)) +
+                "; packedFlags.get(id): " +
+                (file instanceof VirtualFileWithId ? readableFlags(packedFlags.get(((VirtualFileWithId)file).getId())) : null) +
+                "; file.getFileSystem():" +
+                (file == null ? null : file.getFileSystem()) +
+                ")");
           }
           return filtered;
         });
@@ -442,8 +454,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   private static void initializeMatchers(FileTypeBean bean) {
     bean.addMatchers(ContainerUtil.concat(parse(bean.extensions), parse(bean.fileNames, token -> new ExactFileNameMatcher(token)),
-                                          parse(bean.fileNamesCaseInsensitive, token -> new ExactFileNameMatcher(token, true)), parse(bean.patterns, token -> FileNameMatcherFactory
-                    .getInstance().createMatcher(token))));
+                                          parse(bean.fileNamesCaseInsensitive, token -> new ExactFileNameMatcher(token, true)),
+                                          parse(bean.patterns, token -> FileNameMatcherFactory.getInstance().createMatcher(token))));
   }
 
   private void instantiatePendingFileTypes() {
@@ -571,8 +583,14 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         FileType after = getByFile(file);
 
         if (toLog()) {
-          log("F: reDetect(" + file.getName() + ") prepare to redetect. flags: " + readableFlags(flags) +
-              "; beforeType: " + before.getId() + "; afterByFileType: " + (after == null ? null : after.getId()));
+          log("F: reDetect(" +
+              file.getName() +
+              ") prepare to redetect. flags: " +
+              readableFlags(flags) +
+              "; beforeType: " +
+              before.getId() +
+              "; afterByFileType: " +
+              (after == null ? null : after.getId()));
         }
 
         if (after == null || mightBeReplacedByDetectedFileType(after)) {
@@ -582,9 +600,17 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
           catch (IOException e) {
             crashed.add(file);
             if (toLog()) {
-              log("F: reDetect(" + file.getName() + ") " + "before: " + before.getId() + "; after: crashed with " + e.getMessage() +
-                  "; now getFileType()=" + file.getFileType().getId() +
-                  "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " + file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
+              log("F: reDetect(" +
+                  file.getName() +
+                  ") " +
+                  "before: " +
+                  before.getId() +
+                  "; after: crashed with " +
+                  e.getMessage() +
+                  "; now getFileType()=" +
+                  file.getFileType().getId() +
+                  "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " +
+                  file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
             }
             continue;
           }
@@ -597,9 +623,17 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
           packedFlags.set(id, flags);
         }
         if (toLog()) {
-          log("F: reDetect(" + file.getName() + ") " + "before: " + before.getId() + "; after: " + after.getId() +
-              "; now getFileType()=" + file.getFileType().getId() +
-              "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " + file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
+          log("F: reDetect(" +
+              file.getName() +
+              ") " +
+              "before: " +
+              before.getId() +
+              "; after: " +
+              after.getId() +
+              "; now getFileType()=" +
+              file.getFileType().getId() +
+              "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " +
+              file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
         }
 
         if (before != after) {
@@ -807,10 +841,15 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       if (autoDetectWasRun) {
         FileType type = textOrBinaryFromCachedFlags(flags);
         if (toLog()) {
-          log("F: getOrDetectFromContent(" + file.getName() + "):" +
-              " cached type = " + (type == null ? null : type.getName()) +
-              "; packedFlags.get(id):" + readableFlags(flags) +
-              "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " + file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
+          log("F: getOrDetectFromContent(" +
+              file.getName() +
+              "):" +
+              " cached type = " +
+              (type == null ? null : type.getName()) +
+              "; packedFlags.get(id):" +
+              readableFlags(flags) +
+              "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " +
+              file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
         }
         if (type != null) {
           return type;
@@ -915,20 +954,30 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       if (wasAutodetectedAsText || wasAutodetectedAsBinary) {
         file.putUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY, null);
         if (toLog()) {
-          log("F: cacheAutoDetectedFileType(" + file.getName() + ") " +
-              "cached to " + fileType.getName() +
-              " flags = " + readableFlags(flags) +
-              "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " + file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
+          log("F: cacheAutoDetectedFileType(" +
+              file.getName() +
+              ") " +
+              "cached to " +
+              fileType.getName() +
+              " flags = " +
+              readableFlags(flags) +
+              "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " +
+              file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
         }
         return;
       }
     }
     file.putUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY, fileType);
     if (toLog()) {
-      log("F: cacheAutoDetectedFileType(" + file.getName() + ") " +
-          "cached to " + fileType.getName() +
-          " flags = " + readableFlags(flags) +
-          "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " + file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
+      log("F: cacheAutoDetectedFileType(" +
+          file.getName() +
+          ") " +
+          "cached to " +
+          fileType.getName() +
+          " flags = " +
+          readableFlags(flags) +
+          "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " +
+          file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
     }
   }
 
@@ -998,7 +1047,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
         int fileLength = (int)file.getLength();
 
-        int bufferLength = StreamSupport.stream(detectors.spliterator(), false).map(FileTypeDetector::getDesiredContentPrefixLength).max(Comparator.naturalOrder()).orElse(FileUtilRt.getUserContentLoadLimit());
+        int bufferLength = StreamSupport.stream(detectors.spliterator(), false).map(FileTypeDetector::getDesiredContentPrefixLength).max(Comparator.naturalOrder())
+                .orElse(RawFileLoaderImpl.getUserContentLoadLimit());
         byte[] buffer = fileLength <= FileUtilRt.THREAD_LOCAL_BUFFER_LENGTH ? FileUtilRt.getThreadLocalBuffer() : new byte[Math.min(fileLength, bufferLength)];
 
         int n = readSafely(inputStream, buffer, 0, buffer.length);
@@ -1008,11 +1058,18 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
           try (InputStream newStream = ((FileSystemInterface)file.getFileSystem()).getInputStream(file)) {
             byte[] buffer2 = new byte[50];
             int n2 = newStream.read(buffer2, 0, buffer2.length);
-            log("F: detectFromContentAndCache(" + file.getName() + "): result: " + fileType.getName() +
-                "; stream: " + streamInfo(inputStream) +
-                "; newStream: " + streamInfo(newStream) +
-                "; read: " + n2 +
-                "; buffer: " + Arrays.toString(buffer2));
+            log("F: detectFromContentAndCache(" +
+                file.getName() +
+                "): result: " +
+                fileType.getName() +
+                "; stream: " +
+                streamInfo(inputStream) +
+                "; newStream: " +
+                streamInfo(newStream) +
+                "; read: " +
+                n2 +
+                "; buffer: " +
+                Arrays.toString(buffer2));
           }
         }
       }
@@ -1087,9 +1144,21 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       boolean closed = ReflectionUtil.getField(stream.getClass(), stream, boolean.class, "closed");
       int available = stream.available();
       File file = new File(path);
-      return "FileInputStream(path=" + path + ", available=" + available + ", closed=" + closed +
-             ", channel=" + channel + ", channel.size=" + (channel == null ? null : channel.size()) +
-             ", file.exists=" + file.exists() + ", file.content='" + FileUtil.loadFile(file) + "')";
+      return "FileInputStream(path=" +
+             path +
+             ", available=" +
+             available +
+             ", closed=" +
+             closed +
+             ", channel=" +
+             channel +
+             ", channel.size=" +
+             (channel == null ? null : channel.size()) +
+             ", file.exists=" +
+             file.exists() +
+             ", file.content='" +
+             FileUtil.loadFile(file) +
+             "')";
     }
     return stream;
   }

@@ -20,7 +20,7 @@ import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.IndentData;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.codeInsight.CommentUtilCore;
+import consulo.language.util.CommentUtilCore;
 import com.intellij.util.text.CharArrayUtil;
 
 import javax.annotation.Nonnull;

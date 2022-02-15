@@ -32,7 +32,7 @@ import consulo.language.ast.TokenSet;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
-import com.intellij.util.text.CharSequenceSubSequence;
+import consulo.util.lang.CharSequenceSubSequence;
 import consulo.language.version.LanguageVersion;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

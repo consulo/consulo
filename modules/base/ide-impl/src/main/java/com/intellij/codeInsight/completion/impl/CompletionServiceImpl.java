@@ -15,7 +15,7 @@ import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.Weigher;
 import com.intellij.psi.WeighingService;
-import com.intellij.psi.impl.DebugUtil;
+import consulo.language.impl.DebugUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ExceptionUtil;
 import jakarta.inject.Singleton;

@@ -2,14 +2,15 @@
 package com.intellij.psi;
 
 import consulo.language.Language;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.language.file.FileViewProvider;
+import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.impl.SharedPsiElementImplUtil;
+import consulo.language.impl.psi.internal.SharedPsiElementImplUtil;
 import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.impl.source.tree.LeafElement;
+import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.ast.LeafElement;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.util.lang.LocalTimeCounter;
 import javax.annotation.Nonnull;

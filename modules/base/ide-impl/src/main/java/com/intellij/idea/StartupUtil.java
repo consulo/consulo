@@ -18,7 +18,7 @@ package com.intellij.idea;
 import consulo.util.jna.JnaLoader;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.util.ShutDownTracker;
+import consulo.util.lang.ShutDownTracker;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.win32.IdeaWin32;

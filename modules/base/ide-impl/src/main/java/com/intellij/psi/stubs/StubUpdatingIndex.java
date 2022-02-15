@@ -17,6 +17,8 @@ package com.intellij.psi.stubs;
 
 import consulo.index.io.ID;
 import consulo.language.Language;
+import consulo.language.impl.psi.stub.IndexingStampInfo;
+import consulo.language.impl.psi.stub.SubstitutedFileType;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.application.ReadAction;

@@ -5,7 +5,7 @@ package com.intellij.psi.impl.source.tree.injected;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.ex.RangeMarkerEx;
+import consulo.document.impl.RangeMarkerEx;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import javax.annotation.Nonnull;

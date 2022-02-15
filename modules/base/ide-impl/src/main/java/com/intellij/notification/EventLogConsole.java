@@ -15,6 +15,7 @@
  */
 package com.intellij.notification;
 
+import consulo.document.impl.DocumentEx;
 import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.execution.impl.EditorHyperlinkSupport;

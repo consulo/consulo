@@ -29,7 +29,7 @@ import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
-import com.intellij.psi.impl.source.SourceTreeToPsiMap;
+import consulo.language.impl.psi.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.text.CharArrayUtil;

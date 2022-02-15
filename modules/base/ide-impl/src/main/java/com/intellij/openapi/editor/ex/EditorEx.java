@@ -22,6 +22,7 @@ import com.intellij.ide.PasteProvider;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.document.impl.DocumentEx;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.LineExtensionInfo;
 import consulo.editor.colorScheme.EditorColorsScheme;

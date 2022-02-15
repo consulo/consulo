@@ -20,7 +20,7 @@ import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import consulo.debugger.XSourcePosition;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;

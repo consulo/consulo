@@ -6,7 +6,7 @@ import consulo.language.Language;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.formatter.FormattingDocumentModelImpl;
-import com.intellij.psi.impl.DebugUtil;
+import consulo.language.impl.DebugUtil;
 import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 

@@ -22,7 +22,7 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.intellij.openapi.util.io.FileUtilRt.MEGABYTE;
+import static com.intellij.openapi.util.io.FileUtil.MEGABYTE;
 
 public final class MemoryUsagePanel extends JButton implements CustomStatusBarWidget, UISettingsListener, Activatable {
   public static final String WIDGET_ID = "Memory";

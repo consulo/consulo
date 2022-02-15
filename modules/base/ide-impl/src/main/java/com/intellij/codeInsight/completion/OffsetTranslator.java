@@ -4,7 +4,7 @@ package com.intellij.codeInsight.completion;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
+import consulo.document.impl.event.DocumentEventImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

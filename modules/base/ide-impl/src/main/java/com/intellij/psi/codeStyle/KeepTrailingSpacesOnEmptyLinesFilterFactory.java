@@ -15,17 +15,19 @@
  */
 package com.intellij.psi.codeStyle;
 
+import consulo.document.SmartStripTrailingSpacesFilter;
+import consulo.component.ComponentManager;
 import consulo.document.Document;
-import com.intellij.openapi.editor.SmartStripTrailingSpacesFilter;
-import com.intellij.openapi.editor.StripTrailingSpacesFilter;
-import com.intellij.openapi.editor.StripTrailingSpacesFilterFactory;
-import consulo.project.Project;
+import consulo.document.StripTrailingSpacesFilter;
+import consulo.document.StripTrailingSpacesFilterFactory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.intellij.openapi.editor.StripTrailingSpacesFilter.ALL_LINES;
+import static consulo.document.StripTrailingSpacesFilter.ALL_LINES;
 
 public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSpacesFilterFactory {
 
@@ -102,8 +104,8 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
 
   @Nonnull
   @Override
-  public StripTrailingSpacesFilter createFilter(@Nullable Project project, @Nonnull Document document) {
-    if (project != null && shouldKeepTrailingSpacesOnEmptyLines(project, document)) {
+  public StripTrailingSpacesFilter createFilter(@Nullable ComponentManager project, @Nonnull Document document) {
+    if (project != null && shouldKeepTrailingSpacesOnEmptyLines((Project)project, document)) {
       return new KeepTrailingSpacesOnEmptyLinesFilter(document);
     }
     return ALL_LINES;

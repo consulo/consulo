@@ -16,8 +16,9 @@
 package com.intellij.util.proxy;
 
 import com.intellij.openapi.util.io.FileUtil;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.RawFileLoader;
 
+import javax.annotation.Nonnull;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -51,7 +52,7 @@ public class PropertiesEncryptionSupport {
 
   @Nonnull
   public Properties load(@Nonnull File file) throws Exception {
-    final byte[] bytes = decrypt(FileUtil.loadFileBytes(file));
+    final byte[] bytes = decrypt(RawFileLoader.getInstance().loadFileBytes(file));
     final Properties props = new Properties();
     props.load(new ByteArrayInputStream(bytes));
     return props;

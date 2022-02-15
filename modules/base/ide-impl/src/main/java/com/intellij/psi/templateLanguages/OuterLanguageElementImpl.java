@@ -17,7 +17,7 @@ package com.intellij.psi.templateLanguages;
 
 import consulo.language.psi.OuterLanguageElement;
 import consulo.language.psi.PsiElementVisitor;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import consulo.language.impl.psi.LeafPsiElement;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 

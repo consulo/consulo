@@ -39,7 +39,7 @@ import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import consulo.application.event.ApplicationListener;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.ShutDownTracker;
+import consulo.util.lang.ShutDownTracker;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

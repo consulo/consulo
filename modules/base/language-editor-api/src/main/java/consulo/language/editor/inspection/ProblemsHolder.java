@@ -16,7 +16,6 @@
 
 package consulo.language.editor.inspection;
 
-import com.intellij.xml.util.XmlStringUtil;
 import consulo.component.util.localize.BundleBase;
 import consulo.document.util.TextRange;
 import consulo.language.editor.CodeInsightBundle;
@@ -26,6 +25,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 

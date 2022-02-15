@@ -16,16 +16,16 @@
 
 package com.intellij.psi.impl;
 
-import consulo.language.impl.ASTFactory;
+import consulo.language.impl.ast.ASTFactory;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.LanguageCommenters;
 import consulo.language.file.LanguageFileType;
 import com.intellij.psi.impl.source.DummyHolderFactory;
-import com.intellij.psi.impl.source.SourceTreeToPsiMap;
-import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.impl.source.tree.TreeElement;
+import consulo.language.impl.psi.SourceTreeToPsiMap;
+import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.ast.TreeElement;
 import consulo.language.ast.TokenType;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;

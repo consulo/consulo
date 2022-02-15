@@ -16,11 +16,12 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.ex.DocumentEx;
-import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
+import consulo.document.impl.DocumentEx;
+import consulo.document.impl.event.DocumentEventImpl;
+import consulo.document.impl.PersistentRangeMarkerUtil;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.TextAttributes;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

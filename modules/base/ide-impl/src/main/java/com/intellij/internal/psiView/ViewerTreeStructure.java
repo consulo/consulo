@@ -32,7 +32,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.project.Project;
-import com.intellij.psi.impl.source.SourceTreeToPsiMap;
+import consulo.language.impl.psi.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ArrayUtil;

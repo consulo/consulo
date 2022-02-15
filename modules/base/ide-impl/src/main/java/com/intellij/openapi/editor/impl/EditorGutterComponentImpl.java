@@ -2,6 +2,8 @@
 
 package com.intellij.openapi.editor.impl;
 
+import consulo.document.impl.DocumentEx;
+import consulo.document.impl.MarkupIterator;
 import consulo.editor.markup.*;
 import com.intellij.codeInsight.daemon.NonHideableIconGutterMark;
 import com.intellij.codeInsight.folding.impl.FoldingUtil;

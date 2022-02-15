@@ -33,7 +33,7 @@ import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.ObjectPattern;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.filters.TrueFilter;
-import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
+import consulo.language.impl.psi.reference.PsiMultiReference;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.containers.ContainerUtil;

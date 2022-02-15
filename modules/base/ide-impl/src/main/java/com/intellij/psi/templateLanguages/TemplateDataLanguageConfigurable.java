@@ -18,7 +18,7 @@ package com.intellij.psi.templateLanguages;
 import com.intellij.lang.LangBundle;
 import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.ColoredTextContainer;

@@ -20,7 +20,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.TokenType;
-import com.intellij.psi.impl.source.tree.TreeUtil;
+import consulo.language.impl.psi.internal.TreeUtil;
 import javax.annotation.Nullable;
 
 /**

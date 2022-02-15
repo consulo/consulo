@@ -16,6 +16,8 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.CharSequenceSubSequence;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

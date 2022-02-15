@@ -22,7 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.impl.PsiElementBase;
+import consulo.language.impl.psi.PsiElementBase;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.Language;
 

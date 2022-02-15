@@ -38,7 +38,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import consulo.debugger.XDebugSession;
 import consulo.debugger.XDebuggerManager;
 import consulo.debugger.XDebuggerUtil;

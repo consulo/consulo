@@ -17,9 +17,9 @@
 package com.intellij.psi.impl;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
-import com.intellij.psi.impl.source.tree.RecursiveTreeElementWalkingVisitor;
-import com.intellij.psi.impl.source.tree.TreeElement;
+import consulo.language.impl.psi.CodeEditUtil;
+import consulo.language.impl.psi.internal.RecursiveTreeElementWalkingVisitor;
+import consulo.language.impl.ast.TreeElement;
 
 public class GeneratedMarkerVisitor extends RecursiveTreeElementWalkingVisitor {
   @Override

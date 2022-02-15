@@ -16,6 +16,7 @@
 
 package com.intellij.psi.impl.source.tree;
 
+import consulo.language.impl.psi.PsiCoreCommentImpl;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.tree.injected.CommentLiteralEscaper;

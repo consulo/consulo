@@ -18,7 +18,7 @@ package com.intellij.formatting.alignment;
 import consulo.language.ast.ASTNode;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.impl.source.tree.TreeUtil;
+import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.util.collection.SmartList;

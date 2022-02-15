@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.IntFunction;
 
 /**
  * Author: msk
@@ -486,12 +487,12 @@ public class ArrayUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> T[] remove(@Nonnull final T[] src, int idx, @Nonnull ArrayFactory<T> factory) {
+  public static <T> T[] remove(@Nonnull final T[] src, int idx, @Nonnull IntFunction<T[]> factory) {
     int length = src.length;
     if (idx < 0 || idx >= length) {
       throw new IllegalArgumentException("invalid index: " + idx);
     }
-    T[] result = factory.create(length - 1);
+    T[] result = factory.apply(length - 1);
     System.arraycopy(src, 0, result, 0, idx);
     System.arraycopy(src, idx + 1, result, idx, length - idx - 1);
     return result;
@@ -508,7 +509,7 @@ public class ArrayUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> T[] remove(@Nonnull final T[] src, T element, @Nonnull ArrayFactory<T> factory) {
+  public static <T> T[] remove(@Nonnull final T[] src, T element, @Nonnull IntFunction<T[]> factory) {
     final int idx = find(src, element);
     if (idx == -1) return src;
 

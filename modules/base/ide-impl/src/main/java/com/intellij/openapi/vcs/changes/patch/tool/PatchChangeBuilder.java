@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.patch.tool;
 import com.intellij.diff.tools.fragmented.LineNumberConvertor;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineRange;
-import com.intellij.openapi.editor.impl.DocumentImpl;
+import consulo.document.impl.DocumentImpl;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch.AppliedSplitPatchHunk;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus;

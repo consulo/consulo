@@ -12,7 +12,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.impl.PsiManagerEx;
+import consulo.language.impl.psi.internal.PsiManagerEx;
 import com.intellij.psi.impl.PsiParameterizedCachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;

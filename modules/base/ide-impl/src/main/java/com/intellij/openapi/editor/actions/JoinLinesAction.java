@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
 import consulo.editor.Caret;

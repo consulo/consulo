@@ -33,6 +33,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
+import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.editor.Caret;
 import consulo.editor.Editor;
 import consulo.project.Project;

@@ -20,20 +20,20 @@
  */
 package com.intellij.internal;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import consulo.application.progress.ProgressManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.content.ContentIterator;
-import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressManager;
+import consulo.content.ContentIterator;
+import consulo.logging.Logger;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
             if (fileOrDir.isDirectory() || fileOrDir.is(VFileProperty.SPECIAL)) return true;
             try {
               count.incrementAndGet();
-              byte[] bytes = FileUtil.loadFileBytes(new File(fileOrDir.getPath()));
+              byte[] bytes = RawFileLoader.getInstance().loadFileBytes(new File(fileOrDir.getPath()));
               totalSize.addAndGet(bytes.length);
               ProgressManager.getInstance().getProgressIndicator().setText(fileOrDir.getPresentableUrl());
             }

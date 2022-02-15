@@ -49,7 +49,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.application.ui.awt.LinePainter2D;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.util.collection.primitive.ints.IntStack;
 import com.intellij.util.text.CharArrayUtil;

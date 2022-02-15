@@ -15,11 +15,11 @@
  */
 package com.intellij.psi.impl.file;
 
-import com.intellij.navigation.ItemPresentationProviders;
+import consulo.navigation.ItemPresentationProviders;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.ui.Queryable;
-import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.PsiElementBase;
+import consulo.language.impl.DebugUtil;
+import consulo.language.impl.psi.PsiElementBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;

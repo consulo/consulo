@@ -20,6 +20,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 
 public abstract class SpecificNameItemProcessor implements PsiFileSystemItemProcessor {
   private final String myName;

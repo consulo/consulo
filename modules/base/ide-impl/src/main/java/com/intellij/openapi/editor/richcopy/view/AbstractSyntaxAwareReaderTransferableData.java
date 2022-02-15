@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.editor.richcopy.view;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
-import com.intellij.openapi.util.io.FileUtilRt;
-import consulo.application.util.registry.Registry;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.StringBuilderSpinAllocator;
+import consulo.application.util.registry.Registry;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.datatransfer.DataFlavor;
 import java.io.IOException;
 import java.io.Reader;
@@ -97,7 +97,7 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
       return myDelegate;
     }
 
-    int maxLength = Registry.intValue("editor.richcopy.max.size.megabytes") * FileUtilRt.MEGABYTE;
+    int maxLength = Registry.intValue("editor.richcopy.max.size.megabytes") * FileUtil.MEGABYTE;
     final StringBuilder buffer = StringBuilderSpinAllocator.alloc();
     try {
       try {

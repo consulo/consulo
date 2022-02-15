@@ -19,7 +19,7 @@ import consulo.editor.Editor;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.MarkupModelWindow;
 import consulo.document.Document;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import consulo.editor.markup.MarkupModel;
 import consulo.project.Project;

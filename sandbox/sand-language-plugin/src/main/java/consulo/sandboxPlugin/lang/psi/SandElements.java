@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.lang.psi;
 
-import consulo.psi.tree.ElementTypeAsPsiFactory;
+import consulo.language.ast.ElementTypeAsPsiFactory;
 import consulo.language.ast.IElementType;
 import consulo.sandboxPlugin.lang.SandLanguage;
 

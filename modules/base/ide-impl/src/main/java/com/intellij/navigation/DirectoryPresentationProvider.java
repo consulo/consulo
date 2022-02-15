@@ -21,6 +21,7 @@ import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import consulo.application.Application;
 import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentationProvider;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;

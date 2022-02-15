@@ -22,7 +22,7 @@ package com.intellij.psi.impl.source;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.impl.source.tree.TreeElement;
+import consulo.language.impl.ast.TreeElement;
 import consulo.language.util.CharTable;
 import javax.annotation.Nonnull;
 

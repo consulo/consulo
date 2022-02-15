@@ -18,10 +18,10 @@ package com.intellij.pom.tree.events.impl;
 
 import com.intellij.pom.tree.events.ChangeInfo;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.PsiManagerImpl;
-import com.intellij.psi.impl.PsiTreeChangeEventImpl;
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.TreeElement;
+import consulo.language.impl.psi.internal.PsiManagerImpl;
+import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
+import consulo.language.impl.ast.CompositeElement;
+import consulo.language.impl.ast.TreeElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

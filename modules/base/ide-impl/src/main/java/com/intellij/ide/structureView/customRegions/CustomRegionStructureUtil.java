@@ -11,7 +11,7 @@ import com.intellij.lang.folding.LanguageFolding;
 import consulo.application.progress.ProgressManager;
 import consulo.document.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.PsiFileEx;
+import consulo.language.impl.psi.PsiFileEx;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;

@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.impl;
 
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.ActionPlan;
-import com.intellij.util.text.ImmutableCharSequence;
+import consulo.util.lang.ImmutableCharSequence;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

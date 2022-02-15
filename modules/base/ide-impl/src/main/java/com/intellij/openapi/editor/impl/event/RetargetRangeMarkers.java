@@ -16,6 +16,8 @@
 package com.intellij.openapi.editor.impl.event;
 
 import consulo.document.Document;
+import consulo.document.impl.event.DocumentEventImpl;
+
 import javax.annotation.Nonnull;
 
 /**

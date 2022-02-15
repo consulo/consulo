@@ -23,7 +23,7 @@ import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorLastActionTracker;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;

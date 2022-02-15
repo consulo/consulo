@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
+import consulo.document.DocCommandGroupId;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 
 public abstract class BaseEnterHandler extends EditorWriteActionHandler {

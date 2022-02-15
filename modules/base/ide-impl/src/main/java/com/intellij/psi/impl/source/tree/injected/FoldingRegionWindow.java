@@ -6,7 +6,7 @@ import com.intellij.injected.editor.EditorWindow;
 import consulo.editor.Editor;
 import consulo.editor.FoldRegion;
 import consulo.editor.FoldingGroup;
-import com.intellij.openapi.editor.ex.RangeMarkerEx;
+import consulo.document.impl.RangeMarkerEx;
 import com.intellij.openapi.editor.impl.FoldRegionImpl;
 import javax.annotation.Nonnull;
 

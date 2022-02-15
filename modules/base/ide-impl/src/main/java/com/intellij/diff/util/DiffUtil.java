@@ -95,7 +95,7 @@ import com.intellij.ui.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBInsets;

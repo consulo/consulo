@@ -19,27 +19,27 @@
  */
 package com.intellij.openapi.vfs.newvfs.impl;
 
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.util.io.FileTooBigException;
-import com.intellij.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.LargeFileWriteRequestor;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProcessCanceledException;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.keyFMap.KeyFMap;
+import consulo.util.io.FileTooBigException;
 import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.LargeFileWriteRequestor;
+import consulo.virtualFileSystem.RawFileLoader;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -194,5 +194,5 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
   }
 
   private void checkNotTooLarge(@Nullable Object requestor) throws FileTooBigException {
-    if (!(requestor instanceof LargeFileWriteRequestor) && FileUtil.isTooLarge(getLength())) throw new FileTooBigException(getPath());
+    if (!(requestor instanceof LargeFileWriteRequestor) && RawFileLoader.getInstance().isLargeForContentLoading(getLength())) throw new FileTooBigException(getPath());
   }}

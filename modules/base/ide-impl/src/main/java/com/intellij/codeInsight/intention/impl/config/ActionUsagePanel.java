@@ -29,7 +29,7 @@ import consulo.editor.LogicalPosition;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.Segment;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import com.intellij.util.ui.RangeBlinker;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;

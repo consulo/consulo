@@ -40,7 +40,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import consulo.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import com.intellij.openapi.editor.impl.DocumentImpl;
+import consulo.document.impl.DocumentImpl;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.dataContext.DataProvider;
 import consulo.editor.Caret;

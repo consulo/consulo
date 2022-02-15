@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import consulo.document.util.ProperTextRange;
-import com.intellij.lang.CodeDocumentationAwareCommenter;
+import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
 import consulo.document.util.TextRange;

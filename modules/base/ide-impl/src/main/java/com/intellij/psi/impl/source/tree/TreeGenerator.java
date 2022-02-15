@@ -20,6 +20,7 @@
 package com.intellij.psi.impl.source.tree;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;

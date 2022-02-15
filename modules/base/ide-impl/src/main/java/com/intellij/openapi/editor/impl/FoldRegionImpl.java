@@ -7,7 +7,7 @@ import consulo.editor.Editor;
 import consulo.editor.FoldRegion;
 import consulo.editor.FoldingGroup;
 import consulo.document.event.DocumentEvent;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import consulo.editor.impl.CodeEditorBase;
 import consulo.editor.impl.CodeEditorFoldingModelBase;
 import consulo.util.dataholder.Key;

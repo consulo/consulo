@@ -31,6 +31,7 @@ import consulo.util.collection.JBIterable;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

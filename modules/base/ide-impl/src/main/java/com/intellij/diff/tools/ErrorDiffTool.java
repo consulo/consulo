@@ -25,7 +25,7 @@ import com.intellij.diff.util.DiffUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.awt.JBUI;
 import javax.annotation.Nonnull;

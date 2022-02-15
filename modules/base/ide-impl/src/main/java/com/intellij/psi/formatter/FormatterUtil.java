@@ -16,16 +16,22 @@
 package com.intellij.psi.formatter;
 
 import com.intellij.codeInsight.actions.ReformatCodeProcessor;
-import consulo.language.impl.ASTFactory;
+import consulo.language.impl.ast.ASTFactory;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.checkin.ReformatBeforeCheckinHandler;
+import consulo.language.impl.ast.CompositeElement;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.ast.internal.Factory;
+import consulo.language.impl.ast.internal.SharedImplUtil;
+import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.psi.internal.RecursiveTreeElementWalkingVisitor;
+import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.TokenType;
-import com.intellij.psi.impl.source.SourceTreeToPsiMap;
-import com.intellij.psi.impl.source.tree.*;
+import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.util.CharTable;

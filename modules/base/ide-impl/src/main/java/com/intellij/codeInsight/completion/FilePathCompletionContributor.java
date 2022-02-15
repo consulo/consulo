@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
+import consulo.language.impl.psi.reference.PsiMultiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.util.ArrayUtil;

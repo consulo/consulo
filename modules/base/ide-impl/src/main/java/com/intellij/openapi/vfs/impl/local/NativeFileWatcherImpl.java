@@ -9,7 +9,7 @@ import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ShutDownTracker;
+import consulo.util.lang.ShutDownTracker;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.io.CharsetToolkit;

@@ -3,18 +3,16 @@ package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.concurrency.ConcurrentCollectionFactory;
 import com.intellij.concurrency.JobSchedulerImpl;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.progress.util.PingProgress;
-import consulo.project.Project;
-import consulo.project.ProjectLocator;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.LowMemoryWatcher;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.openapi.util.io.*;
+import consulo.util.lang.ShutDownTracker;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.PersistentFSConstants;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.openapi.vfs.encoding.Utf8BomOptionProvider;
@@ -24,12 +22,17 @@ import com.intellij.openapi.vfs.newvfs.impl.*;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MostlySingularMultiMap;
-import consulo.util.collection.MultiMap;
 import com.intellij.util.io.ReplicatorInputStream;
 import com.intellij.util.text.CharSequenceHashingStrategy;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.LowMemoryWatcher;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectLocator;
 import consulo.util.collection.Maps;
+import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.*;
@@ -37,11 +40,8 @@ import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileAttributes;
-import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFileSystem;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -572,7 +572,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
   public InputStream getInputStream(@Nonnull VirtualFile file) throws IOException {
     synchronized (myInputLock) {
       InputStream contentStream;
-      if (getLengthIfUpToDate(file) == -1 || FileUtilRt.isTooLarge(file.getLength()) || (contentStream = readContent(file)) == null) {
+      if (getLengthIfUpToDate(file) == -1 || RawFileLoader.getInstance().isTooLarge(file.getLength()) || (contentStream = readContent(file)) == null) {
         NewVirtualFileSystem delegate = getDelegate(file);
         long len = reloadLengthFromDelegate(file, delegate);
         InputStream nativeStream = delegate.getInputStream(file);

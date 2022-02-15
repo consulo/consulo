@@ -18,7 +18,7 @@ package com.intellij.ui;
 
 import consulo.document.Document;
 import consulo.document.event.DocumentListener;
-import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
+import consulo.document.impl.event.DocumentEventImpl;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;

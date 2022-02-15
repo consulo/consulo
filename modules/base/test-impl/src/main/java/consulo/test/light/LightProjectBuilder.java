@@ -22,7 +22,7 @@ import consulo.language.content.FileIndexFacade;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.PsiFileFactoryImpl;
-import com.intellij.psi.impl.PsiManagerImpl;
+import consulo.language.impl.psi.internal.PsiManagerImpl;
 import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.injecting.InjectingContainerBuilder;

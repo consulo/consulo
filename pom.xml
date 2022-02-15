@@ -83,6 +83,8 @@
     <module>modules/base/virtual-file-watcher-impl</module>
     <module>modules/base/compiler-api</module>
     <module>modules/base/language-editor-api</module>
+    <module>modules/base/language-impl</module>
+    <module>modules/base/document-impl</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

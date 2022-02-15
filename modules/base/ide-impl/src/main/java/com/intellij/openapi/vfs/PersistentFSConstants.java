@@ -16,14 +16,14 @@
 package com.intellij.openapi.vfs;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.util.io.FileUtilRt;
+import consulo.virtualFileSystem.impl.RawFileLoaderImpl;
 
 public class PersistentFSConstants {
-  public static final long FILE_LENGTH_TO_CACHE_THRESHOLD = FileUtilRt.LARGE_FOR_CONTENT_LOADING;
+  public static final long FILE_LENGTH_TO_CACHE_THRESHOLD = RawFileLoaderImpl.LARGE_FOR_CONTENT_LOADING;
   /**
    * always  in range [0, PersistentFS.FILE_LENGTH_TO_CACHE_THRESHOLD]
    */
-  private static int ourMaxIntellisenseFileSize = Math.min(FileUtilRt.getUserFileSizeLimit(), (int)FILE_LENGTH_TO_CACHE_THRESHOLD);
+  private static int ourMaxIntellisenseFileSize = Math.min(RawFileLoaderImpl.getUserFileSizeLimit(), (int)FILE_LENGTH_TO_CACHE_THRESHOLD);
 
   public static int getMaxIntellisenseFileSize() {
     return ourMaxIntellisenseFileSize;

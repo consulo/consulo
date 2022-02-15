@@ -68,7 +68,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
+import consulo.language.impl.psi.reference.PsiMultiReference;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.project.content.scope.ProjectScopes;

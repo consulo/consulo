@@ -20,7 +20,7 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.impl.source.tree.LeafElement;
+import consulo.language.impl.ast.LeafElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

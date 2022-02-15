@@ -12,7 +12,7 @@ import com.intellij.dupLocator.util.PsiFragment;
 import com.intellij.openapi.util.Couple;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.LeafElement;
+import consulo.language.impl.ast.LeafElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,6 +15,8 @@
  */
 package com.intellij.util.diff;
 
+import consulo.language.impl.psi.internal.diff.DiffTreeChangeBuilder;
+import consulo.language.impl.psi.internal.diff.ShallowNodeComparator;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ThreeState;

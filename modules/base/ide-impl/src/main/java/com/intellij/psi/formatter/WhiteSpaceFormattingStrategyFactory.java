@@ -20,7 +20,7 @@ import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.PatchedWeakReference;
+import consulo.util.lang.ref.PatchedWeakReference;
 import javax.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;

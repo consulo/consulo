@@ -17,6 +17,7 @@
 package com.intellij.lang.impl;
 
 import consulo.language.ast.LighterLazyParseableNode;
+import consulo.language.impl.parser.internal.PsiBuilderImpl;
 import consulo.language.lexer.Lexer;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;

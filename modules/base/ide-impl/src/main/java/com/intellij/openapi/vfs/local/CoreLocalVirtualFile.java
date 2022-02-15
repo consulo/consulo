@@ -17,6 +17,7 @@ package com.intellij.openapi.vfs.local;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import javax.annotation.Nonnull;
@@ -113,7 +114,7 @@ public class CoreLocalVirtualFile extends VirtualFile {
   @Nonnull
   @Override
   public byte[] contentsToByteArray() throws IOException {
-    return FileUtil.loadFileBytes(myIoFile);
+    return RawFileLoader.getInstance().loadFileBytes(myIoFile);
   }
 
   @Override

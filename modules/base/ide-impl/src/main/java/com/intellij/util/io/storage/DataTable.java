@@ -19,12 +19,12 @@
  */
 package com.intellij.util.io.storage;
 
-import consulo.index.io.Forceable;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import com.intellij.openapi.util.io.FileUtilRt;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.RandomAccessDataFile;
+import consulo.disposer.Disposable;
+import consulo.index.io.Forceable;
+import consulo.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +54,7 @@ class DataTable implements Disposable, Forceable {
   }
 
   public boolean isCompactNecessary() {
-    return ((double)myWasteSize)/myFile.length() > 0.25 && myWasteSize > 3 * FileUtilRt.MEGABYTE;
+    return ((double)myWasteSize)/myFile.length() > 0.25 && myWasteSize > 3 * FileUtil.MEGABYTE;
   }
 
   private void readInHeader(File filePath) throws IOException {

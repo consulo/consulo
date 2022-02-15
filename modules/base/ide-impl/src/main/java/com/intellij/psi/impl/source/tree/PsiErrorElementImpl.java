@@ -18,6 +18,7 @@
 package com.intellij.psi.impl.source.tree;
 
 import consulo.language.Language;
+import consulo.language.impl.psi.CompositePsiElement;
 import consulo.language.psi.OuterLanguageElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.TokenType;

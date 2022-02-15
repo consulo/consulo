@@ -16,6 +16,7 @@
 
 package com.intellij.lang.cacheBuilder;
 
+import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.container.plugin.PluginDescriptor;
@@ -64,7 +65,7 @@ public class CacheBuilderEP implements PluginAware {
       try {
         final Class<?> aClass = Class.forName(wordsScannerClass, true,
                                               myPluginDescriptor == null ? getClass().getClassLoader()  : myPluginDescriptor.getPluginClassLoader());
-        myWordsScanner = (WordsScanner) aClass.newInstance();
+        myWordsScanner = (WordsScanner)Application.get().getInjectingContainer().getUnbindedInstance(aClass);
       }
       catch(Exception e) {
         LOG.error(e);

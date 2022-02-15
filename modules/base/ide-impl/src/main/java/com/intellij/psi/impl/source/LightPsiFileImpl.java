@@ -16,19 +16,24 @@
 
 package com.intellij.psi.impl.source;
 
-import com.intellij.ide.util.PsiNavigationSupport;
+import consulo.language.impl.psi.PsiFileEx;
+import consulo.language.impl.psi.ResolveScopeManager;
+import consulo.language.impl.psi.internal.PsiManagerImpl;
+import consulo.language.psi.PsiNavigationSupport;
 import consulo.language.ast.FileASTNode;
 import consulo.language.Language;
 import consulo.application.ApplicationManager;
 import consulo.language.file.FileViewProvider;
+import consulo.language.impl.psi.CheckUtil;
+import consulo.language.impl.psi.PsiElementBase;
+import consulo.language.impl.psi.internal.SharedPsiElementImplUtil;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.impl.*;
-import com.intellij.psi.impl.file.PsiFileImplUtil;
-import com.intellij.psi.impl.source.resolve.FileContextUtil;
+import consulo.language.impl.psi.internal.PsiFileImplUtil;
+import consulo.language.impl.psi.internal.FileContextUtil;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.content.scope.SearchScope;
 import consulo.language.util.IncorrectOperationException;

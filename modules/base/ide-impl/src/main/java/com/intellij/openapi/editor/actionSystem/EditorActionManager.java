@@ -17,6 +17,7 @@ package com.intellij.openapi.editor.actionSystem;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
+import consulo.document.ReadonlyFragmentModificationHandler;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

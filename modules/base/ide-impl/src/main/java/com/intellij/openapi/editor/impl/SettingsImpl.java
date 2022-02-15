@@ -30,7 +30,7 @@ import consulo.language.Language;
 import consulo.document.Document;
 import consulo.editor.EditorKind;
 import consulo.editor.EditorSettings;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;

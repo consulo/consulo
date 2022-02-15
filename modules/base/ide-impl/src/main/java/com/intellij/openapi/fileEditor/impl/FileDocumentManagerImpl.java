@@ -8,19 +8,20 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import consulo.editor.EditorFactory;
-import com.intellij.openapi.editor.ex.DocumentEx;
-import consulo.editor.internal.PrioritizedDocumentListener;
-import com.intellij.openapi.editor.impl.DocumentImpl;
+import consulo.document.impl.DocumentEx;
+import consulo.document.impl.event.PrioritizedDocumentListener;
+import consulo.document.impl.DocumentImpl;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import com.intellij.openapi.editor.impl.FrozenDocument;
+import consulo.document.impl.FrozenDocument;
 import com.intellij.openapi.editor.impl.TrailingSpacesStripper;
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
 import com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
-import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
+import consulo.virtualFileSystem.RawFileLoader;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
@@ -29,7 +30,6 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.SafeWriteRequestor;
@@ -37,11 +37,11 @@ import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.pom.core.impl.PomModelImpl;
-import com.intellij.psi.AbstractFileViewProvider;
+import consulo.language.impl.file.AbstractFileViewProvider;
 import com.intellij.psi.ExternalChangeAction;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.PsiFileImpl;
+import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBScrollPane;
@@ -67,6 +67,7 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.impl.RawFileLoaderImpl;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -209,7 +210,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
     if (document == null) {
       if (!file.isValid() || file.isDirectory() || isBinaryWithoutDecompiler(file)) return null;
 
-      boolean tooLarge = FileUtilRt.isTooLarge(file.getLength());
+      boolean tooLarge = RawFileLoader.getInstance().isLargeForContentLoading(file.getLength());
       if (file.getFileType().isBinary() && tooLarge) return null;
 
       final CharSequence text = tooLarge ? LoadTextUtil.loadText(file, getPreviewCharCount(file)) : LoadTextUtil.loadText(file);
@@ -247,7 +248,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
     int totalSize = 0;
     for (Document document : documents) {
       totalSize += document.getTextLength();
-      if (totalSize > FileUtilRt.LARGE_FOR_CONTENT_LOADING) return true;
+      if (RawFileLoader.getInstance().isLargeForContentLoading(totalSize)) return true;
     }
     return false;
   }
@@ -729,7 +730,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
             file.setCharset(null, null, false);
             boolean wasWritable = document.isWritable();
             document.setReadOnly(false);
-            boolean tooLarge = FileUtilRt.isTooLarge(file.getLength());
+            boolean tooLarge = RawFileLoader.getInstance().isTooLarge(file.getLength());
             isReloadable[0] = isReloadable(file, document, project);
             if (isReloadable[0]) {
               CharSequence reloaded = tooLarge ? LoadTextUtil.loadText(file, getPreviewCharCount(file)) : LoadTextUtil.loadText(file);
@@ -753,7 +754,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
 
   private static boolean isReloadable(@Nonnull VirtualFile file, @Nonnull Document document, @Nullable Project project) {
     PsiFile cachedPsiFile = project == null ? null : PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
-    return !(FileUtilRt.isTooLarge(file.getLength()) && file.getFileType().isBinary()) && (cachedPsiFile == null || cachedPsiFile instanceof PsiFileImpl || isBinaryWithDecompiler(file));
+    return !(RawFileLoader.getInstance().isTooLarge(file.getLength()) && file.getFileType().isBinary()) && (cachedPsiFile == null || cachedPsiFile instanceof PsiFileImpl || isBinaryWithDecompiler(file));
   }
 
   @TestOnly
@@ -807,7 +808,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
   private static int getPreviewCharCount(@Nonnull VirtualFile file) {
     Charset charset = EncodingManager.getInstance().getEncoding(file, false);
     float bytesPerChar = charset == null ? 2 : charset.newEncoder().averageBytesPerChar();
-    return (int)(FileUtilRt.LARGE_FILE_PREVIEW_SIZE / bytesPerChar);
+    return (int)(RawFileLoaderImpl.LARGE_FILE_PREVIEW_SIZE / bytesPerChar);
   }
 
   private void handleErrorsOnSave(@Nonnull Map<Document, IOException> failures) {

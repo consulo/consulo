@@ -21,7 +21,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.util.ShutDownTracker;
+import consulo.util.lang.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ApplicationProperties;
 import consulo.container.plugin.PluginId;

@@ -31,7 +31,7 @@ import consulo.editor.EditorFactory;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import consulo.editor.event.EditorFactoryEvent;
 import consulo.editor.event.EditorFactoryListener;
-import com.intellij.openapi.editor.ex.DocumentBulkUpdateListener;
+import consulo.document.event.DocumentBulkUpdateListener;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.project.Project;

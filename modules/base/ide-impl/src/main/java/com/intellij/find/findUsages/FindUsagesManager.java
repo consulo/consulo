@@ -56,7 +56,7 @@ import consulo.util.dataholder.Key;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.psi.impl.PsiManagerImpl;
+import consulo.language.impl.psi.internal.PsiManagerImpl;
 import com.intellij.psi.search.*;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.content.Content;

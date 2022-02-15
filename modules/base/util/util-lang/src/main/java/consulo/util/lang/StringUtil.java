@@ -102,6 +102,13 @@ public class StringUtil {
     return escapeToRegexp(text, result).toString();
   }
 
+  @Contract(pure = true)
+  public static boolean startsWithIgnoreCase(@NonNls @Nonnull String str, @NonNls @Nonnull String prefix) {
+    final int stringLength = str.length();
+    final int prefixLength = prefix.length();
+    return stringLength >= prefixLength && str.regionMatches(true, 0, prefix, 0, prefixLength);
+  }
+
   @Nonnull
   public static StringBuilder escapeToRegexp(@Nonnull CharSequence text, @Nonnull StringBuilder builder) {
     for (int i = 0; i < text.length(); i++) {
@@ -1531,5 +1538,50 @@ public class StringUtil {
     }
 
     return true;
+  }
+
+  /**
+   * @return a lightweight CharSequence which results from replacing {@code [start, end)} range in the {@code charSeq} with {@code replacement}.
+   * Works in O(1), but retains references to the passed char sequences, so please use something else if you want them to be garbage-collected.
+   */
+  @Nonnull
+  public static MergingCharSequence replaceSubSequence(@Nonnull CharSequence charSeq, int start, int end, @Nonnull CharSequence replacement) {
+    return new MergingCharSequence(new MergingCharSequence(new CharSequenceSubSequence(charSeq, 0, start), replacement), new CharSequenceSubSequence(charSeq, end, charSeq.length()));
+  }
+
+  public static void assertValidSeparators(@Nonnull CharSequence s) {
+    char[] chars = CharArrayUtil.fromSequenceWithoutCopying(s);
+    int slashRIndex = -1;
+
+    if (chars != null) {
+      for (int i = 0, len = s.length(); i < len; ++i) {
+        if (chars[i] == '\r') {
+          slashRIndex = i;
+          break;
+        }
+      }
+    }
+    else {
+      for (int i = 0, len = s.length(); i < len; i++) {
+        if (s.charAt(i) == '\r') {
+          slashRIndex = i;
+          break;
+        }
+      }
+    }
+
+    if (slashRIndex != -1) {
+      String context = String.valueOf(last(s.subSequence(0, slashRIndex), 10, true)) + first(s.subSequence(slashRIndex, s.length()), 10, true);
+      context = escapeStringCharacters(context);
+      LOG.error("Wrong line separators: '" + context + "' at offset " + slashRIndex);
+    }
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeStringCharacters(@Nonnull String s) {
+    StringBuilder buffer = new StringBuilder(s.length());
+    escapeStringCharacters(s.length(), s, "\"", buffer);
+    return buffer.toString();
   }
 }

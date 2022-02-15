@@ -30,7 +30,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import com.intellij.psi.impl.source.PsiFileImpl;
+import consulo.language.impl.psi.PsiFileImpl;
 import com.intellij.psi.templateLanguages.TemplateLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.disposer.Disposable;

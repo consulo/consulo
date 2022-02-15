@@ -5,9 +5,9 @@ import com.intellij.dupLocator.TreeHasher;
 import com.intellij.dupLocator.util.PsiFragment;
 import consulo.language.Language;
 import consulo.application.progress.ProgressManager;
-import com.intellij.psi.PsiAnchor;
+import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafElement;
+import consulo.language.impl.ast.LeafElement;
 import javax.annotation.Nonnull;
 
 import java.util.List;

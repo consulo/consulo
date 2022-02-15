@@ -2,6 +2,7 @@
 package com.intellij.openapi.editor.impl.view;
 
 import consulo.application.ApplicationManager;
+import consulo.document.impl.DocumentEx;
 import consulo.editor.colorScheme.EditorColors;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
@@ -11,7 +12,7 @@ import consulo.language.editor.highlight.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.util.ArrayUtilRt;
 import consulo.application.util.function.CommonProcessors;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.document.Document;

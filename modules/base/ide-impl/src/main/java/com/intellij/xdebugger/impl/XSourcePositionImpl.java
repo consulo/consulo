@@ -16,7 +16,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.file.light.LightVirtualFile;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import consulo.debugger.XDebuggerUtil;
 import consulo.debugger.XSourcePosition;
 import org.jetbrains.annotations.Contract;

@@ -15,14 +15,15 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.BinaryContentRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.RawFileLoader;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 
@@ -41,18 +42,18 @@ public class ShelvedBinaryContentRevision implements BinaryContentRevision {
     myShelvedContentPath = shelvedContentPath;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public byte[] getBinaryContent() throws VcsException {
     try {
-      return FileUtil.loadFileBytes(new File(myShelvedContentPath));
+      return RawFileLoader.getInstance().loadFileBytes(new File(myShelvedContentPath));
     }
     catch (IOException e) {
       throw new VcsException(e);
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getContent() throws VcsException {
     throw new IllegalStateException();

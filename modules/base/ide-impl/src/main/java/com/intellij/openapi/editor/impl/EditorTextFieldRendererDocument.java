@@ -2,9 +2,7 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.ex.DocumentEx;
-import com.intellij.openapi.editor.ex.LineIterator;
-import com.intellij.openapi.editor.ex.RangeMarkerEx;
+import consulo.document.impl.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.ArrayUtil;

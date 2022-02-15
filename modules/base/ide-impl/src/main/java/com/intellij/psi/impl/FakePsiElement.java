@@ -18,6 +18,7 @@ package com.intellij.psi.impl;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
+import consulo.language.impl.psi.PsiElementBase;
 import consulo.navigation.ItemPresentation;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

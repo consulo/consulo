@@ -28,7 +28,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.AstLoadingFilter;
+import consulo.language.impl.psi.internal.AstLoadingFilter;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.logging.Logger;

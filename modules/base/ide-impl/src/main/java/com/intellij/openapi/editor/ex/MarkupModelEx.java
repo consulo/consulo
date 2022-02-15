@@ -16,6 +16,7 @@
 package com.intellij.openapi.editor.ex;
 
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
+import consulo.document.impl.MarkupIterator;
 import consulo.editor.markup.HighlighterTargetArea;
 import consulo.editor.markup.MarkupModel;
 import consulo.editor.markup.RangeHighlighter;

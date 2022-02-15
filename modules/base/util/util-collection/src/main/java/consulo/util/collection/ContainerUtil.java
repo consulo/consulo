@@ -35,6 +35,30 @@ import java.util.function.Predicate;
 public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
 
+
+  @Contract(pure = true)
+  public static <T> boolean exists(@Nonnull T[] iterable, @Nonnull Predicate<? super T> condition) {
+    return or(Arrays.asList(iterable), condition);
+  }
+
+  @Contract(pure = true)
+  public static <T> boolean exists(@Nonnull Iterable<? extends T> iterable, @Nonnull Predicate<? super T> condition) {
+    return or(iterable, condition);
+  }
+
+  @Contract(pure = true)
+  public static <T> boolean or(@Nonnull T[] iterable, @Nonnull Predicate<? super T> condition) {
+    return or(Arrays.asList(iterable), condition);
+  }
+
+  @Contract(pure = true)
+  public static <T> boolean or(@Nonnull Iterable<? extends T> iterable, @Nonnull Predicate<? super T> condition) {
+    for (final T t : iterable) {
+      if (condition.test(t)) return true;
+    }
+    return false;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <T> Object[] map2Array(@Nonnull T[] array, @Nonnull Function<T, Object> mapper) {

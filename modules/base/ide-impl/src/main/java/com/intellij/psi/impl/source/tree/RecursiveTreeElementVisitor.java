@@ -16,7 +16,12 @@
 
 package com.intellij.psi.impl.source.tree;
 
-public abstract class RecursiveTreeElementVisitor extends TreeElementVisitor{
+import consulo.language.impl.ast.CompositeElement;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.ast.TreeElementVisitor;
+
+public abstract class RecursiveTreeElementVisitor extends TreeElementVisitor {
   @Override public void visitLeaf(LeafElement leaf) {
     visitNode(leaf);
   }

@@ -15,6 +15,7 @@
  */
 package com.intellij.util.containers;
 
+import consulo.util.collection.PeekableIterator;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import javax.annotation.Nonnull;

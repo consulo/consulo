@@ -8,7 +8,7 @@ import consulo.application.ApplicationManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.colorScheme.FontPreferences;
 import consulo.editor.colorScheme.TextAttributesKey;
-import com.intellij.openapi.editor.ex.MarkupIterator;
+import consulo.document.impl.MarkupIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import consulo.language.editor.highlight.EditorHighlighter;

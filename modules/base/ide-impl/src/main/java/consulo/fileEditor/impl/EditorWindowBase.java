@@ -19,7 +19,7 @@ import consulo.application.ui.UISettings;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.EditorTabPresentationUtil;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.util.Iconable;
 import consulo.virtualFileSystem.VirtualFile;

@@ -19,7 +19,7 @@ import consulo.language.lexer.LexerBase;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.language.ast.IElementType;
-import com.intellij.util.text.CharSequenceSubSequence;
+import consulo.util.lang.CharSequenceSubSequence;
 import javax.annotation.Nonnull;
 
 /**

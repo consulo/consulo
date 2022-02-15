@@ -48,6 +48,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.virtualFileSystem.VirtualFileWithId;
@@ -186,7 +187,7 @@ class FindInProjectTask {
       final boolean skipProjectFile = ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile) && !myFindModel.isSearchInProjectFiles();
       if (skipProjectFile && !Registry.is("find.search.in.project.files")) return true;
 
-      if (fileLength > FileUtilRt.LARGE_FOR_CONTENT_LOADING) {
+      if (RawFileLoader.getInstance().isLargeForContentLoading(fileLength)) {
         myLargeFiles.add(virtualFile);
         return true;
       }

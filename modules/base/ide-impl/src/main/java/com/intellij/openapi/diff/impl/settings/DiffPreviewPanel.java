@@ -24,7 +24,7 @@ import consulo.editor.event.CaretEvent;
 import consulo.editor.event.CaretListener;
 import consulo.editor.event.EditorMouseEvent;
 import consulo.editor.event.EditorMouseMotionListener;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.project.Project;
 import com.intellij.util.EventDispatcher;

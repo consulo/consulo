@@ -19,10 +19,10 @@ import com.intellij.formatting.*;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.editor.TextChange;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.impl.BulkChangesMerger;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

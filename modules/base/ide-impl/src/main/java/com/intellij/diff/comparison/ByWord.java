@@ -26,7 +26,7 @@ import com.intellij.diff.util.Range;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.text.MergingCharSequence;
+import consulo.util.lang.MergingCharSequence;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

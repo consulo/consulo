@@ -172,7 +172,7 @@
                     interface="com.intellij.openapi.fileEditor.impl.http.RemoteFileEditorActionProvider"/>
 
     <extensionPoint name="filetype.decompiler" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.file.BinaryFileDecompiler"/>
+      <with attribute="implementationClass" implements="consulo.virtualFileSystem.BinaryFileDecompiler"/>
     </extensionPoint>
 
     <extensionPoint name="editorActionHandler" beanClass="com.intellij.openapi.editor.actionSystem.EditorActionHandlerBean">
@@ -224,7 +224,7 @@
     <extensionPoint name="fileDocumentSynchronizationVetoer" interface="com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer"/>
 
     <extensionPoint name="itemPresentationProvider" beanClass="com.intellij.openapi.util.ClassExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.navigation.ItemPresentationProvider"/>
+      <with attribute="implementationClass" implements="consulo.navigation.ItemPresentationProvider"/>
     </extensionPoint>
 
     <extensionPoint name="intentionMenuContributor" interface="com.intellij.codeInsight.daemon.impl.IntentionMenuContributor"/>
@@ -520,13 +520,13 @@
     <extensionPoint name="lang.structureViewExtension"
                     interface="com.intellij.ide.structureView.StructureViewExtension"/>
 
-    <extensionPoint name="lang.psi.elementFactory" interface="consulo.psi.tree.PsiElementFactory"/>
+    <extensionPoint name="lang.psi.elementFactory" interface="consulo.language.psi.PsiElementFactory"/>
 
-    <extensionPoint name="lang.ast.lazyFactory" interface="consulo.psi.tree.ASTLazyFactory"/>
+    <extensionPoint name="lang.ast.lazyFactory" interface="consulo.language.impl.ast.ASTLazyFactory"/>
 
-    <extensionPoint name="lang.ast.leafFactory" interface="consulo.psi.tree.ASTLeafFactory"/>
+    <extensionPoint name="lang.ast.leafFactory" interface="consulo.language.impl.ast.ASTLeafFactory"/>
 
-    <extensionPoint name="lang.ast.compositeFactory" interface="consulo.psi.tree.ASTCompositeFactory"/>
+    <extensionPoint name="lang.ast.compositeFactory" interface="consulo.language.impl.ast.ASTCompositeFactory"/>
 
     <extensionPoint name="lang.formatter" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.formatting.FormattingModelBuilder"/>
@@ -575,7 +575,7 @@
     </extensionPoint>
 
     <extensionPoint name="lang.tokenSeparatorGenerator" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.TokenSeparatorGenerator"/>
+      <with attribute="implementationClass" implements="consulo.language.ast.TokenSeparatorGenerator"/>
     </extensionPoint>
 
 
@@ -631,7 +631,7 @@
     <extensionPoint name="directoryIndexExcludePolicy" interface="consulo.module.content.layer.DirectoryIndexExcludePolicy"
                     area="PROJECT"/>
 
-    <extensionPoint name="smartPointerAnchorProvider" interface="com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider"/>
+    <extensionPoint name="smartPointerAnchorProvider" interface="consulo.language.psi.SmartPointerAnchorProvider"/>
     <extensionPoint name="elementSignatureProvider" interface="com.intellij.codeInsight.folding.impl.ElementSignatureProvider"/>
     <extensionPoint name="preFormatProcessor" interface="com.intellij.psi.impl.source.codeStyle.PreFormatProcessor"/>
     <extensionPoint name="postFormatProcessor" interface="com.intellij.psi.impl.source.codeStyle.PostFormatProcessor"/>
@@ -888,7 +888,7 @@
 
     <extensionPoint name="renameHandler" interface="consulo.language.editor.refactoring.rename.RenameHandler"/>
     <extensionPoint name="renamePsiElementProcessor" interface="com.intellij.refactoring.rename.RenamePsiElementProcessor"/>
-    <extensionPoint name="updateAddedFileProcessor" interface="com.intellij.psi.impl.file.UpdateAddedFileProcessor"/>
+    <extensionPoint name="updateAddedFileProcessor" interface="consulo.language.psi.UpdateAddedFileProcessor"/>
     <extensionPoint name="moveFileHandler" interface="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler"/>
     <extensionPoint name="automaticRenamerFactory" interface="com.intellij.refactoring.rename.naming.AutomaticRenamerFactory"/>
     <extensionPoint name="nameSuggestionProvider" interface="com.intellij.refactoring.rename.NameSuggestionProvider"/>
@@ -1140,7 +1140,7 @@
                     interface="com.intellij.psi.impl.source.tree.TreeGenerator"/>
 
     <extensionPoint name="psi.treeChangePreprocessor"
-                    interface="com.intellij.psi.impl.PsiTreeChangePreprocessor"
+                    interface="consulo.language.psi.event.PsiTreeChangePreprocessor"
                     area="PROJECT"/>
 
     <extensionPoint name="codeBlockProvider"
@@ -1171,7 +1171,7 @@
 
     <extensionPoint name="actionFromOptionDescriptorProvider" interface="com.intellij.ide.ui.search.ActionFromOptionDescriptorProvider"/>
 
-    <extensionPoint name="stripTrailingSpacesFilterFactory" interface="com.intellij.openapi.editor.StripTrailingSpacesFilterFactory"/>
+    <extensionPoint name="stripTrailingSpacesFilterFactory" interface="consulo.document.StripTrailingSpacesFilterFactory"/>
 
     <extensionPoint name="notification.parentGroup" beanClass="com.intellij.notification.impl.NotificationParentGroupBean"/>
     <extensionPoint name="notification.group" beanClass="com.intellij.notification.impl.NotificationGroupBean"/>
@@ -1827,13 +1827,13 @@
     <applicationService serviceInterface="com.intellij.ide.PowerSaveMode"
                         serviceImplementation="com.intellij.ide.PowerSaveMode"/>
 
-    <applicationService serviceInterface="com.intellij.psi.impl.DocumentCommitProcessor"
+    <applicationService serviceInterface="consulo.language.impl.psi.internal.DocumentCommitProcessor"
                         serviceImplementation="com.intellij.psi.impl.DocumentCommitThread"/>
 
-    <applicationService serviceInterface="com.intellij.psi.stubs.StubTreeLoader"
+    <applicationService serviceInterface="consulo.language.impl.psi.stub.StubTreeLoader"
                         serviceImplementation="com.intellij.psi.stubs.StubTreeLoaderImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ide.util.PsiNavigationSupport"
+    <applicationService serviceInterface="consulo.language.psi.PsiNavigationSupport"
                         serviceImplementation="com.intellij.ide.util.PsiNavigationSupportImpl"/>
 
     <applicationService serviceInterface="com.intellij.psi.impl.source.codeStyle.IndentHelper"
@@ -1874,10 +1874,10 @@
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.TextEditorHighlightingPassManagerImpl"/>
     <projectService serviceInterface="consulo.language.psi.PsiFileFactory"
                     serviceImplementation="com.intellij.psi.impl.PsiFileFactoryImpl"/>
-    <projectService serviceInterface="com.intellij.psi.text.BlockSupport"
-                    serviceImplementation="com.intellij.psi.impl.BlockSupportImpl"/>
+    <projectService serviceInterface="consulo.language.impl.psi.internal.diff.BlockSupport"
+                    serviceImplementation="consulo.language.impl.psi.internal.diff.BlockSupportImpl"/>
     <projectService serviceInterface="consulo.language.psi.SmartPointerManager"
-                    serviceImplementation="com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl"/>
+                    serviceImplementation="consulo.language.impl.psi.internal.pointer.SmartPointerManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.codeStyle.CodeStyleManager"
                     serviceImplementation="com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl"/>
     <projectService serviceInterface="consulo.language.pom.PomModel"
@@ -1962,7 +1962,7 @@
                     serviceImplementation="com.intellij.psi.impl.cache.impl.IndexCacheManagerImpl"/>
     <projectService serviceInterface="com.intellij.psi.impl.cache.TodoCacheManager"
                     serviceImplementation="com.intellij.psi.impl.cache.impl.IndexTodoCacheManagerImpl"/>
-    <projectService serviceInterface="com.intellij.psi.impl.ResolveScopeManager"
+    <projectService serviceInterface="consulo.language.impl.psi.ResolveScopeManager"
                     serviceImplementation="com.intellij.psi.impl.file.impl.ResolveScopeManagerImpl"/>
     <projectService serviceInterface="consulo.module.content.ProjectFileIndex"
                     serviceImplementation="com.intellij.openapi.roots.impl.ProjectFileIndexImpl"/>
@@ -2484,10 +2484,10 @@
     <iconDescriptorUpdater implementation="consulo.ide.impl.PsiDirectoryIconDescriptorUpdater" id="directory"/>
     <iconDescriptorUpdater implementation="consulo.ide.impl.PsiFileIconDescriptorUpdater" id="default" order="last"/>
 
-    <lang.ast.lazyFactory implementation="consulo.psi.tree.impl.DefaultASTLazyFactory" order="last"/>
-    <lang.ast.leafFactory implementation="consulo.psi.tree.impl.DefaultASTLeafFactory" order="last"/>
-    <lang.ast.compositeFactory implementation="consulo.psi.tree.impl.DefaultASTCompositeFactory" order="last"/>
-    <lang.psi.elementFactory implementation="consulo.psi.tree.impl.DefaultPsiElementFactory" order="last"/>
+    <lang.ast.lazyFactory implementation="consulo.language.impl.ast.internal.DefaultASTLazyFactory" order="last"/>
+    <lang.ast.leafFactory implementation="consulo.language.impl.ast.internal.DefaultASTLeafFactory" order="last"/>
+    <lang.ast.compositeFactory implementation="consulo.language.impl.ast.internal.DefaultASTCompositeFactory" order="last"/>
+    <lang.psi.elementFactory implementation="consulo.language.impl.ast.internal.DefaultPsiElementFactory" order="last"/>
     <iconDescriptorUpdater implementation="consulo.compiler.impl.CompilerIconDescriptorUpdater"/>
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>

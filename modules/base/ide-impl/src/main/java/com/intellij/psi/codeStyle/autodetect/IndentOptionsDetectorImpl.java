@@ -7,19 +7,19 @@ import com.intellij.formatting.FormattingContext;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.lang.LanguageFormatting;
-import consulo.document.Document;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.IndexNotReadyException;
-import consulo.project.Project;
-import com.intellij.openapi.util.io.FileUtilRt;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.project.IndexNotReadyException;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
@@ -89,7 +89,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
 
   private boolean isFileBigToDetect() {
     VirtualFile file = myFile.getVirtualFile();
-    if (file != null && file.getLength() > FileUtilRt.MEGABYTE) {
+    if (file != null && file.getLength() > FileUtil.MEGABYTE) {
       return true;
     }
     return false;

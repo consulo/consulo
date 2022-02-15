@@ -9,7 +9,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
+import consulo.document.DocCommandGroupId;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

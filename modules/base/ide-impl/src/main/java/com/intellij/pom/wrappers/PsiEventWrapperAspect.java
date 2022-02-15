@@ -30,8 +30,8 @@ import com.intellij.pom.tree.events.impl.TreeChangeEventImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;
-import com.intellij.psi.impl.PsiManagerImpl;
-import com.intellij.psi.impl.PsiToDocumentSynchronizer;
+import consulo.language.impl.psi.internal.PsiManagerImpl;
+import consulo.language.impl.psi.internal.PsiToDocumentSynchronizer;
 import com.intellij.psi.impl.source.DummyHolder;
 import consulo.language.file.light.LightVirtualFile;
 

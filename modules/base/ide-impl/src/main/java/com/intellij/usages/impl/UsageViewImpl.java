@@ -34,7 +34,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import com.intellij.psi.impl.PsiDocumentManagerBase;
+import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanelWithEmptyText;

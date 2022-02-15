@@ -16,10 +16,10 @@
 
 package com.intellij.psi.impl.source.parsing;
 
-import consulo.language.impl.ASTFactory;
+import consulo.language.impl.ast.ASTFactory;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.LexerUtil;
-import com.intellij.psi.impl.source.tree.TreeElement;
+import consulo.language.impl.ast.TreeElement;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.util.CharTable;

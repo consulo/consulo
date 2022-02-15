@@ -22,7 +22,7 @@ import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterClient;
 import consulo.language.editor.highlight.HighlighterIterator;
-import consulo.editor.internal.PrioritizedDocumentListener;
+import consulo.document.impl.event.PrioritizedDocumentListener;
 import consulo.editor.markup.TextAttributes;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;

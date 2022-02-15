@@ -15,11 +15,11 @@
  */
 package com.intellij.psi.templateLanguages;
 
-import consulo.language.impl.ASTFactory;
+import consulo.language.impl.ast.ASTFactory;
 import consulo.document.util.TextRange;
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.impl.source.tree.TreeElement;
+import consulo.language.impl.ast.CompositeElement;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.OuterLanguageElement;
 import consulo.language.util.CharTable;
 import javax.annotation.Nonnull;

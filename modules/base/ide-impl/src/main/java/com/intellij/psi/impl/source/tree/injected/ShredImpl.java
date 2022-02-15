@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.tree.injected;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl;
+import consulo.language.impl.psi.internal.pointer.SmartPointerManagerImpl;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;

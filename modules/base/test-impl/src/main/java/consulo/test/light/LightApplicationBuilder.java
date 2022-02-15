@@ -43,12 +43,12 @@ import consulo.component.extension.ExtensionExtender;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.language.version.LanguageVersionDefines;
 import consulo.language.version.LanguageVersionResolvers;
-import consulo.psi.tree.ASTCompositeFactory;
-import consulo.psi.tree.ASTLazyFactory;
-import consulo.psi.tree.ASTLeafFactory;
-import consulo.psi.tree.impl.DefaultASTCompositeFactory;
-import consulo.psi.tree.impl.DefaultASTLazyFactory;
-import consulo.psi.tree.impl.DefaultASTLeafFactory;
+import consulo.language.impl.ast.ASTCompositeFactory;
+import consulo.language.impl.ast.ASTLazyFactory;
+import consulo.language.impl.ast.ASTLeafFactory;
+import consulo.language.impl.ast.internal.DefaultASTCompositeFactory;
+import consulo.language.impl.ast.internal.DefaultASTLazyFactory;
+import consulo.language.impl.ast.internal.DefaultASTLeafFactory;
 import consulo.test.light.impl.*;
 
 import javax.annotation.Nonnull;

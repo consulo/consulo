@@ -15,17 +15,17 @@
  */
 package com.intellij.openapi.vcs.persistent;
 
-import consulo.index.io.Forceable;
-import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.index.io.Forceable;
+import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataOutputStream;
-import consulo.index.io.KeyDescriptor;
-import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.logging.Logger;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.virtualFileSystem.RawFileLoader;
 
 import javax.annotation.Nonnull;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,7 +53,7 @@ public class SmallMapSerializer<K,V> implements Forceable {
 
   private void init() {
     try {
-      final byte[] bytes = FileUtil.loadFileBytes(myFile);
+      final byte[] bytes = RawFileLoader.getInstance().loadFileBytes(myFile);
       final DataInputStream dis = new DataInputStream(new UnsyncByteArrayInputStream(bytes));
       final int size = dis.readInt();
       for (int i = 0; i < size; i++) {

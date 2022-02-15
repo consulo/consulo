@@ -16,9 +16,10 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
+import consulo.document.impl.*;
 import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
 import com.intellij.openapi.util.Pair;
+import consulo.document.impl.event.DocumentEventImpl;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;

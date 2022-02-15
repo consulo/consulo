@@ -19,7 +19,7 @@ import com.intellij.diff.DiffContext;
 import com.intellij.diff.DiffContextEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
 import consulo.virtualFileSystem.VirtualFile;

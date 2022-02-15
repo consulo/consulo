@@ -24,7 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceRange;
-import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
+import consulo.language.impl.psi.reference.PsiMultiReference;
 import com.intellij.util.PairConsumer;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;

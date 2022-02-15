@@ -17,17 +17,17 @@ package com.intellij.codeInsight.completion;
 
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
-import com.intellij.openapi.editor.impl.DocumentImpl;
+import consulo.document.impl.DocumentImpl;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.ChangedPsiRangeUtil;
-import com.intellij.psi.impl.DiffLog;
-import com.intellij.psi.impl.source.tree.FileElement;
+import consulo.language.impl.psi.internal.diff.DiffLog;
+import consulo.language.impl.ast.FileElement;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.text.BlockSupport;
+import consulo.language.impl.psi.internal.diff.BlockSupport;
 import com.intellij.util.ObjectUtil;
 
 import javax.annotation.Nonnull;

@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.generation;
 
 import com.intellij.application.options.CodeStyle;
+import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
 import consulo.language.editor.CodeInsightBundle;
@@ -41,10 +42,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
-import consulo.language.psi.PsiComment;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
@@ -55,7 +53,6 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.templateLanguages.MultipleLangCommentProvider;
-import consulo.language.psi.OuterLanguageElement;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;

@@ -16,6 +16,8 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.dataContext.DataManager;
+import consulo.document.DocumentRunnable;
+import consulo.document.impl.DocumentImpl;
 import consulo.editor.Caret;
 import consulo.editor.Editor;
 import consulo.editor.VisualPosition;
@@ -24,13 +26,12 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import consulo.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.util.ShutDownTracker;
+import consulo.util.lang.ShutDownTracker;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;

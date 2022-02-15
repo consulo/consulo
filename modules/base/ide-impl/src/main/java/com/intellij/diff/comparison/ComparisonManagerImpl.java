@@ -26,7 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import com.intellij.util.text.CharSequenceSubSequence;
+import consulo.util.lang.CharSequenceSubSequence;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

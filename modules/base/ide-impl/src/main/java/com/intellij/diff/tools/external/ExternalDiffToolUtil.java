@@ -21,28 +21,29 @@ import com.intellij.diff.merge.ThreesideMergeRequest;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.Side;
 import com.intellij.diff.util.ThreeSide;
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
 import com.intellij.openapi.ui.Messages;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.PathUtil;
-import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.process.cmd.ParametersListUtil;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.application.progress.ProgressIndicator;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.TimeoutUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -366,7 +367,7 @@ public class ExternalDiffToolUtil {
 
     @Override
     public void apply() throws IOException {
-      myFile.setBinaryContent(FileUtil.loadFileBytes(myLocalFile));
+      myFile.setBinaryContent(RawFileLoader.getInstance().loadFileBytes(myLocalFile));
     }
   }
 

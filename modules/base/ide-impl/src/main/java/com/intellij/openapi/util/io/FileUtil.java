@@ -49,6 +49,10 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
 public class FileUtil extends FileUtilRt {
+  private static final int KILOBYTE = 1024;
+
+  public static final int MEGABYTE = KILOBYTE * KILOBYTE;
+
   public static final String ASYNC_DELETE_EXTENSION = ".__del__";
 
   public static final int REGEX_PATTERN_FLAGS = SystemInfo.isFileSystemCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE;
@@ -219,25 +223,9 @@ public class FileUtil extends FileUtilRt {
   }
 
   @Nonnull
+  @Deprecated
   public static byte[] loadFileBytes(@Nonnull File file) throws IOException {
-    byte[] bytes;
-    final InputStream stream = new FileInputStream(file);
-    try {
-      final long len = file.length();
-      if (len < 0) {
-        throw new IOException("File length reported negative, probably doesn't exist");
-      }
-
-      if (isTooLarge(len)) {
-        throw new FileTooBigException("Attempt to load '" + file + "' in memory buffer, file length is " + len + " bytes.");
-      }
-
-      bytes = loadBytes(stream, (int)len);
-    }
-    finally {
-      stream.close();
-    }
-    return bytes;
+    throw new UnsupportedOperationException("Use RawFileLoader.getInstance().loadFileBytes(File)");
   }
 
   @Nonnull
@@ -1410,17 +1398,34 @@ public class FileUtil extends FileUtilRt {
 
   @Nonnull
   public static List<String> loadLines(@Nonnull BufferedReader reader) throws IOException {
-    return FileUtilRt.loadLines(reader);
+    List<String> lines = new ArrayList<String>();
+    String line;
+    while ((line = reader.readLine()) != null) {
+      lines.add(line);
+    }
+    return lines;
   }
 
   @Nonnull
   public static byte[] loadBytes(@Nonnull InputStream stream) throws IOException {
-    return FileUtilRt.loadBytes(stream);
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    copy(stream, buffer);
+    return buffer.toByteArray();
   }
 
   @Nonnull
   public static byte[] loadBytes(@Nonnull InputStream stream, int length) throws IOException {
-    return FileUtilRt.loadBytes(stream, length);
+    if (length == 0) {
+      return ArrayUtil.EMPTY_BYTE_ARRAY;
+    }
+    byte[] bytes = new byte[length];
+    int count = 0;
+    while (count < length) {
+      int n = stream.read(bytes, count, length - count);
+      if (n <= 0) break;
+      count += n;
+    }
+    return bytes;
   }
 
   @Nonnull

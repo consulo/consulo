@@ -18,6 +18,7 @@ import consulo.index.io.ID;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
+import consulo.language.impl.psi.stub.FileContentImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.stub.FileContent;

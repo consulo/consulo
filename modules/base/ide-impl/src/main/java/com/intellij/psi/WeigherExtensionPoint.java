@@ -15,13 +15,13 @@
  */
 package com.intellij.psi;
 
-import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
+import consulo.application.Application;
+import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.KeyedLazyInstance;
 import consulo.util.xml.serializer.annotation.Attribute;
-import javax.annotation.Nonnull;
 
-import java.lang.reflect.Constructor;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -38,28 +38,17 @@ public class WeigherExtensionPoint extends AbstractExtensionPointBean implements
   @Attribute("id")
   public String id;
 
-  private final NotNullLazyValue<Weigher> myHandler = new NotNullLazyValue<Weigher>() {
+  private final NotNullLazyValue<Weigher> myHandler = new NotNullLazyValue<>() {
     @Override
     @Nonnull
     protected final Weigher compute() {
       try {
         Class<Weigher> tClass = findClass(implementationClass);
-        Constructor<Weigher> constructor = tClass.getConstructor();
-        constructor.setAccessible(true);
-        final Weigher weigher = tClass.newInstance();
+        final Weigher weigher = Application.get().getInjectingContainer().getUnbindedInstance(tClass);
         weigher.setDebugName(id);
         return weigher;
       }
-      catch (InstantiationException e) {
-        throw new RuntimeException(e);
-      }
-      catch (IllegalAccessException e) {
-        throw new RuntimeException(e);
-      }
       catch (ClassNotFoundException e) {
-        throw new RuntimeException(e);
-      }
-      catch (NoSuchMethodException e) {
         throw new RuntimeException(e);
       }
     }

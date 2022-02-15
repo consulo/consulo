@@ -24,7 +24,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.impl.DocumentImpl;
+import consulo.document.impl.DocumentImpl;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;

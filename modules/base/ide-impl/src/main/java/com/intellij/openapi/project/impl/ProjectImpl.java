@@ -36,7 +36,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
-import com.intellij.psi.impl.DebugUtil;
+import consulo.language.impl.DebugUtil;
 import com.intellij.util.TimedReference;
 import consulo.application.AccessRule;
 import consulo.component.extension.ExtensionPointId;

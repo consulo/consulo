@@ -3,12 +3,15 @@ package com.intellij.openapi.editor.impl.event;
 
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.*;
-import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
+import consulo.document.impl.EditorDocumentPriorities;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
+import consulo.document.impl.DocumentEx;
+import consulo.document.impl.event.PrioritizedInternalDocumentListener;
+import consulo.document.impl.event.EditReadOnlyListener;
 import consulo.editor.event.*;
 import consulo.editor.impl.EditorInternal;
 import consulo.ui.annotation.RequiredUIAccess;

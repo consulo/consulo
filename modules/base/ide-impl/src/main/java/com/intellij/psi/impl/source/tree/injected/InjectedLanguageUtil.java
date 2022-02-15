@@ -2,7 +2,8 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.extapi.psi.PsiFileBase;
+import consulo.language.impl.file.AbstractFileViewProvider;
+import consulo.language.impl.psi.PsiFileBase;
 import consulo.document.util.ProperTextRange;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
@@ -14,7 +15,7 @@ import consulo.language.inject.MultiHostRegistrar;
 import consulo.editor.Caret;
 import consulo.document.Document;
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import consulo.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -32,11 +33,10 @@ import com.intellij.openapi.util.*;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.BooleanRunnable;
-import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.PsiDocumentManagerBase;
-import com.intellij.psi.impl.PsiManagerEx;
+import consulo.language.impl.psi.internal.BooleanRunnable;
+import consulo.language.impl.DebugUtil;
+import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
+import consulo.language.impl.psi.internal.PsiManagerEx;
 import com.intellij.psi.impl.source.DummyHolder;
 import com.intellij.psi.injection.ReferenceInjector;
 import consulo.language.ast.IElementType;

@@ -568,8 +568,8 @@ public class CharArrayUtil {
   //  return chars == null ? new CharSequenceReader(text.toString()) : new UnsyncCharArrayReader(chars, 0, text.length());
   //}
   //
-  //@Nonnull
-  //public static ImmutableCharSequence createImmutableCharSequence(@Nonnull CharSequence sequence) {
-  //  return ImmutableText.valueOf(sequence);
-  //}
+  @Nonnull
+  public static ImmutableCharSequence createImmutableCharSequence(@Nonnull CharSequence sequence) {
+    return ImmutableText.valueOf(sequence);
+  }
 }

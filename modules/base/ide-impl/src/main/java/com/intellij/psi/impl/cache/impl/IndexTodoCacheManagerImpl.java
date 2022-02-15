@@ -18,6 +18,7 @@ package com.intellij.psi.impl.cache.impl;
 
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.ReadAction;
+import consulo.language.impl.psi.stub.FileContentImpl;
 import consulo.language.psi.stub.DumbModeAccessType;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;

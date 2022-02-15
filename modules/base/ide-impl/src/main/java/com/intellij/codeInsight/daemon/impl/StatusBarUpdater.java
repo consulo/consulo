@@ -23,7 +23,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.editor.Editor;
-import com.intellij.openapi.editor.ex.DocumentEx;
+import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;

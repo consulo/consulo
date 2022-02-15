@@ -14,7 +14,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.AbstractFileViewProvider;
+import consulo.language.impl.file.AbstractFileViewProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

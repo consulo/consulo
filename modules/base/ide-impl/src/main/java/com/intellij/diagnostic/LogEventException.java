@@ -16,7 +16,7 @@
 package com.intellij.diagnostic;
 
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
-import com.intellij.psi.impl.DebugUtil;
+import consulo.language.impl.DebugUtil;
 import consulo.logging.attachment.Attachment;
 
 /**

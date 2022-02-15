@@ -16,12 +16,13 @@
 package com.intellij.psi.impl;
 
 import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.SingleRootFileViewProvider;
-import com.intellij.psi.impl.file.impl.FileManager;
+import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.impl.file.internal.FileManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;

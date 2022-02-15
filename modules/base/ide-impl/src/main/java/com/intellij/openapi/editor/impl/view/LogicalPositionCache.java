@@ -5,10 +5,10 @@ import com.intellij.diagnostic.Dumpable;
 import consulo.document.Document;
 import consulo.editor.LogicalPosition;
 import consulo.document.event.DocumentEvent;
-import consulo.editor.internal.PrioritizedDocumentListener;
-import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
+import consulo.document.impl.event.PrioritizedDocumentListener;
+import consulo.document.impl.EditorDocumentPriorities;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import consulo.disposer.Disposable;
 import consulo.editor.impl.CodeEditorBase;
 

@@ -16,7 +16,7 @@
 package com.intellij.util.indexing;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.util.ShutDownTracker;
+import consulo.util.lang.ShutDownTracker;
 import com.intellij.openapi.vfs.newvfs.persistent.ContentHashesUtil;
 import com.intellij.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import consulo.index.io.data.IOUtil;

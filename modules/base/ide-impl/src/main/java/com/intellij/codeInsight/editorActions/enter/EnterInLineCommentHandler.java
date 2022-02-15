@@ -16,13 +16,13 @@
 
 package com.intellij.codeInsight.editorActions.enter;
 
-import com.intellij.lang.*;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
+import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.ast.ASTNode;
@@ -46,7 +46,7 @@ public class EnterInLineCommentHandler extends EnterHandlerDelegateAdapter {
       final Language language = psiAtOffset.getLanguage();
       final Commenter languageCommenter = LanguageCommenters.INSTANCE.forLanguage(language);
       final CodeDocumentationAwareCommenter commenter = languageCommenter instanceof CodeDocumentationAwareCommenter
-                                                        ? (CodeDocumentationAwareCommenter)languageCommenter:null;
+                                                        ? (CodeDocumentationAwareCommenter)languageCommenter: null;
       if (commenter != null && token.getElementType() == commenter.getLineCommentTokenType() ) {
         final int offset = CharArrayUtil.shiftForward(text, caretOffset, " \t");
 

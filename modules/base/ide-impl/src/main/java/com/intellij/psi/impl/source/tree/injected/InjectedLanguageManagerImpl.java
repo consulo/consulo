@@ -2,9 +2,9 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.openapi.editor.ex.DocumentEx;
-import com.intellij.psi.impl.PsiDocumentManagerBase;
-import com.intellij.psi.impl.source.resolve.FileContextUtil;
+import consulo.document.impl.DocumentEx;
+import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
+import consulo.language.impl.psi.internal.FileContextUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;

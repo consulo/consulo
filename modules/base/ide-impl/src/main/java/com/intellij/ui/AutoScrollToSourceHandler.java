@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.INativeFileType;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.vfs.PersistentFSConstants;
 import consulo.virtualFileSystem.VirtualFile;

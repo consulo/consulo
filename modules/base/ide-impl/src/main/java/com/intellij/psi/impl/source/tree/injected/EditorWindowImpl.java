@@ -10,6 +10,7 @@ import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.injected.editor.MarkupModelWindow;
 import com.intellij.openapi.editor.*;
+import consulo.document.impl.DocumentEx;
 import consulo.editor.colorScheme.EditorColorsManager;
 import consulo.editor.colorScheme.EditorColorsScheme;
 import consulo.editor.*;

@@ -23,7 +23,7 @@ import com.intellij.openapi.util.RecursionManager;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.impl.PsiManagerEx;
+import consulo.language.impl.psi.internal.PsiManagerEx;
 import consulo.language.psi.PsiModificationTracker;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.NullableFunction;

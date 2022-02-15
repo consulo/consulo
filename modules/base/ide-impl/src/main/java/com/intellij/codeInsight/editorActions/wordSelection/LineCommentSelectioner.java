@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.editorActions.wordSelection;
 
-import com.intellij.lang.CodeDocumentationAwareCommenter;
+import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
 import consulo.editor.Editor;

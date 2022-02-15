@@ -50,7 +50,7 @@ import com.intellij.packageDependencies.DefaultScopesProvider;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.packageDependencies.ui.*;
 import com.intellij.problems.ProblemListener;
-import com.intellij.psi.PsiTreeChangeAdapter;
+import consulo.language.psi.event.PsiTreeChangeAdapter;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;

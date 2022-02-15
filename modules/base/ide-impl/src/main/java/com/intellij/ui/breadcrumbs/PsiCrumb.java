@@ -4,7 +4,7 @@ package com.intellij.ui.breadcrumbs;
 import consulo.editor.Editor;
 import consulo.editor.ScrollType;
 import consulo.document.util.TextRange;
-import com.intellij.psi.PsiAnchor;
+import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import org.jetbrains.annotations.Contract;

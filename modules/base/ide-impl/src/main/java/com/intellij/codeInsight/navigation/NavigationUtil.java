@@ -36,7 +36,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
 import consulo.virtualFileSystem.fileType.INativeFileType;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;

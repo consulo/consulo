@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source;
 
 import consulo.language.ast.TokenType;
-import com.intellij.psi.impl.source.tree.FileElement;
+import consulo.language.impl.ast.FileElement;
 
 public class DummyHolderElement extends FileElement {
   public DummyHolderElement(CharSequence text) {

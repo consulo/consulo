@@ -16,7 +16,7 @@
 package consulo.desktop.editor.impl.ui;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import com.intellij.openapi.editor.ex.MarkupIterator;
+import consulo.document.impl.MarkupIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;

@@ -20,7 +20,7 @@ import consulo.project.startup.StartupManager;
 import com.intellij.openapi.ui.MessageType;
 import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.ShutDownTracker;
+import consulo.util.lang.ShutDownTracker;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.AppIconScheme;
 import consulo.project.ui.wm.IdeFrame;

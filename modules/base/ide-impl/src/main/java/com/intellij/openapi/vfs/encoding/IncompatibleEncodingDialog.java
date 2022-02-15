@@ -1,19 +1,18 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.encoding;
 
-import consulo.application.AllIcons;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import consulo.util.lang.ref.Ref;
-import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtilRt;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.application.AllIcons;
+import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.TargetAWT;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.RawFileLoader;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.nio.charset.Charset;
@@ -112,7 +111,7 @@ public class IncompatibleEncodingDialog extends DialogWrapper {
 
       @Override
       public boolean isEnabled() {
-        return !FileUtilRt.isTooLarge(virtualFile.getLength());
+        return !RawFileLoader.getInstance().isTooLarge(virtualFile.getLength());
       }
     };
     if (!SystemInfo.isMac && safeToConvert == EncodingUtil.Magic8.NO_WAY) {

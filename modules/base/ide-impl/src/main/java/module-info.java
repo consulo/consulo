@@ -54,6 +54,7 @@ open module consulo.ide.impl {
   requires transitive consulo.debugger.api;
   requires transitive consulo.compiler.api;
   requires transitive consulo.language.editor.api;
+  requires transitive consulo.document.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -833,7 +834,6 @@ open module consulo.ide.impl {
   exports com.intellij.psi.stubs.provided;
   exports com.intellij.psi.targets;
   exports com.intellij.psi.templateLanguages;
-  exports com.intellij.psi.text;
   exports com.intellij.psi.tree;
   exports com.intellij.psi.util;
   exports com.intellij.psi.util.proximity;
@@ -971,7 +971,6 @@ open module consulo.ide.impl {
   exports com.intellij.usages.impl.rules;
   exports com.intellij.usages.rules;
   exports com.intellij.util;
-  exports com.intellij.util.codeInsight;
   exports com.intellij.util.concurrency;
   exports com.intellij.util.config;
   exports com.intellij.util.containers;
@@ -1249,17 +1248,10 @@ open module consulo.ide.impl {
   exports consulo.project.impl;
   exports consulo.projectView.impl;
   exports consulo.psi.impl;
-  //exports consulo.psi.impl.source;
   exports consulo.psi.impl.source.codeStyle;
-  exports consulo.psi.impl.source.internal;
   exports consulo.psi.injection;
   exports consulo.psi.injection.impl;
-  //exports consulo.psi.search;
   exports consulo.psi.search.scope;
-  exports consulo.psi.tree;
-  exports consulo.psi.tree.impl;
-  //exports consulo.remoteServer;
-  //exports consulo.remoteServer.configuration;
   exports consulo.remoteServer.configuration.deployment;
   exports consulo.remoteServer.ui;
   exports consulo.roots;

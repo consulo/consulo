@@ -15,16 +15,8 @@
  */
 package com.intellij.packaging.impl.ui.actions;
 
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
-import consulo.compiler.CompilerBundle;
 import com.intellij.openapi.deployment.DeploymentUtil;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
-import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.packaging.artifacts.Artifact;
@@ -38,10 +30,18 @@ import com.intellij.util.io.zip.JBZipEntry;
 import com.intellij.util.io.zip.JBZipFile;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.compiler.CompilerBundle;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.Trinity;
+import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -161,7 +161,7 @@ public class PackageFileWorker {
       try {
         final String fullPathInArchive = DeploymentUtil.trimForwardSlashes(DeploymentUtil.appendToPath(pathInArchive, myRelativeOutputPath));
         final JBZipEntry entry = file.getOrCreateEntry(fullPathInArchive);
-        entry.setData(FileUtil.loadFileBytes(myFile));
+        entry.setData(RawFileLoader.getInstance().loadFileBytes(myFile));
       }
       finally {
         file.close();
@@ -178,12 +178,12 @@ public class PackageFileWorker {
         final JBZipEntry entry = zipFile.getOrCreateEntry(nextPathInArchive);
         LOG.debug("  extracting to temp file: " + nextPathInArchive + " from " + archivePath);
         final File tempFile = FileUtil.createTempFile("packageFile" + FileUtil.sanitizeFileName(nextPathInArchive),
-                                                      FileUtilRt.getExtension(PathUtil.getFileName(nextPathInArchive)));
+                                                      FileUtil.getExtension(PathUtil.getFileName(nextPathInArchive)));
         if (entry.getSize() != -1) {
           FileUtil.writeToFile(tempFile, entry.getData());
         }
         packFile(FileUtil.toSystemIndependentName(tempFile.getAbsolutePath()), "", parentsTrail);
-        entry.setData(FileUtil.loadFileBytes(tempFile));
+        entry.setData(RawFileLoader.getInstance().loadFileBytes(tempFile));
         FileUtil.delete(tempFile);
       }
       finally {

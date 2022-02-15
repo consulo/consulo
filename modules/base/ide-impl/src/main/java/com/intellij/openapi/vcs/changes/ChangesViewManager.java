@@ -50,7 +50,7 @@ import com.intellij.openapi.vcs.changes.shelf.ShelveChangesManager;
 import com.intellij.openapi.vcs.changes.ui.*;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.impl.DebugUtil;
+import consulo.language.impl.DebugUtil;
 import com.intellij.ui.*;
 import consulo.ui.ex.content.Content;
 import consulo.project.ui.util.Alarm;

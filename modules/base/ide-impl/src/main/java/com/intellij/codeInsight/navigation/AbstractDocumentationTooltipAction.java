@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.PatchedWeakReference;
+import consulo.util.lang.ref.PatchedWeakReference;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

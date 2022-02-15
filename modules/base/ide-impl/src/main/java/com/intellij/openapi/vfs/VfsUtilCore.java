@@ -17,7 +17,6 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
@@ -31,6 +30,7 @@ import consulo.content.ContentIterator;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.impl.RawFileLoaderImpl;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
@@ -284,7 +284,7 @@ public class VfsUtilCore {
 
   @Nonnull
   public static byte[] loadBytes(@Nonnull VirtualFile file) throws IOException {
-    return FileUtilRt.isTooLarge(file.getLength()) ? FileUtil.loadFirstAndClose(file.getInputStream(), FileUtilRt.LARGE_FILE_PREVIEW_SIZE) : file.contentsToByteArray();
+    return RawFileLoader.getInstance().isTooLarge(file.getLength()) ? FileUtil.loadFirstAndClose(file.getInputStream(), RawFileLoaderImpl.LARGE_FILE_PREVIEW_SIZE) : file.contentsToByteArray();
   }
 
   @Nonnull

@@ -21,7 +21,7 @@ import com.intellij.codeInspection.reference.RefManagerImpl;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import com.intellij.util.TripleFunction;
+import consulo.util.lang.function.TripleFunction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

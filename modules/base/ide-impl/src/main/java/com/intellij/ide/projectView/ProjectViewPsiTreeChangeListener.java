@@ -20,10 +20,10 @@ import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.language.psi.*;
+import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.*;
 
 import javax.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;

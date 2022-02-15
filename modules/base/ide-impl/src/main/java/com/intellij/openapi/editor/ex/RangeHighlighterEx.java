@@ -2,6 +2,7 @@
 
 package com.intellij.openapi.editor.ex;
 
+import consulo.document.impl.RangeMarkerEx;
 import consulo.editor.FoldRegion;
 import consulo.editor.markup.RangeHighlighter;
 import consulo.editor.markup.TextAttributes;

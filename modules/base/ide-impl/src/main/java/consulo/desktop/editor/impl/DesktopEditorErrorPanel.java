@@ -26,7 +26,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.EditorBundle;
 import consulo.editor.FoldRegion;
 import consulo.editor.VisualPosition;
-import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
+import consulo.document.DocCommandGroupId;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.FoldingModelEx;

@@ -4,7 +4,7 @@ package com.intellij.ide.scratch;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import com.intellij.ide.actions.NewActionGroup;
-import com.intellij.ide.util.PsiNavigationSupport;
+import consulo.language.psi.PsiNavigationSupport;
 import com.intellij.idea.ActionsBundle;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;

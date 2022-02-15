@@ -24,7 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.SingleRootFileViewProvider;
+import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import kava.beans.PropertyChangeListener;
 

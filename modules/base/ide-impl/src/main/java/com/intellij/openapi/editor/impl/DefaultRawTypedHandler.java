@@ -10,6 +10,8 @@ import com.intellij.openapi.command.CommandToken;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
+import consulo.document.DocumentRunnable;
+import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.editor.Editor;
 import consulo.project.Project;
 import consulo.document.Document;

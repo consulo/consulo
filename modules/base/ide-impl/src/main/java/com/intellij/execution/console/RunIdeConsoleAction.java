@@ -36,7 +36,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import consulo.language.impl.psi.LeafPsiElement;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.ObjectUtils;

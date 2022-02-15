@@ -19,7 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.editor.CaretModel;
 import consulo.document.Document;
 import consulo.editor.Editor;
-import com.intellij.util.text.ImmutableCharSequence;
+import consulo.util.lang.ImmutableCharSequence;
 import javax.annotation.Nonnull;
 
 /**

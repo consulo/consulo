@@ -2,6 +2,7 @@
 package com.intellij.openapi.editor.ex;
 
 import consulo.disposer.Disposable;
+import consulo.document.impl.event.EditReadOnlyListener;
 import consulo.editor.event.EditorEventMulticaster;
 import javax.annotation.Nonnull;
 

@@ -3,6 +3,8 @@ package com.intellij.openapi.editor.impl;
 
 import consulo.document.Document;
 import com.intellij.openapi.util.Getter;
+import consulo.document.impl.RangeMarkerTree;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

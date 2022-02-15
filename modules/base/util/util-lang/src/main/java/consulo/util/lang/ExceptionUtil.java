@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,45 +17,51 @@ package consulo.util.lang;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 
-/**
- * @author VISTALL
- * @since 2019-12-03
- */
 public class ExceptionUtil {
-  public static void rethrowUnchecked(@Nullable Throwable t) {
-    if (t != null) {
-      if (t instanceof Error) throw (Error)t;
-      if (t instanceof RuntimeException) throw (RuntimeException)t;
+  private ExceptionUtil() {
+  }
+
+  @Nonnull
+  public static Throwable getRootCause(@Nonnull Throwable e) {
+    while (true) {
+      if (e.getCause() == null) return e;
+      e = e.getCause();
     }
   }
 
-  public static void rethrowAll(@Nullable Throwable t) throws Exception {
-    if (t != null) {
-      rethrowUnchecked(t);
-      throw (Exception)t;
+  public static <T> T findCause(Throwable e, Class<T> klass) {
+    while (e != null && !klass.isInstance(e)) {
+      e = e.getCause();
     }
+    @SuppressWarnings("unchecked") T t = (T)e;
+    return t;
   }
 
-  public static void rethrow(@Nullable Throwable throwable) {
-    if (throwable instanceof Error) {
-      throw (Error)throwable;
-    }
-    else if (throwable instanceof RuntimeException) {
-      throw (RuntimeException)throwable;
-    }
-    else {
-      throw new RuntimeException(throwable);
-    }
+  public static boolean causedBy(Throwable e, Class klass) {
+    return findCause(e, klass) != null;
   }
 
-  public static void rethrowAllAsUnchecked(@Nullable Throwable t) {
-    if (t != null) {
-      rethrowUnchecked(t);
-      throw new RuntimeException(t);
+  @Nonnull
+  public static Throwable makeStackTraceRelative(@Nonnull Throwable th, @Nonnull Throwable relativeTo) {
+    StackTraceElement[] trace = th.getStackTrace();
+    StackTraceElement[] rootTrace = relativeTo.getStackTrace();
+    for (int i = 0, len = Math.min(trace.length, rootTrace.length); i < len; i++) {
+      if (trace[trace.length - i - 1].equals(rootTrace[rootTrace.length - i - 1])) continue;
+      int newDepth = trace.length - i;
+      th.setStackTrace(Arrays.asList(trace).subList(0, newDepth).toArray(new StackTraceElement[newDepth]));
+      break;
     }
+    return th;
+  }
+
+  @Nonnull
+  public static String currentStackTrace() {
+    return getThrowableText(new Throwable());
   }
 
   @Nonnull
@@ -106,5 +112,71 @@ public class ExceptionUtil {
       idx = x.indexOf('.', idx) + 1;
     }
     return x.substring(Math.max(idx, offset));
+  }
+
+  @Nullable
+  public static String getMessage(@Nonnull Throwable e) {
+    String result = e.getMessage();
+    String exceptionPattern = "Exception: ";
+    String errorPattern = "Error: ";
+
+    while ((result == null || result.contains(exceptionPattern) || result.contains(errorPattern)) && e.getCause() != null) {
+      e = e.getCause();
+      result = e.getMessage();
+    }
+
+    if (result != null) {
+      result = extractMessage(result, exceptionPattern);
+      result = extractMessage(result, errorPattern);
+    }
+
+    return result;
+  }
+
+  @Nonnull
+  private static String extractMessage(@Nonnull String result, @Nonnull String errorPattern) {
+    if (result.lastIndexOf(errorPattern) >= 0) {
+      result = result.substring(result.lastIndexOf(errorPattern) + errorPattern.length());
+    }
+    return result;
+  }
+
+  public static void rethrowUnchecked(@Nullable Throwable t) {
+    if (t != null) {
+      if (t instanceof Error) throw (Error)t;
+      if (t instanceof RuntimeException) throw (RuntimeException)t;
+    }
+  }
+
+  public static void rethrowAll(@Nullable Throwable t) throws Exception {
+    if (t != null) {
+      rethrowUnchecked(t);
+      throw (Exception)t;
+    }
+  }
+
+  public static void rethrow(@Nullable Throwable throwable) {
+    if (throwable instanceof Error) {
+      throw (Error)throwable;
+    }
+    else if (throwable instanceof RuntimeException) {
+      throw (RuntimeException)throwable;
+    }
+    else {
+      throw new RuntimeException(throwable);
+    }
+  }
+
+  public static void rethrowAllAsUnchecked(@Nullable Throwable t) {
+    if (t != null) {
+      rethrowUnchecked(t);
+      throw new RuntimeException(t);
+    }
+  }
+
+  @Nonnull
+  public static String getNonEmptyMessage(@Nonnull Throwable t, @Nonnull String defaultMessage) {
+    String message = t.getMessage();
+    return !StringUtil.isEmptyOrSpaces(message) ? message : defaultMessage;
   }
 }

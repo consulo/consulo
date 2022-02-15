@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.scratch.ScratchRootType;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;

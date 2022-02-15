@@ -22,13 +22,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
 public class FileUtilRt {
-  private static final int KILOBYTE = 1024;
-  private static final int DEFAULT_INTELLISENSE_LIMIT = 2500 * KILOBYTE;
-
-  public static final int MEGABYTE = KILOBYTE * KILOBYTE;
-  public static final int LARGE_FOR_CONTENT_LOADING = Math.max(20 * MEGABYTE, Math.max(getUserFileSizeLimit(), getUserContentLoadLimit()));
-  public static final int LARGE_FILE_PREVIEW_SIZE = Math.min(getLargeFilePreviewSize(), LARGE_FOR_CONTENT_LOADING);
-
   private static final int MAX_FILE_IO_ATTEMPTS = 10;
   private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
 
@@ -824,11 +817,6 @@ public class FileUtilRt {
     return buffer.toByteArray();
   }
 
-  public static boolean isTooLarge(long len) {
-    return len > LARGE_FOR_CONTENT_LOADING;
-  }
-
-
   public static byte[] loadBytes(InputStream stream, int length) throws IOException {
     if (length == 0) {
       return ArrayUtilRt.EMPTY_BYTE_ARRAY;
@@ -1053,29 +1041,6 @@ public class FileUtilRt {
     return BUFFER.get();
   }
 
-
-  public static int getUserFileSizeLimit() {
-    return parseKilobyteProperty("idea.max.intellisense.filesize", DEFAULT_INTELLISENSE_LIMIT);
-  }
-
-  public static int getUserContentLoadLimit() {
-    return parseKilobyteProperty("idea.max.content.load.filesize", 20 * MEGABYTE);
-  }
-
-  private static int getLargeFilePreviewSize() {
-    return parseKilobyteProperty("idea.max.content.load.large.preview.size", DEFAULT_INTELLISENSE_LIMIT);
-  }
-
-  private static int parseKilobyteProperty(String key, int defaultValue) {
-    try {
-      long i = Integer.parseInt(System.getProperty(key, String.valueOf(defaultValue / KILOBYTE)));
-      if (i < 0) return Integer.MAX_VALUE;
-      return (int)Math.min(i * KILOBYTE, Integer.MAX_VALUE);
-    }
-    catch (NumberFormatException e) {
-      return defaultValue;
-    }
-  }
 
   private interface CharComparingStrategy {
     CharComparingStrategy IDENTITY = new CharComparingStrategy() {

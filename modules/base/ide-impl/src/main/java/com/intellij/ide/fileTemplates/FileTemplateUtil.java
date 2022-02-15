@@ -23,7 +23,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import consulo.component.extension.Extensions;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;

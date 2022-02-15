@@ -37,7 +37,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import com.intellij.util.DocumentUtil;
+import consulo.document.impl.DocumentUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.action.DefaultActionGroup;

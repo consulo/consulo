@@ -15,6 +15,8 @@
  */
 package com.intellij.util.containers;
 
+import consulo.util.collection.PeekableIterator;
+
 import javax.annotation.Nonnull;
 
 import java.util.Iterator;
