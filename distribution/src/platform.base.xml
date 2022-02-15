@@ -57,7 +57,7 @@
         <include>consulo:consulo-ui-ex-api</include>
         <include>consulo:consulo-configurable-api</include>
         <include>consulo:consulo-language-api</include>
-        <include>consulo:consulo-editor-api</include>
+        <include>consulo:consulo-code-editor-api</include>
         <include>consulo:consulo-process-api</include>
         <include>consulo:consulo-execution-api</include>
         <include>consulo:consulo-debugger-api</include>

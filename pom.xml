@@ -75,7 +75,7 @@
     <module>modules/base/ui-ex-api</module>
     <module>modules/base/project-ui-api</module>
     <module>modules/base/navigation-api</module>
-    <module>modules/base/editor-api</module>
+    <module>modules/base/code-editor-api</module>
     <module>modules/base/process-api</module>
     <module>modules/base/execution-api</module>
     <module>modules/base/debugger-api</module>

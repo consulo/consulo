@@ -167,7 +167,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-editor-api</artifactId>
+      <artifactId>consulo-code-editor-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

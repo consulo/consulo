@@ -7,7 +7,7 @@ module consulo.language.editor.api {
   requires java.desktop;
 
   requires transitive consulo.language.api;
-  requires transitive consulo.editor.api;
+  requires transitive consulo.code.editor.api;
   requires consulo.util.jdom;
   
   exports consulo.language.editor;

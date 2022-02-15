@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 05/02/2022
  */
-module consulo.editor.api {
+module consulo.code.editor.api {
   // todo not required dependency
   requires java.desktop;
 
@@ -18,5 +18,4 @@ module consulo.editor.api {
   exports consulo.editor.event;
   exports consulo.editor.markup;
   exports consulo.editor.util;
-  exports consulo.editor.internal to consulo.ide.impl;
 }
