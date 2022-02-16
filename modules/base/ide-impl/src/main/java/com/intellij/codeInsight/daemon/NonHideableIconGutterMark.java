@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import consulo.editor.EditorSettings;
-import consulo.editor.markup.GutterMark;
+import consulo.codeEditor.EditorSettings;
+import consulo.codeEditor.markup.GutterMark;
 
 /**
  * A marker interface, that allows to show gutter icon

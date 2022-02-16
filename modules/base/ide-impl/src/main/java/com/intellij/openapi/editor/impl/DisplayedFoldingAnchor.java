@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import consulo.editor.FoldRegion;
+import consulo.codeEditor.FoldRegion;
 import javax.annotation.Nonnull;
 
 class DisplayedFoldingAnchor {

@@ -16,7 +16,7 @@
 package consulo.language.editor.intention;
 
 import consulo.application.Application;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.inspection.FileModifier;
 import consulo.project.Project;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.softwrap;
 
-import consulo.editor.SoftWrap;
+import consulo.codeEditor.SoftWrap;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
 import javax.annotation.Nonnull;
 

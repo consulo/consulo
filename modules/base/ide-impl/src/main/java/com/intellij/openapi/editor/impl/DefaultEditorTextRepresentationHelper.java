@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import gnu.trove.TObjectIntHashMap;
 import org.intellij.lang.annotations.JdkConstants;
 

@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;

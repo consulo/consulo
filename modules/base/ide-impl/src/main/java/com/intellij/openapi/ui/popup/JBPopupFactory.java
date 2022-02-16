@@ -7,7 +7,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.ui.MessageType;
 import consulo.util.lang.function.Condition;
 import consulo.ui.ex.RelativePoint;

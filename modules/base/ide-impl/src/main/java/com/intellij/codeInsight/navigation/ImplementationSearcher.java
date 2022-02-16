@@ -17,7 +17,7 @@ package com.intellij.codeInsight.navigation;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;

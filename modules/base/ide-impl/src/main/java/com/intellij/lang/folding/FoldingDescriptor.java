@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.lang.folding;
 
-import consulo.editor.FoldRegion;
+import consulo.codeEditor.FoldRegion;
 import consulo.language.ast.ASTNode;
-import consulo.editor.FoldingGroup;
+import consulo.codeEditor.FoldingGroup;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.component.util.ModificationTracker;

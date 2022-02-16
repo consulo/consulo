@@ -21,7 +21,7 @@ import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.lang.LangBundle;
 import consulo.language.Language;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.project.Project;

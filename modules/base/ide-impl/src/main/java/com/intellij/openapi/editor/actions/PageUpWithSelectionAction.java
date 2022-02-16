@@ -24,9 +24,9 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import consulo.editor.Caret;
-import consulo.editor.CaretAction;
-import consulo.editor.Editor;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.CaretAction;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.dataContext.DataContext;

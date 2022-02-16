@@ -20,7 +20,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.InspectionExtensionsFactory;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

@@ -1157,9 +1157,9 @@ open module consulo.ide.impl {
   exports consulo.diagram.provider;
   exports consulo.diff.editor.impl;
   exports consulo.diff.preferences.impl;
-  exports consulo.editor.impl;
-  exports consulo.editor.impl.softwrap.mapping;
-  exports consulo.editor.notifications;
+  exports consulo.codeEditor.impl;
+  exports consulo.codeEditor.impl.softwrap.mapping;
+  exports consulo.codeEditor.notifications;
   exports consulo.execution.console;
   exports consulo.execution.impl;
   exports consulo.execution.testframework.thrift.runner;

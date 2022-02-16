@@ -20,7 +20,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.psi.PsiDocumentManager;

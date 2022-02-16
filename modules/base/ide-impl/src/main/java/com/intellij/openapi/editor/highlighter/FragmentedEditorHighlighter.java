@@ -16,14 +16,14 @@
 package com.intellij.openapi.editor.highlighter;
 
 import consulo.document.Document;
-import consulo.editor.HighlighterColors;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.HighlighterColors;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.document.event.DocumentEvent;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterClient;
 import consulo.language.editor.highlight.HighlighterIterator;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
 

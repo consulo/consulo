@@ -19,8 +19,8 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.editor.Editor;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
 import jakarta.inject.Inject;
 
 import jakarta.inject.Singleton;

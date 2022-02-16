@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.impl.editorActions;
 
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.actionSystem.ActionPlan;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandlerEx;
 import javax.annotation.Nonnull;

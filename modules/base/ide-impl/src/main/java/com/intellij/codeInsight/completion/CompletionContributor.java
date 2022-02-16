@@ -20,7 +20,7 @@ import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import consulo.language.Language;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;

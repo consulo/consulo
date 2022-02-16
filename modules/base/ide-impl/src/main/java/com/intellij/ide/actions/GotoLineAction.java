@@ -6,7 +6,7 @@ import com.intellij.ide.util.EditorGotoLineNumberDialog;
 import com.intellij.ide.util.GotoLineNumberDialog;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

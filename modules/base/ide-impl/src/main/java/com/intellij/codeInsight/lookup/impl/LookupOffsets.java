@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;

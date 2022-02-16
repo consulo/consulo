@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 
 import java.util.ArrayList;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
-import consulo.editor.markup.GutterMark;
+import consulo.codeEditor.markup.GutterMark;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 

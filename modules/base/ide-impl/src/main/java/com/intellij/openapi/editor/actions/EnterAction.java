@@ -32,9 +32,9 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
-import consulo.editor.Caret;
-import consulo.editor.Editor;
-import consulo.editor.LogicalPosition;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.LogicalPosition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

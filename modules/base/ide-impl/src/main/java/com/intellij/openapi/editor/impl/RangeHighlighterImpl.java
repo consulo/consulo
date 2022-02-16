@@ -2,7 +2,7 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.document.impl.RangeMarkerImpl;
-import consulo.editor.markup.GutterMark;
+import consulo.codeEditor.markup.GutterMark;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.impl.DocumentEx;
@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Consumer;
-import consulo.editor.markup.*;
+import consulo.codeEditor.markup.*;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;

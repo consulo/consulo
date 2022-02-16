@@ -2,7 +2,7 @@ package com.intellij.codeInspection.ex;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.component.util.Iconable;

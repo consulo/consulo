@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.language.CodeDocumentationAwareCommenter;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiComment;
 

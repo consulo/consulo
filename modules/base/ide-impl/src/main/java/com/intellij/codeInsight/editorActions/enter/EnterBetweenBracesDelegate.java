@@ -3,7 +3,7 @@ package com.intellij.codeInsight.editorActions.enter;
 
 import consulo.language.Language;
 import consulo.language.LanguageExtension;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

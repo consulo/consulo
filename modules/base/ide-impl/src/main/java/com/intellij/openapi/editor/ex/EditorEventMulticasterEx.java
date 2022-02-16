@@ -3,7 +3,7 @@ package com.intellij.openapi.editor.ex;
 
 import consulo.disposer.Disposable;
 import consulo.document.impl.event.EditReadOnlyListener;
-import consulo.editor.event.EditorEventMulticaster;
+import consulo.codeEditor.event.EditorEventMulticaster;
 import javax.annotation.Nonnull;
 
 import kava.beans.PropertyChangeListener;

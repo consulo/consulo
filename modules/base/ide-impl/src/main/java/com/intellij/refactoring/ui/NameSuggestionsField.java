@@ -17,8 +17,8 @@
 package com.intellij.refactoring.ui;
 
 import com.intellij.codeInsight.editorActions.SelectWordUtil;
-import consulo.editor.Editor;
-import consulo.editor.SelectionModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.virtualFileSystem.fileType.FileType;

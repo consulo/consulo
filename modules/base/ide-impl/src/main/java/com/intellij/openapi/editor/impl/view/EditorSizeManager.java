@@ -5,7 +5,7 @@ import com.intellij.diagnostic.Dumpable;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.disposer.Disposable;
 import consulo.document.impl.EditorDocumentPriorities;
-import consulo.editor.*;
+import consulo.codeEditor.*;
 import consulo.logging.Logger;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.DocumentEx;

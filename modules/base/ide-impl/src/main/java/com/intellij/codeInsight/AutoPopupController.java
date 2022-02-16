@@ -3,7 +3,7 @@
 package com.intellij.codeInsight;
 
 import com.intellij.codeInsight.completion.CompletionType;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposable;

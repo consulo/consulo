@@ -26,7 +26,7 @@ import consulo.debugger.evaluation.EvaluationMode;
 import consulo.debugger.frame.XValueContainer;
 import consulo.debugger.setting.XDebuggerSettings;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;

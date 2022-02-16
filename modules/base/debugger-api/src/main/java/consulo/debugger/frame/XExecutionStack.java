@@ -17,7 +17,7 @@ package consulo.debugger.frame;
 
 import consulo.application.AllIcons;
 import consulo.debugger.Obsolescent;
-import consulo.editor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

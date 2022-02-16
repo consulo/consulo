@@ -30,7 +30,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.util.ArrayUtil;
 import consulo.application.ui.awt.UIUtil;
-import consulo.editor.util.TextAttributesUtil;
+import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;

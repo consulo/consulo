@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.annotation;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

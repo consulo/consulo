@@ -134,7 +134,7 @@
     </component>
 
     <component>
-      <interface-class>consulo.editor.EditorFactory</interface-class>
+      <interface-class>consulo.codeEditor.EditorFactory</interface-class>
       <implementation-class>consulo.desktop.awt.editor.impl.DesktopEditorFactoryImpl</implementation-class>
     </component>
 

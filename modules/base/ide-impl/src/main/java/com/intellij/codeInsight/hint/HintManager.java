@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.openapi.components.ServiceManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.ui.ex.RelativePoint;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;

@@ -10,7 +10,7 @@ import com.intellij.ide.util.gotoByName.GotoActionItemProvider;
 import com.intellij.ide.util.gotoByName.GotoActionModel;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;

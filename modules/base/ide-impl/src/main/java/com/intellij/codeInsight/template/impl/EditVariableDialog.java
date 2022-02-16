@@ -24,7 +24,7 @@ import com.intellij.codeInsight.template.macro.MacroFactory;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.ToolbarDecorator;

@@ -7,7 +7,7 @@ import com.intellij.codeInsight.template.CustomLiveTemplate;
 import com.intellij.codeInsight.template.CustomLiveTemplateBase;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.codeInsight.template.TemplateActionContext;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;

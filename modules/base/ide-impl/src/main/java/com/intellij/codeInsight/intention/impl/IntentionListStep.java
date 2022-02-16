@@ -8,7 +8,7 @@ import com.intellij.codeInsight.intention.AbstractEmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.component.util.Iconable;

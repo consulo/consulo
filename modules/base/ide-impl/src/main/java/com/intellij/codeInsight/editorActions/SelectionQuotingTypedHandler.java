@@ -17,9 +17,9 @@ package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.injected.editor.EditorWindow;
-import consulo.editor.CaretModel;
-import consulo.editor.Editor;
-import consulo.editor.SelectionModel;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;

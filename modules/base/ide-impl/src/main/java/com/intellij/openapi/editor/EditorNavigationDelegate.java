@@ -2,7 +2,7 @@ package com.intellij.openapi.editor;
 
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 import javax.annotation.Nonnull;
 

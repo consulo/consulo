@@ -33,7 +33,7 @@ import com.intellij.ui.EditorNotifications;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.codeEditor.notifications.EditorNotificationProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

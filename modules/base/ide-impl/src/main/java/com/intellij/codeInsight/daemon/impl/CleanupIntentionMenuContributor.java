@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import consulo.language.editor.intention.IntentionManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

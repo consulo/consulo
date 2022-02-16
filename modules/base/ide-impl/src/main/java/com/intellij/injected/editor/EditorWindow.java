@@ -15,8 +15,8 @@
  */
 package com.intellij.injected.editor;
 
-import consulo.editor.Editor;
-import consulo.editor.LogicalPosition;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.LogicalPosition;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.language.psi.PsiFile;

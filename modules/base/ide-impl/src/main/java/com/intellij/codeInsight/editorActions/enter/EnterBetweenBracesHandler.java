@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.editorActions.enter;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

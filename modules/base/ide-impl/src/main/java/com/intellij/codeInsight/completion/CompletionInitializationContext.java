@@ -2,8 +2,8 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.language.Language;
-import consulo.editor.Caret;
-import consulo.editor.Editor;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.ObjectUtils;

@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.psi.codeStyle.CodeStyleScheme;

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.unwrap;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.psi.PsiElement;
 

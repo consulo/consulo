@@ -17,12 +17,12 @@ package consulo.language.editor.annotation;
 
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.editor.HighlighterColors;
-import consulo.editor.colorScheme.CodeInsightColors;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.GutterIconRenderer;
-import consulo.editor.markup.RangeHighlighter;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.HighlighterColors;
+import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.LocalQuickFixAsIntentionAdapter;

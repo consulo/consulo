@@ -21,7 +21,7 @@ import com.intellij.psi.codeStyle.arrangement.match.ArrangementEntryMatcher;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.editor.util.TextAttributesUtil;
+import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 

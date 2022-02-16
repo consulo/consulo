@@ -3,14 +3,14 @@ package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.diagnostic.Dumpable;
 import consulo.document.Document;
-import consulo.editor.LogicalPosition;
+import consulo.codeEditor.LogicalPosition;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.event.PrioritizedDocumentListener;
 import consulo.document.impl.EditorDocumentPriorities;
 import com.intellij.util.ArrayUtil;
 import consulo.document.impl.DocumentUtil;
 import consulo.disposer.Disposable;
-import consulo.editor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorBase;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

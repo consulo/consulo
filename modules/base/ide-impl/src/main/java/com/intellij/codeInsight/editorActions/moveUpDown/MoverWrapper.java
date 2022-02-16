@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions.moveUpDown;
 
 import com.intellij.codeInsight.folding.CodeFoldingManager;
-import consulo.editor.*;
+import consulo.codeEditor.*;
 import consulo.project.Project;
 import consulo.document.Document;
 import consulo.document.RangeMarker;

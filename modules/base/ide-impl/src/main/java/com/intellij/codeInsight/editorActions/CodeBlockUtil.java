@@ -25,10 +25,10 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
-import consulo.editor.Editor;
-import consulo.editor.IndentGuideDescriptor;
-import consulo.editor.LogicalPosition;
-import consulo.editor.ScrollType;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.IndentGuideDescriptor;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.ScrollType;
 import consulo.language.Language;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.HighlighterIterator;

@@ -4,7 +4,7 @@ package com.intellij.find;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

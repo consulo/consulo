@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.impl.view.EditorPainter;
 import consulo.application.util.registry.Registry;
 import consulo.annotation.DeprecationInfo;
-import consulo.editor.impl.CodeEditorCaretBase;
+import consulo.codeEditor.impl.CodeEditorCaretBase;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

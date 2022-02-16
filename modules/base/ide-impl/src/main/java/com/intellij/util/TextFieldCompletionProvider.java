@@ -2,7 +2,7 @@ package com.intellij.util;
 
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextLanguage;

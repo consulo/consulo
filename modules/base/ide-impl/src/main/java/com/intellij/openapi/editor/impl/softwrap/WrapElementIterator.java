@@ -2,7 +2,7 @@
 package com.intellij.openapi.editor.impl.softwrap;
 
 import consulo.document.Document;
-import consulo.editor.FoldRegion;
+import consulo.codeEditor.FoldRegion;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.view.IterationState;
 import org.intellij.lang.annotations.JdkConstants;

@@ -17,14 +17,14 @@ package com.intellij.application.options;
 
 import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import com.intellij.codeStyle.CodeStyleFacade;
-import consulo.editor.*;
-import consulo.editor.markup.*;
+import consulo.codeEditor.*;
+import consulo.codeEditor.markup.*;
 import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.editor.colorScheme.EditorColors;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.highlight.EditorHighlighter;

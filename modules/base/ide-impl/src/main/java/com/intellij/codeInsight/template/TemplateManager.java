@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.openapi.components.ServiceManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import com.intellij.util.PairProcessor;
 import org.jetbrains.annotations.NonNls;

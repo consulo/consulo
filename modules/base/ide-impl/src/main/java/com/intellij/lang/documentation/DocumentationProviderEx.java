@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.documentation;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;

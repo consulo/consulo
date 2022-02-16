@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.intention;
 
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
-import consulo.editor.CaretModel;
-import consulo.editor.Editor;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.LanguageExtension;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

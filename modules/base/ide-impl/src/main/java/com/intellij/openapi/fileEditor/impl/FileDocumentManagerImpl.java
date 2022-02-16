@@ -7,7 +7,7 @@ import com.intellij.application.options.CodeStyle;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import consulo.document.impl.DocumentEx;
 import consulo.document.impl.event.PrioritizedDocumentListener;
 import consulo.document.impl.DocumentImpl;

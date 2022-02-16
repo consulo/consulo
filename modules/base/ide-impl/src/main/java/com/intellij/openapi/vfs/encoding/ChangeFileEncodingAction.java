@@ -26,7 +26,7 @@ import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UndoableAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

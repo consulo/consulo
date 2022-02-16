@@ -32,7 +32,7 @@ import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

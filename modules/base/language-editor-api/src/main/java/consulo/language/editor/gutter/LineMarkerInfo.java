@@ -17,10 +17,10 @@
 package consulo.language.editor.gutter;
 
 import consulo.document.util.TextRange;
-import consulo.editor.markup.GutterIconRenderer;
-import consulo.editor.markup.MarkupEditorFilter;
-import consulo.editor.markup.RangeHighlighter;
-import consulo.editor.markup.SeparatorPlacement;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.MarkupEditorFilter;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.SeparatorPlacement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;

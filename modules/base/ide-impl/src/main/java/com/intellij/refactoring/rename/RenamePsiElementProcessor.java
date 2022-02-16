@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.rename;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;

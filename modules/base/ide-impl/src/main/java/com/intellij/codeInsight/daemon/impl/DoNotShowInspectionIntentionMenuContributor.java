@@ -18,7 +18,7 @@ import consulo.application.internal.concurrency.JobLauncher;
 import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.DumbService;

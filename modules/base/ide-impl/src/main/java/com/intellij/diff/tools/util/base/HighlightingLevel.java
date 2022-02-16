@@ -16,8 +16,8 @@
 package com.intellij.diff.tools.util.base;
 
 import consulo.application.AllIcons;
-import consulo.editor.markup.HighlighterLayer;
-import consulo.editor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.util.lang.function.Condition;
 import consulo.ui.image.Image;
 

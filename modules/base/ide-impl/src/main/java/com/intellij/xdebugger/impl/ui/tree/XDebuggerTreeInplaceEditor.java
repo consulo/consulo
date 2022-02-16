@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import com.intellij.ui.AppUIUtil;
 import consulo.debugger.XDebugSession;

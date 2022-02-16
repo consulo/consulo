@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.unwrap;
 
-import consulo.editor.Editor;
-import consulo.editor.SelectionModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiElement;

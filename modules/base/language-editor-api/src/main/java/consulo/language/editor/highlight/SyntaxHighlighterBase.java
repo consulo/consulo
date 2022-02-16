@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.highlight;
 
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.logging.Logger;

@@ -9,7 +9,7 @@ import consulo.language.editor.inspection.FileModifier;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.diagnostic.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.DumbService;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.project.Project;

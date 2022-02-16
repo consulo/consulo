@@ -2,11 +2,11 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.document.impl.RangeMarkerTree;
-import consulo.editor.EditorCustomElementRenderer;
-import consulo.editor.Inlay;
-import consulo.editor.VisualPosition;
+import consulo.codeEditor.EditorCustomElementRenderer;
+import consulo.codeEditor.Inlay;
+import consulo.codeEditor.VisualPosition;
 import consulo.document.impl.DocumentUtil;
-import consulo.editor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

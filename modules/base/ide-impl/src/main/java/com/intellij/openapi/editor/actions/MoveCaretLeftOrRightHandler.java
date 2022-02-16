@@ -22,8 +22,8 @@ package com.intellij.openapi.editor.actions;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.*;
-import consulo.editor.impl.EditorInternal;
+import consulo.codeEditor.*;
+import consulo.codeEditor.impl.EditorInternal;
 
 class MoveCaretLeftOrRightHandler extends EditorActionHandler {
   enum Direction {LEFT, RIGHT}

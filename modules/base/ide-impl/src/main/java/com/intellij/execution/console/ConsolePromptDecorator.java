@@ -17,12 +17,12 @@ package com.intellij.execution.console;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.ui.ex.action.AnAction;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorLinePainter;
 import com.intellij.openapi.editor.LineExtensionInfo;
-import consulo.editor.TextAnnotationGutterProvider;
-import consulo.editor.colorScheme.EditorColorKey;
-import consulo.editor.colorScheme.EditorFontType;
+import consulo.codeEditor.TextAnnotationGutterProvider;
+import consulo.codeEditor.colorScheme.EditorColorKey;
+import consulo.codeEditor.colorScheme.EditorFontType;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

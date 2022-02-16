@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor.event;
 
-import consulo.editor.event.CaretEvent;
-import consulo.editor.event.CaretListener;
+import consulo.codeEditor.event.CaretEvent;
+import consulo.codeEditor.event.CaretListener;
 
 public abstract class CaretAdapter implements CaretListener {
   @Override

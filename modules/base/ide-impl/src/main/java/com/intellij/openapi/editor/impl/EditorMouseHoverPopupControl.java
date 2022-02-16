@@ -4,7 +4,7 @@ package com.intellij.openapi.editor.impl;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;

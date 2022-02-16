@@ -5,7 +5,7 @@ import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import consulo.language.Language;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;

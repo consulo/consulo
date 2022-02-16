@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui;
 
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.configurable.OptionsBundle;

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor.event;
 
-import consulo.editor.event.EditorFactoryEvent;
-import consulo.editor.event.EditorFactoryListener;
+import consulo.codeEditor.event.EditorFactoryEvent;
+import consulo.codeEditor.event.EditorFactoryListener;
 
 import javax.annotation.Nonnull;
 

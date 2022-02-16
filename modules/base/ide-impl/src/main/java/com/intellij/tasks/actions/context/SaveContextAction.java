@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.Project;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.tasks.actions.BaseTaskAction;
 import com.intellij.tasks.context.WorkingContextManager;
 import consulo.language.psi.PsiDocumentManager;

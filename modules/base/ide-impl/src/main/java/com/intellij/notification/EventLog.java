@@ -29,7 +29,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.impl.DocumentImpl;
-import consulo.editor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

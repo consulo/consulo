@@ -2,7 +2,7 @@ package com.intellij.execution.filters;
 
 import consulo.application.Application;
 import consulo.document.Document;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.execution.ui.console.HyperlinkInfo;

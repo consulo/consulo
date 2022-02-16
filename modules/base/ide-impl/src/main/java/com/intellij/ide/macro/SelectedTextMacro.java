@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.macro;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 /**
  * @author yole

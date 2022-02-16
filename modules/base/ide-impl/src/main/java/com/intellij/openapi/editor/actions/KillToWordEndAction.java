@@ -16,10 +16,10 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
-import consulo.editor.Caret;
-import consulo.editor.CaretModel;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.CaretModel;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.ide.KillRingTransferable;
 import consulo.annotation.access.RequiredWriteAction;

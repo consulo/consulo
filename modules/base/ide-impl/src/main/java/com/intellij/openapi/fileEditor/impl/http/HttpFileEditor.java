@@ -17,8 +17,8 @@ package com.intellij.openapi.fileEditor.impl.http;
 
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
-import consulo.editor.Editor;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
 import consulo.document.impl.DocumentImpl;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorState;

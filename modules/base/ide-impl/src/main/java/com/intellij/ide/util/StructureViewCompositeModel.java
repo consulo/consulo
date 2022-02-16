@@ -25,7 +25,7 @@ import com.intellij.ide.util.treeView.smartTree.ProvidingTreeModel;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import consulo.navigation.ItemPresentation;
 import consulo.disposer.Disposable;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.JBIterable;
 import consulo.ui.image.Image;

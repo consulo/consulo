@@ -23,7 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.document.LazyRangeMarkerFactory;
 import consulo.document.RangeMarker;
-import consulo.editor.*;
+import consulo.codeEditor.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.virtualFileSystem.fileType.INativeFileType;

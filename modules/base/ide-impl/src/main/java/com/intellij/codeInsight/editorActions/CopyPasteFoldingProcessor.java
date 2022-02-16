@@ -18,8 +18,8 @@ package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.codeInsight.folding.impl.CodeFoldingManagerImpl;
-import consulo.editor.Editor;
-import consulo.editor.FoldRegion;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.FoldRegion;
 import consulo.document.RangeMarker;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;

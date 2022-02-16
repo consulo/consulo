@@ -20,7 +20,7 @@ import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.util.LineCol;
 import com.intellij.openapi.command.undo.UndoManager;
 import consulo.document.Document;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.virtualFileSystem.fileType.FileType;

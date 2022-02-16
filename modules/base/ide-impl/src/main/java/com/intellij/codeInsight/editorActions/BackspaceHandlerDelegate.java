@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
 /**

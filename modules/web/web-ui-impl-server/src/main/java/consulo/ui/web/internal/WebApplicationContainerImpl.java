@@ -15,9 +15,9 @@
  */
 package consulo.ui.web.internal;
 
-import consulo.editor.colorScheme.EditorColorKey;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.EditorColorKey;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;

@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.intention.impl;
 
-import consulo.editor.markup.GutterMark;
+import consulo.codeEditor.markup.GutterMark;
 import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
@@ -10,7 +10,7 @@ import com.intellij.codeInsight.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.application.AllIcons;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;

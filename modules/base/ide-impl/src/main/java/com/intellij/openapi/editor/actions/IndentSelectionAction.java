@@ -18,8 +18,8 @@ package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import consulo.editor.Caret;
-import consulo.editor.Editor;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;

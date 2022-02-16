@@ -17,7 +17,7 @@ package com.intellij.ide.actionMacro;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.ui.playback.commands.KeyCodeTypeCommand;

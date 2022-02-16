@@ -5,7 +5,7 @@ import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
 import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.document.Document;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.DumbService;
 import consulo.project.Project;

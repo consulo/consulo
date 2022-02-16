@@ -18,9 +18,9 @@ package consulo.desktop.swt.editor.impl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
 import com.intellij.openapi.editor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
-import consulo.editor.impl.CodeEditorBase;
-import consulo.editor.impl.CodeEditorSoftWrapModelBase;
-import consulo.editor.impl.softwrap.mapping.SoftWrapApplianceManager;
+import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
+import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 
 import javax.annotation.Nonnull;
 

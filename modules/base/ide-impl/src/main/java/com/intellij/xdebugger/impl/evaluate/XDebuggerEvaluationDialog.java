@@ -23,7 +23,7 @@ import consulo.debugger.XDebuggerBundle;
 import consulo.debugger.XSourcePosition;
 import consulo.debugger.breakpoint.XExpression;
 import consulo.debugger.event.XDebugSessionListener;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

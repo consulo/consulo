@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff;
 
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 
 public interface DiffColors {
   TextAttributesKey DIFF_ABSENT = TextAttributesKey.createTextAttributesKey("DIFF_ABSENT");

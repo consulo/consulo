@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.language.editor.highlight.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;

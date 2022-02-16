@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.fileEditor.ex;
 
-import consulo.editor.Caret;
-import consulo.editor.Editor;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.EditorDataProvider;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;

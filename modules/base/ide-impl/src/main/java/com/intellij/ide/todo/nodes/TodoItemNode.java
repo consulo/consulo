@@ -13,7 +13,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterIterator;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;

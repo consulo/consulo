@@ -15,8 +15,8 @@
  */
 package com.intellij.vcsUtil;
 
-import consulo.editor.Editor;
-import consulo.editor.SelectionModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
 import com.intellij.openapi.vcs.actions.VcsContext;
 
 import javax.annotation.Nullable;

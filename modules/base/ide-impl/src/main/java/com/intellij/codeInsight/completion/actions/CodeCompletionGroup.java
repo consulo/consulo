@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.completion.actions;
 
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

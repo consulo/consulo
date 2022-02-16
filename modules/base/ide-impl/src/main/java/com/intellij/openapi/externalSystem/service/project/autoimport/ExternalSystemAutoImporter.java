@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.service.project.autoimport;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware;

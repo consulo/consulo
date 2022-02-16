@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.impl.editorActions;
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

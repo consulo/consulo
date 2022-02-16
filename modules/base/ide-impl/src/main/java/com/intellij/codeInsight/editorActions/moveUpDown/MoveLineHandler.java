@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.editorActions.moveUpDown;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nullable;

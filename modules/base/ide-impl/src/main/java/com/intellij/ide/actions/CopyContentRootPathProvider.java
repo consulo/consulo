@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;

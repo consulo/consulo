@@ -10,7 +10,7 @@ import consulo.language.Language;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.language.util.LanguageUtil;
 import com.intellij.lang.PsiStructureViewFactory;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;

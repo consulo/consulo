@@ -66,9 +66,9 @@
     <extensionPoint name="dateTimeFormatter" beanClass="com.intellij.util.text.DateTimeFormatterBean"/>
 
     <extensionPoint name="editorFactoryDocumentListener" interface="consulo.document.event.DocumentListener"/>
-    <extensionPoint name="editorFactoryMouseListener" interface="consulo.editor.event.EditorMouseListener"/>
-    <extensionPoint name="editorFactoryMouseMotionListener" interface="consulo.editor.event.EditorMouseMotionListener"/>
-    <extensionPoint name="editorFactoryListener" interface="consulo.editor.event.EditorFactoryListener"/>
+    <extensionPoint name="editorFactoryMouseListener" interface="consulo.codeEditor.event.EditorMouseListener"/>
+    <extensionPoint name="editorFactoryMouseMotionListener" interface="consulo.codeEditor.event.EditorMouseMotionListener"/>
+    <extensionPoint name="editorFactoryListener" interface="consulo.codeEditor.event.EditorFactoryListener"/>
 
     <extensionPoint name="vfs.asyncListener" interface="consulo.virtualFileSystem.event.AsyncFileListener"/>
 
@@ -207,7 +207,7 @@
     <extensionPoint name="writingAccessProvider" area="PROJECT" interface="com.intellij.openapi.vfs.WritingAccessProvider"/>
     <extensionPoint name="nonProjectFileWritingAccessExtension" area="PROJECT"
                     interface="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
-    <extensionPoint name="editorNotificationProvider" area="PROJECT" interface="consulo.editor.notifications.EditorNotificationProvider"/>
+    <extensionPoint name="editorNotificationProvider" area="PROJECT" interface="consulo.codeEditor.notifications.EditorNotificationProvider"/>
 
     <extensionPoint name="editorCustomization" area="PROJECT" interface="com.intellij.ui.EditorCustomization"/>
     <extensionPoint name="editorNavigation" interface="com.intellij.openapi.editor.EditorNavigationDelegate"/>
@@ -1341,13 +1341,13 @@
 
     <applicationService serviceInterface="com.intellij.openapi.options.SchemesManagerFactory"
                         serviceImplementation="com.intellij.openapi.options.SchemesManagerFactoryImpl"/>
-    <applicationService serviceInterface="consulo.editor.colorScheme.TextAttributesKey$TextAttributeKeyDefaultsProvider"
+    <applicationService serviceInterface="consulo.codeEditor.colorScheme.TextAttributesKey$TextAttributeKeyDefaultsProvider"
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.TextAttributeKeyDefaultsProviderImpl"/>
-    <applicationService serviceInterface="consulo.editor.colorScheme.EditorColorsManager"
+    <applicationService serviceInterface="consulo.codeEditor.colorScheme.EditorColorsManager"
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl"/>
     <applicationService serviceInterface="consulo.application.options.PathMacrosService"
                         serviceImplementation="consulo.application.options.PathMacrosServiceImpl"/>
-    <schemeOwner serviceInterface="consulo.editor.colorScheme.EditorColorsManager"/>
+    <schemeOwner serviceInterface="consulo.codeEditor.colorScheme.EditorColorsManager"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.FileAppearanceService"
                         serviceImplementation="com.intellij.openapi.roots.ui.FileAppearanceServiceImpl"/>

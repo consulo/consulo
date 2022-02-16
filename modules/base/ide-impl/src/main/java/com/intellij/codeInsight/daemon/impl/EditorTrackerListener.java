@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.messagebus.Topic;
 
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.editor.SoftWrap;
+import consulo.codeEditor.SoftWrap;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapImpl;

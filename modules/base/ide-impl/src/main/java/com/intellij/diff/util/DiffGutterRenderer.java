@@ -17,7 +17,7 @@ package com.intellij.diff.util;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.editor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.ui.image.Image;
 

@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal.ex;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.ErrorStripTooltipRendererProvider;
 import com.intellij.openapi.editor.ex.ErrorStripeListener;

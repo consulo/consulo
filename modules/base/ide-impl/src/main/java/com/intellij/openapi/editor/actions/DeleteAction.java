@@ -28,9 +28,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.document.impl.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
-import consulo.editor.Caret;
-import consulo.editor.Editor;
-import consulo.editor.FoldRegion;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.FoldRegion;
 
 public class DeleteAction extends EditorAction {
   public DeleteAction() {

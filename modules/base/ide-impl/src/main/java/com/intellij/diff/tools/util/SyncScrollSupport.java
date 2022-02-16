@@ -17,11 +17,11 @@ package com.intellij.diff.tools.util;
 
 import com.intellij.diff.util.Side;
 import com.intellij.diff.util.ThreeSide;
-import consulo.editor.Editor;
-import consulo.editor.LogicalPosition;
-import consulo.editor.ScrollingModel;
-import consulo.editor.event.VisibleAreaEvent;
-import consulo.editor.event.VisibleAreaListener;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.ScrollingModel;
+import consulo.codeEditor.event.VisibleAreaEvent;
+import consulo.codeEditor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.DesktopFoldingModelImpl;
 import com.intellij.util.ArrayUtil;

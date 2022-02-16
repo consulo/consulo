@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 
 import consulo.language.editor.intention.IntentionAction;
 import consulo.project.Project;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
 /**

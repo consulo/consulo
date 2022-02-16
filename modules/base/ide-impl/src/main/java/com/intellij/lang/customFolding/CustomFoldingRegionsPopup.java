@@ -17,8 +17,8 @@ package com.intellij.lang.customFolding;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.lang.folding.FoldingDescriptor;
-import consulo.editor.Editor;
-import consulo.editor.ScrollType;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.ScrollType;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;

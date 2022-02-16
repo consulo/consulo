@@ -22,7 +22,7 @@ import com.intellij.lang.LanguageRefactoringSupport;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.command.impl.StartMarkAction;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.util.Pass;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

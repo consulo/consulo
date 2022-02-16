@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.ex;
 
-import consulo.editor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.impl.ContextMenuPopupHandler;
 import javax.annotation.Nonnull;
 

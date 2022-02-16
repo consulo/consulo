@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;

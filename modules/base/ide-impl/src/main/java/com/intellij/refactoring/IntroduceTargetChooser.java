@@ -16,7 +16,7 @@
 package com.intellij.refactoring;
 
 import com.intellij.codeInsight.unwrap.ScopeHighlighter;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.JBPopup;

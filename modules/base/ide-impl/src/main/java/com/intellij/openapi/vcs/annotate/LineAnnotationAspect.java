@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.annotate;
 
 import com.intellij.openapi.vcs.VcsBundle;
-import consulo.editor.EditorGutterAction;
+import consulo.codeEditor.EditorGutterAction;
 
 /**
  * Represents one part of a line annotation which is shown in the editor when the "Annotate"

@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.BidiTextDirection;
 

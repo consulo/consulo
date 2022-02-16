@@ -49,7 +49,7 @@ import consulo.debugger.step.XSmartStepIntoHandler;
 import consulo.debugger.step.XSmartStepIntoVariant;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.editor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;

@@ -16,9 +16,9 @@
 package com.intellij.openapi.editor.ex.util;
 
 import consulo.document.Document;
-import consulo.editor.Editor;
-import consulo.editor.EditorFactory;
-import consulo.editor.ScrollingModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.ScrollingModel;
 
 import javax.annotation.Nullable;
 import java.awt.*;

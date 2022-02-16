@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
-import consulo.editor.colorScheme.EditorColorKey;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.colorScheme.EditorColorKey;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.markup.TextAttributes;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.util.Comparing;

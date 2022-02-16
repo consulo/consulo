@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options.colors;
 
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 

@@ -21,10 +21,10 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.document.impl.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
-import consulo.editor.Caret;
-import consulo.editor.Editor;
-import consulo.editor.LogicalPosition;
-import consulo.editor.ScrollType;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.ScrollType;
 
 public class JoinLinesAction extends TextComponentEditorAction {
   public JoinLinesAction() {

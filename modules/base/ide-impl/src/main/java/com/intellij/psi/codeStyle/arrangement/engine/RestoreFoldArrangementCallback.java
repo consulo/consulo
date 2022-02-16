@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement.engine;
 
 import com.intellij.codeInsight.folding.CodeFoldingManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
 import consulo.project.Project;
 

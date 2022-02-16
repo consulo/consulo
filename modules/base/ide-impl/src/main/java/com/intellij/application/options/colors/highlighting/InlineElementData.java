@@ -16,12 +16,12 @@
 package com.intellij.application.options.colors.highlighting;
 
 import com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager;
-import consulo.editor.Editor;
-import consulo.editor.EditorCustomElementRenderer;
-import consulo.editor.Inlay;
-import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorCustomElementRenderer;
+import consulo.codeEditor.Inlay;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static consulo.editor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
+import static consulo.codeEditor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
 
 public class InlineElementData extends HighlightData {
   private final String myText;

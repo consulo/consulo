@@ -32,7 +32,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.document.Document;
-import consulo.editor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;

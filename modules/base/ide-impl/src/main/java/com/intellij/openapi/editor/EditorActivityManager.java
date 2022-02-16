@@ -2,7 +2,7 @@
 package com.intellij.openapi.editor;
 
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 import javax.annotation.Nonnull;
 

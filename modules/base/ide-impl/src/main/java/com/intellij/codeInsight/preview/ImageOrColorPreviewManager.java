@@ -18,12 +18,12 @@ package com.intellij.codeInsight.preview;
 
 import consulo.application.Application;
 import consulo.document.Document;
-import consulo.editor.Editor;
-import consulo.editor.EditorFactory;
-import consulo.editor.event.EditorFactoryEvent;
-import consulo.editor.event.EditorFactoryListener;
-import consulo.editor.event.EditorMouseEvent;
-import consulo.editor.event.EditorMouseMotionListener;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.event.EditorFactoryEvent;
+import consulo.codeEditor.event.EditorFactoryListener;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.component.extension.Extensions;
 import consulo.project.DumbService;
 import consulo.project.Project;

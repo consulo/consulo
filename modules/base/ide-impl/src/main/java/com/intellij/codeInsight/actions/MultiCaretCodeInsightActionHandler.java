@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.actions;
 
-import consulo.editor.Caret;
-import consulo.editor.Editor;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

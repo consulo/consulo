@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.windows;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.util.ColoredItem;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.PopupMenuListenerAdapter;

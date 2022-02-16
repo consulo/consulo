@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.dataContext.DataContext;
-import consulo.editor.Caret;
-import consulo.editor.Editor;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.annotation.access.RequiredWriteAction;
 

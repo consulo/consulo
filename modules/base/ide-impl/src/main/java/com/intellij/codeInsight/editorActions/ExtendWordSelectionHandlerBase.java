@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;

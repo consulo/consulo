@@ -17,10 +17,10 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.lookup.*;
-import consulo.editor.Editor;
-import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.editor.colorScheme.EditorFontType;
-import consulo.editor.colorScheme.FontPreferences;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.codeEditor.colorScheme.FontPreferences;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;

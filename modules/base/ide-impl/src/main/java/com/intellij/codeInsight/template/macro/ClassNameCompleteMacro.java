@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.macro;
 
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
 import com.intellij.codeInsight.completion.CompletionType;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 
 public class ClassNameCompleteMacro extends BaseCompleteMacro {

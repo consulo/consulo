@@ -3,9 +3,9 @@
 package com.intellij.openapi.editor.ex;
 
 import consulo.document.impl.RangeMarkerEx;
-import consulo.editor.FoldRegion;
-import consulo.editor.markup.RangeHighlighter;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.TextAttributes;
 import javax.annotation.Nonnull;
 
 import java.util.Comparator;

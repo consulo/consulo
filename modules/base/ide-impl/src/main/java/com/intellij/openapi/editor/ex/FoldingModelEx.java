@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import consulo.editor.FoldRegion;
-import consulo.editor.FoldingGroup;
-import consulo.editor.FoldingModel;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.FoldingGroup;
+import consulo.codeEditor.FoldingModel;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

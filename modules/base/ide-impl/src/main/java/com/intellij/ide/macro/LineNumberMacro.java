@@ -17,7 +17,7 @@
 package com.intellij.ide.macro;
 
 import com.intellij.ide.IdeBundle;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 public final class LineNumberMacro extends EditorMacro {
   public LineNumberMacro() {

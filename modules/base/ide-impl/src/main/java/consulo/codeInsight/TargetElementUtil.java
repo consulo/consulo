@@ -24,7 +24,7 @@ import com.intellij.ide.util.EditSourceUtil;
 import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.language.psi.*;

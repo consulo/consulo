@@ -25,7 +25,7 @@ import com.intellij.codeInsight.template.Result;
 import com.intellij.codeInsight.template.TextResult;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

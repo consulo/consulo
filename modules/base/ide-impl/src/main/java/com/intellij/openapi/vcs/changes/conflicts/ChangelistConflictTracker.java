@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.conflicts;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.FileDocumentManager;

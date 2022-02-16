@@ -41,7 +41,7 @@ import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.codeEditor.notifications.EditorNotificationProvider;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 

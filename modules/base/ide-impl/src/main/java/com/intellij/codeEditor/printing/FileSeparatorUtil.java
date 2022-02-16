@@ -23,7 +23,7 @@ package com.intellij.codeEditor.printing;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.impl.LineMarkersPass;
 import consulo.document.Document;
-import consulo.editor.markup.SeparatorPlacement;
+import consulo.codeEditor.markup.SeparatorPlacement;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;

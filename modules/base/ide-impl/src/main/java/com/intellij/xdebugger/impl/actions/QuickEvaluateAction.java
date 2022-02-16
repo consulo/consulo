@@ -17,9 +17,9 @@ package com.intellij.xdebugger.impl.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.editor.Editor;
-import consulo.editor.EditorGutter;
-import consulo.editor.LogicalPosition;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorGutter;
+import consulo.codeEditor.LogicalPosition;
 import consulo.project.Project;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;

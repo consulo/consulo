@@ -2,7 +2,7 @@
 package com.intellij.ui.components.breadcrumbs;
 
 import consulo.ui.ex.EffectType;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.util.registry.Registry;

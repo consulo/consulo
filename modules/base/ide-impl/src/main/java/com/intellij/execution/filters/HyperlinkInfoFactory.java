@@ -2,7 +2,7 @@
 package com.intellij.execution.filters;
 
 import consulo.application.Application;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

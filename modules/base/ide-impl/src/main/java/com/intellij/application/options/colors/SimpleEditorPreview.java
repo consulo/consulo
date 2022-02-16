@@ -22,11 +22,11 @@ import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.language.editor.rawHighlight.RainbowHighlighter;
 import consulo.language.editor.util.UsedColors;
 import com.intellij.ide.highlighter.HighlighterFactory;
-import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.event.CaretAdapter;
-import consulo.editor.*;
-import consulo.editor.event.CaretEvent;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.CaretEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterIterator;
@@ -54,7 +54,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.*;
 import java.util.List;
 
-import static consulo.editor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
+import static consulo.codeEditor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
 
 public class SimpleEditorPreview implements PreviewPanel {
   private static final Map<String, TextAttributesKey> INLINE_ELEMENTS =

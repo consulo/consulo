@@ -19,7 +19,7 @@
  */
 package com.intellij.usages;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;

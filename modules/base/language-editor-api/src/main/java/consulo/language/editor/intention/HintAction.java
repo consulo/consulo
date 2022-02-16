@@ -16,7 +16,7 @@
 
 package consulo.language.editor.intention;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 

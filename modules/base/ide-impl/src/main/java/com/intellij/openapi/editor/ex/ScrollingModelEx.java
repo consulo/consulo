@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import consulo.editor.ScrollingModel;
+import consulo.codeEditor.ScrollingModel;
 
 /**
  * Extends {@link ScrollingModel} with more implementation-specific functionality.

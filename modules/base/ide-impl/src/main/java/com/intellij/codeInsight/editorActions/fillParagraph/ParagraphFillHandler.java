@@ -3,7 +3,7 @@ package com.intellij.codeInsight.editorActions.fillParagraph;
 import com.intellij.formatting.FormatterTagHandler;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import com.intellij.openapi.util.text.CharFilter;

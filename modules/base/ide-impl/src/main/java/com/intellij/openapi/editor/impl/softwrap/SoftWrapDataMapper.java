@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor.impl.softwrap;
 
 import consulo.document.Document;
-import consulo.editor.LogicalPosition;
-import consulo.editor.VisualPosition;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.VisualPosition;
 import javax.annotation.Nonnull;
 
 /**

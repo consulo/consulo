@@ -21,7 +21,7 @@ import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.impl.ElementLookupRenderer;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.util.ClassConditionKey;
 import com.intellij.openapi.util.Comparing;

@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import consulo.editor.Caret;
-import consulo.editor.Editor;
-import consulo.editor.EditorSettings;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorSettings;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;

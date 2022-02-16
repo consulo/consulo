@@ -17,9 +17,9 @@ package com.intellij.codeInsight;
 
 import com.intellij.codeInsight.completion.InsertionContext;
 import consulo.language.Language;
-import consulo.editor.CaretModel;
+import consulo.codeEditor.CaretModel;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

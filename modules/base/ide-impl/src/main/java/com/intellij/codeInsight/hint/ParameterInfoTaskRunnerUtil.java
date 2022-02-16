@@ -3,8 +3,8 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.NonBlockingReadAction;
-import consulo.editor.Editor;
-import consulo.editor.event.VisibleAreaListener;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.project.Project;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
@@ -21,7 +21,7 @@ import com.intellij.util.ui.AsyncProcessIcon;
 import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.editor.impl.EditorInternal;
+import consulo.codeEditor.impl.EditorInternal;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.CancellablePromise;
 

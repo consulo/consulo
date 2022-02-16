@@ -23,8 +23,8 @@ import consulo.document.util.TextRange;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.ScreenUtil;
-import consulo.editor.Editor;
-import consulo.editor.VisualPosition;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.VisualPosition;
 
 import javax.annotation.Nonnull;
 

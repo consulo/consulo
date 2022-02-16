@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import consulo.editor.Editor;
-import consulo.editor.colorScheme.EditorColorKey;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.colorScheme.EditorColorKey;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.annotate.AnnotationSource;

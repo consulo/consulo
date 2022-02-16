@@ -3,8 +3,8 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
-import consulo.editor.Caret;
-import consulo.editor.Editor;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.pattern.ElementPattern;
 import consulo.disposer.Disposable;

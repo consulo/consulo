@@ -27,7 +27,7 @@ import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.ide.script.IdeScriptBindings;
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;

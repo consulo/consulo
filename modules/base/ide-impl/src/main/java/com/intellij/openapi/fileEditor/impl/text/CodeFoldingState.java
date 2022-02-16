@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 

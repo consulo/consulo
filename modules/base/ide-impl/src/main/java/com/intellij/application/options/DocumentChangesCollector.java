@@ -16,7 +16,7 @@
 package com.intellij.application.options;
 
 import consulo.document.Document;
-import consulo.editor.TextChange;
+import consulo.codeEditor.TextChange;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.impl.TextChangeImpl;

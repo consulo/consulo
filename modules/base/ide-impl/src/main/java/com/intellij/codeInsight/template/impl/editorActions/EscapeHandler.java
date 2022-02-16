@@ -23,8 +23,8 @@ import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.editor.Editor;
-import consulo.editor.SelectionModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 
 public class EscapeHandler extends EditorActionHandler {

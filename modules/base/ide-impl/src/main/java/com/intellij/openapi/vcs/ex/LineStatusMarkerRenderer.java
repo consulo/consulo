@@ -16,10 +16,10 @@
 package com.intellij.openapi.vcs.ex;
 
 import com.intellij.openapi.diff.DiffColors;
-import consulo.editor.Editor;
-import consulo.editor.colorScheme.EditorColors;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.*;
@@ -29,7 +29,7 @@ import com.intellij.util.Function;
 import com.intellij.util.PairConsumer;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.editor.markup.*;
+import consulo.codeEditor.markup.*;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 

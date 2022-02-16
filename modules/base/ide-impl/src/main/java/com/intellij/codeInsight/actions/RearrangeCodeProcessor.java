@@ -19,7 +19,7 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
-import consulo.editor.SelectionModel;
+import consulo.codeEditor.SelectionModel;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;

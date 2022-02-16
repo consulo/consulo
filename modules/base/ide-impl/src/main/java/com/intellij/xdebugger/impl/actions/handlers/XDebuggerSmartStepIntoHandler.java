@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.actions.handlers;
 
 import consulo.dataContext.DataContext;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;

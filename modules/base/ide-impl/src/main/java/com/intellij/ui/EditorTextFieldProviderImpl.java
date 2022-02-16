@@ -18,7 +18,7 @@ package com.intellij.ui;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.editor.EditorSettings;
+import consulo.codeEditor.EditorSettings;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actions.TextComponentEditorAction;
 import com.intellij.openapi.editor.ex.EditorEx;

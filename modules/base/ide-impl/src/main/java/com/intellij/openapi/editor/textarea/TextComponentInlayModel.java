@@ -2,10 +2,10 @@
 package com.intellij.openapi.editor.textarea;
 
 import consulo.disposer.Disposable;
-import consulo.editor.EditorCustomElementRenderer;
-import consulo.editor.Inlay;
-import consulo.editor.InlayModel;
-import consulo.editor.VisualPosition;
+import consulo.codeEditor.EditorCustomElementRenderer;
+import consulo.codeEditor.Inlay;
+import consulo.codeEditor.InlayModel;
+import consulo.codeEditor.VisualPosition;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

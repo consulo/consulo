@@ -15,12 +15,12 @@
  */
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
-import consulo.editor.Editor;
-import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import consulo.editor.markup.MarkupModel;
-import consulo.editor.markup.RangeHighlighter;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;

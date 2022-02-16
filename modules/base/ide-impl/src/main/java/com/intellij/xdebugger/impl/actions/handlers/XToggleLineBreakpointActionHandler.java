@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.actions.handlers;
 
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.debugger.XDebuggerManager;

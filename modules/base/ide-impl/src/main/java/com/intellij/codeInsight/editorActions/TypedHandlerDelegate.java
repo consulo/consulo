@@ -3,7 +3,7 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;

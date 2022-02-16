@@ -2,7 +2,7 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.document.impl.RangeMarkerImpl;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.impl.DocumentEx;
 import javax.annotation.Nonnull;
 

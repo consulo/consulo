@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.postfix.templates;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;

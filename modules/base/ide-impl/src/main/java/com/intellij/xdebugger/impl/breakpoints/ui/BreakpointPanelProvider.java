@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.editor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.project.Project;
 import consulo.debugger.breakpoint.ui.XBreakpointGroupingRule;
 import javax.annotation.Nonnull;

@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.keymap.KeymapUtil;

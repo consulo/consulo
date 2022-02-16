@@ -26,7 +26,7 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.project.Project;

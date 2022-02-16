@@ -8,7 +8,7 @@ import com.intellij.lang.PerFileMappingsEx;
 import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;

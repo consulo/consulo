@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 
 /**

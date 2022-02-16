@@ -24,14 +24,14 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import consulo.editor.*;
+import consulo.codeEditor.*;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
 import com.intellij.openapi.editor.*;
-import consulo.editor.event.EditorMouseEvent;
-import consulo.editor.event.EditorMouseEventArea;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.highlight.EditorHighlighter;

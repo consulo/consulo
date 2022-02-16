@@ -20,7 +20,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;

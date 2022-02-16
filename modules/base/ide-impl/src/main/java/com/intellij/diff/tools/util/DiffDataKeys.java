@@ -21,7 +21,7 @@ import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.merge.MergeTool;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.util.LineRange;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
 

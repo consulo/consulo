@@ -30,7 +30,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import consulo.language.editor.inspection.*;

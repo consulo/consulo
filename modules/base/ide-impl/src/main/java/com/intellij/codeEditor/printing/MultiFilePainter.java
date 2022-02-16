@@ -16,7 +16,7 @@
 
 package com.intellij.codeEditor.printing;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Pair;

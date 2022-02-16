@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.project.Project;

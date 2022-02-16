@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;

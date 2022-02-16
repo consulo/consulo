@@ -21,7 +21,7 @@ import consulo.language.Language;
 import consulo.language.LanguageCommenters;
 import com.intellij.lang.surroundWith.SurroundDescriptor;
 import com.intellij.lang.surroundWith.Surrounder;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

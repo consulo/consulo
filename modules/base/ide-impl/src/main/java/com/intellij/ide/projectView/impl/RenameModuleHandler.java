@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

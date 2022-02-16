@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.patch;
 
 import com.intellij.ide.dnd.FileCopyPasteUtil;
 import com.intellij.openapi.editor.CustomFileDropHandler;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

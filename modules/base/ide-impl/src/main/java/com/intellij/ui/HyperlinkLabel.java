@@ -19,7 +19,7 @@ package com.intellij.ui;
 import com.intellij.ide.BrowserUtil;
 import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.EffectType;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.UIUtil;

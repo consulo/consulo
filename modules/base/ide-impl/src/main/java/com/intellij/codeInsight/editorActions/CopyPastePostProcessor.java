@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;

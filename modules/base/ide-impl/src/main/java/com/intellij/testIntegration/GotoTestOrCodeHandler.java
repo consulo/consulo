@@ -22,7 +22,7 @@ import com.intellij.codeInsight.navigation.NavigationUtil;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.Shortcut;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;

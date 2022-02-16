@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.ex;
 
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.fileType.FileType;

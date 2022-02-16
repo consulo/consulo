@@ -8,7 +8,7 @@ import com.intellij.codeInsight.lookup.LookupManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;

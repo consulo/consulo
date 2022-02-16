@@ -22,7 +22,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;

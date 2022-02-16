@@ -16,9 +16,9 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import consulo.document.Document;
-import consulo.editor.Editor;
-import consulo.editor.FoldRegion;
-import consulo.editor.LogicalPosition;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.LogicalPosition;
 
 import javax.annotation.Nonnull;
 

@@ -24,7 +24,7 @@ import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.project.DumbService;

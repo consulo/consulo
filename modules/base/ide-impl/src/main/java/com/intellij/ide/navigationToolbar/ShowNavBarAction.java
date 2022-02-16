@@ -18,7 +18,7 @@ package com.intellij.ide.navigationToolbar;
 
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

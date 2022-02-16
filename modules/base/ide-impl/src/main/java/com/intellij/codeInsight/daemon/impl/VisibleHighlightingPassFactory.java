@@ -19,8 +19,8 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.editor.Editor;
-import consulo.editor.LogicalPosition;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.LogicalPosition;
 import consulo.document.util.ProperTextRange;
 import javax.annotation.Nonnull;
 

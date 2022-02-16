@@ -3,7 +3,7 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 
 import javax.annotation.Nonnull;

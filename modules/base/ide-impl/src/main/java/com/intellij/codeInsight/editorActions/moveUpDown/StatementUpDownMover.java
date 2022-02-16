@@ -18,9 +18,9 @@ package com.intellij.codeInsight.editorActions.moveUpDown;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Pair;
-import consulo.editor.Editor;
-import consulo.editor.LogicalPosition;
-import consulo.editor.SelectionModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.SelectionModel;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;

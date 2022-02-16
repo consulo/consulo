@@ -3,13 +3,13 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.document.Document;
-import consulo.editor.Editor;
-import consulo.editor.FoldRegion;
-import consulo.editor.FoldingGroup;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.FoldingGroup;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.DocumentUtil;
-import consulo.editor.impl.CodeEditorBase;
-import consulo.editor.impl.CodeEditorFoldingModelBase;
+import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

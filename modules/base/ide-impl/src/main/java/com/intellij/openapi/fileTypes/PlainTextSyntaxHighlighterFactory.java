@@ -26,7 +26,7 @@ import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.CustomHighlighterTokenType;

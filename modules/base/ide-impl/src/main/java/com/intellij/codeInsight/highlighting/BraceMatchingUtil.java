@@ -20,7 +20,7 @@ import consulo.language.Language;
 import com.intellij.lang.LanguageBraceMatching;
 import consulo.language.PairedBraceMatcher;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterIterator;

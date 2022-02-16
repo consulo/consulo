@@ -17,7 +17,7 @@ package com.intellij.ide.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.TreeModel;
 import consulo.disposer.Disposable;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -11,11 +11,11 @@ import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import consulo.document.impl.DocumentUtil;
 import consulo.document.Document;
-import consulo.editor.FoldRegion;
-import consulo.editor.LogicalPosition;
-import consulo.editor.SoftWrap;
-import consulo.editor.VisualPosition;
-import consulo.editor.impl.CodeEditorFoldingModelBase;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.SoftWrap;
+import consulo.codeEditor.VisualPosition;
+import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

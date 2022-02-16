@@ -16,7 +16,7 @@
 package consulo.fileEditor.impl.text;
 
 import consulo.dataContext.DataProvider;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import jakarta.inject.Singleton;
 

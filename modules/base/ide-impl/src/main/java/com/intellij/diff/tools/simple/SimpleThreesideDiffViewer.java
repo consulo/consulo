@@ -33,7 +33,7 @@ import com.intellij.diff.util.*;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.event.DocumentEvent;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;

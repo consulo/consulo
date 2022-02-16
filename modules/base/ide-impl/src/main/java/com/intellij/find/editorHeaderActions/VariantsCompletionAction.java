@@ -17,8 +17,8 @@ package com.intellij.find.editorHeaderActions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
-import consulo.editor.colorScheme.EditorFontType;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.colorScheme.EditorFontType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;

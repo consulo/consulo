@@ -19,7 +19,7 @@ package com.intellij.codeInsight.editorActions.wordSelection;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;

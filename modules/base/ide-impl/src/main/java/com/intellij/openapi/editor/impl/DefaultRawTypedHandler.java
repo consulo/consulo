@@ -12,7 +12,7 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import consulo.document.DocumentRunnable;
 import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.document.Document;
 

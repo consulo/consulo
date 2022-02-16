@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.hint;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import javax.annotation.Nonnull;

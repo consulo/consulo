@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.markup.TextAttributes;
 
 import jakarta.inject.Singleton;
 

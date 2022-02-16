@@ -3,12 +3,12 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.injected.editor.EditorWindow;
-import consulo.editor.*;
-import consulo.editor.event.CaretActionListener;
-import consulo.editor.event.CaretEvent;
-import consulo.editor.event.CaretListener;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.CaretActionListener;
+import consulo.codeEditor.event.CaretEvent;
+import consulo.codeEditor.event.CaretListener;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

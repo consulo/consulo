@@ -27,7 +27,7 @@ import consulo.language.Language;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.application.util.function.Processor;

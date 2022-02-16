@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import consulo.editor.TextChange;
+import consulo.codeEditor.TextChange;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NonNls;

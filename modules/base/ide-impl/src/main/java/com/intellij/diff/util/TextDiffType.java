@@ -17,7 +17,7 @@ package com.intellij.diff.util;
 
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DiffColors;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

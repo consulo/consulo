@@ -16,7 +16,7 @@
 package com.intellij.lang.folding;
 
 import consulo.language.ast.ASTNode;
-import consulo.editor.FoldingGroup;
+import consulo.codeEditor.FoldingGroup;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

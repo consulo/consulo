@@ -16,7 +16,7 @@
 
 package com.intellij.ide.bookmarks;
 
-import consulo.editor.markup.GutterMark;
+import consulo.codeEditor.markup.GutterMark;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.StructureViewModel;
@@ -26,16 +26,16 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.editor.colorScheme.CodeInsightColors;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import consulo.editor.markup.GutterIconRenderer;
-import consulo.editor.markup.HighlighterLayer;
-import consulo.editor.markup.RangeHighlighter;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.project.Project;

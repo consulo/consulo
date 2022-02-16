@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.editor.textarea;
 
-import consulo.editor.SoftWrap;
-import consulo.editor.SoftWrapModel;
-import consulo.editor.VisualPosition;
+import consulo.codeEditor.SoftWrap;
+import consulo.codeEditor.SoftWrapModel;
+import consulo.codeEditor.VisualPosition;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,9 +15,9 @@
  */
 package com.intellij.diff.util;
 
-import consulo.editor.Editor;
-import consulo.editor.markup.CustomHighlighterRenderer;
-import consulo.editor.markup.RangeHighlighter;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.CustomHighlighterRenderer;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;

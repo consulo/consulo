@@ -20,7 +20,7 @@ import com.intellij.diff.contents.*;
 import com.intellij.diff.tools.util.DiffNotifications;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUtil;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;

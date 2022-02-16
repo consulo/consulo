@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.fileEditor;
 
-import consulo.editor.Caret;
+import consulo.codeEditor.Caret;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 /**
  * @author peter

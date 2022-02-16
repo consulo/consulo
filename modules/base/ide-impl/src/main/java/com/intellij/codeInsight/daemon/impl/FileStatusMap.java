@@ -6,7 +6,7 @@ import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
 import consulo.language.editor.ProblemHighlightFilter;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.project.Project;
 import consulo.document.util.TextRange;

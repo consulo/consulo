@@ -21,7 +21,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.UndoConstants;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import consulo.project.Project;

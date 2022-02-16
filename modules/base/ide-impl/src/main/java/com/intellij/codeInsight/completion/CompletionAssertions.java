@@ -9,7 +9,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.RangeMarkerEx;
 import consulo.document.util.TextRange;

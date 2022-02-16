@@ -14,7 +14,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;

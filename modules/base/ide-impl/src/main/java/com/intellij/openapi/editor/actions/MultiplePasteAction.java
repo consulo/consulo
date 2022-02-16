@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actions;
 import com.intellij.ide.CopyPasteManagerEx;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;

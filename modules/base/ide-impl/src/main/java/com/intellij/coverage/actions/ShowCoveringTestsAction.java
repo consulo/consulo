@@ -13,7 +13,7 @@ import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.PanelWithText;

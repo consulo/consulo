@@ -18,12 +18,12 @@ package consulo.desktop.awt.editor.impl;
 import consulo.application.Application;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.document.Document;
-import consulo.editor.Editor;
-import consulo.editor.EditorKind;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKind;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import consulo.project.Project;
-import consulo.editor.impl.EditorInternal;
+import consulo.codeEditor.impl.EditorInternal;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

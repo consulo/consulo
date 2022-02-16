@@ -17,10 +17,10 @@ package consulo.language.editor.rawHighlight;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.colorScheme.TextAttributesScheme;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesScheme;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.language.Language;
 import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.language.editor.annotation.HighlightSeverity;

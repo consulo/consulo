@@ -19,7 +19,7 @@ import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.*;
-import consulo.editor.*;
+import consulo.codeEditor.*;
 import consulo.project.Project;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;

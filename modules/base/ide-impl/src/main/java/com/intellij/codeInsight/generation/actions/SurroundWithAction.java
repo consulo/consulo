@@ -9,7 +9,7 @@ import com.intellij.codeInsight.template.TemplateActionContext;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.language.Language;
 import com.intellij.lang.LanguageSurrounders;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;

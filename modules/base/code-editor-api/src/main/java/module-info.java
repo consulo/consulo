@@ -12,10 +12,10 @@ module consulo.code.editor.api {
   requires transitive consulo.document.api;
   requires transitive consulo.ui.ex.api;
 
-  exports consulo.editor;
-  exports consulo.editor.colorScheme;
-  exports consulo.editor.colorScheme.event;
-  exports consulo.editor.event;
-  exports consulo.editor.markup;
-  exports consulo.editor.util;
+  exports consulo.codeEditor;
+  exports consulo.codeEditor.colorScheme;
+  exports consulo.codeEditor.colorScheme.event;
+  exports consulo.codeEditor.event;
+  exports consulo.codeEditor.markup;
+  exports consulo.codeEditor.util;
 }

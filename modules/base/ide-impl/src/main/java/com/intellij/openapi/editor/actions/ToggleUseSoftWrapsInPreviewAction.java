@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 

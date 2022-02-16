@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.editor.Editor;
-import consulo.editor.event.EditorFactoryEvent;
-import consulo.editor.event.EditorFactoryListener;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.event.EditorFactoryEvent;
+import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.language.psi.PsiDocumentManager;

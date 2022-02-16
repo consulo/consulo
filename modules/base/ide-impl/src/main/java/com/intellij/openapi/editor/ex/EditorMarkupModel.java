@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
-import consulo.editor.markup.MarkupModel;
+import consulo.codeEditor.markup.MarkupModel;
 import com.intellij.ui.PopupHandler;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

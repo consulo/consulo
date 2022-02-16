@@ -19,8 +19,8 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import consulo.editor.IndentGuideDescriptor;
-import consulo.editor.IndentsModel;
+import consulo.codeEditor.IndentGuideDescriptor;
+import consulo.codeEditor.IndentsModel;
 
 import java.util.List;
 

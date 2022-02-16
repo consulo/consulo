@@ -16,13 +16,13 @@
 
 package com.intellij.codeInsight.unwrap;
 
-import consulo.editor.Editor;
-import consulo.editor.colorScheme.EditorColors;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.markup.HighlighterTargetArea;
-import consulo.editor.markup.MarkupModel;
-import consulo.editor.markup.RangeHighlighter;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.TextAttributes;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

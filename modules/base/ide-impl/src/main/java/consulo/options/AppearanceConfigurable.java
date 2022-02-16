@@ -16,8 +16,8 @@
 package consulo.options;
 
 import consulo.application.ui.UISettings;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

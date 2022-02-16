@@ -17,7 +17,7 @@
 package com.intellij.codeInsight;
 
 import consulo.language.editor.inspection.FileModifier;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;

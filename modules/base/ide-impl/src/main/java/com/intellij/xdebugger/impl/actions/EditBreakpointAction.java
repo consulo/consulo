@@ -19,8 +19,8 @@ import com.intellij.idea.ActionsBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.editor.Editor;
-import consulo.editor.markup.GutterIconRenderer;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 
 import javax.annotation.Nonnull;

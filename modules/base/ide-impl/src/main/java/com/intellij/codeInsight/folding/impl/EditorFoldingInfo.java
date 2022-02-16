@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.folding.impl;
 
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.editor.Editor;
-import consulo.editor.FoldRegion;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.FoldRegion;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

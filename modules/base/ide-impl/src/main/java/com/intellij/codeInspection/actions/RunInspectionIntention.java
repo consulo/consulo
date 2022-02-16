@@ -27,7 +27,7 @@ import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInspection.ex.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;

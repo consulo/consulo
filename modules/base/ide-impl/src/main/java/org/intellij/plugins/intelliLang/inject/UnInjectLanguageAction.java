@@ -20,7 +20,7 @@ import com.intellij.codeInsight.intention.LowPriorityAction;
 import consulo.language.Language;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;

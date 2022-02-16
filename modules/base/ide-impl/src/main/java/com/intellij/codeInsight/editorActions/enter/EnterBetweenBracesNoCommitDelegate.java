@@ -4,7 +4,7 @@ package com.intellij.codeInsight.editorActions.enter;
 import com.intellij.codeInsight.editorActions.EnterHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.Language;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;

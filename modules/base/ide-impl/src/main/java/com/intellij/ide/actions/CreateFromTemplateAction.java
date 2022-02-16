@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;

@@ -4,7 +4,7 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;

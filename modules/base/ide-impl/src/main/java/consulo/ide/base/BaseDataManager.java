@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.dataRules.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;

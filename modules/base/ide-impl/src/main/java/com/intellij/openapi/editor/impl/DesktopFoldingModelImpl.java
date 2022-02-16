@@ -3,7 +3,7 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.editor.impl.CodeEditorFoldingModelBase;
+import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

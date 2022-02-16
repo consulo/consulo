@@ -23,7 +23,7 @@ import com.intellij.lang.CodeInsightActions;
 import consulo.language.Language;
 import com.intellij.lang.LanguageCodeInsightActionHandler;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;

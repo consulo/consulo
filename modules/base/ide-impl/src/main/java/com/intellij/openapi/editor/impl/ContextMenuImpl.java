@@ -2,9 +2,9 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.document.Document;
-import consulo.editor.event.EditorMouseEvent;
-import consulo.editor.event.EditorMouseListener;
-import consulo.editor.event.EditorMouseMotionListener;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseListener;
+import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;

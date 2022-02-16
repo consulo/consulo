@@ -15,11 +15,11 @@
  */
 package com.intellij.diff.util;
 
-import consulo.editor.Editor;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import org.jetbrains.annotations.NonNls;

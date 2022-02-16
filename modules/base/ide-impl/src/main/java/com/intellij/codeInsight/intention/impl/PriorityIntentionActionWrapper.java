@@ -18,7 +18,7 @@ package com.intellij.codeInsight.intention.impl;
 import com.intellij.codeInsight.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.LowPriorityAction;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;

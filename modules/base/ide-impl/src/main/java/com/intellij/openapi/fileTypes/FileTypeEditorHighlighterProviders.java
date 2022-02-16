@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;

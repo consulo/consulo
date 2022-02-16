@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.editor.textarea;
 
-import consulo.editor.ScrollingModel;
-import consulo.editor.ScrollType;
-import consulo.editor.LogicalPosition;
-import consulo.editor.event.VisibleAreaListener;
+import consulo.codeEditor.ScrollingModel;
+import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.event.VisibleAreaListener;
 import javax.annotation.Nonnull;
 
 import javax.swing.text.JTextComponent;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import consulo.dataContext.DataContext;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 import javax.annotation.Nonnull;
 

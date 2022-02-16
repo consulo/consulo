@@ -2,7 +2,7 @@
 package com.intellij.openapi.editor;
 
 import consulo.ui.ex.EffectType;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 

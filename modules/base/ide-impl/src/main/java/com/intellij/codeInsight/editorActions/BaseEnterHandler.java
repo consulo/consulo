@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.DocCommandGroupId;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 

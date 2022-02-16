@@ -19,7 +19,7 @@ package com.intellij.codeInsight.template.impl.editorActions;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.dataContext.DataContext;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.document.util.TextRange;
 import jakarta.inject.Inject;

@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.language.plain.psi.PsiPlainText;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;

@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.fragmented;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

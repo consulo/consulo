@@ -20,7 +20,7 @@ import com.intellij.codeInsight.template.impl.ConstantNode;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;

@@ -16,12 +16,12 @@
 package com.intellij.refactoring.rename.inplace;
 
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
-import consulo.editor.colorScheme.EditorColors;
-import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.editor.markup.*;
+import consulo.codeEditor.markup.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.Pair;

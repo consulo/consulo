@@ -18,7 +18,7 @@ package com.intellij.application.options.colors;
 
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.ui.ex.JBColor;

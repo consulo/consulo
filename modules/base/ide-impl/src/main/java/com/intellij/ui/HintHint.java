@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.ide.IdeTooltipManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.RelativePoint;
 import consulo.application.ui.awt.UIUtil;

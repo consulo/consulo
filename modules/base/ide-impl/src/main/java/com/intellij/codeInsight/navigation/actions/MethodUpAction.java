@@ -23,7 +23,7 @@ import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.ide.structureView.impl.TemplateLanguageStructureViewBuilder;
 import com.intellij.lang.LanguageStructureViewBuilder;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

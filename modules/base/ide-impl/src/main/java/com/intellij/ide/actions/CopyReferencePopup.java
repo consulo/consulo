@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;

@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.plain.PlainTextLanguage;
 import javax.annotation.Nonnull;
 

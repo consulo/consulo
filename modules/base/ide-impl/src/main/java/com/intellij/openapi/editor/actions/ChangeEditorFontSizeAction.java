@@ -19,10 +19,10 @@ import com.intellij.application.options.EditorFontsConstants;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorBundle;
 import consulo.application.dumb.DumbAware;
-import consulo.editor.impl.EditorInternal;
+import consulo.codeEditor.impl.EditorInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nullable;

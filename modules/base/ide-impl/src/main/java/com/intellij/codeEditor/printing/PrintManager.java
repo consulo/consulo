@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.*;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.impl.DocumentEx;
 import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.fileTypes.PlainTextFileType;

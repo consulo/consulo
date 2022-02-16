@@ -16,8 +16,8 @@
 package com.intellij.openapi.fileEditor;
 
 import consulo.disposer.Disposable;
-import consulo.editor.Caret;
-import consulo.editor.Editor;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;

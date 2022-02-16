@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.codeEditor.notifications.EditorNotificationProvider;
 
 import jakarta.inject.Inject;
 

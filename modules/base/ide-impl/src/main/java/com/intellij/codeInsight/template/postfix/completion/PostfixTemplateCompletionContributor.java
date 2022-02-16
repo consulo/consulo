@@ -7,7 +7,7 @@ import com.intellij.codeInsight.template.CustomLiveTemplate;
 import com.intellij.codeInsight.template.TemplateActionContext;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

@@ -34,7 +34,7 @@ import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.application.dumb.DumbAware;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.editor.*;
+import consulo.codeEditor.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nullable;

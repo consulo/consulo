@@ -17,7 +17,7 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.util.TextRange;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

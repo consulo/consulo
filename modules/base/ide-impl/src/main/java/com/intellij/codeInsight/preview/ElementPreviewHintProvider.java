@@ -3,7 +3,7 @@ package com.intellij.codeInsight.preview;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

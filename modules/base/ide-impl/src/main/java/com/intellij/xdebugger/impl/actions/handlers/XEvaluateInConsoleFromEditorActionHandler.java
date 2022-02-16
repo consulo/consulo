@@ -7,7 +7,7 @@ import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

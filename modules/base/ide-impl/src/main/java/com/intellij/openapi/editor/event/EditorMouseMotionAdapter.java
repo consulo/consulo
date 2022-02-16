@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor.event;
 
-import consulo.editor.event.EditorMouseEvent;
-import consulo.editor.event.EditorMouseMotionListener;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseMotionListener;
 
 public abstract class EditorMouseMotionAdapter implements EditorMouseMotionListener {
   @Override

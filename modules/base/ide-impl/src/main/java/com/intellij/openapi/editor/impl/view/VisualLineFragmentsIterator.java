@@ -2,9 +2,9 @@
 package com.intellij.openapi.editor.impl.view;
 
 import consulo.document.Document;
-import consulo.editor.FoldRegion;
-import consulo.editor.Inlay;
-import consulo.editor.SoftWrap;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.Inlay;
+import consulo.codeEditor.SoftWrap;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;

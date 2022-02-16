@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.highlighting;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

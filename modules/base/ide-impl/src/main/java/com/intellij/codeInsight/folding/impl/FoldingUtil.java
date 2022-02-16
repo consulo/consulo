@@ -2,11 +2,11 @@
 
 package com.intellij.codeInsight.folding.impl;
 
-import consulo.editor.Editor;
-import consulo.editor.FoldRegion;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.FoldRegion;
 import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import consulo.editor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 

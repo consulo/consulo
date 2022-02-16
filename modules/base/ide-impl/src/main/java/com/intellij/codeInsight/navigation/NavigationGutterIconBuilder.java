@@ -24,7 +24,7 @@ import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationHolder;
 import com.intellij.navigation.GotoRelatedItem;
-import consulo.editor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.NotNullLazyValue;

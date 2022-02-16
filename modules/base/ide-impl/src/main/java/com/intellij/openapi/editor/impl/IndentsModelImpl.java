@@ -19,10 +19,10 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import consulo.editor.IndentGuideDescriptor;
-import consulo.editor.IndentsModel;
-import consulo.editor.LogicalPosition;
-import consulo.editor.impl.CodeEditorBase;
+import consulo.codeEditor.IndentGuideDescriptor;
+import consulo.codeEditor.IndentsModel;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.impl.CodeEditorBase;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

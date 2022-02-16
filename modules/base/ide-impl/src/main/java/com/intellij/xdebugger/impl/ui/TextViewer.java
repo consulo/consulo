@@ -1,7 +1,7 @@
 package com.intellij.xdebugger.impl.ui;
 
 import consulo.document.Document;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.document.impl.DocumentImpl;
 import com.intellij.openapi.fileTypes.PlainTextFileType;

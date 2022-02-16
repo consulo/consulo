@@ -19,7 +19,7 @@ package com.intellij.refactoring.rename;
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.help.HelpManager;

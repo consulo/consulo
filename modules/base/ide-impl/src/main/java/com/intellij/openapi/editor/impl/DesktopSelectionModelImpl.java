@@ -2,9 +2,9 @@
 
 package com.intellij.openapi.editor.impl;
 
-import consulo.editor.SelectionModel;
+import consulo.codeEditor.SelectionModel;
 import consulo.annotation.DeprecationInfo;
-import consulo.editor.impl.CodeEditorSelectionModelBase;
+import consulo.codeEditor.impl.CodeEditorSelectionModelBase;
 
 @Deprecated
 @DeprecationInfo("Desktop implementation")

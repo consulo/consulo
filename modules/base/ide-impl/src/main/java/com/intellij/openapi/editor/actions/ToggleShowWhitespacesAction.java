@@ -24,7 +24,7 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 public class ToggleShowWhitespacesAction extends EditorToggleDecorationAction {
   @Override

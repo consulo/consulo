@@ -17,10 +17,10 @@ package com.intellij.ui;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.editor.CaretModel;
+import consulo.codeEditor.CaretModel;
 import consulo.document.Document;
-import consulo.editor.Editor;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;

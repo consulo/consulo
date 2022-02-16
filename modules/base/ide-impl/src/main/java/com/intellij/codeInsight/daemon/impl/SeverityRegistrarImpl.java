@@ -21,7 +21,7 @@ import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;

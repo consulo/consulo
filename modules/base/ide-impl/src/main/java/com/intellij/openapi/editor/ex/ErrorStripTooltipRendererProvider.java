@@ -20,9 +20,9 @@
 package com.intellij.openapi.editor.ex;
 
 import com.intellij.codeInsight.hint.TooltipRenderer;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.impl.TrafficTooltipRenderer;
-import consulo.editor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.RangeHighlighter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

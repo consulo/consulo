@@ -15,9 +15,9 @@
  */
 package consulo.ui.web.internal.ex;
 
-import consulo.editor.SelectionModel;
-import consulo.editor.impl.CodeEditorBase;
-import consulo.editor.impl.CodeEditorSelectionModelBase;
+import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorSelectionModelBase;
 
 /**
  * @author VISTALL

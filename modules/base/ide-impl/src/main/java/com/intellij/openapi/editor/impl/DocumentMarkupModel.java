@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.MarkupModelWindow;
 import consulo.document.Document;
 import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
-import consulo.editor.markup.MarkupModel;
+import consulo.codeEditor.markup.MarkupModel;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;

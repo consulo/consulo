@@ -17,7 +17,7 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.codeInsight.highlighting.TooltipLinkHandler;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

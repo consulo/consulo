@@ -32,7 +32,7 @@ import com.intellij.ui.EditorNotifications;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.codeEditor.notifications.EditorNotificationProvider;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import jakarta.inject.Inject;

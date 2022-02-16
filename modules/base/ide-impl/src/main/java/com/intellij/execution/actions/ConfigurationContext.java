@@ -27,7 +27,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.DumbService;

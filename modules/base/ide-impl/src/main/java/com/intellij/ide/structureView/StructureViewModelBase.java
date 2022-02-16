@@ -17,7 +17,7 @@
 package com.intellij.ide.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.Sorter;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

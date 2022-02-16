@@ -3,8 +3,8 @@ package com.intellij.openapi.editor.event;
 
 import consulo.document.Document;
 import consulo.document.event.DocumentListener;
-import consulo.editor.event.CaretListener;
-import consulo.editor.event.SelectionListener;
+import consulo.codeEditor.event.CaretListener;
+import consulo.codeEditor.event.SelectionListener;
 
 import javax.annotation.Nonnull;
 

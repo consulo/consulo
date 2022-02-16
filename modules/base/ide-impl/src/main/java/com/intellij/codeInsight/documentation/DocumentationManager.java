@@ -34,7 +34,7 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.disposer.Disposer;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.ref.Ref;

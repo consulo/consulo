@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor.textarea;
 
-import consulo.editor.FoldRegion;
-import consulo.editor.FoldingModel;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.FoldingModel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

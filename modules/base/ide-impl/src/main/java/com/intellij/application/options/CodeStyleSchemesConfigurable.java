@@ -20,7 +20,7 @@ import com.intellij.application.options.codeStyle.CodeStyleMainPanel;
 import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import com.intellij.application.options.codeStyle.CodeStyleSettingsPanelFactory;
 import com.intellij.application.options.codeStyle.NewCodeStyleSettingsPanel;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;

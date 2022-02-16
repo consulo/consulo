@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.document.util.TextRange;

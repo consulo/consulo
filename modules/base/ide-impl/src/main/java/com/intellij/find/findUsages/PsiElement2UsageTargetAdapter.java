@@ -29,7 +29,7 @@ import com.intellij.navigation.PsiElementNavigationItem;
 import com.intellij.openapi.actionSystem.DataSink;
 import consulo.ui.ex.action.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.language.psi.*;
 import consulo.project.Project;

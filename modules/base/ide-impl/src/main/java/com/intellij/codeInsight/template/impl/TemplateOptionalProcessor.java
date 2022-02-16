@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.template.Template;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;

@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.macro;
 
-import consulo.editor.Editor;
-import consulo.editor.VisualPosition;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.VisualPosition;
 
 /**
  * @author yole

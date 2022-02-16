@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.color;
 
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import javax.annotation.Nonnull;
 

@@ -2,9 +2,9 @@
 package consulo.language.editor.annotation;
 
 import consulo.document.util.TextRange;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.GutterIconRenderer;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.CommonProblemDescriptor;

@@ -30,7 +30,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import consulo.component.extension.ExtensionException;
 import consulo.component.extension.Extensions;

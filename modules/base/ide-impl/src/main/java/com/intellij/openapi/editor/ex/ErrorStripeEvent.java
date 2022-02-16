@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import consulo.editor.Editor;
-import consulo.editor.markup.RangeHighlighter;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.RangeHighlighter;
 
 import java.awt.event.MouseEvent;
 import java.util.EventObject;

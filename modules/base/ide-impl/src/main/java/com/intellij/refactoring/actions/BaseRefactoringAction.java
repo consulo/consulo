@@ -29,7 +29,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.DocCommandGroupId;
 import consulo.language.psi.*;
 import consulo.application.progress.ProcessCanceledException;

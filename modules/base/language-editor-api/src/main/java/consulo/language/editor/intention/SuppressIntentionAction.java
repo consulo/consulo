@@ -20,8 +20,8 @@
  */
 package consulo.language.editor.intention;
 
-import consulo.editor.CaretModel;
-import consulo.editor.Editor;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiElement;

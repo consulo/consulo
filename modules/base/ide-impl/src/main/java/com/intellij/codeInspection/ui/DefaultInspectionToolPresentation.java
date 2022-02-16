@@ -25,7 +25,7 @@ import com.intellij.codeInspection.ex.*;
 import com.intellij.codeInspection.reference.*;
 import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.components.PathMacroManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.inspection.reference.*;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.intention.IntentionAction;

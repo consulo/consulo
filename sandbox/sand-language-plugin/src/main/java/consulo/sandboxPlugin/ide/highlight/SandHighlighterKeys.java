@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.highlight;
 
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 
 /**
  * @author VISTALL

@@ -6,7 +6,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
-import consulo.editor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.EditorPopupHandler;
 import consulo.ui.event.details.InputDetails;
 import consulo.util.lang.ObjectUtil;

@@ -17,7 +17,7 @@
 package com.maddyhome.idea.copyright.actions;
 
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;

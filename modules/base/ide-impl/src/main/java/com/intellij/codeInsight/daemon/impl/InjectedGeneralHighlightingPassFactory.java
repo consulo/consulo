@@ -20,7 +20,7 @@ import com.intellij.codeHighlighting.MainHighlightingPassFactory;
 import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;

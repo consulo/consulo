@@ -26,7 +26,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
-import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.codeEditor.notifications.EditorNotificationProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

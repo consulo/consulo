@@ -21,7 +21,7 @@ import com.intellij.lang.folding.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;

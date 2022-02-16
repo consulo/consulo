@@ -17,7 +17,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.undo.UndoUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;

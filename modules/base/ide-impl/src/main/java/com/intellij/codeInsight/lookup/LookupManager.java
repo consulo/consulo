@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.components.ServiceManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.disposer.Disposable;

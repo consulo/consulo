@@ -16,7 +16,7 @@
 package consulo.debugger.frame.presentation;
 
 import consulo.debugger.frame.XValueNode;
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

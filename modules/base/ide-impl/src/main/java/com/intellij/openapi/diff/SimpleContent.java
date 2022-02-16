@@ -17,7 +17,7 @@ package com.intellij.openapi.diff;
 
 import consulo.logging.Logger;
 import consulo.document.Document;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;

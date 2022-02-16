@@ -20,11 +20,11 @@
 package com.intellij.openapi.editor.colors.impl;
 
 import consulo.application.ui.UISettings;
-import consulo.editor.HighlighterColors;
-import consulo.editor.colorScheme.*;
+import consulo.codeEditor.HighlighterColors;
+import consulo.codeEditor.colorScheme.*;
 import consulo.ui.ex.EffectType;
-import consulo.editor.markup.TextAttributes;
-import consulo.editor.colorScheme.FontSize;
+import consulo.codeEditor.markup.TextAttributes;
+import consulo.codeEditor.colorScheme.FontSize;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
 import consulo.util.xml.serializer.WriteExternalException;

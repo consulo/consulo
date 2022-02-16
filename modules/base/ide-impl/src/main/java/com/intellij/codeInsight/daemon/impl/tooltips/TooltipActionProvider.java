@@ -5,7 +5,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.editor.ex.TooltipAction;
 import consulo.application.util.registry.Registry;
 import consulo.component.extension.ExtensionPointName;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

@@ -1,6 +1,6 @@
 package consulo.fileEditor.impl.text;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.ui.Component;
 
 import javax.annotation.Nullable;

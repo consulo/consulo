@@ -17,9 +17,9 @@ package com.intellij.openapi.editor.ex;
 
 import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
-import consulo.editor.EditorSettings;
-import consulo.editor.SoftWrap;
-import consulo.editor.SoftWrapModel;
+import consulo.codeEditor.EditorSettings;
+import consulo.codeEditor.SoftWrap;
+import consulo.codeEditor.SoftWrapModel;
 
 import javax.annotation.Nonnull;
 

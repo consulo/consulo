@@ -15,13 +15,13 @@
  */
 package consulo.ui.web.internal.ex;
 
-import consulo.editor.markup.GutterMark;
+import consulo.codeEditor.markup.GutterMark;
 import consulo.ui.ex.action.ActionGroup;
-import consulo.editor.EditorGutterAction;
-import consulo.editor.FoldRegion;
-import consulo.editor.TextAnnotationGutterProvider;
+import consulo.codeEditor.EditorGutterAction;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.TextAnnotationGutterProvider;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
-import consulo.editor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterIconRenderer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

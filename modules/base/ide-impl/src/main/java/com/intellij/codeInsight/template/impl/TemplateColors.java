@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 
 public interface TemplateColors {
   TextAttributesKey TEMPLATE_VARIABLE_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("TEMPLATE_VARIABLE_ATTRIBUTES");

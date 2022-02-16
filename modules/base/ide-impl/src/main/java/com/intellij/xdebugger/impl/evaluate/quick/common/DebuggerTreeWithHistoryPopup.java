@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.evaluate.quick.common;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupAdapter;

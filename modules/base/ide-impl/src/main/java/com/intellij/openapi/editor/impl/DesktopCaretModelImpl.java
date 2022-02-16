@@ -3,8 +3,8 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.editor.impl.CodeEditorBase;
-import consulo.editor.impl.CodeEditorCaretModelBase;
+import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 
 import javax.annotation.Nonnull;
 

@@ -26,7 +26,7 @@ import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;

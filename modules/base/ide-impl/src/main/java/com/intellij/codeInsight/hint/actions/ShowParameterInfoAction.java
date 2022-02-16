@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.hint.ShowParameterInfoHandler;
 import consulo.language.Language;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

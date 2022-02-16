@@ -24,7 +24,7 @@ import consulo.execution.configuration.LocatableConfiguration;
 import com.intellij.execution.configurations.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
 import com.intellij.openapi.actionSystem.*;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;

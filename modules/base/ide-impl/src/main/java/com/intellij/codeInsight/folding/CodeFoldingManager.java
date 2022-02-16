@@ -3,8 +3,8 @@ package com.intellij.codeInsight.folding;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
-import consulo.editor.Editor;
-import consulo.editor.FoldRegion;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.FoldRegion;
 import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
 import consulo.project.Project;
 import org.jdom.Element;

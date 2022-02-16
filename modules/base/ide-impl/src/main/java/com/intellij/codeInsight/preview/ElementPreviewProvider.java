@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.preview;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

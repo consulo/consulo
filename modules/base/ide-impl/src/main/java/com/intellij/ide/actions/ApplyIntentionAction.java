@@ -22,7 +22,7 @@ import com.intellij.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.util.function.Computable;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;

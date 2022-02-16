@@ -1,8 +1,8 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl.source.tree.injected;
 
-import consulo.editor.SoftWrap;
-import consulo.editor.VisualPosition;
+import consulo.codeEditor.SoftWrap;
+import consulo.codeEditor.VisualPosition;
 import com.intellij.openapi.editor.ex.SoftWrapChangeListener;
 import com.intellij.openapi.editor.ex.SoftWrapModelEx;
 import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;

@@ -16,7 +16,7 @@
 package com.intellij.refactoring.changeSignature.inplace;
 
 import consulo.dataContext.DataContext;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 
 public class EscapeHandler extends EditorActionHandler {

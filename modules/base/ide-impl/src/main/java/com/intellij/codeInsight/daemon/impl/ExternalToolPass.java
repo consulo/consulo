@@ -26,7 +26,7 @@ import consulo.language.editor.annotation.AnnotationSession;
 import consulo.language.editor.annotation.ExternalAnnotator;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.application.progress.ProgressIndicator;

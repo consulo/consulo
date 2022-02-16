@@ -18,7 +18,7 @@ package com.intellij.ide.hierarchy;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.SmartElementDescriptor;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import consulo.language.psi.PsiElement;

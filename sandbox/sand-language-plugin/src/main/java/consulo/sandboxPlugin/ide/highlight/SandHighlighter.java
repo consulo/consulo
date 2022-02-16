@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.highlight;
 
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.highlight.LanguageVersionableSyntaxHighlighter;
 import consulo.language.lexer.Lexer;

@@ -20,9 +20,9 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import consulo.editor.event.EditorMouseEventArea;
+import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.application.util.SystemInfo;
 
 import javax.swing.*;

@@ -4,10 +4,10 @@ package com.intellij.psi.impl.source.codeStyle;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.*;
-import consulo.editor.CaretModel;
-import consulo.editor.Editor;
-import consulo.editor.ScrollType;
-import consulo.editor.VisualPosition;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.VisualPosition;
 import consulo.language.*;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.lang.*;

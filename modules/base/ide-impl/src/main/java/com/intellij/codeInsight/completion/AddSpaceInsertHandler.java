@@ -3,7 +3,7 @@ package com.intellij.codeInsight.completion;
 import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.codeInsight.lookup.LookupElement;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

@@ -17,7 +17,7 @@ package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.CodeInsightSettings;
 import consulo.language.Language;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
 

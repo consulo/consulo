@@ -7,7 +7,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.*;
 import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import com.intellij.reporting.FreezeLogger;
 import consulo.document.Document;

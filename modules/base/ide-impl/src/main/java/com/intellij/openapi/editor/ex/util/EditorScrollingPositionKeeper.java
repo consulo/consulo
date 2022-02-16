@@ -6,9 +6,9 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.editor.Editor;
-import consulo.editor.EditorFactory;
-import consulo.editor.ScrollingModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.ScrollingModel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

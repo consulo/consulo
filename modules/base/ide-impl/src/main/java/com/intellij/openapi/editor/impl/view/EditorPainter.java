@@ -2,17 +2,17 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.editor.*;
-import consulo.editor.colorScheme.EditorColors;
-import consulo.editor.colorScheme.EditorFontType;
-import consulo.editor.colorScheme.FontPreferences;
+import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.codeEditor.colorScheme.FontPreferences;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterIterator;
 import com.intellij.openapi.editor.impl.*;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
-import consulo.editor.markup.*;
-import consulo.editor.markup.TextAttributesEffectsBuilder.EffectDescriptor;
+import consulo.codeEditor.markup.*;
+import consulo.codeEditor.markup.TextAttributesEffectsBuilder.EffectDescriptor;
 import com.intellij.openapi.util.Couple;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
@@ -31,7 +31,7 @@ import com.intellij.util.containers.PeekableIteratorWrapper;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import consulo.editor.*;
+import consulo.codeEditor.*;
 import consulo.ui.ex.EffectType;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static consulo.editor.markup.TextAttributesEffectsBuilder.EffectSlot.FRAME_SLOT;
+import static consulo.codeEditor.markup.TextAttributesEffectsBuilder.EffectSlot.FRAME_SLOT;
 
 /**
  * Renders editor contents.

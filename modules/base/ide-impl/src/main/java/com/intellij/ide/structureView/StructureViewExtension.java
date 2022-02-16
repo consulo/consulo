@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.structureView;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 

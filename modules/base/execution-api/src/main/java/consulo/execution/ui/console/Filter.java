@@ -18,12 +18,12 @@ package consulo.execution.ui.console;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.awt.UIUtil;
-import consulo.editor.colorScheme.CodeInsightColors;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.HighlighterLayer;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;

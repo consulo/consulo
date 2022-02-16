@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.editor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.util.collection.SmartList;

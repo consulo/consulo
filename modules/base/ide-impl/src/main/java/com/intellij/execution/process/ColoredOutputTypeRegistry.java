@@ -2,10 +2,10 @@ package com.intellij.execution.process;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import consulo.ui.ex.EffectType;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.process.ProcessOutputTypes;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;

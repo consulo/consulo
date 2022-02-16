@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.editor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
 import javax.annotation.Nonnull;
 

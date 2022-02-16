@@ -4,12 +4,12 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
-import consulo.editor.LogicalPosition;
-import consulo.editor.SelectionModel;
-import consulo.editor.VisualPosition;
-import consulo.editor.event.SelectionListener;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.VisualPosition;
+import consulo.codeEditor.event.SelectionListener;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;

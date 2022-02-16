@@ -17,7 +17,7 @@
 package com.intellij.lang.refactoring;
 
 import consulo.language.Language;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

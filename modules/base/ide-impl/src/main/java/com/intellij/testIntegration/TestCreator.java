@@ -16,7 +16,7 @@
 
 package com.intellij.testIntegration;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 

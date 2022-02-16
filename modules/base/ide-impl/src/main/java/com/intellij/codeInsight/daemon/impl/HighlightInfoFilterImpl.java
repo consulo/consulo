@@ -20,7 +20,7 @@ import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.ApplicationManager;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 

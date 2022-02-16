@@ -16,10 +16,10 @@
 package com.intellij.ide.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.*;
-import consulo.editor.Editor;
-import consulo.editor.EditorFactory;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.event.CaretAdapter;
-import consulo.editor.event.CaretEvent;
+import consulo.codeEditor.event.CaretEvent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.psi.PsiElement;

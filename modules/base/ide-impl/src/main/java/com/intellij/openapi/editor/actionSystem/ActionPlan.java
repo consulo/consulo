@@ -16,9 +16,9 @@
 package com.intellij.openapi.editor.actionSystem;
 
 import consulo.dataContext.DataContext;
-import consulo.editor.CaretModel;
+import consulo.codeEditor.CaretModel;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.util.lang.ImmutableCharSequence;
 import javax.annotation.Nonnull;
 

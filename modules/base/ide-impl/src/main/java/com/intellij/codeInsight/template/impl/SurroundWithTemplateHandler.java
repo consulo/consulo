@@ -11,7 +11,7 @@ import com.intellij.codeInsight.template.TemplateActionContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

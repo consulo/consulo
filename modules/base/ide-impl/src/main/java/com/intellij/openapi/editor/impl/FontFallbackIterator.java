@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import consulo.editor.colorScheme.FontPreferences;
+import consulo.codeEditor.colorScheme.FontPreferences;
 import com.intellij.openapi.editor.colors.impl.FontPreferencesImpl;
 import com.intellij.util.text.CharArrayIterator;
 import com.intellij.util.text.CharSequenceIterator;

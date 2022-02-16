@@ -17,7 +17,7 @@
 package com.intellij.codeInspection;
 
 import consulo.language.editor.intention.IntentionAction;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.project.Project;

@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.language.psi.PsiElement;

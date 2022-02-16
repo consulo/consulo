@@ -16,14 +16,14 @@
 
 package com.intellij.application.options.colors.highlighting;
 
-import consulo.editor.Editor;
-import consulo.editor.HighlighterColors;
-import consulo.editor.colorScheme.EditorColorsScheme;
-import consulo.editor.colorScheme.TextAttributesKey;
-import consulo.editor.markup.HighlighterLayer;
-import consulo.editor.markup.HighlighterTargetArea;
-import consulo.editor.markup.RangeHighlighter;
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.HighlighterColors;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.application.ui.awt.UIUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
 
-import static consulo.editor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
+import static consulo.codeEditor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
 
 public class HighlightData {
   private final int myStartOffset;

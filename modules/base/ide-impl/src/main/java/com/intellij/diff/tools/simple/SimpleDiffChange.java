@@ -22,12 +22,12 @@ import com.intellij.internal.statistic.UsageTrigger;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.markup.GutterIconRenderer;
-import consulo.editor.markup.HighlighterLayer;
-import consulo.editor.markup.HighlighterTargetArea;
-import consulo.editor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 

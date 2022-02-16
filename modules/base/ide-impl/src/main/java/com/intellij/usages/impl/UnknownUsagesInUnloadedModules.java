@@ -21,7 +21,7 @@ import com.intellij.usages.UsagePresentation;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AllIcons;
-import consulo.editor.util.TextAttributesUtil;
+import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.module.UnloadedModuleDescription;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;

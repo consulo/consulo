@@ -25,7 +25,7 @@ import com.intellij.codeInsight.daemon.impl.ShowErrorDescriptionHandler;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;

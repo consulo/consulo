@@ -20,7 +20,7 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 

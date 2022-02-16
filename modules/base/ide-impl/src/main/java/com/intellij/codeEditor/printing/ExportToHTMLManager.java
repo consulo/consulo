@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.configurable.ConfigurationException;
 import consulo.application.progress.ProgressIndicator;

@@ -17,10 +17,10 @@ package consulo.web.editor.impl;
 
 import consulo.application.Application;
 import consulo.document.Document;
-import consulo.editor.EditorKind;
+import consulo.codeEditor.EditorKind;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import consulo.project.Project;
-import consulo.editor.impl.EditorInternal;
+import consulo.codeEditor.impl.EditorInternal;
 import consulo.ui.web.internal.ex.WebEditorImpl;
 
 import javax.annotation.Nonnull;

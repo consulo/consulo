@@ -16,7 +16,7 @@
 package com.intellij.ui.mac.touchbar;
 
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.popup.AbstractPopup;
 import consulo.disposer.Disposable;

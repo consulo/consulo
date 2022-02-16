@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.codeStyle.lineIndent;
 import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.Indent;
 import consulo.language.Language;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.project.Project;

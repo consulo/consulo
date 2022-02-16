@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.openapi.components.ServiceManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import javax.annotation.Nonnull;
 
 /**

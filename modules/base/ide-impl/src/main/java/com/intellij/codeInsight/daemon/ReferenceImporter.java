@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

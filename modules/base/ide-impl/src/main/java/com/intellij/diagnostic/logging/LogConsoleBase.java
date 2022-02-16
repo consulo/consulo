@@ -32,7 +32,7 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.TextConsoleBuilder;

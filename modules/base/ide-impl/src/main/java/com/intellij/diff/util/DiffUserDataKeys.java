@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.util;
 
-import consulo.editor.EditorKind;
+import consulo.codeEditor.EditorKind;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataProvider;

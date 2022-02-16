@@ -20,7 +20,7 @@ import com.intellij.application.options.SaveSchemeDialog;
 import com.intellij.application.options.SkipSelfSearchComponent;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;

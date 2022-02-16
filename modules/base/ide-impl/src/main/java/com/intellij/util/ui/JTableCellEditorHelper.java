@@ -17,7 +17,7 @@ package com.intellij.util.ui;
 
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 import javax.swing.*;
 import java.awt.*;

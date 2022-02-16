@@ -20,7 +20,7 @@ import com.intellij.navigation.ColoredItemPresentation;
 import consulo.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationWithSeparator;
 import com.intellij.navigation.LocationPresentation;
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.util.ComparableObject;

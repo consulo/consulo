@@ -17,9 +17,9 @@ package com.intellij.openapi.vcs.actions;
 
 import consulo.language.editor.util.ColorGenerator;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.editor.colorScheme.EditorColorKey;
-import consulo.editor.colorScheme.EditorColorsManager;
-import consulo.editor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.colorScheme.EditorColorKey;
+import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.color.ColorValue;
 import jakarta.inject.Singleton;

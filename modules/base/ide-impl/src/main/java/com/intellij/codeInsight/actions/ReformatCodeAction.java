@@ -23,7 +23,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.LanguageFormatting;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.*;
 import consulo.module.Module;

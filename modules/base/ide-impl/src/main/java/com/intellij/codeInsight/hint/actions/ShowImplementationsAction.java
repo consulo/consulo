@@ -25,7 +25,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;

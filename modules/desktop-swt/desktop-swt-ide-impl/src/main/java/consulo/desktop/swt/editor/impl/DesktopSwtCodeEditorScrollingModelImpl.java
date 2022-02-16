@@ -15,10 +15,10 @@
  */
 package consulo.desktop.swt.editor.impl;
 
-import consulo.editor.LogicalPosition;
-import consulo.editor.ScrollType;
-import consulo.editor.impl.CodeEditorBase;
-import consulo.editor.impl.CodeEditorScrollingModelBase;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

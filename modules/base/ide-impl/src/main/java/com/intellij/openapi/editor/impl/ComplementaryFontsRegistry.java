@@ -3,7 +3,7 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.Patches;
 import consulo.application.ApplicationManager;
-import consulo.editor.colorScheme.FontPreferences;
+import consulo.codeEditor.colorScheme.FontPreferences;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.logging.Logger;

@@ -25,7 +25,7 @@ import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.scheme.ModifiableModel;
 import consulo.application.AllIcons;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.component.util.Iconable;

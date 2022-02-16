@@ -15,8 +15,8 @@
  */
 package consulo.desktop.swt.editor.impl;
 
-import consulo.editor.impl.CodeEditorBase;
-import consulo.editor.impl.CodeEditorSelectionModelBase;
+import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorSelectionModelBase;
 
 /**
  * @author VISTALL

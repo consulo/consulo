@@ -13,7 +13,7 @@ import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.language.psi.*;

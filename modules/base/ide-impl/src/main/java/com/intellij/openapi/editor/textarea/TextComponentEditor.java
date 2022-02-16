@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.textarea;
 
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 
 import javax.swing.text.Document;
 

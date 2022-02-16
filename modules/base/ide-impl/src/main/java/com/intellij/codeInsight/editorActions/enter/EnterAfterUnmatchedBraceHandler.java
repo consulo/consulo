@@ -24,7 +24,7 @@ import consulo.language.Language;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighter;

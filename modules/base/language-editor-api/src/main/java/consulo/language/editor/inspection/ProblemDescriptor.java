@@ -17,7 +17,7 @@ package consulo.language.editor.inspection;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
-import consulo.editor.colorScheme.TextAttributesKey;
+import consulo.codeEditor.colorScheme.TextAttributesKey;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.psi.PsiElement;
 

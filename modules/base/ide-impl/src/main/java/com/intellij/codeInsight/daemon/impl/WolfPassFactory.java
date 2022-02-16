@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 

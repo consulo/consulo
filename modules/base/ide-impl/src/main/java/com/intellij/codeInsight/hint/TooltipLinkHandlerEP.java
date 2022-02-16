@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.codeInsight.highlighting.TooltipLinkHandler;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import consulo.application.extension.LazyInstance;

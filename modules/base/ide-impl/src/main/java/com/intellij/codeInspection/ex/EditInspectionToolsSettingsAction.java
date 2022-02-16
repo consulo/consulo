@@ -23,7 +23,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.application.AllIcons;
-import consulo.editor.Editor;
+import consulo.codeEditor.Editor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.component.util.Iconable;

@@ -25,13 +25,13 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
-import consulo.editor.Caret;
-import consulo.editor.CaretAction;
-import consulo.editor.Editor;
-import consulo.editor.VisualPosition;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.CaretAction;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.VisualPosition;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.editor.impl.EmptyEditorHighlighter;
+import consulo.codeEditor.impl.EmptyEditorHighlighter;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.util.lang.ref.Ref;

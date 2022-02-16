@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import consulo.editor.markup.TextAttributes;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.language.editor.annotation.HighlightSeverity;
 
 import javax.annotation.Nonnull;
