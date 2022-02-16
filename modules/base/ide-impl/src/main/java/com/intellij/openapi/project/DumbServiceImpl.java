@@ -25,7 +25,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.AppIconScheme;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.ui.AppIcon;
 import com.intellij.util.ExceptionUtil;

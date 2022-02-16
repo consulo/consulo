@@ -26,7 +26,7 @@ import com.intellij.history.integration.ui.models.SelectionCalculator;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 
 import java.io.IOException;
 import java.util.Collections;

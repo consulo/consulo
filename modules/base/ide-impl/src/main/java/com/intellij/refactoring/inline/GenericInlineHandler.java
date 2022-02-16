@@ -21,7 +21,7 @@ import consulo.language.Language;
 import com.intellij.lang.refactoring.InlineHandler;
 import com.intellij.lang.refactoring.InlineHandlers;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressManager;

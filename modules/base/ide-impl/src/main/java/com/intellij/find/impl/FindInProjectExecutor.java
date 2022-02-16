@@ -18,7 +18,7 @@ package com.intellij.find.impl;
 import com.intellij.find.FindModel;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.usages.FindUsagesProcessPresentation;
 import com.intellij.usages.UsageInfo2UsageAdapter;
 import com.intellij.usages.UsageInfoAdapter;

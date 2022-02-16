@@ -11,7 +11,7 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;

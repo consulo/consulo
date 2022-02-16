@@ -25,7 +25,7 @@ import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.TextEditor;

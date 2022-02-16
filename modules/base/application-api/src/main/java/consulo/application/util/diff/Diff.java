@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.diff;
+package consulo.application.util.diff;
 
-import consulo.util.lang.ref.Ref;
+import consulo.application.util.Enumerator;
+import consulo.application.util.LineTokenizer;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.util.text.LineTokenizer;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Enumerator;
 import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -193,12 +192,7 @@ public class Diff {
 
   @Nonnull
   private static String[] trim(@Nonnull String[] lines) {
-    return ContainerUtil.map2Array(lines, String.class, new Function<String, String>() {
-      @Override
-      public String fun(String s) {
-        return s.trim();
-      }
-    });
+    return ContainerUtil.map2Array(lines, String.class, String::trim);
   }
 
   /**

@@ -22,7 +22,7 @@ import consulo.document.impl.PersistentRangeMarkerUtil;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.TextAttributes;
 import consulo.document.impl.DocumentUtil;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

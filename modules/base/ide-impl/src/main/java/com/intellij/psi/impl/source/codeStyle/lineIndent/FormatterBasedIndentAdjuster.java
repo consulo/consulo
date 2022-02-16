@@ -3,7 +3,7 @@ package com.intellij.psi.impl.source.codeStyle.lineIndent;
 
 import com.intellij.formatting.FormattingMode;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

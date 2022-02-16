@@ -21,7 +21,7 @@ import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import consulo.codeEditor.colorScheme.EditorColors;

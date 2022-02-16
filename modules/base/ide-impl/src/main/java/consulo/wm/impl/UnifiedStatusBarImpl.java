@@ -28,7 +28,7 @@ import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.impl.status.ToolWindowsWidget;
 import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;

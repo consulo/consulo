@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.module.Module;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;

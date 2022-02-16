@@ -19,7 +19,7 @@ import consulo.language.Language;
 import consulo.language.LanguageExtension;
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;

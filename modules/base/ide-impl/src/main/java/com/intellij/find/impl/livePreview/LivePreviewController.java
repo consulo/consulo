@@ -4,7 +4,7 @@ package com.intellij.find.impl.livePreview;
 import com.intellij.find.*;
 import com.intellij.find.impl.FindResultImpl;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;

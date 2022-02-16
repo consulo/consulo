@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.comparison.iterables;
 
-import com.intellij.util.diff.Diff;
+import consulo.application.util.diff.Diff;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

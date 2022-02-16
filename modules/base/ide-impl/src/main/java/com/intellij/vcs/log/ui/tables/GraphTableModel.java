@@ -1,7 +1,7 @@
 package com.intellij.vcs.log.ui.tables;
 
 import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;

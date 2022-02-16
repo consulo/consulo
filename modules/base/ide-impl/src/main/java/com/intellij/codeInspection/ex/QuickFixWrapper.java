@@ -17,17 +17,18 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import consulo.language.editor.intention.IntentionAction;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
-import com.intellij.openapi.command.undo.UndoUtil;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.impl.undoRedo.LanguageUndoUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.logging.Logger;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -86,7 +87,7 @@ public class QuickFixWrapper implements IntentionAction {
     fix.applyFix(project, myDescriptor);
     DaemonCodeAnalyzer.getInstance(project).restart();
     if (fileForUndo != null && !fileForUndo.equals(file)) {
-      UndoUtil.markPsiFileForUndo(fileForUndo);
+      LanguageUndoUtil.markPsiFileForUndo(fileForUndo);
     }
   }
 

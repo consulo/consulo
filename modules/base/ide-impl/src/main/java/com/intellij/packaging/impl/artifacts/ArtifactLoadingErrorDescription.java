@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.module.ConfigurationErrorDescription;
 import com.intellij.openapi.module.ConfigurationErrorType;
 import com.intellij.packaging.artifacts.ArtifactManager;

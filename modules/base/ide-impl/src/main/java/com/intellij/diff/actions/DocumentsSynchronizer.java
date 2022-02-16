@@ -16,7 +16,7 @@
 package com.intellij.diff.actions;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;

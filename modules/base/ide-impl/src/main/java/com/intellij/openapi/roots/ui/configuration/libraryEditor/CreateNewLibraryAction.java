@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;

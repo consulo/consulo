@@ -23,7 +23,7 @@ import consulo.language.lexer.Lexer;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.language.Language;

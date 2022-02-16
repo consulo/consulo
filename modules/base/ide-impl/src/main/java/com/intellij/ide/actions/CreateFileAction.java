@@ -23,7 +23,7 @@ import com.intellij.ide.ui.newItemPopup.NewItemSimplePopupPanel;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.lang.LangBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.application.dumb.DumbAware;

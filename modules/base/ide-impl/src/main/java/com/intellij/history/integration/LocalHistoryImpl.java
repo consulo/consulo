@@ -24,7 +24,7 @@ import com.intellij.history.utils.LocalHistoryLog;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.project.Project;
 import consulo.util.lang.ShutDownTracker;
 import consulo.application.util.function.ThrowableComputable;

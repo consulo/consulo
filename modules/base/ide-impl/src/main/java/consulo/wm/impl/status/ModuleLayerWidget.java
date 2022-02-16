@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.language.util.ModuleUtilCore;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;

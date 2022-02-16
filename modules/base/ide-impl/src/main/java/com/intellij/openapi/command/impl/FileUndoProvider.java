@@ -11,6 +11,7 @@ import com.intellij.history.integration.LocalHistoryImpl;
 import com.intellij.openapi.command.undo.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.undoRedo.util.UndoConstants;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;

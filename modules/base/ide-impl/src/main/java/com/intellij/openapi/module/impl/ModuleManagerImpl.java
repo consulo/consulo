@@ -21,7 +21,7 @@ import consulo.component.util.graph.InboundSemiGraph;
 import consulo.module.*;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.components.PathMacroManager;
 import consulo.component.persist.PersistentStateComponentWithModificationTracker;
 import com.intellij.openapi.components.StateStorageException;

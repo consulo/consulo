@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.impl.util;
 
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

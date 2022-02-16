@@ -1,28 +1,13 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.command.undo;
+package consulo.undoRedo.util;
 
-import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
-import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 
 public final class UndoUtil {
   private UndoUtil() {
-  }
-
-  /**
-   * make undoable action in current document in order to Undo action work from current file
-   *
-   * @param file to make editors of to respond to undo action.
-   */
-  public static void markPsiFileForUndo(@Nonnull final PsiFile file) {
-    Project project = file.getProject();
-    final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
-    if (document == null) return;
-    CommandProcessor.getInstance().addAffectedDocuments(project, document);
   }
 
   public static void disableUndoFor(@Nonnull Document document) {

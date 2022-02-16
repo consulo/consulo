@@ -34,7 +34,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;

@@ -10,7 +10,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.document.Document;
 import consulo.codeEditor.SelectionModel;
@@ -42,7 +42,7 @@ import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.SequentialTask;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 

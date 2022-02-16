@@ -15,7 +15,7 @@ import consulo.ui.ex.action.AnSeparator;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;

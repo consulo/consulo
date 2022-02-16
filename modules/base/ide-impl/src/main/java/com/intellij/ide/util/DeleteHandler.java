@@ -28,7 +28,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.project.DumbService;
 import consulo.project.Project;

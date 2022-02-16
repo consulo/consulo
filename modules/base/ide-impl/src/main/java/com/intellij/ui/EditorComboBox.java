@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.CaretModel;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

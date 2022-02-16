@@ -29,7 +29,7 @@ import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.compiler.*;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;

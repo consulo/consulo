@@ -24,7 +24,7 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.project.Project;

@@ -25,7 +25,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.LineTokenizer;
+import consulo.application.util.LineTokenizer;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

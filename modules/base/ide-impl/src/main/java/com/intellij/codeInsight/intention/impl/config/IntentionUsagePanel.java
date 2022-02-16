@@ -20,7 +20,7 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.colorScheme.CodeInsightColors;
 import consulo.codeEditor.colorScheme.EditorColorsManager;
 import consulo.codeEditor.colorScheme.EditorColorsScheme;

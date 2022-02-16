@@ -24,7 +24,7 @@ import com.intellij.ide.startup.impl.StartupManagerImpl;
 import consulo.project.ui.notification.NotificationsManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;

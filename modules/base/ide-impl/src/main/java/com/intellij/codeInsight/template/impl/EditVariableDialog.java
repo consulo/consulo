@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.Macro;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.codeInsight.template.macro.MacroFactory;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.help.HelpManager;

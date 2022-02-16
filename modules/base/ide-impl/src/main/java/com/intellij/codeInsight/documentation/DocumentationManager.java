@@ -29,7 +29,7 @@ import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.disposer.Disposer;
 import consulo.language.psi.*;

@@ -24,7 +24,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.DocumentContent;
 import com.intellij.openapi.diff.SimpleContent;

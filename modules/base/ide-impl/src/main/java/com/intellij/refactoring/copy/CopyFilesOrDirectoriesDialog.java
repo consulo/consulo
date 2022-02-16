@@ -19,7 +19,7 @@ import com.intellij.ide.util.DirectoryUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.DialogWrapper;

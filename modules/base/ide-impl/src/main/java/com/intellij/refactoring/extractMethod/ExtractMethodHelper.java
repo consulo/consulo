@@ -19,7 +19,7 @@ import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.find.FindManager;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;

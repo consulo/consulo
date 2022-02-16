@@ -15,7 +15,10 @@
  */
 package com.intellij.openapi.command;
 
-public abstract class CommandAdapter implements CommandListener{
+import consulo.undoRedo.event.CommandEvent;
+import consulo.undoRedo.event.CommandListener;
+
+public abstract class CommandAdapter implements CommandListener {
   public void commandStarted(CommandEvent event) {
   }
 

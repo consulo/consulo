@@ -19,11 +19,11 @@ import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.diff.ex.DiffFragment;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.diff.Diff;
+import consulo.application.util.diff.Diff;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import gnu.trove.TIntHashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

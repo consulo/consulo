@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;

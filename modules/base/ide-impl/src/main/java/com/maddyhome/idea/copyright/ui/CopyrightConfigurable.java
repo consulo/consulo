@@ -17,7 +17,7 @@
 package com.maddyhome.idea.copyright.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.application.ui.awt.VerticalFlowLayout;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

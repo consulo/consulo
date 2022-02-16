@@ -33,7 +33,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;

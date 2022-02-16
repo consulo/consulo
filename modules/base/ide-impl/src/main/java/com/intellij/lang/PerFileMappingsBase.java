@@ -4,7 +4,7 @@ package com.intellij.lang;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import consulo.component.persist.PersistentStateComponent;

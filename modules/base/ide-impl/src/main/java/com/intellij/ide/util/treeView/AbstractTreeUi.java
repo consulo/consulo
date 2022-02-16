@@ -12,6 +12,7 @@ import consulo.application.progress.Progressive;
 import consulo.application.util.function.Computable;
 import consulo.project.ui.util.Alarm;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.component.util.BusyObject;

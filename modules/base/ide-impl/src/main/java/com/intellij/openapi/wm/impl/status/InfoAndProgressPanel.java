@@ -27,7 +27,7 @@ import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.AnimatedIcon;
 import com.intellij.ui.InplaceButton;

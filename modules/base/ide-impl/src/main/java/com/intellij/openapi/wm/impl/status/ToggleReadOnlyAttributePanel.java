@@ -3,7 +3,7 @@ package com.intellij.openapi.wm.impl.status;
 
 import consulo.application.AllIcons;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;

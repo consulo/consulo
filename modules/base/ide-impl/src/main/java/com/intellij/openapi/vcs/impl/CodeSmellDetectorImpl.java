@@ -26,7 +26,7 @@ import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.CodeSmellDetector;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ui.MessageCategory;
 import consulo.application.ApplicationManager;

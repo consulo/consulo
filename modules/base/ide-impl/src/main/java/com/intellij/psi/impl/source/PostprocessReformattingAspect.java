@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.application.progress.ProgressManager;

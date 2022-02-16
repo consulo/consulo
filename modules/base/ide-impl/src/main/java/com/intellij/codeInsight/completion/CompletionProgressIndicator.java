@@ -17,7 +17,7 @@ import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.codeEditor.Caret;

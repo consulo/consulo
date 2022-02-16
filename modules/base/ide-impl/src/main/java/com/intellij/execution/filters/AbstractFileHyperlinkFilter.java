@@ -2,7 +2,7 @@
 package com.intellij.execution.filters;
 
 import consulo.application.ReadAction;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;

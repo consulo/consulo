@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.command.undo;
+package consulo.undoRedo;
 
-import consulo.util.dataholder.Key;
-
-public interface UndoConstants {
-  Key<Boolean> FORCE_RECORD_UNDO = Key.create("FORCE_RECORD_UNDO");
-  Key<Boolean> DONT_RECORD_UNDO = Key.create("DONT_RECORD_UNDO");
+public enum UndoConfirmationPolicy {
+  DEFAULT, REQUEST_CONFIRMATION, DO_NOT_REQUEST_CONFIRMATION
 }

@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;

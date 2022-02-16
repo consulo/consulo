@@ -16,7 +16,7 @@ import com.intellij.ide.OccurenceNavigator;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.undo.UndoUtil;
+import consulo.undoRedo.util.UndoUtil;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.TypedAction;

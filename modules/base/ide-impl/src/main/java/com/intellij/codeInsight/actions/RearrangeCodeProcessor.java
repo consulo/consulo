@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.actions;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
 import consulo.codeEditor.SelectionModel;
@@ -27,7 +27,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

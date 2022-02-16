@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.RemoteDesktopService;
 import consulo.application.Application;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.VisualPosition;

@@ -15,7 +15,7 @@
  */
 package consulo.web.servlet;
 
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

@@ -17,7 +17,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.ActionPlan;
 import com.intellij.openapi.editor.actionSystem.TypedAction;

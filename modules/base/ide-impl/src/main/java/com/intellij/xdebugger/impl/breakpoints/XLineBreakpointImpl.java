@@ -21,7 +21,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.TextAttributes;
 import consulo.ui.ex.action.AnAction;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.document.Document;
 import consulo.document.LazyRangeMarkerFactory;
 import consulo.document.RangeMarker;

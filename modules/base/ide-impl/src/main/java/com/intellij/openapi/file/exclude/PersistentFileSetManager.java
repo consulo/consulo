@@ -3,7 +3,7 @@ package com.intellij.openapi.file.exclude;
 
 import com.google.common.collect.Sets;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;

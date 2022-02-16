@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util.text;
+package consulo.application.util;
 
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.text.CharArrayCharSequence;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.CharArrayCharSequence;
+
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

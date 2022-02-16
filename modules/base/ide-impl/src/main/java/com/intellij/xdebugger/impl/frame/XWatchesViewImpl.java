@@ -22,7 +22,7 @@ import com.intellij.ide.dnd.DnDNativeTarget;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import consulo.dataContext.DataContext;
 import consulo.disposer.CompositeDisposable;
 import consulo.disposer.Disposable;

@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

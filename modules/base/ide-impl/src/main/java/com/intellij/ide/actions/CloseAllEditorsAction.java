@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;

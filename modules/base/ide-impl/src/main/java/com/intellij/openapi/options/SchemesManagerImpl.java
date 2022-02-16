@@ -17,7 +17,7 @@ package com.intellij.openapi.options;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import consulo.component.persist.RoamingType;
 import com.intellij.openapi.components.ServiceManager;

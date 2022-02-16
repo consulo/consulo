@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;

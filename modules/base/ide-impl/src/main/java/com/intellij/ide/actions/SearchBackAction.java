@@ -20,7 +20,7 @@ import com.intellij.find.FindManager;
 import com.intellij.find.FindUtil;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import consulo.project.Project;

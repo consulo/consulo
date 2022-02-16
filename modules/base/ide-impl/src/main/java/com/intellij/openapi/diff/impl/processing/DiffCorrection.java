@@ -21,7 +21,7 @@ import com.intellij.openapi.diff.impl.ComparisonPolicy;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.highlighting.Util;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;

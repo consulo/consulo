@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.module.Module;
 import consulo.content.library.Library;
 import consulo.module.content.ModuleRootManager;

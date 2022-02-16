@@ -2,14 +2,9 @@
 package consulo.document.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.editor.ex.MarkupIterator;
-import com.intellij.openapi.util.Getter;
-import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.util.WalkingState;
-import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.longs.LongSet;
 import consulo.util.collection.primitive.longs.LongSets;
@@ -17,6 +12,8 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Comparator;
@@ -308,7 +305,16 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
      * N        - 1bit flag.  if set then all deltas up to root are null
      * MMMMMMMM - 32bit int containing this node modification count
      */
-    private static final AtomicFieldUpdater<IntervalNode, Long> cachedDeltaUpdater = AtomicFieldUpdater.forLongFieldIn(IntervalNode.class);
+    private static VarHandle cachedDeltaUpdater;
+
+    static {
+      try {
+        cachedDeltaUpdater = MethodHandles.lookup().findVarHandle(IntervalNode.class, "cachedDeltaUpToRoot", long.class);
+      }
+      catch (NoSuchFieldException | IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
+    }
 
     private void setCachedValues(int deltaUpToRoot, boolean allDeltaUpToRootAreNull, int modCount) {
       cachedDeltaUpToRoot = packValues(deltaUpToRoot, allDeltaUpToRootAreNull, modCount);
@@ -322,7 +328,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
       if (myIntervalTree.getModCount() != treeModCount) return false;
       long newValue = packValues(deltaUpToRoot, allDeltasUpAreNull, treeModCount);
       long oldValue = cachedDeltaUpToRoot;
-      return cachedDeltaUpdater.compareAndSetLong(this, oldValue, newValue);
+      return cachedDeltaUpdater.compareAndSet(this, oldValue, newValue);
     }
 
     private static boolean allDeltasUpAreNull(long packedOffsets) {
@@ -383,7 +389,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
   }
 
   private void assertUnderWriteLock() {
-    if (DEBUG && !ApplicationInfoImpl.isInPerformanceTest()) {
+    if (DEBUG) {
       assert isAcquired(l.writeLock()) : l.writeLock();
     }
   }

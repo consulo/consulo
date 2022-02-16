@@ -18,7 +18,7 @@ package com.intellij.refactoring.lang;
 
 import com.intellij.ide.util.DirectoryUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;

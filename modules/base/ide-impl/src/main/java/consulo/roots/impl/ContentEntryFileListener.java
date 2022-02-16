@@ -16,7 +16,7 @@
 package consulo.roots.impl;
 
 import consulo.application.ReadAction;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;

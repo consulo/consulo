@@ -15,7 +15,7 @@ import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.application.ui.awt.*;
 import consulo.logging.Logger;
 import consulo.document.event.DocumentListener;

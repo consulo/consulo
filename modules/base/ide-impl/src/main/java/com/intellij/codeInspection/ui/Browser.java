@@ -27,7 +27,7 @@ import com.intellij.codeInspection.ui.actions.SuppressActionWrapper;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.ui.ex.action.AnAction;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.colorScheme.EditorColorsManager;
 import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.document.util.TextRange;

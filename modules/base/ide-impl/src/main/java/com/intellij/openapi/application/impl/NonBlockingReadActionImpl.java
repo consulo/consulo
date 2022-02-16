@@ -6,7 +6,7 @@ import com.intellij.concurrency.SensitiveProgressWrapper;
 import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import consulo.project.Project;

@@ -32,7 +32,7 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;

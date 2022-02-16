@@ -11,7 +11,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructureBase;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.RemoteServersManager;

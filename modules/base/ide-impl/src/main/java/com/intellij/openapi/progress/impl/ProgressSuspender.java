@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorListenerAdapter;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;

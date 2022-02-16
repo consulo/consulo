@@ -6,7 +6,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import consulo.language.editor.FileModificationService;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.document.DocCommandGroupId;

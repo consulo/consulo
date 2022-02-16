@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.command;
+package consulo.application.progress;
 
-public enum UndoConfirmationPolicy {
-  DEFAULT, REQUEST_CONFIRMATION, DO_NOT_REQUEST_CONFIRMATION
+import javax.annotation.Nonnull;
+
+public interface ProgressIndicatorEx extends ProgressIndicator {
+  void addStateDelegate(@Nonnull ProgressIndicatorEx delegate);
+
+  void finish(@Nonnull TaskInfo task);
+
+  boolean isFinished(@Nonnull TaskInfo task);
+
+  boolean wasStarted();
+
+  void processFinish();
+
+  void initStateFrom(@Nonnull ProgressIndicator indicator);
 }

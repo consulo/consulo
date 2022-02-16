@@ -26,7 +26,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
 import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;

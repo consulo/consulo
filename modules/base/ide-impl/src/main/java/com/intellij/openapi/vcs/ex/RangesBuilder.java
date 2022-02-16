@@ -19,8 +19,8 @@ import com.intellij.diff.util.DiffUtil;
 import consulo.document.Document;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.diff.Diff;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.Diff;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

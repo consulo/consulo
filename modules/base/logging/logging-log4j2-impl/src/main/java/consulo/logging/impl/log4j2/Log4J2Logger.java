@@ -18,7 +18,7 @@ package consulo.logging.impl.log4j2;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.container.plugin.PluginDescriptor;

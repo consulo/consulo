@@ -1,4 +1,4 @@
-package com.intellij.util.diff;
+package consulo.application.util.diff;
 
 /**
  * @author irengrig

@@ -20,7 +20,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.util.text.LineTokenizer;
+import consulo.application.util.LineTokenizer;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalToolTipUI;

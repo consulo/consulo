@@ -24,7 +24,7 @@ import com.intellij.diff.util.Range;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.DumbProgressIndicator;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.LineTokenizer;
+import consulo.application.util.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 

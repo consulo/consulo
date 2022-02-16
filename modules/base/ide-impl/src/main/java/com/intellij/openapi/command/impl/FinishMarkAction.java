@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;

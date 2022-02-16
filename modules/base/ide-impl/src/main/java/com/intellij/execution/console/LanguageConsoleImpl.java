@@ -13,7 +13,7 @@ import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.EmptyAction;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import com.intellij.openapi.command.undo.UndoUtil;
+import consulo.undoRedo.util.UndoUtil;
 import consulo.codeEditor.colorScheme.EditorColorsManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;

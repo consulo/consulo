@@ -23,7 +23,7 @@ import com.intellij.internal.statistic.UsageTrigger;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

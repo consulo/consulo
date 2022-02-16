@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document.impl;
 
-import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
@@ -13,6 +12,7 @@ import consulo.document.util.UnfairTextRange;
 import consulo.logging.Logger;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;

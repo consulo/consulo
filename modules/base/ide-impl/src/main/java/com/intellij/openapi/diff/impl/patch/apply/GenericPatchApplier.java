@@ -22,7 +22,7 @@ import com.intellij.openapi.diff.impl.patch.PatchLine;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
-import com.intellij.openapi.util.text.LineTokenizer;
+import consulo.application.util.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import com.intellij.util.BeforeAfter;

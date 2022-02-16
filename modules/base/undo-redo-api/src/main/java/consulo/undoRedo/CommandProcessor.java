@@ -1,14 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.command;
+package consulo.undoRedo;
 
-import consulo.disposer.Disposable;
+import consulo.annotation.DeprecationInfo;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.project.Project;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.undoRedo.event.CommandListener;
+import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -21,7 +23,7 @@ import javax.annotation.Nullable;
 public abstract class CommandProcessor {
   @Nonnull
   public static CommandProcessor getInstance() {
-    return ServiceManager.getService(CommandProcessor.class);
+    return Application.get().getInstance(CommandProcessor.class);
   }
 
   /**

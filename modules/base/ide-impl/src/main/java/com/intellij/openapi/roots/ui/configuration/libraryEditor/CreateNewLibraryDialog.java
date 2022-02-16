@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;

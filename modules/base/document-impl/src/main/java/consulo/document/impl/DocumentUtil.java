@@ -16,10 +16,9 @@
 package consulo.document.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
 import consulo.document.Document;
-import consulo.document.impl.DocumentEx;
 import consulo.document.util.TextRange;
+import consulo.undoRedo.CommandProcessor;
 
 import javax.annotation.Nonnull;
 
@@ -33,10 +32,10 @@ public final class DocumentUtil {
   /**
    * Ensures that given task is executed when given document is at the given 'in bulk' mode.
    *
-   * @param document       target document
-   * @param executeInBulk  {@code true} to force given document to be in bulk mode when given task is executed;
-   *                       {@code false} to force given document to be <b>not</b> in bulk mode when given task is executed
-   * @param task           task to execute
+   * @param document      target document
+   * @param executeInBulk {@code true} to force given document to be in bulk mode when given task is executed;
+   *                      {@code false} to force given document to be <b>not</b> in bulk mode when given task is executed
+   * @param task          task to execute
    */
   public static void executeInBulk(@Nonnull Document document, final boolean executeInBulk, @Nonnull Runnable task) {
     if (!(document instanceof DocumentEx)) {
@@ -60,12 +59,7 @@ public final class DocumentUtil {
   }
 
   public static void writeInRunUndoTransparentAction(@Nonnull final Runnable runnable) {
-    CommandProcessor.getInstance().runUndoTransparentAction(new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().runWriteAction(runnable);
-      }
-    });
+    CommandProcessor.getInstance().runUndoTransparentAction(() -> ApplicationManager.getApplication().runWriteAction(runnable));
   }
 
   public static int getFirstNonSpaceCharOffset(@Nonnull Document document, int line) {

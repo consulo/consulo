@@ -20,7 +20,7 @@ import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;

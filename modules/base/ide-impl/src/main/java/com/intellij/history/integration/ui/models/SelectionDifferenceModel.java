@@ -26,7 +26,7 @@ import com.intellij.history.integration.IdeaGateway;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 
 public class SelectionDifferenceModel extends FileDifferenceModel {
   private final SelectionCalculator myCalculator;

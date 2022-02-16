@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

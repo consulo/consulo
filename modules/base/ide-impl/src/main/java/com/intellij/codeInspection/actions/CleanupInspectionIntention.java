@@ -27,7 +27,7 @@ import com.intellij.codeInspection.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.codeInspection.ex.PerformFixesModalTask;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;

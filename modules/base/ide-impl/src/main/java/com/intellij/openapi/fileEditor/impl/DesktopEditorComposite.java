@@ -20,7 +20,7 @@ import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.colorScheme.EditorColors;
 import consulo.codeEditor.colorScheme.EditorColorsManager;
 import com.intellij.openapi.fileEditor.FileEditor;

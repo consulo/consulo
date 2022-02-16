@@ -20,8 +20,8 @@ import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.history.VcsFileRevision;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.diff.Diff;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.Diff;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

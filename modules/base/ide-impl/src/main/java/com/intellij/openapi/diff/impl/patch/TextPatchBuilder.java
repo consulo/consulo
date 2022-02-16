@@ -26,7 +26,7 @@ import com.intellij.openapi.diff.impl.util.TextDiffTypeEnum;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.util.BeforeAfter;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

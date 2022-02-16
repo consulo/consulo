@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.roots.impl;
 
+import consulo.application.WriteAction;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectTopics;
 import com.intellij.openapi.application.*;
@@ -18,7 +19,7 @@ import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.util.ClearableLazyValue;
 import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.project.*;
 import consulo.module.content.ProjectFileIndex;

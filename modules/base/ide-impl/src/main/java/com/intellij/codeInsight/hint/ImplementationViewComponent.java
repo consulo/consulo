@@ -27,7 +27,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.fileEditor.FileEditor;

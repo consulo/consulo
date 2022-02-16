@@ -4,7 +4,7 @@ package com.intellij.openapi.command.impl;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
-import com.intellij.openapi.command.undo.UndoConstants;
+import consulo.undoRedo.util.UndoConstants;
 import com.intellij.openapi.command.undo.UndoManager;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;

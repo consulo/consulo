@@ -24,7 +24,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;

@@ -51,7 +51,7 @@ import com.intellij.psi.search.searches.IndexPatternSearch;
 import com.intellij.util.PairConsumer;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

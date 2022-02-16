@@ -77,6 +77,7 @@ import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;

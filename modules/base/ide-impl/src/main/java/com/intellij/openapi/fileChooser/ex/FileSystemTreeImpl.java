@@ -10,7 +10,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.FileSystemTree;

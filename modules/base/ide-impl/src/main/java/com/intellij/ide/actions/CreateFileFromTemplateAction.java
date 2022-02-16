@@ -20,7 +20,7 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.fileTemplates.actions.CreateFromTemplateActionBase;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;

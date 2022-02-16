@@ -21,7 +21,7 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import com.intellij.diff.tools.util.side.ThreesideDiffViewer;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import javax.annotation.Nonnull;
 
 public class ThreesideBinaryDiffViewer extends ThreesideDiffViewer<BinaryEditorHolder> {

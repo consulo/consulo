@@ -20,6 +20,8 @@ import consulo.application.*;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.language.psi.PsiFile;

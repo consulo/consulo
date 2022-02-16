@@ -18,7 +18,7 @@ package com.intellij.refactoring.move.moveFilesOrDirectories;
 
 import com.intellij.ide.util.DirectoryChooserUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.DumbService;

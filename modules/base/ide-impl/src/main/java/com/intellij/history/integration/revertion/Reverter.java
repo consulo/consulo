@@ -26,7 +26,7 @@ import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.text.DateFormatUtil;
 
 import java.io.IOException;

@@ -27,7 +27,7 @@ import consulo.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;

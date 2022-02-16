@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.document.Document;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;

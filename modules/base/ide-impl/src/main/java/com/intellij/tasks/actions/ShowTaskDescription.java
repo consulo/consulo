@@ -19,7 +19,7 @@ import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.project.Project;
 import consulo.language.psi.PsiManager;
 import com.intellij.tasks.LocalTask;

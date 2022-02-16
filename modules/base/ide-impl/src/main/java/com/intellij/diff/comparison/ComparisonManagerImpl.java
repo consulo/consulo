@@ -25,7 +25,7 @@ import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.util.lang.CharSequenceSubSequence;
 import consulo.logging.Logger;
 

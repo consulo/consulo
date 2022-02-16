@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;

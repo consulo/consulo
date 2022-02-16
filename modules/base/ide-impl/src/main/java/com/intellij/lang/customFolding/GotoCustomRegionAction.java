@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.language.Language;
 import com.intellij.lang.folding.*;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;

@@ -31,7 +31,7 @@ import consulo.codeEditor.markup.TextAttributes;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.text.LineTokenizer;
+import consulo.application.util.LineTokenizer;
 import com.intellij.util.ObjectUtils;
 import consulo.util.lang.CharSequenceSubSequence;
 import consulo.application.ui.awt.UIUtil;

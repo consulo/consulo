@@ -59,6 +59,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.project.util.ExpirableRunnable;
+import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ref.Ref;
 import sun.awt.SunToolkit;
 

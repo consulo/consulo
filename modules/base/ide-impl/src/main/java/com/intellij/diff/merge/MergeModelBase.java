@@ -17,7 +17,7 @@ package com.intellij.diff.merge;
 
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineRange;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;

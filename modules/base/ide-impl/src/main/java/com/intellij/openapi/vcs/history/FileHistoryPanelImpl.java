@@ -23,7 +23,7 @@ import com.intellij.ide.CopyProvider;
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;

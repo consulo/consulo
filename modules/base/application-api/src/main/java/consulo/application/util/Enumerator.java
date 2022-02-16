@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.containers;
+package consulo.application.util;
 
-import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;

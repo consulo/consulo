@@ -1,7 +1,7 @@
 package com.intellij.codeInsight.editorActions.fillParagraph;
 
 import com.intellij.formatting.FormatterTagHandler;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;

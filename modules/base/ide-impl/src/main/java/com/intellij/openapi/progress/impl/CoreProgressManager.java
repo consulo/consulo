@@ -11,7 +11,7 @@ import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.progress.*;
 import consulo.util.lang.ref.Ref;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;

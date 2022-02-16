@@ -21,7 +21,7 @@ import com.intellij.ide.TitledHandler;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;

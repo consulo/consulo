@@ -1,8 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.command;
+package consulo.undoRedo.event;
 
 import consulo.document.Document;
 import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -21,7 +21,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;

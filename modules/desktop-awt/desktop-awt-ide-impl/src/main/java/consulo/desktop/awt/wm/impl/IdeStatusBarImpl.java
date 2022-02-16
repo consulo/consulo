@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.impl.status.InfoAndProgressPanel;
 import com.intellij.openapi.wm.impl.status.MemoryUsagePanel;

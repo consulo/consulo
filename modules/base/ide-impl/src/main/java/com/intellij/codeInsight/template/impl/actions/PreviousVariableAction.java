@@ -28,7 +28,7 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;

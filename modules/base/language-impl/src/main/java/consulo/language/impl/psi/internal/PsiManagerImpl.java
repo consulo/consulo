@@ -1,38 +1,37 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.psi.internal;
 
-import consulo.language.file.FileViewProvider;
-import consulo.language.parser.PsiBuilderFactory;
-import consulo.disposer.Disposable;
+import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
+import com.intellij.openapi.progress.util.ProgressWrapper;
+import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.component.messagebus.Topic;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.language.content.FileIndexFacade;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.file.internal.FileManager;
+import consulo.language.impl.file.internal.FileManagerImpl;
+import consulo.language.parser.PsiBuilderFactory;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeListener;
 import consulo.language.psi.event.PsiTreeChangePreprocessor;
 import consulo.logging.Logger;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
-import com.intellij.openapi.progress.util.ProgressWrapper;
 import consulo.project.Project;
-import consulo.language.content.FileIndexFacade;
-import consulo.disposer.Disposer;
 import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import consulo.language.impl.file.internal.FileManager;
-import consulo.language.impl.file.internal.FileManagerImpl;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.component.messagebus.Topic;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jetbrains.annotations.TestOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

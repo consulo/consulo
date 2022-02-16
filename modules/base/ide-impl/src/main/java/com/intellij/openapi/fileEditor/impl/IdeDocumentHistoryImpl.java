@@ -3,9 +3,9 @@ package com.intellij.openapi.fileEditor.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandEvent;
-import com.intellij.openapi.command.CommandListener;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.event.CommandEvent;
+import consulo.undoRedo.event.CommandListener;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.impl.CommandMerger;
 import com.intellij.openapi.command.impl.FocusBasedCurrentEditorProvider;
 import consulo.component.persist.PersistentStateComponent;

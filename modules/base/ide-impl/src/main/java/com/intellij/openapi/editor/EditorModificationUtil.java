@@ -24,7 +24,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.codeEditor.*;
 import consulo.project.Project;
-import com.intellij.openapi.util.text.LineTokenizer;
+import consulo.application.util.LineTokenizer;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.util.Producer;
 import consulo.document.Document;

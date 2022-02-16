@@ -18,7 +18,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.language.file.FileViewProvider;

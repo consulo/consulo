@@ -25,7 +25,7 @@ import consulo.language.file.inject.DocumentWindow;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;

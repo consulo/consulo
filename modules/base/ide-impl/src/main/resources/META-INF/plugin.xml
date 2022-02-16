@@ -1257,7 +1257,7 @@
     <undoProvider implementation="consulo.command.impl.ApplicationFileUndoProvider"/>
     <projectUndoProvider implementation="consulo.command.impl.ProjectFileUndoProvider"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.command.CommandProcessor"
+    <applicationService serviceInterface="consulo.undoRedo.CommandProcessor"
                         serviceImplementation="com.intellij.openapi.command.impl.CommandProcessorImpl"/>
 
     <applicationService serviceInterface="com.intellij.ide.CommonActionsManager"

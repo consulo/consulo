@@ -21,7 +21,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;

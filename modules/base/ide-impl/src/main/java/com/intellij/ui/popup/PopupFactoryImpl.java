@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.CollectionListModel;

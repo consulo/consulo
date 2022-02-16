@@ -2,6 +2,8 @@
 package com.intellij.openapi.command;
 
 import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

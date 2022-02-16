@@ -29,6 +29,7 @@ import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import consulo.application.progress.ProgressManager;
+import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.Condition;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;

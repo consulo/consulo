@@ -21,7 +21,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.document.FileDocumentManager;

@@ -23,7 +23,7 @@ import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
 import consulo.language.psi.*;

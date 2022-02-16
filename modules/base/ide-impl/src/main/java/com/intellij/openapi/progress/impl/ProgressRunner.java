@@ -11,7 +11,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.util.BlockingProgressIndicator;
 import consulo.util.lang.ref.Ref;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.Semaphore;
 import consulo.application.ui.awt.internal.EDT;

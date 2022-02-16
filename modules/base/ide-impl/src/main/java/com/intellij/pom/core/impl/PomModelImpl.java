@@ -19,7 +19,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.ast.ASTNode;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import com.intellij.openapi.progress.*;
 import consulo.language.impl.DebugUtil;

@@ -21,7 +21,7 @@ import com.intellij.history.core.Content;
 import com.intellij.history.core.revisions.Revision;
 import com.intellij.history.core.tree.Entry;
 import com.intellij.history.integration.IdeaGateway;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nullable;
 
 import java.util.HashMap;

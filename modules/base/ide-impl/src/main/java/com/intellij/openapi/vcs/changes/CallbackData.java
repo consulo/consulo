@@ -21,7 +21,7 @@ import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -26,7 +26,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.keymap.KeymapManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;

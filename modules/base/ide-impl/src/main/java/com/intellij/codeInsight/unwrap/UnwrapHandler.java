@@ -21,7 +21,7 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import consulo.language.editor.FileModificationService;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.colorScheme.EditorColors;
 import consulo.codeEditor.colorScheme.EditorColorsManager;

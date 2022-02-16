@@ -19,7 +19,7 @@ import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import consulo.document.event.DocumentBulkUpdateListener;

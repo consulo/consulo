@@ -27,7 +27,7 @@ import consulo.document.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapHelper;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.document.impl.DocumentUtil;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.logging.Logger;

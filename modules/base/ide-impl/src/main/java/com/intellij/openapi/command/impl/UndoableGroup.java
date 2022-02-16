@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.UndoableAction;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;

@@ -15,7 +15,6 @@
  */
 package consulo.document.impl;
 
-import com.intellij.openapi.command.CommandProcessor;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
@@ -40,6 +39,7 @@ import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
 import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;

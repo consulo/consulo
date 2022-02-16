@@ -22,7 +22,7 @@ import consulo.codeEditor.markup.*;
 import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.colorScheme.EditorColors;
 import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;

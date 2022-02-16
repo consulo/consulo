@@ -24,7 +24,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;

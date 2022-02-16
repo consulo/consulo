@@ -22,7 +22,7 @@ import com.intellij.lang.LanguageImportStatements;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl;

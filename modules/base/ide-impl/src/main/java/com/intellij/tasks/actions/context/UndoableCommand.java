@@ -16,7 +16,7 @@
 
 package com.intellij.tasks.actions.context;
 
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UndoableAction;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;

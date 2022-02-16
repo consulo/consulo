@@ -21,7 +21,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

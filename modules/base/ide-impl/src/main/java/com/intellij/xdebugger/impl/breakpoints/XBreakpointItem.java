@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import com.intellij.openapi.application.WriteAction;
+import consulo.application.WriteAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.navigation.Navigatable;

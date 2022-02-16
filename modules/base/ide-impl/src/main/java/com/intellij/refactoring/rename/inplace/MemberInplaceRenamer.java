@@ -17,7 +17,7 @@ package com.intellij.refactoring.rename.inplace;
 
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import consulo.language.inject.InjectedLanguageManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import consulo.codeEditor.Editor;

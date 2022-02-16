@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.application;
+package consulo.application;
 
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.ThrowableComputable;
-import com.intellij.util.ReflectionUtil;
-import consulo.application.util.function.ThrowableRunnable;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessToken;
-import consulo.application.Application;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.application.util.function.ThrowableRunnable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;

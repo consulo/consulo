@@ -31,7 +31,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

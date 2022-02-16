@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.util.diff.Diff;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.Diff;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -16,9 +16,9 @@
 
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.command.CommandEvent;
-import com.intellij.openapi.command.CommandListener;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.event.CommandEvent;
+import consulo.undoRedo.event.CommandListener;
+import consulo.undoRedo.CommandProcessor;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.project.Project;

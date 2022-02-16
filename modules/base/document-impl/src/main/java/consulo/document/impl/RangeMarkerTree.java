@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document.impl;
 
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
@@ -74,7 +73,7 @@ public class RangeMarkerTree<T extends RangeMarkerEx> extends IntervalTreeImpl<T
     ((RangeMarkerImpl)interval).setValid(true);
     RMNode<T> node = (RMNode<T>)super.addInterval(interval, start, end, greedyToLeft, greedyToRight, stickingToRight, layer);
 
-    if (IntervalTreeImpl.DEBUG && node.intervals.size() > DUPLICATE_LIMIT && !ApplicationInfoImpl.isInPerformanceTest() && ApplicationManager.getApplication().isUnitTestMode()) {
+    if (IntervalTreeImpl.DEBUG && node.intervals.size() > DUPLICATE_LIMIT && ApplicationManager.getApplication().isUnitTestMode()) {
       l.readLock().lock();
       try {
         String msg = errMsg(node);

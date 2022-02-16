@@ -17,8 +17,8 @@ package com.intellij.util.ui;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

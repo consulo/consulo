@@ -29,7 +29,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
 import com.intellij.openapi.editor.actions.IncrementalFindAction;

@@ -26,7 +26,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import consulo.project.Project;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;

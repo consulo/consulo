@@ -35,7 +35,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;

@@ -19,7 +19,7 @@ package com.intellij.ide.fileTemplates;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.fileTemplates.impl.CustomFileTemplate;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.component.extension.Extensions;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;

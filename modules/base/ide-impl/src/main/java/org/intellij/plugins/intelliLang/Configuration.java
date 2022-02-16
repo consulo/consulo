@@ -18,7 +18,7 @@ package org.intellij.plugins.intelliLang;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.lang.function.Condition;
 import consulo.language.Language;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.GlobalUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;

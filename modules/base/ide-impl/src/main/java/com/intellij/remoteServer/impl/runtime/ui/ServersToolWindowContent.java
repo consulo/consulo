@@ -18,7 +18,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.impl.runtime.log.LoggingHandlerImpl;
 import com.intellij.remoteServer.impl.runtime.ui.tree.DeploymentNode;

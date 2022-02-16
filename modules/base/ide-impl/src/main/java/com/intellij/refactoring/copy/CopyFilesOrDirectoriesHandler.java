@@ -22,7 +22,7 @@ import com.intellij.ide.util.EditorHelper;
 import com.intellij.ide.util.PlatformPackageUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.language.psi.*;
 import consulo.logging.Logger;

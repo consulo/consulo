@@ -3,7 +3,7 @@ package com.intellij.execution.impl;
 
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
-import com.intellij.openapi.command.undo.UndoUtil;
+import consulo.undoRedo.util.UndoUtil;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;

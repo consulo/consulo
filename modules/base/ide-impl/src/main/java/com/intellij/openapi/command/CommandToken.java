@@ -2,6 +2,7 @@
 package com.intellij.openapi.command;
 
 import consulo.project.Project;
+import consulo.undoRedo.UndoConfirmationPolicy;
 
 import javax.annotation.Nullable;
 

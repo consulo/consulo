@@ -20,7 +20,7 @@ import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.command.undo.UndoConstants;
+import consulo.undoRedo.util.UndoConstants;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;

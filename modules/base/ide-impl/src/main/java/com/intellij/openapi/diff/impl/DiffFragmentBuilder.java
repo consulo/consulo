@@ -23,7 +23,7 @@ package com.intellij.openapi.diff.impl;
 import com.intellij.openapi.diff.ex.DiffFragment;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import consulo.document.util.TextRange;
-import com.intellij.util.diff.Diff;
+import consulo.application.util.diff.Diff;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 

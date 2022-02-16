@@ -18,7 +18,7 @@ package com.intellij.codeInsight.lookup.impl;
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementAction;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.popup.ClosableByLeftArrow;

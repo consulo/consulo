@@ -19,7 +19,7 @@ import com.intellij.codeInsight.actions.ReformatCodeProcessor;
 import consulo.language.impl.ast.ASTFactory;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.checkin.ReformatBeforeCheckinHandler;
 import consulo.language.impl.ast.CompositeElement;

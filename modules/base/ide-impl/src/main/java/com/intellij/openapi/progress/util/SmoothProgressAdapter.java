@@ -21,7 +21,7 @@ import com.intellij.openapi.progress.StandardProgressIndicator;
 import consulo.application.progress.WrappedProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.Semaphore;
 import consulo.disposer.Disposable;

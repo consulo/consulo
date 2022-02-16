@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
-import com.intellij.openapi.util.EmptyRunnable;
+import consulo.util.lang.EmptyRunnable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

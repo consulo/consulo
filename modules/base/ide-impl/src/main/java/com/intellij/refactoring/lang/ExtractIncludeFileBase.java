@@ -24,7 +24,7 @@ import consulo.language.Language;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.command.CommandProcessor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;

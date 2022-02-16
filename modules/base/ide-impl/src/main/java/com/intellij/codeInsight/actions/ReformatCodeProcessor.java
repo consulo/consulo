@@ -32,7 +32,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
