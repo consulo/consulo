@@ -42,7 +42,7 @@ import consulo.language.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.PairProcessor;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

@@ -39,7 +39,8 @@ import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.stubs.StubTextInconsistencyException;
 import com.intellij.util.PairProcessor;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

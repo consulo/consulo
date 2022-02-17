@@ -7,7 +7,7 @@ import com.intellij.openapi.actionSystem.impl.ActionUpdateEdtExecutor;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import com.intellij.reference.SoftReference;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.dataContext.AsyncDataContext;

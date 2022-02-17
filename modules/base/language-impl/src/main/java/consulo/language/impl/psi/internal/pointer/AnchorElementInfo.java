@@ -20,7 +20,7 @@ import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
-import consulo.language.impl.psi.PsiAnchor;
+import consulo.language.impl.psi.internal.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.internal.PsiFileWithStubSupport;

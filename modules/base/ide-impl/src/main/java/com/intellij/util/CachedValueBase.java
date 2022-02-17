@@ -2,6 +2,8 @@
 package com.intellij.util;
 
 import com.intellij.openapi.diagnostic.Logger;
+import consulo.application.util.RecursionGuard;
+import consulo.application.util.RecursionManager;
 import consulo.document.Document;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;

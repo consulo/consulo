@@ -33,7 +33,7 @@ import consulo.virtualFileSystem.event.VFileMoveEvent;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.concurrency.NonUrgentExecutor;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.container.boot.ContainerPathManager;

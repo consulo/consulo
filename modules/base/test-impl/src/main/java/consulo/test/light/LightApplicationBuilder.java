@@ -22,7 +22,7 @@ import com.intellij.ide.util.treeView.TreeAnchorizer;
 import consulo.language.LanguageExtensionPoint;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.PsiBuilderFactory;
-import com.intellij.lang.impl.PsiBuilderFactoryImpl;
+import consulo.language.impl.parser.internal.PsiBuilderFactoryImpl;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import com.intellij.openapi.application.PathMacroFilter;

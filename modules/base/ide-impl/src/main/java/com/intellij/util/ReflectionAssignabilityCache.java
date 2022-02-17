@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 
 import java.util.concurrent.ConcurrentMap;
 

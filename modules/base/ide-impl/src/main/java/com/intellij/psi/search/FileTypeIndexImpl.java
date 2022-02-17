@@ -2,7 +2,7 @@
 package com.intellij.psi.search;
 
 import consulo.index.io.ID;
-import consulo.language.impl.psi.stub.SubstitutedFileType;
+import consulo.language.impl.psi.internal.stub.SubstitutedFileType;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import consulo.application.ui.awt.EmptyIcon;
 import consulo.ui.image.Image;
 

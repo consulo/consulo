@@ -57,7 +57,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
                                 final Project project) {
     super("Filter Inspections", true);
     myInspectionsFilter = inspectionsFilter;
-    mySeverityRegistrar = ((SeverityProvider)profile.getProfileManager()).getOwnSeverityRegistrar();
+    mySeverityRegistrar = (SeverityRegistrarImpl)((SeverityProvider)profile.getProfileManager()).getOwnSeverityRegistrar();
     getTemplatePresentation().setIcon(AllIcons.General.Filter);
     tune(profile, project);
   }

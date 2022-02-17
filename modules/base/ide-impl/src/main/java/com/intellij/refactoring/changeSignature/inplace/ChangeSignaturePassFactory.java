@@ -17,20 +17,20 @@ package com.intellij.refactoring.changeSignature.inplace;
 
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.UpdateHighlightersUtil;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
+import com.intellij.refactoring.changeSignature.ChangeInfo;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.colorScheme.CodeInsightColors;
 import consulo.codeEditor.markup.TextAttributes;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.refactoring.changeSignature.ChangeInfo;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -72,7 +72,7 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
 
     @Override
     public void doApplyInformationToEditor() {
-      HighlightInfoImpl info = null;
+      HighlightInfo info = null;
       final InplaceChangeSignature currentRefactoring = InplaceChangeSignature.getCurrentRefactoring(myEditor);
       if (currentRefactoring != null) {
         final ChangeInfo changeInfo = currentRefactoring.getStableChange();
@@ -87,13 +87,13 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
                                                        myEditor.getColorsScheme().getAttributes(CodeInsightColors.WEAK_WARNING_ATTRIBUTES)
                                                                .getEffectColor(),
                                                        null, Font.PLAIN);
-        HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.INFORMATION).range(range);
+        HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(range);
         builder.textAttributes(attributes);
         builder.descriptionAndTooltip(SIGNATURE_SHOULD_BE_POSSIBLY_CHANGED);
         info = builder.createUnconditionally();
         QuickFixAction.registerQuickFixAction(info, new ApplyChangeSignatureAction(currentRefactoring.getInitialName()));
       }
-      Collection<HighlightInfoImpl> infos = info != null ? Collections.singletonList(info) : Collections.emptyList();
+      Collection<HighlightInfo> infos = info != null ? Collections.singletonList(info) : Collections.emptyList();
       UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
     }
   }

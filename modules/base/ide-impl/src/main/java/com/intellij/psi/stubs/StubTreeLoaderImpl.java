@@ -15,35 +15,34 @@
  */
 package com.intellij.psi.stubs;
 
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.*;
-import consulo.language.impl.psi.stub.FileContentImpl;
-import consulo.language.impl.psi.stub.IndexingStampInfo;
-import consulo.language.impl.psi.stub.StubTreeLoader;
-import consulo.language.psi.stub.*;
-import consulo.language.psi.stub.StubTreeBuilder;
-import consulo.logging.Logger;
+import com.intellij.openapi.project.NoAccessDuringPsiEvents;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.indexing.FileBasedIndexImpl;
+import com.intellij.util.indexing.SingleEntryFileBasedIndexExtension;
+import consulo.application.ApplicationManager;
+import consulo.application.util.RecursionManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.util.RecursionManager;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.impl.psi.internal.PsiManagerEx;
+import consulo.language.impl.psi.internal.stub.FileContentImpl;
+import consulo.language.impl.psi.internal.stub.IndexingStampInfo;
+import consulo.language.impl.psi.internal.stub.StubTreeLoader;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.stub.*;
+import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.impl.psi.internal.PsiManagerEx;
-import consulo.language.impl.psi.PsiFileImpl;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;

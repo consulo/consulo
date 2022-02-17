@@ -7,7 +7,7 @@ import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.fileEditor.impl.text.TextEditorProvider;

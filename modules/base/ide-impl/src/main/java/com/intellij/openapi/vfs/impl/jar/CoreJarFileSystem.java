@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Couple;
 import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

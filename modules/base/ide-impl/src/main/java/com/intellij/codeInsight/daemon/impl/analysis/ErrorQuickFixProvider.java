@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl.analysis;
 
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiErrorElement;
 

@@ -24,6 +24,7 @@ import consulo.document.impl.RangeMarkerTree;
 import consulo.document.impl.TextRangeInterval;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
   private final MarkupModelEx myMarkupModel;
@@ -46,7 +47,7 @@ class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
   }
 
   @Override
-  void correctMax(@Nonnull IntervalNode<RangeHighlighterEx> node, int deltaUpToRoot) {
+  public void correctMax(@Nonnull IntervalNode<RangeHighlighterEx> node, int deltaUpToRoot) {
     super.correctMax(node, deltaUpToRoot);
     ((RHNode)node).recalculateRenderFlags();
   }
@@ -89,7 +90,7 @@ class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
     private void recalculateRenderFlags() {
       boolean renderedInGutter = false;
       boolean renderedInScrollBar = false;
-      for (Getter<RangeHighlighterEx> getter : intervals) {
+      for (Supplier<RangeHighlighterEx> getter : intervals) {
         RangeHighlighterEx h = getter.get();
         renderedInGutter |= h.isRenderedInGutter();
         renderedInScrollBar |= h.isRenderedInScrollBar();
@@ -120,7 +121,7 @@ class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
     }
 
     @Override
-    void addInterval(@Nonnull RangeHighlighterEx h) {
+    public void addInterval(@Nonnull RangeHighlighterEx h) {
       super.addInterval(h);
       if (h.isRenderedInGutter() && !isFlagSet(RENDERED_IN_GUTTER_FLAG) || h.isRenderedInScrollBar() && !isFlagSet(RENDERED_IN_SCROLL_BAR_FLAG)) {
         recalculateRenderFlagsUp();

@@ -2,29 +2,30 @@
 package consulo.codeEditor.impl;
 
 import com.intellij.diagnostic.Dumpable;
-import consulo.application.ApplicationManager;
-import consulo.document.impl.EditorDocumentPriorities;
-import consulo.document.impl.RangeMarkerTree;
-import consulo.codeEditor.colorScheme.EditorColors;
-import consulo.document.event.DocumentEvent;
-import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.ex.FoldingListener;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
-import consulo.document.impl.event.PrioritizedInternalDocumentListener;
 import com.intellij.openapi.editor.ex.util.EditorScrollingPositionKeeper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.*;
-import consulo.codeEditor.markup.TextAttributes;
-import com.intellij.openapi.util.Getter;
-import consulo.component.util.ModificationTracker;
-import consulo.document.impl.DocumentUtil;
+import com.intellij.openapi.editor.impl.FoldRegionImpl;
+import com.intellij.openapi.editor.impl.FoldRegionsTree;
+import com.intellij.openapi.editor.impl.HardReferencingRangeMarkerTree;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
-import consulo.util.collection.MultiMap;
+import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.markup.TextAttributes;
+import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.impl.DocumentEx;
+import consulo.document.impl.DocumentUtil;
+import consulo.document.impl.EditorDocumentPriorities;
+import consulo.document.impl.RangeMarkerTree;
+import consulo.document.impl.event.PrioritizedInternalDocumentListener;
 import consulo.logging.Logger;
+import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
@@ -35,6 +36,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Supplier;
 
 /**
  * Common part from desktop folding model
@@ -703,7 +705,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
       return new Node<>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight) {
         @Override
         public void onRemoved() {
-          for (Getter<FoldRegionImpl> getter : intervals) {
+          for (Supplier<FoldRegionImpl> getter : intervals) {
             removeRegionFromGroup(getter.get());
           }
         }

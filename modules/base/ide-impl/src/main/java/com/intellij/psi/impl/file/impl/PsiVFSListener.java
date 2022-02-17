@@ -61,7 +61,7 @@ public class PsiVFSListener implements BulkFileListener {
       PsiVFSListener psiVFSListener = project.getInstance(PsiVFSListener.class);
 
       MessageBusConnection connection = project.getMessageBus().connect();
-      connection.subscribe(ProjectTopics.PROJECT_ROOTS, psiVFSListener.new MyModuleRootListener());
+      connection.subscribe(ModuleRootListener.TOPIC, psiVFSListener.new MyModuleRootListener());
       connection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
         @Override
         public void fileTypesChanged(@Nonnull FileTypeEvent e) {

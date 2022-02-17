@@ -16,6 +16,8 @@
 
 package com.intellij.util.containers;
 
+import consulo.application.util.ConcurrentFactoryMap;
+
 import javax.annotation.Nonnull;
 
 import java.util.Map;

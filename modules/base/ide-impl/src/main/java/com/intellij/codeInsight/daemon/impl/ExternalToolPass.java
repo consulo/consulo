@@ -19,21 +19,22 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.lang.ExternalLanguageAnnotators;
-import consulo.language.Language;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.annotation.Annotation;
-import consulo.language.editor.annotation.AnnotationSession;
-import consulo.language.editor.annotation.ExternalAnnotator;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.util.ui.update.Update;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.application.progress.ProgressIndicator;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.Language;
+import consulo.language.editor.annotation.Annotation;
+import consulo.language.editor.annotation.AnnotationSession;
+import consulo.language.editor.annotation.ExternalAnnotator;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.ui.update.Update;
-import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -66,11 +67,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
     }
   }
 
-  public ExternalToolPass(@Nonnull ExternalToolPassFactory externalToolPassFactory,
-                          @Nonnull PsiFile file,
-                          @Nonnull Editor editor,
-                          int startOffset,
-                          int endOffset) {
+  public ExternalToolPass(@Nonnull ExternalToolPassFactory externalToolPassFactory, @Nonnull PsiFile file, @Nonnull Editor editor, int startOffset, int endOffset) {
     super(file.getProject(), editor.getDocument(), false);
     myEditor = editor;
     myFile = file;
@@ -98,7 +95,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
         DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
         boolean errorFound = daemonCodeAnalyzer.getFileStatusMap().wasErrorFound(myDocument);
 
-        for(ExternalAnnotator externalAnnotator: externalAnnotators) {
+        for (ExternalAnnotator externalAnnotator : externalAnnotators) {
           final Object collectedInfo = externalAnnotator.collectInformation(psiRoot, myEditor, errorFound);
           if (collectedInfo != null) {
             myAnnotator2DataMap.put(externalAnnotator, new MyData(psiRoot, collectedInfo));
@@ -152,9 +149,8 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
                 }
 
                 myDocument.removeDocumentListener(myDocumentListener);
-                final List<HighlightInfoImpl> infos = getHighlights();
-                UpdateHighlightersUtil
-                  .setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, infos, getColorsScheme(), getId());
+                final List<HighlightInfo> infos = getHighlights();
+                UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, infos, getColorsScheme(), getId());
               }
             }, ModalityState.stateForComponent(myEditor.getComponent()));
           }
@@ -181,8 +177,8 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
     }
   }
 
-  private List<HighlightInfoImpl> getHighlights() {
-    List<HighlightInfoImpl> infos = new ArrayList<HighlightInfoImpl>();
+  private List<HighlightInfo> getHighlights() {
+    List<HighlightInfo> infos = new ArrayList<>();
     for (Annotation annotation : myAnnotationHolder) {
       infos.add(HighlightInfoImpl.fromAnnotation(annotation));
     }
@@ -204,8 +200,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
       @Override
       public void run() {
         if (!myProject.isDisposed()) {
-          UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, Collections.<HighlightInfoImpl>emptyList(),
-                                                         getColorsScheme(), getId());
+          UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myStartOffset, myEndOffset, Collections.<HighlightInfo>emptyList(), getColorsScheme(), getId());
         }
       }
     };

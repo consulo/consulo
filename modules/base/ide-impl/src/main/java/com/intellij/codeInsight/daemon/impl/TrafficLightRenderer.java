@@ -16,7 +16,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.language.Language;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.ui.ex.action.AnAction;

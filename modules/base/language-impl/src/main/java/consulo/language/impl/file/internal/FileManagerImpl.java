@@ -22,7 +22,7 @@ import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.language.impl.psi.PsiDirectoryImpl;
 import consulo.language.impl.psi.PsiFileEx;
-import consulo.language.impl.psi.PsiModificationTrackerImpl;
+import consulo.language.impl.psi.internal.PsiModificationTrackerImpl;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
 import consulo.language.psi.LanguageSubstitutors;
@@ -286,7 +286,7 @@ public final class FileManagerImpl implements FileManager {
 
   private boolean myProcessingFileTypesChange;
 
-  void processFileTypesChanged(boolean clearViewProviders) {
+  public void processFileTypesChanged(boolean clearViewProviders) {
     if (myProcessingFileTypesChange) return;
     myProcessingFileTypesChange = true;
     DebugUtil.performPsiModification(null, () -> {
@@ -310,7 +310,7 @@ public final class FileManagerImpl implements FileManager {
     });
   }
 
-  void possiblyInvalidatePhysicalPsi() {
+  public void possiblyInvalidatePhysicalPsi() {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     removeInvalidDirs();
     for (FileViewProvider provider : getVFileToViewProviderMap().values()) {

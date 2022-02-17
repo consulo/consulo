@@ -16,7 +16,7 @@ import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.language.editor.Pass;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
@@ -42,7 +42,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     if (document == null) return;
     final long modificationStamp = document.getModificationStamp();
     final TextRange priorityIntersection = priorityRange.intersection(restrictRange);
-    List<? extends HighlightInfoImpl> infoCopy = new ArrayList<>(infos);
+    List<? extends HighlightInfo> infoCopy = new ArrayList<>(infos);
     ((HighlightingSessionImpl)session).applyInEDT(() -> {
       if (modificationStamp != document.getModificationStamp()) return;
       if (priorityIntersection != null) {
@@ -104,16 +104,17 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
 
   private static void killAbandonedHighlightsUnder(@Nonnull PsiFile psiFile,
                                                    @Nonnull final TextRange range,
-                                                   @Nullable final List<? extends HighlightInfoImpl> infos,
+                                                   @Nullable final List<? extends HighlightInfo> infos,
                                                    @Nonnull final HighlightingSession highlightingSession) {
     final Project project = psiFile.getProject();
     final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
     if (document == null) return;
-    DaemonCodeAnalyzerEx.processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), existing -> {
+    DaemonCodeAnalyzerEx.processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), e -> {
+      HighlightInfoImpl existing = (HighlightInfoImpl)e;
       if (existing.isBijective() && existing.getGroup() == Pass.UPDATE_ALL && range.equalsToRange(existing.getActualStartOffset(), existing.getActualEndOffset())) {
         if (infos != null) {
-          for (HighlightInfoImpl created : infos) {
-            if (existing.equalsByActualOffset(created)) return true;
+          for (HighlightInfo created : infos) {
+            if (existing.equalsByActualOffset((HighlightInfoImpl)created)) return true;
           }
         }
         // seems that highlight info "existing" is going to disappear

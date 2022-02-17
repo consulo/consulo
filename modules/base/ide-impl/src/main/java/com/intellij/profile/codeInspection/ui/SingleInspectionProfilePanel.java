@@ -316,7 +316,7 @@ public class SingleInspectionProfilePanel extends JPanel {
   }
 
   private static void copyUsedSeveritiesIfUndefined(final ModifiableModel selectedProfile, final ProfileManager profileManager) {
-    final SeverityRegistrarImpl registrar = ((SeverityProvider)profileManager).getSeverityRegistrar();
+    final SeverityRegistrarImpl registrar = (SeverityRegistrarImpl)((SeverityProvider)profileManager).getSeverityRegistrar();
     final Set<HighlightSeverity> severities = ((InspectionProfileImpl)selectedProfile).getUsedSeverities();
     for (Iterator<HighlightSeverity> iterator = severities.iterator(); iterator.hasNext();) {
       HighlightSeverity severity = iterator.next();
@@ -326,7 +326,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     }
 
     if (!severities.isEmpty()) {
-      final SeverityRegistrarImpl oppositeRegister = ((SeverityProvider)selectedProfile.getProfileManager()).getSeverityRegistrar();
+      final SeverityRegistrarImpl oppositeRegister = (SeverityRegistrarImpl)((SeverityProvider)selectedProfile.getProfileManager()).getSeverityRegistrar();
       for (HighlightSeverity severity : severities) {
         final TextAttributesKey attributesKey = TextAttributesKey.find(severity.getName());
         final TextAttributes textAttributes = oppositeRegister.getTextAttributesBySeverity(severity);
@@ -745,7 +745,7 @@ public class SingleInspectionProfilePanel extends JPanel {
 
   private JPopupMenu compoundPopup() {
     final DefaultActionGroup group = new DefaultActionGroup();
-    final SeverityRegistrarImpl severityRegistrar = ((SeverityProvider)mySelectedProfile.getProfileManager()).getOwnSeverityRegistrar();
+    final SeverityRegistrarImpl severityRegistrar = (SeverityRegistrarImpl)((SeverityProvider)mySelectedProfile.getProfileManager()).getOwnSeverityRegistrar();
     TreeSet<HighlightSeverity> severities = new TreeSet<HighlightSeverity>(severityRegistrar);
     severities.add(HighlightSeverity.ERROR);
     severities.add(HighlightSeverity.WARNING);

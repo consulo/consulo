@@ -4,39 +4,40 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.IntentionManager;
 import com.intellij.codeInsight.intention.impl.CachedIntentions;
 import com.intellij.codeInsight.intention.impl.EditIntentionSettingsAction;
 import com.intellij.codeInsight.intention.impl.EnableDisableIntentionAction;
 import com.intellij.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.document.FileDocumentManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.DumbService;
-import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.CommonProcessors;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
-import consulo.application.util.function.CommonProcessors;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.FocusableComponent;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -73,7 +74,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   public static List<HighlightInfoImpl.IntentionActionDescriptor> getAvailableFixes(@Nonnull final Editor editor, @Nonnull final PsiFile file, final int passId, int offset) {
     final Project project = file.getProject();
 
-    List<HighlightInfoImpl> infos = new ArrayList<>();
+    List<HighlightInfo> infos = new ArrayList<>();
     DaemonCodeAnalyzerImpl.processHighlightsNearOffset(editor.getDocument(), project, HighlightSeverity.INFORMATION, offset, true, new CommonProcessors.CollectProcessor<>(infos));
     List<HighlightInfoImpl.IntentionActionDescriptor> result = new ArrayList<>();
     infos.forEach(info -> addAvailableFixesForGroups(info, editor, file, result, passId, offset));
@@ -83,16 +84,17 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   public static boolean markActionInvoked(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull IntentionAction action) {
     final int offset = ((EditorEx)editor).getExpectedCaretOffset();
 
-    List<HighlightInfoImpl> infos = new ArrayList<>();
+    List<HighlightInfo> infos = new ArrayList<>();
     DaemonCodeAnalyzerImpl.processHighlightsNearOffset(editor.getDocument(), project, HighlightSeverity.INFORMATION, offset, true, new CommonProcessors.CollectProcessor<>(infos));
     boolean removed = false;
-    for (HighlightInfoImpl info : infos) {
-      if (info.quickFixActionMarkers != null) {
-        for (Pair<HighlightInfoImpl.IntentionActionDescriptor, RangeMarker> pair : info.quickFixActionMarkers) {
+    for (HighlightInfo info : infos) {
+      List<consulo.util.lang.Pair<HighlightInfoImpl.IntentionActionDescriptor, RangeMarker>> list = ((HighlightInfoImpl)info).quickFixActionMarkers;
+      if (list != null) {
+        for (consulo.util.lang.Pair<HighlightInfoImpl.IntentionActionDescriptor, RangeMarker> pair : list) {
           HighlightInfoImpl.IntentionActionDescriptor actionInGroup = pair.first;
           if (actionInGroup.getAction() == action) {
             // no CME because the list is concurrent
-            removed |= info.quickFixActionMarkers.remove(pair);
+            removed |= list.remove(pair);
           }
         }
       }
@@ -100,18 +102,19 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     return removed;
   }
 
-  private static void addAvailableFixesForGroups(@Nonnull HighlightInfoImpl info,
+  private static void addAvailableFixesForGroups(@Nonnull HighlightInfo i,
                                                  @Nonnull Editor editor,
                                                  @Nonnull PsiFile file,
                                                  @Nonnull List<? super HighlightInfoImpl.IntentionActionDescriptor> outList,
                                                  int group,
                                                  int offset) {
+    HighlightInfoImpl info = (HighlightInfoImpl)i;
     if (info.quickFixActionMarkers == null) return;
     if (group != -1 && group != info.getGroup()) return;
     boolean fixRangeIsNotEmpty = !info.getFixTextRange().isEmpty();
     Editor injectedEditor = null;
     PsiFile injectedFile = null;
-    for (Pair<HighlightInfoImpl.IntentionActionDescriptor, RangeMarker> pair : info.quickFixActionMarkers) {
+    for (consulo.util.lang.Pair<HighlightInfoImpl.IntentionActionDescriptor, RangeMarker> pair : info.quickFixActionMarkers) {
       HighlightInfoImpl.IntentionActionDescriptor actionInGroup = pair.first;
       RangeMarker range = pair.second;
       if (!range.isValid() || fixRangeIsNotEmpty && isEmpty(range)) continue;

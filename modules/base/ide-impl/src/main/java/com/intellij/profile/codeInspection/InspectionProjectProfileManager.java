@@ -15,19 +15,19 @@
  */
 package com.intellij.profile.codeInspection;
 
-import consulo.language.editor.rawHighlight.SeverityProvider;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
-import consulo.project.Project;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.profile.DefaultProjectProfileManager;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.Profile;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -37,15 +37,13 @@ import javax.annotation.Nonnull;
  * Date: 30-Nov-2005
  */
 public abstract class InspectionProjectProfileManager extends DefaultProjectProfileManager
-        implements ProjectComponent, SeverityProvider, PersistentStateComponent<Element> {
-  public InspectionProjectProfileManager(@Nonnull Project project,
-                                         @Nonnull InspectionProfileManager inspectionProfileManager,
-                                         @Nonnull DependencyValidationManager holder) {
+        implements ProjectComponent, SeverityProvider, PersistentStateComponent<Element>, consulo.language.editor.inspection.scheme.InspectionProjectProfileManager {
+  public InspectionProjectProfileManager(@Nonnull Project project, @Nonnull InspectionProfileManager inspectionProfileManager, @Nonnull DependencyValidationManager holder) {
     super(project, inspectionProfileManager, holder);
   }
 
   public static InspectionProjectProfileManager getInstance(Project project) {
-    return project.getComponent(InspectionProjectProfileManager.class);
+    return (InspectionProjectProfileManager)project.getComponent(consulo.language.editor.inspection.scheme.InspectionProjectProfileManager.class);
   }
 
   @Override
@@ -53,6 +51,7 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
     return getInspectionProfile().getName();
   }
 
+  @Override
   public InspectionProfileImpl getCurrentProfile() {
     return (InspectionProfileImpl)getInspectionProfile();
   }

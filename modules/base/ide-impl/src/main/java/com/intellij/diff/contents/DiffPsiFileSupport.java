@@ -15,17 +15,18 @@
  */
 package com.intellij.diff.contents;
 
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import com.intellij.codeInsight.daemon.impl.IntentionActionFilter;
 import com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
-import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoFilter;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -34,7 +35,7 @@ public class DiffPsiFileSupport {
 
   public static class HighlightFilter implements HighlightInfoFilter {
     @Override
-    public boolean accept(@Nonnull HighlightInfoImpl info, @Nullable PsiFile file) {
+    public boolean accept(@Nonnull HighlightInfo info, @Nullable PsiFile file) {
       if (!isDiffFile(file)) return true;
       if (info.getSeverity() == HighlightSeverity.ERROR) return false;
       return true;

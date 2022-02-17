@@ -1,12 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.psi.internal;
 
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
-import com.intellij.openapi.progress.util.ProgressWrapper;
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
@@ -27,7 +23,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -35,10 +30,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
-@Singleton
-public final class PsiManagerImpl extends PsiManagerEx {
+public class PsiManagerImpl extends PsiManagerEx {
   private static final Logger LOG = Logger.getInstance(PsiManagerImpl.class);
 
   private final Project myProject;
@@ -480,25 +473,5 @@ public final class PsiManagerImpl extends PsiManagerEx {
     assert ApplicationManager.getApplication().isUnitTestMode();
     myFileManager.cleanupForNextTest();
     dropPsiCaches();
-  }
-
-  public void dropResolveCacheRegularly(@Nonnull ProgressIndicator indicator) {
-    indicator = ProgressWrapper.unwrap(indicator);
-    if (indicator instanceof ProgressIndicatorEx) {
-      ((ProgressIndicatorEx)indicator).addStateDelegate(new AbstractProgressIndicatorExBase() {
-        private final AtomicLong lastClearedTimeStamp = new AtomicLong();
-
-        @Override
-        public void setFraction(double fraction) {
-          long current = System.currentTimeMillis();
-          long last = lastClearedTimeStamp.get();
-          if (current - last >= 500 && lastClearedTimeStamp.compareAndSet(last, current)) {
-            // fraction is changed when each file is processed =>
-            // resolve caches used when searching in that file are likely to be not needed anymore
-            dropResolveCaches();
-          }
-        }
-      });
-    }
   }
 }

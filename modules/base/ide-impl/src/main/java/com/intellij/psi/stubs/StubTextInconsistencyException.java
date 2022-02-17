@@ -25,7 +25,7 @@ import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.language.impl.psi.stub.FileContentImpl;
+import consulo.language.impl.psi.internal.stub.FileContentImpl;
 import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.PsiFileStubImpl;
 import consulo.language.psi.stub.StubTreeBuilder;

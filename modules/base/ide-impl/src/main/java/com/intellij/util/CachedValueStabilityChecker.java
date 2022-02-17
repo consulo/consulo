@@ -2,7 +2,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

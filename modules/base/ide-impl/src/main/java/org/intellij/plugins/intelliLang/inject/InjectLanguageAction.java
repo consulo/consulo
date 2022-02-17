@@ -27,7 +27,7 @@ import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.impl.psi.PsiModificationTrackerImpl;
+import consulo.language.impl.psi.internal.PsiModificationTrackerImpl;
 import com.intellij.psi.injection.Injectable;
 import com.intellij.psi.injection.ReferenceInjector;
 import com.intellij.ui.ColoredListCellRenderer;

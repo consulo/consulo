@@ -34,7 +34,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl;
-import consulo.language.editor.rawHighlight.SeverityProvider;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Function;
@@ -49,23 +48,25 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.markup.TextAttributes;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
@@ -91,7 +92,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
   private final boolean myIgnoreSuppressed;
   private final ConcurrentMap<PsiFile, List<InspectionResult>> result = ContainerUtil.newConcurrentMap();
   private static final String PRESENTABLE_NAME = DaemonBundle.message("pass.inspection");
-  private volatile List<HighlightInfoImpl> myInfos = Collections.emptyList();
+  private volatile List<HighlightInfo> myInfos = Collections.emptyList();
   private final String myShortcutText;
   private final SeverityRegistrarImpl mySeverityRegistrar;
   private final InspectionProfileWrapper myProfileWrapper;
@@ -127,7 +128,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
     myProfileWrapper = profileToUse;
     assert myProfileWrapper != null;
-    mySeverityRegistrar = ((SeverityProvider)myProfileWrapper.getInspectionProfile().getProfileManager()).getSeverityRegistrar();
+    mySeverityRegistrar = (SeverityRegistrarImpl)((SeverityProvider)myProfileWrapper.getInspectionProfile().getProfileManager()).getSeverityRegistrar();
 
     // initial guess
     setProgressLimit(300 * 2);
@@ -364,7 +365,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     if (isFileLevel) b.fileLevelAnnotation();
     if (problemDescriptor.getProblemGroup() != null) b.problemGroup(problemDescriptor.getProblemGroup());
 
-    return b.create();
+    return (HighlightInfoImpl)b.create();
   }
 
   private final Map<TextRange, RangeMarker> ranges2markersCache = new HashMap<>();
@@ -372,7 +373,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
           new TransferToEDTQueue<>("Apply inspection results", new Processor<Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator>>() {
             private final InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(myProject).getInspectionProfile();
             private final InjectedLanguageManager ilManager = InjectedLanguageManager.getInstance(myProject);
-            private final List<HighlightInfoImpl> infos = new ArrayList<>(2);
+            private final List<HighlightInfo> infos = new ArrayList<>(2);
             private final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
 
             @Override
@@ -393,11 +394,11 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
               infos.clear();
               createHighlightsForDescriptor(infos, emptyActionRegistered, ilManager, file, thisDocument, tool, severity, descriptor, psiElement);
-              for (HighlightInfoImpl info : infos) {
+              for (HighlightInfo info : infos) {
                 final EditorColorsScheme colorsScheme = getColorsScheme();
                 UpdateHighlightersUtil
-                        .addHighlighterToEditorIncrementally(myProject, myDocument, getFile(), myRestrictRange.getStartOffset(), myRestrictRange.getEndOffset(), info, colorsScheme, getId(),
-                                                             ranges2markersCache);
+                        .addHighlighterToEditorIncrementally(myProject, myDocument, getFile(), myRestrictRange.getStartOffset(), myRestrictRange.getEndOffset(), (HighlightInfoImpl)info, colorsScheme,
+                                                             getId(), ranges2markersCache);
               }
 
               return true;
@@ -438,7 +439,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, myRestrictRange.getStartOffset(), myRestrictRange.getEndOffset(), myInfos, getColorsScheme(), getId());
   }
 
-  private void addHighlightsFromResults(@Nonnull List<HighlightInfoImpl> outInfos, @Nonnull ProgressIndicator indicator) {
+  private void addHighlightsFromResults(@Nonnull List<HighlightInfo> outInfos, @Nonnull ProgressIndicator indicator) {
     InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(myProject).getInspectionProfile();
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
     InjectedLanguageManager ilManager = InjectedLanguageManager.getInstance(myProject);
@@ -467,7 +468,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     }
   }
 
-  private void createHighlightsForDescriptor(@Nonnull List<HighlightInfoImpl> outInfos,
+  private void createHighlightsForDescriptor(@Nonnull List<HighlightInfo> outInfos,
                                              @Nonnull Set<Pair<TextRange, String>> emptyActionRegistered,
                                              @Nonnull InjectedLanguageManager ilManager,
                                              @Nonnull PsiFile file,
@@ -526,7 +527,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
       if (toolTip != null) {
         builder.escapedToolTip(toolTip);
       }
-      HighlightInfoImpl patched = builder.createUnconditionally();
+      HighlightInfoImpl patched = (HighlightInfoImpl)builder.createUnconditionally();
       if (patched.startOffset != patched.endOffset || info.startOffset == info.endOffset) {
         patched.setFromInjection(true);
         registerQuickFixes(toolWrapper, descriptor, patched, emptyActionRegistered);
@@ -713,7 +714,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
   @Override
   @Nonnull
-  public List<HighlightInfoImpl> getInfos() {
+  public List<HighlightInfo> getInfos() {
     return myInfos;
   }
 

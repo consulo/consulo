@@ -2,30 +2,30 @@
 
 package com.intellij.codeInsight.intention.impl;
 
-import consulo.codeEditor.markup.GutterMark;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.application.AllIcons;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
-import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.LightColors;
+import consulo.application.AllIcons;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.GutterMark;
+import consulo.document.util.TextRange;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -42,7 +42,8 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
                                      @Nullable final List<Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange>> intentions,
                                      @Nonnull final Project project,
                                      @Nonnull final PsiFile psiFile,
-                                     @Nonnull final Editor editor, @Nullable String tooltip) {
+                                     @Nonnull final Editor editor,
+                                     @Nullable String tooltip) {
     super(getColor(project, severity));
     myProject = project;
 

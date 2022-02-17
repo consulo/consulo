@@ -25,7 +25,7 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import consulo.language.impl.SingleProjectHolder;
+import consulo.language.impl.psi.internal.SingleProjectHolder;
 import consulo.language.impl.ast.ChangeUtil;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeElement;
@@ -40,14 +40,12 @@ import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class ASTDelegatePsiElement extends PsiElementBase implements PsiElementWithSubtreeChangeNotifier {
   private static final Logger LOG = Logger.getInstance(ASTDelegatePsiElement.class);
 
-  private static final List EMPTY = Collections.emptyList();
-
+  @Nonnull
   @Override
   public PsiManager getManager() {
     Project project = SingleProjectHolder.theOnlyOpenProject();
@@ -72,7 +70,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   @RequiredReadAction
   public PsiElement[] getChildren() {
     PsiElement psiChild = getFirstChild();
-    if (psiChild == null) return EMPTY_ARRAY;
+    if (psiChild == null) return PsiElement.EMPTY_ARRAY;
 
     List<PsiElement> result = new ArrayList<PsiElement>();
     while (psiChild != null) {
@@ -251,12 +249,12 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   @RequiredReadAction
   @Nonnull
   protected <T extends PsiElement> List<T> findChildrenByType(TokenSet elementType) {
-    List<T> result = EMPTY;
+    List<T> result = List.of();
     ASTNode child = getNode().getFirstChildNode();
     while (child != null) {
       final IElementType tt = child.getElementType();
       if (elementType.contains(tt)) {
-        if (result == EMPTY) {
+        if (result == List.<T>of()) {
           result = new ArrayList<T>();
         }
         result.add((T)child.getPsi());
@@ -269,11 +267,11 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   @Nonnull
   @RequiredReadAction
   protected <T extends PsiElement> List<T> findChildrenByType(IElementType elementType) {
-    List<T> result = EMPTY;
+    List<T> result = List.of();
     ASTNode child = getNode().getFirstChildNode();
     while (child != null) {
       if (elementType == child.getElementType()) {
-        if (result == EMPTY) {
+        if (result == List.<T>of()) {
           result = new ArrayList<T>();
         }
         result.add((T)child.getPsi());

@@ -23,7 +23,7 @@ import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.psi.internal.SpineRef;
 import consulo.language.impl.psi.internal.SubstrateRef;
 import consulo.language.impl.psi.internal.SubstrateRefOwner;
-import consulo.language.impl.psi.stub.StubTreeLoader;
+import consulo.language.impl.psi.internal.stub.StubTreeLoader;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.PsiFileStubImpl;
 import consulo.language.psi.stub.StubBase;

@@ -36,7 +36,6 @@ import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.popup.WizardPopup;
 import consulo.project.ui.util.Alarm;
-import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
@@ -50,6 +49,7 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.ThreeState;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

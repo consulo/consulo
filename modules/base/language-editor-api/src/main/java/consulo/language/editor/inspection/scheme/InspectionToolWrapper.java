@@ -18,10 +18,9 @@ package consulo.language.editor.inspection.scheme;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.language.Language;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.inspection.CleanupLocalInspectionTool;
 import consulo.language.editor.inspection.GlobalInspectionContext;
-import consulo.language.editor.inspection.internal.InspectionToolsRegistrarCore;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.io.ResourceUtil;
@@ -60,7 +59,7 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
     myEP = other.myEP;
     // we need to create a copy for buffering
     //noinspection unchecked
-    myTool = other.myTool == null ? null : (T)InspectionToolsRegistrarCore.instantiateTool(other.myTool.getClass());
+    myTool = other.myTool == null ? null : (T)Application.get().getUnbindedInstance(other.myTool.getClass());
   }
 
   public void initialize(@Nonnull GlobalInspectionContext context) {
@@ -80,6 +79,10 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
       }
     }
     return myTool;
+  }
+
+  public E getEP() {
+    return myEP;
   }
 
   public boolean isInitialized() {

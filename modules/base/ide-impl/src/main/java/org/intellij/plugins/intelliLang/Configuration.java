@@ -35,7 +35,7 @@ import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.*;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import consulo.util.collection.MultiMap;

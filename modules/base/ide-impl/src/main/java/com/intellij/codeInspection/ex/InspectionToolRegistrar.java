@@ -16,23 +16,25 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.InspectionToolProvider;
+import com.intellij.codeInspection.InspectionToolsFactory;
+import com.intellij.codeInspection.LocalInspectionEP;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.util.Factory;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.progress.ProgressManager;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
-import consulo.language.editor.inspection.internal.InspectionToolsRegistrarCore;
 import consulo.language.editor.inspection.scheme.InspectionEP;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.logging.Logger;
-import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.util.Factory;
-import com.intellij.util.containers.ContainerUtil;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -117,12 +119,12 @@ public class InspectionToolRegistrar {
 
   @Nonnull
   private Factory<InspectionToolWrapper> registerLocalInspection(final Class toolClass, boolean store) {
-    return registerInspectionToolFactory(() -> new LocalInspectionToolWrapper((LocalInspectionTool)InspectionToolsRegistrarCore.instantiateTool(toolClass)), store);
+    return registerInspectionToolFactory(() -> new LocalInspectionToolWrapper((LocalInspectionTool)Application.get().getInjectingContainer().getUnbindedInstance(toolClass)), store);
   }
 
   @Nonnull
   private Factory<InspectionToolWrapper> registerGlobalInspection(@Nonnull final Class aClass, boolean store) {
-    return registerInspectionToolFactory(() -> new GlobalInspectionToolWrapper((GlobalInspectionTool) InspectionToolsRegistrarCore.instantiateTool(aClass)), store);
+    return registerInspectionToolFactory(() -> new GlobalInspectionToolWrapper((GlobalInspectionTool)Application.get().getInjectingContainer().getUnbindedInstance(aClass)), store);
   }
 
   @Nonnull

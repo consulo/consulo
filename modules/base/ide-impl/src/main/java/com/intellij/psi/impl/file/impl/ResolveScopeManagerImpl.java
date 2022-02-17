@@ -34,7 +34,7 @@ import consulo.language.impl.psi.internal.FileContextUtil;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;

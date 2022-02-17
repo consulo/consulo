@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.intention.impl;
 
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
@@ -24,13 +24,13 @@ import consulo.component.util.Iconable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
+import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

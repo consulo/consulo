@@ -45,7 +45,6 @@ public class LazyParseableElement extends CompositeElement {
     private ChameleonLock() {
     }
 
-    @NonNls
     @Override
     public String toString() {
       return "chameleon parsing lock";
@@ -130,7 +129,7 @@ public class LazyParseableElement extends CompositeElement {
   }
 
   @Override
-  protected int textMatches(@Nonnull CharSequence buffer, int start) {
+  public int textMatches(@Nonnull CharSequence buffer, int start) {
     CharSequence text = myText();
     if (text != null) {
       return LeafElement.leafTextMatches(text, buffer, start);

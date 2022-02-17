@@ -8,7 +8,7 @@ import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.InspectionExtensionsFactory;
 import consulo.language.editor.inspection.reference.RefManagerExtension;
 import consulo.language.Language;
-import consulo.language.impl.psi.PsiAnchor;
+import consulo.language.impl.psi.internal.PsiAnchor;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;

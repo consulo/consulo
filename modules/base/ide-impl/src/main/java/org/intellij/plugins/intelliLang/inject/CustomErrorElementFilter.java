@@ -15,10 +15,10 @@
  */
 package org.intellij.plugins.intelliLang.inject;
 
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoFilter;
-import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
+import consulo.language.editor.HighlightErrorFilter;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
@@ -31,12 +31,13 @@ import javax.annotation.Nullable;
  */
 public class CustomErrorElementFilter extends HighlightErrorFilter implements HighlightInfoFilter {
 
+  @Override
   public boolean shouldHighlightErrorElement(@Nonnull PsiErrorElement element) {
     return !isFrankenstein(element.getContainingFile());
   }
 
   @Override
-  public boolean accept(@Nonnull HighlightInfoImpl highlightInfo, @Nullable PsiFile file) {
+  public boolean accept(@Nonnull HighlightInfo highlightInfo, @Nullable PsiFile file) {
     if (highlightInfo.getSeverity() != HighlightSeverity.WARNING &&
         highlightInfo.getSeverity() != HighlightSeverity.WEAK_WARNING) return true;
     if (!isFrankenstein(file)) return true;

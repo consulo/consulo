@@ -33,7 +33,7 @@ import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
 import com.intellij.util.NullableFunction;
-import consulo.language.impl.psi.stub.FileContentImpl;
+import consulo.language.impl.psi.internal.stub.FileContentImpl;
 import consulo.index.io.data.DataExternalizer;
 import javax.annotation.Nonnull;
 

@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.application.util.RecursionGuard;
+import consulo.application.util.RecursionManager;
 import consulo.application.util.function.Computable;
 
 import javax.annotation.Nonnull;

@@ -1,15 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.psi.internal;
 
-import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
-import com.intellij.util.exception.FrequentErrorLogger;
 import consulo.application.util.function.ThrowableRunnable;
+import consulo.application.util.registry.Registry;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
-import consulo.logging.attachment.AttachmentFactory;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,7 +65,7 @@ import java.util.function.Supplier;
 public class AstLoadingFilter {
 
   private static final Logger LOG = Logger.getInstance(AstLoadingFilter.class);
-  private static final FrequentErrorLogger ourErrorLogger = FrequentErrorLogger.newInstance(LOG);
+  //TODO private static final FrequentErrorLogger ourErrorLogger = FrequentErrorLogger.newInstance(LOG);
   /**
    * Holds not-null value if loading was disabled in current thread.
    * Initial value is {@code null} meaning loading is enabled by default.
@@ -91,7 +89,7 @@ public class AstLoadingFilter {
     }
     else {
       AstLoadingException throwable = new AstLoadingException();
-      ourErrorLogger.error("Tree access disabled", throwable, AttachmentFactory.get().create("debugInfo", buildDebugInfo(file, disallowedInfo)));
+      // TODO ourErrorLogger.error("Tree access disabled", throwable, AttachmentFactory.get().create("debugInfo", buildDebugInfo(file, disallowedInfo)));
     }
   }
 

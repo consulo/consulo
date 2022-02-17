@@ -352,7 +352,7 @@
                     interface="consulo.language.editor.rawHighlight.HighlightVisitor"
                     area="PROJECT"/>
     <extensionPoint name="highlightErrorFilter"
-                    interface="com.intellij.codeInsight.highlighting.HighlightErrorFilter"
+                    interface="consulo.language.editor.HighlightErrorFilter"
                     area="PROJECT"/>
 
     <extensionPoint name="daemon.tooltipActionProvider"
@@ -1516,7 +1516,7 @@
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.CharsetEP"/>
 
-    <iconDescriptorUpdater implementation="consulo.language.impl.LockedIconDescriptorUpdater"/>
+    <iconDescriptorUpdater implementation="consulo.ide.impl.language.LockedIconDescriptorUpdater"/>
 
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.LargeFileEditorProvider"/>
 
@@ -1718,7 +1718,7 @@
                         serviceImplementation="com.intellij.execution.filters.TextConsoleBuilderFactoryImpl"/>
 
     <applicationService serviceInterface="consulo.language.parser.PsiBuilderFactory"
-                        serviceImplementation="com.intellij.lang.impl.PsiBuilderFactoryImpl"/>
+                        serviceImplementation="consulo.language.impl.parser.internal.PsiBuilderFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.documentation.DocumentationManagerUtil"
                         serviceImplementation="com.intellij.codeInsight.documentation.DocumentationManagerUtil"/>
@@ -1830,13 +1830,13 @@
     <applicationService serviceInterface="consulo.language.impl.psi.internal.DocumentCommitProcessor"
                         serviceImplementation="com.intellij.psi.impl.DocumentCommitThread"/>
 
-    <applicationService serviceInterface="consulo.language.impl.psi.stub.StubTreeLoader"
+    <applicationService serviceInterface="consulo.language.impl.psi.internal.stub.StubTreeLoader"
                         serviceImplementation="com.intellij.psi.stubs.StubTreeLoaderImpl"/>
 
     <applicationService serviceInterface="consulo.language.psi.PsiNavigationSupport"
                         serviceImplementation="com.intellij.ide.util.PsiNavigationSupportImpl"/>
 
-    <applicationService serviceInterface="com.intellij.psi.impl.source.codeStyle.IndentHelper"
+    <applicationService serviceInterface="consulo.language.impl.psi.internal.IndentHelper"
                         serviceImplementation="com.intellij.psi.impl.source.codeStyle.IndentHelperImpl"/>
 
     <applicationService serviceInterface="com.intellij.conversion.ConversionService"
@@ -1940,7 +1940,7 @@
 
     <projectService serviceInterface="consulo.language.editor.scope.NamedScopeManager"
                     serviceImplementation="consulo.language.editor.scope.NamedScopeManager"/>
-    <namedScopesHolderProvider implementation="consulo.language.psi.search.scope.impl.DefaultNamedScopesHolderProvider"/>
+    <namedScopesHolderProvider implementation="consulo.ide.impl.language.psi.search.scope.DefaultNamedScopesHolderProvider"/>
 
     <projectService serviceInterface="com.intellij.packageDependencies.DependencyValidationManager"
                     serviceImplementation="com.intellij.packageDependencies.DependencyValidationManagerImpl"/>
@@ -2411,7 +2411,7 @@
     <editorTabTitleProvider implementation="com.intellij.openapi.fileEditor.impl.UniqueNameEditorTabTitleProvider"/>
 
     <projectService serviceInterface="consulo.language.psi.PsiModificationTracker"
-                    serviceImplementation="consulo.language.impl.psi.PsiModificationTrackerImpl"/>
+                    serviceImplementation="consulo.language.impl.psi.internal.PsiModificationTrackerImpl"/>
 
     <itemPresentationProvider forClass="consulo.language.psi.PsiDirectory"
                               implementationClass="com.intellij.navigation.DirectoryPresentationProvider"/>
@@ -2810,6 +2810,7 @@
     <applicationService serviceInterface="consulo.process.DefaultCharsetProvider" serviceImplementation="consulo.process.impl.DefaultCharsetProviderImpl"/>
     <applicationService serviceInterface="consulo.project.ui.notification.internal.NotificationActionInvoker"
                         serviceImplementation="consulo.project.ui.notification.impl.NotificationActionInvokerImpl"/>
+    <applicationService serviceInterface="consulo.virtualFileSystem.RawFileLoader" serviceImplementation="consulo.virtualFileSystem.impl.RawFileLoaderImpl"/>
   </extensions>
 
   <applicationListeners>

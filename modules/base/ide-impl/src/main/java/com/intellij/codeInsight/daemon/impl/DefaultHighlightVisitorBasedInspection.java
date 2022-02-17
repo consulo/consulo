@@ -2,34 +2,36 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
-import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.GlobalInspectionUtil;
+import com.intellij.codeInspection.GlobalSimpleInspectionTool;
 import com.intellij.codeInspection.ex.GlobalInspectionContextBase;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightVisitor;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.document.Document;
+import com.intellij.openapi.util.Pair;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.ProblemDescriptionsProcessor;
 import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -100,9 +102,9 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
                         @Nonnull ProblemsHolder problemsHolder,
                         @Nonnull GlobalInspectionContext globalContext,
                         @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor) {
-    for (Pair<PsiFile, HighlightInfoImpl> pair : runAnnotatorsInGeneralHighlighting(originalFile, highlightErrorElements, runAnnotators)) {
+    for (Pair<PsiFile, HighlightInfo> pair : runAnnotatorsInGeneralHighlighting(originalFile, highlightErrorElements, runAnnotators)) {
       PsiFile file = pair.first;
-      HighlightInfoImpl info = pair.second;
+      HighlightInfoImpl info = (HighlightInfoImpl)pair.second;
       TextRange range = new TextRange(info.startOffset, info.endOffset);
       PsiElement element = file.findElementAt(info.startOffset);
 
@@ -119,7 +121,7 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
   }
 
   @Nonnull
-  public static List<Pair<PsiFile, HighlightInfoImpl>> runAnnotatorsInGeneralHighlighting(@Nonnull PsiFile file, boolean highlightErrorElements, boolean runAnnotators) {
+  public static List<Pair<PsiFile, HighlightInfo>> runAnnotatorsInGeneralHighlighting(@Nonnull PsiFile file, boolean highlightErrorElements, boolean runAnnotators) {
     ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
     MyPsiElementVisitor visitor = new MyPsiElementVisitor(highlightErrorElements, runAnnotators);
     if (indicator instanceof DaemonProgressIndicator) {
@@ -141,7 +143,7 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
   private static class MyPsiElementVisitor extends PsiElementVisitor {
     private final boolean highlightErrorElements;
     private final boolean runAnnotators;
-    private final List<Pair<PsiFile, HighlightInfoImpl>> result = new ArrayList<>();
+    private final List<Pair<PsiFile, HighlightInfo>> result = new ArrayList<>();
 
     MyPsiElementVisitor(boolean highlightErrorElements, boolean runAnnotators) {
       this.highlightErrorElements = highlightErrorElements;
@@ -160,7 +162,7 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
   }
 
   @Nonnull
-  private static List<Pair<PsiFile, HighlightInfoImpl>> runAnnotatorsInGeneralHighlightingPass(@Nonnull PsiFile file, boolean highlightErrorElements, boolean runAnnotators) {
+  private static List<Pair<PsiFile, HighlightInfo>> runAnnotatorsInGeneralHighlightingPass(@Nonnull PsiFile file, boolean highlightErrorElements, boolean runAnnotators) {
     Project project = file.getProject();
     Document document = PsiDocumentManager.getInstance(project).getDocument(file);
     if (document == null) return Collections.emptyList();
@@ -179,11 +181,11 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
       });
     }
 
-    List<Pair<PsiFile, HighlightInfoImpl>> result = new ArrayList<>();
+    List<Pair<PsiFile, HighlightInfo>> result = new ArrayList<>();
     for (TextEditorHighlightingPass pass : gpasses) {
       pass.doCollectInformation(progress);
-      List<HighlightInfoImpl> infos = pass.getInfos();
-      for (HighlightInfoImpl info : infos) {
+      List<HighlightInfo> infos = pass.getInfos();
+      for (HighlightInfo info : infos) {
         if (info != null && info.getSeverity().compareTo(HighlightSeverity.INFORMATION) > 0) {
           result.add(Pair.create(file, info));
         }

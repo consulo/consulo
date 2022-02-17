@@ -26,7 +26,7 @@ import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.file.internal.FileManagerImpl;
 import consulo.language.impl.psi.internal.*;
 import consulo.language.impl.psi.internal.diff.BlockSupportImpl;
-import consulo.language.impl.psi.stub.StubTreeLoader;
+import consulo.language.impl.psi.internal.stub.StubTreeLoader;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;

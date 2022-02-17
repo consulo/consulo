@@ -3,40 +3,41 @@
 package com.intellij.psi.impl;
 
 import com.intellij.AppTopics;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.ast.ASTNode;
-import consulo.language.impl.psi.internal.BooleanRunnable;
-import consulo.language.impl.psi.internal.DocumentCommitProcessor;
-import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.document.Document;
-import consulo.codeEditor.EditorFactory;
-import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
-import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.project.ProjectLocator;
 import com.intellij.openapi.project.impl.ProjectImpl;
-import consulo.disposer.Disposer;
-import consulo.document.util.Segment;
-import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.pom.core.impl.PomModelImpl;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.PsiFile;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.progress.ProgressIndicator;
+import consulo.codeEditor.EditorFactory;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.event.DocumentEvent;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.impl.psi.internal.BooleanRunnable;
+import consulo.language.impl.psi.internal.DocumentCommitProcessor;
+import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectLocator;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -48,6 +49,8 @@ import java.util.*;
 //todo listen & notifyListeners readonly events?
 @Singleton
 public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
+  private static final Logger LOG = Logger.getInstance(PsiDocumentManagerImpl.class);
+
   private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
   public PsiDocumentManagerImpl(@Nonnull Project project, @Nonnull DocumentCommitProcessor documentCommitProcessor) {
@@ -160,12 +163,12 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
 
   @Nonnull
   @Override
-  List<BooleanRunnable> reparseChangedInjectedFragments(@Nonnull Document hostDocument,
-                                                        @Nonnull PsiFile hostPsiFile,
-                                                        @Nonnull TextRange hostChangedRange,
-                                                        @Nonnull ProgressIndicator indicator,
-                                                        @Nonnull ASTNode oldRoot,
-                                                        @Nonnull ASTNode newRoot) {
+  public List<BooleanRunnable> reparseChangedInjectedFragments(@Nonnull Document hostDocument,
+                                                               @Nonnull PsiFile hostPsiFile,
+                                                               @Nonnull TextRange hostChangedRange,
+                                                               @Nonnull ProgressIndicator indicator,
+                                                               @Nonnull ASTNode oldRoot,
+                                                               @Nonnull ASTNode newRoot) {
     List<DocumentWindow> changedInjected = InjectedLanguageManager.getInstance(myProject).getCachedInjectedDocumentsInRange(hostPsiFile, hostChangedRange);
     if (changedInjected.isEmpty()) return Collections.emptyList();
     FileViewProvider hostViewProvider = hostPsiFile.getViewProvider();

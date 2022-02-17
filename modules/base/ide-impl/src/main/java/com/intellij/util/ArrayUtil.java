@@ -318,14 +318,14 @@ public class ArrayUtil extends ArrayUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> T[] mergeArrays(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull ArrayFactory<T> factory) {
+  public static <T> T[] mergeArrays(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull IntFunction<T[]> factory) {
     if (a1.length == 0) {
       return a2;
     }
     if (a2.length == 0) {
       return a1;
     }
-    T[] result = factory.create(a1.length + a2.length);
+    T[] result = factory.apply(a1.length + a2.length);
     System.arraycopy(a1, 0, result, 0, a1.length);
     System.arraycopy(a2, 0, result, a1.length, a2.length);
     return result;

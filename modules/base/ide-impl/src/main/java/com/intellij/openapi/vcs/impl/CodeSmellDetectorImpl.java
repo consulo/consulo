@@ -26,21 +26,17 @@ import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.CodeSmellDetector;
 import com.intellij.openapi.vcs.VcsBundle;
-import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ui.MessageCategory;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
+import consulo.application.progress.*;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -177,7 +173,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
             if (psiFile == null || document == null) {
               return;
             }
-            List<HighlightInfoImpl> infos = codeAnalyzer.runMainPasses(psiFile, document, daemonIndicator);
+            List<HighlightInfo> infos = codeAnalyzer.runMainPasses(psiFile, document, daemonIndicator);
             convertErrorsAndWarnings(infos, result, document);
           }
         });
@@ -187,21 +183,21 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     return result;
   }
 
-  private void convertErrorsAndWarnings(@Nonnull Collection<HighlightInfoImpl> highlights,
+  private void convertErrorsAndWarnings(@Nonnull Collection<HighlightInfo> highlights,
                                         @Nonnull List<CodeSmellInfo> result,
                                         @Nonnull Document document) {
-    for (HighlightInfoImpl highlightInfo : highlights) {
+    for (HighlightInfo highlightInfo : highlights) {
       final HighlightSeverity severity = highlightInfo.getSeverity();
       if (SeverityRegistrarImpl.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
         result.add(new CodeSmellInfo(document, getDescription(highlightInfo),
-                                     new TextRange(highlightInfo.startOffset, highlightInfo.endOffset), severity));
+                                     new TextRange(highlightInfo.getStartOffset(), highlightInfo.getEndOffset()), severity));
       }
     }
   }
 
-  private static String getDescription(@Nonnull HighlightInfoImpl highlightInfo) {
+  private static String getDescription(@Nonnull HighlightInfo highlightInfo) {
     final String description = highlightInfo.getDescription();
-    final HighlightInfoType type = highlightInfo.type;
+    final HighlightInfoType type = highlightInfo.getType();
     if (type instanceof HighlightInfoType.HighlightInfoTypeSeverityByKey) {
       final HighlightDisplayKey severityKey = ((HighlightInfoType.HighlightInfoTypeSeverityByKey)type).getSeverityKey();
       final String id = severityKey.getID();

@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.execution.lineMarker.LineMarkerActionWrapper;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;

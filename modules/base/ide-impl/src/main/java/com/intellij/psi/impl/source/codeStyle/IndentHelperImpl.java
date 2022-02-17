@@ -17,15 +17,16 @@
 package com.intellij.psi.impl.source.codeStyle;
 
 import com.intellij.application.options.CodeStyle;
-import consulo.language.ast.ASTNode;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.internal.IndentHelper;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.psi.impl.source.codeStyle.IndentHelperExtension;
+import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 
 @Singleton
 public final class IndentHelperImpl extends IndentHelper {
@@ -40,9 +41,9 @@ public final class IndentHelperImpl extends IndentHelper {
 
   @Override
   public int getIndent(@Nonnull PsiFile file, @Nonnull final ASTNode element, boolean includeNonSpace) {
-    for (IndentHelperExtension extension : IndentHelperExtension.EP_NAME.getExtensions()) {
-      if (extension.isAvaliable(file)) {
-        return extension.getIndentInner(this, file, element, includeNonSpace, 0);
+    for (IndentHelperExtension extension : IndentHelperExtension.EP_NAME.getExtensionList()) {
+      if (extension.isAvailable(file)) {
+        return extension.getIndentInner(file, element, includeNonSpace, 0);
       }
     }
     return 0;

@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.openapi.editor.ex.ErrorStripeAdapter;
 import com.intellij.openapi.editor.ex.ErrorStripeEvent;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

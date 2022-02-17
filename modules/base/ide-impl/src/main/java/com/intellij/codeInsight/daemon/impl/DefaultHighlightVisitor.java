@@ -3,9 +3,9 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.AnnotatorStatisticsCollector;
 import com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.rawHighlight.HighlightInfoHolder;
-import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
+import consulo.language.editor.HighlightErrorFilter;
 import com.intellij.diagnostic.PluginException;
 import consulo.language.Language;
 import com.intellij.lang.LanguageAnnotators;
@@ -26,7 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
@@ -159,7 +159,7 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     TextRange range = element.getTextRange();
     LocalizeValue errorDescription = element.getErrorDescriptionValue();
     if (!range.isEmpty()) {
-      return HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(range).descriptionAndTooltip(errorDescription).create();
+      return (HighlightInfoImpl)HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(range).descriptionAndTooltip(errorDescription).create();
     }
     int offset = range.getStartOffset();
     PsiFile containingFile = element.getContainingFile();
@@ -170,7 +170,7 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     if (offset < fileLength && text != null && !StringUtil.startsWithChar(text, '\n') && !StringUtil.startsWithChar(text, '\r')) {
       HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(offset, offset + 1);
       builder.descriptionAndTooltip(errorDescription);
-      return builder.create();
+      return (HighlightInfoImpl)builder.create();
     }
     int start;
     int end;
@@ -185,7 +185,7 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(element, start, end);
     builder.descriptionAndTooltip(errorDescription);
     builder.endOfLine();
-    return builder.create();
+    return (HighlightInfoImpl)builder.create();
   }
 
   @Nonnull

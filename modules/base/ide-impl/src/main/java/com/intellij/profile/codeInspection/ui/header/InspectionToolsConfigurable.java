@@ -359,7 +359,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
                   for (String level : levels) {
                     final TextAttributes textAttributes = CodeInsightColors.WARNINGS_ATTRIBUTES.getDefaultAttributes();
                     HighlightInfoType.HighlightInfoTypeImpl info = new HighlightInfoType.HighlightInfoTypeImpl(new HighlightSeverity(level, 50), TextAttributesKey.createTextAttributesKey(level));
-                    myProfileManager.getOwnSeverityRegistrar().registerSeverity(new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes.clone(), info), textAttributes.getErrorStripeColor());
+                    ((SeverityRegistrarImpl)myProfileManager.getOwnSeverityRegistrar()).registerSeverity(new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes.clone(), info), textAttributes.getErrorStripeColor());
                   }
                 }
               }

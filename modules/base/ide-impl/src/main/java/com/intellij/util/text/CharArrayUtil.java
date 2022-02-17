@@ -15,10 +15,9 @@
  */
 package com.intellij.util.text;
 
-import consulo.document.util.TextRange;
 import consulo.annotation.internal.MigratedExtensionsTo;
+import consulo.document.util.TextRange;
 import consulo.util.lang.ImmutableCharSequence;
-import consulo.util.lang.ImmutableText;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -346,6 +345,6 @@ public class CharArrayUtil {
 
   @Nonnull
   public static ImmutableCharSequence createImmutableCharSequence(@Nonnull CharSequence sequence) {
-    return ImmutableText.valueOf(sequence);
+    return consulo.util.lang.CharArrayUtil.createImmutableCharSequence(sequence);
   }
 }

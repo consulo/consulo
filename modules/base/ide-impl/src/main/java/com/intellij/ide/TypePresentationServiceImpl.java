@@ -19,7 +19,7 @@ import com.intellij.ide.presentation.Presentation;
 import com.intellij.ide.presentation.PresentationProvider;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.ui.image.Image;

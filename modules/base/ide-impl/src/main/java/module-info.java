@@ -501,7 +501,6 @@ open module consulo.ide.impl {
   exports com.intellij.lang.documentation;
   exports com.intellij.lang.findUsages;
   exports com.intellij.lang.folding;
-  exports com.intellij.lang.impl;
   exports com.intellij.lang.injection;
   exports com.intellij.lang.parameterInfo;
   exports com.intellij.lang.parser;
@@ -761,11 +760,7 @@ open module consulo.ide.impl {
   exports com.intellij.platform.templates.github;
   exports com.intellij.pom;
   exports com.intellij.pom.core.impl;
-  exports com.intellij.pom.impl;
   exports com.intellij.pom.references;
-  exports com.intellij.pom.tree;
-  exports com.intellij.pom.tree.events;
-  exports com.intellij.pom.tree.events.impl;
   exports com.intellij.pom.wrappers;
   exports com.intellij.problems;
   exports com.intellij.profile;
@@ -805,7 +800,6 @@ open module consulo.ide.impl {
   exports com.intellij.psi.impl.light;
   exports com.intellij.psi.impl.meta;
   exports com.intellij.psi.impl.search;
-  exports com.intellij.psi.impl.smartPointers;
   exports com.intellij.psi.impl.source;
   exports com.intellij.psi.impl.source.codeStyle;
   exports com.intellij.psi.impl.source.codeStyle.lineIndent;
@@ -977,7 +971,6 @@ open module consulo.ide.impl {
   exports com.intellij.util.config;
   exports com.intellij.util.containers;
   exports com.intellij.util.continuation;
-  exports com.intellij.util.diff;
   exports com.intellij.util.exception;
   exports com.intellij.util.gist;
   exports com.intellij.util.graph;

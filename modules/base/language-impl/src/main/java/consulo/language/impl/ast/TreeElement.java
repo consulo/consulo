@@ -10,7 +10,7 @@ import consulo.language.ast.TokenType;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.light.ReadOnlyLightVirtualFile;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.SingleProjectHolder;
+import consulo.language.impl.psi.internal.SingleProjectHolder;
 import consulo.language.impl.ast.internal.SharedImplUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.psi.internal.TreeUtil;

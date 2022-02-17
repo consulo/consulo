@@ -57,7 +57,7 @@
 
     <component>
       <interface-class>consulo.language.psi.PsiManager</interface-class>
-      <implementation-class>consulo.language.impl.psi.internal.PsiManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.language.psi.IdePsiManagerImpl</implementation-class>
       <loadForDefaultProject/>
     </component>
 
@@ -119,7 +119,7 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.profile.codeInspection.InspectionProjectProfileManager</interface-class>
+      <interface-class>consulo.language.editor.inspection.scheme.InspectionProjectProfileManager</interface-class>
       <implementation-class>com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl</implementation-class>
       <loadForDefaultProject/>
     </component>

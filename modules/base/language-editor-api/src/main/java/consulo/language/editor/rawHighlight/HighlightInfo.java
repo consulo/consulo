@@ -15,21 +15,25 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import consulo.document.util.Segment;
-import consulo.document.util.TextRange;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.TextAttributes;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.annotation.ProblemGroup;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.internal.HighlightInfoFactory;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -139,4 +143,16 @@ public interface HighlightInfo extends Segment {
   int getActualStartOffset();
 
   int getActualEndOffset();
+
+  String getDescription();
+
+  HighlightInfoType getType();
+
+  @Nullable
+  TextAttributes getTextAttributes(@Nullable PsiElement element, @Nullable EditorColorsScheme editorColorsScheme);
+
+  @Nullable
+  GutterMark getGutterIconRenderer();
+
+  void registerFix(@Nullable IntentionAction action, @Nullable List<IntentionAction> options, @Nullable String displayName, @Nullable TextRange fixRange, @Nullable HighlightDisplayKey key);
 }

@@ -21,7 +21,7 @@ import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationHolder;
 import consulo.language.editor.annotation.ExternalAnnotator;
 import consulo.document.util.TextRange;
-import consulo.language.impl.psi.PsiAnchor;
+import consulo.language.impl.psi.internal.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;

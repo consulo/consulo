@@ -36,7 +36,7 @@ import java.util.List;
  */
 public abstract class InspectionProfileManager extends ApplicationProfileManager implements SeverityProvider {
   public static final String INSPECTION_DIR = "inspection";
-  protected static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + '/' + INSPECTION_DIR;
+  public static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + '/' + INSPECTION_DIR;
 
   private final List<ProfileChangeAdapter> myProfileChangeAdapters = Lists.newLockFreeCopyOnWriteList();
 

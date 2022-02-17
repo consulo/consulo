@@ -399,7 +399,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
-  ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler() {
+  public ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler() {
     return myReadonlyFragmentModificationHandler;
   }
 
@@ -752,7 +752,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     myFrozen = null;
   }
 
-  void clearLineModificationFlagsExcept(@Nonnull int[] caretLines) {
+  public void clearLineModificationFlagsExcept(@Nonnull int[] caretLines) {
     IntList modifiedLines = IntLists.newArrayList(caretLines.length);
     LineSet lineSet = getLineSet();
     for (int line : caretLines) {

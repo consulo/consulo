@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.DaemonBundle;
@@ -24,11 +24,12 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -95,7 +96,9 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
     Document document = myEditor.getDocument();
     final List<HighlightInfoImpl> infos = new ArrayList<>();
-    DaemonCodeAnalyzerEx.processHighlights(document, myProject, null, 0, document.getTextLength(), info -> {
+    DaemonCodeAnalyzerEx.processHighlights(document, myProject, null, 0, document.getTextLength(), i -> {
+      HighlightInfoImpl info = (HighlightInfoImpl)i;
+
       if (info.hasHint() && info.getSeverity() == HighlightSeverity.ERROR && !info.getFixTextRange().containsOffset(caretOffset)) {
         infos.add(info);
       }
@@ -120,7 +123,8 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
   private static List<HighlightInfoImpl> getVisibleHighlights(final int startOffset, final int endOffset, @Nonnull Project project, @Nonnull Editor editor, boolean isDirty) {
     final List<HighlightInfoImpl> highlights = new ArrayList<>();
     int offset = editor.getCaretModel().getOffset();
-    DaemonCodeAnalyzerEx.processHighlights(editor.getDocument(), project, null, startOffset, endOffset, info -> {
+    DaemonCodeAnalyzerEx.processHighlights(editor.getDocument(), project, null, startOffset, endOffset, i -> {
+      HighlightInfoImpl info = (HighlightInfoImpl)i;
       //no changes after escape => suggest imports under caret only
       if (!isDirty && !info.getFixTextRange().contains(offset)) {
         return true;

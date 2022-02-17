@@ -100,7 +100,7 @@ public class EncodingUtil {
       String lineSeparator = FileDocumentManager.getInstance().getLineSeparator(virtualFile, null);
       CharSequence textToSave = lineSeparator.equals("\n") ? text : StringUtilRt.convertLineSeparators(text, lineSeparator);
 
-      Pair<Charset, byte[]> chosen = LoadTextUtil.chooseMostlyHarmlessCharset(virtualFile.getCharset(), charset, textToSave.toString());
+      consulo.util.lang.Pair<Charset, byte[]> chosen = LoadTextUtil.chooseMostlyHarmlessCharset(virtualFile.getCharset(), charset, textToSave.toString());
 
       byte[] saved = chosen.second;
 

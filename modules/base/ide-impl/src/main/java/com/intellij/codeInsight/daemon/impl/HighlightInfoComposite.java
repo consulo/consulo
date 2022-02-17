@@ -2,12 +2,12 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.document.RangeMarker;
-import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.templateLanguages;
 
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import consulo.language.editor.intention.IntentionAction;

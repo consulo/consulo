@@ -15,34 +15,33 @@
  */
 package com.intellij.psi.stubs;
 
-import consulo.index.io.ID;
-import consulo.language.Language;
-import consulo.language.impl.psi.stub.IndexingStampInfo;
-import consulo.language.impl.psi.stub.SubstitutedFileType;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.ParserDefinition;
-import consulo.application.ReadAction;
-import consulo.language.psi.stub.*;
-import consulo.language.psi.stub.StubTreeBuilder;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.LanguageFileType;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.project.Project;
-import consulo.project.ProjectLocator;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.language.ast.IFileElementType;
 import com.intellij.util.BitUtil;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.DebugAssertions;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.indexing.impl.InputDataDiffBuilder;
 import com.intellij.util.indexing.impl.forward.EmptyForwardIndex;
+import com.intellij.util.io.PersistentHashMapValueStorage;
+import consulo.application.ReadAction;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.index.io.ID;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
-import com.intellij.util.io.PersistentHashMapValueStorage;
+import consulo.language.Language;
+import consulo.language.ast.IFileElementType;
+import consulo.language.file.LanguageFileType;
+import consulo.language.impl.psi.internal.stub.IndexingStampInfo;
+import consulo.language.impl.psi.internal.stub.SubstitutedFileType;
+import consulo.language.parser.LanguageParserDefinitions;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectLocator;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -213,7 +212,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
   }
 
   @Nullable
-  static IndexingStampInfo getIndexingStampInfo(@Nonnull VirtualFile file) {
+  public static IndexingStampInfo getIndexingStampInfo(@Nonnull VirtualFile file) {
     try (DataInputStream stream = INDEXED_STAMP.readAttribute(file)) {
       if (stream == null) {
         return null;

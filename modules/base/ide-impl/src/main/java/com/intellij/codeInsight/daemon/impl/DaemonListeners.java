@@ -3,7 +3,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.event.*;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.module.content.ProjectTopics;

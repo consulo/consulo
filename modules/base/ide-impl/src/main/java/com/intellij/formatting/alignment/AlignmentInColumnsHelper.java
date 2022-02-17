@@ -16,12 +16,13 @@
 package com.intellij.formatting.alignment;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nullable;
 
 import java.util.List;

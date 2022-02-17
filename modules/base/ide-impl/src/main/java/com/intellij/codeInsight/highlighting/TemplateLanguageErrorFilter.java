@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.highlighting;
 
 import consulo.language.Language;
+import consulo.language.editor.HighlightErrorFilter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;

@@ -25,28 +25,29 @@ import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesHandler;
 import com.intellij.find.findUsages.FindUsagesManager;
 import com.intellij.find.impl.FindManagerImpl;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.psi.*;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import consulo.codeEditor.markup.MarkupModel;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import consulo.language.psi.scope.LocalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.progress.ProgressIndicator;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.codeInsight.TargetElementUtilEx;
-import javax.annotation.Nonnull;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.psi.*;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.logging.Logger;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -197,11 +198,11 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   @Override
   public void doApplyInformationToEditor() {
     final boolean virtSpace = TargetElementUtil.inVirtualSpace(myEditor, myEditor.getCaretModel().getOffset());
-    final List<HighlightInfoImpl> infos = virtSpace ? Collections.<HighlightInfoImpl>emptyList() : getHighlights();
+    final List<HighlightInfo> infos = virtSpace ? Collections.<HighlightInfo>emptyList() : getHighlights();
     UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());
   }
 
-  private List<HighlightInfoImpl> getHighlights() {
+  private List<HighlightInfo> getHighlights() {
     if (myReadAccessRanges.isEmpty() && myWriteAccessRanges.isEmpty()) {
       return Collections.emptyList();
     }
@@ -210,7 +211,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
       existingMarkupTooltips.add(Pair.create(highlighter.getErrorStripeTooltip(), new TextRange(highlighter.getStartOffset(), highlighter.getEndOffset())));
     }
 
-    List<HighlightInfoImpl> result = new ArrayList<>(myReadAccessRanges.size() + myWriteAccessRanges.size());
+    List<HighlightInfo> result = new ArrayList<>(myReadAccessRanges.size() + myWriteAccessRanges.size());
     for (TextRange range: myReadAccessRanges) {
       ContainerUtil.addIfNotNull(result, createHighlightInfo(range, HighlightInfoType.ELEMENT_UNDER_CARET_READ, existingMarkupTooltips));
     }
@@ -220,11 +221,11 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     return result;
   }
 
-  private HighlightInfoImpl createHighlightInfo(TextRange range, HighlightInfoType type, Set<Pair<Object, TextRange>> existingMarkupTooltips) {
+  private HighlightInfo createHighlightInfo(TextRange range, HighlightInfoType type, Set<Pair<Object, TextRange>> existingMarkupTooltips) {
     int start = range.getStartOffset();
     String tooltip = start <= myDocument.getTextLength() ? HighlightHandlerBase.getLineTextErrorStripeTooltip(myDocument, start, false) : null;
     String unescapedTooltip = existingMarkupTooltips.contains(new Pair<Object, TextRange>(tooltip, range)) ? null : tooltip;
-    HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(type).range(range);
+    HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(type).range(range);
     if (unescapedTooltip != null) {
       builder.unescapedToolTip(unescapedTooltip);
     }

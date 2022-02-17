@@ -27,7 +27,7 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon.impl.quickfix;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.QuickFixActionRegistrar;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;

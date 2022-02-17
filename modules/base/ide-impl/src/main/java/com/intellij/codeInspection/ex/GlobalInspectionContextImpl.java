@@ -16,42 +16,27 @@
 
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.analysis.AnalysisUIOptions;
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
-import consulo.language.editor.FileModificationService;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoProcessor;
 import com.intellij.codeInsight.daemon.impl.LocalInspectionsPass;
-import com.intellij.codeInspection.*;
-import consulo.language.editor.inspection.GlobalInspectionContextExtension;
-import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
+import com.intellij.codeInspection.GlobalSimpleInspectionTool;
 import com.intellij.codeInspection.reference.RefManagerImpl;
-import consulo.language.editor.inspection.reference.RefVisitor;
 import com.intellij.codeInspection.ui.DefaultInspectionToolPresentation;
 import com.intellij.codeInspection.ui.InspectionResultsView;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import com.intellij.concurrency.JobLauncherImpl;
 import com.intellij.concurrency.SensitiveProgressWrapper;
-import consulo.language.editor.annotation.ProblemGroup;
-import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import consulo.module.content.util.ProjectUtilCore;
-import consulo.util.lang.EmptyRunnable;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.impl.file.SingleRootFileViewProvider;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.SequentialModalProgressTask;
-import consulo.util.lang.function.TripleFunction;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -67,13 +52,24 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.annotation.ProblemGroup;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.util.ProjectUtilCore;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
@@ -86,8 +82,11 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.TripleFunction;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -807,8 +806,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     if (presentation == null) {
       Class<?> presentationClass = null;
 
-      if (toolWrapper.myEP != null && !StringUtil.isEmpty(toolWrapper.myEP.presentation)) {
-        presentationClass = toolWrapper.myEP.findClassNoExceptions(toolWrapper.myEP.presentation);
+      if (toolWrapper.getEP() != null && !StringUtil.isEmpty(toolWrapper.getEP().presentation)) {
+        presentationClass = toolWrapper.getEP().findClassNoExceptions(toolWrapper.getEP().presentation);
       }
 
       if (presentationClass == null) {
@@ -860,7 +859,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
     final List<LocalInspectionToolWrapper> lTools = new ArrayList<LocalInspectionToolWrapper>();
 
-    final LinkedHashMap<PsiFile, List<HighlightInfoImpl>> results = new LinkedHashMap<PsiFile, List<HighlightInfoImpl>>();
+    final LinkedHashMap<PsiFile, List<HighlightInfo>> results = new LinkedHashMap<>();
 
     final SearchScope searchScope = scope.toSearchScope();
     final TextRange range;
@@ -912,10 +911,10 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             }
           };
           ApplicationManager.getApplication().runReadAction(runnable);
-          final List<HighlightInfoImpl> infos = pass.getInfos();
+          final List<HighlightInfo> infos = pass.getInfos();
           if (searchScope instanceof LocalSearchScope) {
-            for (Iterator<HighlightInfoImpl> iterator = infos.iterator(); iterator.hasNext(); ) {
-              final HighlightInfoImpl info = iterator.next();
+            for (Iterator<HighlightInfo> iterator = infos.iterator(); iterator.hasNext(); ) {
+              final HighlightInfo info = iterator.next();
               final TextRange infoRange = new TextRange(info.getStartOffset(), info.getEndOffset());
               if (!((LocalSearchScope)searchScope).containsRange(file, infoRange)) {
                 iterator.remove();

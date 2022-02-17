@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  * User: anna
  * Date: 30-Nov-2005
  */
-public abstract class ProjectProfileManager implements ProfileManager {
+public interface ProjectProfileManager extends ProfileManager {
   public abstract String getProfileName();
 
   public abstract String getProjectProfile();

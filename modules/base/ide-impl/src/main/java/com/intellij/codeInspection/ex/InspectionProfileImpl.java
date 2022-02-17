@@ -16,40 +16,38 @@
 
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.InspectionProfileConvertor;
-import consulo.language.editor.inspection.scheme.InspectionEP;
-import consulo.language.editor.inspection.scheme.*;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.application.ApplicationManager;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.profile.DefaultProjectProfileManager;
-import consulo.language.editor.inspection.scheme.ProfileEx;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.language.editor.rawHighlight.SeverityProvider;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.search.scope.NamedScope;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
 import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.util.function.Computable;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
-import consulo.application.util.function.Computable;
-import consulo.logging.Logger;
-import consulo.util.dataholder.Key;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -63,12 +61,12 @@ import java.util.*;
  * @author max
  */
 public class InspectionProfileImpl extends ProfileEx implements ModifiableModel, InspectionProfile, ExternalizableScheme {
-  @NonNls public static final String INSPECTION_TOOL_TAG = "inspection_tool";
-  @NonNls public static final String CLASS_TAG = "class";
+  public static final String INSPECTION_TOOL_TAG = "inspection_tool";
+  public static final String CLASS_TAG = "class";
   private static final Logger LOG = Logger.getInstance(InspectionProfileImpl.class);
-  @NonNls private static final String VALID_VERSION = "1.0";
-  @NonNls private static final String VERSION_TAG = "version";
-  @NonNls private static final String USED_LEVELS = "used_levels";
+  private static final String VALID_VERSION = "1.0";
+  private static final String VERSION_TAG = "version";
+  private static final String USED_LEVELS = "used_levels";
   @TestOnly
   public static boolean INIT_INSPECTIONS = false;
   private static Map<String, InspectionElementsMerger> ourMergers = null;
@@ -102,9 +100,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     copyFrom(inspectionProfile);
   }
 
-  public InspectionProfileImpl(@Nonnull final String profileName,
-                               @Nonnull InspectionToolRegistrar registrar,
-                               @Nonnull final ProfileManager profileManager) {
+  public InspectionProfileImpl(@Nonnull final String profileName, @Nonnull InspectionToolRegistrar registrar, @Nonnull final ProfileManager profileManager) {
     super(profileName);
     myRegistrar = registrar;
     myBaseProfile = getDefaultProfile();
@@ -130,9 +126,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   }
 
   @Nonnull
-  public static InspectionProfileImpl createSimple(@Nonnull String name,
-                                                   @Nonnull Project project,
-                                                   @Nonnull final InspectionToolWrapper... toolWrappers) {
+  public static InspectionProfileImpl createSimple(@Nonnull String name, @Nonnull Project project, @Nonnull final InspectionToolWrapper... toolWrappers) {
     InspectionToolRegistrar registrar = new InspectionToolRegistrar() {
       @Nonnull
       @Override
@@ -163,8 +157,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   }
 
   @Nonnull
-  private static InspectionToolWrapper copyToolSettings(@Nonnull InspectionToolWrapper toolWrapper)
-          throws WriteExternalException, InvalidDataException {
+  private static InspectionToolWrapper copyToolSettings(@Nonnull InspectionToolWrapper toolWrapper) throws WriteExternalException, InvalidDataException {
     final InspectionToolWrapper inspectionTool = toolWrapper.createCopy();
     if (toolWrapper.isInitialized()) {
       @NonNls String tempRoot = "config";
@@ -263,7 +256,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     final Element highlightElement = element.getChild(USED_LEVELS);
     if (highlightElement != null) {
       // from old profiles
-      ((SeverityProvider)getProfileManager()).getOwnSeverityRegistrar().readExternal(highlightElement);
+      ((SeverityRegistrarImpl)((SeverityProvider)getProfileManager()).getOwnSeverityRegistrar()).readExternal(highlightElement);
     }
 
     Interner<String> interner = Interner.createStringInterner();
@@ -359,16 +352,14 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     return merger != null && merger.areSettingsMerged(myUninstalledInspectionsSettings, inspectionElement);
   }
 
-  public void collectDependentInspections(@Nonnull InspectionToolWrapper toolWrapper,
-                                          @Nonnull Set<InspectionToolWrapper> dependentEntries,
-                                          Project project) {
+  public void collectDependentInspections(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull Set<InspectionToolWrapper> dependentEntries, Project project) {
     String mainToolId = toolWrapper.getMainToolId();
 
     if (mainToolId != null) {
       InspectionToolWrapper dependentEntryWrapper = getInspectionTool(mainToolId, project);
 
       if (dependentEntryWrapper == null) {
-        LOG.error("Can't find main tool: '" + mainToolId+"' which was specified in "+toolWrapper);
+        LOG.error("Can't find main tool: '" + mainToolId + "' which was specified in " + toolWrapper);
         return;
       }
       if (!dependentEntries.add(dependentEntryWrapper)) {
@@ -394,13 +385,13 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   @Override
   public <T extends InspectionProfileEntry> T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element) {
     //noinspection unchecked
-    return (T) getUnwrappedTool(shortNameKey.toString(), element);
+    return (T)getUnwrappedTool(shortNameKey.toString(), element);
   }
 
   @Override
-  public void modifyProfile(@Nonnull Consumer<ModifiableModel> modelConsumer) {
+  public void modifyProfile(@Nonnull java.util.function.Consumer<ModifiableModel> modelConsumer) {
     ModifiableModel model = getModifiableModel();
-    modelConsumer.consume(model);
+    modelConsumer.accept(model);
     try {
       model.commit();
     }
@@ -412,14 +403,11 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   @Override
   public <T extends InspectionProfileEntry> void modifyToolSettings(@Nonnull final Key<T> shortNameKey,
                                                                     @Nonnull final PsiElement psiElement,
-                                                                    @Nonnull final Consumer<T> toolConsumer) {
-    modifyProfile(new Consumer<ModifiableModel>() {
-      @Override
-      public void consume(@Nonnull ModifiableModel model) {
-        InspectionProfileEntry tool = model.getUnwrappedTool(shortNameKey.toString(), psiElement);
-        //noinspection unchecked
-        toolConsumer.consume((T) tool);
-      }
+                                                                    @Nonnull final java.util.function.Consumer<T> toolConsumer) {
+    modifyProfile(model -> {
+      InspectionProfileEntry tool = model.getUnwrappedTool(shortNameKey.toString(), psiElement);
+      //noinspection unchecked
+      toolConsumer.accept((T)tool);
     });
   }
 
@@ -427,15 +415,14 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   @Nullable
   public InspectionToolWrapper getInspectionTool(@Nonnull String shortName, Project project) {
     final ToolsImpl tools = getTools(shortName, project);
-    return tools != null? tools.getTool() : null;
+    return tools != null ? tools.getTool() : null;
   }
 
   public InspectionToolWrapper getToolById(@Nonnull String id, @Nonnull PsiElement element) {
     initInspectionTools(element.getProject());
     for (Tools toolList : myTools.values()) {
       final InspectionToolWrapper tool = toolList.getInspectionTool(element);
-      String toolId =
-              tool instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)tool).getID() : tool.getShortName();
+      String toolId = tool instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)tool).getID() : tool.getShortName();
       if (id.equals(toolId)) return tool;
     }
     return null;
@@ -565,8 +552,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
           }
         };
         if (toolWrapper instanceof LocalInspectionToolWrapper) {
-          key = HighlightDisplayKey.register(shortName, computable, ((LocalInspectionToolWrapper)toolWrapper).getID(),
-                                             ((LocalInspectionToolWrapper)toolWrapper).getAlternativeID());
+          key = HighlightDisplayKey.register(shortName, computable, ((LocalInspectionToolWrapper)toolWrapper).getID(), ((LocalInspectionToolWrapper)toolWrapper).getAlternativeID());
         }
         else {
           key = HighlightDisplayKey.register(shortName, computable);
@@ -648,7 +634,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
 
   private HighlightDisplayLevel getErrorLevel(@Nonnull HighlightDisplayKey key, Project project) {
     final ToolsImpl tools = getTools(key.toString(), project);
-    LOG.assertTrue(tools != null, "profile name: " + myName +  " base profile: " + (myBaseProfile != null ? myBaseProfile.getName() : "-") + " key: " + key);
+    LOG.assertTrue(tools != null, "profile name: " + myName + " base profile: " + (myBaseProfile != null ? myBaseProfile.getName() : "-") + " key: " + key);
     return tools.getLevel();
   }
 
@@ -902,7 +888,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   }
 
   public boolean isToolEnabled(@Nonnull HighlightDisplayKey key, NamedScope namedScope, Project project) {
-    return getTools(key.toString(), project).isEnabled(namedScope,project);
+    return getTools(key.toString(), project).isEnabled(namedScope, project);
   }
 
   @Deprecated
@@ -948,11 +934,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     return tools != null ? tools.getLevel(scope, project) : HighlightDisplayLevel.WARNING;
   }
 
-  public ScopeToolState addScope(@Nonnull InspectionToolWrapper toolWrapper,
-                                 NamedScope scope,
-                                 @Nonnull HighlightDisplayLevel level,
-                                 boolean enabled,
-                                 Project project) {
+  public ScopeToolState addScope(@Nonnull InspectionToolWrapper toolWrapper, NamedScope scope, @Nonnull HighlightDisplayLevel level, boolean enabled, Project project) {
     return getTools(toolWrapper.getShortName(), project).prependTool(scope, toolWrapper, enabled, level);
   }
 

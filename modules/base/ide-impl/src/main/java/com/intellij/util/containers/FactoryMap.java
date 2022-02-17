@@ -15,10 +15,11 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.openapi.util.RecursionGuard;
-import com.intellij.openapi.util.RecursionManager;
+import consulo.application.util.RecursionGuard;
+import consulo.application.util.RecursionManager;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
+import consulo.application.util.ConcurrentFactoryMap;
 import consulo.util.lang.DeprecatedMethodException;
 
 import javax.annotation.Nonnull;

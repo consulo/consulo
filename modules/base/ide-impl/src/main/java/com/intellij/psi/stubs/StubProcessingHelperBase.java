@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.stubs;
 
-import consulo.language.impl.psi.stub.StubTreeLoader;
+import consulo.language.impl.psi.internal.stub.StubTreeLoader;
 import consulo.language.psi.stub.BinaryFileStubBuilders;
 import consulo.language.psi.stub.ObjectStubTree;
 import consulo.language.psi.stub.StubTree;

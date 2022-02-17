@@ -16,42 +16,42 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoHolder;
-import consulo.application.internal.concurrency.JobLauncher;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.HighlightVisitor;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.inject.InjectedLanguageManager;
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import com.intellij.psi.impl.source.tree.injected.Place;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
-import consulo.document.Document;
+import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.function.Processor;
+import consulo.application.util.function.Processors;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.colorScheme.EditorColors;
 import consulo.codeEditor.markup.TextAttributes;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
+import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoHolder;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightVisitor;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.impl.source.tree.injected.Place;
-import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
-import consulo.application.util.function.Processors;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -90,19 +90,19 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     Set<PsiFile> injected = getInjectedPsiFiles(allInsideElements, allOutsideElements, progress);
     setProgressLimit(injected.size());
 
-    Set<HighlightInfoImpl> injectedResult = new HashSet<>();
+    Set<HighlightInfo> injectedResult = new HashSet<>();
     if (!addInjectedPsiHighlights(injected, progress, Collections.synchronizedSet(injectedResult))) {
       throw new ProcessCanceledException();
     }
 
-    Set<HighlightInfoImpl> result;
+    Set<HighlightInfo> result;
     synchronized (injectedResult) {
       // sync here because all writes happened in another thread
       result = injectedResult;
     }
-    final Set<HighlightInfoImpl> gotHighlights = new HashSet<>(100);
-    final List<HighlightInfoImpl> injectionsOutside = new ArrayList<>(gotHighlights.size());
-    for (HighlightInfoImpl info : result) {
+    final Set<HighlightInfo> gotHighlights = new HashSet<>(100);
+    final List<HighlightInfo> injectionsOutside = new ArrayList<>(gotHighlights.size());
+    for (HighlightInfo info : result) {
       if (myRestrictRange.contains(info)) {
         gotHighlights.add(info);
       }
@@ -116,15 +116,15 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
       final ProperTextRange priorityIntersection = myPriorityRange.intersection(myRestrictRange);
       if ((!allInsideElements.isEmpty() || !gotHighlights.isEmpty()) && priorityIntersection != null) { // do not apply when there were no elements to highlight
         // clear infos found in visible area to avoid applying them twice
-        final List<HighlightInfoImpl> toApplyInside = new ArrayList<>(gotHighlights);
+        final List<HighlightInfo> toApplyInside = new ArrayList<>(gotHighlights);
         myHighlights.addAll(toApplyInside);
         gotHighlights.clear();
 
         myHighlightInfoProcessor.highlightsInsideVisiblePartAreProduced(myHighlightingSession, getEditor(), toApplyInside, myPriorityRange, myRestrictRange, getId());
       }
 
-      List<HighlightInfoImpl> toApply = new ArrayList<>();
-      for (HighlightInfoImpl info : gotHighlights) {
+      List<HighlightInfo> toApply = new ArrayList<>();
+      for (HighlightInfo info : gotHighlights) {
         if (!myRestrictRange.contains(info)) continue;
         if (!myPriorityRange.contains(info)) {
           toApply.add(info);
@@ -185,7 +185,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
   }
 
   // returns false if canceled
-  private boolean addInjectedPsiHighlights(@Nonnull final Set<? extends PsiFile> injectedFiles, @Nonnull final ProgressIndicator progress, @Nonnull final Collection<? super HighlightInfoImpl> outInfos) {
+  private boolean addInjectedPsiHighlights(@Nonnull final Set<? extends PsiFile> injectedFiles, @Nonnull final ProgressIndicator progress, @Nonnull final Collection<? super HighlightInfo> outInfos) {
     if (injectedFiles.isEmpty()) return true;
     final InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(myProject);
     final TextAttributes injectedAttributes = myGlobalScheme.getAttributes(EditorColors.INJECTED_LANGUAGE_FRAGMENT);
@@ -196,7 +196,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
 
   private boolean addInjectedPsiHighlights(@Nonnull PsiFile injectedPsi,
                                            TextAttributes injectedAttributes,
-                                           @Nonnull Collection<? super HighlightInfoImpl> outInfos,
+                                           @Nonnull Collection<? super HighlightInfo> outInfos,
                                            @Nonnull InjectedLanguageManager injectedLanguageManager) {
     DocumentWindow documentWindow = (DocumentWindow)PsiDocumentManager.getInstance(myProject).getCachedDocument(injectedPsi);
     if (documentWindow == null) return true;
@@ -215,7 +215,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
         String desc = injectedPsi.getLanguage().getDisplayName() + ": " + injectedPsi.getText();
         builder.unescapedToolTip(desc);
       }
-      HighlightInfoImpl info = builder.createUnconditionally();
+      HighlightInfoImpl info = (HighlightInfoImpl)builder.createUnconditionally();
       info.setFromInjection(true);
       outInfos.add(info);
     }
@@ -223,7 +223,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     HighlightInfoHolder holder = createInfoHolder(injectedPsi);
     runHighlightVisitorsForInjected(injectedPsi, holder);
     for (int i = 0; i < holder.size(); i++) {
-      HighlightInfoImpl info = holder.get(i);
+      HighlightInfoImpl info = (HighlightInfoImpl)holder.get(i);
       final int startOffset = documentWindow.injectedToHost(info.startOffset);
       final TextRange fixedTextRange = getFixedTextRange(documentWindow, startOffset);
       addPatchedInfos(info, injectedPsi, documentWindow, injectedLanguageManager, fixedTextRange, outInfos);
@@ -231,7 +231,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     int injectedStart = holder.size();
     highlightInjectedSyntax(injectedPsi, holder);
     for (int i = injectedStart; i < holder.size(); i++) {
-      HighlightInfoImpl info = holder.get(i);
+      HighlightInfoImpl info = (HighlightInfoImpl)holder.get(i);
       final int startOffset = info.startOffset;
       final TextRange fixedTextRange = getFixedTextRange(documentWindow, startOffset);
       if (fixedTextRange == null) {
@@ -259,7 +259,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
   }
 
   @Override
-  protected void queueInfoToUpdateIncrementally(@Nonnull HighlightInfoImpl info) {
+  protected void queueInfoToUpdateIncrementally(@Nonnull HighlightInfo info) {
     // do not send info to highlight immediately - we need to convert its offsets first
     // see addPatchedInfos()
   }
@@ -317,7 +317,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
       patched.setHint(info.hasHint());
 
       if (info.quickFixActionRanges != null) {
-        for (Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> pair : info.quickFixActionRanges) {
+        for (consulo.util.lang.Pair<HighlightInfoImpl.IntentionActionDescriptor, TextRange> pair : info.quickFixActionRanges) {
           TextRange quickfixTextRange = pair.getSecond();
           List<TextRange> editableQF = injectedLanguageManager.intersectWithAllEditableFragments(injectedPsi, quickfixTextRange);
           for (TextRange editableRange : editableQF) {
@@ -397,13 +397,13 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
         forcedAttributes = TextAttributes.ERASE_MARKER;
       }
       else {
-        HighlightInfoImpl info = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT).range(annRange).textAttributes(TextAttributes.ERASE_MARKER).createUnconditionally();
+        HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT).range(annRange).textAttributes(TextAttributes.ERASE_MARKER).createUnconditionally();
         holder.add(info);
 
         forcedAttributes = new TextAttributes(attributes.getForegroundColor(), attributes.getBackgroundColor(), attributes.getEffectColor(), attributes.getEffectType(), attributes.getFontType());
       }
 
-      HighlightInfoImpl info = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT).range(annRange).textAttributes(forcedAttributes).createUnconditionally();
+      HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT).range(annRange).textAttributes(forcedAttributes).createUnconditionally();
       holder.add(info);
     }
   }

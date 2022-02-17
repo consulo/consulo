@@ -37,6 +37,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +48,17 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
   private static final Logger LOG = Logger.getInstance(SingleRootFileViewProvider.class);
   @SuppressWarnings("unused")
   private volatile PsiFile myPsiFile;
-  private static final AtomicFieldUpdater<SingleRootFileViewProvider, PsiFile> myPsiFileUpdater = AtomicFieldUpdater.forFieldOfType(SingleRootFileViewProvider.class, PsiFile.class);
+  private static final VarHandle ourPsiFileUpdater;
+
+  static {
+    try {
+      ourPsiFileUpdater = MethodHandles.lookup().findVarHandle(SingleRootFileViewProvider.class, "myPsiFile", PsiFile.class);
+    }
+    catch (NoSuchFieldException | IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   @Nonnull
   private final Language myBaseLanguage;
 
@@ -106,7 +118,7 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
       if (psiFile == null) {
         psiFile = PsiUtilCore.NULL_PSI_FILE;
       }
-      boolean set = myPsiFileUpdater.compareAndSet(this, null, psiFile);
+      boolean set = ourPsiFileUpdater.compareAndSet(this, null, psiFile);
       if (!set && psiFile != PsiUtilCore.NULL_PSI_FILE) {
         PsiFile alreadyCreated = myPsiFile;
         if (alreadyCreated == psiFile) {
@@ -229,7 +241,7 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
     while (true) {
       PsiFile prev = myPsiFile;
       // jdk 6 doesn't have getAndSet()
-      if (myPsiFileUpdater.compareAndSet(this, prev, psiFile)) {
+      if (ourPsiFileUpdater.compareAndSet(this, prev, psiFile)) {
         if (prev != psiFile && prev instanceof PsiFileEx) {
           ((PsiFileEx)prev).markInvalidated();
         }

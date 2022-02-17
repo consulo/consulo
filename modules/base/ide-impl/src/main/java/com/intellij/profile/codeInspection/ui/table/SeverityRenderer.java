@@ -15,17 +15,18 @@
  */
 package com.intellij.profile.codeInspection.ui.table;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.language.editor.rawHighlight.SeverityProvider;
 import com.intellij.profile.codeInspection.ui.LevelChooserAction;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -49,7 +50,7 @@ public class SeverityRenderer extends ComboBoxTableRenderer<SeverityState> {
   }
 
   public static SeverityRenderer create(final InspectionProfileImpl inspectionProfile, @Nullable final Runnable onClose) {
-    final SortedSet<HighlightSeverity> severities = LevelChooserAction.getSeverities(((SeverityProvider)inspectionProfile.getProfileManager()).getOwnSeverityRegistrar());
+    final SortedSet<HighlightSeverity> severities = LevelChooserAction.getSeverities((SeverityRegistrarImpl)((SeverityProvider)inspectionProfile.getProfileManager()).getOwnSeverityRegistrar());
     return new SeverityRenderer(ContainerUtil.map2Array(severities, new SeverityState[severities.size()], severity -> new SeverityState(severity, true, false)), onClose);
   }
 

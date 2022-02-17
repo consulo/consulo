@@ -12,6 +12,7 @@ import consulo.language.*;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.lang.*;
 import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;
+import consulo.language.impl.psi.internal.IndentHelper;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;

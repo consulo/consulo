@@ -72,7 +72,7 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.event.ProjectManagerListener;
-import consulo.language.impl.SingleProjectHolder;
+import consulo.language.impl.psi.internal.SingleProjectHolder;
 import consulo.project.startup.StartupManager;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.UIAccess;

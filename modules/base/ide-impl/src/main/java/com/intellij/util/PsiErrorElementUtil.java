@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
+import consulo.language.editor.HighlightErrorFilter;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;

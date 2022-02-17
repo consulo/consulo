@@ -27,7 +27,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ConcurrencyUtil;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

@@ -24,11 +24,12 @@ import com.intellij.openapi.editor.ex.TooltipAction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.Editor;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
@@ -44,12 +45,12 @@ import java.util.List;
 public class DaemonTooltipActionProvider implements TooltipActionProvider {
   @Nullable
   @Override
-  public TooltipAction getTooltipAction(@Nonnull HighlightInfoImpl info, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
-    IntentionAction intention = extractMostPriorityFixFromHighlightInfo(info, editor, psiFile);
+  public TooltipAction getTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
+    IntentionAction intention = extractMostPriorityFixFromHighlightInfo((HighlightInfoImpl)info, editor, psiFile);
 
     if(intention == null) return null;
 
-    return wrapIntentionToTooltipAction(intention, info);
+    return wrapIntentionToTooltipAction(intention, (HighlightInfoImpl)info);
   }
 
   private TooltipAction wrapIntentionToTooltipAction(IntentionAction intention, HighlightInfoImpl info) {

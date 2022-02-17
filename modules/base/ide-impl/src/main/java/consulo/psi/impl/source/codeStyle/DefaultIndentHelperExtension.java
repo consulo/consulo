@@ -17,7 +17,6 @@ package consulo.psi.impl.source.codeStyle;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.codeStyle.IndentHelper;
 import com.intellij.psi.impl.source.codeStyle.IndentHelperImpl;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.psi.internal.TreeUtil;
@@ -31,13 +30,13 @@ import javax.annotation.Nonnull;
  */
 public class DefaultIndentHelperExtension implements IndentHelperExtension {
   @Override
-  public boolean isAvaliable(@Nonnull PsiFile file) {
+  public boolean isAvailable(@Nonnull PsiFile file) {
     return true;
   }
 
   @RequiredReadAction
   @Override
-  public int getIndentInner(@Nonnull IndentHelper indentHelper, @Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace, int recursionLevel) {
+  public int getIndentInner(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace, int recursionLevel) {
     if (recursionLevel > TOO_BIG_WALK_THRESHOLD) return 0;
 
     if (element.getTreePrev() != null) {
@@ -47,7 +46,7 @@ public class DefaultIndentHelperExtension implements IndentHelperExtension {
         lastCompositePrev = prev;
         prev = prev.getLastChildNode();
         if (prev == null) { // element.prev is "empty composite"
-          return getIndentInner(indentHelper, file, lastCompositePrev, includeNonSpace, recursionLevel + 1);
+          return getIndentInner(file, lastCompositePrev, includeNonSpace, recursionLevel + 1);
         }
       }
 
@@ -59,7 +58,7 @@ public class DefaultIndentHelperExtension implements IndentHelperExtension {
       }
 
       if (includeNonSpace) {
-        return getIndentInner(indentHelper, file, prev, includeNonSpace, recursionLevel + 1) + IndentHelperImpl.getIndent(file, text, includeNonSpace);
+        return getIndentInner(file, prev, includeNonSpace, recursionLevel + 1) + IndentHelperImpl.getIndent(file, text, includeNonSpace);
       }
 
 
@@ -75,14 +74,14 @@ public class DefaultIndentHelperExtension implements IndentHelperExtension {
         return IndentHelperImpl.getIndent(file, text, includeNonSpace);
       }
       else {
-        return getIndentInner(indentHelper, file, prev, includeNonSpace, recursionLevel + 1);
+        return getIndentInner(file, prev, includeNonSpace, recursionLevel + 1);
       }
     }
     else {
       if (element.getTreeParent() == null) {
         return 0;
       }
-      return getIndentInner(indentHelper, file, element.getTreeParent(), includeNonSpace, recursionLevel + 1);
+      return getIndentInner(file, element.getTreeParent(), includeNonSpace, recursionLevel + 1);
     }
   }
 }

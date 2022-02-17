@@ -24,6 +24,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;

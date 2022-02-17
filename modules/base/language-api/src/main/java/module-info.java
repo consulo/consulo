@@ -28,6 +28,7 @@ module consulo.language.api {
   exports consulo.language.pom.event;
   exports consulo.language.psi;
   exports consulo.language.psi.event;
+  exports consulo.language.pattern.compiler;
   exports consulo.language.psi.internal to consulo.ide.impl, consulo.language.impl;
   exports consulo.language.psi.meta;
   exports consulo.language.psi.resolve;

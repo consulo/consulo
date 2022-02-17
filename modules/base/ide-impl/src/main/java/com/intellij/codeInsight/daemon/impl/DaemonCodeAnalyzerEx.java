@@ -16,19 +16,19 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import consulo.language.editor.rawHighlight.SeverityRegistrar;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.language.psi.PsiFile;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
+import consulo.document.Document;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
+import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -37,12 +37,12 @@ import java.util.List;
 
 public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
   private static final Logger LOG = Logger.getInstance(DaemonCodeAnalyzerEx.class);
+
   public static DaemonCodeAnalyzerEx getInstanceEx(Project project) {
     return (DaemonCodeAnalyzerEx)project.getComponent(DaemonCodeAnalyzer.class);
   }
 
   /**
-   *
    * @param document
    * @param project
    * @param minSeverity null means all
@@ -53,26 +53,23 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
    */
   public static boolean processHighlights(@Nonnull Document document,
                                           @Nonnull Project project,
-                                          @javax.annotation.Nullable final HighlightSeverity minSeverity,
+                                          @Nullable final HighlightSeverity minSeverity,
                                           final int startOffset,
                                           final int endOffset,
-                                          @Nonnull final Processor<HighlightInfoImpl> processor) {
+                                          @Nonnull final Processor<HighlightInfo> processor) {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
     MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
     return model.processRangeHighlightersOverlappingWith(startOffset, endOffset, marker -> {
       Object tt = marker.getErrorStripeTooltip();
-      if (!(tt instanceof HighlightInfoImpl)) return true;
-      HighlightInfoImpl info = (HighlightInfoImpl)tt;
-      return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
-             || info.getHighlighter() == null
-             || processor.process(info);
+      if (!(tt instanceof HighlightInfo)) return true;
+      HighlightInfo info = (HighlightInfo)tt;
+      return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0 || info.getHighlighter() == null || processor.process(info);
     });
   }
 
   /**
-   *
    * @param document
    * @param project
    * @param minSeverity null means all
@@ -86,30 +83,25 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
                                                      @Nullable final HighlightSeverity minSeverity,
                                                      final int startOffset,
                                                      final int endOffset,
-                                                     @Nonnull final Processor<HighlightInfoImpl> processor) {
+                                                     @Nonnull final Processor<HighlightInfo> processor) {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
     MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
     return model.processRangeHighlightersOutside(startOffset, endOffset, marker -> {
       Object tt = marker.getErrorStripeTooltip();
-      if (!(tt instanceof HighlightInfoImpl)) return true;
-      HighlightInfoImpl info = (HighlightInfoImpl)tt;
-      return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0
-             || info.getHighlighter() == null
-             || processor.process(info);
+      if (!(tt instanceof HighlightInfo)) return true;
+      HighlightInfo info = (HighlightInfo)tt;
+      return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0 || info.getHighlighter() == null || processor.process(info);
     });
   }
 
   static boolean hasErrors(@Nonnull Project project, @Nonnull Document document) {
-    return !processHighlights(document, project, HighlightSeverity.ERROR, 0, document.getTextLength(),
-                              CommonProcessors.<HighlightInfoImpl>alwaysFalse());
+    return !processHighlights(document, project, HighlightSeverity.ERROR, 0, document.getTextLength(), CommonProcessors.<HighlightInfo>alwaysFalse());
   }
 
   @Nonnull
-  public abstract List<HighlightInfoImpl> runMainPasses(@Nonnull PsiFile psiFile,
-                                                        @Nonnull Document document,
-                                                        @Nonnull ProgressIndicator progress);
+  public abstract List<HighlightInfo> runMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document, @Nonnull ProgressIndicator progress);
 
   public abstract boolean isErrorAnalyzingFinished(@Nonnull PsiFile file);
 
@@ -118,12 +110,9 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
 
   @Nonnull
   @TestOnly
-  public abstract List<HighlightInfoImpl> getFileLevelHighlights(@Nonnull Project project, @Nonnull PsiFile file);
+  public abstract List<HighlightInfo> getFileLevelHighlights(@Nonnull Project project, @Nonnull PsiFile file);
 
   public abstract void cleanFileLevelHighlights(@Nonnull Project project, int group, PsiFile psiFile);
 
-  public abstract void addFileLevelHighlight(@Nonnull final Project project,
-                                             final int group,
-                                             @Nonnull final HighlightInfoImpl info,
-                                             @Nonnull final PsiFile psiFile);
+  public abstract void addFileLevelHighlight(@Nonnull final Project project, final int group, @Nonnull final HighlightInfo info, @Nonnull final PsiFile psiFile);
 }

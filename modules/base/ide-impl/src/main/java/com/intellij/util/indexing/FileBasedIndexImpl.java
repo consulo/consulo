@@ -9,8 +9,8 @@ import consulo.application.util.function.*;
 import consulo.content.scope.SearchScope;
 import consulo.index.io.ID;
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.psi.stub.FileContentImpl;
-import consulo.language.impl.psi.stub.SubstitutedFileType;
+import consulo.language.impl.psi.internal.stub.FileContentImpl;
+import consulo.language.impl.psi.internal.stub.SubstitutedFileType;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
@@ -64,7 +64,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.language.impl.psi.PsiDocumentTransactionListener;
+import consulo.language.impl.psi.internal.PsiDocumentTransactionListener;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;
@@ -2283,7 +2283,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     myIndexableSetToProjectMap.put(set, project);
     if (project != null) {
       ((PsiManagerImpl)PsiManager.getInstance(project)).addTreeChangePreprocessor(event -> {
-        if (event.isGenericChange() && event.getCode() == PsiTreeChangeEventImpl.PsiEventType.CHILDREN_CHANGED) {
+        if (((PsiTreeChangeEventImpl)event).isGenericChange() && ((PsiTreeChangeEventImpl)event).getCode() == PsiTreeChangeEventImpl.PsiEventType.CHILDREN_CHANGED) {
           PsiFile file = event.getFile();
 
           if (file != null) {

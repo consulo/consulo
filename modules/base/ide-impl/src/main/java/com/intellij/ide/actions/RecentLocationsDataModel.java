@@ -34,6 +34,7 @@ import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.document.Document;
@@ -185,7 +186,9 @@ public class RecentLocationsDataModel {
   private void applyHighlightingPasses(Project project, final EditorEx editor, Document document, final EditorColorsScheme colorsScheme, final TextRange rangeMarker) {
     final int startOffset = rangeMarker.getStartOffset();
     final int endOffset = rangeMarker.getEndOffset();
-    DaemonCodeAnalyzerEx.processHighlights(document, project, null, startOffset, endOffset, info -> {
+    DaemonCodeAnalyzerEx.processHighlights(document, project, null, startOffset, endOffset, i -> {
+      HighlightInfoImpl info = (HighlightInfoImpl)i;
+
       if (info.getStartOffset() >= startOffset && info.getEndOffset() <= endOffset) {
         HighlightSeverity highlightSeverity = info.getSeverity();
         if (highlightSeverity == HighlightSeverity.ERROR ||

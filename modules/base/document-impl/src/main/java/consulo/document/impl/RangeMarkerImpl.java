@@ -26,7 +26,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
 
   @Nonnull
   private final Object myDocumentOrFile; // either VirtualFile (if any) or DocumentEx if no file associated
-  RangeMarkerTree.RMNode<RangeMarkerEx> myNode;
+  protected RangeMarkerTree.RMNode<RangeMarkerEx> myNode;
 
   private final long myId;
   private static final StripedIDGenerator counter = new StripedIDGenerator();
@@ -99,7 +99,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     return node == null ? -1 : node.intervalEnd() + node.computeDeltaUpToRoot();
   }
 
-  void invalidate(@Nonnull final Object reason) {
+  public void invalidate(@Nonnull final Object reason) {
     setValid(false);
     RangeMarkerTree.RMNode<?> node = myNode;
 

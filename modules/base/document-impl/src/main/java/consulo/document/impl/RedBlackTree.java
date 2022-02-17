@@ -300,11 +300,11 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
     private volatile byte myFlags;
     static final byte COLOR_MASK = 1;
 
-    boolean isFlagSet(byte mask) {
+    public boolean isFlagSet(byte mask) {
       return BitUtil.isSet(myFlags, mask);
     }
 
-    void setFlag(byte mask, boolean value) {
+    public void setFlag(byte mask, boolean value) {
       myFlags = BitUtil.set(myFlags, mask, value);
     }
 

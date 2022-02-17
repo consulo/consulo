@@ -16,6 +16,7 @@
 
 package consulo.language.impl.ast;
 
+import consulo.application.util.RecursionManager;
 import consulo.language.ast.*;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.psi.internal.AstSpine;

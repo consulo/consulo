@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.intention.impl;
 
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import com.intellij.codeInsight.intention.*;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import consulo.language.editor.inspection.FileModifier;

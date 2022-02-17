@@ -17,7 +17,7 @@ package com.intellij.patterns.compiler;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 
 import javax.annotation.Nonnull;
 

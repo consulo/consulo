@@ -1,69 +1,72 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeHighlighting.*;
-import com.intellij.codeInsight.daemon.*;
+import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
+import com.intellij.codeHighlighting.HighlightingPass;
+import com.intellij.codeHighlighting.TextEditorHighlightingPass;
+import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl;
+import com.intellij.codeInsight.daemon.ReferenceImporter;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.impl.FileLevelIntentionComponent;
 import com.intellij.codeInsight.intention.impl.IntentionHintComponent;
-import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.ide.PowerSaveMode;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.Pass;
-import consulo.language.editor.gutter.LineMarkerInfo;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.NonBlockingReadActionImpl;
-import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
-import consulo.application.util.function.Processors;
-import consulo.application.util.function.ThrowableRunnable;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import consulo.component.persist.StoragePathMacros;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.RangeMarker;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.PsiCompiledElement;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.util.collection.SmartList;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
+import com.intellij.openapi.vfs.newvfs.RefreshQueue;
+import com.intellij.packageDependencies.DependencyValidationManager;
+import com.intellij.psi.RefResolveService;
+import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.psi.*;
-import consulo.language.psi.PsiModificationTracker;
-import consulo.language.psi.PsiUtilCore;
-import consulo.ui.ex.concurrent.EdtExecutorService;
-import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.ui.awt.UIUtil;
+import consulo.application.util.concurrent.ThreadDumper;
+import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.function.Processor;
+import consulo.application.util.function.Processors;
+import consulo.application.util.function.ThrowableRunnable;
+import consulo.codeEditor.Editor;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.language.editor.Pass;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -161,8 +164,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
   @Nonnull
   @TestOnly
-  public static List<HighlightInfoImpl> getHighlights(@Nonnull Document document, @Nullable HighlightSeverity minSeverity, @Nonnull Project project) {
-    List<HighlightInfoImpl> infos = new ArrayList<>();
+  public static List<HighlightInfo> getHighlights(@Nonnull Document document, @Nullable HighlightSeverity minSeverity, @Nonnull Project project) {
+    List<HighlightInfo> infos = new ArrayList<>();
     processHighlights(document, project, minSeverity, 0, document.getTextLength(), Processors.cancelableCollectProcessor(infos));
     return infos;
   }
@@ -170,7 +173,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   @Override
   @Nonnull
   @TestOnly
-  public List<HighlightInfoImpl> getFileLevelHighlights(@Nonnull Project project, @Nonnull PsiFile file) {
+  public List<HighlightInfo> getFileLevelHighlights(@Nonnull Project project, @Nonnull PsiFile file) {
     VirtualFile vFile = file.getViewProvider().getVirtualFile();
     return Arrays.stream(FileEditorManager.getInstance(project).getEditors(vFile)).map(fileEditor -> fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS)).filter(Objects::nonNull).flatMap(Collection::stream)
             .collect(Collectors.toList());
@@ -197,7 +200,9 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   }
 
   @Override
-  public void addFileLevelHighlight(@Nonnull final Project project, final int group, @Nonnull final HighlightInfoImpl info, @Nonnull final PsiFile psiFile) {
+  public void addFileLevelHighlight(@Nonnull final Project project, final int group, @Nonnull final HighlightInfo i, @Nonnull final PsiFile psiFile) {
+    HighlightInfoImpl info = (HighlightInfoImpl)i;
+
     VirtualFile vFile = psiFile.getViewProvider().getVirtualFile();
     final FileEditorManager manager = FileEditorManager.getInstance(project);
     for (FileEditor fileEditor : manager.getEditors(vFile)) {
@@ -219,7 +224,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
   @Override
   @Nonnull
-  public List<HighlightInfoImpl> runMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document, @Nonnull final ProgressIndicator progress) {
+  public List<HighlightInfo> runMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document, @Nonnull final ProgressIndicator progress) {
     if (ApplicationManager.getApplication().isDispatchThread()) {
       throw new IllegalStateException("Must not run highlighting from under EDT");
     }
@@ -235,7 +240,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     stopProcess(false, "disable background daemon");
     myPassExecutorService.cancelAll(true);
 
-    final List<HighlightInfoImpl> result;
+    final List<HighlightInfo> result;
     try {
       result = new ArrayList<>();
       final VirtualFile virtualFile = psiFile.getVirtualFile();
@@ -608,7 +613,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
                                              @Nonnull final HighlightSeverity minSeverity,
                                              final int offset,
                                              final boolean includeFixRange,
-                                             @Nonnull final Processor<? super HighlightInfoImpl> processor) {
+                                             @Nonnull final Processor<? super HighlightInfo> processor) {
     return processHighlights(document, project, null, 0, document.getTextLength(), info -> {
       if (!isOffsetInsideHighlightInfo(offset, info, includeFixRange)) return true;
 
@@ -626,11 +631,11 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   HighlightInfoImpl findHighlightByOffset(@Nonnull Document document, final int offset, final boolean includeFixRange, @Nonnull HighlightSeverity minSeverity) {
     final List<HighlightInfoImpl> foundInfoList = new SmartList<>();
     processHighlightsNearOffset(document, myProject, minSeverity, offset, includeFixRange, info -> {
-      if (info.getSeverity() == HighlightInfoType.ELEMENT_UNDER_CARET_SEVERITY || info.type == HighlightInfoType.TODO) {
+      if (info.getSeverity() == HighlightInfoType.ELEMENT_UNDER_CARET_SEVERITY || info.getType() == HighlightInfoType.TODO) {
         return true;
       }
       if (!foundInfoList.isEmpty()) {
-        HighlightInfoImpl foundInfo = foundInfoList.get(0);
+        HighlightInfo foundInfo = foundInfoList.get(0);
         int compare = foundInfo.getSeverity().compareTo(info.getSeverity());
         if (compare < 0) {
           foundInfoList.clear();
@@ -639,7 +644,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
           return true;
         }
       }
-      foundInfoList.add(info);
+      foundInfoList.add((HighlightInfoImpl)info);
       return true;
     });
 
@@ -648,8 +653,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     return HighlightInfoComposite.create(foundInfoList);
   }
 
-  private static boolean isOffsetInsideHighlightInfo(int offset, @Nonnull HighlightInfoImpl info, boolean includeFixRange) {
-    RangeHighlighterEx highlighter = info.getHighlighter();
+  private static boolean isOffsetInsideHighlightInfo(int offset, @Nonnull HighlightInfo info, boolean includeFixRange) {
+    RangeHighlighterEx highlighter = (RangeHighlighterEx)info.getHighlighter();
     if (highlighter == null || !highlighter.isValid()) return false;
     int startOffset = highlighter.getStartOffset();
     int endOffset = highlighter.getEndOffset();
@@ -657,7 +662,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       return true;
     }
     if (!includeFixRange) return false;
-    RangeMarker fixMarker = info.fixMarker;
+    RangeMarker fixMarker = ((HighlightInfoImpl)info).fixMarker;
     if (fixMarker != null) {  // null means its range is the same as highlighter
       if (!fixMarker.isValid()) return false;
       startOffset = fixMarker.getStartOffset();

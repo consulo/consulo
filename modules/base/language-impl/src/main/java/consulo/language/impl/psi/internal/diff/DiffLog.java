@@ -265,7 +265,7 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode, ASTNode> {
   }
 
   public void doActualPsiChange(@Nonnull PsiFile file) {
-    CodeStyleManager.getInstance(file.getProject()).performActionWithFormatterDisabled((Runnable)() -> {
+    FormattingService.getInstance(file.getProject()).performActionWithFormatterDisabled((Runnable)() -> {
       FileViewProvider viewProvider = file.getViewProvider();
       synchronized (((AbstractFileViewProvider)viewProvider).getFilePsiLock()) {
         viewProvider.beforeContentsSynchronized();

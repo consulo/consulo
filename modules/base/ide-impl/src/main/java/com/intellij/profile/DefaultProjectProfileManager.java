@@ -46,7 +46,7 @@ import java.util.Map;
  * User: anna
  * Date: 30-Nov-2005
  */
-public abstract class DefaultProjectProfileManager extends ProjectProfileManager implements PersistentStateComponent<Element> {
+public abstract class DefaultProjectProfileManager implements ProjectProfileManager, PersistentStateComponent<Element> {
   protected static final Logger LOG = Logger.getInstance(DefaultProjectProfileManager.class);
 
   @NonNls

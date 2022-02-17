@@ -16,19 +16,20 @@
 
 package com.intellij.codeInspection;
 
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.ProblemDescriptionsProcessor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInspection.ex.GlobalInspectionContextUtil;
 import consulo.language.editor.annotation.ProblemGroup;
-import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.codeStyle;
 
+import consulo.application.util.RecursionManager;
 import consulo.language.Language;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;

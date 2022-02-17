@@ -5,7 +5,7 @@ import consulo.language.Language;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
-import consulo.language.impl.psi.PsiAnchor;
+import consulo.language.impl.psi.internal.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;

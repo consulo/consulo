@@ -15,11 +15,10 @@
  */
 package consulo.psi.impl.source.codeStyle;
 
-import consulo.language.ast.ASTNode;
-import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.codeStyle.IndentHelper;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 
@@ -32,8 +31,8 @@ public interface IndentHelperExtension {
 
   int TOO_BIG_WALK_THRESHOLD = 450;
 
-  boolean isAvaliable(@Nonnull PsiFile file);
+  boolean isAvailable(@Nonnull PsiFile file);
 
   @RequiredReadAction
-  int getIndentInner(@Nonnull IndentHelper indentHelper, @Nonnull PsiFile file, @Nonnull final ASTNode element, boolean includeNonSpace, int recursionLevel);
+  int getIndentInner(@Nonnull PsiFile file, @Nonnull final ASTNode element, boolean includeNonSpace, int recursionLevel);
 }

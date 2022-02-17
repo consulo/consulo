@@ -6,7 +6,7 @@ import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.ID;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
-import consulo.language.impl.psi.stub.FileContentImpl;
+import consulo.language.impl.psi.internal.stub.FileContentImpl;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
 import consulo.logging.Logger;

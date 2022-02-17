@@ -46,7 +46,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
   private HighlightSeverity myChosen = null;
 
   public LevelChooserAction(final InspectionProfileImpl profile) {
-    this(((SeverityProvider)profile.getProfileManager()).getOwnSeverityRegistrar());
+    this((SeverityRegistrarImpl)((SeverityProvider)profile.getProfileManager()).getOwnSeverityRegistrar());
   }
 
   public LevelChooserAction(final SeverityRegistrarImpl severityRegistrar) {

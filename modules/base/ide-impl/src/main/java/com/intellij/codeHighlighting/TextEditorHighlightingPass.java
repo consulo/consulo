@@ -3,22 +3,22 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.document.Document;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import com.intellij.util.ArrayUtilRt;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.DumbService;
-import consulo.project.Project;
+import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.document.Document;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
-import com.intellij.util.ArrayUtilRt;
 import consulo.language.util.IncorrectOperationException;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -118,7 +118,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
   }
 
   @Nonnull
-  public List<HighlightInfoImpl> getInfos() {
+  public List<HighlightInfo> getInfos() {
     return Collections.emptyList();
   }
 

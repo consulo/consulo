@@ -2,47 +2,50 @@
 
 package com.intellij.codeInsight.problems;
 
-import com.intellij.codeInsight.daemon.impl.*;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoHolder;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.application.ReadAction;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
+import com.intellij.codeInsight.daemon.impl.GeneralHighlightingPass;
+import com.intellij.codeInsight.daemon.impl.HighlightInfoProcessor;
+import com.intellij.codeInsight.daemon.impl.ProgressableTextEditorHighlightingPass;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vcs.FileStatusListener;
+import com.intellij.openapi.vcs.FileStatusManager;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.problems.Problem;
+import com.intellij.problems.WolfTheProblemSolver;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ReadAction;
+import consulo.application.progress.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.ProperTextRange;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoHolder;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.event.PsiTreeChangeListener;
-import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
+import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
-import consulo.document.util.ProperTextRange;
-import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.FileStatusListener;
-import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFileMoveEvent;
-import com.intellij.problems.Problem;
-import com.intellij.problems.WolfTheProblemSolver;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -249,9 +252,9 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
                 protected HighlightInfoHolder createInfoHolder(@Nonnull final PsiFile file) {
                   return new HighlightInfoHolder(file) {
                     @Override
-                    public boolean add(@Nullable HighlightInfoImpl info) {
+                    public boolean add(@Nullable HighlightInfo info) {
                       if (info != null && info.getSeverity() == HighlightSeverity.ERROR) {
-                        error.set(info);
+                        error.set((HighlightInfoImpl)info);
                         hasErrorElement.set(myHasErrorElement);
                         throw new ProcessCanceledException();
                       }
@@ -390,13 +393,13 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   @Override
   public Problem convertToProblem(@Nullable final VirtualFile virtualFile, final int line, final int column, @Nonnull final String[] message) {
     if (virtualFile == null || virtualFile.isDirectory() || virtualFile.getFileType().isBinary()) return null;
-    HighlightInfoImpl info = ReadAction.compute(() -> {
+    HighlightInfo info = ReadAction.compute(() -> {
       TextRange textRange = getTextRange(virtualFile, line, column);
       String description = StringUtil.join(message, "\n");
-      return HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(textRange).descriptionAndTooltip(description).create();
+      return HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(textRange).descriptionAndTooltip(description).create();
     });
     if (info == null) return null;
-    return new ProblemImpl(virtualFile, info, false);
+    return new ProblemImpl(virtualFile, (HighlightInfoImpl)info, false);
   }
 
   @Override

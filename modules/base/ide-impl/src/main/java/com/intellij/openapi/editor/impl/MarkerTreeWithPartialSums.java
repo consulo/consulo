@@ -2,13 +2,12 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.document.Document;
-import com.intellij.openapi.util.Getter;
 import consulo.document.impl.RangeMarkerTree;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.util.function.IntSupplier;
+import java.util.function.Supplier;
 
 /**
  * Extension of {@link RangeMarkerTree} which can quickly calculate sum of values associated with markers for a given offset range.
@@ -63,7 +62,7 @@ public class MarkerTreeWithPartialSums<T extends RangeMarkerWithGetterImpl & Int
   }
 
   @Override
-  void correctMax(@Nonnull IntervalNode<T> node, int deltaUpToRoot) {
+  public void correctMax(@Nonnull IntervalNode<T> node, int deltaUpToRoot) {
     super.correctMax(node, deltaUpToRoot);
     ((Node<T>)node).recalculateSubTreeSum();
   }
@@ -92,7 +91,7 @@ public class MarkerTreeWithPartialSums<T extends RangeMarkerWithGetterImpl & Int
 
     private int getLocalSum() {
       int sum = 0;
-      for (Getter<T> g : intervals) {
+      for (Supplier<T> g : intervals) {
         sum += g.get().getAsInt();
       }
       return sum;
@@ -115,7 +114,7 @@ public class MarkerTreeWithPartialSums<T extends RangeMarkerWithGetterImpl & Int
     }
 
     @Override
-    void addInterval(@Nonnull T interval) {
+    public void addInterval(@Nonnull T interval) {
       super.addInterval(interval);
       recalculateSubTreeSumUp();
     }

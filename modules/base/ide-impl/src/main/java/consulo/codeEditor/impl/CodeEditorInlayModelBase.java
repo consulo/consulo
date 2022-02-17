@@ -2,22 +2,20 @@
 package consulo.codeEditor.impl;
 
 import com.intellij.diagnostic.Dumpable;
-import consulo.application.ApplicationManager;
-import consulo.document.event.DocumentEvent;
-import consulo.document.impl.*;
 import com.intellij.openapi.editor.impl.*;
-import com.intellij.openapi.util.Getter;
-import consulo.document.impl.DocumentUtil;
 import com.intellij.util.EventDispatcher;
-import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
-import consulo.document.Document;
-import consulo.document.impl.event.PrioritizedInternalDocumentListener;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Processor;
 import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.InlayModel;
 import consulo.codeEditor.VisualPosition;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.impl.*;
+import consulo.document.impl.event.PrioritizedInternalDocumentListener;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -28,6 +26,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Common part from desktop inlay model
@@ -466,8 +465,8 @@ public class CodeEditorInlayModelBase implements InlayModel, Disposable, Dumpabl
         public void addIntervalsFrom(@Nonnull IntervalNode<InlineInlayImpl> otherNode) {
           super.addIntervalsFrom(otherNode);
           if (myPutMergedIntervalsAtBeginning) {
-            List<Getter<InlineInlayImpl>> added = ContainerUtil.subList(intervals, intervals.size() - otherNode.intervals.size());
-            List<Getter<InlineInlayImpl>> addedCopy = new ArrayList<>(added);
+            List<Supplier<InlineInlayImpl>> added = ContainerUtil.subList(intervals, intervals.size() - otherNode.intervals.size());
+            List<Supplier<InlineInlayImpl>> addedCopy = new ArrayList<>(added);
             added.clear();
             intervals.addAll(0, addedCopy);
           }

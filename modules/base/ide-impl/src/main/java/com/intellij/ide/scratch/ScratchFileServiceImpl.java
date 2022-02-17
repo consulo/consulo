@@ -38,7 +38,7 @@ import com.intellij.psi.search.UseScopeEnlarger;
 import com.intellij.usages.impl.rules.UsageType;
 import com.intellij.usages.impl.rules.UsageTypeProvider;
 import com.intellij.util.PathUtil;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.indexing.LightDirectoryIndex;

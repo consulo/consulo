@@ -23,7 +23,7 @@ import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.application.util.ConcurrentFactoryMap;
 import consulo.util.collection.SmartHashSet;
 import consulo.component.messagebus.MessageBus;
 import consulo.annotation.access.RequiredWriteAction;

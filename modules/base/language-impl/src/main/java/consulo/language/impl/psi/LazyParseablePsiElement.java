@@ -24,7 +24,7 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import consulo.language.impl.SingleProjectHolder;
+import consulo.language.impl.psi.internal.SingleProjectHolder;
 import consulo.language.impl.ast.ChangeUtil;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.LazyParseableElement;

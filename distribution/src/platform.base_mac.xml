@@ -64,6 +64,10 @@
         <include>consulo:consulo-virtual-file-watcher-api</include>
         <include>consulo:consulo-virtual-file-watcher-impl</include>
         <include>consulo:consulo-compiler-api</include>
+        <include>consulo:consulo-language-editor-api</include>
+        <include>consulo:consulo-undo-redo-api</include>
+        <include>consulo:consulo-language-impl</include>
+        <include>consulo:consulo-document-impl</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

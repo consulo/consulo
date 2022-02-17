@@ -34,4 +34,9 @@ public interface SeverityRegistrar extends Comparator<HighlightSeverity> {
 
   @Nullable
   TextAttributes getTextAttributesBySeverity(@Nonnull HighlightSeverity severity);
+
+  @Nullable
+  HighlightSeverity getSeverity(@Nonnull String name);
+
+  boolean isSeverityValid(@Nonnull String severityName);
 }

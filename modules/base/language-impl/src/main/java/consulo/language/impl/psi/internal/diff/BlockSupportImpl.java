@@ -67,8 +67,8 @@ public class BlockSupportImpl extends BlockSupport {
 
   public static class ReparseResult implements AutoCloseable {
     public final DiffLog log;
-    final ASTNode oldRoot;
-    final ASTNode newRoot;
+    public final ASTNode oldRoot;
+    public final ASTNode newRoot;
 
     ReparseResult(DiffLog log, ASTNode oldRoot, ASTNode newRoot) {
       this.log = log;
@@ -84,12 +84,12 @@ public class BlockSupportImpl extends BlockSupport {
   // return diff log, old node to replace, new node (in dummy file)
   // MUST call .close() on the returned result
   @Nonnull
-  static ReparseResult reparse(@Nonnull final PsiFile file,
-                               @Nonnull FileASTNode oldFileNode,
-                               @Nonnull TextRange changedPsiRange,
-                               @Nonnull final CharSequence newFileText,
-                               @Nonnull final ProgressIndicator indicator,
-                               @Nonnull CharSequence lastCommittedText) {
+  public static ReparseResult reparse(@Nonnull final PsiFile file,
+                                      @Nonnull FileASTNode oldFileNode,
+                                      @Nonnull TextRange changedPsiRange,
+                                      @Nonnull final CharSequence newFileText,
+                                      @Nonnull final ProgressIndicator indicator,
+                                      @Nonnull CharSequence lastCommittedText) {
     PsiFileImpl fileImpl = (PsiFileImpl)file;
 
     final Couple<ASTNode> reparseableRoots = findReparseableRoots(fileImpl, oldFileNode, changedPsiRange, newFileText);

@@ -16,6 +16,8 @@
 
 package com.intellij.openapi.util;
 
+import consulo.application.util.RecursionGuard;
+import consulo.application.util.RecursionManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;

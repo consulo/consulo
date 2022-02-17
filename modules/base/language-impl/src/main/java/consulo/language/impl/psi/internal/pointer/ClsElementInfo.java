@@ -16,7 +16,7 @@
 package consulo.language.impl.psi.internal.pointer;
 
 import consulo.document.util.Segment;
-import consulo.language.impl.psi.PsiAnchor;
+import consulo.language.impl.psi.internal.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;

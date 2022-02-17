@@ -20,28 +20,26 @@
  */
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.language.editor.inspection.scheme.*;
-import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import consulo.language.editor.inspection.scheme.ProfileEx;
+import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.language.psi.search.scope.PackageSet;
+import consulo.project.Project;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -171,7 +169,7 @@ public class ToolsImpl implements Tools {
   void readExternal(@Nonnull Element toolElement, @Nonnull InspectionProfile profile, Map<String, List<String>> dependencies) throws InvalidDataException {
     final String levelName = toolElement.getAttributeValue(LEVEL_ATTRIBUTE);
     final ProfileManager profileManager = profile.getProfileManager();
-    final SeverityRegistrarImpl registrar = ((SeverityProvider)profileManager).getOwnSeverityRegistrar();
+    final SeverityRegistrar registrar = ((SeverityProvider)profileManager).getOwnSeverityRegistrar();
     HighlightDisplayLevel level = levelName != null ? HighlightDisplayLevel.find(registrar.getSeverity(levelName)) : null;
     if (level == null || level == HighlightDisplayLevel.DO_NOT_SHOW) {//from old profiles
       level = HighlightDisplayLevel.WARNING;

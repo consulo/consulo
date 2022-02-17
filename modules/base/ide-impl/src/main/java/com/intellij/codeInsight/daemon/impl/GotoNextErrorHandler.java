@@ -22,14 +22,15 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.application.util.function.Processor;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
+import consulo.document.Document;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
-import consulo.language.editor.rawHighlight.impl.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -76,9 +77,9 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     final HighlightInfoImpl[][] infoToGo = new HighlightInfoImpl[2][2]; //HighlightInfo[luck-noluck][skip-noskip]
     final int caretOffsetIfNoLuck = myGoForward ? -1 : document.getTextLength();
 
-    DaemonCodeAnalyzerEx.processHighlights(document, project, minSeverity, 0, document.getTextLength(), new Processor<HighlightInfoImpl>() {
+    DaemonCodeAnalyzerEx.processHighlights(document, project, minSeverity, 0, document.getTextLength(), new Processor<HighlightInfo>() {
       @Override
-      public boolean process(HighlightInfoImpl info) {
+      public boolean process(HighlightInfo info) {
         int startOffset = getNavigationPositionFor(info, document);
         if (SeverityRegistrarImpl.isGotoBySeverityEnabled(info.getSeverity())) {
           infoToGo[0][0] = getBetterInfoThan(infoToGo[0][0], caretOffset, startOffset, info);
@@ -95,14 +96,14 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     return infoToGo[0][0];
   }
 
-  private HighlightInfoImpl getBetterInfoThan(HighlightInfoImpl infoToGo, int caretOffset, int startOffset, HighlightInfoImpl info) {
+  private HighlightInfoImpl getBetterInfoThan(HighlightInfo infoToGo, int caretOffset, int startOffset, HighlightInfo info) {
     if (isBetterThan(infoToGo, caretOffset, startOffset)) {
       infoToGo = info;
     }
-    return infoToGo;
+    return (HighlightInfoImpl)infoToGo;
   }
 
-  private boolean isBetterThan(HighlightInfoImpl oldInfo, int caretOffset, int newOffset) {
+  private boolean isBetterThan(HighlightInfo oldInfo, int caretOffset, int newOffset) {
     if (oldInfo == null) return true;
     int oldOffset = getNavigationPositionFor(oldInfo, oldInfo.getHighlighter().getDocument());
     if (myGoForward) {
@@ -151,11 +152,11 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
   }
 
-  private static int getNavigationPositionFor(HighlightInfoImpl info, Document document) {
+  private static int getNavigationPositionFor(HighlightInfo info, Document document) {
     int start = info.getActualStartOffset();
     if (start >= document.getTextLength()) return document.getTextLength();
     char c = document.getCharsSequence().charAt(start);
-    int shift = info.isAfterEndOfLine() && c != '\n' ? 1 : info.getNavigationShift();
+    int shift = ((HighlightInfoImpl)info).isAfterEndOfLine() && c != '\n' ? 1 : ((HighlightInfoImpl)info).getNavigationShift();
 
     int offset = info.getActualStartOffset() + shift;
     return Math.min(offset, document.getTextLength());

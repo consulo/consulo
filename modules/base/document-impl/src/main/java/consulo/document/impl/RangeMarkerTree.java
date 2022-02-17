@@ -122,24 +122,24 @@ public class RangeMarkerTree<T extends RangeMarkerEx> extends IntervalTreeImpl<T
   public static class RMNode<T extends RangeMarkerEx> extends IntervalTreeImpl.IntervalNode<T> {
     private static final byte EXPAND_TO_LEFT_FLAG = IntervalNode.VALID_FLAG << 1;
     private static final byte EXPAND_TO_RIGHT_FLAG = EXPAND_TO_LEFT_FLAG << 1;
-    static final byte STICK_TO_RIGHT_FLAG = EXPAND_TO_RIGHT_FLAG << 1;
+    public static final byte STICK_TO_RIGHT_FLAG = EXPAND_TO_RIGHT_FLAG << 1;
 
-    RMNode(@Nonnull RangeMarkerTree<T> rangeMarkerTree, @Nonnull T key, int start, int end, boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight) {
+    public RMNode(@Nonnull RangeMarkerTree<T> rangeMarkerTree, @Nonnull T key, int start, int end, boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight) {
       super(rangeMarkerTree, key, start, end);
       setFlag(EXPAND_TO_LEFT_FLAG, greedyToLeft);
       setFlag(EXPAND_TO_RIGHT_FLAG, greedyToRight);
       setFlag(STICK_TO_RIGHT_FLAG, stickingToRight);
     }
 
-    boolean isGreedyToLeft() {
+    public boolean isGreedyToLeft() {
       return isFlagSet(EXPAND_TO_LEFT_FLAG);
     }
 
-    boolean isGreedyToRight() {
+    public boolean isGreedyToRight() {
       return isFlagSet(EXPAND_TO_RIGHT_FLAG);
     }
 
-    boolean isStickingToRight() {
+    public boolean isStickingToRight() {
       return isFlagSet(STICK_TO_RIGHT_FLAG);
     }
 
