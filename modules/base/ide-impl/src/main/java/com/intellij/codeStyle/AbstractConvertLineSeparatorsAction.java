@@ -21,7 +21,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

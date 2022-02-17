@@ -19,10 +19,6 @@
  */
 package consulo.language.impl.ast;
 
-import com.intellij.openapi.util.Getter;
-import com.intellij.openapi.util.StaticGetter;
-import com.intellij.reference.SoftReference;
-import com.intellij.util.text.ImmutableCharSequence;
 import consulo.application.progress.ProgressManager;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementTypeBase;
@@ -31,7 +27,9 @@ import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.util.lang.CharArrayUtil;
+import consulo.util.lang.ImmutableCharSequence;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.ref.SoftReference;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -41,7 +39,7 @@ import java.util.function.Supplier;
 
 public class LazyParseableElement extends CompositeElement {
   private static final Logger LOG = Logger.getInstance(LazyParseableElement.class);
-  private static final Supplier<CharSequence> NO_TEXT = new StaticGetter<>(null);
+  private static final Supplier<CharSequence> NO_TEXT = () -> null;
 
   private static class ChameleonLock {
     private ChameleonLock() {
@@ -73,7 +71,7 @@ public class LazyParseableElement extends CompositeElement {
         myText = NO_TEXT;
       }
       else {
-        myText = new StaticGetter<>(ImmutableCharSequence.asImmutable(text));
+        myText = () -> ImmutableCharSequence.asImmutable(text);
         setCachedLength(text.length());
       }
     }

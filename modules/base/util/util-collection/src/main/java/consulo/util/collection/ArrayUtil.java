@@ -15,6 +15,7 @@
  */
 package consulo.util.collection;
 
+import consulo.util.lang.CharArrayCharSequence;
 import consulo.util.lang.Comparing;
 import org.jetbrains.annotations.Contract;
 
@@ -45,7 +46,7 @@ public class ArrayUtil {
   public static final Collection[] EMPTY_COLLECTION_ARRAY = new Collection[0];
   public static final File[] EMPTY_FILE_ARRAY = new File[0];
   public static final Runnable[] EMPTY_RUNNABLE_ARRAY = new Runnable[0];
-  //public static final CharSequence EMPTY_CHAR_SEQUENCE = new CharArrayCharSequence(EMPTY_CHAR_ARRAY);
+  public static final CharSequence EMPTY_CHAR_SEQUENCE = new CharArrayCharSequence(EMPTY_CHAR_ARRAY);
 
   public static final ArrayFactory<String> STRING_ARRAY_FACTORY = ArrayUtil::newStringArray;
   public static final ArrayFactory<Object> OBJECT_ARRAY_FACTORY = ArrayUtil::newObjectArray;

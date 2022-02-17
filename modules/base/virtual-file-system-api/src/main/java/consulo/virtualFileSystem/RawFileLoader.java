@@ -45,4 +45,8 @@ public interface RawFileLoader {
   }
 
   boolean isLargeForContentLoading(long length);
+
+  int getMaxIntellisenseFileSize();
+
+  int getFileLengthToCacheThreshold();
 }

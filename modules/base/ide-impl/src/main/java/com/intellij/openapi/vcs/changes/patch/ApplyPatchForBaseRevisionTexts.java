@@ -20,7 +20,7 @@ import com.intellij.openapi.diff.impl.patch.TextFilePatch;
 import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.text.StringUtil;

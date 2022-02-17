@@ -2,16 +2,16 @@
 package consulo.language.impl.psi.internal.pointer;
 
 import consulo.application.ApplicationManager;
-import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.impl.FrozenDocument;
-import consulo.util.dataholder.Key;
 import consulo.application.util.LowMemoryWatcher;
-import consulo.document.util.Segment;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
+import consulo.document.event.DocumentEvent;
+import consulo.document.impl.FrozenDocument;
+import consulo.document.util.Segment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

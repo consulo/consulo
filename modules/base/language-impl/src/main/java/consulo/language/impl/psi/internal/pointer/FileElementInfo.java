@@ -1,19 +1,20 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.psi.internal.pointer;
 
-import consulo.language.Language;
-import consulo.language.util.LanguageUtil;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.Language;
+import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
+import consulo.language.util.LanguageUtil;
+import consulo.project.Project;
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

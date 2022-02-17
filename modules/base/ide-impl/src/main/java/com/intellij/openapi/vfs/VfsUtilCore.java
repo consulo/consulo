@@ -200,7 +200,7 @@ public class VfsUtilCore {
    */
   @Nonnull
   public static VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir) throws IOException {
-    return copyFile(requestor, file, toDir, file.getName());
+    return VirtualFileUtil.copyFile(requestor, file, toDir);
   }
 
   /**
@@ -217,9 +217,7 @@ public class VfsUtilCore {
    */
   @Nonnull
   public static VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir, @Nonnull String newName) throws IOException {
-    final VirtualFile newChild = toDir.createChildData(requestor, newName);
-    newChild.setBinaryContent(file.contentsToByteArray());
-    return newChild;
+    return VirtualFileUtil.copyFile(requestor, file, toDir, newName);
   }
 
   @Nonnull

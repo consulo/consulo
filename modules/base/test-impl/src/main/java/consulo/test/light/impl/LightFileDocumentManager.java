@@ -16,7 +16,7 @@
 package consulo.test.light.impl;
 
 import consulo.document.impl.DocumentImpl;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
 import consulo.component.ComponentManager;
 import consulo.document.Document;

@@ -52,7 +52,7 @@ public class ForeignLeafPsiElement extends LeafPsiElement {
   }
 
   @Override
-  protected int textMatches(@Nonnull CharSequence buffer, int start) {
+  public int textMatches(@Nonnull CharSequence buffer, int start) {
     return start;
   }
 

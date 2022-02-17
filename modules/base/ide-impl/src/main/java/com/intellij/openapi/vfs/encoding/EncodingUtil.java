@@ -8,7 +8,7 @@ import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;

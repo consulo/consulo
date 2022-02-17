@@ -25,6 +25,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.ast.internal.SharedImplUtil;
+import consulo.language.impl.parser.internal.PsiBuilderImpl;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.psi.*;
 import consulo.language.psi.stub.ObjectStubSerializer;
@@ -80,10 +81,12 @@ public class DebugUtil {
 
   public static /*final*/ boolean CHECK = false;
   public static final boolean DO_EXPENSIVE_CHECKS;
+
   static {
     Application application = ApplicationManager.getApplication();
     DO_EXPENSIVE_CHECKS = application != null && application.isUnitTestMode();
   }
+
   public static final boolean CHECK_INSIDE_ATOMIC_ACTION_ENABLED = DO_EXPENSIVE_CHECKS;
 
   public static String psiTreeToString(@Nonnull final PsiElement element, final boolean skipWhitespaces) {
@@ -189,7 +192,7 @@ public class DebugUtil {
           }
         }
       }
-      if (psiElement != null && extra != null ) {
+      if (psiElement != null && extra != null) {
         extra.accept(psiElement, new Consumer<PsiElement>() {
           @Override
           public void accept(PsiElement element) {
@@ -203,8 +206,7 @@ public class DebugUtil {
     }
   }
 
-  public static String lightTreeToString(@Nonnull final FlyweightCapableTreeStructure<LighterASTNode> tree,
-                                         final boolean skipWhitespaces) {
+  public static String lightTreeToString(@Nonnull final FlyweightCapableTreeStructure<LighterASTNode> tree, final boolean skipWhitespaces) {
     final LengthBuilder ruler = new LengthBuilder();
     lightTreeToBuffer(tree, tree.getRoot(), ruler, 0, skipWhitespaces);
     final StringBuilder buffer = new StringBuilder(ruler.getLength());
@@ -276,8 +278,7 @@ public class DebugUtil {
       }
       buffer.append(node.toString()).append('\n');
 
-      @SuppressWarnings({"unchecked"})
-      final List<? extends Stub> children = node.getChildrenStubs();
+      @SuppressWarnings({"unchecked"}) final List<? extends Stub> children = node.getChildrenStubs();
       for (final Stub child : children) {
         stubTreeToBuffer(child, buffer, indent + 2);
       }
@@ -423,7 +424,7 @@ public class DebugUtil {
     return psiToString(root, skipWhiteSpaces, showRanges, null);
   }
 
-  public static String psiToString(@Nonnull final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges, PairConsumer<PsiElement, Consumer<PsiElement>> extra) {
+  public static String psiToString(@Nonnull final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges, BiConsumer<PsiElement, Consumer<PsiElement>> extra) {
     final LengthBuilder ruler = new LengthBuilder();
     psiToBuffer(ruler, root, skipWhiteSpaces, showRanges, extra);
     final StringBuilder buffer = new StringBuilder(ruler.getLength());
@@ -431,11 +432,7 @@ public class DebugUtil {
     return buffer.toString();
   }
 
-  private static void psiToBuffer(final Appendable buffer,
-                                  final PsiElement root,
-                                  final boolean skipWhiteSpaces,
-                                  final boolean showRanges,
-                                  PairConsumer<PsiElement, Consumer<PsiElement>> extra) {
+  private static void psiToBuffer(final Appendable buffer, final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges, BiConsumer<PsiElement, Consumer<PsiElement>> extra) {
     final ASTNode node = root.getNode();
     if (node == null) {
       psiToBuffer(buffer, root, 0, skipWhiteSpaces, showRanges, showRanges, extra);
@@ -445,12 +442,7 @@ public class DebugUtil {
     }
   }
 
-  public static void psiToBuffer(@Nonnull final Appendable buffer,
-                                 @Nonnull final PsiElement root,
-                                 int indent,
-                                 boolean skipWhiteSpaces,
-                                 boolean showRanges,
-                                 boolean showChildrenRanges) {
+  public static void psiToBuffer(@Nonnull final Appendable buffer, @Nonnull final PsiElement root, int indent, boolean skipWhiteSpaces, boolean showRanges, boolean showChildrenRanges) {
     psiToBuffer(buffer, root, indent, skipWhiteSpaces, showRanges, showChildrenRanges, null);
   }
 
@@ -460,7 +452,7 @@ public class DebugUtil {
                                  final boolean skipWhiteSpaces,
                                  boolean showRanges,
                                  final boolean showChildrenRanges,
-                                 PairConsumer<PsiElement, Consumer<PsiElement>> extra) {
+                                 BiConsumer<PsiElement, Consumer<PsiElement>> extra) {
     if (skipWhiteSpaces && root instanceof PsiWhiteSpace) return;
 
     StringUtil.repeatSymbol(buffer, ' ', indent);
@@ -480,12 +472,7 @@ public class DebugUtil {
         child = child.getNextSibling();
       }
       if (extra != null) {
-        extra.consume(root, new Consumer<PsiElement>() {
-          @Override
-          public void consume(PsiElement element) {
-            psiToBuffer(buffer, element, indent + 2, skipWhiteSpaces, showChildrenRanges, showChildrenRanges, null);
-          }
-        });
+        extra.accept(root, element -> psiToBuffer(buffer, element, indent + 2, skipWhiteSpaces, showChildrenRanges, showChildrenRanges, null));
       }
     }
     catch (IOException e) {
@@ -544,6 +531,7 @@ public class DebugUtil {
 
   /**
    * Finished PSI modification action.
+   *
    * @see #startPsiModification(String)
    */
   public static void finishPsiModification() {
@@ -554,7 +542,8 @@ public class DebugUtil {
     if (depth == null) {
       LOG.warn("Unmatched PSI modification end", new Throwable());
       depth = 0;
-    } else {
+    }
+    else {
       depth--;
       ourPsiModificationDepth.set(depth);
     }
@@ -635,8 +624,9 @@ public class DebugUtil {
   public static void sleep(long millis) {
     TimeoutUtil.sleep(millis);
   }
+
   public static void checkTreeStructure(ASTNode element) {
-    if (CHECK){
+    if (CHECK) {
       doCheckTreeStructure(element);
     }
   }

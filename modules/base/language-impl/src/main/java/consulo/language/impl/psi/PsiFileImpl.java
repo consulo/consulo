@@ -2,14 +2,12 @@
 
 package consulo.language.impl.psi;
 
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.ui.Queryable;
-import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.Queryable;
 import consulo.content.scope.SearchScope;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -60,6 +58,8 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -67,7 +67,16 @@ import java.util.function.Supplier;
 public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileEx, PsiFileWithStubSupport, Queryable, PsiElementWithSubtreeChangeNotifier, Cloneable {
   private static final Logger LOG = Logger.getInstance(PsiFileImpl.class);
   public static final String STUB_PSI_MISMATCH = "stub-psi mismatch";
-  private static final AtomicFieldUpdater<PsiFileImpl, FileTrees> ourTreeUpdater = AtomicFieldUpdater.forFieldOfType(PsiFileImpl.class, FileTrees.class);
+  private static VarHandle ourTreeUpdater;
+
+  static {
+    try {
+      ourTreeUpdater = MethodHandles.lookup().findVarHandle(PsiFileImpl.class, "myTrees", FileTrees.class);
+    }
+    catch (NoSuchFieldException | IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private IElementType myElementType;
   protected IElementType myContentElementType;

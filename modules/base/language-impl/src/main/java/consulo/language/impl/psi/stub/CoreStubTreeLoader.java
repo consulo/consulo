@@ -15,20 +15,17 @@
  */
 package consulo.language.impl.psi.stub;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
-import consulo.language.impl.psi.stub.StubTreeLoader;
+import consulo.language.ast.IFileElementType;
+import consulo.language.file.LanguageFileType;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.stub.*;
-import consulo.language.psi.stub.StubTreeBuilder;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
-import consulo.language.ast.IFileElementType;
-import com.intellij.util.indexing.FileContentImpl;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nullable;
 import java.io.IOException;

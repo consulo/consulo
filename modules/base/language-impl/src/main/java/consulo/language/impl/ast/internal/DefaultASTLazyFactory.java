@@ -20,6 +20,7 @@ import consulo.language.impl.ast.ASTLazyFactory;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.LazyParseableElement;
 import consulo.language.impl.psi.CodeFragmentElement;
+import consulo.language.impl.psi.DummyHolderElement;
 import consulo.language.impl.psi.LazyParseablePsiElement;
 
 import javax.annotation.Nonnull;

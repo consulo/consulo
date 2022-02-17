@@ -34,7 +34,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.DialogWrapperPeer;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import com.intellij.openapi.ui.impl.AbstractDialog;
 import com.intellij.openapi.ui.impl.HeadlessDialog;
 import com.intellij.openapi.ui.popup.StackingPopupDispatcher;

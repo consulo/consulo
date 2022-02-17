@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;

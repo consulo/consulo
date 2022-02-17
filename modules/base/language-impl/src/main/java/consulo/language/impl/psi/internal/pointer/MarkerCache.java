@@ -15,20 +15,19 @@
  */
 package consulo.language.impl.psi.internal.pointer;
 
-import consulo.language.Language;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.impl.FrozenDocument;
-import com.intellij.openapi.editor.impl.ManualRangeMarker;
-import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
-import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
+import consulo.document.impl.FrozenDocument;
+import consulo.document.impl.ManualRangeMarker;
+import consulo.document.impl.event.DocumentEventImpl;
+import consulo.document.impl.event.RetargetRangeMarkers;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
-import consulo.language.impl.psi.internal.pointer.SmartPointerTracker;
+import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -194,9 +193,13 @@ class MarkerCache {
 
     UpdatedRanges ranges = new UpdatedRanges(0, frozen, infos, new ManualRangeMarker[]{marker});
     // NB: convert events from completion to whole doc change event to more precise translation
-    List<DocumentEvent> newEvents = ContainerUtil.map(events, event -> isWholeDocumentReplace(frozen, (DocumentEventImpl)event)
-                                                                       ? new DocumentEventImpl(event.getDocument(), event.getOffset(), event.getOldFragment(), event.getNewFragment(), event.getOldTimeStamp(), true,
-                                                                                               ((DocumentEventImpl)event).getInitialStartOffset(), ((DocumentEventImpl)event).getInitialOldLength()) : event);
+    List<DocumentEvent> newEvents = ContainerUtil.map(events, event -> isWholeDocumentReplace(frozen, (DocumentEventImpl)event) ? new DocumentEventImpl(event.getDocument(), event.getOffset(),
+                                                                                                                                                        event.getOldFragment(), event.getNewFragment(),
+                                                                                                                                                        event.getOldTimeStamp(), true,
+                                                                                                                                                        ((DocumentEventImpl)event)
+                                                                                                                                                                .getInitialStartOffset(),
+                                                                                                                                                        ((DocumentEventImpl)event)
+                                                                                                                                                                .getInitialOldLength()) : event);
     UpdatedRanges updated = applyEvents(newEvents, ranges);
     return updated.myMarkers[0];
   }

@@ -27,7 +27,7 @@ import consulo.codeEditor.EditorSettings;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.document.impl.DocumentImpl;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

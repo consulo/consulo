@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;

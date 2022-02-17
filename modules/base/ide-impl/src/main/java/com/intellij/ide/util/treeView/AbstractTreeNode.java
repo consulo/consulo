@@ -6,7 +6,7 @@ import consulo.navigation.NavigationItem;
 import consulo.codeEditor.colorScheme.TextAttributesKey;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;

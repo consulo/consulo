@@ -2,7 +2,6 @@
 
 package consulo.language.impl.psi;
 
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.document.Document;
@@ -51,7 +50,7 @@ public abstract class PsiAnchor {
     PsiUtilCore.ensureValid(element);
 
     PsiAnchor anchor = doCreateAnchor(element);
-    if (ApplicationManager.getApplication().isUnitTestMode() && !ApplicationInfoImpl.isInPerformanceTest()) {
+    if (ApplicationManager.getApplication().isUnitTestMode()) {
       PsiElement restored = anchor.retrieve();
       if (!element.equals(restored)) {
         LOG.error("Cannot restore element " + element + " of " + element.getClass() + " from anchor " + anchor + ", getting " + restored + " instead");

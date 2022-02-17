@@ -27,7 +27,7 @@ import consulo.compiler.CompilerManager;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;

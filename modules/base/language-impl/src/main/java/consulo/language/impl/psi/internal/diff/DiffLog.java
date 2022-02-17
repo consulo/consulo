@@ -1,34 +1,29 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.psi.internal.diff;
 
-import consulo.language.ast.ASTNode;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.document.Document;
+import consulo.language.ast.ASTNode;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.psi.internal.PsiManagerEx;
-import consulo.language.impl.psi.internal.PsiManagerImpl;
-import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.language.pom.PomManager;
-import consulo.language.pom.PomModel;
-import consulo.language.pom.event.PomModelEvent;
-import com.intellij.pom.impl.PomTransactionBase;
-import com.intellij.pom.tree.TreeAspect;
-import com.intellij.pom.tree.TreeAspectEvent;
-import com.intellij.pom.tree.events.impl.TreeChangeEventImpl;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeElement;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.util.diff.DiffTreeChangeBuilder;
-import javax.annotation.Nonnull;
+import consulo.language.impl.file.AbstractFileViewProvider;
+import consulo.language.impl.pom.internal.PomTransactionBase;
+import consulo.language.impl.pom.internal.TreeChangeEventImpl;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.impl.psi.internal.*;
+import consulo.language.pom.PomManager;
+import consulo.language.pom.PomModel;
+import consulo.language.pom.TreeAspect;
+import consulo.language.pom.TreeAspectEvent;
+import consulo.language.pom.event.PomModelEvent;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

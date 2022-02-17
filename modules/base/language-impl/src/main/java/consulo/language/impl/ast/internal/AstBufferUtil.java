@@ -15,18 +15,19 @@
  */
 package consulo.language.impl.ast.internal;
 
-import consulo.language.ast.ASTNode;
 import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.LazyParseableElement;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.psi.ForeignLeafPsiElement;
 import consulo.language.impl.psi.internal.RecursiveTreeElementWalkingVisitor;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
-import com.intellij.util.text.CharArrayCharSequence;
-import com.intellij.util.text.StringFactory;
+import consulo.util.lang.CharArrayCharSequence;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

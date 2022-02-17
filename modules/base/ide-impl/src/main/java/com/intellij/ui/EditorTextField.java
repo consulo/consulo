@@ -36,7 +36,7 @@ import consulo.codeEditor.*;
 import consulo.ui.ex.DocumentBasedComponent;
 import consulo.ui.ex.TextComponent;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;

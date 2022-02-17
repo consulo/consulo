@@ -16,16 +16,17 @@
 
 package consulo.language.impl.ast.internal;
 
+import consulo.language.ast.IElementType;
 import consulo.language.impl.ast.ASTFactory;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.psi.CodeEditUtil;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.psi.DummyHolderFactory;
+import consulo.language.impl.psi.PsiErrorElementImpl;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.impl.source.DummyHolderFactory;
-import consulo.language.impl.psi.CodeEditUtil;
-import consulo.language.ast.IElementType;
 import consulo.language.util.CharTable;
 import consulo.localize.LocalizeValue;
 

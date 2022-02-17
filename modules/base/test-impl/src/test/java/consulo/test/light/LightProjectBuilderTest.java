@@ -16,7 +16,7 @@
 package consulo.test.light;
 
 import consulo.application.Application;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

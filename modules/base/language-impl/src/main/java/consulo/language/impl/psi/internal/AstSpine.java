@@ -33,7 +33,7 @@ public class AstSpine implements StubbedSpine {
   public static final AstSpine EMPTY_SPINE = new AstSpine(Collections.emptyList());
   private final List<CompositeElement> myNodes;
 
-  AstSpine(@Nonnull List<CompositeElement> nodes) {
+  public AstSpine(@Nonnull List<CompositeElement> nodes) {
     myNodes = nodes;
   }
 

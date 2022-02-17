@@ -46,7 +46,7 @@ import consulo.document.FileDocumentManager;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.VisualPosition;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import com.intellij.openapi.ui.TypingTarget;
 import consulo.application.util.function.Computable;
 import consulo.application.util.SystemInfo;

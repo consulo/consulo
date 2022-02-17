@@ -20,7 +20,7 @@ import com.intellij.diff.util.LineCol;
 import com.intellij.ide.GeneralSettings;
 import consulo.document.Document;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;

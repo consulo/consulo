@@ -21,7 +21,7 @@ import consulo.codeEditor.colorScheme.EditorColorsManager;
 import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.SeparatorPlacement;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

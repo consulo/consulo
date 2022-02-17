@@ -15,25 +15,18 @@
  */
 package com.intellij.openapi.vfs;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.DeprecationInfo;
+import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.impl.RawFileLoaderImpl;
 
+@Deprecated
 public class PersistentFSConstants {
+  @Deprecated
+  @DeprecationInfo("Use consulo.virtualFileSystem.RawFileLoader.getFileLengthToCacheThreshold")
   public static final long FILE_LENGTH_TO_CACHE_THRESHOLD = RawFileLoaderImpl.LARGE_FOR_CONTENT_LOADING;
-  /**
-   * always  in range [0, PersistentFS.FILE_LENGTH_TO_CACHE_THRESHOLD]
-   */
-  private static int ourMaxIntellisenseFileSize = Math.min(RawFileLoaderImpl.getUserFileSizeLimit(), (int)FILE_LENGTH_TO_CACHE_THRESHOLD);
 
   public static int getMaxIntellisenseFileSize() {
-    return ourMaxIntellisenseFileSize;
-  }
-
-  public static void setMaxIntellisenseFileSize(int sizeInBytes) {
-    if (!ApplicationManager.getApplication().isUnitTestMode()) {
-      throw new IllegalStateException("cannot change max setMaxIntellisenseFileSize while running");
-    }
-    ourMaxIntellisenseFileSize = sizeInBytes;
+    return RawFileLoader.getInstance().getMaxIntellisenseFileSize();
   }
 
   private PersistentFSConstants() {

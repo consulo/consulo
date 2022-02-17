@@ -20,7 +20,7 @@ import com.intellij.codeInsight.intention.impl.config.TextDescriptor;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.disposer.Disposer;
 import com.intellij.util.ArrayUtil;

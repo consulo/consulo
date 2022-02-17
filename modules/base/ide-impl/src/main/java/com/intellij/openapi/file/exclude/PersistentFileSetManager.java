@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

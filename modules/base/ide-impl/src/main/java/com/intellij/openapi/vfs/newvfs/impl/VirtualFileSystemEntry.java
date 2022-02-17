@@ -3,7 +3,7 @@ package com.intellij.openapi.vfs.newvfs.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.fileType.FileType;

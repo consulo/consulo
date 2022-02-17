@@ -151,7 +151,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     return textMatches(buffer, startOffset) == endOffset;
   }
 
-  protected abstract int textMatches(@Nonnull CharSequence buffer, int start);
+  public abstract int textMatches(@Nonnull CharSequence buffer, int start);
 
   public boolean textMatches(@Nonnull CharSequence seq) {
     return textMatches(seq, 0, seq.length());

@@ -120,7 +120,7 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  protected int textMatches(@Nonnull CharSequence buffer, int start) {
+  public int textMatches(@Nonnull CharSequence buffer, int start) {
     assert start >= 0 : start;
     return leafTextMatches(myText, buffer, start);
   }

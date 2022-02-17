@@ -35,7 +35,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.FileDocumentManager;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;

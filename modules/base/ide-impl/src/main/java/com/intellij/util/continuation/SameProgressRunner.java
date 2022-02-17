@@ -18,7 +18,7 @@ package com.intellij.util.continuation;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

@@ -4,7 +4,7 @@ import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.document.impl.DocumentImpl;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import com.intellij.ui.EditorTextField;
 import javax.annotation.Nonnull;

@@ -51,7 +51,7 @@ import consulo.codeEditor.markup.LineMarkerRenderer;
 import consulo.codeEditor.markup.TextAttributes;
 import consulo.project.Project;
 import com.intellij.openapi.ui.AbstractPainter;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import com.intellij.openapi.util.*;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

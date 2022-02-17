@@ -26,7 +26,7 @@ import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import consulo.project.ProjectManager;

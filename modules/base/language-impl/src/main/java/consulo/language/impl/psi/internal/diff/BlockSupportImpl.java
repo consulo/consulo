@@ -2,12 +2,6 @@
 
 package consulo.language.impl.psi.internal.diff;
 
-import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.impl.source.DummyHolderFactory;
-import com.intellij.util.diff.DiffTree;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.Document;
@@ -22,6 +16,8 @@ import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.ast.internal.ASTStructure;
 import consulo.language.impl.ast.internal.SharedImplUtil;
 import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.psi.DummyHolderFactory;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.psi.internal.*;
 import consulo.language.plain.PlainTextLanguage;
@@ -31,6 +27,9 @@ import consulo.language.util.CharTable;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -66,8 +65,8 @@ public class BlockSupportImpl extends BlockSupport {
     }
   }
 
-  static class ReparseResult implements AutoCloseable {
-    final DiffLog log;
+  public static class ReparseResult implements AutoCloseable {
+    public final DiffLog log;
     final ASTNode oldRoot;
     final ASTNode newRoot;
 
@@ -165,8 +164,12 @@ public class BlockSupportImpl extends BlockSupport {
   }
 
   @Nullable
-  protected static ASTNode tryReparseNode(@Nonnull IReparseableElementTypeBase reparseable, @Nonnull ASTNode node, @Nonnull CharSequence newTextStr,
-                                          @Nonnull PsiManager manager, @Nonnull Language baseLanguage, @Nonnull CharTable charTable) {
+  protected static ASTNode tryReparseNode(@Nonnull IReparseableElementTypeBase reparseable,
+                                          @Nonnull ASTNode node,
+                                          @Nonnull CharSequence newTextStr,
+                                          @Nonnull PsiManager manager,
+                                          @Nonnull Language baseLanguage,
+                                          @Nonnull CharTable charTable) {
     if (!reparseable.isParsable(node.getTreeParent(), newTextStr, baseLanguage, manager.getProject())) {
       return null;
     }
@@ -198,23 +201,24 @@ public class BlockSupportImpl extends BlockSupport {
   }
 
   private static void reportInconsistentLength(PsiFile file, CharSequence newFileText, ASTNode node, int start, int end) {
-    String message = "Index out of bounds: type=" + node.getElementType() + "; file=" + file + "; file.class=" + file.getClass() + "; start=" + start + "; end=" + end + "; length=" + node.getTextLength();
+    String message =
+            "Index out of bounds: type=" + node.getElementType() + "; file=" + file + "; file.class=" + file.getClass() + "; start=" + start + "; end=" + end + "; length=" + node.getTextLength();
     String newTextBefore = newFileText.subSequence(0, start).toString();
     String oldTextBefore = file.getText().subSequence(0, start).toString();
     if (oldTextBefore.equals(newTextBefore)) {
       message += "; oldTextBefore==newTextBefore";
     }
-    LOG.error(message, new Attachment(file.getName() + "_oldNodeText.txt", node.getText()), new Attachment(file.getName() + "_oldFileText.txt", file.getText()),
-              new Attachment(file.getName() + "_newFileText.txt", newFileText.toString()));
+    LOG.error(message, AttachmentFactory.get().create(file.getName() + "_oldNodeText.txt", node.getText()), AttachmentFactory.get().create(file.getName() + "_oldFileText.txt", file.getText()),
+              AttachmentFactory.get().create(file.getName() + "_newFileText.txt", newFileText.toString()));
   }
 
   // returns diff log, new file element
   @Nonnull
-  static ReparseResult makeFullParse(@Nonnull PsiFileImpl fileImpl,
-                                     @Nonnull FileASTNode oldFileNode,
-                                     @Nonnull CharSequence newFileText,
-                                     @Nonnull ProgressIndicator indicator,
-                                     @Nonnull CharSequence lastCommittedText) {
+  public static ReparseResult makeFullParse(@Nonnull PsiFileImpl fileImpl,
+                                            @Nonnull FileASTNode oldFileNode,
+                                            @Nonnull CharSequence newFileText,
+                                            @Nonnull ProgressIndicator indicator,
+                                            @Nonnull CharSequence lastCommittedText) {
     if (fileImpl instanceof PsiCodeFragment) {
       FileElement parent = fileImpl.getTreeElement();
       PsiElement context = fileImpl.getContext();
@@ -298,13 +302,20 @@ public class BlockSupportImpl extends BlockSupport {
   }
 
   private static String details(FileViewProvider providerCopy, FileViewProvider viewProvider) {
-    return "; languages: " + viewProvider.getLanguages() +
-           "; base: " + viewProvider.getBaseLanguage() +
-           "; copy: " + providerCopy +
-           "; copy.base: " + providerCopy.getBaseLanguage() +
-           "; vFile: " + viewProvider.getVirtualFile() +
-           "; copy.vFile: " + providerCopy.getVirtualFile() +
-           "; fileType: " + viewProvider.getVirtualFile().getFileType() +
+    return "; languages: " +
+           viewProvider.getLanguages() +
+           "; base: " +
+           viewProvider.getBaseLanguage() +
+           "; copy: " +
+           providerCopy +
+           "; copy.base: " +
+           providerCopy.getBaseLanguage() +
+           "; vFile: " +
+           viewProvider.getVirtualFile() +
+           "; copy.vFile: " +
+           providerCopy.getVirtualFile() +
+           "; fileType: " +
+           viewProvider.getVirtualFile().getFileType() +
            "; copy.original(): " +
            (providerCopy.getVirtualFile() instanceof LightVirtualFile ? ((LightVirtualFile)providerCopy.getVirtualFile()).getOriginalFile() : null);
   }

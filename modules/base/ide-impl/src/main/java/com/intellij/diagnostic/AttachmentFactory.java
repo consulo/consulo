@@ -2,7 +2,7 @@ package com.intellij.diagnostic;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.attachment.Attachment;
 import javax.annotation.Nonnull;

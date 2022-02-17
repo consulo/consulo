@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.psi.internal.pointer;
 
-import com.google.common.base.MoreObjects;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -10,10 +9,12 @@ import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
+import consulo.util.interner.Interner;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -140,7 +141,7 @@ public abstract class Identikit {
 
     @Override
     public String toString() {
-      return MoreObjects.toStringHelper(this).add("class", myElementClassName).add("elementType", myElementTypeId).add("fileLanguage", myFileLanguageId).toString();
+      return Map.of("class", myElementClassName, "elementType", myElementTypeId ,"fileLanguage", myFileLanguageId).toString();
     }
 
     @Override

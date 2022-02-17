@@ -35,6 +35,42 @@ public class FileUtil {
   private static final int MAX_FILE_IO_ATTEMPTS = 10;
   private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
 
+  public static final int THREAD_LOCAL_BUFFER_LENGTH = 1024 * 20;
+  protected static final ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>() {
+    @Override
+    protected byte[] initialValue() {
+      return new byte[THREAD_LOCAL_BUFFER_LENGTH];
+    }
+  };
+
+  @Nonnull
+  public static byte[] loadFirstAndClose(@Nonnull InputStream stream, int maxLength) throws IOException {
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    try {
+      copy(stream, maxLength, buffer);
+    }
+    finally {
+      stream.close();
+    }
+    return buffer.toByteArray();
+  }
+
+  public static void copy(@Nonnull InputStream inputStream, int maxSize, @Nonnull OutputStream outputStream) throws IOException {
+    final byte[] buffer = getThreadLocalBuffer();
+    int toRead = maxSize;
+    while (toRead > 0) {
+      int read = inputStream.read(buffer, 0, Math.min(buffer.length, toRead));
+      if (read < 0) break;
+      toRead -= read;
+      outputStream.write(buffer, 0, read);
+    }
+  }
+
+  @Nonnull
+  public static byte[] getThreadLocalBuffer() {
+    return BUFFER.get();
+  }
+
   @Nonnull
   public static String loadTextAndClose(@Nonnull InputStream stream) throws IOException {
     //noinspection IOResourceOpenedButNotSafelyClosed

@@ -6,7 +6,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.virtualFileSystem.fileType.DirectoryFileType;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FakeFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;

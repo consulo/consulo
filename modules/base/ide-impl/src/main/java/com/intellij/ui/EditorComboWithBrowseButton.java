@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.util.ArrayUtil;

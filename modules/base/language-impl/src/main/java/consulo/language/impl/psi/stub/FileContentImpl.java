@@ -1,31 +1,31 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.psi.stub;
 
-import consulo.language.ast.FCTSBackedLighterAST;
-import consulo.language.ast.FileASTNode;
-import consulo.language.Language;
-import consulo.language.ast.LighterAST;
-import consulo.language.ast.TreeBackedLighterAST;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import consulo.language.psi.stub.FileContent;
-import consulo.language.psi.stub.IndexingDataKeys;
-import consulo.language.psi.stub.PsiDependentFileContent;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.language.Language;
+import consulo.language.ast.FCTSBackedLighterAST;
+import consulo.language.ast.FileASTNode;
+import consulo.language.ast.LighterAST;
+import consulo.language.ast.TreeBackedLighterAST;
 import consulo.language.file.LanguageFileType;
-import consulo.project.internal.DefaultProjectFactory;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.language.psi.LanguageSubstitutors;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.stub.FileContent;
+import consulo.language.psi.stub.IndexingDataKeys;
+import consulo.language.psi.stub.PsiDependentFileContent;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionResolvers;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -115,7 +115,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
   public PsiFile createFileFromText(@Nonnull CharSequence text) {
     Project project = getProject();
     if (project == null) {
-      project = DefaultProjectFactory.getInstance().getDefaultProject();
+      project = ProjectManager.getInstance().getDefaultProject();
     }
     FileType fileType = getFileTypeWithoutSubstitution();
     if (!(fileType instanceof LanguageFileType)) {

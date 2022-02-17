@@ -35,6 +35,82 @@ import java.util.function.Predicate;
 public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
 
+  @Nonnull
+  @Contract(pure = true)
+  public static <T extends Comparable<? super T>> List<T> sorted(@Nonnull Collection<? extends T> list) {
+    return sorted(list, Comparator.naturalOrder());
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> sorted(@Nonnull Collection<? extends T> list, @Nonnull Comparator<? super T> comparator) {
+    return sorted((Iterable<? extends T>)list, comparator);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> sorted(@Nonnull Iterable<? extends T> list, @Nonnull Comparator<? super T> comparator) {
+    List<T> sorted = newArrayList(list);
+    sort(sorted, comparator);
+    return sorted;
+  }
+  
+  public static <T> void sort(@Nonnull T[] a, @Nonnull Comparator<T> comparator) {
+    int size = a.length;
+
+    if (size < 2) return;
+    if (size == 2) {
+      T t0 = a[0];
+      T t1 = a[1];
+
+      if (comparator.compare(t0, t1) > 0) {
+        a[0] = t1;
+        a[1] = t0;
+      }
+    }
+    else if (size < INSERTION_SORT_THRESHOLD) {
+      for (int i = 0; i < size; i++) {
+        for (int j = 0; j < i; j++) {
+          T ti = a[i];
+          T tj = a[j];
+
+          if (comparator.compare(ti, tj) < 0) {
+            a[i] = tj;
+            a[j] = ti;
+          }
+        }
+      }
+    }
+    else {
+      Arrays.sort(a, comparator);
+    }
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> createMaybeSingletonList(@Nullable T element) {
+    return element == null ? List.of() : Collections.singletonList(element);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <E> List<E> reverse(@Nonnull final List<E> elements) {
+    if (elements.isEmpty()) {
+      return List.of();
+    }
+
+    return new AbstractList<E>() {
+      @Override
+      public E get(int index) {
+        return elements.get(elements.size() - 1 - index);
+      }
+
+      @Override
+      public int size() {
+        return elements.size();
+      }
+    };
+  }
 
   @Contract(pure = true)
   public static <T> boolean exists(@Nonnull T[] iterable, @Nonnull Predicate<? super T> condition) {

@@ -18,7 +18,7 @@ package com.intellij.ui.treeStructure;
 import com.intellij.ide.util.treeView.*;
 import consulo.application.ReadAction;
 import consulo.application.ui.awt.GraphicsConfig;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import consulo.application.ui.awt.UIUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;

@@ -18,7 +18,7 @@ package com.intellij.vcs.log.ui.frame;
 import com.google.common.primitives.Ints;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.ui.components.JBLoadingPanel;

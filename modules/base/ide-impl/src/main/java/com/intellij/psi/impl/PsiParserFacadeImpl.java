@@ -16,23 +16,24 @@
 
 package com.intellij.psi.impl;
 
-import consulo.language.impl.ast.ASTFactory;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.LanguageCommenters;
+import consulo.language.ast.TokenType;
 import consulo.language.file.LanguageFileType;
-import com.intellij.psi.impl.source.DummyHolderFactory;
-import consulo.language.impl.psi.SourceTreeToPsiMap;
+import consulo.language.impl.ast.ASTFactory;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
-import consulo.language.ast.TokenType;
+import consulo.language.impl.psi.DummyHolderFactory;
+import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole

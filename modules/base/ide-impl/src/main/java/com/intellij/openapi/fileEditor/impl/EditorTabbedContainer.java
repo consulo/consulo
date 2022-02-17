@@ -33,7 +33,7 @@ import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
 import com.intellij.openapi.fileEditor.impl.text.FileDropHandler;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowAnchor;

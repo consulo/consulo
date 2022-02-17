@@ -17,7 +17,7 @@ package com.intellij.util.continuation;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;

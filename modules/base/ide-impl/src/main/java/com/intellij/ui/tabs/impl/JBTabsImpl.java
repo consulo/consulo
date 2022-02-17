@@ -22,7 +22,7 @@ import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.*;
 import consulo.project.ui.IdeFocusManager;

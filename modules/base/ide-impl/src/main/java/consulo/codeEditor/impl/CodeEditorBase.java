@@ -40,7 +40,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.TextAttributes;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.registry.Registry;

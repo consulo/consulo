@@ -1,10 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.file.internal;
 
-import com.intellij.openapi.util.StackOverflowPreventedException;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.psi.impl.file.PsiDirectoryImpl;
-import com.intellij.util.ConcurrencyUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.application.util.registry.Registry;
@@ -24,7 +20,9 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.impl.psi.PsiDirectoryImpl;
 import consulo.language.impl.psi.PsiFileEx;
+import consulo.language.impl.psi.PsiModificationTrackerImpl;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
 import consulo.language.psi.LanguageSubstitutors;
@@ -36,10 +34,14 @@ import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Maps;
+import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StackOverflowPreventedException;
 import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.inject.Provider;
 import org.jetbrains.annotations.TestOnly;
@@ -208,7 +210,7 @@ public final class FileManagerImpl implements FileManager {
     if (file instanceof LightVirtualFile) {
       return file.putUserDataIfAbsent(myPsiHardRefKey, viewProvider);
     }
-    return ConcurrencyUtil.cacheOrGet(getVFileToViewProviderMap(), file, viewProvider);
+    return Maps.cacheOrGet(getVFileToViewProviderMap(), file, viewProvider);
   }
 
   @Override
@@ -423,7 +425,7 @@ public final class FileManagerImpl implements FileManager {
     }
 
     psiDir = new PsiDirectoryImpl(myManager, vFile);
-    return ConcurrencyUtil.cacheOrGet(psiDirMap, vFile, psiDir);
+    return Maps.cacheOrGet(psiDirMap, vFile, psiDir);
   }
 
   private boolean isExcludedOrIgnored(@Nonnull VirtualFile vFile) {
@@ -440,7 +442,7 @@ public final class FileManagerImpl implements FileManager {
   @Override
   public void removeFilesAndDirsRecursively(@Nonnull VirtualFile vFile) {
     DebugUtil.performPsiModification("removeFilesAndDirsRecursively", () -> {
-      VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor<Void>() {
+      VirtualFileUtil.visitChildrenRecursively(vFile, new VirtualFileVisitor<Void>() {
         @Override
         public boolean visitFile(@Nonnull VirtualFile file) {
           if (file.isDirectory()) {
@@ -542,7 +544,7 @@ public final class FileManagerImpl implements FileManager {
     markInvalidations(originalFileToPsiFileMap);
   }
 
-  static boolean areViewProvidersEquivalent(@Nonnull FileViewProvider view1, @Nonnull FileViewProvider view2) {
+  public static boolean areViewProvidersEquivalent(@Nonnull FileViewProvider view1, @Nonnull FileViewProvider view2) {
     if (view1.getClass() != view2.getClass() || view1.getFileType() != view2.getFileType()) return false;
 
     Language baseLanguage = view1.getBaseLanguage();

@@ -2,10 +2,9 @@
 
 package consulo.language.impl.psi;
 
-import com.intellij.openapi.ui.Queryable;
-import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.util.Queryable;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.FileASTNode;

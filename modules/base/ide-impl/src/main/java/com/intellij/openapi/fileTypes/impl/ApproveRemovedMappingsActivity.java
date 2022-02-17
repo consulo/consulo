@@ -9,7 +9,7 @@ import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import consulo.application.util.registry.Registry;

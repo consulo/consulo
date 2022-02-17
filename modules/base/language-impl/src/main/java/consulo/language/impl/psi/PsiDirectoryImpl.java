@@ -16,13 +16,10 @@
 
 package consulo.language.impl.psi;
 
-import com.intellij.navigation.ItemPresentationProviders;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import com.intellij.openapi.ui.Queryable;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.util.Queryable;
 import consulo.application.util.SystemInfo;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -32,6 +29,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.ast.ChangeUtil;
 import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiElementProcessor;
@@ -39,6 +37,7 @@ import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentationProviders;
 import consulo.project.DumbService;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
@@ -46,6 +45,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -397,7 +397,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         copyVFile.setBinaryContent(originalFile.getText().getBytes(copyVFile.getCharset()));
       }
       else {
-        copyVFile = VfsUtilCore.copyFile(this, vFile, parent, newName);
+        copyVFile = VirtualFileUtil.copyFile(this, vFile, parent, newName);
       }
       LOG.assertTrue(copyVFile != null, "File was not copied: " + vFile);
       DumbService.getInstance(getProject()).completeJustSubmittedTasks();
@@ -483,7 +483,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
             newVFile.setBinaryContent(storedContents);
           }
           else {
-            newVFile = VfsUtilCore.copyFile(null, originalFile.getVirtualFile(), myFile);
+            newVFile = VirtualFileUtil.copyFile(null, originalFile.getVirtualFile(), myFile);
           }
         }
         psiDocumentManager.commitAllDocuments();

@@ -35,7 +35,7 @@ import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
 import consulo.application.extension.KeyedExtensionCollector;

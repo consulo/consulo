@@ -37,7 +37,7 @@ import consulo.language.impl.psi.internal.BooleanRunnable;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
 import consulo.language.impl.psi.internal.PsiManagerEx;
-import com.intellij.psi.impl.source.DummyHolder;
+import consulo.language.impl.psi.DummyHolder;
 import com.intellij.psi.injection.ReferenceInjector;
 import consulo.language.ast.IElementType;
 import com.intellij.reference.SoftReference;

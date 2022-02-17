@@ -16,7 +16,6 @@
 
 package consulo.language.impl.psi.internal.pointer;
 
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -36,6 +35,7 @@ import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -110,7 +110,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
 
   @Override
   public E getCachedElement() {
-    return com.intellij.reference.SoftReference.dereference(myElement);
+    return consulo.util.lang.ref.SoftReference.dereference(myElement);
   }
 
   @Override
@@ -148,7 +148,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   @Nonnull
   private static <E extends PsiElement> SmartPointerElementInfo createElementInfo(SmartPointerManagerImpl manager, @Nonnull E element, PsiFile containingFile, boolean forInjected) {
     SmartPointerElementInfo elementInfo = doCreateElementInfo(manager.getProject(), element, containingFile, forInjected);
-    if (ApplicationManager.getApplication().isUnitTestMode() && !ApplicationInfoImpl.isInPerformanceTest()) {
+    if (ApplicationManager.getApplication().isUnitTestMode()) {
       PsiElement restored = elementInfo.restoreElement(manager);
       if (!element.equals(restored)) {
         // likely cause: PSI having isPhysical==true, but which can't be restored by containing file and range. To fix, make isPhysical return false

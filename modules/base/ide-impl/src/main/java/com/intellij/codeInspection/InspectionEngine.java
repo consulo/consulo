@@ -28,7 +28,7 @@ import com.intellij.codeInspection.reference.RefManagerImpl;
 import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.application.internal.concurrency.JobLauncher;
 import consulo.language.Language;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.util.lang.function.Conditions;

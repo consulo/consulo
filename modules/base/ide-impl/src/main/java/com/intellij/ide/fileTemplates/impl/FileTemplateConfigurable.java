@@ -45,6 +45,7 @@ import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
+import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;

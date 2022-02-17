@@ -20,7 +20,7 @@ import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.text.ByteArrayCharSequence;
+import consulo.util.lang.ByteArrayCharSequence;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

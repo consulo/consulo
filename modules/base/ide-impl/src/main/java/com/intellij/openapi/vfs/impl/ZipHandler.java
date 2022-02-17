@@ -22,7 +22,7 @@ import com.intellij.openapi.util.io.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.FileAccessorCache;
-import com.intellij.util.text.ByteArrayCharSequence;
+import consulo.util.lang.ByteArrayCharSequence;
 import consulo.vfs.impl.archive.ArchiveEntry;
 import consulo.vfs.impl.archive.ArchiveFile;
 import javax.annotation.Nonnull;

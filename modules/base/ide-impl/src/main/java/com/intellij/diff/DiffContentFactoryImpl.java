@@ -22,7 +22,7 @@ import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUtil;
 import consulo.codeEditor.EditorFactory;
 import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.io.FileUtil;

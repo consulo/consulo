@@ -27,7 +27,7 @@ import consulo.document.Document;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

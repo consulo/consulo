@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.progress.util;
 
-import com.intellij.openapi.progress.StandardProgressIndicator;
+import consulo.application.progress.StandardProgressIndicator;
 
 public class ProgressIndicatorBase extends AbstractProgressIndicatorExBase implements StandardProgressIndicator {
   public ProgressIndicatorBase() {

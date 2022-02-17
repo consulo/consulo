@@ -39,7 +39,7 @@ import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;

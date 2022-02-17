@@ -23,7 +23,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import consulo.util.dataholder.Key;

@@ -17,7 +17,7 @@ package com.intellij.vcs.log.data;
 
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
 import consulo.disposer.Disposer;

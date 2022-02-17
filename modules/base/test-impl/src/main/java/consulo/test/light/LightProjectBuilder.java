@@ -23,7 +23,7 @@ import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
 import com.intellij.psi.impl.PsiFileFactoryImpl;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
-import com.intellij.psi.impl.PsiModificationTrackerImpl;
+import consulo.language.impl.psi.PsiModificationTrackerImpl;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.test.light.impl.LightExtensionRegistrator;

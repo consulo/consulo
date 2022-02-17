@@ -5,7 +5,7 @@ package com.intellij.openapi.diff.impl.settings;
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.contents.DiffContent;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

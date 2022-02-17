@@ -15,9 +15,6 @@
  */
 package consulo.language.impl.file;
 
-import com.intellij.openapi.vfs.PersistentFSConstants;
-import com.intellij.util.ReflectionUtil;
-import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
@@ -33,6 +30,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.reflect.ReflectionUtil;
+import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
@@ -160,11 +159,11 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
 
   public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile) {
     if (!checkFileSizeLimit(vFile)) return false;
-    return fileSizeIsGreaterThan(vFile, PersistentFSConstants.getMaxIntellisenseFileSize());
+    return fileSizeIsGreaterThan(vFile, RawFileLoader.getInstance().getMaxIntellisenseFileSize());
   }
 
   public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile) {
-    return fileSizeIsGreaterThan(vFile, PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD);
+    return fileSizeIsGreaterThan(vFile, RawFileLoader.getInstance().getFileLengthToCacheThreshold());
   }
 
   private static boolean checkFileSizeLimit(@Nonnull VirtualFile vFile) {
@@ -184,11 +183,11 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
 
   public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, final long contentSize) {
     if (!checkFileSizeLimit(vFile)) return false;
-    return contentSize > PersistentFSConstants.getMaxIntellisenseFileSize();
+    return contentSize > RawFileLoader.getInstance().getMaxIntellisenseFileSize();
   }
 
   public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, final long contentSize) {
-    return contentSize > PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD;
+    return contentSize > RawFileLoader.getInstance().getFileLengthToCacheThreshold();
   }
 
   public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, final long maxBytes) {

@@ -25,7 +25,7 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

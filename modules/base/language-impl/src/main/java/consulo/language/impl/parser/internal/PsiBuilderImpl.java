@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.parser.internal;
 
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.ast.*;

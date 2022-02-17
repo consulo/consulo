@@ -41,7 +41,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.psi.ExternalChangeAction;
+import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.util.ObjectUtils;
 import consulo.annotation.access.RequiredWriteAction;

@@ -16,20 +16,22 @@
 
 package consulo.language.impl.ast;
 
-import com.intellij.pom.impl.PomTransactionBase;
-import com.intellij.pom.tree.TreeAspect;
-import com.intellij.pom.tree.events.TreeChangeEvent;
-import com.intellij.pom.tree.events.impl.TreeChangeEventImpl;
-import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.impl.source.DummyHolderFactory;
-import com.intellij.psi.impl.source.SourceTreeToPsiMap;
-import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import consulo.language.ast.ASTNode;
+import consulo.language.ast.TreeCopyHandler;
+import consulo.language.ast.TreeGenerator;
+import consulo.language.impl.DebugUtil;
+import consulo.language.impl.pom.internal.PomTransactionBase;
+import consulo.language.impl.pom.internal.TreeChangeEventImpl;
+import consulo.language.impl.psi.CodeEditUtil;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.psi.DummyHolderFactory;
+import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.language.pom.PomManager;
 import consulo.language.pom.PomModel;
+import consulo.language.pom.TreeAspect;
 import consulo.language.pom.event.PomModelEvent;
+import consulo.language.pom.event.TreeChangeEvent;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
@@ -90,7 +92,7 @@ public class ChangeUtil {
     }
 
     for (TreeCopyHandler handler : TreeCopyHandler.EP_NAME.getExtensionList()) {
-      final TreeElement handled = handler.decodeInformation(element, state);
+      final TreeElement handled = (TreeElement)handler.decodeInformation(element, state);
       if (handled != null) return handled;
     }
 
@@ -151,7 +153,7 @@ public class ChangeUtil {
     }
     else {
       for (TreeGenerator generator : TreeGenerator.EP_NAME.getExtensionList()) {
-        final TreeElement element = generator.generateTreeFor(original, table, manager);
+        final TreeElement element = (TreeElement)generator.generateTreeFor(original, table, manager);
         if (element != null) return element;
       }
       return null;

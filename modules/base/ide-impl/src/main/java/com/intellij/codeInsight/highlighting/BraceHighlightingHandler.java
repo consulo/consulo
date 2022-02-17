@@ -51,7 +51,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.application.dumb.DumbAwareRunnable;

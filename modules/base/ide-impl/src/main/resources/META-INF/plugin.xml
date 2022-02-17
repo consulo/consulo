@@ -1135,9 +1135,9 @@
                     interface="com.intellij.codeInsight.generation.PatternProvider"/>
 
     <extensionPoint name="treeCopyHandler"
-                    interface="com.intellij.psi.impl.source.tree.TreeCopyHandler"/>
+                    interface="consulo.language.ast.TreeCopyHandler"/>
     <extensionPoint name="treeGenerator"
-                    interface="com.intellij.psi.impl.source.tree.TreeGenerator"/>
+                    interface="consulo.language.ast.TreeGenerator"/>
 
     <extensionPoint name="psi.treeChangePreprocessor"
                     interface="consulo.language.psi.event.PsiTreeChangePreprocessor"
@@ -1921,7 +1921,7 @@
     <projectService serviceInterface="com.intellij.diagnostic.logging.LogConsolePreferences"
                     serviceImplementation="com.intellij.diagnostic.logging.LogConsolePreferences"/>
 
-    <applicationService serviceInterface="com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry"
+    <applicationService serviceInterface="consulo.language.psi.ReferenceProvidersRegistry"
                         serviceImplementation="com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistryImpl"/>
 
     <projectService serviceInterface="com.intellij.find.FindManager"
@@ -2015,7 +2015,7 @@
     <projectService serviceInterface="com.intellij.tools.ToolsProjectConfig"
                     serviceImplementation="com.intellij.tools.ToolsProjectConfig"/>
 
-    <lang.parserDefinition language="TEXT" implementationClass="com.intellij.openapi.fileTypes.PlainTextParserDefinition"/>
+    <lang.parserDefinition language="TEXT" implementationClass="consulo.language.impl.plain.PlainTextParserDefinition"/>
     <lang.syntaxHighlighterFactory key="TEXT" implementationClass="com.intellij.openapi.fileTypes.PlainTextSyntaxHighlighterFactory"/>
     <lang.braceMatcher language="TEXT" implementationClass="com.intellij.ide.highlighter.custom.impl.CustomFileTypeBraceMatcher"/>
     <lang.ast.leafFactory implementation="com.intellij.psi.impl.source.tree.PlainTextASTLeafFactory"/>
@@ -2411,7 +2411,7 @@
     <editorTabTitleProvider implementation="com.intellij.openapi.fileEditor.impl.UniqueNameEditorTabTitleProvider"/>
 
     <projectService serviceInterface="consulo.language.psi.PsiModificationTracker"
-                    serviceImplementation="com.intellij.psi.impl.PsiModificationTrackerImpl"/>
+                    serviceImplementation="consulo.language.impl.psi.PsiModificationTrackerImpl"/>
 
     <itemPresentationProvider forClass="consulo.language.psi.PsiDirectory"
                               implementationClass="com.intellij.navigation.DirectoryPresentationProvider"/>

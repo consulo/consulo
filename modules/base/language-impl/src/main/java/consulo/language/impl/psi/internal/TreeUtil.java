@@ -16,23 +16,23 @@
 
 package consulo.language.impl.psi.internal;
 
-import consulo.language.ast.ASTNode;
-import consulo.language.impl.ast.*;
-import consulo.language.lexer.Lexer;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.util.Couple;
-import consulo.util.lang.ref.Ref;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IStrongWhitespaceHolderElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.impl.DebugUtil;
+import consulo.language.impl.ast.*;
+import consulo.language.lexer.Lexer;
+import consulo.language.psi.OuterLanguageElement;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiWhiteSpace;
-import consulo.language.impl.DebugUtil;
-import consulo.language.psi.OuterLanguageElement;
-import consulo.language.ast.IElementType;
-import com.intellij.psi.tree.IStrongWhitespaceHolderElementType;
-import consulo.language.ast.TokenSet;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import consulo.util.lang.Couple;
+import consulo.util.lang.ref.Ref;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.LinkedList;

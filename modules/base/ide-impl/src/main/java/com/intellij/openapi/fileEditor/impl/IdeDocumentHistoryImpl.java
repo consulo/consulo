@@ -39,7 +39,7 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.psi.ExternalChangeAction;
+import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;

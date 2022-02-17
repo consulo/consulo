@@ -22,7 +22,7 @@ import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.document.util.TextRange;

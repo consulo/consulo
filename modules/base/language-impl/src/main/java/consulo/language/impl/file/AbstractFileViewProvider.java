@@ -1,10 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.file;
 
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.command.undo.UndoConstants;
-import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -18,15 +14,17 @@ import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.file.internal.FileManager;
 import consulo.language.impl.file.internal.FileManagerImpl;
+import consulo.language.impl.plain.PsiPlainTextFileImpl;
 import consulo.language.impl.psi.*;
-import consulo.language.impl.psi.internal.PsiManagerEx;
-import consulo.language.impl.psi.internal.PsiManagerImpl;
-import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
+import consulo.language.impl.psi.internal.*;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
 import consulo.project.Project;
+import consulo.undoRedo.util.UndoConstants;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -159,14 +157,14 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
 
   @Nullable
   private Document getCachedDocument() {
-    final Document document = com.intellij.reference.SoftReference.dereference(myDocument);
+    final Document document = consulo.util.lang.ref.SoftReference.dereference(myDocument);
     if (document != null) return document;
     return FileDocumentManager.getInstance().getCachedDocument(getVirtualFile());
   }
 
   @Override
   public Document getDocument() {
-    Document document = com.intellij.reference.SoftReference.dereference(myDocument);
+    Document document = consulo.util.lang.ref.SoftReference.dereference(myDocument);
     if (document == null) {
       document = FileDocumentManager.getInstance().getDocument(getVirtualFile());
       myDocument = document == null ? null : new SoftReference<>(document);
@@ -350,10 +348,10 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
       int nodeLength = fileElement.getTextLength();
       if (!isDocumentConsistentWithPsi(fileLength, fileElement, nodeLength)) {
         PsiUtilCore.ensureValid(fileElement.getPsi());
-        List<Attachment> attachments = ContainerUtil
-                .newArrayList(new Attachment(myVirtualFile.getName(), myContent.getText().toString()), new Attachment(myVirtualFile.getNameWithoutExtension() + ".tree.txt", fileElement.getText()));
+        List<Attachment> attachments = ContainerUtil.newArrayList(AttachmentFactory.get().create(myVirtualFile.getName(), myContent.getText().toString()),
+                                                                  AttachmentFactory.get().create(myVirtualFile.getNameWithoutExtension() + ".tree.txt", fileElement.getText()));
         if (document != null) {
-          attachments.add(new Attachment(myVirtualFile.getNameWithoutExtension() + ".document.txt", document.getText()));
+          attachments.add(AttachmentFactory.get().create(myVirtualFile.getNameWithoutExtension() + ".document.txt", document.getText()));
         }
         // exceptions here should be assigned to peter
         LOG.error("Inconsistent " + fileElement.getElementType() + " tree in " + this + "; nodeLength=" + nodeLength + "; fileLength=" + fileLength, attachments.toArray(Attachment.EMPTY_ARRAY));
@@ -364,7 +362,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   private boolean isDocumentConsistentWithPsi(int fileLength, FileElement fileElement, int nodeLength) {
     if (nodeLength != fileLength) return false;
 
-    if (ApplicationManager.getApplication().isUnitTestMode() && !ApplicationInfoImpl.isInPerformanceTest()) {
+    if (ApplicationManager.getApplication().isUnitTestMode()) {
       return fileElement.textMatches(myContent.getText());
     }
 

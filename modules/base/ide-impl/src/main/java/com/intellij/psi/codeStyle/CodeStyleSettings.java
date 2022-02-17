@@ -3,6 +3,7 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.configurationStore.UnknownElementCollector;
 import com.intellij.configurationStore.UnknownElementWriter;
+import consulo.language.plain.PlainTextFileType;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;

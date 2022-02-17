@@ -64,7 +64,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.impl.file.SingleRootFileViewProvider;
-import com.intellij.psi.impl.PsiDocumentTransactionListener;
+import consulo.language.impl.psi.PsiDocumentTransactionListener;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;

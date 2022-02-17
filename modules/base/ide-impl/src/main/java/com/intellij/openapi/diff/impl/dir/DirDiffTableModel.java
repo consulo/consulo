@@ -28,7 +28,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.dir.actions.popup.WarnOnDeletion;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

@@ -2,26 +2,25 @@
 package consulo.language.impl.psi.internal.pointer;
 
 import consulo.application.ApplicationManager;
-import consulo.language.psi.*;
-import consulo.logging.Logger;
 import consulo.document.Document;
-import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.impl.FrozenDocument;
 import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
+import consulo.document.event.DocumentEvent;
+import consulo.document.impl.FrozenDocument;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
-import com.intellij.reference.SoftReference;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import consulo.language.psi.*;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.SoftReference;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.util.List;
 

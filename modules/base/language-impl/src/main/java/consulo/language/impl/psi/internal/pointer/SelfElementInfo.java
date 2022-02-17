@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.psi.internal.pointer;
 
-import com.intellij.openapi.editor.impl.FrozenDocument;
 import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
+import consulo.document.impl.FrozenDocument;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;

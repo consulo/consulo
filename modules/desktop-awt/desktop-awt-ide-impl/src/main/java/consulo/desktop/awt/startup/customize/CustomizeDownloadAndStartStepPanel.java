@@ -17,7 +17,7 @@ package consulo.desktop.awt.startup.customize;
 
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import consulo.application.progress.EmptyProgressIndicator;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.application.ui.awt.VerticalFlowLayout;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;

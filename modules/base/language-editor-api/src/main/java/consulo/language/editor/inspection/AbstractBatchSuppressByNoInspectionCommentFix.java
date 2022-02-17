@@ -16,11 +16,11 @@
 
 package consulo.language.editor.inspection;
 
-import com.intellij.openapi.command.undo.UndoUtil;
 import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.language.Language;
 import consulo.language.editor.FileModificationService;
+import consulo.language.editor.util.LanguageUndoUtil;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
@@ -143,7 +143,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
     if (replaceSuppressionComments(container)) return;
 
     createSuppression(project, element, container);
-    UndoUtil.markPsiFileForUndo(element.getContainingFile());
+    LanguageUndoUtil.markPsiFileForUndo(element.getContainingFile());
   }
 
   protected boolean replaceSuppressionComments(PsiElement container) {

@@ -20,7 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.IntSLRUCache;
 import com.intellij.util.containers.IntObjectLRUMap;
-import com.intellij.util.text.ByteArrayCharSequence;
+import consulo.util.lang.ByteArrayCharSequence;
 import javax.annotation.Nonnull;
 
 import java.io.File;

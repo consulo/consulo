@@ -16,6 +16,7 @@
 package consulo.language.impl.psi;
 
 import consulo.language.file.FileViewProvider;
+import consulo.language.impl.plain.PsiPlainTextFileImpl;
 import consulo.language.psi.PsiLargeTextFile;
 
 public class PsiLargeTextFileImpl extends PsiPlainTextFileImpl implements PsiLargeTextFile {

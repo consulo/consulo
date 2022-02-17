@@ -24,7 +24,7 @@ import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.language.editor.intention.SuppressIntentionAction;
-import consulo.language.impl.undoRedo.LanguageUndoUtil;
+import consulo.language.editor.util.LanguageUndoUtil;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;

@@ -22,7 +22,7 @@ import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.language.impl.undoRedo.LanguageUndoUtil;
+import consulo.language.editor.util.LanguageUndoUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;

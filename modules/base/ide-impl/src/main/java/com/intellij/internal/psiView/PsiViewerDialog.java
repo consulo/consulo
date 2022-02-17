@@ -20,6 +20,7 @@ import com.intellij.formatting.Block;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.openapi.util.*;
+import consulo.language.plain.PlainTextFileType;
 import consulo.ui.ex.JBColor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;

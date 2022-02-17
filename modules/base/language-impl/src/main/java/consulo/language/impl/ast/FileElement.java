@@ -16,9 +16,6 @@
 
 package consulo.language.impl.ast;
 
-import com.intellij.openapi.util.Getter;
-import com.intellij.openapi.util.RecursionManager;
-import com.intellij.openapi.util.StackOverflowPreventedException;
 import consulo.language.ast.*;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.psi.internal.AstSpine;
@@ -31,6 +28,7 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.psi.stub.StubBuilder;
 import consulo.language.util.CharTable;
+import consulo.util.lang.StackOverflowPreventedException;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

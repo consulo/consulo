@@ -20,7 +20,7 @@
 package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import com.intellij.openapi.vfs.VfsUtilCore;

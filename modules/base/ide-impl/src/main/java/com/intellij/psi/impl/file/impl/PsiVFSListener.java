@@ -9,7 +9,7 @@ import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
-import com.intellij.psi.ExternalChangeAction;
+import consulo.language.psi.internal.ExternalChangeAction;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;

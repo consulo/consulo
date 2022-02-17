@@ -17,7 +17,7 @@ package com.intellij.psi.impl.file;
 
 import consulo.navigation.ItemPresentationProviders;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.psi.PsiElementBase;
 import com.intellij.util.ArrayUtil;

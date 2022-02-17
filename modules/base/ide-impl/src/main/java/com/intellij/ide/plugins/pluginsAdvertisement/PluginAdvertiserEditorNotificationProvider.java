@@ -21,7 +21,7 @@ import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;

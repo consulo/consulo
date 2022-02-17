@@ -25,7 +25,6 @@ import consulo.language.editor.inspection.InspectionExtensionsFactory;
 import com.intellij.codeInspection.reference.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import consulo.application.progress.*;
 import consulo.language.editor.inspection.GlobalInspectionContext;

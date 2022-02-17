@@ -4,7 +4,7 @@ import consulo.application.Application;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

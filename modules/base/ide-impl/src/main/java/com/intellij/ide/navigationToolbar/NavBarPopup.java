@@ -4,7 +4,7 @@ package com.intellij.ide.navigationToolbar;
 import com.intellij.ide.navigationToolbar.ui.NavBarUIManager;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Queryable;
+import consulo.application.util.Queryable;
 import consulo.application.util.SystemInfo;
 import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;

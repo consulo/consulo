@@ -16,10 +16,6 @@
 
 package consulo.language.impl.ast;
 
-import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.impl.source.DummyHolderFactory;
-import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
-import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -31,18 +27,21 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.internal.AstBufferUtil;
 import consulo.language.impl.ast.internal.SharedImplUtil;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
-import consulo.language.impl.psi.ForeignLeafPsiElement;
-import consulo.language.impl.psi.SourceTreeToPsiMap;
+import consulo.language.impl.pom.internal.TreeChangeEventImpl;
+import consulo.language.impl.psi.*;
 import consulo.language.impl.psi.internal.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayFactory;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.util.function.IntFunction;
 
 public class CompositeElement extends TreeElement {
@@ -57,7 +56,16 @@ public class CompositeElement extends TreeElement {
   private volatile PsiElement myWrapper;
   private static final boolean ASSERT_THREADING = true;//DebugUtil.CHECK || ApplicationManagerEx.getApplicationEx().isInternal() || ApplicationManagerEx.getApplicationEx().isUnitTestMode();
 
-  private static final AtomicFieldUpdater<CompositeElement, PsiElement> ourPsiUpdater = AtomicFieldUpdater.forFieldOfType(CompositeElement.class, PsiElement.class);
+  private static final VarHandle ourPsiUpdater;
+
+  static {
+    try {
+      ourPsiUpdater = MethodHandles.lookup().findVarHandle(CompositeElement.class, "myWrapper", PsiElement.class);
+    }
+    catch (NoSuchFieldException | IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   public CompositeElement(@Nonnull IElementType type) {
     super(type);
@@ -311,7 +319,7 @@ public class CompositeElement extends TreeElement {
   }
 
   @Override
-  protected int textMatches(@Nonnull final CharSequence buffer, final int start) {
+  public int textMatches(@Nonnull final CharSequence buffer, final int start) {
     final int[] curOffset = {start};
     acceptTree(new RecursiveTreeElementWalkingVisitor() {
       @Override
@@ -479,7 +487,7 @@ public class CompositeElement extends TreeElement {
     }
     catch (AssertionError e) {
       myCachedLength = -1;
-      String assertion = StringUtil.getThrowableText(e);
+      String assertion = ExceptionUtil.getThrowableText(e);
       throw new AssertionError("Walking failure: ===\n" + assertion + "\n=== Thread dump:\n" + ThreadDumper.dumpThreadsToString() + "\n===\n");
     }
   }
@@ -701,7 +709,7 @@ public class CompositeElement extends TreeElement {
     if (wrapper != null) return wrapper;
 
     wrapper = createPsiNoLock();
-    return ourPsiUpdater.compareAndSet(this, null, wrapper) ? wrapper : ObjectUtils.assertNotNull(myWrapper);
+    return ourPsiUpdater.compareAndSet(this, null, wrapper) ? wrapper : ObjectUtil.assertNotNull(myWrapper);
   }
 
   @Override

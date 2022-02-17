@@ -37,6 +37,11 @@ public class RawFileLoaderImpl implements RawFileLoader {
   public static final int LARGE_FOR_CONTENT_LOADING = Math.max(20 * MEGABYTE, Math.max(getUserFileSizeLimit(), getUserContentLoadLimit()));
   public static final int LARGE_FILE_PREVIEW_SIZE = Math.min(getLargeFilePreviewSize(), LARGE_FOR_CONTENT_LOADING);
 
+  /**
+   * always  in range [0, PersistentFS.FILE_LENGTH_TO_CACHE_THRESHOLD]
+   */
+  private static int ourMaxIntellisenseFileSize = Math.min(RawFileLoaderImpl.getUserFileSizeLimit(), (int)LARGE_FOR_CONTENT_LOADING);
+
   @Nonnull
   @Override
   public byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException {
@@ -59,6 +64,16 @@ public class RawFileLoaderImpl implements RawFileLoader {
   @Override
   public boolean isLargeForContentLoading(long length) {
     return length >= LARGE_FOR_CONTENT_LOADING;
+  }
+
+  @Override
+  public int getMaxIntellisenseFileSize() {
+    return ourMaxIntellisenseFileSize;
+  }
+
+  @Override
+  public int getFileLengthToCacheThreshold() {
+    return LARGE_FOR_CONTENT_LOADING;
   }
 
   private static int parseKilobyteProperty(String key, int defaultValue) {

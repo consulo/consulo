@@ -24,7 +24,7 @@ import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

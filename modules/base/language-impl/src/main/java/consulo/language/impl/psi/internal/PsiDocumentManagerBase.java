@@ -1,30 +1,24 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.psi.internal;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.editor.DocumentRunnable;
-import com.intellij.openapi.editor.ex.DocumentEx;
-import com.intellij.openapi.editor.ex.PrioritizedInternalDocumentListener;
-import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
-import com.intellij.openapi.editor.impl.FrozenDocument;
-import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
 import consulo.application.*;
 import consulo.application.internal.TransactionGuardEx;
-import consulo.application.progress.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.application.progress.ProgressManager;
-import consulo.application.ui.awt.UIUtil;
+import consulo.application.progress.*;
 import consulo.application.util.Semaphore;
 import consulo.application.util.function.Computable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.DocumentRunnable;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
+import consulo.document.impl.DocumentEx;
+import consulo.document.impl.DocumentImpl;
+import consulo.document.impl.EditorDocumentPriorities;
+import consulo.document.impl.FrozenDocument;
+import consulo.document.impl.event.PrioritizedInternalDocumentListener;
+import consulo.document.impl.event.RetargetRangeMarkers;
 import consulo.document.util.FileContentUtilCore;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
@@ -36,6 +30,7 @@ import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.file.internal.FileManager;
 import consulo.language.impl.file.internal.FileManagerImpl;
+import consulo.language.impl.psi.PsiDocumentTransactionListener;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.psi.internal.diff.BlockSupport;
 import consulo.language.impl.psi.internal.diff.BlockSupportImpl;
@@ -44,18 +39,16 @@ import consulo.language.impl.psi.internal.pointer.SmartPointerManagerImpl;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiDocumentListener;
+import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
+import consulo.util.collection.Maps;
 import consulo.util.collection.SmartList;
-import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.DeprecatedMethodException;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
-import consulo.util.lang.SystemProperties;
+import consulo.util.lang.*;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
@@ -83,7 +76,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   private static volatile boolean ourIsFullReparseInProgress;
   private final PsiToDocumentSynchronizer mySynchronizer;
 
-  private final List<Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<Listener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
   protected PsiDocumentManagerBase(@Nonnull Project project, DocumentCommitProcessor documentCommitProcessor) {
     myProject = project;
@@ -264,7 +257,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     LOG.assertTrue(!hasUncommitedDocuments(), myUncommittedDocuments);
   }
 
-  @VisibleForTesting
   public boolean doCommitWithoutReparse(@Nonnull Document document) {
     return finishCommitInWriteAction(document, Collections.emptyList(), Collections.emptyList(), true, true);
   }
@@ -377,7 +369,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     if (ok[0]) {
       // run after commit actions outside write action
       runAfterCommitActions(document);
-      if (DebugUtil.DO_EXPENSIVE_CHECKS && !ApplicationInfoImpl.isInPerformanceTest()) {
+      if (DebugUtil.DO_EXPENSIVE_CHECKS) {
         checkAllElementsValid(document, reason);
       }
     }
@@ -563,7 +555,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         }
 
         performWhenAllCommitted(() -> semaphore.up(), contextTransaction);
-      }, ModalityState.any());
+      }, application.getAnyModalityState());
 
       while (!semaphore.waitFor(10)) {
         ProgressManager.checkCanceled();
@@ -609,7 +601,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
   @Override
   public void performLaterWhenAllCommitted(@Nonnull final Runnable runnable) {
-    performLaterWhenAllCommitted(runnable, ModalityState.defaultModalityState());
+    performLaterWhenAllCommitted(runnable, Application.get().getDefaultModalityState());
   }
 
   @Override
@@ -627,7 +619,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
       whenAllCommitted.run();
     }
     else {
-      UIUtil.invokeLaterIfNeeded(() -> {
+      Application.get().getLastUIAccess().giveIfNeed(() -> {
         if (!myProject.isDisposed()) performWhenAllCommitted(whenAllCommitted);
       });
     }
@@ -769,7 +761,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
       UncommittedInfo info = myUncommittedInfos.get(delegate);
       DocumentWindow answer = info == null ? null : info.myFrozenWindows.get(document);
       if (answer == null) answer = freezeWindow(window);
-      if (info != null) answer = ConcurrencyUtil.cacheOrGet(info.myFrozenWindows, window, answer);
+      if (info != null) answer = Maps.cacheOrGet(info.myFrozenWindows, window, answer);
       return (DocumentEx)answer;
     }
 
@@ -1063,7 +1055,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return false;
   }
 
-  @VisibleForTesting
   @TestOnly
   public void clearUncommittedDocuments() {
     myUncommittedInfos.clear();

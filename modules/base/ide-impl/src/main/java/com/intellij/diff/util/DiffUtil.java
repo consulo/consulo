@@ -66,7 +66,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.document.FileDocumentManager;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.application.progress.ProgressIndicator;

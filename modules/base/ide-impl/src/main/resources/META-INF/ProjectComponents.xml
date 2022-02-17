@@ -68,8 +68,8 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.pom.tree.TreeAspect</interface-class>
-      <implementation-class>com.intellij.pom.tree.TreeAspect</implementation-class>
+      <interface-class>consulo.language.pom.TreeAspect</interface-class>
+      <implementation-class>consulo.language.pom.TreeAspect</implementation-class>
       <loadForDefaultProject/>
     </component>
     <component>
