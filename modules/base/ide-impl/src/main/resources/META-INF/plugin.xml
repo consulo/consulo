@@ -2811,6 +2811,7 @@
     <applicationService serviceInterface="consulo.project.ui.notification.internal.NotificationActionInvoker"
                         serviceImplementation="consulo.project.ui.notification.impl.NotificationActionInvokerImpl"/>
     <applicationService serviceInterface="consulo.virtualFileSystem.RawFileLoader" serviceImplementation="consulo.virtualFileSystem.impl.RawFileLoaderImpl"/>
+    <projectService serviceInterface="consulo.language.impl.psi.internal.FormattingService" serviceImplementation="consulo.ide.impl.language.psi.FormattingServiceImpl"/>
   </extensions>
 
   <applicationListeners>
