@@ -16,10 +16,10 @@
 package com.intellij.openapi.vcs;
 
 import consulo.codeEditor.colorScheme.EditorColorKey;
-import consulo.ui.ex.Gray;
-import consulo.codeEditor.ui.api.localize.EditorUIApiLocalize;
+import consulo.editor.ui.api.localize.EditorUIApiLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.Gray;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
