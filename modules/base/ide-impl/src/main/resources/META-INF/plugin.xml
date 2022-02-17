@@ -1527,7 +1527,7 @@
 
     <getDataRule implementation="com.intellij.ide.impl.dataRules.ProjectFileDirectoryRule"/>
 
-    <localInspection shortName="InconsistentLineSeparators" bundle="messages.InspectionsBundle" key="inconsistent.line.separators"
+    <localInspection shortName="InconsistentLineSeparators" bundle="consulo.language.editor.inspection.InspectionsBundle" key="inconsistent.line.separators"
                      groupKey="group.names.portability.issues" enabledByDefault="false" level="WARNING"
                      implementationClass="com.intellij.codeStyle.InconsistentLineSeparatorsInspection"/>
 
@@ -2343,13 +2343,13 @@
 
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.ActionTracer"/>
 
-    <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="messages.InspectionsBundle"
+    <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"
                       enabledByDefault="true" level="ERROR"
                       implementationClass="com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$AnnotatorBasedInspection"/>
-    <globalInspection shortName="SyntaxError" displayName="Syntax error" groupKey="inspection.general.tools.group.name" groupBundle="messages.InspectionsBundle"
+    <globalInspection shortName="SyntaxError" displayName="Syntax error" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"
                       enabledByDefault="true" level="ERROR"
                       implementationClass="com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$SyntaxErrorInspection"/>
-    <localInspection shortName="LossyEncoding" bundle="messages.InspectionsBundle" key="lossy.encoding"
+    <localInspection shortName="LossyEncoding" bundle="consulo.language.editor.inspection.InspectionsBundle" key="lossy.encoding"
                      groupKey="group.names.internationalization.issues" enabledByDefault="true" level="WARNING"
                      implementationClass="com.intellij.codeInspection.LossyEncodingInspection"/>
 
