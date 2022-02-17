@@ -1630,9 +1630,9 @@
 
     <!-- Compiler -->
     <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler"
-                         key="compiler.configurable.display.name" bundle="messages.CompilerBundle" order="after project"/>
+                         key="compiler.configurable.display.name" bundle="consulo.compiler.CompilerBundle" order="after project"/>
 
-    <projectConfigurable id="project.propCompiler.excluded" bundle="messages.CompilerBundle" key="actions.exclude.from.compile.text"
+    <projectConfigurable id="project.propCompiler.excluded" bundle="consulo.compiler.CompilerBundle" key="actions.exclude.from.compile.text"
                          parentId="project.propCompiler"
                          instance="consulo.compiler.options.CompilerExcludedConfigurable"/>
 
@@ -2498,7 +2498,7 @@
 
     <projectConfigurable parentId="project.propCompiler"
                          instance="consulo.compiler.impl.resourceCompiler.ResourceCompilerConfigurable"
-                         key="resource.compiler.description" bundle="messages.CompilerBundle"/>
+                         key="resource.compiler.description" bundle="consulo.compiler.CompilerBundle"/>
 
 
     <search.topHitProvider implementation="com.intellij.platform.DefaultPlatformTopHitProvider"/>

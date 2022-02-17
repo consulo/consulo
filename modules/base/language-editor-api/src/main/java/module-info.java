@@ -25,4 +25,6 @@ module consulo.language.editor.api {
   exports consulo.language.editor.refactoring;
   exports consulo.language.editor.refactoring.rename;
   exports consulo.language.editor.util;
+
+  opens consulo.language.editor.inspection.scheme to consulo.util.xml.serializer;
 }

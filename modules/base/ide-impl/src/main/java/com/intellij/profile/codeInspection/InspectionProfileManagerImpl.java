@@ -92,7 +92,8 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         try {
           profile.readExternal(element);
         }
-        catch (Exception ignored) {
+        catch (Exception e) {
+          LOG.error(e);
           ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {

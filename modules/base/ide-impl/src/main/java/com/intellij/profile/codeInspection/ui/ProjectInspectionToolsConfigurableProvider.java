@@ -16,7 +16,7 @@
 package com.intellij.profile.codeInspection.ui;
 
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import jakarta.inject.Inject;
 
 /**
@@ -27,14 +27,13 @@ public class ProjectInspectionToolsConfigurableProvider extends ErrorsConfigurab
   private final InspectionProjectProfileManager myProjectProfileManager;
 
   @Inject
-  public ProjectInspectionToolsConfigurableProvider(InspectionProfileManager profileManager,
-                                                    InspectionProjectProfileManager projectProfileManager) {
+  public ProjectInspectionToolsConfigurableProvider(InspectionProfileManager profileManager, InspectionProjectProfileManager projectProfileManager) {
     myProfileManager = profileManager;
     myProjectProfileManager = projectProfileManager;
   }
 
   @Override
   public ErrorsConfigurable createConfigurable() {
-    return new ProjectInspectionToolsConfigurable(myProfileManager, myProjectProfileManager);
+    return new ProjectInspectionToolsConfigurable(myProfileManager, (com.intellij.profile.codeInspection.InspectionProjectProfileManager)myProjectProfileManager);
   }
 }

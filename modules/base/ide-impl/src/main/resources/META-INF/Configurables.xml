@@ -90,11 +90,11 @@
                              id="editing.templates"
                              parentId="editor.preferences.completion"
                              key="templates.settings.page.title"
-                             bundle="messages.CodeInsightBundle"/>
+                             bundle="consulo.language.editor.CodeInsightBundle"/>
 
     <applicationConfigurable dynamic="true"
                              key="debugger.configurable.display.name"
-                             bundle="messages.XDebuggerBundle"
+                             bundle="consulo.debugger.XDebuggerBundle"
                              parentId="execution"
                              instance="com.intellij.xdebugger.impl.settings.DebuggerConfigurable"/>
 
