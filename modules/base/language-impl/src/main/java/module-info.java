@@ -16,13 +16,13 @@ module consulo.language.impl {
   exports consulo.language.impl.psi.reference;
 
   // internal implementation
-  exports consulo.language.impl.plain to consulo.ide.impl, consulo.injecting.pico.impl;
-  exports consulo.language.impl.ast.internal to consulo.ide.impl, consulo.injecting.pico.impl;
+  exports consulo.language.impl.plain to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl;
+  exports consulo.language.impl.ast.internal to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl;
   exports consulo.language.impl.file.internal to consulo.ide.impl;
-  exports consulo.language.impl.parser.internal to consulo.ide.impl, consulo.injecting.pico.impl;
-  exports consulo.language.impl.psi.internal to consulo.ide.impl, consulo.injecting.pico.impl;
+  exports consulo.language.impl.parser.internal to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl;
+  exports consulo.language.impl.psi.internal to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl;
   exports consulo.language.impl.psi.internal.diff to consulo.ide.impl;
-  exports consulo.language.impl.psi.internal.pointer to consulo.ide.impl, consulo.injecting.pico.impl;
+  exports consulo.language.impl.psi.internal.pointer to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl;
   exports consulo.language.impl.psi.internal.stub to consulo.ide.impl;
   exports consulo.language.impl.pom.internal to consulo.ide.impl;
 }

@@ -15,13 +15,12 @@
  */
 package consulo.test.light.impl;
 
+import com.intellij.openapi.util.io.FileUtil;
+import consulo.util.collection.Maps;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.collection.Maps;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -66,14 +65,14 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
   @Nonnull
   @Override
   public FileType getFileTypeByFileName(@Nonnull @NonNls String fileName) {
-    final String extension = FileUtilRt.getExtension(fileName);
+    final String extension = FileUtil.getExtension(fileName);
     return getFileTypeByExtension(extension);
   }
 
   @Nonnull
   @Override
-  public FileType getFileTypeByFileName(@Nonnull @NonNls CharSequence fileName) {
-    final String extension = FileUtilRt.getExtension(fileName.toString());
+  public FileType getFileTypeByFileName(@Nonnull CharSequence fileName) {
+    final String extension = FileUtil.getExtension(fileName.toString());
     return getFileTypeByExtension(extension);
   }
 
