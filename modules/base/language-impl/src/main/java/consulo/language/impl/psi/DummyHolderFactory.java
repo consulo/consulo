@@ -19,6 +19,7 @@
  */
 package consulo.language.impl.psi;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.Language;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.PsiElement;
@@ -32,6 +33,8 @@ public class DummyHolderFactory  {
 
   private DummyHolderFactory() {}
 
+  @Deprecated
+  @DeprecationInfo("Do not allow overriding it via plugins. Need provide new options based on target language")
   public static void setFactory(HolderFactory factory) {
     INSTANCE = factory;
   }
