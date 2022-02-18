@@ -21,7 +21,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
-import consulo.language.impl.psi.PsiFileEx;
+import consulo.language.impl.psi.internal.PsiFileEx;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.*;

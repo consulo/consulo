@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source;
 
-import consulo.language.impl.psi.PsiFileEx;
+import consulo.language.impl.psi.internal.PsiFileEx;
 import consulo.language.impl.psi.ResolveScopeManager;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.psi.PsiNavigationSupport;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.impl.psi;
+package consulo.language.impl.psi.internal;
 
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;

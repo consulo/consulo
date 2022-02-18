@@ -13,6 +13,7 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.file.internal.FileManagerImpl;
 import consulo.language.impl.psi.internal.FileContextUtil;
+import consulo.language.impl.psi.internal.PsiFileEx;
 import consulo.language.impl.psi.internal.PsiFileImplUtil;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.psi.*;
