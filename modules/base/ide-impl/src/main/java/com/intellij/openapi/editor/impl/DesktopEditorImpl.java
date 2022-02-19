@@ -23,7 +23,7 @@ import consulo.document.*;
 import consulo.document.impl.DocumentUtil;
 import consulo.document.util.ProperTextRange;
 import consulo.colorScheme.EditorColorKey;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;

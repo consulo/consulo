@@ -26,7 +26,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.MarkupModelEx;

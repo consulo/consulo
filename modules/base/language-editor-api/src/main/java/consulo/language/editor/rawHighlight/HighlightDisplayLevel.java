@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.TextAttributes;

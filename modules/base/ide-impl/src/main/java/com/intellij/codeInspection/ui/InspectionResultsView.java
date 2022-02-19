@@ -40,7 +40,7 @@ import consulo.language.file.inject.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.fileEditor.FileEditorManager;

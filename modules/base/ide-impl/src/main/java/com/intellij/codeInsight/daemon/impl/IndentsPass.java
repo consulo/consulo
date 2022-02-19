@@ -25,7 +25,7 @@ import consulo.codeEditor.*;
 import consulo.language.Language;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;

@@ -12,7 +12,7 @@ import com.intellij.openapi.editor.impl.HardReferencingRangeMarkerTree;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;

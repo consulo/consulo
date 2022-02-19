@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static consulo.codeEditor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
+import static consulo.codeEditor.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
 
 public class InlineElementData extends HighlightData {
   private final String myText;

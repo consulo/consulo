@@ -54,7 +54,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.*;
 import java.util.List;
 
-import static consulo.codeEditor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
+import static consulo.codeEditor.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
 
 public class SimpleEditorPreview implements PreviewPanel {
   private static final Map<String, TextAttributesKey> INLINE_ELEMENTS =

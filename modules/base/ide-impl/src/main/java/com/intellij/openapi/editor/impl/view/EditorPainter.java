@@ -2,7 +2,7 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.editor.*;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.FontPreferences;
 import com.intellij.openapi.editor.ex.MarkupModelEx;

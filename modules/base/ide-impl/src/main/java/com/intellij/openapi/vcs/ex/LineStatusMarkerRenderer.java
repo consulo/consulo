@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.ex;
 
 import com.intellij.openapi.diff.DiffColors;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;

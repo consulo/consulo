@@ -29,7 +29,7 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.ui.ex.action.Shortcut;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.RangeHighlighter;

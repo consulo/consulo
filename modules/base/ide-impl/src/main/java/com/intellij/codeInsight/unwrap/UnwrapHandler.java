@@ -23,7 +23,7 @@ import consulo.language.editor.FileModificationService;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.colorScheme.TextAttributes;

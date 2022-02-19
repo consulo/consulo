@@ -18,7 +18,7 @@ package com.intellij.ui;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.SelectionModel;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;

@@ -8,7 +8,7 @@ import com.intellij.ide.OccurenceNavigator;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;

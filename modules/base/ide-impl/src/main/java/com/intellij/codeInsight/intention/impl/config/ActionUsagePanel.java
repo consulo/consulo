@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;

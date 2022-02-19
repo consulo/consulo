@@ -33,7 +33,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.application.AllIcons;
 import consulo.language.Language;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
 import consulo.fileChooser.IdeaFileChooser;

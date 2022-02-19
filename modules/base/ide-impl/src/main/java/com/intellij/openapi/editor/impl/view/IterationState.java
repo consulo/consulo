@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesEffectsBuilder;
 import consulo.document.impl.DocumentEx;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.HighlighterColors;

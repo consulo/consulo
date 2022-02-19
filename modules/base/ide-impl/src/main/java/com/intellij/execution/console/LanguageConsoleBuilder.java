@@ -24,7 +24,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentBulkUpdateListener;

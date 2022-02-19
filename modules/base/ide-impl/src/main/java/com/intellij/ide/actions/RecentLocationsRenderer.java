@@ -21,7 +21,7 @@ import consulo.document.util.TextRange;
 import consulo.codeEditor.CaretState;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterColors;
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;

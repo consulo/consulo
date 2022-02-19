@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.project.Project;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;

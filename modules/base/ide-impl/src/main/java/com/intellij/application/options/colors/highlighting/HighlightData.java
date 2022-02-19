@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
 
-import static consulo.codeEditor.colorScheme.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
+import static consulo.codeEditor.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
 
 public class HighlightData {
   private final int myStartOffset;

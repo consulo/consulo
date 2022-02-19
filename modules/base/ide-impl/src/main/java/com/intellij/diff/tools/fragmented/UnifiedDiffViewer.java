@@ -49,7 +49,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.LineTokenizer;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import consulo.document.ReadonlyFragmentModificationHandler;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;

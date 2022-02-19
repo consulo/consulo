@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.colorScheme;
+package consulo.codeEditor;
 
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;

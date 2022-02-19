@@ -23,7 +23,7 @@ import com.intellij.refactoring.changeSignature.ChangeInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
 import consulo.language.editor.rawHighlight.HighlightInfo;

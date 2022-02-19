@@ -3,7 +3,7 @@ package com.intellij.openapi.editor.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.document.impl.DocumentImpl;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;

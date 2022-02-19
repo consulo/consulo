@@ -28,7 +28,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actions.AbstractToggleUseSoftWrapsAction;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import consulo.virtualFileSystem.fileType.FileType;

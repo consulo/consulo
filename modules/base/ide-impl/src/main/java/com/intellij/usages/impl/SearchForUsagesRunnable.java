@@ -19,7 +19,7 @@ import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.find.FindManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import com.intellij.openapi.keymap.KeymapUtil;

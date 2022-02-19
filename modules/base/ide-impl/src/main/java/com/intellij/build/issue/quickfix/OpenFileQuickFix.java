@@ -24,7 +24,7 @@ import com.intellij.find.FindResult;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;

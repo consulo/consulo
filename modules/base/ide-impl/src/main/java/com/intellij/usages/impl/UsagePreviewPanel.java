@@ -24,7 +24,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;

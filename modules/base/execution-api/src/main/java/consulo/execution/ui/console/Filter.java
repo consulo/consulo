@@ -18,7 +18,7 @@ package consulo.execution.ui.console;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.awt.UIUtil;
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;

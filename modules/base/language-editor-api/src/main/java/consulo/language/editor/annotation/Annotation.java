@@ -18,7 +18,7 @@ package consulo.language.editor.annotation;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.HighlighterColors;
-import consulo.codeEditor.colorScheme.CodeInsightColors;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.RangeHighlighter;

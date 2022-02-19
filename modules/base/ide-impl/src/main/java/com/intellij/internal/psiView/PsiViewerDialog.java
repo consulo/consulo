@@ -58,7 +58,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;

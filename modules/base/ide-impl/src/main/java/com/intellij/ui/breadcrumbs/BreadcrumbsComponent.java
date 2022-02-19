@@ -18,7 +18,7 @@ package com.intellij.ui.breadcrumbs;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;

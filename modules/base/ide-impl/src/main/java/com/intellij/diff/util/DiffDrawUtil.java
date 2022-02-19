@@ -19,7 +19,7 @@ import com.intellij.diff.fragments.DiffFragment;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;

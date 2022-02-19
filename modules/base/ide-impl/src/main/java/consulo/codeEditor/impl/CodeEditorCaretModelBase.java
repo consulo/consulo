@@ -5,7 +5,7 @@ package consulo.codeEditor.impl;
 
 import com.intellij.diagnostic.Dumpable;
 import consulo.application.ApplicationManager;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.event.CaretActionListener;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;

@@ -20,7 +20,7 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;

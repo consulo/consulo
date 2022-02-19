@@ -31,7 +31,7 @@ import consulo.application.util.function.Processors;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterColors;
-import consulo.codeEditor.colorScheme.EditorColors;
+import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;

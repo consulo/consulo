@@ -14,7 +14,6 @@ module consulo.code.editor.api {
   requires transitive consulo.color.scheme.api;
 
   exports consulo.codeEditor;
-  exports consulo.codeEditor.colorScheme;
   exports consulo.codeEditor.event;
   exports consulo.codeEditor.markup;
   exports consulo.codeEditor.util;
