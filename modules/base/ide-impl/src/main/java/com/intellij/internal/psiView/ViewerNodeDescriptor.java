@@ -21,7 +21,7 @@
  */
 package com.intellij.internal.psiView;
 
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -29,7 +29,7 @@ public class ViewerNodeDescriptor extends NodeDescriptor {
   private final Object myElement;
 
   public ViewerNodeDescriptor(Project project, Object element, NodeDescriptor parentDescriptor) {
-    super(project, parentDescriptor);
+    super(parentDescriptor);
     myElement = element;
     myName = myElement.toString();
   }

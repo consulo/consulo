@@ -22,7 +22,7 @@
 package com.intellij.internal.psiView;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.language.ast.ASTNode;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
@@ -165,7 +165,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
   @Nonnull
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     if (element == myRootElement) {
-      return new NodeDescriptor(myProject, null) {
+      return new NodeDescriptor(null) {
         @RequiredUIAccess
         @Override
         public boolean update() {

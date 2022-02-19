@@ -29,7 +29,7 @@ import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
+import consulo.compiler.artifact.ArtifactPointerUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;

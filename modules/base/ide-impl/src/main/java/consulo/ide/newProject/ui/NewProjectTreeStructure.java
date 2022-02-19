@@ -15,10 +15,10 @@
  */
 package consulo.ide.newProject.ui;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.newProject.node.NewModuleContextGroup;
@@ -63,7 +63,7 @@ public class NewProjectTreeStructure extends AbstractTreeStructure {
   @Nonnull
   @Override
   public NodeDescriptor createDescriptor(@Nonnull Object element, @Nullable NodeDescriptor parentDescriptor) {
-    return new PresentableNodeDescriptor(null, parentDescriptor) {
+    return new PresentableNodeDescriptor(parentDescriptor) {
 
       @Override
       protected void update(PresentationData presentation) {

@@ -21,7 +21,7 @@ import consulo.util.dataholder.Key;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
+import consulo.compiler.artifact.ArtifactPointerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

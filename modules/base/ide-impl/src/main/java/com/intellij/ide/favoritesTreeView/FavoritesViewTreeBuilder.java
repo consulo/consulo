@@ -10,7 +10,7 @@ import com.intellij.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;

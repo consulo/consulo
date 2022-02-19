@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
+import consulo.compiler.artifact.ArtifactPointerUtil;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;

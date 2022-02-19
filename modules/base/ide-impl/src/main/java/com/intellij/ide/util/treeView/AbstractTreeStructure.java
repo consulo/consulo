@@ -17,6 +17,7 @@
 package com.intellij.ide.util.treeView;
 
 import consulo.project.Project;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.language.psi.PsiDocumentManager;

@@ -3,7 +3,7 @@ package com.intellij.coverage.view;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ui.ColumnInfo;
@@ -64,7 +64,7 @@ public class PercentageCoverageColumnInfo extends ColumnInfo<NodeDescriptor, Str
   @Override
   public String valueOf(NodeDescriptor node) {
     final CoverageEngine coverageEngine = mySuitesBundle.getCoverageEngine();
-    final Project project = node.getProject();
+    final Project project = ((AbstractTreeNode)node).getProject();
     return coverageEngine.createCoverageViewExtension(project, mySuitesBundle, myStateBean).getPercentage(myColumnIdx, (AbstractTreeNode)node);
   }
 

@@ -2,7 +2,7 @@
 package com.intellij.util;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.application.ModalityState;

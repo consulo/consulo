@@ -10,6 +10,8 @@ module consulo.ui.ex.api {
   requires transitive consulo.ui.api;
   requires transitive consulo.datacontext.api;
   requires transitive consulo.document.api;
+  requires transitive consulo.navigation.api;
+  requires transitive consulo.color.scheme.api;
   requires transitive kava.beans;
 
   exports consulo.ui.ex;
@@ -24,6 +26,7 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.event;
   exports consulo.ui.ex.update;
   exports consulo.ui.ex.concurrent;
+  exports consulo.ui.ex.tree;
 
   exports consulo.ui.ex.awt;
   exports consulo.ui.ex.awt.internal;

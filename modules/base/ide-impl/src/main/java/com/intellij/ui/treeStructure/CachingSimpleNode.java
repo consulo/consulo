@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.treeStructure;
 
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import javax.annotation.Nullable;
 

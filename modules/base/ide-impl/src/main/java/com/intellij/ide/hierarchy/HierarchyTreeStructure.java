@@ -17,7 +17,7 @@
 package com.intellij.ide.hierarchy;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
@@ -192,7 +192,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
 
   private static final class TextInfoNodeDescriptor extends NodeDescriptor {
     public TextInfoNodeDescriptor(final NodeDescriptor parentDescriptor, final String text, final Project project) {
-      super(project, parentDescriptor);
+      super(parentDescriptor);
       myName = text;
       myColor = StandardColors.RED;
     }

@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.util.treeView;
+package consulo.ui.ex.tree;
 
-import com.intellij.ide.projectView.PresentationData;
-import consulo.project.Project;
-import consulo.application.ui.awt.ColorUtil;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.application.ui.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 
-public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E>  {
+public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
 
   private PresentationData myTemplatePresentation;
   private PresentationData myUpdatedPresentation;
 
-  protected PresentableNodeDescriptor(Project project, @Nullable NodeDescriptor parentDescriptor) {
-    super(project, parentDescriptor);
+  protected PresentableNodeDescriptor(@Nullable NodeDescriptor parentDescriptor) {
+    super(parentDescriptor);
   }
 
   @RequiredUIAccess
@@ -169,10 +164,6 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E>  {
     return false;
   }
 
-  public Color getHighlightColor() {
-    return UIUtil.isUnderDarcula() ? ColorUtil.shift(UIUtil.getTreeBackground(), 1.1) : UIUtil.getTreeBackground().brighter();
-  }
-
   public static class ColoredFragment {
     private final String myText;
     private final String myToolTip;
@@ -183,7 +174,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E>  {
     }
 
     public ColoredFragment(String aText, String toolTip, SimpleTextAttributes aAttributes) {
-      myText = aText == null? "" : aText;
+      myText = aText == null ? "" : aText;
       myAttributes = aAttributes;
       myToolTip = toolTip;
     }

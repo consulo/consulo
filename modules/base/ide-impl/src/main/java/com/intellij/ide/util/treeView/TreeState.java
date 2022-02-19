@@ -3,6 +3,7 @@ package com.intellij.ide.util.treeView;
 
 import consulo.navigation.NavigationItem;
 import consulo.application.progress.EmptyProgressIndicator;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;

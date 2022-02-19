@@ -16,7 +16,7 @@
 package com.intellij.navigation;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import consulo.application.Application;
 import consulo.module.Module;

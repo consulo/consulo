@@ -2,7 +2,7 @@
 package com.intellij.ide.util.scopeChooser;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.util.treeView.WeighedItem;
+import consulo.ui.ex.tree.WeighedItem;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;

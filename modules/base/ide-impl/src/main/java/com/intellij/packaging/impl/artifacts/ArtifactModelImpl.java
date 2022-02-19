@@ -25,7 +25,7 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.event.ArtifactAdapter;
 import consulo.compiler.artifact.event.ArtifactListener;
-import consulo.packaging.artifacts.ArtifactPointerUtil;
+import consulo.compiler.artifact.ArtifactPointerUtil;
 import consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl;
 
 import javax.annotation.Nonnull;

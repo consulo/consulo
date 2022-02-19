@@ -11,7 +11,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.actions.CloseTabToolbarAction;
 import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;

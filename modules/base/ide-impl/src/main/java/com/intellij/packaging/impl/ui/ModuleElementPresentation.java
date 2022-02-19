@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.ui;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.CompilerBundle;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;

@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.ui.configuration;
 import consulo.application.AllIcons;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.idea.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataProvider;

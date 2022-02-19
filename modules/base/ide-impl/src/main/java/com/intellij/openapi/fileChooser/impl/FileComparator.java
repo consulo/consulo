@@ -21,7 +21,7 @@ package com.intellij.openapi.fileChooser.impl;
 
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 
 import java.util.Comparator;
 

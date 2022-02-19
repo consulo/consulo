@@ -19,7 +19,7 @@ import com.intellij.ide.OccurenceNavigatorSupport;
 import com.intellij.ide.actions.EditSourceAction;
 import consulo.application.ui.UISettings;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;

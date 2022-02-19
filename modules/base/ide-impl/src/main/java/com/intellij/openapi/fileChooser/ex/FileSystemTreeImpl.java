@@ -3,7 +3,7 @@ package com.intellij.openapi.fileChooser.ex;
 
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;

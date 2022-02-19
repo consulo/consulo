@@ -16,7 +16,7 @@
 package com.intellij.ui.treeStructure;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import javax.annotation.Nonnull;
 
 public abstract class SimpleTreeStructure extends AbstractTreeStructure {

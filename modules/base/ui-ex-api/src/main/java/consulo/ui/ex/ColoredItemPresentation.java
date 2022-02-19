@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.packaging.artifacts;
+package consulo.ui.ex;
 
-import consulo.project.Project;
-import consulo.compiler.artifact.ArtifactPointerManager;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.navigation.ItemPresentation;
+
+import javax.annotation.Nullable;
 
 /**
- * @author VISTALL
- * @since 16:57/05.07.13
+ * @author yole
  */
-public class ArtifactPointerUtil {
-  @Deprecated
-  public static ArtifactPointerManager getPointerManager(Project project) {
-    return ArtifactPointerManager.getInstance(project);
-  }
+public interface ColoredItemPresentation extends ItemPresentation {
+  /**
+   * Returns the text attributes for rendering the item text.
+   *
+   * @return the text attributes, or null if default text attributes should be used
+   */
+  @Nullable
+  TextAttributesKey getTextAttributesKey();
 }

@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author konstantin.aleev
  */
 public interface DashboardNode {
-  @javax.annotation.Nullable
+  @Nullable
   default RunContentDescriptor getDescriptor() {
     return null;
   }

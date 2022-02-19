@@ -15,12 +15,12 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;

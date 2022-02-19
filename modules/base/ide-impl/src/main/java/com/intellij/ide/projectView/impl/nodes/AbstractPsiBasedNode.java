@@ -6,7 +6,7 @@ import com.intellij.codeInsight.navigation.NavigationUtil;
 import consulo.application.AllIcons;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarkManager;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.ViewSettings;

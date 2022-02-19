@@ -16,6 +16,7 @@
 package consulo.compiler.artifact;
 
 import consulo.compiler.artifact.element.*;
+import consulo.compiler.artifact.ui.ArtifactProblemsHolder;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.content.layer.ModulesProvider;

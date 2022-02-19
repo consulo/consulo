@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.content.library.ui.LibraryEditor;
 import consulo.project.ProjectBundle;
 import consulo.content.OrderRootType;
@@ -40,7 +40,7 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
   public LibraryTreeStructure(LibraryRootsComponent parentElement, LibraryRootsComponentDescriptor componentDescriptor) {
     myParentEditor = parentElement;
     myComponentDescriptor = componentDescriptor;
-    myRootElementDescriptor = new NodeDescriptor(null, null) {
+    myRootElementDescriptor = new NodeDescriptor(null) {
       @RequiredUIAccess
       @Override
       public boolean update() {

@@ -1,10 +1,10 @@
 package com.intellij.util.net.ssl;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtil;
@@ -219,7 +219,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     private final T myObject;
 
     MyNodeDescriptor(@Nullable NodeDescriptor parentDescriptor, @Nonnull T object) {
-      super(null, parentDescriptor);
+      super(parentDescriptor);
       myObject = object;
     }
 

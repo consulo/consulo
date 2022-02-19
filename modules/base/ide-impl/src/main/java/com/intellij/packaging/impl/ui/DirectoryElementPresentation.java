@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.packaging.impl.elements.DirectoryPackagingElement;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;

@@ -16,8 +16,8 @@
 
 package consulo.language.editor.highlight;
 
+import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
-import consulo.codeEditor.markup.TextAttributes;
 import consulo.language.ast.IElementType;
 
 public interface HighlighterIterator {

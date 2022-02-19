@@ -17,7 +17,7 @@
 package com.intellij.openapi.fileChooser.impl;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;

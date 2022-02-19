@@ -3,8 +3,8 @@ package com.intellij.build;
 
 import com.intellij.build.events.*;
 import consulo.application.AllIcons;
-import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
@@ -65,7 +65,7 @@ public class ExecutionNode extends PresentableNodeDescriptor<ExecutionNode> {
   private boolean myAlwaysVisible;
 
   public ExecutionNode(Project aProject, ExecutionNode parentNode, boolean isAutoExpandNode, @Nonnull Supplier<Boolean> isCorrectThread) {
-    super(aProject, parentNode);
+    super(parentNode);
     myName = "";
     myParentNode = parentNode;
     myAutoExpandNode = isAutoExpandNode;

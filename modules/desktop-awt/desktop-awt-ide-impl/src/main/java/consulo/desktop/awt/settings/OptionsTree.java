@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.settings;
 
-import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;

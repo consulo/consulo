@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.nodes;
 
-import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.SimpleTextAttributes;

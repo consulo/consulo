@@ -23,6 +23,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
@@ -38,10 +39,12 @@ import javax.annotation.Nullable;
 
 public class SmartElementDescriptor extends NodeDescriptor {
   private final SmartPsiElementPointer mySmartPointer;
+  private final Project myProject;
 
   public SmartElementDescriptor(@Nonnull Project project, NodeDescriptor parentDescriptor, @Nonnull PsiElement element) {
-    super(project, parentDescriptor);
-    mySmartPointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(element);
+    super(parentDescriptor);
+    myProject = project;
+    mySmartPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(element);
   }
 
   @Nullable

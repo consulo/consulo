@@ -2,7 +2,7 @@ package com.intellij.coverage.view;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.coverage.CoverageSuitesBundle;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;

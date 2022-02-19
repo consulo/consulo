@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.application.ui.awt.VerticalFlowLayout;

@@ -17,7 +17,7 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;

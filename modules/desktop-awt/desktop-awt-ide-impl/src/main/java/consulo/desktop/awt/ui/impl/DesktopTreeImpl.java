@@ -16,11 +16,11 @@
 package consulo.desktop.awt.ui.impl;
 
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
-import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import com.intellij.ui.tree.AsyncTreeModel;
 import com.intellij.ui.tree.StructureTreeModel;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -85,7 +85,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     private final Object myElement;
 
     protected MyNodeDescriptor(Object rootElement, Object element, @Nullable NodeDescriptor parentDescriptor) {
-      super(null, parentDescriptor);
+      super(parentDescriptor);
       myRootElement = rootElement;
       myElement = element;
     }

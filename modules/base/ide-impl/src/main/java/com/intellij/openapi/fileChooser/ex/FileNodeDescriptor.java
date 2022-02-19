@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -34,7 +34,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
   private final String myComment;
 
   public FileNodeDescriptor(Project project, @Nonnull FileElement element, NodeDescriptor parentDescriptor, Image icon, String name, String comment) {
-    super(project, parentDescriptor);
+    super(parentDescriptor);
     myOriginalIcon = icon;
     myComment = comment;
     myFileElement = element;

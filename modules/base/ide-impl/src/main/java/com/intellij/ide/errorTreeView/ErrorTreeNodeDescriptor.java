@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.errorTreeView;
 
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -27,7 +27,7 @@ public class ErrorTreeNodeDescriptor extends NodeDescriptor<ErrorTreeElement>{
   private final ErrorTreeElement myElement;
 
   public ErrorTreeNodeDescriptor(Project project, NodeDescriptor parentDescriptor, ErrorTreeElement element) {
-    super(project, parentDescriptor);
+    super(parentDescriptor);
     myElement = element;
   }
 

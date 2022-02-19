@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ModuleGroup;
@@ -91,6 +91,6 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
 
   @Override
   public boolean contains(@Nonnull VirtualFile file) {
-    return ProjectViewPane.canBeSelectedInProjectView(myProject, file);
+    return ProjectViewPane.canBeSelectedInProjectView(getProject(), file);
   }
 }

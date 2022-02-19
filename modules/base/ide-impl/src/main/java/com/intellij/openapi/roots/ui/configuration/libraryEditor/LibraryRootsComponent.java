@@ -20,7 +20,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.content.library.OrderRoot;

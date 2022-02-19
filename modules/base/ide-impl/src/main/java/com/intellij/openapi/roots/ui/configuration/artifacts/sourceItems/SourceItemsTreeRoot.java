@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;

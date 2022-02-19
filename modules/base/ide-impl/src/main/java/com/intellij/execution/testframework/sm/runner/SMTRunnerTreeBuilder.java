@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.sm.runner;
 import com.intellij.execution.testframework.ui.AbstractTestTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.IndexComparator;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

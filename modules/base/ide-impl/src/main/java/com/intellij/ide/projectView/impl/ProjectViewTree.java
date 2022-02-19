@@ -5,7 +5,7 @@ package com.intellij.ide.projectView.impl;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;

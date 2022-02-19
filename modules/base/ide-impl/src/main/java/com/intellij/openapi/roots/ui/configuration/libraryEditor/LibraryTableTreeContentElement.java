@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 public abstract class LibraryTableTreeContentElement<E> extends NodeDescriptor<E> {
   protected LibraryTableTreeContentElement(@Nullable NodeDescriptor parentDescriptor) {
-    super(null, parentDescriptor);
+    super(parentDescriptor);
   }
 
   protected static ColorValue getForegroundColor(boolean isValid) {

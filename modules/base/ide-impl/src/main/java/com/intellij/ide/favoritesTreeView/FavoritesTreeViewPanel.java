@@ -22,7 +22,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.favoritesTreeView.actions.*;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.ui.awt.UIUtil;

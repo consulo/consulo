@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.breakpoints;
 import consulo.application.AllIcons;
 import com.intellij.ide.favoritesTreeView.AbstractFavoritesListProvider;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.service.task.ui;
 
-import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ public class ExternalSystemNodeDescriptor<T> extends PresentableNodeDescriptor<T
   private final String myDescription;
 
   public ExternalSystemNodeDescriptor(@Nonnull T element, @Nonnull String name, @Nonnull String description, @Nullable Image icon) {
-    super(null, null);
+    super(null);
     myElement = element;
     myName = name;
     setIcon(icon);
@@ -45,14 +45,14 @@ public class ExternalSystemNodeDescriptor<T> extends PresentableNodeDescriptor<T
   public void setName(@Nonnull String name) {
     myName = name;
   }
-  
+
   @Override
   protected void update(PresentationData presentation) {
     presentation.setPresentableText(myName);
     presentation.setIcon(getIcon());
     presentation.setTooltip(myDescription);
   }
-  
+
   @Nonnull
   @Override
   public T getElement() {

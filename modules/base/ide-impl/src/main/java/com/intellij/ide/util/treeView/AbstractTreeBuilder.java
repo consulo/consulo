@@ -2,7 +2,8 @@
 
 package com.intellij.ide.util.treeView;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;

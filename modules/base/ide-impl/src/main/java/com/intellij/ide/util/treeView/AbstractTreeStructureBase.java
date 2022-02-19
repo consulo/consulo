@@ -10,6 +10,7 @@ import consulo.application.progress.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;

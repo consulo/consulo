@@ -15,6 +15,8 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.application.util.registry.Registry;

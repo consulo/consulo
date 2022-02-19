@@ -17,6 +17,7 @@ package com.intellij.navigation;
 
 import consulo.colorScheme.TextAttributesKey;
 import consulo.navigation.ItemPresentation;
+import consulo.ui.ex.ColoredItemPresentation;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

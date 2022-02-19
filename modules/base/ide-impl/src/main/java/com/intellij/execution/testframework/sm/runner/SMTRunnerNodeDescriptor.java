@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.execution.testframework.ui.BaseTestProxyNodeDescriptor;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 
 /**

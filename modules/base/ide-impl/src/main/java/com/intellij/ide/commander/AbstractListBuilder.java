@@ -20,7 +20,7 @@ import consulo.fileEditor.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.IndexComparator;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

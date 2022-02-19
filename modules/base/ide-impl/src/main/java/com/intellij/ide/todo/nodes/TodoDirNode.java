@@ -3,7 +3,7 @@
 package com.intellij.ide.todo.nodes;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.todo.TodoTreeBuilder;

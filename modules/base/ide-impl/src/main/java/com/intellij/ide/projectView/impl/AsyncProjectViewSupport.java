@@ -9,7 +9,7 @@ import com.intellij.ide.projectView.impl.ProjectViewPaneSelectionHelper.Selectio
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.disposer.Disposer;

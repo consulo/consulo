@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.navigation;
+package consulo.compiler.artifact;
 
-import consulo.navigation.ItemPresentation;
+import consulo.project.Project;
 
 /**
- * @author pegov
+ * @author VISTALL
+ * @since 16:57/05.07.13
  */
-public interface ItemPresentationWithSeparator extends ItemPresentation {
+@Deprecated
+public class ArtifactPointerUtil {
+  @Deprecated
+  public static ArtifactPointerManager getPointerManager(Project project) {
+    return ArtifactPointerManager.getInstance(project);
+  }
 }

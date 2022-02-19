@@ -10,6 +10,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.*;
 import consulo.application.util.function.Computable;
 import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.Condition;

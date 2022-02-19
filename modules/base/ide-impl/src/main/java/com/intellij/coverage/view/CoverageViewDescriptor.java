@@ -1,6 +1,6 @@
 package com.intellij.coverage.view;
 
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -13,7 +13,7 @@ public class CoverageViewDescriptor extends NodeDescriptor {
   private final Object myClassOrPackage;
  
   public CoverageViewDescriptor(final Project project, final NodeDescriptor parentDescriptor, final Object classOrPackage) {
-    super(project, parentDescriptor);
+    super(parentDescriptor);
     myClassOrPackage = classOrPackage;
     myName = classOrPackage instanceof PsiNamedElement ? ((PsiNamedElement)classOrPackage).getName() : classOrPackage.toString();
   }

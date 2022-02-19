@@ -1,7 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util.treeView;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.navigation.NavigationItem;
 import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -28,13 +30,15 @@ public abstract class AbstractTreeNode<T> extends PresentableNodeDescriptor<Abst
   private static final TextAttributesKey FILESTATUS_ERRORS = TextAttributesKey.createTextAttributesKey("FILESTATUS_ERRORS");
   private static final Logger LOG = Logger.getInstance(AbstractTreeNode.class);
   private AbstractTreeNode myParent;
+  protected final Project myProject;
   private Object myValue;
   private boolean myNullValueSet;
   private final boolean myNodeWrapper;
   static final Object TREE_WRAPPER_VALUE = new Object();
 
   protected AbstractTreeNode(Project project, @Nonnull T value) {
-    super(project, null);
+    super(null);
+    myProject = project;
     myNodeWrapper = setInternalValue(value);
   }
 
@@ -261,5 +265,10 @@ public abstract class AbstractTreeNode<T> extends PresentableNodeDescriptor<Abst
   @Deprecated
   protected String getToolTip() {
     return getPresentation().getTooltip();
+  }
+
+  @Nullable
+  public Project getProject() {
+    return myProject;
   }
 }

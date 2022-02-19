@@ -16,12 +16,12 @@
 
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.component.extension.Extensions;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -36,11 +36,14 @@ import consulo.language.psi.SmartPsiElementPointer;
  * Date: Feb 15, 2005
  */
 public class FavoritesTreeNodeDescriptor extends PresentableNodeDescriptor<AbstractTreeNode> {
-  private final AbstractTreeNode myElement;
   public static final FavoritesTreeNodeDescriptor[] EMPTY_ARRAY = new FavoritesTreeNodeDescriptor[0];
 
+  private final Project myProject;
+  private final AbstractTreeNode myElement;
+
   public FavoritesTreeNodeDescriptor(final Project project, final NodeDescriptor parentDescriptor, final AbstractTreeNode element) {
-    super(project, parentDescriptor);
+    super(parentDescriptor);
+    myProject = project;
     myElement = element;
   }
 

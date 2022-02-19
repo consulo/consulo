@@ -3,7 +3,7 @@ package com.intellij.ui.tree;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.ValidateableNode;
 import consulo.application.progress.ProgressManager;
 import com.intellij.util.concurrency.Invoker;

@@ -1,6 +1,6 @@
 package com.intellij.coverage;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import consulo.language.psi.PsiDirectory;

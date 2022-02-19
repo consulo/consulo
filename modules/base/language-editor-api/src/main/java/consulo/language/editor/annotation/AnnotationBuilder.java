@@ -1,17 +1,17 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.annotation;
 
-import consulo.document.util.TextRange;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import org.jetbrains.annotations.Contract;

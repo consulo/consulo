@@ -13,22 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.navigation;
-
-import consulo.colorScheme.TextAttributesKey;
-import consulo.navigation.ItemPresentation;
-
-import javax.annotation.Nullable;
+package consulo.navigation;
 
 /**
- * @author yole
+ * @author pegov
  */
-public interface ColoredItemPresentation extends ItemPresentation {
-  /**
-   * Returns the text attributes for rendering the item text.
-   *
-   * @return the text attributes, or null if default text attributes should be used
-   */
-  @Nullable
-  TextAttributesKey getTextAttributesKey();
+public interface ItemPresentationWithSeparator extends ItemPresentation {
 }

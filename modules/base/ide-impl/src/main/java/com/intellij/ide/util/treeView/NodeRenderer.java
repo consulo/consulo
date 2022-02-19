@@ -15,8 +15,10 @@
  */
 package com.intellij.ide.util.treeView;
 
-import com.intellij.ide.projectView.PresentationData;
-import com.intellij.navigation.ColoredItemPresentation;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.ColoredItemPresentation;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
@@ -96,7 +98,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
     else if (value != null) {
       String text = value.toString();
       if (descriptor != null) {
-        text = descriptor.myName;
+        text = descriptor.getName();
       }
       text = tree.convertValueToText(text, selected, expanded, leaf, row, hasFocus);
       if (text == null) {

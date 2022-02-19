@@ -26,7 +26,7 @@ import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import com.intellij.ide.projectView.impl.ProjectViewTree;
 import com.intellij.ide.util.scopeChooser.EditScopesDialog;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.language.LanguageExtension;
 import com.intellij.openapi.actionSystem.*;

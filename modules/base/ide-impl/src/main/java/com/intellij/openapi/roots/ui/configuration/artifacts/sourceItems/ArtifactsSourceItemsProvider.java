@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.PackagingElement;
 import com.intellij.packaging.impl.elements.ArtifactElementType;

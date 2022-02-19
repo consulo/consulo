@@ -743,10 +743,6 @@ open module consulo.ide.impl {
   exports com.intellij.packageDependencies;
   exports com.intellij.packageDependencies.actions;
   exports com.intellij.packageDependencies.ui;
-  //exports com.intellij.packaging;
-  exports com.intellij.packaging.artifacts;
-  exports com.intellij.packaging.elements;
-  //exports com.intellij.packaging.impl;
   exports com.intellij.packaging.impl.artifacts;
   exports com.intellij.packaging.impl.artifacts.state;
   exports com.intellij.packaging.impl.compiler;
@@ -1229,16 +1225,11 @@ open module consulo.ide.impl {
   exports consulo.options;
   exports consulo.packageDependencies;
   exports consulo.packagesView;
-  //exports consulo.packaging;
-  exports consulo.packaging.artifacts;
-  exports consulo.packaging.elements;
-  //exports consulo.packaging.impl;
   exports consulo.packaging.impl.artifacts;
   exports consulo.packaging.impl.elements;
   exports consulo.packaging.impl.elements.moduleContent;
   exports consulo.packaging.impl.run;
   exports consulo.packaging.impl.util;
-  //exports consulo.plugins;
   exports consulo.plugins.internal;
   exports consulo.progress.util;
   exports consulo.progress.util.impl;

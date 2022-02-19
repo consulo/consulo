@@ -41,7 +41,7 @@ import com.intellij.ide.util.DirectoryChooserUtil;
 import com.intellij.ide.util.EditorHelper;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;

@@ -15,20 +15,20 @@
  */
 package consulo.language.editor.annotation;
 
-import consulo.document.util.Segment;
-import consulo.document.util.TextRange;
-import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.CodeInsightColors;
-import consulo.colorScheme.TextAttributesKey;
+import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeEditor.markup.TextAttributes;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.LocalQuickFixAsIntentionAdapter;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

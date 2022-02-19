@@ -8,6 +8,7 @@ import com.intellij.ide.favoritesTreeView.FavoritesTreeNodeDescriptor;
 import com.intellij.ide.util.treeView.*;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 import consulo.project.Project;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.util.lang.ref.Ref;

@@ -16,30 +16,30 @@
 package com.intellij.profile.codeInspection;
 
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
+import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAwareRunnable;
+import consulo.application.ui.awt.UIUtil;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.application.dumb.DumbAwareRunnable;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.project.Project;
-import consulo.project.startup.StartupManager;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
-import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.ProfileEx;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.application.ui.awt.UIUtil;
+import consulo.project.Project;
+import consulo.project.startup.StartupManager;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -69,7 +69,7 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
   }
 
   public static InspectionProjectProfileManagerImpl getInstanceImpl(Project project) {
-    return (InspectionProjectProfileManagerImpl)project.getComponent(InspectionProjectProfileManager.class);
+    return (InspectionProjectProfileManagerImpl)InspectionProjectProfileManager.getInstance(project);
   }
 
   @Override

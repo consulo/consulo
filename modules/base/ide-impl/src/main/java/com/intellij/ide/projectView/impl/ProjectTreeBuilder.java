@@ -25,7 +25,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewPsiTreeChangeListener;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;

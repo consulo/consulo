@@ -19,7 +19,7 @@ package com.intellij.ide.todo;
 import com.intellij.ide.todo.nodes.SingleFileToDoNode;
 import com.intellij.ide.todo.nodes.ToDoRootNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

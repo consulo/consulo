@@ -16,7 +16,7 @@
 
 package com.intellij.ide.hierarchy;
 
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.SmartElementDescriptor;
 import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;

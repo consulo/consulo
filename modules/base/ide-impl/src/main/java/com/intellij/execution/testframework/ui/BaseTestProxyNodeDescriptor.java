@@ -16,11 +16,12 @@
 package com.intellij.execution.testframework.ui;
 
 import com.intellij.execution.testframework.AbstractTestProxy;
-import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.tree.NodeDescriptor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author Roman.Chernyatchik
@@ -29,10 +30,8 @@ public class BaseTestProxyNodeDescriptor<T extends AbstractTestProxy> extends No
   @Nonnull
   private final T myTestProxy;
 
-  public BaseTestProxyNodeDescriptor(@Nullable final Project project,
-                                     @Nonnull final T testProxy,
-                                     @javax.annotation.Nullable final NodeDescriptor parentDescriptor) {
-    super(project, parentDescriptor);
+  public BaseTestProxyNodeDescriptor(@Nullable final Project project, @Nonnull final T testProxy, @Nullable final NodeDescriptor parentDescriptor) {
+    super(parentDescriptor);
     myTestProxy = testProxy;
     myName = testProxy.getName();
   }
@@ -42,10 +41,12 @@ public class BaseTestProxyNodeDescriptor<T extends AbstractTestProxy> extends No
     return myTestProxy.isLeaf() ? 10 : 5;
   }
 
+  @Override
   public String getName() {
     return myTestProxy.getName();
   }
 
+  @Override
   public boolean expandOnDoubleClick() {
     return !getElement().isLeaf();
   }

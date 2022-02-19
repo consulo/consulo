@@ -21,7 +21,7 @@ import com.intellij.ide.todo.nodes.TodoFileNode;
 import com.intellij.ide.todo.nodes.TodoItemNode;
 import com.intellij.ide.todo.nodes.TodoTreeHelper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.*;

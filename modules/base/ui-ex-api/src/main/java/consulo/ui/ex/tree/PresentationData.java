@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.projectView;
+package consulo.ui.ex.tree;
 
-import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
-import com.intellij.navigation.ColoredItemPresentation;
-import consulo.navigation.ItemPresentation;
-import com.intellij.navigation.ItemPresentationWithSeparator;
-import consulo.navigation.LocationPresentation;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.ItemPresentationWithSeparator;
+import consulo.navigation.LocationPresentation;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.ColoredItemPresentation;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
+import consulo.util.collection.Lists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,9 +35,8 @@ import java.util.List;
 /**
  * Default implementation of the {@link ItemPresentation} interface.
  */
-
 public class PresentationData implements ColoredItemPresentation, ComparableObject, LocationPresentation {
-  protected final List<PresentableNodeDescriptor.ColoredFragment> myColoredText = ContainerUtil.createLockFreeCopyOnWriteList();
+  protected final List<PresentableNodeDescriptor.ColoredFragment> myColoredText = Lists.newLockFreeCopyOnWriteList();
 
   private Image myIcon;
 
@@ -284,11 +282,11 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
 
   @Override
   public String getLocationPrefix() {
-    return myLocationPrefix == null ? DEFAULT_LOCATION_PREFIX : myLocationPrefix;
+    return myLocationPrefix == null ? LocationPresentation.DEFAULT_LOCATION_PREFIX : myLocationPrefix;
   }
 
   @Override
   public String getLocationSuffix() {
-    return myLocationSuffix == null ? DEFAULT_LOCATION_SUFFIX : myLocationSuffix;
+    return myLocationSuffix == null ? LocationPresentation.DEFAULT_LOCATION_SUFFIX : myLocationSuffix;
   }
 }

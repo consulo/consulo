@@ -15,20 +15,29 @@
  */
 package com.intellij.ui.treeStructure;
 
-import com.intellij.ide.util.treeView.*;
-import consulo.application.ReadAction;
-import consulo.application.ui.awt.GraphicsConfig;
-import consulo.application.util.Queryable;
-import consulo.application.ui.awt.UIUtil;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
-import consulo.application.util.SystemInfo;
+import com.intellij.ide.util.treeView.AbstractTreeBuilder;
+import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.ui.*;
 import com.intellij.ui.tree.TreePathBackgroundSupplier;
-import com.intellij.util.ui.*;
+import com.intellij.util.ui.AsyncProcessIcon;
+import com.intellij.util.ui.ComponentWithEmptyText;
+import com.intellij.util.ui.MouseEventAdapter;
+import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.ReadAction;
+import consulo.application.ui.awt.ColorUtil;
+import consulo.application.ui.awt.GraphicsConfig;
+import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.awt.internal.DarkThemeCalculator;
+import consulo.application.util.Queryable;
+import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -470,7 +479,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
           }
 
           if (rect != null) {
-            final Color highlightColor = node.getHighlightColor();
+            final Color highlightColor = getHighlightColor(node);
             g.setColor(highlightColor);
             g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 4, 4);
             g.setColor(highlightColor.darker());
@@ -556,7 +565,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
         toPaint.width = getWidth() - toPaint.x - 4;
 
-        final Color highlightColor = first.getHighlightColor();
+        final Color highlightColor = getHighlightColor(node);
         g.setColor(highlightColor);
         g.fillRoundRect(toPaint.x, toPaint.y, toPaint.width, toPaint.height, 4, 4);
         g.setColor(highlightColor.darker());
@@ -565,6 +574,10 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     }
 
     config.restore();
+  }
+
+  public Color getHighlightColor(PresentableNodeDescriptor node) {
+    return DarkThemeCalculator.isDark() ? ColorUtil.shift(UIUtil.getTreeBackground(), 1.1) : UIUtil.getTreeBackground().brighter();
   }
 
   private int[] getMax(final PresentableNodeDescriptor node, final AbstractTreeStructure structure) {

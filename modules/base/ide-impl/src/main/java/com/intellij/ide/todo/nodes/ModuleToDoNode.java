@@ -18,7 +18,7 @@ package com.intellij.ide.todo.nodes;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.todo.TodoTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeNode;

@@ -19,6 +19,7 @@ package com.intellij.ide.util.treeView;
 import consulo.logging.Logger;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.NodeDescriptor;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

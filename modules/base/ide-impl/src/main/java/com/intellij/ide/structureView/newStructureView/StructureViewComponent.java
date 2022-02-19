@@ -44,6 +44,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 import consulo.component.util.ModificationTracker;
 import consulo.application.util.registry.Registry;

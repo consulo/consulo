@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactType;

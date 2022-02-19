@@ -15,8 +15,8 @@
  */
 package consulo.compiler.artifact.ui;
 
-import com.intellij.ide.projectView.PresentationData;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.PresentationData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

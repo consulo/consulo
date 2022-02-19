@@ -22,6 +22,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

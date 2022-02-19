@@ -21,6 +21,8 @@
  */
 package com.intellij.ide.util.treeView;
 
+import consulo.ui.ex.tree.NodeDescriptor;
+
 import java.util.Comparator;
 
 public class IndexComparator implements Comparator<NodeDescriptor> {

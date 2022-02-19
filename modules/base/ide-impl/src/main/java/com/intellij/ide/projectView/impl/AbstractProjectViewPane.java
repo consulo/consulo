@@ -15,6 +15,7 @@ import com.intellij.ide.projectView.impl.nodes.ModuleGroupNode;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.util.treeView.*;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.language.file.inject.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;

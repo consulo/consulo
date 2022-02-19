@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.util.treeView;
+package consulo.ui.ex.tree;
 
-import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -24,7 +23,6 @@ import javax.annotation.Nullable;
 import java.util.Comparator;
 
 public abstract class NodeDescriptor<E> {
-  protected final Project myProject;
   private final NodeDescriptor myParentDescriptor;
 
   protected String myName;
@@ -39,8 +37,7 @@ public abstract class NodeDescriptor<E> {
 
   private boolean myWasDeclaredAlwaysLeaf;
 
-  public NodeDescriptor(@Nullable Project project, @Nullable NodeDescriptor parentDescriptor) {
-    myProject = project;
+  public NodeDescriptor(@Nullable NodeDescriptor parentDescriptor) {
     myParentDescriptor = parentDescriptor;
   }
 
@@ -66,6 +63,10 @@ public abstract class NodeDescriptor<E> {
     return myName;
   }
 
+  public String getName() {
+    return myName;
+  }
+
   @Nullable
   public final Image getIcon() {
     return myIcon;
@@ -73,11 +74,6 @@ public abstract class NodeDescriptor<E> {
 
   public final ColorValue getColor() {
     return myColor;
-  }
-
-  @Nullable
-  public final Project getProject() {
-    return myProject;
   }
 
   public boolean expandOnDoubleClick() {

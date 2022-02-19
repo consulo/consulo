@@ -45,7 +45,7 @@ import java.util.ServiceLoader;
  * This should moved to desktop module, after split desktop and platform code
  */
 @SuppressWarnings("deprecation")
-public class TargetAWT {
+public final class TargetAWT {
   private static final TargetAWTFacade ourFacade = findImplementation(TargetAWTFacade.class);
 
   @Nonnull

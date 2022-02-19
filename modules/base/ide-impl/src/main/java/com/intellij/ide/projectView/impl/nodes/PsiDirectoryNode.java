@@ -16,7 +16,7 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.ide.projectView.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
