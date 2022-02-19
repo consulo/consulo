@@ -17,8 +17,8 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.impl.DocumentEx;
 import consulo.codeEditor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;
@@ -556,7 +556,7 @@ public class InjectedLanguageUtil {
     if (virtualFile instanceof VirtualFileWindow) {
       virtualFile = ((VirtualFileWindow)virtualFile).getDelegate();
     }
-    Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, virtualFile, -1), false);
+    Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, virtualFile, -1), false);
     if (editor == null || editor instanceof EditorWindow || editor.isDisposed()) return editor;
     if (document instanceof DocumentWindowImpl) {
       return EditorWindowImpl.create((DocumentWindowImpl)document, (EditorInternal)editor, file);

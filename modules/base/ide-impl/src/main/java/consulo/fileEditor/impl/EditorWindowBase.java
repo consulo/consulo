@@ -16,7 +16,7 @@
 package consulo.fileEditor.impl;
 
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.EditorTabPresentationUtil;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.virtualFileSystem.fileType.UnknownFileType;

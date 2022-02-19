@@ -39,6 +39,7 @@ import consulo.document.util.UnfairTextRange;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.TextAttributes;
 import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.fileEditor.*;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.*;
@@ -255,7 +256,7 @@ public class UsageInfo2UsageAdapter
       range = ((VirtualFileWindow)file).getDocumentWindow().injectedToHost(TextRange.create(range));
       file = ((VirtualFileWindow)file).getDelegate();
     }
-    return new OpenFileDescriptor(getProject(), file, range == null ? getNavigationOffset() : range.getStartOffset());
+    return new OpenFileDescriptorImpl(getProject(), file, range == null ? getNavigationOffset() : range.getStartOffset());
   }
 
   @Override

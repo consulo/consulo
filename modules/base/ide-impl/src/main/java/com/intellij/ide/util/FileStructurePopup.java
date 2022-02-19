@@ -6,9 +6,9 @@ import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.ViewStructureAction;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import com.intellij.ide.structureView.ModelListener;
-import com.intellij.ide.structureView.StructureView;
-import com.intellij.ide.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.event.ModelListener;
+import consulo.fileEditor.structureView.StructureView;
+import consulo.fileEditor.structureView.StructureViewModel;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
 import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
 import com.intellij.ide.structureView.newStructureView.TreeActionWrapper;
@@ -25,10 +25,11 @@ import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
+import consulo.fileEditor.structureView.tree.*;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -549,7 +550,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
       if (PlatformDataKeys.FILE_EDITOR == dataId) {
         return myFileEditor;
       }
-      if (OpenFileDescriptor.NAVIGATE_IN_EDITOR == dataId) {
+      if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId) {
         if (myFileEditor instanceof TextEditor) {
           return ((TextEditor)myFileEditor).getEditor();
         }

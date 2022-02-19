@@ -18,6 +18,7 @@ package com.intellij.ide.util.treeView.smartTree;
 
 import com.intellij.ide.structureView.impl.StructureViewElementWrapper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.fileEditor.structureView.tree.*;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 

@@ -16,8 +16,8 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

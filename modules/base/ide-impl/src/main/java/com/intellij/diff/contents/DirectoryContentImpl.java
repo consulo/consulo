@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.contents;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -38,7 +38,7 @@ public class DirectoryContentImpl extends DiffContentBase implements DirectoryCo
   @Override
   public Navigatable getNavigatable() {
     if (myProject == null || myProject.isDefault() || !myFile.isValid()) return null;
-    return new OpenFileDescriptor(myProject, myFile);
+    return new OpenFileDescriptorImpl(myProject, myFile);
   }
 
   @Nonnull

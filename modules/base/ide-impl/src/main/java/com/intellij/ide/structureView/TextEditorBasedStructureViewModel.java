@@ -15,13 +15,17 @@
  */
 package com.intellij.ide.structureView;
 
-import com.intellij.ide.util.treeView.smartTree.*;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.event.CaretAdapter;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
+import consulo.fileEditor.structureView.event.FileEditorPositionListener;
+import consulo.fileEditor.structureView.event.ModelListener;
+import consulo.fileEditor.structureView.tree.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;

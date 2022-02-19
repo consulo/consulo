@@ -15,7 +15,7 @@
  */
 package com.intellij.pom;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -41,6 +41,6 @@ public abstract class NavigatableAdapter implements Navigatable {
   }
 
   public static void navigate(Project project, VirtualFile file, int offset, boolean requestFocus) {
-    new OpenFileDescriptor(project, file, offset).navigate(requestFocus);
+    new OpenFileDescriptorImpl(project, file, offset).navigate(requestFocus);
   }
 }

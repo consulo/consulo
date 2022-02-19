@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.fileEditor.impl.http;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorPolicy;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorPolicy;
+import consulo.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

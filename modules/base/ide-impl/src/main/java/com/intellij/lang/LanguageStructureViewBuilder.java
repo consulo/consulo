@@ -19,7 +19,7 @@
  */
 package com.intellij.lang;
 
-import com.intellij.ide.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.language.LanguageExtension;
 import consulo.language.psi.PsiFile;
 import consulo.container.plugin.PluginIds;

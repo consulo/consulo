@@ -23,7 +23,7 @@ import consulo.language.Language;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.fileEditor.EditorDataProvider;
+import consulo.fileEditor.EditorDataProvider;
 import consulo.language.psi.*;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;

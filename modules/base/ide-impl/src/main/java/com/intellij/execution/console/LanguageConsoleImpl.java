@@ -26,8 +26,8 @@ import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.project.Project;
@@ -507,7 +507,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
     @Nullable
     protected Object getEditorData(@Nonnull EditorEx editor, Key dataId) {
-      if (OpenFileDescriptor.NAVIGATE_IN_EDITOR == dataId) {
+      if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId) {
         return editor;
       }
       else if (project.isInitialized()) {

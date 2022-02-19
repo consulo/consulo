@@ -4,7 +4,7 @@ package com.intellij.xdebugger.impl;
 import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
@@ -188,10 +188,10 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
   }
 
   @Nonnull
-  public static OpenFileDescriptor createOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
+  public static OpenFileDescriptorImpl createOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
     Navigatable navigatable = position.createNavigatable(project);
-    if (navigatable instanceof OpenFileDescriptor) {
-      return (OpenFileDescriptor)navigatable;
+    if (navigatable instanceof OpenFileDescriptorImpl) {
+      return (OpenFileDescriptorImpl)navigatable;
     }
     else {
       return doCreateOpenFileDescriptor(project, position);
@@ -199,8 +199,8 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
   }
 
   @Nonnull
-  public static OpenFileDescriptor doCreateOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
-    return position.getOffset() != -1 ? new OpenFileDescriptor(project, position.getFile(), position.getOffset()) : new OpenFileDescriptor(project, position.getFile(), position.getLine(), 0);
+  public static OpenFileDescriptorImpl doCreateOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
+    return position.getOffset() != -1 ? new OpenFileDescriptorImpl(project, position.getFile(), position.getOffset()) : new OpenFileDescriptorImpl(project, position.getFile(), position.getLine(), 0);
   }
 
   @Override

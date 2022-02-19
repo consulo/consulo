@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.codeEditor.Caret;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;

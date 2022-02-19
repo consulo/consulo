@@ -18,7 +18,7 @@ package com.intellij.ide.favoritesTreeView;
 import consulo.application.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -71,7 +71,7 @@ public class FileGroupingProjectNode extends ProjectViewNodeWithChildrenList<Fil
   @Override
   public void navigate(boolean requestFocus) {
     if (myVirtualFile != null) {
-      new OpenFileDescriptor(myProject, myVirtualFile).navigate(requestFocus);
+      new OpenFileDescriptorImpl(myProject, myVirtualFile).navigate(requestFocus);
     }
   }
 

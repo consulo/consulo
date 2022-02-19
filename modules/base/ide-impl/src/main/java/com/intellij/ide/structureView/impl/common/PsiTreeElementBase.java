@@ -3,7 +3,7 @@ package com.intellij.ide.structureView.impl.common;
 
 import com.intellij.ide.structureView.StructureViewExtension;
 import com.intellij.ide.structureView.StructureViewFactoryEx;
-import com.intellij.ide.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.customRegions.CustomRegionStructureUtil;
 import com.intellij.ide.util.treeView.AbstractTreeUi;
 import com.intellij.ide.util.treeView.NodeDescriptorProvidingKey;

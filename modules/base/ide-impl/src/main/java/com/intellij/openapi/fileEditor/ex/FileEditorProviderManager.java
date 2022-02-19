@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor.ex;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditorProvider;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 

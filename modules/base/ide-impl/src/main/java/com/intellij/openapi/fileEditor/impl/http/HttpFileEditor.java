@@ -15,13 +15,16 @@
  */
 package com.intellij.openapi.fileEditor.impl.http;
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
-import com.intellij.ide.structureView.StructureViewBuilder;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.impl.DocumentImpl;
-import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
+import consulo.fileEditor.FileEditorLocation;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;

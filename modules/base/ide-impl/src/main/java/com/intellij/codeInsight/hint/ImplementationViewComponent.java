@@ -30,9 +30,9 @@ import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighter;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorProvider;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import consulo.language.psi.*;
@@ -594,7 +594,7 @@ public class ImplementationViewComponent extends JPanel {
       if (virtualFile == null) return;
       Project project = element.getProject();
       FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-      OpenFileDescriptor descriptor = new OpenFileDescriptor(project, virtualFile, navigationElement.getTextOffset());
+      OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, virtualFile, navigationElement.getTextOffset());
       fileEditorManager.openTextEditor(descriptor, myFocusEditor);
     }
   }

@@ -1,7 +1,7 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.build;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -15,16 +15,16 @@ import javax.annotation.Nullable;
  */
 public class FileNavigatable implements Navigatable {
   private final Project myProject;
-  private final NullableLazyValue<OpenFileDescriptor> myValue;
+  private final NullableLazyValue<OpenFileDescriptorImpl> myValue;
   private final FilePosition myFilePosition;
 
   public FileNavigatable(@Nonnull Project project, @Nonnull FilePosition filePosition) {
     myProject = project;
     myFilePosition = filePosition;
-    myValue = new NullableLazyValue<OpenFileDescriptor>() {
+    myValue = new NullableLazyValue<OpenFileDescriptorImpl>() {
       @Nullable
       @Override
-      protected OpenFileDescriptor compute() {
+      protected OpenFileDescriptorImpl compute() {
         return createDescriptor();
       }
     };
@@ -57,7 +57,7 @@ public class FileNavigatable implements Navigatable {
   }
 
   @Nullable
-  public OpenFileDescriptor getFileDescriptor() {
+  public OpenFileDescriptorImpl getFileDescriptor() {
     return myValue.getValue();
   }
 
@@ -67,11 +67,11 @@ public class FileNavigatable implements Navigatable {
   }
 
   @Nullable
-  private OpenFileDescriptor createDescriptor() {
-    OpenFileDescriptor descriptor = null;
+  private OpenFileDescriptorImpl createDescriptor() {
+    OpenFileDescriptorImpl descriptor = null;
     VirtualFile file = VfsUtil.findFileByIoFile(myFilePosition.getFile(), false);
     if (file != null) {
-      descriptor = new OpenFileDescriptor(myProject, file, myFilePosition.getStartLine(), myFilePosition.getStartColumn());
+      descriptor = new OpenFileDescriptorImpl(myProject, file, myFilePosition.getStartLine(), myFilePosition.getStartColumn());
     }
     return descriptor;
   }

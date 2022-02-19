@@ -33,7 +33,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -190,7 +190,7 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
       }
     }
 
-    return new OpenFileDescriptor(project, file, offset);
+    return new OpenFileDescriptorImpl(project, file, offset);
   }
 
   public boolean fixEmptySuite() {

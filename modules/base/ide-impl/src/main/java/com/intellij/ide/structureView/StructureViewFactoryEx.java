@@ -16,6 +16,7 @@
 
 package com.intellij.ide.structureView;
 
+import consulo.fileEditor.structureView.StructureViewFactory;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 

@@ -17,10 +17,10 @@
 package com.intellij.ide.actions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.ide.structureView.StructureView;
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
+import consulo.fileEditor.structureView.StructureView;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.ide.structureView.impl.StructureViewComposite;
 import com.intellij.ide.util.FileStructurePopup;
 import com.intellij.ide.util.StructureViewCompositeModel;
@@ -30,8 +30,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.disposer.Disposer;

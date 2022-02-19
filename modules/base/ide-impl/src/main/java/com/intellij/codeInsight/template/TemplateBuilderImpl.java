@@ -22,8 +22,8 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -280,7 +280,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     final Project project = myFile.getProject();
     VirtualFile file = myFile.getVirtualFile();
     assert file != null;
-    OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file);
+    OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, file);
     final Editor editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
 
     assert editor != null : "Editor is null";

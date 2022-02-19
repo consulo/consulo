@@ -16,7 +16,7 @@
 package consulo.codeEditor.notifications;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;

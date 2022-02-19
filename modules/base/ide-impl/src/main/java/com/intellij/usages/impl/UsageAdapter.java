@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.openapi.fileEditor.FileEditorLocation;
+import consulo.fileEditor.FileEditorLocation;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsagePresentation;
 import javax.annotation.Nonnull;

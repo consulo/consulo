@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.ide.util.EditSourceUtil;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.virtualFileSystem.VirtualFile;
@@ -50,7 +50,7 @@ public class DelegatePsiTarget implements PsiTarget {
     final int offset = getTextOffset();
     final VirtualFile virtualFile = PsiUtilBase.getVirtualFile(myElement);
     if (virtualFile != null && virtualFile.isValid()) {
-      new OpenFileDescriptor(myElement.getProject(), virtualFile, offset).navigate(requestFocus);
+      new OpenFileDescriptorImpl(myElement.getProject(), virtualFile, offset).navigate(requestFocus);
     }
   }
 

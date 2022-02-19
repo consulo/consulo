@@ -15,8 +15,8 @@
  */
 package consulo.fileEditor.impl;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.HistoryEntry;
 
 import javax.annotation.Nonnull;

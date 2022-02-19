@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditor;
 
 import java.lang.ref.WeakReference;
 

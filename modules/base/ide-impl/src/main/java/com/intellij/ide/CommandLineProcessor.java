@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.ide.impl.ProjectUtil;
 import consulo.application.Application;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.module.content.ProjectRootManager;
@@ -94,10 +94,10 @@ public class CommandLineProcessor {
   private static void openFile(@Nonnull UIAccess uiAccess, @Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
     uiAccess.give(() -> {
       if (line == -1) {
-        new OpenFileDescriptor(project, virtualFile).navigate(true);
+        new OpenFileDescriptorImpl(project, virtualFile).navigate(true);
       }
       else {
-        new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
+        new OpenFileDescriptorImpl(project, virtualFile, line - 1, 0).navigate(true);
       }
     });
   }

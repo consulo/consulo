@@ -18,7 +18,7 @@ package com.intellij.openapi.diff;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.util.io.CharsetToolkit;
@@ -96,7 +96,7 @@ public class SimpleContent extends DiffContent {
   /**
    * @return null
    */
-  public OpenFileDescriptor getOpenFileDescriptor(int offset) {
+  public OpenFileDescriptorImpl getOpenFileDescriptor(int offset) {
     return null;
   }
 

@@ -16,14 +16,15 @@
 package com.intellij.diff.contents;
 
 import com.intellij.diff.util.LineCol;
-import consulo.document.Document;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtils;
-import javax.annotation.Nonnull;
+import consulo.document.Document;
+import consulo.fileEditor.OpenFileDescriptor;
+import consulo.navigation.Navigatable;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 
 public interface DocumentContent extends DiffContent {
@@ -37,34 +38,44 @@ public interface DocumentContent extends DiffContent {
    * This file could be used for better syntax highlighting.
    * Some file types can't be highlighted properly depending only on their FileType (ex: SQL dialects, PHP templates).
    */
-  @javax.annotation.Nullable
-  default VirtualFile getHighlightFile() { return null; }
+  @Nullable
+  default VirtualFile getHighlightFile() {
+    return null;
+  }
 
   /**
    * Provides a way to open given text place in editor
    */
-  @javax.annotation.Nullable
-  default Navigatable getNavigatable(@Nonnull LineCol position) { return null; }
+  @Nullable
+  default Navigatable getNavigatable(@Nonnull LineCol position) {
+    return null;
+  }
 
   /**
    * @return original file line separator
    */
-  @javax.annotation.Nullable
-  default LineSeparator getLineSeparator() { return null; }
+  @Nullable
+  default LineSeparator getLineSeparator() {
+    return null;
+  }
 
   /**
    * @return original file charset
    */
-  @javax.annotation.Nullable
-  default Charset getCharset() { return null; }
+  @Nullable
+  default Charset getCharset() {
+    return null;
+  }
 
   /**
    * @return original file byte order mark
    */
-  @javax.annotation.Nullable
-  default Boolean hasBom() { return null; }
+  @Nullable
+  default Boolean hasBom() {
+    return null;
+  }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Deprecated
   default OpenFileDescriptor getOpenFileDescriptor(int offset) {
     LineCol position = LineCol.fromOffset(getDocument(), offset);

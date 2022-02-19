@@ -101,7 +101,7 @@
                     area="PROJECT"/>
 
     <extensionPoint name="fileEditorProvider"
-                    interface="com.intellij.openapi.fileEditor.FileEditorProvider"/>
+                    interface="consulo.fileEditor.FileEditorProvider"/>
 
     <extensionPoint name="fileTypeFactory"
                     interface="consulo.virtualFileSystem.fileType.FileTypeFactory"/>
@@ -220,8 +220,8 @@
 
     <extensionPoint name="actionPromoter" interface="com.intellij.openapi.actionSystem.ActionPromoter"/>
 
-    <extensionPoint name="fileDocumentManagerListener" interface="com.intellij.openapi.fileEditor.FileDocumentManagerListener"/>
-    <extensionPoint name="fileDocumentSynchronizationVetoer" interface="com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer"/>
+    <extensionPoint name="fileDocumentManagerListener" interface="consulo.document.event.FileDocumentManagerListener"/>
+    <extensionPoint name="fileDocumentSynchronizationVetoer" interface="consulo.document.FileDocumentSynchronizationVetoer"/>
 
     <extensionPoint name="itemPresentationProvider" beanClass="com.intellij.openapi.util.ClassExtensionPoint">
       <with attribute="implementationClass" implements="consulo.navigation.ItemPresentationProvider"/>
@@ -743,7 +743,7 @@
 
     <extensionPoint name="structureViewBuilder"
                     beanClass="consulo.component.extension.KeyedFactoryEPBean">
-      <with attribute="implementationClass" implements="com.intellij.ide.structureView.StructureViewBuilder"/>
+      <with attribute="implementationClass" implements="consulo.fileEditor.structureView.StructureViewBuilder"/>
     </extensionPoint>
 
     <extensionPoint name="macro" interface="com.intellij.ide.macro.Macro"/>
@@ -2300,7 +2300,7 @@
 
     <projectService serviceInterface="com.intellij.ide.todo.TodoView"
                     serviceImplementation="com.intellij.ide.todo.TodoView"/>
-    <projectService serviceInterface="com.intellij.ide.structureView.StructureViewFactory"
+    <projectService serviceInterface="consulo.fileEditor.structureView.StructureViewFactory"
                     serviceImplementation="com.intellij.ide.structureView.impl.StructureViewFactoryImpl"/>
     <projectService serviceInterface="consulo.language.editor.inspection.scheme.InspectionManager"
                     serviceImplementation="com.intellij.codeInspection.ex.InspectionManagerEx"/>
@@ -2812,6 +2812,7 @@
                         serviceImplementation="consulo.project.ui.notification.impl.NotificationActionInvokerImpl"/>
     <applicationService serviceInterface="consulo.virtualFileSystem.RawFileLoader" serviceImplementation="consulo.virtualFileSystem.impl.RawFileLoaderImpl"/>
     <projectService serviceInterface="consulo.language.impl.psi.internal.FormattingService" serviceImplementation="consulo.ide.impl.language.psi.FormattingServiceImpl"/>
+    <projectService serviceInterface="consulo.fileEditor.OpenFileDescriptorFactory" serviceImplementation="consulo.ide.impl.fileEditor.OpenFileDescriptorFactoryImpl"/>
   </extensions>
 
   <applicationListeners>

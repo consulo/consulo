@@ -15,7 +15,7 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl;
 
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

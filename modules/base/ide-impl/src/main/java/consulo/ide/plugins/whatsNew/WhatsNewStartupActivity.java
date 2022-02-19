@@ -16,7 +16,7 @@
 package consulo.ide.plugins.whatsNew;
 
 import consulo.application.Application;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.ide.updateSettings.impl.UpdateHistory;
 import consulo.platform.base.localize.IdeLocalize;

@@ -33,7 +33,7 @@ import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.document.event.DocumentBulkUpdateListener;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.util.text.StringUtil;

@@ -3,10 +3,10 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
-import com.intellij.util.ArrayUtilRt;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.document.Document;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
@@ -15,7 +15,7 @@ import consulo.language.psi.PsiModificationTracker;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,8 +31,8 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
   private final boolean myRunIntentionPassAfter;
   private final long myInitialDocStamp;
   private final long myInitialPsiStamp;
-  private volatile int[] myCompletionPredecessorIds = ArrayUtilRt.EMPTY_INT_ARRAY;
-  private volatile int[] myStartingPredecessorIds = ArrayUtilRt.EMPTY_INT_ARRAY;
+  private volatile int[] myCompletionPredecessorIds = ArrayUtil.EMPTY_INT_ARRAY;
+  private volatile int[] myStartingPredecessorIds = ArrayUtil.EMPTY_INT_ARRAY;
   private volatile int myId;
   private volatile boolean myDumb;
   private EditorColorsScheme myColorsScheme;
@@ -42,7 +42,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     myProject = project;
     myRunIntentionPassAfter = runIntentionPassAfter;
     myInitialDocStamp = document == null ? 0 : document.getModificationStamp();
-    myInitialPsiStamp = PsiModificationTracker.SERVICE.getInstance(myProject).getModificationCount();
+    myInitialPsiStamp = PsiModificationTracker.getInstance(myProject).getModificationCount();
   }
 
   protected TextEditorHighlightingPass(@Nonnull final Project project, @Nullable final Document document) {
@@ -78,7 +78,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
       return false;
     }
 
-    if (PsiModificationTracker.SERVICE.getInstance(myProject).getModificationCount() != myInitialPsiStamp) {
+    if (PsiModificationTracker.getInstance(myProject).getModificationCount() != myInitialPsiStamp) {
       return false;
     }
 
@@ -146,7 +146,6 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
   }
 
   @Override
-  @NonNls
   public String toString() {
     return (getClass().isAnonymousClass() ? getClass().getSuperclass() : getClass()).getSimpleName() + "; id=" + getId();
   }

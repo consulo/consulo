@@ -15,7 +15,7 @@
  */
 package consulo.fileEditor.internal;
 
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 
 /**
  * File Editor with * if modified, ignore getMarkModifiedTabsWithAsterisk setting, show always

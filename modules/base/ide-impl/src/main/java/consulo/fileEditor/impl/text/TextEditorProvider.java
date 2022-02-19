@@ -16,10 +16,10 @@
 package consulo.fileEditor.impl.text;
 
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProviderImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
+import consulo.fileEditor.*;
 import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;

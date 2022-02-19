@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import consulo.document.Document;
-import com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer;
+import consulo.document.FileDocumentSynchronizationVetoer;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.ui.CommitHelper;
 

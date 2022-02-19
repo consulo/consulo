@@ -22,7 +22,7 @@ import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import com.intellij.diff.tools.util.DiffNotifications;
 import com.intellij.diff.tools.util.side.OnesideDiffViewer;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.application.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 

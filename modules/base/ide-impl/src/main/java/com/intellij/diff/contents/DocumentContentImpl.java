@@ -18,7 +18,7 @@ package com.intellij.diff.contents;
 import com.intellij.diff.util.LineCol;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -146,7 +146,7 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
     public void navigate(boolean requestFocus) {
       Document targetDocument = FileDocumentManager.getInstance().getDocument(myTargetFile);
       LineCol targetPosition = translatePosition(myDocument, targetDocument, myPosition);
-      OpenFileDescriptor descriptor = new OpenFileDescriptor(myProject, myTargetFile, targetPosition.line, targetPosition.column);
+      OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, myTargetFile, targetPosition.line, targetPosition.column);
       if (descriptor.canNavigate()) descriptor.navigate(true);
     }
 

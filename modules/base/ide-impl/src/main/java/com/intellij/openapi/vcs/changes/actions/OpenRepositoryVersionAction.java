@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
@@ -50,7 +50,7 @@ public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
       ContentRevision revision = change.getAfterRevision();
       if (revision == null || revision.getFile().isDirectory()) continue;
       VirtualFile vFile = ContentRevisionVirtualFile.create(revision);
-      Navigatable navigatable = new OpenFileDescriptor(project, vFile);
+      Navigatable navigatable = new OpenFileDescriptorImpl(project, vFile);
       navigatable.navigate(true);
     }
   }

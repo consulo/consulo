@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.openapi.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;

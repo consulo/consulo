@@ -15,10 +15,12 @@
  */
 package com.intellij.openapi.fileEditor;
 
+import consulo.fileEditor.FileEditorProvider;
+
 /**
  * @author peter
  */
-public abstract class WeighedFileEditorProvider implements FileEditorProvider{
+public abstract class WeighedFileEditorProvider implements FileEditorProvider {
 
   double DEFAULT_WEIGHT = 1;
 

@@ -30,7 +30,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;

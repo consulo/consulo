@@ -23,7 +23,7 @@ import com.intellij.openapi.command.impl.StartMarkAction;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;

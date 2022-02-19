@@ -21,8 +21,8 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
@@ -55,7 +55,7 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {
-        final Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
+        final Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, file), true);
         if (editor != null && editor.getComponent().isDisplayable()) {
           HintManager.getInstance().showErrorHint(editor, CodeInsightBundle.message("error.hint.file.is.readonly", file.getPresentableUrl()));
         }

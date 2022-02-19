@@ -24,7 +24,7 @@ import consulo.document.Document;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
@@ -90,7 +90,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   @Nullable
   public Navigatable getNavigatable(@Nullable Project project) {
     if (project == null || project.isDefault() || !myFile.isValid()) return null;
-    return new OpenFileDescriptor(project, myFile);
+    return new OpenFileDescriptorImpl(project, myFile);
   }
 
   @Override

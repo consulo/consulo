@@ -17,7 +17,7 @@ package com.intellij.openapi.diff;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -56,11 +56,11 @@ public class DocumentContent extends DiffContent {
     return myDocument;
   }
 
-  public OpenFileDescriptor getOpenFileDescriptor(int offset) {
+  public OpenFileDescriptorImpl getOpenFileDescriptor(int offset) {
     VirtualFile file = getFile();
     if (file == null) return null;
     if (myProject == null) return null;
-    return new OpenFileDescriptor(myProject, file, offset);
+    return new OpenFileDescriptorImpl(myProject, file, offset);
   }
 
   public VirtualFile getFile() {

@@ -15,7 +15,7 @@
  */
 package com.intellij.usages;
 
-import com.intellij.openapi.fileEditor.FileEditorLocation;
+import consulo.fileEditor.FileEditorLocation;
 import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

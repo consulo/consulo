@@ -18,7 +18,7 @@ package com.intellij.compiler;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
@@ -73,7 +73,7 @@ public final class CompilerMessageImpl implements CompilerMessage {
     if (virtualFile != null && virtualFile.isValid()) {
       final int line = getLine() - 1; // editor lines are zero-based
       if (line >= 0) {
-        return myNavigatable = new OpenFileDescriptor(myProject, virtualFile, line, Math.max(0, getColumn()-1));
+        return myNavigatable = new OpenFileDescriptorImpl(myProject, virtualFile, line, Math.max(0, getColumn() - 1));
       }
     }
     return null;

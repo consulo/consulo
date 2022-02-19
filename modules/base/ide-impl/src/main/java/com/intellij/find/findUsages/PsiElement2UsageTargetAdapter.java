@@ -30,7 +30,7 @@ import com.intellij.openapi.actionSystem.DataSink;
 import consulo.ui.ex.action.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

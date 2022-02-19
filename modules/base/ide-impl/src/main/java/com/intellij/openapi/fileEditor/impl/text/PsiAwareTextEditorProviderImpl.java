@@ -19,15 +19,15 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import com.intellij.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
 import consulo.project.Project;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;

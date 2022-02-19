@@ -20,7 +20,7 @@ import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
@@ -176,7 +176,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
       VirtualFile group = underFileGroup != null ? underFileGroup : file;
       VirtualFile nav = file != null ? file : underFileGroup;
 
-      addNavigatableMessage(group.getPresentableUrl(), new OpenFileDescriptor(myProject, nav, line, column), kind, text, data,
+      addNavigatableMessage(group.getPresentableUrl(), new OpenFileDescriptorImpl(myProject, nav, line, column), kind, text, data,
                             NewErrorTreeViewPanel.createExportPrefix(guiline), NewErrorTreeViewPanel.createRendererPrefix(guiline, guicolumn), group);
     }
     else {
@@ -436,7 +436,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
                                          @Nonnull final VirtualFile vf,
                                          String exportText,
                                          String rendererTextPrefix) {
-      super(kind, parent, message, new OpenFileDescriptor(project, vf, -1, -1), exportText, rendererTextPrefix);
+      super(kind, parent, message, new OpenFileDescriptorImpl(project, vf, -1, -1), exportText, rendererTextPrefix);
       myVf = vf;
       myCustomizeColoredTreeCellRenderer = new CustomizeColoredTreeCellRenderer() {
         @Override

@@ -16,7 +16,7 @@
 package com.intellij.openapi.command.impl;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 
 /**
  * author: lesya

@@ -17,8 +17,8 @@ package consulo.execution.ui.editor;
 
 import com.intellij.execution.impl.RunConfigurable;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;

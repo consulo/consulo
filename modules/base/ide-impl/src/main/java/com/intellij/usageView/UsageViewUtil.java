@@ -18,8 +18,8 @@ package com.intellij.usageView;
 
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.document.util.TextRange;
@@ -168,7 +168,7 @@ public class UsageViewUtil {
     VirtualFile file = info.getVirtualFile();
     Project project = info.getProject();
     if (file != null) {
-      FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file, offset), requestFocus);
+      FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, file, offset), requestFocus);
     }
   }
 

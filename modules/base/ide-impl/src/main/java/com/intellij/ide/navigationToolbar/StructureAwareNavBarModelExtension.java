@@ -15,14 +15,14 @@
  */
 package com.intellij.ide.navigationToolbar;
 
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
 import consulo.application.ui.UISettings;
-import com.intellij.ide.util.treeView.smartTree.NodeProvider;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import consulo.fileEditor.structureView.tree.NodeProvider;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.Language;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

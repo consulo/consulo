@@ -21,7 +21,7 @@ import consulo.application.event.ApplicationListener;
 import consulo.document.Document;
 import com.intellij.openapi.editor.impl.EditorHighlighterCache;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
+import consulo.document.event.FileDocumentManagerListener;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.application.*;

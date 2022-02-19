@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.util;
 
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;

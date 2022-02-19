@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import com.intellij.openapi.util.Pair;
 
 public class UndoAction extends UndoRedoAction {

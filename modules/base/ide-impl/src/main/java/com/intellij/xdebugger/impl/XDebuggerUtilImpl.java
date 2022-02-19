@@ -33,8 +33,8 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.TextAttributes;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.language.psi.*;
 import consulo.project.Project;
@@ -557,7 +557,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
   }
 
   @Nullable
-  public static Editor createEditor(@Nonnull OpenFileDescriptor descriptor) {
+  public static Editor createEditor(@Nonnull OpenFileDescriptorImpl descriptor) {
     return descriptor.canNavigate() ? FileEditorManager.getInstance(descriptor.getProject()).openTextEditor(descriptor, false) : null;
   }
 

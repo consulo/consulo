@@ -23,6 +23,9 @@ import com.intellij.openapi.editor.EditorDropHandler;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.document.FileDocumentManager;
@@ -82,7 +85,7 @@ public class FileDropHandler implements EditorDropHandler {
           fileEditorManager.openFileWithProviders(vFile, true, editorWindow);
         }
         else {
-          new OpenFileDescriptor(project, vFile).navigate(true);
+          new OpenFileDescriptorImpl(project, vFile).navigate(true);
         }
       }
     }

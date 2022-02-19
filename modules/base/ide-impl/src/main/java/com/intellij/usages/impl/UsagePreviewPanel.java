@@ -30,7 +30,7 @@ import consulo.codeEditor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.*;
 import consulo.language.psi.*;
@@ -98,7 +98,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
       LogicalPosition position = myEditor.getCaretModel().getLogicalPosition();
       VirtualFile file = FileDocumentManager.getInstance().getFile(myEditor.getDocument());
       if (file != null) {
-        return new Navigatable[]{new OpenFileDescriptor(myProject, file, position.line, position.column)};
+        return new Navigatable[]{new OpenFileDescriptorImpl(myProject, file, position.line, position.column)};
       }
     }
     return null;

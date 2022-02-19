@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.application.TransactionGuard;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

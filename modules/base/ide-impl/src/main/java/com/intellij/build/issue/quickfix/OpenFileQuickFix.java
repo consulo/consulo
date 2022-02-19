@@ -28,8 +28,8 @@ import consulo.codeEditor.colorScheme.EditorColors;
 import consulo.codeEditor.colorScheme.EditorColorsManager;
 import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -77,7 +77,7 @@ public class OpenFileQuickFix implements BuildIssueQuickFix {
       if (file == null) {
         return;
       }
-      Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), false);
+      Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, file), false);
       if (search == null || editor == null) return;
 
       FindModel findModel = new FindModel();

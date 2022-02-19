@@ -16,7 +16,7 @@
 package consulo.fileEditor.impl;
 
 import consulo.application.AccessToken;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import consulo.desktop.util.awt.migration.AWTComponentProvider;

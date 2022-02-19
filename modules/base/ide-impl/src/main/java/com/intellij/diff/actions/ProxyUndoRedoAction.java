@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.EmptyAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.command.undo.UndoManager;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.fileEditor.impl.text.TextEditorProvider;

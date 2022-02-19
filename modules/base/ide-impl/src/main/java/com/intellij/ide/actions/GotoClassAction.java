@@ -5,12 +5,12 @@ import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
-import com.intellij.ide.structureView.StructureView;
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.ide.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.StructureView;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.gotoByName.*;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import com.intellij.lang.LanguageStructureViewBuilder;
@@ -19,9 +19,9 @@ import com.intellij.navigation.AnonymousElementProvider;
 import com.intellij.navigation.ChooseByNameContributor;
 import consulo.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -124,7 +124,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
       VirtualFile file = PsiUtilCore.getVirtualFile(psiElement);
 
       if (file != null && popup.getLinePosition() != -1) {
-        OpenFileDescriptor descriptor = new OpenFileDescriptor(psiElement.getProject(), file, popup.getLinePosition(), popup.getColumnPosition());
+        OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(psiElement.getProject(), file, popup.getLinePosition(), popup.getColumnPosition());
         Navigatable n = descriptor.setUseCurrentWindow(popup.isOpenInCurrentWindowRequested());
         if (n.canNavigate()) {
           n.navigate(true);

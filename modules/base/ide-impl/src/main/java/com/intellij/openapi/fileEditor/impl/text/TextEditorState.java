@@ -16,8 +16,8 @@
 package com.intellij.openapi.fileEditor.impl.text;
 
 import consulo.document.Document;
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
 import com.intellij.util.Producer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

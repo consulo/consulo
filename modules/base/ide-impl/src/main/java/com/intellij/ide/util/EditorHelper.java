@@ -18,10 +18,10 @@ package com.intellij.ide.util;
 
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
@@ -58,7 +58,7 @@ public class EditorHelper {
     if (file == null) return null;//SCR44414
     VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null) return null;
-    OpenFileDescriptor descriptor = new OpenFileDescriptor(element.getProject(), virtualFile, offset);
+    OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(element.getProject(), virtualFile, offset);
     Project project = element.getProject();
     if (offset == -1 && !switchToText) {
       FileEditorManager.getInstance(project).openEditor(descriptor, false);

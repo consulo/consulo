@@ -26,8 +26,8 @@ import consulo.process.ProcessOutputTypes;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
@@ -131,7 +131,7 @@ public class OutputFileUtil {
               ApplicationManager.getApplication().runReadAction(new Runnable() {
                 @Override
                 public void run() {
-                  FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file), true);
+                  FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, file), true);
                 }
               });
             }

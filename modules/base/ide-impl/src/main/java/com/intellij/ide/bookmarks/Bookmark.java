@@ -18,9 +18,9 @@ package com.intellij.ide.bookmarks;
 
 import consulo.codeEditor.markup.GutterMark;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
@@ -37,7 +37,7 @@ import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.TextAttributes;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -116,7 +116,7 @@ public class Bookmark implements Navigatable {
 
   private final VirtualFile myFile;
   @Nonnull
-  private final OpenFileDescriptor myTarget;
+  private final OpenFileDescriptorImpl myTarget;
   private final Project myProject;
 
   private String myDescription;
@@ -128,7 +128,7 @@ public class Bookmark implements Navigatable {
     myProject = project;
     myDescription = description;
 
-    myTarget = new OpenFileDescriptor(project, file, line, -1, true);
+    myTarget = new OpenFileDescriptorImpl(project, file, line, -1, true);
 
     if (addHighlighter) {
       addHighlighter();

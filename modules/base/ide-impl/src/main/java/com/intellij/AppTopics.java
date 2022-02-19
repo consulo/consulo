@@ -19,9 +19,10 @@
  */
 package com.intellij;
 
-import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
+import consulo.document.event.FileDocumentManagerListener;
 import consulo.component.messagebus.Topic;
 
+@Deprecated
 public class AppTopics {
-  public static final Topic<FileDocumentManagerListener> FILE_DOCUMENT_SYNC = new Topic<FileDocumentManagerListener>("Document load, save and reload events", FileDocumentManagerListener.class);
+  public static final Topic<FileDocumentManagerListener> FILE_DOCUMENT_SYNC = FileDocumentManagerListener.TOPIC;
 }

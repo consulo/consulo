@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.conflicts;
 
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;

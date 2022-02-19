@@ -15,10 +15,10 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.ide.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.StructureViewModel;
 import com.intellij.ide.structureView.newStructureView.TreeActionsOwner;
-import com.intellij.ide.util.treeView.smartTree.Sorter;
-import com.intellij.ide.util.treeView.smartTree.TreeAction;
+import consulo.fileEditor.structureView.tree.Sorter;
+import consulo.fileEditor.structureView.tree.TreeAction;
 
 import java.util.HashSet;
 import java.util.Set;

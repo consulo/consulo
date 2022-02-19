@@ -21,7 +21,7 @@ import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.CodeSmellDetector;
@@ -89,8 +89,8 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
 
         for (CodeSmellInfo smellInfo : smellList) {
           final VirtualFile file = fileManager.getFile(smellInfo.getDocument());
-          final OpenFileDescriptor navigatable =
-                  new OpenFileDescriptor(myProject, file, smellInfo.getStartLine(), smellInfo.getStartColumn());
+          final OpenFileDescriptorImpl navigatable =
+                  new OpenFileDescriptorImpl(myProject, file, smellInfo.getStartLine(), smellInfo.getStartColumn());
           final String exportPrefix = NewErrorTreeViewPanel.createExportPrefix(smellInfo.getStartLine() + 1);
           final String rendererPrefix =
                   NewErrorTreeViewPanel.createRendererPrefix(smellInfo.getStartLine() + 1, smellInfo.getStartColumn() + 1);

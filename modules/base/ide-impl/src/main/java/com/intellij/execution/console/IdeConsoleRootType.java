@@ -17,7 +17,7 @@ package com.intellij.execution.console;
 
 import consulo.application.AllIcons;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.language.plain.PlainTextFileType;

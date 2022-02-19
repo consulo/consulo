@@ -29,7 +29,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;

@@ -20,7 +20,7 @@ import com.intellij.codeInsight.lookup.LookupManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer;
+import consulo.document.FileDocumentSynchronizationVetoer;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;

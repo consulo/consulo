@@ -45,10 +45,10 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.TextEditor;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.language.file.FileViewProvider;
@@ -468,7 +468,7 @@ public abstract class InplaceRefactoring {
               if (exitCode == DialogWrapper.OK_EXIT_CODE) {
                 final TextRange range = templateState.getVariableRange(PRIMARY_VARIABLE_NAME);
                 if (range != null) {
-                  new OpenFileDescriptor(project, virtualFile, range.getStartOffset()).navigate(true);
+                  new OpenFileDescriptorImpl(project, virtualFile, range.getStartOffset()).navigate(true);
                   return;
                 }
               }

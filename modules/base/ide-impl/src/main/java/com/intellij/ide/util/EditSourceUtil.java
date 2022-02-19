@@ -17,8 +17,8 @@
 package com.intellij.ide.util;
 
 import consulo.navigation.NavigationItem;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -50,7 +50,7 @@ public class EditSourceUtil {
     if (virtualFile == null || !virtualFile.isValid()) {
       return null;
     }
-    OpenFileDescriptor desc = new OpenFileDescriptor(navigationElement.getProject(), virtualFile, offset);
+    OpenFileDescriptorImpl desc = new OpenFileDescriptorImpl(navigationElement.getProject(), virtualFile, offset);
     desc.setUseCurrentWindow(FileEditorManager.USE_CURRENT_WINDOW.isIn(navigationElement));
     return desc;
   }

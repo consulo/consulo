@@ -16,8 +16,8 @@
 package com.intellij.ide.structureView.customRegions;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import com.intellij.lang.folding.CustomFoldingProvider;
 import consulo.navigation.ItemPresentation;
 import consulo.document.util.TextRange;

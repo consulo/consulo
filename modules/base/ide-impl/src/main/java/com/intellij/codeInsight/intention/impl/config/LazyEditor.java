@@ -20,8 +20,8 @@ import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.codeEditor.markup.MarkupModel;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.ui.popup.AbstractPopup;
 import consulo.document.Document;
 import consulo.codeEditor.*;
@@ -53,7 +53,7 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   private Editor getEditor() {
     if (myEditor == null) {
       final Project project = myFile.getProject();
-      myEditor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, myFile.getVirtualFile(), 0), false);
+      myEditor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptorImpl(project, myFile.getVirtualFile(), 0), false);
       assert myEditor != null;
     }
     return myEditor;

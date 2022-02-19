@@ -16,7 +16,7 @@
 
 package com.intellij.tasks.context;
 
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.ui.docking.DockContainer;

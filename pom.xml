@@ -86,6 +86,7 @@
     <module>modules/base/language-impl</module>
     <module>modules/base/document-impl</module>
     <module>modules/base/undo-redo-api</module>
+    <module>modules/base/file-editor-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

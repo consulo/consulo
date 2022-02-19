@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 
 /**
  * @author max

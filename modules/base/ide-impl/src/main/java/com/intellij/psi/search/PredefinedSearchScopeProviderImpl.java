@@ -22,7 +22,7 @@ import com.intellij.ide.projectView.impl.AbstractUrl;
 import com.intellij.ide.scratch.ScratchesSearchScope;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsageView;

@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.application.util.function.ThrowableComputable;
@@ -158,7 +158,7 @@ public class ChangesUtil {
 
   @Nonnull
   public static Navigatable[] getNavigatableArray(@Nonnull Project project, @Nonnull Stream<VirtualFile> files) {
-    return files.filter(file -> !file.isDirectory()).map(file -> new OpenFileDescriptor(project, file)).toArray(Navigatable[]::new);
+    return files.filter(file -> !file.isDirectory()).map(file -> new OpenFileDescriptorImpl(project, file)).toArray(Navigatable[]::new);
   }
 
   @Nullable

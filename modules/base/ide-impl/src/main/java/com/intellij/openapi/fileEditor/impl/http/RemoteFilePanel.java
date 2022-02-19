@@ -23,7 +23,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.disposer.Disposer;

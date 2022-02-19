@@ -15,7 +15,7 @@ import com.intellij.execution.filters.RegexpFilter;
 import com.intellij.execution.filters.UrlFilter;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -235,8 +235,8 @@ public class BuildViewServiceImpl implements BuildViewService {
     else if (virtualFile != null) {
       File file = VfsUtilCore.virtualToIoFile(virtualFile);
       FilePosition filePosition;
-      if (navigatable instanceof OpenFileDescriptor) {
-        OpenFileDescriptor fileDescriptor = (OpenFileDescriptor)navigatable;
+      if (navigatable instanceof OpenFileDescriptorImpl) {
+        OpenFileDescriptorImpl fileDescriptor = (OpenFileDescriptorImpl)navigatable;
         int column = fileDescriptor.getColumn();
         int line = fileDescriptor.getLine();
         filePosition = new FilePosition(file, line, column);

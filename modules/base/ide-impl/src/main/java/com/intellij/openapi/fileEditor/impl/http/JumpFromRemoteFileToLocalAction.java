@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.ui.Messages;
@@ -106,6 +106,6 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
   }
 
   private static void navigateToFile(Project project, @Nonnull VirtualFile file) {
-    new OpenFileDescriptor(project, file).navigate(true);
+    new OpenFileDescriptorImpl(project, file).navigate(true);
   }
 }

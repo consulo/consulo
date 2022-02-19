@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.ide.util.treeView.smartTree.NodeProvider;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import consulo.fileEditor.structureView.tree.NodeProvider;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.ui.ex.action.Shortcut;
 
 /**

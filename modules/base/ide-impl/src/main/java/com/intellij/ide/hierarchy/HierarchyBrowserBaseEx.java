@@ -32,7 +32,7 @@ import consulo.language.LanguageExtension;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
@@ -154,7 +154,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
           if (psiElement == null || !psiElement.isValid()) return null;
           final VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
           if (virtualFile == null) return null;
-          return new OpenFileDescriptor(psiElement.getProject(), virtualFile, psiElement.getTextOffset());
+          return new OpenFileDescriptorImpl(psiElement.getProject(), virtualFile, psiElement.getTextOffset());
         }
 
         @Override

@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.language.plain.PlainTextFileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;

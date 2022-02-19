@@ -15,7 +15,7 @@
  */
 package com.intellij.execution;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -52,12 +52,12 @@ public abstract class Location<E extends PsiElement> {
   }
 
   @Nullable
-  public OpenFileDescriptor getOpenFileDescriptor() {
+  public OpenFileDescriptorImpl getOpenFileDescriptor() {
     VirtualFile virtualFile = getVirtualFile();
     if (virtualFile == null) {
       return null;
     }
-    return new OpenFileDescriptor(getProject(), virtualFile, getPsiElement().getTextOffset());
+    return new OpenFileDescriptorImpl(getProject(), virtualFile, getPsiElement().getTextOffset());
   }
 
   @Nullable

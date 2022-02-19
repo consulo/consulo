@@ -16,7 +16,7 @@
 package com.intellij.usages;
 
 import consulo.navigation.NavigationItem;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;

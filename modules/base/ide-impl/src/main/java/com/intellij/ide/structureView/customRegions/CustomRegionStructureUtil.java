@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.structureView.customRegions;
 
-import com.intellij.ide.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.lang.folding.CustomFoldingBuilder;

@@ -33,7 +33,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.VisualPosition;
@@ -96,7 +96,7 @@ public class InplaceChangeSignature implements DocumentListener {
       if (exitCode == Messages.CANCEL) return;
       PsiElement method = myStableChange.getMethod();
       VirtualFile virtualFile = PsiUtilCore.getVirtualFile(method);
-      new OpenFileDescriptor(project, virtualFile, method.getTextOffset()).navigate(true);
+      new OpenFileDescriptorImpl(project, virtualFile, method.getTextOffset()).navigate(true);
       return;
     }
 

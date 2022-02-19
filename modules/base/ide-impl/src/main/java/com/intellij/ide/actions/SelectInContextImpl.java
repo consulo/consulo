@@ -22,6 +22,9 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.AnActionEvent;
@@ -88,8 +91,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
 
     if (selectInContext == null) {
       Navigatable descriptor = dataContext.getData(PlatformDataKeys.NAVIGATABLE);
-      if (descriptor instanceof OpenFileDescriptor) {
-        final VirtualFile file = ((OpenFileDescriptor)descriptor).getFile();
+      if (descriptor instanceof OpenFileDescriptorImpl) {
+        final VirtualFile file = ((OpenFileDescriptorImpl)descriptor).getFile();
         if (file.isValid()) {
           Project project = dataContext.getData(CommonDataKeys.PROJECT);
           selectInContext = OpenFileDescriptorContext.create(project, file);

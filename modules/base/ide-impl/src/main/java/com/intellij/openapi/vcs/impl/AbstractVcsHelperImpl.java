@@ -19,6 +19,9 @@ import com.intellij.ide.actions.CloseTabToolbarAction;
 import com.intellij.ide.errorTreeView.ErrorTreeElementKind;
 import com.intellij.ide.errorTreeView.HotfixData;
 import com.intellij.ide.errorTreeView.SimpleErrorData;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
@@ -436,7 +439,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
       editor = textFileEditor.getEditor();
     }
     else {
-      OpenFileDescriptor openFileDescriptor = new OpenFileDescriptor(myProject, file, line, 0);
+      OpenFileDescriptorImpl openFileDescriptor = new OpenFileDescriptorImpl(myProject, file, line, 0);
       editor = FileEditorManager.getInstance(myProject).openTextEditor(openFileDescriptor, true);
     }
 

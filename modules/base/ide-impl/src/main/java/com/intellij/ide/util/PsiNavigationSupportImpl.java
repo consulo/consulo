@@ -3,7 +3,7 @@ package com.intellij.ide.util;
 
 import com.intellij.ide.impl.ProjectViewSelectInTarget;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.psi.PsiNavigationSupport;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -29,7 +29,7 @@ public class PsiNavigationSupportImpl extends PsiNavigationSupport {
   @Nonnull
   @Override
   public Navigatable createNavigatable(@Nonnull Project project, @Nonnull VirtualFile vFile, int offset) {
-    return new OpenFileDescriptor(project, vFile, offset);
+    return new OpenFileDescriptorImpl(project, vFile, offset);
   }
 
   @Override

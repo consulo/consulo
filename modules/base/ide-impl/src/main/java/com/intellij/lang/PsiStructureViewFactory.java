@@ -19,7 +19,7 @@
  */
 package com.intellij.lang;
 
-import com.intellij.ide.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nullable;

@@ -16,7 +16,7 @@
 package com.intellij.diff.contents;
 
 import com.intellij.diff.requests.DiffRequest;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.navigation.Navigatable;
@@ -47,7 +47,7 @@ public interface DiffContent extends UserDataHolder {
 
   @Nullable
   @Deprecated
-  default OpenFileDescriptor getOpenFileDescriptor() {
-    return ObjectUtils.tryCast(getNavigatable(), OpenFileDescriptor.class);
+  default OpenFileDescriptorImpl getOpenFileDescriptor() {
+    return ObjectUtils.tryCast(getNavigatable(), OpenFileDescriptorImpl.class);
   }
 }

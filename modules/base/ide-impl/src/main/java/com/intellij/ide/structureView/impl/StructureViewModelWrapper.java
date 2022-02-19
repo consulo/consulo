@@ -16,13 +16,13 @@
 
 package com.intellij.ide.structureView.impl;
 
-import com.intellij.ide.structureView.FileEditorPositionListener;
-import com.intellij.ide.structureView.ModelListener;
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.util.treeView.smartTree.Filter;
-import com.intellij.ide.util.treeView.smartTree.Grouper;
-import com.intellij.ide.util.treeView.smartTree.Sorter;
+import consulo.fileEditor.structureView.event.FileEditorPositionListener;
+import consulo.fileEditor.structureView.event.ModelListener;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.tree.Filter;
+import consulo.fileEditor.structureView.tree.Grouper;
+import consulo.fileEditor.structureView.tree.Sorter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

@@ -17,6 +17,7 @@ package com.intellij.ide.structureView;
 
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;

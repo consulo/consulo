@@ -19,7 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
@@ -360,7 +360,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     Pair<Integer, Integer> position = getLineAndColumn(searchText);
     boolean positionSpecified = position.first >= 0 || position.second >= 0;
     if (file != null && positionSpecified) {
-      OpenFileDescriptor descriptor = new OpenFileDescriptor(psi.getProject(), file, position.first, position.second);
+      OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(psi.getProject(), file, position.first, position.second);
       return descriptor.setUseCurrentWindow(openInCurrentWindow(modifiers));
     }
 

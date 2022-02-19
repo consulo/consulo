@@ -29,8 +29,8 @@ import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
@@ -171,7 +171,7 @@ public class SelectInEditorManagerImpl extends SelectInEditorManager implements 
     if (file == null || !file.isValid()){
       return null;
     }
-    OpenFileDescriptor descriptor = new OpenFileDescriptor(myProject, file, textOffset);
+    OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, file, textOffset);
     return FileEditorManager.getInstance(myProject).openTextEditor(descriptor, false);
   }
 }

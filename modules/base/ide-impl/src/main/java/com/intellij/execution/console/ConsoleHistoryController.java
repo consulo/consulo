@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.actions.ContentChooser;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
-import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
+import consulo.document.event.FileDocumentManagerAdapter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import com.intellij.openapi.keymap.KeymapUtil;

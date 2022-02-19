@@ -26,7 +26,7 @@ import consulo.application.Application;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
@@ -218,8 +218,8 @@ public class CompilerTask extends Task.Backgroundable {
     VirtualFile virtualFile = message.getVirtualFile();
     if (virtualFile == null) {
       Navigatable navigatable = message.getNavigatable();
-      if (navigatable instanceof OpenFileDescriptor) {
-        virtualFile = ((OpenFileDescriptor)navigatable).getFile();
+      if (navigatable instanceof OpenFileDescriptorImpl) {
+        virtualFile = ((OpenFileDescriptorImpl)navigatable).getFile();
       }
     }
     return virtualFile;
@@ -227,8 +227,8 @@ public class CompilerTask extends Task.Backgroundable {
 
   public static TextRange getTextRange(final CompilerMessage message) {
     Navigatable navigatable = message.getNavigatable();
-    if (navigatable instanceof OpenFileDescriptor) {
-      int offset = ((OpenFileDescriptor)navigatable).getOffset();
+    if (navigatable instanceof OpenFileDescriptorImpl) {
+      int offset = ((OpenFileDescriptorImpl)navigatable).getOffset();
       return new TextRange(offset, offset);
     }
     return TextRange.EMPTY_RANGE;

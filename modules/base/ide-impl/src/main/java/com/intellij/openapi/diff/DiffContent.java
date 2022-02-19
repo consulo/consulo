@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff;
 
 import consulo.document.Document;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -97,9 +97,9 @@ public abstract class DiffContent {
    * null means given offset can't be opened in editor
    *
    * @param offset in document returned by {@link #getDocument()}
-   * @return {@link com.intellij.openapi.fileEditor.OpenFileDescriptor} to open this content in editor
+   * @return {@link OpenFileDescriptorImpl} to open this content in editor
    */
-  public abstract OpenFileDescriptor getOpenFileDescriptor(int offset);
+  public abstract OpenFileDescriptorImpl getOpenFileDescriptor(int offset);
 
   /**
    * @return VirtualFile from which this content gets data.

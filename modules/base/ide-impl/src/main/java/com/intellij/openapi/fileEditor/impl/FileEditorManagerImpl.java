@@ -19,6 +19,9 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.component.util.ActiveRunnable;
 import consulo.component.util.BusyObject;
+import consulo.fileEditor.*;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.module.content.ProjectTopics;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
@@ -1051,7 +1054,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     if (descriptor.getFile() instanceof VirtualFileWindow) {
       VirtualFileWindow delegate = (VirtualFileWindow)descriptor.getFile();
       int hostOffset = delegate.getDocumentWindow().injectedToHost(descriptor.getOffset());
-      OpenFileDescriptor realDescriptor = new OpenFileDescriptor(descriptor.getProject(), delegate.getDelegate(), hostOffset);
+      OpenFileDescriptorImpl realDescriptor = new OpenFileDescriptorImpl(descriptor.getProject(), delegate.getDelegate(), hostOffset);
       realDescriptor.setUseCurrentWindow(descriptor.isUseCurrentWindow());
       return openEditor(realDescriptor, focusEditor);
     }

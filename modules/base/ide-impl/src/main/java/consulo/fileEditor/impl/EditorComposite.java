@@ -16,7 +16,7 @@
 package consulo.fileEditor.impl;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.Component;

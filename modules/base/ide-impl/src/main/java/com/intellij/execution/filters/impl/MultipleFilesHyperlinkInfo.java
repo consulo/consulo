@@ -28,8 +28,8 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -119,7 +119,7 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
     if (document != null && myLineNumber >= 0 && myLineNumber < document.getLineCount()) {
       offset = document.getLineStartOffset(myLineNumber);
     }
-    OpenFileDescriptor descriptor = new OpenFileDescriptor(myProject, file, offset);
+    OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, file, offset);
     Editor editor = FileEditorManager.getInstance(myProject).openTextEditor(descriptor, true);
     if (myAction != null && editor != null) {
       if (editor instanceof EditorEx) {
@@ -139,9 +139,9 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
 
   @Nullable
   @Override
-  public OpenFileDescriptor getDescriptor() {
+  public OpenFileDescriptorImpl getDescriptor() {
     VirtualFile file = getPreferredFile();
-    return file != null ? new OpenFileDescriptor(myProject, file, myLineNumber, 0) : null;
+    return file != null ? new OpenFileDescriptorImpl(myProject, file, myLineNumber, 0) : null;
   }
 
   @Nullable

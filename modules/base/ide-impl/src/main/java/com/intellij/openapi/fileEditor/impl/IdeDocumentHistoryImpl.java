@@ -3,6 +3,9 @@ package com.intellij.openapi.fileEditor.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
+import consulo.fileEditor.*;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.undoRedo.CommandProcessor;
@@ -21,7 +24,6 @@ import consulo.codeEditor.event.CaretEvent;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.event.EditorEventListener;
 import consulo.codeEditor.event.EditorEventMulticaster;
-import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.wm.impl.status.widget;
 
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;

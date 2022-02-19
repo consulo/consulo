@@ -10,10 +10,10 @@ import consulo.codeEditor.colorScheme.EditorColorsManager;
 import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.TextEditor;
 import consulo.codeEditor.markup.*;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -40,7 +40,7 @@ public class ExecutionPointHighlighter {
   private RangeHighlighter myRangeHighlighter;
   private Editor myEditor;
   private XSourcePosition mySourcePosition;
-  private OpenFileDescriptor myOpenFileDescriptor;
+  private OpenFileDescriptorImpl myOpenFileDescriptor;
   private boolean myNotTopFrame;
   private GutterIconRenderer myGutterIconRenderer;
   public static final Key<Boolean> EXECUTION_POINT_HIGHLIGHTER_TOP_FRAME_KEY = Key.create("EXECUTION_POINT_HIGHLIGHTER_TOP_FRAME_KEY");
@@ -130,9 +130,9 @@ public class ExecutionPointHighlighter {
     removeHighlighter();
 
 
-    OpenFileDescriptor fileDescriptor = myOpenFileDescriptor;
+    OpenFileDescriptorImpl fileDescriptor = myOpenFileDescriptor;
     if (!navigate && myOpenFileDescriptor != null) {
-      fileDescriptor = new OpenFileDescriptor(myProject, myOpenFileDescriptor.getFile());
+      fileDescriptor = new OpenFileDescriptorImpl(myProject, myOpenFileDescriptor.getFile());
     }
     myEditor = null;
     if (fileDescriptor != null) {

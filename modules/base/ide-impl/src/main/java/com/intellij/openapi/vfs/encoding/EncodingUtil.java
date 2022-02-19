@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
+import consulo.document.event.FileDocumentManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.virtualFileSystem.fileType.FileType;

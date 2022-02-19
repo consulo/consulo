@@ -16,7 +16,7 @@ import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
@@ -268,7 +268,7 @@ public class ExternalSystemNotificationManager {
 
     final Navigatable navigatable = notificationData.getNavigatable() != null
                                     ? notificationData.getNavigatable()
-                                    : virtualFile != null ? new OpenFileDescriptor(myProject, virtualFile, line, column) : null;
+                                    : virtualFile != null ? new OpenFileDescriptorImpl(myProject, virtualFile, line, column) : null;
 
     final ErrorTreeElementKind kind =
             ErrorTreeElementKind.convertMessageFromCompilerErrorType(notificationData.getNotificationCategory().getMessageCategory());

@@ -2,14 +2,14 @@
 
 package com.intellij.ide.structureView.newStructureView;
 
-import com.intellij.ide.structureView.FileEditorPositionListener;
-import com.intellij.ide.structureView.ModelListener;
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.util.treeView.smartTree.*;
 import consulo.disposer.Disposer;
-import javax.annotation.Nonnull;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.event.FileEditorPositionListener;
+import consulo.fileEditor.structureView.event.ModelListener;
+import consulo.fileEditor.structureView.tree.*;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

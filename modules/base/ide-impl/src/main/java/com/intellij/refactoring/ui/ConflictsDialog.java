@@ -21,7 +21,7 @@
 package com.intellij.refactoring.ui;
 
 import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
-import com.intellij.openapi.fileEditor.FileEditorLocation;
+import consulo.fileEditor.FileEditorLocation;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.refactoring.RefactoringBundle;

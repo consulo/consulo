@@ -16,9 +16,9 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerListener;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;

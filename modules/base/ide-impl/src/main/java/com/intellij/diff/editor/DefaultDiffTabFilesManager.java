@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.editor;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;

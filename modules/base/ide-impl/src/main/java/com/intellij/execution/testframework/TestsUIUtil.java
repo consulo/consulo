@@ -23,7 +23,7 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.AppIconScheme;
 import consulo.project.ui.wm.ToolWindowId;
@@ -104,7 +104,7 @@ public class TestsUIUtil {
       if (openFailureLine) {
         return proxy.getDescriptor(location, testConsoleProperties);
       }
-      final OpenFileDescriptor openFileDescriptor = location == null ? null : location.getOpenFileDescriptor();
+      final OpenFileDescriptorImpl openFileDescriptor = location == null ? null : location.getOpenFileDescriptor();
       if (openFileDescriptor != null && openFileDescriptor.getFile().isValid()) {
         return openFileDescriptor;
       }

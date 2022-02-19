@@ -18,7 +18,7 @@ package com.intellij.codeInsight.hint;
 import com.intellij.codeInsight.highlighting.TooltipLinkHandler;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
@@ -55,7 +55,7 @@ public class NavigationLinkHandler extends TooltipLinkHandler {
       return true;
     }
 
-    new OpenFileDescriptor(editor.getProject(), vFile, offset).navigate(true);
+    new OpenFileDescriptorImpl(editor.getProject(), vFile, offset).navigate(true);
     return true;
   }
 }

@@ -1,7 +1,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorProvider;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

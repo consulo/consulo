@@ -16,7 +16,7 @@
 
 package com.intellij.execution.filters;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.execution.ui.console.HyperlinkInfo;
 
 import javax.annotation.Nullable;
@@ -27,5 +27,5 @@ import javax.annotation.Nullable;
  */
 public interface FileHyperlinkInfo extends HyperlinkInfo {
   @Nullable
-  OpenFileDescriptor getDescriptor();
+  OpenFileDescriptorImpl getDescriptor();
 }

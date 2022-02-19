@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.ui.ex.action.AnAction;

@@ -23,6 +23,9 @@ import com.intellij.ide.CopyProvider;
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -528,7 +531,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       }
       VirtualFile virtualFileForRevision = createVirtualFileForRevision(firstSelectedRevision);
       if (virtualFileForRevision != null) {
-        return new OpenFileDescriptor(myVcs.getProject(), virtualFileForRevision);
+        return new OpenFileDescriptorImpl(myVcs.getProject(), virtualFileForRevision);
       }
       else {
         return null;

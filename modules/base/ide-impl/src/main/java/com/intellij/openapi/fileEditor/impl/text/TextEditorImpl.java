@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
-import com.intellij.ide.structureView.StructureViewBuilder;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.*;
+import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.colorScheme.EditorColorsManager;
@@ -24,7 +26,6 @@ import consulo.codeEditor.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.fileEditor.*;
 import consulo.project.Project;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
@@ -212,7 +213,7 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
 
   @Override
   public void navigateTo(@Nonnull final Navigatable navigatable) {
-    ((OpenFileDescriptor)navigatable).navigateIn(getEditor());
+    ((OpenFileDescriptorImpl)navigatable).navigateIn(getEditor());
   }
 
   @Override

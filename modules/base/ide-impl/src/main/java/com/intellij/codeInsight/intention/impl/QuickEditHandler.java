@@ -39,9 +39,9 @@ import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.document.impl.DocumentEx;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.document.Document;
@@ -261,7 +261,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
         final consulo.fileEditor.impl.EditorWindow curWindow = fileEditorManager.getCurrentWindow();
         mySplittedWindow = curWindow.split(SwingConstants.HORIZONTAL, false, myNewVirtualFile, true);
       }
-      Editor editor = fileEditorManager.openTextEditor(new OpenFileDescriptor(myProject, myNewVirtualFile, injectedOffset), true);
+      Editor editor = fileEditorManager.openTextEditor(new OpenFileDescriptorImpl(myProject, myNewVirtualFile, injectedOffset), true);
       // fold missing values
       if (editor != null) {
         editor.putUserData(QuickEditAction.QUICK_EDIT_HANDLER, this);

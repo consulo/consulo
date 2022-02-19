@@ -17,7 +17,7 @@ package com.intellij.diff.contents;
 
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.ide.GeneralSettings;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -56,7 +56,7 @@ public class FileContentImpl extends DiffContentBase implements FileContent {
   public Navigatable getNavigatable() {
     if (myProject == null || myProject.isDefault()) return null;
     if (myHighlightFile == null || !myHighlightFile.isValid()) return null;
-    return new OpenFileDescriptor(myProject, myHighlightFile);
+    return new OpenFileDescriptorImpl(myProject, myHighlightFile);
   }
 
   @javax.annotation.Nullable

@@ -4,8 +4,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -146,7 +146,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
         CharSequence content = LoadTextUtil.loadText(file);
         int newLine = translateLine(oldContent, content, oldLine);
 
-        OpenFileDescriptor openFileDescriptor = new OpenFileDescriptor(vcs.getProject(), file, newLine, 0);
+        OpenFileDescriptorImpl openFileDescriptor = new OpenFileDescriptorImpl(vcs.getProject(), file, newLine, 0);
         FileEditorManager.getInstance(vcs.getProject()).openTextEditor(openFileDescriptor, true);
       }
     }

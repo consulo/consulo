@@ -16,11 +16,11 @@
 
 package com.intellij.codeInsight.navigation;
 
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.component.extension.Extensions;
 import consulo.language.psi.PsiElement;

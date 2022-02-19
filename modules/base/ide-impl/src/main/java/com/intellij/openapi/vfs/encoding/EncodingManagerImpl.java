@@ -16,7 +16,7 @@ import consulo.document.event.DocumentListener;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;

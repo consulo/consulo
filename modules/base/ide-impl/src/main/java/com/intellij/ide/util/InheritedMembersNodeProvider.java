@@ -17,9 +17,9 @@ package com.intellij.ide.util;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.fileEditor.structureView.tree.ActionPresentationData;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.ui.ex.action.Shortcut;
 import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;

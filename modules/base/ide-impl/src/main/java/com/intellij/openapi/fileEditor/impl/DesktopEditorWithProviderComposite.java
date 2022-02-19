@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import consulo.virtualFileSystem.VirtualFile;

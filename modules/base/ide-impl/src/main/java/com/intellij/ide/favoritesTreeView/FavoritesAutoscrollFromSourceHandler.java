@@ -18,7 +18,7 @@ package com.intellij.ide.favoritesTreeView;
 import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.actions.SelectInContextImpl;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

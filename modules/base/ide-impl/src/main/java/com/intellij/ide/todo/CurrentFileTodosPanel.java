@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.todo;
 
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileEditor.FileEditorManagerListener;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

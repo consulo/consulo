@@ -28,7 +28,7 @@ import consulo.application.ApplicationManager;
 import consulo.compiler.*;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.compiler.Compiler;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -301,7 +301,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     final VirtualFile file = message.getVirtualFile();
     Navigatable navigatable = message.getNavigatable();
     if (navigatable == null && file != null) {
-      navigatable = new OpenFileDescriptor(myProject, file, -1, -1);
+      navigatable = new OpenFileDescriptorImpl(myProject, file, -1, -1);
     }
     final CompilerMessageCategory category = message.getCategory();
     final int type = translateCategory(category);

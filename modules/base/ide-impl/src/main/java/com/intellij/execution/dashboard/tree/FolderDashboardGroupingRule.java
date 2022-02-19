@@ -22,8 +22,8 @@ import com.intellij.execution.dashboard.DashboardGroupingRule;
 import com.intellij.execution.dashboard.DashboardRunConfigurationNode;
 import consulo.application.AllIcons;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.fileEditor.structureView.tree.ActionPresentationData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

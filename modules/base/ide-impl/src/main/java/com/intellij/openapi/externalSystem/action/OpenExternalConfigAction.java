@@ -10,8 +10,8 @@ import com.intellij.openapi.externalSystem.model.project.ExternalProjectPojo;
 import com.intellij.openapi.externalSystem.service.settings.ExternalSystemConfigLocator;
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -59,7 +59,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
       return;
     }
     
-    OpenFileDescriptor descriptor = new OpenFileDescriptor(project, configFile);
+    OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, configFile);
     FileEditorManager.getInstance(project).openTextEditor(descriptor, true); 
   }
 

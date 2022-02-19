@@ -1,6 +1,6 @@
 package com.intellij.diff.editor;
 
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 

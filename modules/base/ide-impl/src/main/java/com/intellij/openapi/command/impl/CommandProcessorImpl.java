@@ -4,7 +4,7 @@ package com.intellij.openapi.command.impl;
 import com.intellij.openapi.command.CommandToken;
 import com.intellij.openapi.command.undo.UndoManager;
 import consulo.document.Document;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;

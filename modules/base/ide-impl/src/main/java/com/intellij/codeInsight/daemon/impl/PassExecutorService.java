@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.EditorBoundHighlightingPass;
-import com.intellij.codeHighlighting.HighlightingPass;
+import consulo.fileEditor.highlight.HighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import consulo.application.internal.concurrency.Job;
 import consulo.application.internal.concurrency.JobLauncher;
@@ -17,9 +17,9 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.TextEditor;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.ProcessCanceledException;

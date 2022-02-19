@@ -10,7 +10,7 @@ import consulo.codeEditor.FoldingGroup;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.impl.DesktopFoldingModelImpl;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
@@ -168,7 +168,7 @@ class UpdateFoldRegionsOperation implements Runnable {
     if (myApplyDefaultState != ApplyDefaultStateMode.NO) {
       // Considering that this code is executed only on initial fold regions construction on editor opening.
       if (myApplyDefaultState == ApplyDefaultStateMode.EXCEPT_CARET_REGION) {
-        TextRange lineRange = OpenFileDescriptor.getRangeToUnfoldOnNavigation(myEditor);
+        TextRange lineRange = OpenFileDescriptorImpl.getRangeToUnfoldOnNavigation(myEditor);
         if (lineRange.intersects(range)) {
           return true;
         }

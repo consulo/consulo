@@ -20,7 +20,7 @@ import com.intellij.ide.dnd.DnDAware;
 import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -157,7 +157,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     else if (key == CommonDataKeys.NAVIGATABLE) {
       VirtualFile file = getIfSingle(getSelectedFiles());
       if (file != null && !file.isDirectory()) {
-        sink.put(CommonDataKeys.NAVIGATABLE, new OpenFileDescriptor(myProject, file, 0));
+        sink.put(CommonDataKeys.NAVIGATABLE, new OpenFileDescriptorImpl(myProject, file, 0));
       }
     }
     else if (key == CommonDataKeys.NAVIGATABLE_ARRAY) {

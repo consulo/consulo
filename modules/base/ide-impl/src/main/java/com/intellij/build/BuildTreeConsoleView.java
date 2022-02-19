@@ -35,7 +35,7 @@ import consulo.codeEditor.LogicalPosition;
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -592,8 +592,8 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     String failureNodeName = getMessageTitle(message);
     Navigatable failureNavigatable = failure.getNavigatable();
     FilePosition filePosition = null;
-    if (failureNavigatable instanceof OpenFileDescriptor) {
-      OpenFileDescriptor fileDescriptor = (OpenFileDescriptor)failureNavigatable;
+    if (failureNavigatable instanceof OpenFileDescriptorImpl) {
+      OpenFileDescriptorImpl fileDescriptor = (OpenFileDescriptorImpl)failureNavigatable;
       File file = VfsUtilCore.virtualToIoFile(fileDescriptor.getFile());
       filePosition = new FilePosition(file, fileDescriptor.getLine(), fileDescriptor.getColumn());
       parentNode = createMessageParentNodes(eventTime, filePosition, failureNavigatable, parentNode);

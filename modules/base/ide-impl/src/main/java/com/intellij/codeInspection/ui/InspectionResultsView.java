@@ -43,8 +43,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.colorScheme.EditorColors;
 import consulo.codeEditor.colorScheme.EditorColorsManager;
 import consulo.codeEditor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.ui.awt.SideBorder;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
@@ -162,14 +162,14 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
       public void referenceClicked(final Browser.ClickEvent e) {
         if (e.getEventType() == Browser.ClickEvent.REF_ELEMENT) {
           final RefElement refElement = e.getClickedElement();
-          final OpenFileDescriptor descriptor = getOpenFileDescriptor(refElement);
+          final OpenFileDescriptorImpl descriptor = getOpenFileDescriptor(refElement);
           if (descriptor != null) {
             FileEditorManager.getInstance(project).openTextEditor(descriptor, false);
           }
         }
         else if (e.getEventType() == Browser.ClickEvent.FILE_OFFSET) {
           final VirtualFile file = e.getFile();
-          final OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file, e.getStartOffset());
+          final OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, file, e.getStartOffset());
           final Editor editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
           if (editor != null) {
             final TextAttributes selectionAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
@@ -379,7 +379,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
   }
 
   @Nullable
-  private static OpenFileDescriptor getOpenFileDescriptor(final RefElement refElement) {
+  private static OpenFileDescriptorImpl getOpenFileDescriptor(final RefElement refElement) {
     final VirtualFile[] file = new VirtualFile[1];
     final int[] offset = new int[1];
 
@@ -401,7 +401,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     });
 
     if (file[0] != null && file[0].isValid()) {
-      return new OpenFileDescriptor(refElement.getRefManager().getProject(), file[0], offset[0]);
+      return new OpenFileDescriptorImpl(refElement.getRefManager().getProject(), file[0], offset[0]);
     }
     return null;
   }
@@ -699,7 +699,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
           startOffset = textRange.getStartOffset();
         }
       }
-      return new OpenFileDescriptor(myProject, virtualFile, startOffset);
+      return new OpenFileDescriptorImpl(myProject, virtualFile, startOffset);
     }
     return null;
   }

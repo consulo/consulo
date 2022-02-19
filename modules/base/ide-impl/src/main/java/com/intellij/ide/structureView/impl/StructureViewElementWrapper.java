@@ -16,8 +16,8 @@
 
 package com.intellij.ide.structureView.impl;
 
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.Language;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;

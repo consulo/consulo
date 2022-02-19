@@ -15,7 +15,7 @@ import consulo.codeEditor.colorScheme.EditorColorKey;
 import consulo.codeEditor.colorScheme.EditorFontType;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import consulo.codeEditor.markup.RangeHighlighter;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -192,7 +192,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
     if (key == null) return null;
     HyperlinkInfo info = EditorHyperlinkSupport.getHyperlinkInfo(key);
     if (!(info instanceof FileHyperlinkInfo)) return null;
-    OpenFileDescriptor descriptor = ((FileHyperlinkInfo)info).getDescriptor();
+    OpenFileDescriptorImpl descriptor = ((FileHyperlinkInfo)info).getDescriptor();
     return descriptor != null ? descriptor.getFile() : null;
   }
 

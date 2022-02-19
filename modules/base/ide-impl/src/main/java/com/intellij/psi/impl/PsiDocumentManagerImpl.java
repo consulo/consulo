@@ -4,7 +4,7 @@ package com.intellij.psi.impl;
 
 import com.intellij.AppTopics;
 import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
-import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
+import consulo.document.event.FileDocumentManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.text.StringUtil;

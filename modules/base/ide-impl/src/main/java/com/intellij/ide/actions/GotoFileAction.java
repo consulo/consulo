@@ -25,7 +25,7 @@ import com.intellij.ide.util.gotoByName.GotoFileModel;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
@@ -86,7 +86,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
         if (element instanceof PsiFile) {
           VirtualFile file = ((PsiFile)element).getVirtualFile();
           if (file == null) return;
-          OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file, popup.getLinePosition(), popup.getColumnPosition());
+          OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, file, popup.getLinePosition(), popup.getColumnPosition());
           n = descriptor.setUseCurrentWindow(popup.isOpenInCurrentWindowRequested());
         }
 

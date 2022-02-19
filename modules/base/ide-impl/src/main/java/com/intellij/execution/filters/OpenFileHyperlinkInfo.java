@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.filters;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 public final class OpenFileHyperlinkInfo extends FileHyperlinkInfoBase {
   private final VirtualFile myVirtualFile;
 
-  public OpenFileHyperlinkInfo(@Nonnull OpenFileDescriptor descriptor) {
+  public OpenFileHyperlinkInfo(@Nonnull OpenFileDescriptorImpl descriptor) {
     this(descriptor.getProject(), descriptor.getFile(), descriptor.getLine(), descriptor.getColumn());
   }
 

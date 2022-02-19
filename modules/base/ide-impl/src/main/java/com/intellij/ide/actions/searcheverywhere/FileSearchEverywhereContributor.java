@@ -10,7 +10,7 @@ import com.intellij.ide.util.gotoByName.GotoFileModel;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.project.Project;
@@ -104,7 +104,7 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
       VirtualFile file = ((PsiFile)selected).getVirtualFile();
       if (file != null && myProject != null) {
         Pair<Integer, Integer> pos = getLineAndColumn(searchText);
-        OpenFileDescriptor descriptor = new OpenFileDescriptor(myProject, file, pos.first, pos.second);
+        OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, file, pos.first, pos.second);
         descriptor.setUseCurrentWindow(openInCurrentWindow(modifiers));
         if (descriptor.canNavigate()) {
           descriptor.navigate(true);

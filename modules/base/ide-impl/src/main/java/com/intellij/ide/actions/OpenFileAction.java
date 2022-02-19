@@ -25,8 +25,8 @@ import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import consulo.fileChooser.PathChooserDialog;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -150,7 +150,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
     }
 
     NonProjectFileWritingAccessProvider.allowWriting(virtualFile);
-    OpenFileDescriptor descriptor = new OpenFileDescriptor(project, virtualFile);
+    OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, virtualFile);
     FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
   }
 }

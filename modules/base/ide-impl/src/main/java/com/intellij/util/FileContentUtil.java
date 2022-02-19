@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.document.util.FileContentUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

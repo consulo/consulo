@@ -19,8 +19,8 @@
  */
 package com.intellij.ide.highlighter;
 
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.ide.structureView.StructureViewBuilderProvider;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import com.intellij.lang.PsiStructureViewFactory;
 import consulo.virtualFileSystem.fileType.FileType;

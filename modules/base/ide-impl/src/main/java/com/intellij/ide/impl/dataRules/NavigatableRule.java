@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
@@ -38,8 +38,8 @@ public class NavigatableRule implements GetDataRule<Navigatable> {
   @Override
   public Navigatable getData(@Nonnull DataProvider dataProvider) {
     final Navigatable navigatable = dataProvider.getDataUnchecked(PlatformDataKeys.NAVIGATABLE);
-    if (navigatable != null && navigatable instanceof OpenFileDescriptor) {
-      final OpenFileDescriptor openFileDescriptor = (OpenFileDescriptor)navigatable;
+    if (navigatable != null && navigatable instanceof OpenFileDescriptorImpl) {
+      final OpenFileDescriptorImpl openFileDescriptor = (OpenFileDescriptorImpl)navigatable;
 
       if (openFileDescriptor.getFile().isValid()) {
         return openFileDescriptor;

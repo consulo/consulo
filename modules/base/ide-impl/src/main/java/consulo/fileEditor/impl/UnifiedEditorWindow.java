@@ -18,7 +18,7 @@ package consulo.fileEditor.impl;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.fileEditor.FileEditorManagerListener;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.project.Project;

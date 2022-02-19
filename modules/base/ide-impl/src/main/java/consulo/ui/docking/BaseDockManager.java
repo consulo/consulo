@@ -16,8 +16,8 @@
 package consulo.ui.docking;
 
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.MutualMap;

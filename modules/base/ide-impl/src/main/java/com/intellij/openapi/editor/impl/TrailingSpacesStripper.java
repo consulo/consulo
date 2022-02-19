@@ -28,7 +28,7 @@ import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
+import consulo.document.event.FileDocumentManagerAdapter;
 import consulo.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import consulo.util.lang.ShutDownTracker;

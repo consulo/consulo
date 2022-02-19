@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.openapi.fileEditor.*;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.*;
+import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

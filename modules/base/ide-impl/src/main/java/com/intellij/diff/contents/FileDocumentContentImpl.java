@@ -19,7 +19,7 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineCol;
 import com.intellij.ide.GeneralSettings;
 import consulo.document.Document;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -44,7 +44,7 @@ public class FileDocumentContentImpl extends DocumentContentImpl implements File
   public Navigatable getNavigatable(@Nonnull LineCol position) {
     Project project = getProject();
     if (project == null || project.isDefault() || !myFile.isValid()) return null;
-    return new OpenFileDescriptor(project, myFile, position.line, position.column);
+    return new OpenFileDescriptorImpl(project, myFile, position.line, position.column);
   }
 
   @javax.annotation.Nullable

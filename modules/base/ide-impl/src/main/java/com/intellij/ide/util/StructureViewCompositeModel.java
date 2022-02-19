@@ -15,14 +15,14 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.ide.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewModelBase;
-import com.intellij.ide.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.impl.StructureViewComposite;
-import com.intellij.ide.util.treeView.smartTree.Filter;
-import com.intellij.ide.util.treeView.smartTree.NodeProvider;
-import com.intellij.ide.util.treeView.smartTree.ProvidingTreeModel;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import consulo.fileEditor.structureView.tree.Filter;
+import consulo.fileEditor.structureView.tree.NodeProvider;
+import consulo.fileEditor.structureView.tree.ProvidingTreeModel;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.navigation.ItemPresentation;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.Editor;

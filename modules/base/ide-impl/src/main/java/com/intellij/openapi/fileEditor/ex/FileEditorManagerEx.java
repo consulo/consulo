@@ -17,10 +17,10 @@ package com.intellij.openapi.fileEditor.ex;
 
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.EditorDataProvider;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
+import consulo.fileEditor.EditorDataProvider;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.component.util.BusyObject;
 import consulo.project.Project;

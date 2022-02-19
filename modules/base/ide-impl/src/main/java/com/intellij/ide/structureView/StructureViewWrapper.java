@@ -16,7 +16,7 @@
 
 package com.intellij.ide.structureView;
 
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

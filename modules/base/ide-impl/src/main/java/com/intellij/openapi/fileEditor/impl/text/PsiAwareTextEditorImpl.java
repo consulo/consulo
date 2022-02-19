@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
 import com.intellij.codeInsight.folding.CodeFoldingManager;

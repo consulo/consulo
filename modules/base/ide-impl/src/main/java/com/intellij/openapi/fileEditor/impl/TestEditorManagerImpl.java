@@ -17,6 +17,9 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.highlighter.HighlighterFactory;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.*;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import consulo.logging.Logger;
@@ -102,7 +105,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     }
 
     //text editor
-    Editor editor = openTextEditor(new OpenFileDescriptor(myProject, file), focusEditor);
+    Editor editor = openTextEditor(new OpenFileDescriptorImpl(myProject, file), focusEditor);
     assert editor != null;
     final FileEditor fileEditor = TextEditorProvider.getInstance().getTextEditor(editor);
     final FileEditorProvider fileEditorProvider = getProvider();

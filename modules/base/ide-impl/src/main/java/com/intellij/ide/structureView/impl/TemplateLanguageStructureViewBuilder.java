@@ -1,17 +1,17 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.structureView.impl;
 
-import com.intellij.ide.structureView.StructureView;
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
+import consulo.fileEditor.structureView.StructureView;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.ide.util.StructureViewCompositeModel;
 import consulo.language.Language;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.language.util.LanguageUtil;
 import com.intellij.lang.PsiStructureViewFactory;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;

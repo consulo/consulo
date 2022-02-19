@@ -19,7 +19,7 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.project.DumbService;
 import consulo.project.Project;

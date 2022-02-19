@@ -5,7 +5,7 @@ import com.intellij.ide.util.EditorGotoLineNumberDialog;
 import com.intellij.ide.util.GotoLineNumberDialog;
 import consulo.application.Application;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.codeEditor.Editor;

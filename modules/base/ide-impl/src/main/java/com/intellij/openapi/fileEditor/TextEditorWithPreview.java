@@ -1,9 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileEditor;
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.application.AllIcons;
-import com.intellij.ide.structureView.StructureViewBuilder;
+import consulo.fileEditor.*;
+import consulo.fileEditor.structureView.StructureViewBuilder;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;

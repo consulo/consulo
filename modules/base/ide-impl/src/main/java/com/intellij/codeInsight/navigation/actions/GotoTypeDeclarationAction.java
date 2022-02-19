@@ -21,8 +21,8 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
@@ -85,7 +85,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
     assert element != null : "SymbolType :" + symbolType + "; file: " + symbolType.getContainingFile();
     VirtualFile file = element.getContainingFile().getVirtualFile();
     if (file != null) {
-      OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file, element.getTextOffset());
+      OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, file, element.getTextOffset());
       FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
     }
   }

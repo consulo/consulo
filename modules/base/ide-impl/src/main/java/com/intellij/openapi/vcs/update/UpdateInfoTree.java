@@ -21,7 +21,7 @@ import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.TreeExpander;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.awt.SideBorder;
 import consulo.project.Project;
@@ -239,7 +239,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     }
     if (CommonDataKeys.NAVIGATABLE == dataId) {
       if (mySelectedFile == null || !mySelectedFile.isValid()) return null;
-      return new OpenFileDescriptor(myProject, mySelectedFile);
+      return new OpenFileDescriptorImpl(myProject, mySelectedFile);
     }
     else if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
       return getVirtualFileArray();

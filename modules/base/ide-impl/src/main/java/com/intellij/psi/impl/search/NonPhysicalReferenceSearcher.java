@@ -4,7 +4,7 @@ package com.intellij.psi.impl.search;
 import com.intellij.ide.scratch.ScratchFileService;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

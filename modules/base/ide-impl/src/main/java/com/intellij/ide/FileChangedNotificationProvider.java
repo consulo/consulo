@@ -17,8 +17,8 @@ package com.intellij.ide;
 
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.util.io.FileAttributes;

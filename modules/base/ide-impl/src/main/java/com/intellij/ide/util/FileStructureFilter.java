@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util;
 
-import com.intellij.ide.util.treeView.smartTree.Filter;
+import consulo.fileEditor.structureView.tree.Filter;
 import consulo.ui.ex.action.Shortcut;
 
 /**

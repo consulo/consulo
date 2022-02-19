@@ -47,7 +47,7 @@ import com.intellij.openapi.editor.ex.util.HighlighterIteratorWrapper;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterIterator;
-import com.intellij.openapi.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;

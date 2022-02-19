@@ -18,8 +18,8 @@ package com.intellij.execution.filters;
 import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
@@ -60,7 +60,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
   protected abstract VirtualFile getVirtualFile();
 
   @Override
-  public OpenFileDescriptor getDescriptor() {
+  public OpenFileDescriptorImpl getDescriptor() {
     VirtualFile file = getVirtualFile();
     if (file == null || !file.isValid()) {
       return null;
@@ -78,16 +78,16 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
 
     int offset = calculateOffset(file, line, myDocumentColumn);
     if (offset != UNDEFINED_OFFSET) {
-      return new OpenFileDescriptor(myProject, file, offset);
+      return new OpenFileDescriptorImpl(myProject, file, offset);
     }
     // although document position != logical position, it seems better than returning 'null'
-    return new OpenFileDescriptor(myProject, file, line, myDocumentColumn);
+    return new OpenFileDescriptorImpl(myProject, file, line, myDocumentColumn);
   }
 
   @Override
   public void navigate(final Project project) {
     Application.get().runReadAction(() -> {
-      OpenFileDescriptor descriptor = getDescriptor();
+      OpenFileDescriptorImpl descriptor = getDescriptor();
       if (descriptor != null) {
         FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
       }

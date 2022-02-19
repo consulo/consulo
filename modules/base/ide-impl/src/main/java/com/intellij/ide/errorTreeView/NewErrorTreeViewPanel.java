@@ -24,7 +24,7 @@ import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.ide.errorTreeView.impl.ErrorViewTextExporter;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -304,8 +304,8 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       return;
     }
     VirtualFile file = data instanceof VirtualFile ? (VirtualFile)data : null;
-    if (file == null && navigatable instanceof OpenFileDescriptor) {
-      file = ((OpenFileDescriptor)navigatable).getFile();
+    if (file == null && navigatable instanceof OpenFileDescriptorImpl) {
+      file = ((OpenFileDescriptorImpl)navigatable).getFile();
     }
     final String exportPrefix = exportTextPrefix == null ? "" : exportTextPrefix;
     final String renderPrefix = rendererTextPrefix == null ? "" : rendererTextPrefix;
