@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.codeStyle.arrangement.std;
 
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

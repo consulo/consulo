@@ -3,10 +3,10 @@ package consulo.execution.ui.console;
 
 import consulo.process.ProcessOutputType;
 import consulo.process.ProcessOutputTypes;
-import consulo.codeEditor.colorScheme.EditorColorKey;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributes;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 

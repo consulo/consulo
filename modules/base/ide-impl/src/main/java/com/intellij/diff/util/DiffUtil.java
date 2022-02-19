@@ -56,7 +56,7 @@ import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.impl.GenericDataProvider;
 import consulo.codeEditor.colorScheme.EditorColors;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;

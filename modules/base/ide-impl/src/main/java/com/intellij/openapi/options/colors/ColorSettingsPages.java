@@ -16,7 +16,7 @@
 package com.intellij.openapi.options.colors;
 
 import com.intellij.openapi.components.ServiceManager;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nullable;
 

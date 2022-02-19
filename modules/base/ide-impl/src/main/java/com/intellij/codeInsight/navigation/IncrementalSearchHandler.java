@@ -42,7 +42,7 @@ import com.intellij.openapi.editor.event.*;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

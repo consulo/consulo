@@ -19,7 +19,7 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.codeEditor.colorScheme.CodeInsightColors;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.util.Couple;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

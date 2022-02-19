@@ -23,7 +23,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;

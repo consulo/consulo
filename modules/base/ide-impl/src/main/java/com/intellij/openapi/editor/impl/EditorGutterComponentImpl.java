@@ -2,6 +2,7 @@
 
 package com.intellij.openapi.editor.impl;
 
+import consulo.colorScheme.TextAttributes;
 import consulo.document.impl.DocumentEx;
 import consulo.document.impl.MarkupIterator;
 import consulo.codeEditor.markup.*;
@@ -19,9 +20,9 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.editor.*;
-import consulo.codeEditor.colorScheme.EditorColorKey;
+import consulo.colorScheme.EditorColorKey;
 import consulo.codeEditor.colorScheme.EditorColors;
-import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.colorScheme.EditorFontType;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.*;

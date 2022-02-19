@@ -13,30 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.colorScheme;
+package consulo.colorScheme;
 
-import java.util.HashMap;
+import javax.annotation.Nonnull;
 import java.util.Map;
 
-public enum EditorFontType {
-  PLAIN,
-  BOLD,
-  ITALIC,
-  BOLD_ITALIC,
-  CONSOLE_PLAIN,
-  CONSOLE_BOLD,
-  CONSOLE_ITALIC,
-  CONSOLE_BOLD_ITALIC;
+public interface TextAttributesScheme {
+  TextAttributes getAttributes(TextAttributesKey key);
 
-  private static final Map<EditorFontType, EditorFontType> ourConsoleTypes = new HashMap<>();
-  static {
-    ourConsoleTypes.put(PLAIN, CONSOLE_PLAIN);
-    ourConsoleTypes.put(ITALIC, CONSOLE_ITALIC);
-    ourConsoleTypes.put(BOLD_ITALIC, CONSOLE_BOLD_ITALIC);
-    ourConsoleTypes.put(BOLD, CONSOLE_BOLD);
+  default void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
   }
 
-  public static EditorFontType getConsoleType(EditorFontType fontType) {
-    return ourConsoleTypes.get(fontType);
+  default Map<String, Object> getMetaProperties() {
+    return Map.of();
   }
 }

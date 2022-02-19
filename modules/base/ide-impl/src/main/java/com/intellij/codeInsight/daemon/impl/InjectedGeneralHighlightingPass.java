@@ -32,7 +32,7 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.colorScheme.EditorColors;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;

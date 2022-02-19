@@ -15,9 +15,9 @@
  */
 package consulo.codeEditor.util;
 
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.EffectType;
+import consulo.colorScheme.EffectType;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.TargetAWT;
 

@@ -19,7 +19,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.colorScheme.EditorColors;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.event.EditorMouseEvent;

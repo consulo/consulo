@@ -20,7 +20,7 @@ import consulo.document.impl.DocumentEx;
 import consulo.document.impl.event.DocumentEventImpl;
 import consulo.document.impl.PersistentRangeMarkerUtil;
 import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.document.impl.DocumentUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import javax.annotation.Nonnull;

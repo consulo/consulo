@@ -17,7 +17,7 @@
 package consulo.language.editor.highlight;
 
 import consulo.document.event.DocumentListener;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

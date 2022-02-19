@@ -15,8 +15,8 @@
  */
 package com.intellij.util.ui.table;
 
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorFontType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;

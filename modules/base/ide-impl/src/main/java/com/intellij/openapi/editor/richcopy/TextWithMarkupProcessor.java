@@ -10,7 +10,7 @@ import consulo.codeEditor.Caret;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.RawText;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;

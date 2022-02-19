@@ -17,9 +17,9 @@ package com.intellij.openapi.editor.colors;
 
 import consulo.ui.ex.JBColor;
 import consulo.application.ui.awt.UIUtil;
-import consulo.codeEditor.colorScheme.EditorColorKey;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.util.ColorValueUtil;

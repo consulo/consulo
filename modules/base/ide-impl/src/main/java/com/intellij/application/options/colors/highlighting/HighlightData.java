@@ -18,12 +18,12 @@ package com.intellij.application.options.colors.highlighting;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterColors;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.application.ui.awt.UIUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;

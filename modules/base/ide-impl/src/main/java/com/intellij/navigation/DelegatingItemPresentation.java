@@ -15,7 +15,7 @@
  */
 package com.intellij.navigation;
 
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
 

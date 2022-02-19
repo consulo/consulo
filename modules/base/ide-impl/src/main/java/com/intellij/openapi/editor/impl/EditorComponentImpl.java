@@ -34,7 +34,7 @@ import consulo.codeEditor.Caret;
 import consulo.document.Document;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.document.event.DocumentEvent;

@@ -1341,13 +1341,13 @@
 
     <applicationService serviceInterface="com.intellij.openapi.options.SchemesManagerFactory"
                         serviceImplementation="com.intellij.openapi.options.SchemesManagerFactoryImpl"/>
-    <applicationService serviceInterface="consulo.codeEditor.colorScheme.TextAttributesKey$TextAttributeKeyDefaultsProvider"
+    <applicationService serviceInterface="consulo.colorScheme.TextAttributesKey$TextAttributeKeyDefaultsProvider"
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.TextAttributeKeyDefaultsProviderImpl"/>
-    <applicationService serviceInterface="consulo.codeEditor.colorScheme.EditorColorsManager"
+    <applicationService serviceInterface="consulo.colorScheme.EditorColorsManager"
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl"/>
     <applicationService serviceInterface="consulo.application.options.PathMacrosService"
                         serviceImplementation="consulo.application.options.PathMacrosServiceImpl"/>
-    <schemeOwner serviceInterface="consulo.codeEditor.colorScheme.EditorColorsManager"/>
+    <schemeOwner serviceInterface="consulo.colorScheme.EditorColorsManager"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.FileAppearanceService"
                         serviceImplementation="com.intellij.openapi.roots.ui.FileAppearanceServiceImpl"/>

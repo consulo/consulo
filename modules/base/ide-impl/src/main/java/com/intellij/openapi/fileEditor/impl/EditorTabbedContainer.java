@@ -24,7 +24,7 @@ import consulo.application.ui.event.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
 import com.intellij.openapi.actionSystem.*;
 import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

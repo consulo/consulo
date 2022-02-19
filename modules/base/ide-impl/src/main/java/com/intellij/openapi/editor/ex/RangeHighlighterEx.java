@@ -5,7 +5,7 @@ package com.intellij.openapi.editor.ex;
 import consulo.document.impl.RangeMarkerEx;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import javax.annotation.Nonnull;
 
 import java.util.Comparator;

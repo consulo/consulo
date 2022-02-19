@@ -4,7 +4,7 @@ package com.intellij.openapi.editor.textarea;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretActionListener;
 import consulo.codeEditor.event.CaretListener;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
 

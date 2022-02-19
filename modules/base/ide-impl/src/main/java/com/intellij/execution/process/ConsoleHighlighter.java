@@ -16,7 +16,7 @@
 package com.intellij.execution.process;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import org.jetbrains.annotations.NonNls;
 
 /**

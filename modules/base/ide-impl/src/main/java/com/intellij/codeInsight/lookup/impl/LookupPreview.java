@@ -17,9 +17,9 @@ package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
-import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.colorScheme.EditorFontType;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;

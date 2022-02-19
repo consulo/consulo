@@ -20,11 +20,11 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterClient;
 import consulo.language.editor.highlight.HighlighterIterator;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 

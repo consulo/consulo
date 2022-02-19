@@ -17,8 +17,8 @@ package com.intellij.psi.search;
 
 import consulo.application.AllIcons;
 import consulo.codeEditor.colorScheme.CodeInsightColors;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributes;
 
 import javax.annotation.Nonnull;
 

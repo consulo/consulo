@@ -17,7 +17,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
 import consulo.codeEditor.colorScheme.EditorColors;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.dataContext.DataProvider;

@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor;
 
-import consulo.ui.ex.EffectType;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.EffectType;
+import consulo.colorScheme.TextAttributes;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 

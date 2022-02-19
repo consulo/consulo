@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoFilter;

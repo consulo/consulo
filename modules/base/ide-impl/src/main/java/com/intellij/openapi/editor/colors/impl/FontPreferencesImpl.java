@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor.colors.impl;
 
 import com.intellij.application.options.EditorFontsConstants;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.colorScheme.FontPreferences;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.FontPreferences;
 import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;

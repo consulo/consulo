@@ -18,7 +18,7 @@ package com.intellij.ide.highlighter.custom;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.LayeredLexer;
 import consulo.language.lexer.StringLiteralLexer;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import com.intellij.psi.CustomHighlighterTokenType;
 import consulo.language.ast.StringEscapesTokenTypes;

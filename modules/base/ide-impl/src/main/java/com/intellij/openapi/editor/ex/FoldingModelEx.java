@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.ex;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingGroup;
 import consulo.codeEditor.FoldingModel;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

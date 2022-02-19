@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex;
+package consulo.colorScheme.event;
 
-public enum EffectType {
-  LINE_UNDERSCORE,
-  WAVE_UNDERSCORE,
-  BOXED,
-  STRIKEOUT,
-  BOLD_LINE_UNDERSCORE,
-  BOLD_DOTTED_LINE,
-  SEARCH_MATCH,
-  ROUNDED_BOX
+import consulo.colorScheme.EditorColorsScheme;
+
+import java.util.EventListener;
+
+public interface EditorColorsListener extends EventListener {
+  void globalSchemeChange(EditorColorsScheme scheme);
 }

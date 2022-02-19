@@ -20,7 +20,7 @@ import consulo.document.impl.MarkupIterator;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import com.intellij.util.Consumer;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;

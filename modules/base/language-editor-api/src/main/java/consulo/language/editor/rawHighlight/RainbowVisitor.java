@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.util.UsedColors;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

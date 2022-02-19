@@ -9,7 +9,7 @@ import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingGroup;
 import com.intellij.openapi.editor.ex.FoldingListener;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.util.dataholder.Key;
 import consulo.component.util.ModificationTracker;
 import consulo.document.util.TextRange;

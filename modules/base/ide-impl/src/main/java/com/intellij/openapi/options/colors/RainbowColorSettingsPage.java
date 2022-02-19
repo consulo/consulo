@@ -16,7 +16,7 @@
 package com.intellij.openapi.options.colors;
 
 import consulo.language.Language;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import javax.annotation.Nullable;
 
 public interface RainbowColorSettingsPage extends ColorSettingsPage {

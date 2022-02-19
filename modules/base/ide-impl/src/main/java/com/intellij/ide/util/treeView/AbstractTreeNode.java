@@ -3,7 +3,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.ide.projectView.PresentationData;
 import consulo.navigation.NavigationItem;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.ide.CopyPasteManager;
 import consulo.project.Project;
 import consulo.application.util.Queryable;

@@ -15,9 +15,8 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
-import consulo.codeEditor.colorScheme.*;
-import consulo.codeEditor.markup.TextAttributes;
-import consulo.codeEditor.colorScheme.FontSize;
+import consulo.colorScheme.*;
+import consulo.colorScheme.FontSize;
 import consulo.ui.color.ColorValue;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

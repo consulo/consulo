@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.annotate;
 
 import consulo.ui.ex.action.AnAction;
-import consulo.codeEditor.colorScheme.EditorColorKey;
-import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.EditorFontType;
 
 import java.util.List;
 

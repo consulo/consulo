@@ -8,7 +8,7 @@ import consulo.codeEditor.event.CaretActionListener;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

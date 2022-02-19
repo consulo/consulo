@@ -16,7 +16,7 @@ import consulo.document.impl.event.PrioritizedDocumentListener;
 import consulo.document.impl.EditorDocumentPriorities;
 import com.intellij.openapi.editor.impl.InlineInlayImpl;
 import consulo.document.impl.RangeMarkerTree;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyClipboardOwner;

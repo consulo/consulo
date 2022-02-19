@@ -17,7 +17,7 @@ package com.intellij.codeInsight.highlighting;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;

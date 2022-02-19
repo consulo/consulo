@@ -19,7 +19,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.colorScheme.CodeInsightColors;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.TextAttributes;

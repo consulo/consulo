@@ -4,7 +4,7 @@ package consulo.codeEditor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.codeEditor.event.SelectionListener;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.impl.TemplateColors;
 import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.colorScheme.CodeInsightColors;
 import consulo.codeEditor.colorScheme.EditorColors;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.component.extension.Extensions;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;

@@ -9,7 +9,7 @@ import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.event.SelectionListener;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;

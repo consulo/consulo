@@ -6,7 +6,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
 import com.intellij.openapi.application.impl.NonBlockingReadActionImpl;
 import consulo.codeEditor.HighlighterColors;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.codeEditor.impl.EmptyEditorHighlighter;
 import consulo.language.editor.highlight.EditorHighlighter;

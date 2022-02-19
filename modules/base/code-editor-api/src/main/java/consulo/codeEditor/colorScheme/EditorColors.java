@@ -15,8 +15,10 @@
  */
 package consulo.codeEditor.colorScheme;
 
-import consulo.codeEditor.markup.TextAttributes;
-import consulo.ui.ex.EffectType;
+import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.EffectType;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.ui.style.StandardColors;
 
 public interface EditorColors {

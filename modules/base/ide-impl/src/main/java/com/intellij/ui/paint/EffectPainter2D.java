@@ -10,7 +10,7 @@ import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.WavePainter2D;
-import consulo.ui.ex.EffectType;
+import consulo.colorScheme.EffectType;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

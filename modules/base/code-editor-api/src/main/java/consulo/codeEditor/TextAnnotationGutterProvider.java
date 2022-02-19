@@ -15,8 +15,8 @@
  */
 package consulo.codeEditor;
 
-import consulo.codeEditor.colorScheme.EditorColorKey;
-import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.EditorFontType;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 

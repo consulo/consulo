@@ -15,6 +15,7 @@
  */
 package com.intellij.notification;
 
+import consulo.colorScheme.TextAttributes;
 import consulo.document.impl.DocumentEx;
 import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewUtil;
@@ -26,10 +27,10 @@ import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.notification.impl.ui.NotificationsUtil;
 import com.intellij.openapi.actionSystem.*;
-import consulo.codeEditor.colorScheme.event.EditorColorsListener;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.event.EditorColorsListener;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.EditorMouseEvent;
@@ -50,7 +51,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.EffectType;
+import consulo.colorScheme.EffectType;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.ref.Ref;
 import consulo.document.Document;

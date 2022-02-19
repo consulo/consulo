@@ -43,7 +43,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.fileEditor.FileEditor;

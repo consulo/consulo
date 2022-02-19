@@ -2,8 +2,8 @@
 package com.intellij.ui;
 
 import consulo.application.ui.UISettings;
-import consulo.ui.ex.EffectType;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.EffectType;
+import consulo.colorScheme.TextAttributes;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;

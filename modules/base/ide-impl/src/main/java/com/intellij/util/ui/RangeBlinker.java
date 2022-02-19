@@ -19,6 +19,7 @@ package com.intellij.util.ui;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.*;
+import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
 import consulo.document.util.Segment;
 import consulo.project.ui.util.Alarm;

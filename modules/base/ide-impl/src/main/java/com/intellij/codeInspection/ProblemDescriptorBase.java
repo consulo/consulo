@@ -23,7 +23,7 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.navigation.Navigatable;

@@ -30,7 +30,7 @@ import consulo.application.ui.UISettings;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
-import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.colorScheme.EditorFontType;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;

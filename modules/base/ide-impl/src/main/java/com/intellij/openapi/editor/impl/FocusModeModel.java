@@ -6,8 +6,8 @@ import consulo.application.ApplicationManager;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.codeEditor.Caret;
 import consulo.document.RangeMarker;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.event.SelectionEvent;
@@ -17,7 +17,7 @@ import consulo.document.impl.RangeMarkerEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
@@ -37,7 +37,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import static consulo.ui.ex.EffectType.LINE_UNDERSCORE;
+import static consulo.colorScheme.EffectType.LINE_UNDERSCORE;
 import static consulo.codeEditor.markup.HighlighterTargetArea.EXACT_RANGE;
 
 public class FocusModeModel implements Disposable {

@@ -15,6 +15,7 @@
  */
 package consulo.codeEditor.markup;
 
+import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.codeEditor.Editor;

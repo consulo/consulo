@@ -16,8 +16,8 @@
 package com.intellij.usages;
 
 import com.intellij.usages.impl.rules.UsageType;
-import consulo.codeEditor.markup.AttributesFlyweight;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.AttributesFlyweight;
+import consulo.colorScheme.TextAttributes;
 import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 

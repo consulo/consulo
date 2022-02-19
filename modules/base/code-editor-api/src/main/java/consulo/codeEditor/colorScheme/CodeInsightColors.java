@@ -15,6 +15,9 @@
  */
 package consulo.codeEditor.colorScheme;
 
+import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.TextAttributesKey;
+
 @SuppressWarnings("unused")
 public interface CodeInsightColors {
   TextAttributesKey WRONG_REFERENCES_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("WRONG_REFERENCES_ATTRIBUTES");

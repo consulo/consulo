@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor;
 
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 
 public interface HighlighterColors {
   TextAttributesKey NO_HIGHLIGHTING = TextAttributesKey.createTextAttributesKey("DEFAULT");

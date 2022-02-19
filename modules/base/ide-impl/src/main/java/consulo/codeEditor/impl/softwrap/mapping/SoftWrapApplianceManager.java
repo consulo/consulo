@@ -16,7 +16,7 @@ import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
 import com.intellij.openapi.editor.impl.softwrap.mapping.*;
 import com.intellij.openapi.editor.impl.view.IterationState;
 import consulo.document.impl.DocumentImpl;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.codeEditor.*;
 import consulo.project.Project;
 import consulo.document.Document;

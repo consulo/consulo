@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 
 import java.util.ArrayList;
 import java.util.List;

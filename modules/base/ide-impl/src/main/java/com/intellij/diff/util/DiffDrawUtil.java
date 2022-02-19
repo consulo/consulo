@@ -16,11 +16,12 @@
 package com.intellij.diff.util;
 
 import com.intellij.diff.fragments.DiffFragment;
+import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.colorScheme.EditorColors;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.*;

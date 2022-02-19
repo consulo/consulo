@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.colorScheme;
+package consulo.colorScheme;
 
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.Application;
-import consulo.codeEditor.markup.TextAttributes;
 import consulo.util.collection.Maps;
 import consulo.util.lang.lazy.LazyValue;
 import org.jdom.Element;

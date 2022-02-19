@@ -16,7 +16,7 @@
 package consulo.language.editor;
 
 import consulo.codeEditor.HighlighterColors;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 
 /**
  * Base highlighter colors for multiple languages.

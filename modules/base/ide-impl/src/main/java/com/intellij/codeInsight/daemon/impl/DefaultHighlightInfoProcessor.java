@@ -12,7 +12,7 @@ import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.language.editor.Pass;
 import consulo.language.editor.rawHighlight.HighlightInfo;

@@ -18,12 +18,12 @@ package consulo.codeEditor.impl;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.codeEditor.HighlighterColors;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterClient;
 import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.document.impl.event.PrioritizedDocumentListener;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 

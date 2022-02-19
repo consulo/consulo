@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.impl.status;
 
 import consulo.application.ui.UISettings;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TransparentPanel;

@@ -9,7 +9,7 @@ import com.intellij.lang.parameterInfo.ParameterInfoUIContextEx;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.colorScheme.EditorFontType;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.util.SystemInfo;
 import consulo.document.util.TextRange;

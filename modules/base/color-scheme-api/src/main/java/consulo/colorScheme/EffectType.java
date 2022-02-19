@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.colorScheme.event;
+package consulo.colorScheme;
 
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-
-import java.util.EventListener;
-
-public interface EditorColorsListener extends EventListener {
-  void globalSchemeChange(EditorColorsScheme scheme);
+public enum EffectType {
+  LINE_UNDERSCORE,
+  WAVE_UNDERSCORE,
+  BOXED,
+  STRIKEOUT,
+  BOLD_LINE_UNDERSCORE,
+  BOLD_DOTTED_LINE,
+  SEARCH_MATCH,
+  ROUNDED_BOX
 }

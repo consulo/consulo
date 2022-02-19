@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 
 public class HighlightedRegion {
    public int startOffset;

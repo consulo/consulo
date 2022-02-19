@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.highlighting;
 
 import com.intellij.injected.editor.EditorWindow;
+import consulo.colorScheme.TextAttributes;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.codeEditor.markup.*;
 import consulo.ui.ex.action.AnAction;

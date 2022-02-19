@@ -15,8 +15,8 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighter;

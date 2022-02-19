@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import consulo.codeEditor.event.SelectionListener;
 import com.intellij.openapi.editor.impl.DesktopSelectionModelImpl;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

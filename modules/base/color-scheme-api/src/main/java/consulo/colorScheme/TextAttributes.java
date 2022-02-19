@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.markup;
+package consulo.colorScheme;
 
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.EffectType;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;

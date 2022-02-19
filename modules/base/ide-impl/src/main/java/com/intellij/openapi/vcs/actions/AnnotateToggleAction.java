@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnSeparator;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;

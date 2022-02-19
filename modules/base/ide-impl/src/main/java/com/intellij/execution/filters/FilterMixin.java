@@ -16,7 +16,7 @@
 package com.intellij.execution.filters;
 
 import consulo.document.Document;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import com.intellij.util.Consumer;
 import consulo.execution.ui.console.Filter;
 

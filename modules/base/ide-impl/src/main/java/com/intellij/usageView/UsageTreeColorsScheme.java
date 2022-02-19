@@ -16,7 +16,7 @@
 package com.intellij.usageView;
 
 import com.intellij.openapi.components.ServiceManager;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;

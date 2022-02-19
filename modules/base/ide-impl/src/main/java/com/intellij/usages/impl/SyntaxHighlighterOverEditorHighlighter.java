@@ -17,7 +17,7 @@ package com.intellij.usages.impl;
 
 import consulo.language.lexer.LayeredLexer;
 import consulo.language.lexer.Lexer;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.util.LayeredHighlighterIterator;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
 import consulo.language.editor.highlight.EditorHighlighter;

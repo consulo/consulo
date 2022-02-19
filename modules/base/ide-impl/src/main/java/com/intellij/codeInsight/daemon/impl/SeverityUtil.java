@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 
 import javax.annotation.Nonnull;

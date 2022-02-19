@@ -22,7 +22,7 @@ import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.virtualFileSystem.fileType.FileType;

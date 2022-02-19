@@ -2,6 +2,8 @@
 package com.intellij.openapi.editor.impl.view;
 
 import consulo.application.ApplicationManager;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesEffectsBuilder;
 import consulo.document.impl.DocumentEx;
 import consulo.codeEditor.colorScheme.EditorColors;
 import com.intellij.openapi.editor.ex.*;
@@ -22,7 +24,7 @@ import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.FoldRegion;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.EffectType;
+import consulo.colorScheme.EffectType;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;

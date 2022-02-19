@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.colorScheme;
+package consulo.colorScheme;
 
 import consulo.component.util.pointer.Named;
-import consulo.codeEditor.markup.TextAttributes;
 import consulo.ui.color.ColorValue;
 import org.jdom.Element;
 

@@ -17,17 +17,16 @@
 /*
  * @author max
  */
-package consulo.codeEditor.markup;
+package consulo.colorScheme;
 
-import consulo.ui.ex.EffectType;
-import consulo.util.xml.serializer.DefaultJDOMExternalizer;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.util.collection.Maps;
 import consulo.util.lang.Comparing;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

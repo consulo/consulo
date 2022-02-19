@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.colorScheme.event.EditorColorsListener;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.event.EditorColorsListener;
 
 public abstract class EditorColorsAdapter implements EditorColorsListener {
   public void globalSchemeChange(EditorColorsScheme scheme) {

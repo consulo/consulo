@@ -28,7 +28,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.*;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;

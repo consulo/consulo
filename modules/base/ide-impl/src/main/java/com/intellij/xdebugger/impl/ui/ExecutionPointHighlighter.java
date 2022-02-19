@@ -3,11 +3,12 @@ package com.intellij.xdebugger.impl.ui;
 
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
+import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.fileEditor.FileEditor;

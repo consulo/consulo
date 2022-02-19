@@ -14,7 +14,7 @@ import com.intellij.openapi.actionSystem.EmptyAction;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.undoRedo.util.UndoUtil;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.impl.DocumentEx;

@@ -17,9 +17,9 @@ package consulo.language.editor.rawHighlight;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
-import consulo.codeEditor.colorScheme.TextAttributesScheme;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesScheme;
 import consulo.codeEditor.markup.TextAttributes;
 import consulo.language.Language;
 import consulo.language.editor.DefaultLanguageHighlighterColors;

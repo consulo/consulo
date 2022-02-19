@@ -5,7 +5,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.codeEditor.event.CaretActionListener;
 import consulo.codeEditor.event.CaretListener;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

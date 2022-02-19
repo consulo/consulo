@@ -9,7 +9,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.ui.FilePathSplittingPolicy;
 import consulo.ui.ex.JBColor;
 import consulo.component.util.Iconable;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;

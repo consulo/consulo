@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor;
 
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

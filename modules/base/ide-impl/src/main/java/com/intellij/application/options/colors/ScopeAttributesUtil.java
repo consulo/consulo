@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.colors;
 
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
 import javax.annotation.Nonnull;
 
 public class ScopeAttributesUtil {

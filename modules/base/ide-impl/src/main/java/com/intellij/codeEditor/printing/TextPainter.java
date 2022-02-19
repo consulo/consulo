@@ -23,7 +23,7 @@ import consulo.document.impl.DocumentEx;
 import consulo.document.impl.LineIterator;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.editor.highlight.HighlighterIterator;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

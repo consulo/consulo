@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.actions;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.colorScheme.EditorColorKey;
+import consulo.colorScheme.EditorColorKey;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.annotate.AnnotationSource;
 import com.intellij.openapi.vcs.annotate.AnnotationSourceSwitcher;

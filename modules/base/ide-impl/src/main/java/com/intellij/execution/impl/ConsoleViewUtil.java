@@ -3,6 +3,7 @@ package com.intellij.execution.impl;
 
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
+import consulo.colorScheme.*;
 import consulo.undoRedo.util.UndoUtil;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -17,9 +18,7 @@ import consulo.application.ui.UISettings;
 import consulo.content.scope.SearchScope;
 import consulo.document.Document;
 import consulo.codeEditor.*;
-import consulo.codeEditor.colorScheme.*;
 import consulo.codeEditor.impl.EmptyEditorHighlighter;
-import consulo.codeEditor.markup.TextAttributes;
 import consulo.execution.ui.console.*;
 import consulo.language.ast.IElementType;
 import consulo.language.lexer.Lexer;

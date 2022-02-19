@@ -13,7 +13,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.colorScheme.EditorColors;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

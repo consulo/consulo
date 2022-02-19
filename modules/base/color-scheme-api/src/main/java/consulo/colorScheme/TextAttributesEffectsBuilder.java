@@ -1,9 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.codeEditor.markup;
+package consulo.colorScheme;
 
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.EffectType;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -15,8 +14,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import static consulo.ui.ex.EffectType.*;
-import static consulo.codeEditor.markup.TextAttributesEffectsBuilder.EffectSlot.*;
+import static consulo.colorScheme.EffectType.*;
+import static consulo.colorScheme.TextAttributesEffectsBuilder.EffectSlot.*;
 
 /**
  * Allows to build effects for the TextAttributes. Allows to cover effects on the current state and slip effects under it.

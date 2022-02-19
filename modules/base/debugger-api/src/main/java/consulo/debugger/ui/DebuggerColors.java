@@ -19,8 +19,8 @@
  */
 package consulo.debugger.ui;
 
-import consulo.codeEditor.colorScheme.EditorColorKey;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.ui.color.RGBColor;
 import consulo.util.dataholder.Key;

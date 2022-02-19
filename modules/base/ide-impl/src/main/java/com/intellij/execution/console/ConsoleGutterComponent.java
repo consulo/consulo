@@ -20,7 +20,7 @@ import com.intellij.codeInsight.hint.TooltipGroup;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
-import consulo.codeEditor.colorScheme.EditorFontType;
+import consulo.colorScheme.EditorFontType;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;

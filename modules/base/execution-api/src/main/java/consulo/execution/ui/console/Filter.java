@@ -19,11 +19,11 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.awt.UIUtil;
 import consulo.codeEditor.colorScheme.CodeInsightColors;
-import consulo.codeEditor.colorScheme.EditorColorsManager;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.colorScheme.TextAttributesKey;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.TextAttributes;
+import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;

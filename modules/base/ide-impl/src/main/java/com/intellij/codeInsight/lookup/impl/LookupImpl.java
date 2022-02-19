@@ -29,7 +29,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.colorScheme.FontPreferences;
+import consulo.colorScheme.FontPreferences;
 import com.intellij.openapi.editor.colors.impl.FontPreferencesImpl;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.project.DumbAwareAction;

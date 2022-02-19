@@ -16,7 +16,7 @@
 package com.intellij.application.options.colors;
 
 import com.intellij.application.options.colors.OptionsPanelImpl.ColorDescriptionPanel;
-import consulo.codeEditor.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.util.lang.function.Condition;
 import javax.annotation.Nonnull;
 
