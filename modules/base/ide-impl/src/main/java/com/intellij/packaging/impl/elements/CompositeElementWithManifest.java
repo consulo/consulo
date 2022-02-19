@@ -15,8 +15,8 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElementType;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElementType;
 
 /**
  * @author nik

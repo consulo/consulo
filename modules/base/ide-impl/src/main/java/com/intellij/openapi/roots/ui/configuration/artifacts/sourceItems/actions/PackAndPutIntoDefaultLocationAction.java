@@ -20,8 +20,8 @@ import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.deployment.DeploymentUtil;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
-import com.intellij.packaging.elements.PackagingElementOutputKind;
-import com.intellij.packaging.ui.PackagingSourceItem;
+import consulo.compiler.artifact.element.PackagingElementOutputKind;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
 import javax.annotation.Nullable;
 
 import java.util.List;

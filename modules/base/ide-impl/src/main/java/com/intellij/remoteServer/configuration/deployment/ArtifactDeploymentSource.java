@@ -15,8 +15,8 @@
  */
 package com.intellij.remoteServer.configuration.deployment;
 
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactPointer;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactPointer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

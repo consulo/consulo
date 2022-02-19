@@ -15,10 +15,14 @@
  */
 package com.intellij.packaging.impl.run;
 
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactPointer;
+import consulo.compiler.artifact.ArtifactPointerManager;
+import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.execution.BeforeRunTaskProvider;
 import consulo.compiler.CompilerBundle;
 import com.intellij.openapi.ui.DialogBuilder;
-import com.intellij.packaging.artifacts.*;
 import consulo.application.AllIcons;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;

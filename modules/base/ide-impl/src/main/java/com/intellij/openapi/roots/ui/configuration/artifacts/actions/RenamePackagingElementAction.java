@@ -22,8 +22,8 @@ import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.RenameablePackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.RenameablePackagingElement;
 
 import javax.swing.tree.TreePath;
 

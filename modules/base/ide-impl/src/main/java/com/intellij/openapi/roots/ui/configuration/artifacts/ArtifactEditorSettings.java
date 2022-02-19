@@ -17,9 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import consulo.component.persist.PersistentStateComponent;
 import consulo.project.Project;
-import com.intellij.packaging.elements.ComplexPackagingElementType;
-import com.intellij.packaging.elements.PackagingElementFactory;
-import com.intellij.packaging.elements.PackagingElementType;
+import consulo.compiler.artifact.element.ComplexPackagingElementType;
+import consulo.compiler.artifact.element.PackagingElementFactory;
+import consulo.compiler.artifact.element.PackagingElementType;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
 

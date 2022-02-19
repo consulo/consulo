@@ -15,6 +15,7 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
+import consulo.compiler.artifact.element.*;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.util.lang.Trinity;
@@ -22,11 +23,10 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.artifacts.ArtifactProperties;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.*;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactProperties;
+import consulo.compiler.artifact.ArtifactType;
 import com.intellij.packaging.impl.elements.*;
 import com.intellij.util.PathUtil;
 import consulo.util.collection.SmartList;

@@ -20,12 +20,12 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.PackagingElementFactory;
-import com.intellij.packaging.elements.PackagingElementType;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElementFactory;
+import consulo.compiler.artifact.element.PackagingElementType;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

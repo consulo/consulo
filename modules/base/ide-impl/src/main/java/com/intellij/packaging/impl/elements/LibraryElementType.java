@@ -21,10 +21,10 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.library.Library;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.elements.ComplexPackagingElementType;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.element.ComplexPackagingElementType;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 

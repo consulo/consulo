@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.content.layer.ModulesProvider;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModuleRootModel;

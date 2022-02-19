@@ -15,12 +15,12 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.*;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactType;
 import com.intellij.packaging.impl.ui.DirectoryElementPresentation;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingElementPresentation;
+import consulo.compiler.artifact.element.*;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import org.jetbrains.annotations.NonNls;

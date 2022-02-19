@@ -22,7 +22,7 @@ import com.intellij.openapi.compiler.generic.GenericCompiler;
 import com.intellij.openapi.compiler.generic.GenericCompilerInstance;
 import com.intellij.openapi.compiler.generic.VirtualFilePersistentState;
 import consulo.project.Project;
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.KeyDescriptor;
 import consulo.util.dataholder.Key;

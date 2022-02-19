@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import com.intellij.packaging.elements.PackagingElementType;
+import consulo.compiler.artifact.element.PackagingElementType;
 
 /**
 * @author nik

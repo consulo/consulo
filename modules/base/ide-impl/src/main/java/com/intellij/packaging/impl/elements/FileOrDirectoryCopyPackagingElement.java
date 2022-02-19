@@ -17,8 +17,8 @@ package com.intellij.packaging.impl.elements;
 
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.PackagingElementType;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElementType;
 import consulo.util.xml.serializer.annotation.Attribute;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

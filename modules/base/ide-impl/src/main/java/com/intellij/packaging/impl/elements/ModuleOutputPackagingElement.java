@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.elements;
 
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.content.ContentFolderTypeProvider;

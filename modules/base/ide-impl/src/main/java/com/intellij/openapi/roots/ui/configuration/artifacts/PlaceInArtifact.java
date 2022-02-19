@@ -19,8 +19,8 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.PlaceInProjectStructure;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.elements.PackagingElement;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.element.PackagingElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 

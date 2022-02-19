@@ -16,9 +16,9 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import javax.annotation.Nonnull;
 
 import java.util.List;

@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.packaging.ui.PackagingSourceItem;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
 
 import javax.annotation.Nullable;
 import java.util.Set;

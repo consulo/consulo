@@ -20,11 +20,11 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.ArtifactsTreeNode;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingSourceItem;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.PackagingSourceItemsProvider;
-import com.intellij.packaging.ui.TreeNodePresentation;
+import consulo.compiler.artifact.ui.TreeNodePresentation;
 import com.intellij.ui.treeStructure.SimpleNode;
 
 import javax.annotation.Nullable;

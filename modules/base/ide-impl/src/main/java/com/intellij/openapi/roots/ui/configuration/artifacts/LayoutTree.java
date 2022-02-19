@@ -28,8 +28,8 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElem
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.RenameablePackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.RenameablePackagingElement;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.TreeUIHelper;
 import com.intellij.ui.treeStructure.SimpleNode;

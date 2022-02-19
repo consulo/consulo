@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
+import consulo.compiler.artifact.*;
+import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -33,8 +35,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.ui.MasterDetailsState;
 import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.NamedConfigurable;
-import com.intellij.packaging.artifacts.*;
-import com.intellij.packaging.elements.PackagingElementFactory;
+import consulo.compiler.artifact.element.PackagingElementFactory;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.InvalidArtifact;
 import com.intellij.packaging.impl.artifacts.PackagingElementPath;

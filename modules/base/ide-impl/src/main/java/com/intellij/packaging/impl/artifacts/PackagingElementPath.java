@@ -15,11 +15,11 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.elements.ComplexPackagingElement;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.element.ComplexPackagingElement;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import consulo.util.collection.SmartList;
 import com.intellij.util.StringBuilderSpinAllocator;

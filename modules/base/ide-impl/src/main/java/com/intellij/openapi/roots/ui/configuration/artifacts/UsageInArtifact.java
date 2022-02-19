@@ -3,8 +3,8 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.PlaceInProjectStructure;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElementUsage;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.elements.PackagingElement;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.element.PackagingElement;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

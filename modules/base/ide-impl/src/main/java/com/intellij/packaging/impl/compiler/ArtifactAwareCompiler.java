@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

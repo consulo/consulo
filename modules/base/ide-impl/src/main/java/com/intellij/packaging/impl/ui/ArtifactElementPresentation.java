@@ -17,11 +17,11 @@ package com.intellij.packaging.impl.ui;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactPointer;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactPointer;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementWeights;
-import com.intellij.packaging.ui.TreeNodePresentation;
+import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 

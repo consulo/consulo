@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactProjectStru
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.packaging.elements.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
 
 /**
 * @author nik

@@ -15,8 +15,8 @@
  */
 package com.intellij.packaging.impl.ui;
 
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
-import com.intellij.packaging.ui.ArtifactProblemsHolder;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
+import consulo.compiler.artifact.ui.ArtifactProblemsHolder;
 import javax.annotation.Nonnull;
 
 /**

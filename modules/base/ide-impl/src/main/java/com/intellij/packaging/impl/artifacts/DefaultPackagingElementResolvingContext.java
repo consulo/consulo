@@ -20,10 +20,10 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.artifacts.ArtifactModel;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
+import consulo.module.content.layer.ModulesProvider;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactModel;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

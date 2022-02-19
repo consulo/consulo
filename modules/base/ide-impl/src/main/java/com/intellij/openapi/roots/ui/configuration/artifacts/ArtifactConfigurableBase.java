@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectStructureElementConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 

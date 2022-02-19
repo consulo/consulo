@@ -17,9 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.nodes;
 
 import com.intellij.openapi.roots.ui.configuration.artifacts.ComplexElementSubstitutionParameters;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTree;
-import com.intellij.packaging.elements.ComplexPackagingElement;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.element.ComplexPackagingElement;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import com.intellij.ui.treeStructure.SimpleTree;
 
 import java.awt.event.InputEvent;

@@ -16,9 +16,9 @@
 package com.intellij.packaging.impl.artifacts;
 
 import consulo.util.lang.function.Condition;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactModel;
-import com.intellij.packaging.artifacts.ArtifactType;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactModel;
+import consulo.compiler.artifact.ArtifactType;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

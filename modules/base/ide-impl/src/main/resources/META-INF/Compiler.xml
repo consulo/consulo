@@ -39,10 +39,10 @@
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.LibraryElementType"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.ArtifactElementType"/>
 
-    <projectService serviceInterface="com.intellij.packaging.artifacts.ArtifactManager"
+    <projectService serviceInterface="consulo.compiler.artifact.ArtifactManager"
                     serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactManagerImpl"/>
 
-    <projectService serviceInterface="com.intellij.packaging.artifacts.ArtifactPointerManager"
+    <projectService serviceInterface="consulo.compiler.artifact.ArtifactPointerManager"
                     serviceImplementation="consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder"

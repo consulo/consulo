@@ -17,9 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingSourceItem;
-import com.intellij.packaging.ui.TreeNodePresentation;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 

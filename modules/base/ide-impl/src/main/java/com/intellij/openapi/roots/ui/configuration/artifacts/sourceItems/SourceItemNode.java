@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingSourceItem;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
 import com.intellij.ui.treeStructure.SimpleTree;
 import javax.annotation.Nonnull;
 

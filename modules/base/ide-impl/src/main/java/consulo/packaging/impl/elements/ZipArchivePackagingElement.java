@@ -17,7 +17,7 @@ package consulo.packaging.impl.elements;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
-import consulo.packaging.elements.ArchivePackageWriter;
+import consulo.compiler.artifact.element.ArchivePackageWriter;
 
 import javax.annotation.Nonnull;
 import java.io.*;

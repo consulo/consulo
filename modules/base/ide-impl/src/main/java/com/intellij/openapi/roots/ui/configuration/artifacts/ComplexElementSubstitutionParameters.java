@@ -17,9 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.ComplexPackagingElementNode;
-import com.intellij.packaging.elements.ComplexPackagingElement;
-import com.intellij.packaging.elements.ComplexPackagingElementType;
-import com.intellij.packaging.elements.PackagingElementFactory;
+import consulo.compiler.artifact.element.ComplexPackagingElement;
+import consulo.compiler.artifact.element.ComplexPackagingElementType;
+import consulo.compiler.artifact.element.PackagingElementFactory;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

@@ -20,7 +20,7 @@ import consulo.content.bundle.Sdk;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;

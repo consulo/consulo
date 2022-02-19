@@ -17,13 +17,13 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.PackagingElementOutputKind;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import com.intellij.packaging.impl.elements.moduleContent.ModuleOutputElementTypeBase;
 import com.intellij.packaging.impl.ui.ModuleElementPresentation;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingSourceItem;
-import com.intellij.packaging.ui.SourceItemPresentation;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.compiler.artifact.ui.SourceItemPresentation;
 import com.intellij.packaging.ui.SourceItemWeights;
 import consulo.component.util.pointer.NamedPointer;
 import javax.annotation.Nonnull;

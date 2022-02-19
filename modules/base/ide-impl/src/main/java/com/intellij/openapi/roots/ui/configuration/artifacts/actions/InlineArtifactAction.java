@@ -23,13 +23,13 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.CompositePackagingElementNode;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.elements.ArtifactRootElement;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElement;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.element.ArtifactRootElement;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 
 import java.util.Collections;
 

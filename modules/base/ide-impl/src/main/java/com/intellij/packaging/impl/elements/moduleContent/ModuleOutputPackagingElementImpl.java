@@ -15,6 +15,7 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
+import consulo.compiler.artifact.element.*;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
@@ -22,16 +23,15 @@ import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import consulo.module.content.layer.ModulesProvider;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.*;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactType;
 import com.intellij.packaging.impl.elements.ModuleOutputPackagingElement;
 import com.intellij.packaging.impl.ui.DelegatedPackagingElementPresentation;
 import com.intellij.packaging.impl.ui.ModuleElementPresentation;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingElementPresentation;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import com.intellij.util.ArrayUtil;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
@@ -53,7 +53,7 @@ import java.util.List;
  * @author nik
  */
 public class ModuleOutputPackagingElementImpl
-  extends PackagingElement<ModuleOutputPackagingElementImpl.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
+        extends PackagingElement<ModuleOutputPackagingElementImpl.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
   @NonNls public static final String MODULE_NAME_ATTRIBUTE = "name";
 
   protected NamedPointer<Module> myModulePointer;

@@ -17,8 +17,8 @@ package com.intellij.packaging.impl.artifacts;
 
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ModifiableArtifactModel;
 import com.intellij.packaging.impl.elements.FileOrDirectoryCopyPackagingElement;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;

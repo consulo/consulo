@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import consulo.annotation.DeprecationInfo;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;

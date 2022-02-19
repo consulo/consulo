@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.packaging.elements.PackagingElementFactory;
+import consulo.compiler.artifact.element.PackagingElementFactory;
 import com.intellij.packaging.impl.artifacts.state.ArtifactState;
 
 /**

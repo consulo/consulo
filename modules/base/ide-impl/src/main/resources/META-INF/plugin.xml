@@ -312,10 +312,10 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.roots.ui.OrderRootTypeUIFactory"/>
     </extensionPoint>
 
-    <extensionPoint name="packaging.elementType" interface="com.intellij.packaging.elements.PackagingElementType"/>
-    <extensionPoint name="packaging.artifactPropertiesProvider" interface="com.intellij.packaging.artifacts.ArtifactPropertiesProvider"/>
+    <extensionPoint name="packaging.elementType" interface="consulo.compiler.artifact.element.PackagingElementType"/>
+    <extensionPoint name="packaging.artifactPropertiesProvider" interface="consulo.compiler.artifact.ArtifactPropertiesProvider"/>
     <extensionPoint name="packaging.sourceItemProvider" interface="com.intellij.packaging.ui.PackagingSourceItemsProvider"/>
-    <extensionPoint name="packaging.artifactType" interface="com.intellij.packaging.artifacts.ArtifactType"/>
+    <extensionPoint name="packaging.artifactType" interface="consulo.compiler.artifact.ArtifactType"/>
 
     <extensionPoint name="moduleImportProvider" interface="consulo.moduleImport.ModuleImportProvider"/>
 
@@ -1590,7 +1590,7 @@
     <gotoRelatedProvider implementation="com.intellij.testIntegration.GotoTestRelatedProvider"/>
 
 
-    <projectService serviceInterface="com.intellij.packaging.elements.PackagingElementFactory"
+    <projectService serviceInterface="consulo.compiler.artifact.element.PackagingElementFactory"
                     serviceImplementation="com.intellij.packaging.impl.elements.PackagingElementFactoryImpl"/>
 
 

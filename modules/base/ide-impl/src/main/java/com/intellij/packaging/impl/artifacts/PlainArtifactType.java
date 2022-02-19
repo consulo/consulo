@@ -17,10 +17,10 @@ package com.intellij.packaging.impl.artifacts;
 
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElementFactory;
-import com.intellij.packaging.elements.PackagingElementOutputKind;
+import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElementFactory;
+import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

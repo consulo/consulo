@@ -31,7 +31,7 @@ import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

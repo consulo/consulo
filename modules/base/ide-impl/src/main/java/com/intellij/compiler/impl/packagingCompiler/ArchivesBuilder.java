@@ -31,7 +31,7 @@ import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.compiler.impl.packagingCompiler.ArchivePackageWriterEx;
 import consulo.logging.Logger;
-import consulo.packaging.elements.ArchivePackageWriter;
+import consulo.compiler.artifact.element.ArchivePackageWriter;
 import consulo.packaging.impl.util.DeploymentUtilImpl;
 
 import javax.annotation.Nonnull;

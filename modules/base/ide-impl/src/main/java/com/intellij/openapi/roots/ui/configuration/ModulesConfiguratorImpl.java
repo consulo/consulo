@@ -36,7 +36,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.compiler.CompilerConfiguration;
 import consulo.disposer.Disposable;

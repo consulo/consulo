@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.nodes;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.TreeNodePresentation;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.treeStructure.CachingSimpleNode;
 

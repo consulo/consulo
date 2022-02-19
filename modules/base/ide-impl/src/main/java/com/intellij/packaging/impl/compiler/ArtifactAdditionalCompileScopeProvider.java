@@ -22,7 +22,7 @@ import consulo.compiler.Compiler;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;

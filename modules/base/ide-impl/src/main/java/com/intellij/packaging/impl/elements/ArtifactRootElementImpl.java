@@ -17,14 +17,14 @@ package com.intellij.packaging.impl.elements;
 
 import com.intellij.ide.projectView.PresentationData;
 import consulo.compiler.CompilerBundle;
-import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
-import com.intellij.packaging.elements.ArtifactRootElement;
-import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingElementPresentation;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.element.ArtifactIncrementalCompilerContext;
+import consulo.compiler.artifact.element.ArtifactRootElement;
+import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 

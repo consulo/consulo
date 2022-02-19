@@ -20,7 +20,7 @@ import com.intellij.compiler.impl.packagingCompiler.ExplodedDestinationInfo;
 import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
 import consulo.compiler.CompileContext;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
+import consulo.compiler.artifact.element.ArtifactIncrementalCompilerContext;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

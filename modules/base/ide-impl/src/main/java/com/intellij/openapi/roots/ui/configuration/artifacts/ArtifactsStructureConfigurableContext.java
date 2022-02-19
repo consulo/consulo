@@ -18,11 +18,11 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
-import com.intellij.packaging.ui.ArtifactEditor;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ModifiableArtifactModel;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
+import consulo.compiler.artifact.ui.ArtifactEditor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

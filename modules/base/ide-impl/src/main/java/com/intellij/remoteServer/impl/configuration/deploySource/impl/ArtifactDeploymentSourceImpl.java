@@ -1,10 +1,10 @@
 package com.intellij.remoteServer.impl.configuration.deploySource.impl;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactPointer;
-import com.intellij.packaging.elements.ArtifactRootElement;
-import com.intellij.packaging.elements.CompositePackagingElement;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactPointer;
+import consulo.compiler.artifact.element.ArtifactRootElement;
+import consulo.compiler.artifact.element.CompositePackagingElement;
 import com.intellij.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.impl.configuration.deploySource.ArtifactDeploymentSourceType;

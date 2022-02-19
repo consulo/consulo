@@ -16,18 +16,18 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import consulo.project.Project;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactPointer;
-import com.intellij.packaging.artifacts.ArtifactPointerManager;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactPointer;
+import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.PackagingElementFactory;
-import com.intellij.packaging.elements.PackagingElementOutputKind;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElementFactory;
+import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.packaging.impl.artifacts.ZipArtifactType;
 import com.intellij.packaging.impl.ui.ArtifactElementPresentation;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingSourceItem;
-import com.intellij.packaging.ui.SourceItemPresentation;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.compiler.artifact.ui.SourceItemPresentation;
 import com.intellij.packaging.ui.SourceItemWeights;
 import javax.annotation.Nonnull;
 

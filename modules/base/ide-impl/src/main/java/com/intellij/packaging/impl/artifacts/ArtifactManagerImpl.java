@@ -17,6 +17,9 @@ package com.intellij.packaging.impl.artifacts;
 
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
+import consulo.compiler.artifact.*;
+import consulo.compiler.artifact.element.*;
+import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -28,8 +31,6 @@ import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.packaging.artifacts.*;
-import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.artifacts.state.ArtifactManagerState;
 import com.intellij.packaging.impl.artifacts.state.ArtifactPropertiesState;
 import com.intellij.packaging.impl.artifacts.state.ArtifactState;

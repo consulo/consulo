@@ -19,8 +19,8 @@ import com.intellij.compiler.impl.packagingCompiler.DestinationInfo;
 import com.intellij.compiler.impl.packagingCompiler.ArchiveDestinationInfo;
 import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.packaging.elements.ArchivePackageWriter;
-import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
+import consulo.compiler.artifact.element.ArchivePackageWriter;
+import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
 import javax.annotation.Nonnull;
 
 /**

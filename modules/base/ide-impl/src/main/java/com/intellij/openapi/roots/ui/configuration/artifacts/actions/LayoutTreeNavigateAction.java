@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import com.intellij.packaging.ui.TreeNodePresentation;
+import consulo.compiler.artifact.ui.TreeNodePresentation;
 import javax.annotation.Nullable;
 
 /**

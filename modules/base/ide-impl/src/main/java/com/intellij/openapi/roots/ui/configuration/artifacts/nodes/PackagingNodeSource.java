@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.nodes;
 
-import com.intellij.packaging.elements.ComplexPackagingElement;
-import com.intellij.packaging.elements.CompositePackagingElement;
+import consulo.compiler.artifact.element.ComplexPackagingElement;
+import consulo.compiler.artifact.element.CompositePackagingElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

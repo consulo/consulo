@@ -16,14 +16,14 @@
 package com.intellij.packaging.impl.elements;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
-import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.element.ArtifactIncrementalCompilerContext;
+import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.ui.DirectoryCopyPresentation;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingElementPresentation;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import javax.annotation.Nonnull;
 
 /**

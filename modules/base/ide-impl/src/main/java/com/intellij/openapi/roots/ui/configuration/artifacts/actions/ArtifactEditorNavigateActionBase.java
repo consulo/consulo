@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.ProjectBundle;
-import com.intellij.packaging.ui.TreeNodePresentation;
+import consulo.compiler.artifact.ui.TreeNodePresentation;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

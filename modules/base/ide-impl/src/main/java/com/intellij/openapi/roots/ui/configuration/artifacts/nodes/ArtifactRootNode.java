@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.nodes;
 
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ComplexElementSubstitutionParameters;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 
 import java.util.Collections;
 

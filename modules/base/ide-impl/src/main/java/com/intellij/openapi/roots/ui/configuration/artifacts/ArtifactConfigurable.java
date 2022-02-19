@@ -19,8 +19,8 @@ import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactType;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

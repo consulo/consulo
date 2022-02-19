@@ -22,9 +22,9 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.packaging.artifacts.ArtifactType;
+import consulo.compiler.artifact.ArtifactType;
 import com.intellij.packaging.impl.artifacts.PlainArtifactType;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ui.ex.event.DocumentAdapter;
 
 import javax.swing.*;

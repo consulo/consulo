@@ -20,8 +20,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import com.intellij.packaging.elements.CompositePackagingElementType;
-import com.intellij.packaging.elements.PackagingElementFactory;
+import consulo.compiler.artifact.element.CompositePackagingElementType;
+import consulo.compiler.artifact.element.PackagingElementFactory;
 
 import java.util.List;
 

@@ -15,8 +15,8 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.elements.CompositePackagingElement;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.element.CompositePackagingElement;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;
 

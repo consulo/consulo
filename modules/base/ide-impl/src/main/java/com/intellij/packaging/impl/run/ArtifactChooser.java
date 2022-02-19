@@ -17,8 +17,8 @@ package com.intellij.packaging.impl.run;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.util.ElementsChooser;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactPointer;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactPointer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.image.Image;
 

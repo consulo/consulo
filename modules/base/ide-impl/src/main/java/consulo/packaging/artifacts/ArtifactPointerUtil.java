@@ -16,7 +16,7 @@
 package consulo.packaging.artifacts;
 
 import consulo.project.Project;
-import com.intellij.packaging.artifacts.ArtifactPointerManager;
+import consulo.compiler.artifact.ArtifactPointerManager;
 
 /**
  * @author VISTALL

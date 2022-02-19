@@ -20,7 +20,7 @@ import consulo.application.ui.event.UISettingsListener;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.ide.util.treeView.smartTree.*;
-import com.intellij.navigation.LocationPresentation;
+import consulo.navigation.LocationPresentation;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;

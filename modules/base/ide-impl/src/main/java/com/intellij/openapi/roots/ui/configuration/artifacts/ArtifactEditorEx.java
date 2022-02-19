@@ -17,12 +17,12 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.PackagingElementType;
-import com.intellij.packaging.ui.ArtifactEditor;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElementType;
+import consulo.compiler.artifact.ui.ArtifactEditor;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

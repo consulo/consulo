@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 
-import com.intellij.packaging.artifacts.ArtifactType;
+import consulo.compiler.artifact.ArtifactType;
 
 /**
  * @author nik

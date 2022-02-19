@@ -15,7 +15,9 @@
  */
 package com.intellij.packaging.ui;
 
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 

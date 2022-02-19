@@ -29,7 +29,7 @@ import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsState;
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import com.intellij.ui.TreeSpeedSearch;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.IconUtil;

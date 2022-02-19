@@ -15,15 +15,15 @@
  */
 package com.intellij.packaging.impl.elements;
 
+import consulo.compiler.artifact.*;
+import consulo.compiler.artifact.element.*;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.artifacts.*;
-import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.ArtifactElementPresentation;
 import com.intellij.packaging.impl.ui.DelegatedPackagingElementPresentation;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingElementPresentation;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl;
 import org.jetbrains.annotations.NonNls;

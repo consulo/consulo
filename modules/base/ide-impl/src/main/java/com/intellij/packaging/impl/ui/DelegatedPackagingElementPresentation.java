@@ -15,8 +15,8 @@
  */
 package com.intellij.packaging.impl.ui;
 
-import com.intellij.packaging.ui.PackagingElementPresentation;
-import com.intellij.packaging.ui.TreeNodePresentation;
+import consulo.compiler.artifact.ui.PackagingElementPresentation;
+import consulo.compiler.artifact.ui.TreeNodePresentation;
 import com.intellij.ide.projectView.PresentationData;
 import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;

@@ -15,11 +15,16 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.packaging.artifacts.*;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElementFactory;
+import consulo.compiler.artifact.ModifiableArtifact;
+import consulo.compiler.artifact.ModifiableArtifactModel;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElementFactory;
 import com.intellij.util.EventDispatcher;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.event.ArtifactAdapter;
+import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 import consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl;
 

@@ -16,9 +16,9 @@
 package com.intellij.packaging.impl.artifacts;
 
 import consulo.project.Project;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.elements.ArtifactElementType;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import consulo.language.psi.util.CachedValue;

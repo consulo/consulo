@@ -69,6 +69,7 @@
         <include>consulo:consulo-language-impl</include>
         <include>consulo:consulo-document-impl</include>
         <include>consulo:consulo-file-editor-api</include>
+        <include>consulo:consulo-compiler-artifact-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

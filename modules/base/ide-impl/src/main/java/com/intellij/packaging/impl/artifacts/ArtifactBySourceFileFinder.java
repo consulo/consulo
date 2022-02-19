@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.artifacts;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packaging.artifacts.Artifact;
+import consulo.compiler.artifact.Artifact;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

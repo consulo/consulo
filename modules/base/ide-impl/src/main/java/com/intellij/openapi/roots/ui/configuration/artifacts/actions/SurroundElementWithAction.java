@@ -26,10 +26,10 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElem
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.CompositePackagingElementType;
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.elements.PackagingElementFactory;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.CompositePackagingElementType;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElementFactory;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;

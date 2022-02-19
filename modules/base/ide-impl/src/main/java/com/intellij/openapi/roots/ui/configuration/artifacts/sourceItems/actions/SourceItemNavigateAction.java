@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.action
 import com.intellij.openapi.roots.ui.configuration.artifacts.actions.ArtifactEditorNavigateActionBase;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemNode;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
-import com.intellij.packaging.ui.TreeNodePresentation;
+import consulo.compiler.artifact.ui.TreeNodePresentation;
 
 import java.util.List;
 

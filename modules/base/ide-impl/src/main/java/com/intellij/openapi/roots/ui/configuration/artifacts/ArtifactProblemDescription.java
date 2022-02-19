@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemDescription;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
-import com.intellij.packaging.elements.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

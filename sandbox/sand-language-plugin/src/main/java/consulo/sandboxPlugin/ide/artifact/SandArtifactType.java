@@ -17,11 +17,11 @@ package consulo.sandboxPlugin.ide.artifact;
 
 import consulo.application.AllIcons;
 import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import consulo.module.content.layer.ModulesProvider;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElementFactory;
-import com.intellij.packaging.elements.PackagingElementOutputKind;
+import consulo.compiler.artifact.element.PackagingElementFactory;
+import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;

@@ -22,6 +22,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.ex.FileChooserKeys;
 import consulo.module.Module;
 import com.intellij.openapi.project.DumbAwareAction;
+import consulo.module.content.layer.ModulesProvider;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ContentEntry;

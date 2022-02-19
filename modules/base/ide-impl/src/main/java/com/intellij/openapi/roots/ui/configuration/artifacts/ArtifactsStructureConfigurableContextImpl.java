@@ -16,6 +16,8 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import consulo.application.WriteAction;
+import consulo.compiler.artifact.*;
+import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -23,9 +25,8 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.packaging.artifacts.*;
-import com.intellij.packaging.elements.CompositePackagingElement;
+import consulo.module.content.layer.ModulesProvider;
+import consulo.compiler.artifact.element.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.DefaultPackagingElementResolvingContext;
 import consulo.disposer.Disposer;

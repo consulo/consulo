@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolderImpl;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.MultiValuesMap;
-import com.intellij.packaging.elements.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

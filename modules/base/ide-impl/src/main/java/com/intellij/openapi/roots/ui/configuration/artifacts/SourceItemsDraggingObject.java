@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import com.intellij.packaging.elements.PackagingElement;
-import com.intellij.packaging.ui.PackagingSourceItem;
-import com.intellij.packaging.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 
 import java.util.List;
 import java.util.ArrayList;

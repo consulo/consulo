@@ -15,8 +15,9 @@
  */
 package consulo.packaging.impl.artifacts;
 
+import consulo.compiler.artifact.*;
+import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.project.Project;
-import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.impl.artifacts.ArtifactPointerImpl;
 import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
