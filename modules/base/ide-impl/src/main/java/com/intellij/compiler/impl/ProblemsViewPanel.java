@@ -15,8 +15,8 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.compiler.CompilerWorkspaceConfiguration;
-import com.intellij.compiler.HelpID;
+import consulo.compiler.impl.CompilerWorkspaceConfiguration;
+import consulo.compiler.impl.HelpID;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;

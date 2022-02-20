@@ -15,23 +15,23 @@
  */
 package com.intellij.compiler.options;
 
+import com.intellij.execution.configurations.RunConfigurationBase;
+import com.intellij.openapi.util.Comparing;
+import consulo.application.AllIcons;
+import consulo.application.TransactionGuard;
+import consulo.compiler.CompileStatusNotification;
+import consulo.compiler.CompilerManager;
+import consulo.compiler.scope.CompileScope;
+import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
-import com.intellij.execution.configurations.RunConfigurationBase;
 import consulo.execution.configuration.RunProfileWithCompileBeforeLaunchOption;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.application.AllIcons;
-import consulo.dataContext.DataContext;
-import consulo.application.TransactionGuard;
-import consulo.compiler.scope.CompileScope;
-import consulo.compiler.CompileStatusNotification;
-import consulo.compiler.CompilerManager;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
-import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

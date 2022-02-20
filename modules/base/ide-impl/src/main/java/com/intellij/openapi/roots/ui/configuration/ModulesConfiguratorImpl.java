@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.compiler.ModuleCompilerUtil;
+import consulo.compiler.impl.ModuleCompilerUtil;
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;

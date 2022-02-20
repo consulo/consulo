@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.xdebugger.impl.settings;
+package consulo.debugger.impl.setting;
 
 import consulo.configurable.Configurable;
 import consulo.debugger.XDebuggerBundle;

@@ -15,7 +15,6 @@
  */
 package consulo.compiler.impl;
 
-import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.compiler.impl.*;
 import consulo.application.ApplicationManager;
 import consulo.compiler.*;

@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.compiler;
+package consulo.compiler;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.navigation.Navigatable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import com.intellij.util.ArrayUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import javax.annotation.Nonnull;
+import consulo.util.collection.ArrayUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ import java.util.StringTokenizer;
 public abstract class ProblemsView {
   @Nonnull
   public static ProblemsView getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, ProblemsView.class);
+    return project.getInstance(ProblemsView.class);
   }
 
   public static void showCurrentFileProblems(@Nonnull Project project) {

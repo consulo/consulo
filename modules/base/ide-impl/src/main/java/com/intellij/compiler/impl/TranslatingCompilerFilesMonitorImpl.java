@@ -19,7 +19,7 @@ import consulo.compiler.*;
 import consulo.content.ContentIterator;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectTopics;
-import com.intellij.compiler.CompilerIOUtil;
+import consulo.compiler.impl.CompilerIOUtil;
 import com.intellij.ide.caches.CachesInvalidator;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

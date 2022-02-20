@@ -59,14 +59,14 @@
     <projectService serviceInterface="consulo.compiler.CompilerConfiguration"
                     serviceImplementation="consulo.compiler.impl.CompilerConfigurationImpl"/>
 
-    <projectService serviceInterface="com.intellij.compiler.CompilerEncodingService"
-                    serviceImplementation="com.intellij.compiler.CompilerEncodingServiceImpl"/>
+    <projectService serviceInterface="consulo.compiler.CompilerEncodingService"
+                    serviceImplementation="consulo.compiler.impl.CompilerEncodingServiceImpl"/>
 
     <projectService serviceInterface="com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings"
                     serviceImplementation="com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings"/>
 
-    <projectService serviceInterface="com.intellij.compiler.CompilerWorkspaceConfiguration"
-                    serviceImplementation="com.intellij.compiler.CompilerWorkspaceConfiguration"/>
+    <projectService serviceInterface="consulo.compiler.impl.CompilerWorkspaceConfiguration"
+                    serviceImplementation="consulo.compiler.impl.CompilerWorkspaceConfiguration"/>
 
     <macro implementation="com.intellij.ide.macro.OutputPathMacro"/>
 

@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package com.intellij.compiler;
+package consulo.compiler.impl;
 
+import com.intellij.openapi.util.Pair;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.graph.GraphAlgorithms;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.util.graph.CachingSemiGraph;
 import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.Graph;
 import consulo.component.util.graph.GraphGenerator;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
-import com.intellij.openapi.util.Pair;
+import consulo.project.Project;
 import consulo.util.collection.Chunk;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.graph.*;
-import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.logging.Logger;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**

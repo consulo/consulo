@@ -17,7 +17,7 @@
 /*
  * @author Eugene Zhuravlev
  */
-package com.intellij.compiler;
+package consulo.compiler.impl;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.component.persist.State;

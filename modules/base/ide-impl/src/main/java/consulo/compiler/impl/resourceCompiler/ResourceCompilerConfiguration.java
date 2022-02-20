@@ -16,7 +16,7 @@
 package consulo.compiler.impl.resourceCompiler;
 
 import consulo.application.CommonBundle;
-import com.intellij.compiler.MalformedPatternException;
+import consulo.compiler.impl.MalformedPatternException;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.compiler.CompilerBundle;
 import com.intellij.openapi.components.*;

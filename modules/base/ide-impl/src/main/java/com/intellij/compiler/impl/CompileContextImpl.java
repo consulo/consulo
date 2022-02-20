@@ -21,8 +21,8 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.compiler.CompilerMessageImpl;
-import com.intellij.compiler.ProblemsView;
+import consulo.compiler.impl.CompilerMessageImpl;
+import consulo.compiler.ProblemsView;
 import com.intellij.compiler.progress.CompilerTask;
 import consulo.application.ApplicationManager;
 import consulo.compiler.*;

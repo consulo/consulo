@@ -15,29 +15,26 @@
  */
 package consulo.psi.impl;
 
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectTopics;
-import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
-import consulo.language.util.ModuleUtilCore;
-import consulo.module.content.layer.event.ModuleRootEvent;
-import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.project.Project;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
-import consulo.application.util.LowMemoryWatcher;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiManager;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.Query;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.LowMemoryWatcher;
 import consulo.disposer.Disposable;
-import consulo.module.extension.ModuleExtension;
+import consulo.language.psi.*;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
-import consulo.language.psi.PsiPackage;
-import consulo.language.psi.PsiPackageManager;
-import consulo.language.psi.PsiPackageSupportProvider;
-import consulo.virtualFileSystem.*;
+import consulo.module.content.ProjectTopics;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.extension.ModuleExtension;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
@@ -47,7 +44,6 @@ import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -152,9 +148,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   }
 
   @Nullable
-  private PsiPackage createPackageFromProviders(@Nonnull VirtualFile virtualFile,
-                                                @Nonnull Class<? extends ModuleExtension> extensionClass,
-                                                @Nonnull String qualifiedName) {
+  private PsiPackage createPackageFromProviders(@Nonnull VirtualFile virtualFile, @Nonnull Class<? extends ModuleExtension> extensionClass, @Nonnull String qualifiedName) {
     final Module moduleForFile = ModuleUtil.findModuleForFile(virtualFile, myProject);
     if (moduleForFile == null) {
       return null;
@@ -175,9 +169,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     return null;
   }
 
-  private PsiPackage createPackageFromLibrary(@Nonnull VirtualFile virtualFile,
-                                              @Nonnull Class<? extends ModuleExtension> extensionClass,
-                                              @Nonnull String qualifiedName) {
+  private PsiPackage createPackageFromLibrary(@Nonnull VirtualFile virtualFile, @Nonnull Class<? extends ModuleExtension> extensionClass, @Nonnull String qualifiedName) {
     if (myProjectFileIndex.isInLibraryClasses(virtualFile)) {
       List<OrderEntry> orderEntriesForFile = myProjectFileIndex.getOrderEntriesForFile(virtualFile);
       for (OrderEntry orderEntry : orderEntriesForFile) {

@@ -17,10 +17,10 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.build.BuildContentManager;
-import com.intellij.compiler.CompilerMessageImpl;
-import com.intellij.compiler.CompilerWorkspaceConfiguration;
-import com.intellij.compiler.ModuleCompilerUtil;
-import com.intellij.compiler.ProblemsView;
+import consulo.compiler.impl.CompilerMessageImpl;
+import consulo.compiler.impl.CompilerWorkspaceConfiguration;
+import consulo.compiler.impl.ModuleCompilerUtil;
+import consulo.compiler.ProblemsView;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.diagnostic.IdeErrorsDialog;

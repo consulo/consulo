@@ -246,7 +246,6 @@ open module consulo.ide.impl {
   exports com.intellij.codeInspection.util;
   exports com.intellij.codeStyle;
   exports com.intellij.codeWithMe;
-  exports com.intellij.compiler;
   exports com.intellij.compiler.actions;
   exports com.intellij.compiler.impl;
   exports com.intellij.compiler.impl.generic;
@@ -1289,7 +1288,6 @@ open module consulo.ide.impl {
   exports consulo.wm.impl.layout;
   exports consulo.wm.impl.status;
   exports consulo.wm.impl.welcomeScreen;
-  exports consulo.xdebugger.impl.settings;
   exports icons;
   exports org.intellij.plugins.intelliLang;
   exports org.intellij.plugins.intelliLang.inject;

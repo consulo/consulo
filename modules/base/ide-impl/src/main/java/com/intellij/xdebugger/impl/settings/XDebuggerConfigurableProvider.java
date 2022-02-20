@@ -5,7 +5,7 @@ import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.debugger.setting.DebuggerSettingsCategory;
 import consulo.debugger.setting.XDebuggerSettings;
-import consulo.xdebugger.impl.settings.XDebuggerGeneralConfigurable;
+import consulo.debugger.impl.setting.XDebuggerGeneralConfigurable;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.compiler;
+package consulo.compiler.impl;
 
-import org.jetbrains.annotations.NonNls;
+public class MalformedPatternException extends RuntimeException {
+  public MalformedPatternException(Throwable cause) {
+    super(cause);
+  }
 
-public interface HelpID {
-  @NonNls  String  COMPILER = "reference.toolWindows.messages";
-  @NonNls  String  GENERATE_ANT_BUILD = "editing.generateAntBuild";
+  @Override
+  public String getLocalizedMessage() {
+    return getCause().getLocalizedMessage();
+  }
 }
