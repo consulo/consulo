@@ -1,18 +1,19 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui;
 
+import consulo.ui.ex.tree.LoadingNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.ui.treeStructure.Tree;
+import consulo.ui.ex.tree.Tree;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import consulo.util.collection.JBIterable;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

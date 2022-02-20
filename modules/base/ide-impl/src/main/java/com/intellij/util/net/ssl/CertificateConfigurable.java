@@ -12,7 +12,7 @@ import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.treeStructure.Tree;
+import consulo.ui.ex.tree.Tree;
 import com.intellij.util.Consumer;
 import consulo.application.ui.awt.UIUtil;
 import consulo.disposer.Disposer;

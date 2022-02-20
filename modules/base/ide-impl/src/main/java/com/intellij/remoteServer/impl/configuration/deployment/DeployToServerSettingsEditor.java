@@ -17,7 +17,7 @@ package com.intellij.remoteServer.impl.configuration.deployment;
 
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Comparing;

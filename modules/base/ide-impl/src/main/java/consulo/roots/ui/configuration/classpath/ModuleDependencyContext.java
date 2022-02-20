@@ -22,8 +22,8 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 
 import javax.annotation.Nonnull;
 import java.util.*;

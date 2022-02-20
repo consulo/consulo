@@ -6,7 +6,7 @@ import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.LightColors;
 import consulo.application.AllIcons;

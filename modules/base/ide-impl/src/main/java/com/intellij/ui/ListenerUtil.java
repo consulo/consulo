@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.ClickListener;
+
 import java.awt.*;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyListener;

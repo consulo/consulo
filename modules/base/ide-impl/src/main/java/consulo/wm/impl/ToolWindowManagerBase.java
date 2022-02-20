@@ -20,7 +20,7 @@ import com.intellij.internal.statistic.UsageTrigger;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.fileEditor.FileEditorManager;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.DumbService;
 import consulo.project.Project;

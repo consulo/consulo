@@ -21,7 +21,7 @@ import com.intellij.codeInsight.intention.LowPriorityAction;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;

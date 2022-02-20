@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.push.ui;
 
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import javax.annotation.Nonnull;
 
 interface CustomRenderedTreeNode {

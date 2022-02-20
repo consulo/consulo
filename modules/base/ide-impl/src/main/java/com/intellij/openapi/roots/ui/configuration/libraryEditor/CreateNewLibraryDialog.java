@@ -25,7 +25,7 @@ import consulo.content.library.LibraryType;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.FormBuilder;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

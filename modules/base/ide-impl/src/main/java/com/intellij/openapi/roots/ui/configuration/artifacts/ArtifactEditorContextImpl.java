@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;

@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestTreeView;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerNodeDescriptor;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.ui.awt.JBUI;
 import org.jetbrains.annotations.NonNls;

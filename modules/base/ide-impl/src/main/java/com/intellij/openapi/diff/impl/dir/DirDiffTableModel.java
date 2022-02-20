@@ -44,10 +44,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.TableUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLoadingPanel;
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.StatusText;
+import consulo.ui.ex.StatusText;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.treeStructure.Tree;
+import consulo.ui.ex.tree.Tree;
 import com.intellij.util.Consumer;
 import consulo.application.ui.awt.UIUtil;
 

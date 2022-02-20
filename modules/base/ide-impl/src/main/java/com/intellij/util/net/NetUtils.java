@@ -15,7 +15,7 @@
  */
 package com.intellij.util.net;
 
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.net.util.NetUtil;
 

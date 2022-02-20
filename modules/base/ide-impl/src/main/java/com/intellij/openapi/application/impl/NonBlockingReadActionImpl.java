@@ -20,7 +20,7 @@ import consulo.application.constraint.ExpirableConstrainedExecution;
 import consulo.application.constraint.Expiration;
 import consulo.component.ComponentManager;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;

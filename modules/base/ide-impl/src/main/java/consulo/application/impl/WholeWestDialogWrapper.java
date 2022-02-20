@@ -21,8 +21,8 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.WindowStateService;
-import com.intellij.ui.JBSplitter;
-import com.intellij.ui.OnePixelSplitter;
+import consulo.ui.ex.JBSplitter;
+import consulo.ide.ui.OnePixelSplitter;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

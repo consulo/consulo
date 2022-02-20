@@ -15,9 +15,9 @@
  */
 package com.intellij.vcs.log.ui.render;
 
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

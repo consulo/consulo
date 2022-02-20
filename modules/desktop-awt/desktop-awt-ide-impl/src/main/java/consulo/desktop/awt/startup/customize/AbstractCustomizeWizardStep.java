@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.application.ui.awt.UIUtil;
 

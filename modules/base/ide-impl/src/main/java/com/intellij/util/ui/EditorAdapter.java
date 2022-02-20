@@ -27,7 +27,7 @@ import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 
 import java.util.ArrayList;
 import java.util.Collection;

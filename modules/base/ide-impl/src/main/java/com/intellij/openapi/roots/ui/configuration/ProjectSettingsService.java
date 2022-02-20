@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.module.Module;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.orderEntry.OrderEntry;

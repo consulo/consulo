@@ -55,9 +55,9 @@
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.content.layer.ContentFolderSupportPatcher"/>
     <extensionPoint name="createFromTemplateActionModuleResolver" interface="com.intellij.ide.actions.CreateFileFromTemplateAction$ModuleResolver"/>
 
-    <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
-    <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor" area="PROJECT"/>
-    <extensionPoint name="moduleService" beanClass="com.intellij.openapi.components.ServiceDescriptor" area="MODULE"/>
+    <extensionPoint name="applicationService" beanClass="consulo.component.impl.extension.ServiceDescriptor"/>
+    <extensionPoint name="projectService" beanClass="consulo.component.impl.extension.ServiceDescriptor" area="PROJECT"/>
+    <extensionPoint name="moduleService" beanClass="consulo.component.impl.extension.ServiceDescriptor" area="MODULE"/>
 
     <extensionPoint name="extensionExtender" beanClass="consulo.component.extension.KeyedLazyInstanceEP">
       <with attribute="implementationClass" implements="consulo.component.extension.ExtensionExtender"/>
@@ -1218,7 +1218,7 @@
 
     <applicationService serviceImplementation="com.intellij.ide.GeneralSettings"/>
 
-    <applicationService serviceInterface="consulo.util.ApplicationPropertiesComponent"
+    <applicationService serviceInterface="consulo.application.ApplicationPropertiesComponent"
                         serviceImplementation="com.intellij.ide.util.AppPropertiesComponentImpl"/>
 
     <applicationService serviceInterface="consulo.virtualFileSystem.fileType.FileNameMatcherFactory"
@@ -1233,7 +1233,7 @@
 
     <urlOpener implementation="com.intellij.ide.browsers.impl.DefaultUrlOpener" order="last"/>
 
-    <projectService serviceInterface="consulo.util.ProjectPropertiesComponent"
+    <projectService serviceInterface="consulo.project.ProjectPropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.wm.impl.WindowDressing" lazy="false"/>
@@ -2442,7 +2442,7 @@
     <favoritesListProvider implementation="com.intellij.ide.bookmarks.BookmarksFavoriteListProvider"/>
     <applicationService serviceInterface="consulo.language.editor.FileModificationService"
                         serviceImplementation="com.intellij.codeInsight.CodeInsightUtilBase"/>
-    <applicationService serviceInterface="com.intellij.ide.util.treeView.TreeAnchorizer"
+    <applicationService serviceInterface="consulo.ui.ex.tree.TreeAnchorizer"
                         serviceImplementation="com.intellij.ide.projectView.impl.nodes.PsiTreeAnchorizer"/>
 
     <!--Platform-->

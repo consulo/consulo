@@ -19,9 +19,9 @@ import com.intellij.ide.startup.StartupManagerEx;
 import consulo.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.components.ServiceDescriptor;
+import consulo.component.impl.extension.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
+import consulo.component.impl.extension.ExtensionAreaId;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -386,6 +386,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   public void dispose() {
     ApplicationEx application = (ApplicationEx)getApplication();
+
+    application.assertIsDispatchThread();
 
     assert application.isWriteAccessAllowed();  // dispose must be under write action
 

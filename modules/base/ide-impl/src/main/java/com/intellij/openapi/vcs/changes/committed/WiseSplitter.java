@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.openapi.ui.Splitter;
+import consulo.ui.ex.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.ui.IdeBorderFactory;
 import consulo.application.ui.awt.SideBorder;

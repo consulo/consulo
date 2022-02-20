@@ -8,7 +8,7 @@ import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;

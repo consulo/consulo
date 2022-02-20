@@ -24,7 +24,7 @@ import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.panels.VerticalBox;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import com.intellij.util.ArrayUtil;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

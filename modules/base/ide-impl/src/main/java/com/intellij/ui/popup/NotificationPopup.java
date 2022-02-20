@@ -21,8 +21,8 @@ import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.BalloonLayout;
-import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.NonOpaquePanel;
+import consulo.ui.ex.Wrapper;
 import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nullable;

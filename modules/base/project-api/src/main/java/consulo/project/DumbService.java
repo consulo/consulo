@@ -17,7 +17,7 @@ import consulo.component.messagebus.Topic;
 import consulo.component.util.ComponentUtil;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ModalityState;
 import consulo.util.lang.ref.SimpleReference;

@@ -20,7 +20,7 @@ import com.intellij.ide.dnd.DnDAction;
 import com.intellij.ide.dnd.DnDDragStartBean;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import com.intellij.ide.util.treeView.AbstractTreeBuilder;
+import consulo.ui.ex.tree.AbstractTreeBuilder;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.project.ProjectBundle;
@@ -35,7 +35,7 @@ import com.intellij.ui.TreeUIHelper;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

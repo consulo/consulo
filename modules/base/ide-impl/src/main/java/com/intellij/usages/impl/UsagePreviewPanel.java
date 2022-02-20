@@ -58,7 +58,7 @@ import com.intellij.usages.UsageContextPanel;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.UsageViewPresentation;
 import consulo.ui.ex.PositionTracker;
-import com.intellij.util.ui.StatusText;
+import consulo.ui.ex.StatusText;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

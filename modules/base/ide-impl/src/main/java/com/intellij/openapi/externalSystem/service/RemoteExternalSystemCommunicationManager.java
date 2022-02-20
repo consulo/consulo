@@ -43,7 +43,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.projectRoots.JdkUtil;
 import com.intellij.openapi.projectRoots.SimpleJavaSdkType;
 import consulo.util.lang.ShutDownTracker;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.PathUtil;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;

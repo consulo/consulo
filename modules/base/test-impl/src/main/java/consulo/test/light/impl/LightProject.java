@@ -15,19 +15,19 @@
  */
 package consulo.test.light.impl;
 
-import consulo.application.Application;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
-import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.collection.MultiMap;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
+import consulo.component.impl.BaseComponentManager;
+import consulo.component.impl.extension.ExtensionAreaId;
+import consulo.component.impl.extension.ExtensionsAreaImpl;
 import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.util.collection.MultiMap;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2018-08-25
  */
-public class LightProject extends ComponentManagerImpl implements Project {
+public class LightProject extends BaseComponentManager implements Project {
   @Nonnull
   private final Application myApplication;
   @Nonnull

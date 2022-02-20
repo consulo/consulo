@@ -35,7 +35,7 @@ import consulo.ui.ex.action.AnSeparator;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.event.DocumentEvent;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.util.containers.ContainerUtil;

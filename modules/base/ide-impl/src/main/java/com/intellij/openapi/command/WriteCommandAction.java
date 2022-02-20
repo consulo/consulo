@@ -17,7 +17,7 @@ package com.intellij.openapi.command;
 
 import consulo.language.editor.FileModificationService;
 import consulo.application.*;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.undoRedo.CommandProcessor;

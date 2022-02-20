@@ -16,7 +16,7 @@
 package consulo.ide.base;
 
 import com.intellij.openapi.options.ConfigurableEP;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.util.text.StringUtil;

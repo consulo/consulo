@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.search.TodoAttributesUtil;
 import com.intellij.psi.search.TodoPattern;
 import com.intellij.ui.*;
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 import com.intellij.util.ui.Table;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.image.Image;

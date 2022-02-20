@@ -16,7 +16,7 @@
 package consulo.ide.newProject.ui;
 
 import consulo.ui.ex.tree.PresentationData;
-import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.SimpleTextAttributes;

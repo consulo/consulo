@@ -30,7 +30,7 @@ import consulo.language.impl.psi.reference.PsiMultiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.util.ArrayUtil;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.codeInsight.completion.CompletionProvider;
 import consulo.language.psi.PsiElement;

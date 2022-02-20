@@ -16,14 +16,16 @@
 package consulo.components.impl;
 
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.AccessToken;
 import consulo.application.Application;
-import consulo.component.ComponentManager;
-import com.intellij.openapi.components.ServiceDescriptor;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
+import consulo.application.ApplicationProperties;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.component.ComponentManager;
+import consulo.component.impl.BaseComponentManager;
+import consulo.component.impl.extension.ExtensionAreaId;
+import consulo.component.impl.extension.ServiceDescriptor;
 import consulo.components.impl.stores.IComponentStore;
 import consulo.components.impl.stores.StateComponentInfo;
 import consulo.container.plugin.ComponentConfig;
@@ -35,7 +37,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl {
+public abstract class PlatformComponentManagerImpl extends BaseComponentManager {
   private static final Logger LOG = Logger.getInstance(PlatformComponentManagerImpl.class);
 
   private boolean myHandlingInitComponentError;
@@ -77,6 +79,34 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
 
   private float getPercentageOfComponentsLoaded() {
     return ((float)myCreatedNotLazyServicesCount.get()) / getNotLazyServicesCount();
+  }
+
+  @Override
+  protected Object initProgressIndicatorForLazyServices() {
+    ProgressIndicator progressIndicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
+    if (progressIndicator != null) {
+      progressIndicator.setIndeterminate(false);
+      progressIndicator.setFraction(0);
+    }
+    return progressIndicator;
+  }
+
+  @Override
+  protected void checkCanceledAndChangeProgress(@Nullable Object p, int pos, int maxPos) {
+    ProgressIndicator progressIndicator = (ProgressIndicator)p;
+    if (progressIndicator != null) {
+      progressIndicator.checkCanceled();
+
+      progressIndicator.setFraction(pos / (float)maxPos);
+    }
+    else {
+      checkCanceled();
+    }
+  }
+
+  @Override
+  protected boolean logSlowComponents() {
+    return LOG.isDebugEnabled() || ApplicationProperties.isInSandbox();
   }
 
   @RequiredUIAccess

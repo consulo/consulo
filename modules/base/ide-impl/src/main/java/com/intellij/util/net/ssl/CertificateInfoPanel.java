@@ -4,6 +4,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.FormBuilder;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;

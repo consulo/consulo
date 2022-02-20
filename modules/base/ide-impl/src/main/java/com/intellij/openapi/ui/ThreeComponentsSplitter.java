@@ -16,15 +16,16 @@
 package com.intellij.openapi.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.util.Weighted;
+import consulo.component.util.Weighted;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.wm.IdeGlassPane;
-import com.intellij.openapi.wm.IdeGlassPaneUtil;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.IdeGlassPane;
+import consulo.ui.ex.IdeGlassPaneUtil;
+import consulo.ui.ex.ClickListener;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBLabel;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.Splitter;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.update.UiNotifyConnector;
 import consulo.disposer.Disposable;

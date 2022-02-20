@@ -28,7 +28,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.popup.PopupFactoryImpl;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

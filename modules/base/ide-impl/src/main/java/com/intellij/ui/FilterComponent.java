@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.application.ModalityState;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

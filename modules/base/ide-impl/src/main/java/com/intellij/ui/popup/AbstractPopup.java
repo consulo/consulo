@@ -33,7 +33,7 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.*;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLabel;

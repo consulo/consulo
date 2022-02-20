@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.Application;
 import consulo.project.Project;
-import com.intellij.openapi.wm.FocusWatcher;
+import consulo.ui.ex.util.FocusWatcher;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.containers.ContainerUtil;

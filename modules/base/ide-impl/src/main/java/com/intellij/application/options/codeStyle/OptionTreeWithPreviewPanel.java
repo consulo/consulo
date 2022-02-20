@@ -18,15 +18,15 @@ package com.intellij.application.options.codeStyle;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import com.intellij.ui.SpeedSearchComparator;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.treeStructure.Tree;
+import consulo.ui.ex.tree.Tree;
 import consulo.util.collection.MultiMap;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 

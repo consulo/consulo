@@ -26,7 +26,7 @@ import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 

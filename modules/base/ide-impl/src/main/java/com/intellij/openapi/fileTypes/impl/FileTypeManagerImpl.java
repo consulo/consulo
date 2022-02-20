@@ -49,7 +49,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.concurrent.EdtExecutorService;
-import consulo.util.ApplicationPropertiesComponent;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.util.concurrent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
 import consulo.util.io.ByteArraySequence;

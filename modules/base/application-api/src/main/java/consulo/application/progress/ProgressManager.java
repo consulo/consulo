@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
+import consulo.component.ProcessCanceledException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -12,7 +12,7 @@ import consulo.application.internal.concurrency.Job;
 import consulo.application.internal.concurrency.JobLauncher;
 import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import jakarta.inject.Singleton;
 

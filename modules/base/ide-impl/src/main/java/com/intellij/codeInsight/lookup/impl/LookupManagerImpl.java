@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.LightweightHint;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.BitUtil;
 import consulo.logging.Logger;
 import kava.beans.PropertyChangeListener;

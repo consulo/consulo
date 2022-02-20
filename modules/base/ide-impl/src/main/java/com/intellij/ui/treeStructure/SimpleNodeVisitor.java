@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.treeStructure;
 
-import com.intellij.ide.util.treeView.AbstractTreeBuilder;
+import consulo.ui.ex.tree.AbstractTreeBuilder;
 
 /**
  * @author kir

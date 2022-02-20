@@ -16,7 +16,7 @@
 package com.intellij.ide.projectView;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;

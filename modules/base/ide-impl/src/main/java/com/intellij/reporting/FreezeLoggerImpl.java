@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -30,7 +30,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ProjectLocalize;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;

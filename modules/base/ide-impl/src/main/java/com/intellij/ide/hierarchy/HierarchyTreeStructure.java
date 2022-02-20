@@ -16,7 +16,7 @@
 
 package com.intellij.ide.hierarchy;
 
-import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
@@ -126,7 +126,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   @Nonnull
   @Override
   public ActionCallback asyncCommit() {
-    return asyncCommitDocuments(myProject);
+    return PsiDocumentManager.asyncCommitDocuments(myProject);
   }
 
   protected abstract Object[] buildChildren(HierarchyNodeDescriptor descriptor);

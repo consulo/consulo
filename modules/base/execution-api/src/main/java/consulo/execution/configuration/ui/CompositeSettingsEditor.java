@@ -18,7 +18,7 @@ package consulo.execution.configuration.ui;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

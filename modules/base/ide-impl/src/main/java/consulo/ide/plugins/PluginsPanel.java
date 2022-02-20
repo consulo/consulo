@@ -25,7 +25,7 @@ import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import consulo.container.plugin.PluginId;

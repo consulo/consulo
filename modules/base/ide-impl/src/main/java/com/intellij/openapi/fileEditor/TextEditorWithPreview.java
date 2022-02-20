@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.OnePixelSplitter;
+import consulo.ide.ui.OnePixelSplitter;
 import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

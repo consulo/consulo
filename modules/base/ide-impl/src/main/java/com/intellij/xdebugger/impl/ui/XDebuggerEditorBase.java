@@ -41,7 +41,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.project.ui.IdeFocusManager;
 import consulo.language.psi.PsiElement;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.EditorTextField;
 import consulo.ui.ex.RelativePoint;

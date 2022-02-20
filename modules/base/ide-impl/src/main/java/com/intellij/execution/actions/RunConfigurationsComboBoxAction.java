@@ -32,7 +32,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;

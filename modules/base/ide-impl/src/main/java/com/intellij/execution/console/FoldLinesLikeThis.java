@@ -10,7 +10,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

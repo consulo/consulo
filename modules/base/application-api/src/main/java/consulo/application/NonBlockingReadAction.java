@@ -3,7 +3,7 @@ package consulo.application;
 
 import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.CancellablePromise;

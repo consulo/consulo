@@ -17,7 +17,7 @@ package com.intellij.util.indexing.impl;
 
 import consulo.index.io.IndexId;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Computable;
 import consulo.application.util.LowMemoryWatcher;

@@ -17,7 +17,7 @@ package com.intellij.usages.impl;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;

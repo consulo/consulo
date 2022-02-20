@@ -15,6 +15,7 @@ import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.application.progress.*;
+import consulo.component.ProcessCanceledException;
 import consulo.project.startup.StartupManager;
 import com.intellij.openapi.ui.MessageType;
 import consulo.component.util.ModificationTracker;

@@ -28,7 +28,7 @@ import consulo.application.ApplicationManager;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Computable;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

@@ -89,6 +89,8 @@
     <module>modules/base/file-editor-api</module>
     <module>modules/base/compiler-artifact-api</module>
     <module>modules/base/color-scheme-api</module>
+    <module>modules/base/ide-api</module>
+    <module>modules/base/component-impl</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

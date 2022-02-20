@@ -16,6 +16,7 @@
 package com.intellij.pom.core.impl;
 
 import consulo.application.progress.*;
+import consulo.component.ProcessCanceledException;
 import consulo.language.ast.ASTNode;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
@@ -55,7 +56,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.Stack;
-import com.intellij.util.lang.CompoundRuntimeException;
+import consulo.util.lang.CompoundRuntimeException;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

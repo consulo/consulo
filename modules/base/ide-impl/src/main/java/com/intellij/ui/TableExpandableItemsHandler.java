@@ -2,6 +2,8 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.Pair;
+import consulo.ui.ex.ComponentWithExpandableItems;
+import consulo.ui.ex.TableCell;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

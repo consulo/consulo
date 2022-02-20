@@ -22,7 +22,7 @@ import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;

@@ -18,8 +18,8 @@ package com.intellij.openapi.module.impl;
 import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.dataholder.UserDataHolderBase;
 
 import javax.annotation.Nonnull;

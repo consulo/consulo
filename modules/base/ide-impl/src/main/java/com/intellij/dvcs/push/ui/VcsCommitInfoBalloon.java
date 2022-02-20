@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import javax.annotation.Nonnull;

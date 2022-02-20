@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.windows;
 
 import com.intellij.ui.ComponentUtil;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;

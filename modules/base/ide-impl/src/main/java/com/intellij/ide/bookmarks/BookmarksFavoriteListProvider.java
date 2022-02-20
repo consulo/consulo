@@ -21,7 +21,7 @@ import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
 import consulo.ui.image.ImageEffects;
 import jakarta.inject.Inject;

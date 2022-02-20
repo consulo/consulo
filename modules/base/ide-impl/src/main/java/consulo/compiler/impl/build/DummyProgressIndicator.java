@@ -16,7 +16,7 @@
 package consulo.compiler.impl.build;
 
 import com.intellij.openapi.application.ModalityState;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.application.progress.ProgressIndicatorEx;

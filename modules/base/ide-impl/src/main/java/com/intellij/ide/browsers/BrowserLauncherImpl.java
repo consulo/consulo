@@ -20,7 +20,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.AppUIUtil;

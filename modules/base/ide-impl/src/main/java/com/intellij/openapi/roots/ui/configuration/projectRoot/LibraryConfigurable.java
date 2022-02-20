@@ -20,14 +20,14 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
+import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.content.library.ui.LibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryRootsComponent;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.disposer.Disposer;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

@@ -15,6 +15,7 @@
  */
 package consulo.application.progress;
 
+import consulo.component.ProcessCanceledException;
 import consulo.component.extension.internal.RootComponentHolder;
 
 import javax.annotation.Nullable;

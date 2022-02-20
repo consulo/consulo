@@ -36,7 +36,7 @@ import consulo.project.ui.wm.ToolWindowContentUiType;
 import com.intellij.ui.content.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.ContentUtilEx;
 import consulo.util.lang.function.Condition;
 import consulo.dataContext.DataProvider;

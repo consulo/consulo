@@ -29,7 +29,7 @@ import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.history.ByteContent;
 import com.intellij.history.Label;
 import com.intellij.openapi.actionSystem.*;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

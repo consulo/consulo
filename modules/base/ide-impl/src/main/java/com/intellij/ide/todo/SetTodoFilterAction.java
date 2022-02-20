@@ -20,7 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.todo.configurable.TodoConfigurable;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Consumer;

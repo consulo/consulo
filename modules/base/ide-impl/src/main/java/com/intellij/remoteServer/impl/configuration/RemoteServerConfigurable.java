@@ -15,7 +15,7 @@ import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import consulo.application.util.Semaphore;
 import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;
-import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ide.setting.ConfigurableUIMigrationUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;

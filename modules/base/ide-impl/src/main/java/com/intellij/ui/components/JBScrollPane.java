@@ -16,6 +16,8 @@ import com.intellij.util.ui.*;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.UIUtil;
 import consulo.awt.hacking.BasicScrollPaneUIHacking;
+import consulo.ui.ex.JBViewport;
+import consulo.ui.ex.awt.MouseEventAdapter;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

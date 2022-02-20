@@ -12,7 +12,7 @@ import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.ComponentUtil;
 import consulo.ui.ex.event.DocumentAdapter;
 import consulo.ui.ex.RelativePoint;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.ui.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

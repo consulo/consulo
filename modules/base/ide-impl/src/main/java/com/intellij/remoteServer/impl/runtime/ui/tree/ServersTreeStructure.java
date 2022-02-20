@@ -9,7 +9,7 @@ import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.TreeStructureProvider;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructureBase;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
 import com.intellij.openapi.util.Pair;

@@ -29,6 +29,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.util.LafProperty;
 import consulo.ui.image.ImageKey;
 import consulo.util.collection.ArrayUtil;
@@ -327,9 +328,6 @@ public class UIUtil {
   public static final String CENTER_TOOLTIP_STRICT = "ToCenterTooltip.default";
 
   public static final Pattern CLOSE_TAG_PATTERN = Pattern.compile("<\\s*([^<>/ ]+)([^<>]*)/\\s*>", Pattern.CASE_INSENSITIVE);
-
-  @NonNls
-  public static final String FOCUS_PROXY_KEY = "isFocusProxy";
 
   public static Key<Integer> KEEP_BORDER_SIDES = Key.create("keepBorderSides");
 
@@ -2664,11 +2662,11 @@ public class UIUtil {
   }
 
   public static boolean isFocusProxy(@Nullable Component c) {
-    return c instanceof JComponent && Boolean.TRUE.equals(((JComponent)c).getClientProperty(FOCUS_PROXY_KEY));
+    return LafProperty.isFocusProxy(c);
   }
 
   public static void setFocusProxy(JComponent c, boolean isProxy) {
-    c.putClientProperty(FOCUS_PROXY_KEY, isProxy ? Boolean.TRUE : null);
+    LafProperty.setFocusProxy(c, isProxy);
   }
 
   public static void maybeInstall(InputMap map, String action, KeyStroke stroke) {

@@ -15,10 +15,12 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ui.treeStructure.Tree;
+import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.Tree;
 import com.intellij.util.ui.ThreeStateCheckBox;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -19,7 +19,7 @@ import com.intellij.ui.popup.WizardPopup;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

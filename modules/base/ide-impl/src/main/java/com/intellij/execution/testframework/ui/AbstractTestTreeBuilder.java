@@ -21,6 +21,8 @@ import com.intellij.ide.util.treeView.*;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 import com.intellij.openapi.util.Comparing;
+import consulo.ui.ex.tree.AbstractTreeBuilder;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 
 import javax.annotation.Nonnull;

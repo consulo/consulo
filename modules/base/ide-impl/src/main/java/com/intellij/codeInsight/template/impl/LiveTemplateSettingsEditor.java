@@ -22,6 +22,7 @@ import com.intellij.codeInsight.template.EverywhereContextType;
 import com.intellij.codeInsight.template.TemplateContextType;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import consulo.ui.ex.ClickListener;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ui.ex.JBColor;
 import consulo.document.Document;
@@ -47,7 +48,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import com.intellij.util.ui.GridBag;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.update.UiNotifyConnector;
 

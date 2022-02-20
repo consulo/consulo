@@ -28,7 +28,7 @@ import consulo.dataContext.DataProvider;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Splitter;
+import consulo.ui.ex.Splitter;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;

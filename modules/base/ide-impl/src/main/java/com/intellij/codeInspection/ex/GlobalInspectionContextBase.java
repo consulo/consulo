@@ -16,6 +16,7 @@
 
 package com.intellij.codeInspection.ex;
 
+import consulo.component.ProcessCanceledException;
 import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;

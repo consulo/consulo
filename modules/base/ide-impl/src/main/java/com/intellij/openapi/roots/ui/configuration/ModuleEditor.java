@@ -35,8 +35,8 @@ import com.intellij.util.EventDispatcher;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import consulo.roots.ui.configuration.ExtensionEditor;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

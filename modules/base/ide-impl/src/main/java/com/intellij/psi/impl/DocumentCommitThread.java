@@ -40,7 +40,7 @@ import consulo.language.ast.FileASTNode;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

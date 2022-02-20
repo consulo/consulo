@@ -4,7 +4,7 @@ package com.intellij.openapi.vfs.newvfs;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.component.extension.ExtensionPointName;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.PingProgress;
 import com.intellij.openapi.util.Pair;

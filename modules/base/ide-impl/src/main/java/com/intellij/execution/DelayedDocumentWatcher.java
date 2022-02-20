@@ -30,7 +30,7 @@ import consulo.project.ProjectCoreUtil;
 import consulo.application.util.function.Computable;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.PsiErrorElementUtil;
 import consulo.component.messagebus.MessageBusConnection;

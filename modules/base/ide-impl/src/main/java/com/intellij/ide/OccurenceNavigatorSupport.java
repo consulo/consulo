@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import consulo.navigation.Navigatable;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

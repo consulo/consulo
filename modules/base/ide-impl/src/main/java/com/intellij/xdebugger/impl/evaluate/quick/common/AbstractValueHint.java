@@ -35,7 +35,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;

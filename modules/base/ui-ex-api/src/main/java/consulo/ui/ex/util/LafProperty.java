@@ -19,6 +19,7 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -27,6 +28,8 @@ import java.awt.*;
  * @since 12-Feb-22
  */
 public final class LafProperty {
+  private static final String FOCUS_PROXY_KEY = "isFocusProxy";
+
   public static Color getListBackground() {
     return UIManager.getColor("List.background");
   }
@@ -61,5 +64,13 @@ public final class LafProperty {
 
   public static Color getLabelForeground() {
     return JBColor.namedColor("Label.foreground", new JBColor(Gray._0, Gray.xBB));
+  }
+
+  public static boolean isFocusProxy(@Nullable Component c) {
+    return c instanceof JComponent && Boolean.TRUE.equals(((JComponent)c).getClientProperty(FOCUS_PROXY_KEY));
+  }
+
+  public static void setFocusProxy(JComponent c, boolean isProxy) {
+    c.putClientProperty(FOCUS_PROXY_KEY, isProxy ? Boolean.TRUE : null);
   }
 }

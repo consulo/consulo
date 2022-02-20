@@ -7,7 +7,7 @@ import com.intellij.navigation.PsiElementNavigationItem;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.IconUtil;

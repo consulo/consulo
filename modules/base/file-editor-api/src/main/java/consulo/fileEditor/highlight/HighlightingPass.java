@@ -17,7 +17,7 @@ package consulo.fileEditor.highlight;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 
 import javax.annotation.Nonnull;
 

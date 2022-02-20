@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;

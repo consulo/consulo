@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.ClickListener;
 import consulo.ui.ex.JBColor;
 import org.jetbrains.annotations.NonNls;
 

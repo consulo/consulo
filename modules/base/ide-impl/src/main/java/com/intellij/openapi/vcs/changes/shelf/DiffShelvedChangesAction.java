@@ -30,7 +30,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.diff.impl.patch.*;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

@@ -20,7 +20,7 @@ import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.EditableTreeModel;
 import com.intellij.util.ui.ElementProducer;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

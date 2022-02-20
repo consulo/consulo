@@ -22,7 +22,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.CheckedTreeNode;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import consulo.language.icon.IconDescriptorUpdaters;
 
 import javax.swing.tree.TreeNode;

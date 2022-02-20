@@ -21,7 +21,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.actionSystem.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

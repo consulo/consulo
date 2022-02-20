@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.generation;
 
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import consulo.ui.image.Image;

@@ -3,7 +3,7 @@ package com.intellij.ui.components;
 
 import consulo.application.Application;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.wm.IdeGlassPane.TopComponent;
+import consulo.ui.ex.IdeGlassPane.TopComponent;
 import com.intellij.ui.ComponentUtil;
 import consulo.application.ui.awt.JBUIScale;
 import com.intellij.ui.scroll.TouchScrollUtil;

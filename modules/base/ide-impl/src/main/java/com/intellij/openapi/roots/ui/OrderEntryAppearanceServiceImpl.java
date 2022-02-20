@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
@@ -33,7 +33,7 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkUtil;
 import consulo.content.library.Library;
-import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.module.Module;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -41,7 +41,7 @@ import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

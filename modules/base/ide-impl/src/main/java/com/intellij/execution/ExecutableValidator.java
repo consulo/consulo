@@ -21,7 +21,7 @@ import com.intellij.execution.process.CapturingProcessHandler;
 import consulo.process.local.ProcessOutput;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.registry.Registry;

@@ -16,7 +16,7 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.openapi.util.Weighted;
+import consulo.component.util.Weighted;
 
 /**
  * @author Rustam Vishnyakov

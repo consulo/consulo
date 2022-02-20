@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection.ui;
 
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;

@@ -17,7 +17,7 @@ package consulo.application.impl;
 
 import consulo.application.Application;
 import consulo.application.TransactionId;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;

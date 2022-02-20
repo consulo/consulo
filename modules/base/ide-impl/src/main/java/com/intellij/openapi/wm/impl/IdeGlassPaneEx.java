@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.wm.IdeGlassPane;
+import consulo.ui.ex.IdeGlassPane;
 
 import java.awt.*;
 

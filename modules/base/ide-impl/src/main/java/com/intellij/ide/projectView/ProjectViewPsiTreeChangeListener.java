@@ -17,7 +17,7 @@
 package com.intellij.ide.projectView;
 
 import com.intellij.ide.scratch.ScratchUtil;
-import com.intellij.ide.util.treeView.AbstractTreeUpdater;
+import consulo.ui.ex.tree.AbstractTreeUpdater;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;

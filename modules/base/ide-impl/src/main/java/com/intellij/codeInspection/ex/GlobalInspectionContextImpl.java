@@ -46,6 +46,7 @@ import consulo.application.progress.*;
 import consulo.application.ui.awt.UIUtil;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
+import consulo.component.ProcessCanceledException;
 import consulo.content.FileIndex;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;

@@ -10,7 +10,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.concurrency.FutureResult;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.ui.awt.UIUtil;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;

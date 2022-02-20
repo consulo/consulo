@@ -23,15 +23,15 @@ import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
-import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
+import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.EditExistingLibraryDialog;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.content.base.BinariesOrderRootType;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 
 import javax.annotation.Nonnull;
 import java.util.List;

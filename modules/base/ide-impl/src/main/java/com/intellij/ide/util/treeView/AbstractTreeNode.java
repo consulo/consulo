@@ -1,9 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util.treeView;
 
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.tree.*;
 import consulo.navigation.NavigationItem;
 import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -13,7 +11,6 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.tree.LeafState;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;

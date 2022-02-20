@@ -17,7 +17,7 @@ package com.intellij.codeInspection.ex;
 
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;

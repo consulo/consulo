@@ -28,7 +28,7 @@ import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.profile.codeInspection.ui.ToolDescriptors;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.ui.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;

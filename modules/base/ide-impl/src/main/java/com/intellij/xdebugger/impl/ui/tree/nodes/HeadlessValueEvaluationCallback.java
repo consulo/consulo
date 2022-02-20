@@ -19,7 +19,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.application.util.Semaphore;
 import consulo.debugger.XDebuggerBundle;
 import consulo.debugger.frame.XFullValueEvaluator;

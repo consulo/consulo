@@ -21,7 +21,7 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchConditio
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.ui.components.JBTextField;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

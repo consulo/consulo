@@ -32,7 +32,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.DocCommandGroupId;
 import consulo.language.psi.*;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiUtilCore;

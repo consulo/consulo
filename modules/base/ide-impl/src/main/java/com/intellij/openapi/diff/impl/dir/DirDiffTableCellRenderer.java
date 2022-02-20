@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.dir;
 
 import com.intellij.ide.diff.DirDiffOperation;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import com.intellij.util.ObjectUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;

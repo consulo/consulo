@@ -17,7 +17,7 @@ package com.intellij.dvcs.push;
 
 import com.intellij.dvcs.push.ui.PushTargetEditorListener;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

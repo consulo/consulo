@@ -36,7 +36,7 @@
 
 package consulo.desktop.awt.ui.util;
 
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.application.ui.awt.GraphicsUtil;
 import consulo.application.ui.awt.ImageUtil;
 import consulo.application.ui.awt.JBUI;

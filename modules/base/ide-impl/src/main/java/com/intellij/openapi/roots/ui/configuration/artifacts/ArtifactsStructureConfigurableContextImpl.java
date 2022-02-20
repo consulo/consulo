@@ -30,8 +30,8 @@ import consulo.compiler.artifact.element.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.DefaultPackagingElementResolvingContext;
 import consulo.disposer.Disposer;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

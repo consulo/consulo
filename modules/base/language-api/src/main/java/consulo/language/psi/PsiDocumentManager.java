@@ -7,6 +7,7 @@ import consulo.document.Document;
 import consulo.language.file.FileViewProvider;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
+import consulo.util.concurrent.ActionCallback;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -19,15 +20,6 @@ import java.util.EventListener;
  */
 public abstract class PsiDocumentManager {
   /**
-   * Checks if the PSI tree for the specified document is up to date (its state reflects the latest changes made
-   * to the document content).
-   *
-   * @param document the document to check.
-   * @return true if the PSI tree for the document is up to date, false otherwise.
-   */
-  public abstract boolean isCommitted(@Nonnull Document document);
-
-  /**
    * Returns the document manager instance for the specified project.
    *
    * @param project the project for which the document manager is requested.
@@ -36,6 +28,27 @@ public abstract class PsiDocumentManager {
   public static PsiDocumentManager getInstance(@Nonnull Project project) {
     return project.getComponent(PsiDocumentManager.class);
   }
+
+  @Nonnull
+  public static ActionCallback asyncCommitDocuments(@Nonnull Project project) {
+    if (project.isDisposed()) return ActionCallback.DONE;
+    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+    if (!documentManager.hasUncommitedDocuments()) {
+      return ActionCallback.DONE;
+    }
+    final ActionCallback callback = new ActionCallback();
+    documentManager.performWhenAllCommitted(callback.createSetDoneRunnable());
+    return callback;
+  }
+
+  /**
+   * Checks if the PSI tree for the specified document is up to date (its state reflects the latest changes made
+   * to the document content).
+   *
+   * @param document the document to check.
+   * @return true if the PSI tree for the document is up to date, false otherwise.
+   */
+  public abstract boolean isCommitted(@Nonnull Document document);
 
   /**
    * Returns the PSI file for the specified document.

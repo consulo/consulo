@@ -22,7 +22,7 @@ import consulo.language.editor.intention.IntentionAction;
 import com.intellij.lang.LangBundle;
 import consulo.language.Language;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

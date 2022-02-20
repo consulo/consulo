@@ -39,7 +39,7 @@ import com.intellij.ui.MutableCollectionComboBoxModel;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.BorderLayoutPanel;
 import consulo.disposer.Disposable;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
 import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
 import consulo.ui.annotation.RequiredUIAccess;

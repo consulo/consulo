@@ -11,7 +11,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.IdeBorderFactory;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ObjectUtils;
 import consulo.application.ui.awt.JBCurrentTheme;

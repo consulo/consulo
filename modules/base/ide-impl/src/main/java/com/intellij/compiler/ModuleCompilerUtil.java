@@ -18,7 +18,10 @@ package com.intellij.compiler;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.component.util.graph.CachingSemiGraph;
+import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.Graph;
+import consulo.component.util.graph.GraphGenerator;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;

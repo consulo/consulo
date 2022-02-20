@@ -22,7 +22,7 @@ package consulo.application.extension;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.KeyedLazyInstance;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

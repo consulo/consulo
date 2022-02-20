@@ -59,6 +59,8 @@ open module consulo.ide.impl {
   requires transitive consulo.undo.redo.api;
   requires transitive consulo.file.editor.api;
   requires transitive consulo.compiler.artifact.api;
+  requires transitive consulo.ide.api;
+  requires transitive consulo.component.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -573,7 +575,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.editor.richcopy.settings;
   exports com.intellij.openapi.editor.richcopy.view;
   exports com.intellij.openapi.editor.textarea;
-  exports com.intellij.openapi.extensions.impl;
   exports com.intellij.openapi.externalSystem;
   exports com.intellij.openapi.externalSystem.action;
   exports com.intellij.openapi.externalSystem.importing;
@@ -985,9 +986,7 @@ open module consulo.ide.impl {
   exports com.intellij.util.io.socketConnection.impl;
   exports com.intellij.util.io.storage;
   exports com.intellij.util.io.zip;
-  exports com.intellij.util.lang;
   exports com.intellij.util.loader;
-  exports com.intellij.util.messages.impl;
   exports com.intellij.util.net;
   exports com.intellij.util.net.ssl;
   exports com.intellij.util.properties;

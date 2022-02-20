@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
+import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import javax.annotation.Nonnull;
 

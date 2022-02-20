@@ -37,7 +37,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.dataContext.DataManager;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import com.intellij.ui.ListUtil;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBList;

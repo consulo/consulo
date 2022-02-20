@@ -15,6 +15,7 @@
  */
 package consulo.options;
 
+import consulo.ide.setting.ProjectStructureSelector;
 import consulo.module.Module;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
@@ -33,7 +34,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleConfigurabl
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
-import com.intellij.openapi.ui.MasterDetailsComponent;
+import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.compiler.artifact.Artifact;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -44,7 +44,7 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.ex.AbstractDelegatingToRootTraversalPolicy;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBInsets;

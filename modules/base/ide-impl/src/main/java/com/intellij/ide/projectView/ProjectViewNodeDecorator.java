@@ -18,7 +18,7 @@ package com.intellij.ide.projectView;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.tree.PresentationData;
 
 /**

@@ -21,7 +21,7 @@ import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WindowManager;

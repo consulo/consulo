@@ -26,7 +26,7 @@ import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.panels.HorizontalLayout;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.util.NotNullProducer;
 import consulo.application.ui.awt.JBUI;

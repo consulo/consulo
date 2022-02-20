@@ -15,7 +15,7 @@
  */
 package consulo.desktop.editor.impl;
 
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 
 import javax.swing.*;
 import java.awt.*;

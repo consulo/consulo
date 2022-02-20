@@ -22,7 +22,7 @@ import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
 import consulo.document.util.Segment;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.ArrayUtil;
 
 import java.util.ArrayList;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.issueLinks;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -2,7 +2,7 @@ package com.intellij.coverage.view;
 
 import com.intellij.ide.commander.AbstractListBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.AlphaComparator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -13,7 +13,7 @@ import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.TableUtil;
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

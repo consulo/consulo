@@ -3,7 +3,7 @@ package com.intellij.ide.actions.runAnything.items;
 
 import com.intellij.ide.actions.runAnything.groups.RunAnythingGroup;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ObjectUtils;

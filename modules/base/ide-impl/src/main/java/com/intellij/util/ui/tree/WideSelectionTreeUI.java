@@ -20,7 +20,7 @@ import consulo.util.lang.function.Conditions;
 import consulo.application.util.SystemInfo;
 import consulo.util.lang.SystemProperties;
 import consulo.application.ui.awt.JBUI;
-import com.intellij.util.ui.MouseEventAdapter;
+import consulo.ui.ex.awt.MouseEventAdapter;
 import consulo.application.ui.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;

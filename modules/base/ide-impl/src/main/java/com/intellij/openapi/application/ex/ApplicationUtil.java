@@ -26,7 +26,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import org.jetbrains.ide.PooledThreadExecutor;
 

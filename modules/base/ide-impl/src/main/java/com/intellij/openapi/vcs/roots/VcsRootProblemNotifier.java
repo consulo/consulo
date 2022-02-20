@@ -8,7 +8,7 @@ import com.intellij.notification.NotificationAction;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;

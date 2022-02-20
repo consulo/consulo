@@ -20,6 +20,7 @@ import com.intellij.history.LocalHistoryAction;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.progress.*;
+import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;

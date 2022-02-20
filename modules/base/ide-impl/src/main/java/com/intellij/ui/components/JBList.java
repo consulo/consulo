@@ -13,6 +13,10 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.ComponentWithEmptyText;
+import consulo.ui.ex.ComponentWithExpandableItems;
+import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.StatusText;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

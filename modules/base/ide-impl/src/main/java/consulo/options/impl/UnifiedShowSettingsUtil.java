@@ -15,11 +15,13 @@
  */
 package consulo.options.impl;
 
+import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.ide.setting.bundle.SettingsSdksModel;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.project.Project;
-import consulo.options.ProjectStructureSelector;
+import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.impl.settings.UnifiedSettingsDialog;
 import consulo.util.concurrent.AsyncResult;
@@ -122,5 +124,13 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
   @Override
   public boolean isAlreadyShown() {
     return false;
+  }
+
+  @Nonnull
+  @Override
+  public SettingsSdksModel getSdksModel() {
+    SettingsSdksModel model = new DefaultSdksModel();
+    model.reset();
+    return model;
   }
 }

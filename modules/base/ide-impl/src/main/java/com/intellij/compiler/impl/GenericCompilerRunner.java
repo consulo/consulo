@@ -23,7 +23,7 @@ import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.CompilerPaths;
 import com.intellij.openapi.compiler.generic.*;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;

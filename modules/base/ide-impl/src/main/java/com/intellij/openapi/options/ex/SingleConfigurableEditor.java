@@ -28,12 +28,12 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import consulo.application.ui.awt.CustomLineBorder;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.BorderLayoutPanel;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
-import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ide.setting.ConfigurableUIMigrationUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 

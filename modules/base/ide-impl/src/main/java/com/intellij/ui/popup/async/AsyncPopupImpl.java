@@ -9,7 +9,7 @@ import consulo.disposer.Disposer;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.popup.NextStepHandler;
 import com.intellij.ui.popup.WizardPopup;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.application.ui.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

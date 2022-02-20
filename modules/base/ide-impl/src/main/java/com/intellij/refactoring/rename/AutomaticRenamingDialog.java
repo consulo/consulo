@@ -33,7 +33,7 @@ import com.intellij.refactoring.util.RefactoringUIUtil;
 import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.ui.GuiUtils;
 import com.intellij.ui.TableUtil;
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.UsageViewPresentation;
 import com.intellij.usages.impl.UsagePreviewPanel;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.progress.util;
 
 import consulo.application.ui.UISettings;
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;

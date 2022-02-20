@@ -28,7 +28,7 @@ import consulo.codeEditor.Editor;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 import com.intellij.util.ui.EditableModel;
 import javax.annotation.Nonnull;
 

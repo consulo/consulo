@@ -17,6 +17,7 @@
 package consulo.application.progress;
 
 import consulo.application.Application;
+import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;

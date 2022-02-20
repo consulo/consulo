@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.util.Pass;
 import com.intellij.ui.InplaceButton;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.ui.tabs.TabInfo;
 
 import javax.swing.*;

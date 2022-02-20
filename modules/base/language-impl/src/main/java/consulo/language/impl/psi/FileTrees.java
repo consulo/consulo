@@ -15,7 +15,7 @@
  */
 package consulo.language.impl.psi;
 
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.CompositeElement;

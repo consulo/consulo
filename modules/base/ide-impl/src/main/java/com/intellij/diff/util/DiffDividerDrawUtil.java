@@ -18,7 +18,7 @@ package com.intellij.diff.util;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.application.ui.awt.GraphicsUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;

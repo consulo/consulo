@@ -16,9 +16,9 @@
 package com.intellij.ui.components;
 
 import com.intellij.util.BooleanFunction;
-import com.intellij.util.ui.ComponentWithEmptyText;
+import consulo.ui.ex.ComponentWithEmptyText;
 import consulo.application.ui.awt.JBInsets;
-import com.intellij.util.ui.StatusText;
+import consulo.ui.ex.StatusText;
 import consulo.application.ui.awt.UIUtil;
 
 import javax.annotation.Nonnull;

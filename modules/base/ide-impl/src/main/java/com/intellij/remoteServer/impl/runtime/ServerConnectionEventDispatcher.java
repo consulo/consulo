@@ -19,8 +19,8 @@ import consulo.application.ApplicationManager;
 import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionListener;
 import consulo.component.messagebus.MessageBus;
-import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.Update;
+import consulo.ui.ex.util.MergingUpdateQueue;
+import consulo.ui.ex.util.Update;
 
 /**
  * @author nik

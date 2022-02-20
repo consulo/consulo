@@ -15,13 +15,13 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 
 import javax.swing.table.TableModel;
 
 
 /**
- * @deprecated use {@link com.intellij.ui.table.JBTable}
+ * @deprecated use {@link JBTable}
  */
 public class Table extends JBTable {
   public Table() {

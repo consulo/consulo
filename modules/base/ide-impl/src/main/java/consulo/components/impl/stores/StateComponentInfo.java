@@ -20,7 +20,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.StoragePathMacros;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
+import consulo.component.impl.BaseComponentManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import com.intellij.openapi.util.RoamingTypeDisabled;
@@ -54,7 +54,7 @@ public class StateComponentInfo<T> {
       stateComponent = (PersistentStateComponent<?>)o;
 
       if (project != null) {
-        final ComponentConfig config = ((ComponentManagerImpl)project).getConfig(o.getClass());
+        final ComponentConfig config = ((BaseComponentManager)project).getConfig(o.getClass());
 
         if (config != null && isWorkspace(config.options)) {
           LOGGER.warn("Marker 'workspace' is ignored for component: " + o.getClass().getName());
@@ -66,13 +66,13 @@ public class StateComponentInfo<T> {
 
       if (state == null) {
         RoamingType type = o instanceof RoamingTypeDisabled ? RoamingType.DISABLED : RoamingType.PER_USER;
-        String name = ComponentManagerImpl.getComponentName(o);
+        String name = BaseComponentManager.getComponentName(o);
         String file;
         if (project == null) {
           file = StoragePathMacros.DEFAULT_FILE;
         }
         else {
-          final ComponentConfig config = ((ComponentManagerImpl)project).getConfig(o.getClass());
+          final ComponentConfig config = ((BaseComponentManager)project).getConfig(o.getClass());
           assert config != null : "Couldn't find old storage for " + o.getClass().getName();
 
           final boolean workspace = isWorkspace(config.options);

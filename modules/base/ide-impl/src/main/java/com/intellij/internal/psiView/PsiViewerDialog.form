@@ -65,7 +65,7 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="628d6" class="com.intellij.ui.treeStructure.Tree" binding="myPsiTree" custom-create="true">
+                          <component id="628d6" class="consulo.ui.ex.tree.Tree" binding="myPsiTree" custom-create="true">
                             <constraints/>
                             <properties/>
                           </component>
@@ -131,7 +131,7 @@
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="7dc8f" class="com.intellij.ui.treeStructure.Tree" binding="myBlockTree" custom-create="true">
+                              <component id="7dc8f" class="consulo.ui.ex.tree.Tree" binding="myBlockTree" custom-create="true">
                                 <constraints/>
                                 <properties/>
                               </component>

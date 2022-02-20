@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
 import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FilteringIterator;
+import consulo.util.collection.FilteringIterator;
 import com.intellij.util.containers.FlatteningIterator;
 import consulo.util.collection.MultiMap;
 

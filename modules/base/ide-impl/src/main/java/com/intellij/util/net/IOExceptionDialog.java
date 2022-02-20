@@ -16,7 +16,7 @@
 package com.intellij.util.net;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.util.lang.ref.Ref;

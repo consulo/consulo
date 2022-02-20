@@ -22,7 +22,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.project.ui.IdeFocusManager;

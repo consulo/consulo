@@ -29,7 +29,7 @@ import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import consulo.content.library.LibraryType;
 import consulo.content.library.OrderRoot;
-import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
+import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
 import consulo.content.library.ui.LibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.NewLibraryEditor;
@@ -42,7 +42,7 @@ import consulo.component.util.text.UniqueNameGenerator;
 import consulo.logging.Logger;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

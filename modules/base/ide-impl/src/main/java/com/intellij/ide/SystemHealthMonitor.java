@@ -50,7 +50,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.ide.updateSettings.impl.UpdateHistory;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.ApplicationPropertiesComponent;
+import consulo.application.ApplicationPropertiesComponent;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.jetbrains.annotations.PropertyKey;

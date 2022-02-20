@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.components;
 
+import consulo.component.BaseComponent;
 import consulo.project.Project;
 
 /**

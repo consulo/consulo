@@ -7,7 +7,7 @@ import com.intellij.openapi.util.SystemInfoRt;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.ComponentUtil;
 import consulo.application.util.mac.foundation.ID;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.NotNullProducer;
 import consulo.application.ui.awt.UIUtil;
 import com.sun.jna.Callback;

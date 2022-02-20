@@ -33,7 +33,7 @@ import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.BorderLayoutPanel;
 import consulo.application.impl.WholeWestDialogWrapper;
 import consulo.disposer.Disposer;
-import consulo.options.ProjectStructureSelector;
+import consulo.ide.setting.ProjectStructureSelector;
 import consulo.options.ProjectStructureSelectorOverSettings;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;

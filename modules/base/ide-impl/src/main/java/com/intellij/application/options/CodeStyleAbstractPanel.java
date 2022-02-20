@@ -46,7 +46,7 @@ import com.intellij.psi.codeStyle.*;
 import consulo.ui.ex.event.UserActivityListener;
 import consulo.ui.ex.UserActivityWatcher;
 import consulo.application.ui.awt.CustomLineBorder;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.ui.ex.update.UiNotifyConnector;

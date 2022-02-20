@@ -40,7 +40,7 @@ import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.options.colors.pages.GeneralColorsPage;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

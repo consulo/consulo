@@ -17,7 +17,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import com.intellij.ui.UIBundle;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.Consumer;
 import consulo.disposer.Disposer;
 import consulo.document.Document;

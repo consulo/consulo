@@ -5,10 +5,10 @@ import com.intellij.ui.ComponentUtil;
 import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.ui.ComponentWithEmptyText;
+import consulo.ui.ex.ComponentWithEmptyText;
 import consulo.application.ui.awt.JBInsets;
 import consulo.application.ui.awt.JBUI;
-import com.intellij.util.ui.StatusText;
+import consulo.ui.ex.StatusText;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

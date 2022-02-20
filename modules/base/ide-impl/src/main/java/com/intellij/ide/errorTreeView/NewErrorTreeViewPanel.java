@@ -41,12 +41,12 @@ import com.intellij.ui.PopupHandler;
 import consulo.application.ui.awt.SideBorder;
 import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.MessageView;
-import com.intellij.ui.treeStructure.Tree;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.tree.Tree;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.ui.MutableErrorTreeView;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 

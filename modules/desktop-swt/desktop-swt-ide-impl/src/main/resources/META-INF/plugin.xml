@@ -32,7 +32,7 @@
 
     <applicationService serviceInterface="consulo.codeEditor.EditorFactory" serviceImplementation="consulo.desktop.swt.editor.impl.DesktopSwtEditorFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil" serviceImplementation="consulo.options.impl.UnifiedShowSettingsUtil"/>
+    <applicationService serviceInterface="consulo.ide.setting.ShowSettingsUtil" serviceImplementation="consulo.options.impl.UnifiedShowSettingsUtil"/>
 
     <projectService serviceInterface="consulo.project.ui.wm.ToolWindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtToolWindowManagerImpl" lazy="false"/>
 

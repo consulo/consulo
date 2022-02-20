@@ -43,7 +43,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;

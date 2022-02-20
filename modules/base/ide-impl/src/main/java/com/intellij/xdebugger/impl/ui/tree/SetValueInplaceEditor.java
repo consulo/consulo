@@ -19,7 +19,7 @@ import com.intellij.codeInsight.hint.HintManager;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.application.ui.awt.JBUI;
 import consulo.debugger.frame.XValueModifier;
 import consulo.debugger.frame.presentation.XValuePresentation;

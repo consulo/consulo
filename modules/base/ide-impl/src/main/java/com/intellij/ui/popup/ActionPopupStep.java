@@ -8,7 +8,7 @@ import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
 import consulo.ui.ex.util.TextWithMnemonic;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.ui.StatusText;
+import consulo.ui.ex.StatusText;
 import consulo.application.ui.awt.UIUtil;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.popup.ListSeparator;

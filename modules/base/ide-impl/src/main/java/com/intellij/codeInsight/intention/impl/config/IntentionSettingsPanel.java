@@ -20,8 +20,8 @@ import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.OnePixelSplitter;
-import consulo.project.ui.util.Alarm;
+import consulo.ide.ui.OnePixelSplitter;
+import consulo.ui.ex.util.Alarm;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

@@ -19,7 +19,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pass;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

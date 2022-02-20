@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.treeStructure;
 
-import com.intellij.ide.util.treeView.AbstractTreeBuilder;
+import consulo.ui.ex.tree.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.ide.util.treeView.TreeVisitor;
 import consulo.ui.ex.action.ActionGroup;
@@ -13,7 +13,9 @@ import consulo.application.util.SystemInfo;
 import com.intellij.ui.TreeUIHelper;
 import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.tree.Tree;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

@@ -16,9 +16,9 @@
 package com.intellij.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.ui.Divider;
+import consulo.ui.ex.Divider;
 import com.intellij.openapi.ui.PseudoSplitter;
-import com.intellij.openapi.ui.Splitter;
+import consulo.ui.ex.Splitter;
 import com.intellij.openapi.vcs.changes.RefreshablePanel;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.image.Image;

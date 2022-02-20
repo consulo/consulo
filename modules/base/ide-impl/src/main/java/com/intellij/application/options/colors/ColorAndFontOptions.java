@@ -41,6 +41,7 @@ import com.intellij.openapi.options.ex.Settings;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;

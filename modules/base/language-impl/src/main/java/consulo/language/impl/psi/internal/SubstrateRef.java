@@ -18,7 +18,7 @@ package consulo.language.impl.psi.internal;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -29,7 +29,7 @@ import com.intellij.openapi.wm.impl.AnchoredButton;
 import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import com.intellij.ui.tabs.TabsUtil;
 import consulo.application.ui.awt.UIUtil;
 import consulo.project.ui.IdeFocusManager;

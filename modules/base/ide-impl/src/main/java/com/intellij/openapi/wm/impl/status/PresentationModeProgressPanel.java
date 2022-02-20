@@ -23,8 +23,8 @@ import com.intellij.ui.TransparentPanel;
 import consulo.util.collection.JBIterable;
 import consulo.application.ui.awt.EmptyIcon;
 import consulo.application.ui.awt.JBUI;
-import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.Update;
+import consulo.ui.ex.util.MergingUpdateQueue;
+import consulo.ui.ex.util.Update;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 

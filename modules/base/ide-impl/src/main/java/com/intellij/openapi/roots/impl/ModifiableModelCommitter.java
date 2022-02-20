@@ -24,9 +24,9 @@ import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.graph.CachingSemiGraph;
-import com.intellij.util.graph.DFSTBuilder;
-import com.intellij.util.graph.GraphGenerator;
+import consulo.component.util.graph.CachingSemiGraph;
+import consulo.component.util.graph.DFSTBuilder;
+import consulo.component.util.graph.GraphGenerator;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
 

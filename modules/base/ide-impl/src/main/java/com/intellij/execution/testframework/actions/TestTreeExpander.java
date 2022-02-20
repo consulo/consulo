@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.ide.TreeExpander;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 
 import javax.swing.*;
 

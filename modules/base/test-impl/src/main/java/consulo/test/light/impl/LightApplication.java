@@ -15,19 +15,18 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
-import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import consulo.application.event.ApplicationListener;
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.util.collection.MultiMap;
+import com.intellij.openapi.application.ModalityState;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessToken;
 import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.event.ApplicationListener;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.component.impl.BaseComponentManager;
+import consulo.component.impl.extension.ExtensionAreaId;
+import consulo.component.impl.extension.ExtensionsAreaImpl;
 import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainer;
@@ -35,6 +34,7 @@ import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -46,7 +46,7 @@ import java.util.function.BooleanSupplier;
  * @author VISTALL
  * @since 2018-08-25
  */
-public class LightApplication extends ComponentManagerImpl implements Application {
+public class LightApplication extends BaseComponentManager implements Application {
   private final Disposable myLastDisposable;
   private final LightExtensionRegistrator myRegistrator;
 

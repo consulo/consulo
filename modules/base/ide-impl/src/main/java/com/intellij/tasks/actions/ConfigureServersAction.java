@@ -3,7 +3,7 @@ package com.intellij.tasks.actions;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.tasks.config.TaskRepositoriesConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 

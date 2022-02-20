@@ -17,7 +17,7 @@
 package com.intellij.openapi.ui;
 
 import consulo.ui.ex.Gray;
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

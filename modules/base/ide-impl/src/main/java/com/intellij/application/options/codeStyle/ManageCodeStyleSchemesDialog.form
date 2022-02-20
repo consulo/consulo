@@ -17,7 +17,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="578bf" class="com.intellij.ui.table.JBTable" binding="mySchemesTable" custom-create="true">
+          <component id="578bf" class="consulo.ui.ex.table.JBTable" binding="mySchemesTable" custom-create="true">
             <constraints/>
             <properties>
               <striped value="true"/>

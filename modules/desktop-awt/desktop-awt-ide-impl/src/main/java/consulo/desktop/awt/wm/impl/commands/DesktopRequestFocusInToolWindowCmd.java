@@ -17,14 +17,14 @@ package consulo.desktop.awt.wm.impl.commands;
 
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.openapi.wm.FocusWatcher;
+import consulo.ui.ex.util.FocusWatcher;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.desktop.awt.wm.impl.DesktopFloatingDecorator;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowImpl;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.DesktopWindowWatcher;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

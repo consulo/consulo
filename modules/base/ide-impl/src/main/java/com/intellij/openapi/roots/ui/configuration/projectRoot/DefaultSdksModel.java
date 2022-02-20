@@ -29,16 +29,15 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.ui.MasterDetailsComponent;
+import consulo.ide.setting.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
-import consulo.ide.settings.impl.SettingsSdksModel;
+import consulo.ide.setting.bundle.SettingsSdksModel;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -49,6 +48,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * User: anna
@@ -91,7 +91,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
   }
 
   @Override
-  public void forEachBundle(@Nonnull java.util.function.Consumer<Sdk> sdkConsumer) {
+  public void forEachBundle(@Nonnull Consumer<Sdk> sdkConsumer) {
     for (Sdk sdk : mySdks.values()) {
       sdkConsumer.accept(sdk);
     }
@@ -340,7 +340,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     myModified = true;
     mySdks.put(newSdk, newSdk);
     if (updateTree != null) {
-      updateTree.consume(newSdk);
+      updateTree.accept(newSdk);
     }
     mySdkEventsDispatcher.getMulticaster().sdkAdded(newSdk);
   }

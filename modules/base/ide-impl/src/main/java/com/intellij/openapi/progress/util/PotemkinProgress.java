@@ -4,7 +4,7 @@ package com.intellij.openapi.progress.util;
 import com.intellij.ide.IdeEventQueue;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.application.util.Semaphore;

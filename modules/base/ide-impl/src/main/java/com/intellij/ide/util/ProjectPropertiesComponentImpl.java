@@ -15,15 +15,15 @@
  */
 package com.intellij.ide.util;
 
+import consulo.component.impl.BasePropertiesComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.util.ProjectPropertiesComponent;
-
+import consulo.project.ProjectPropertiesComponent;
 import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "PropertiesComponent", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
-public class ProjectPropertiesComponentImpl extends BasePropertiesComponentImpl implements ProjectPropertiesComponent {
+public class ProjectPropertiesComponentImpl extends BasePropertiesComponent implements ProjectPropertiesComponent, PropertiesComponent {
 }

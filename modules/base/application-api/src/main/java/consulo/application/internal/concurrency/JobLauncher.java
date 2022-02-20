@@ -4,7 +4,7 @@ package consulo.application.internal.concurrency;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 
 import javax.annotation.Nonnull;

@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.treeStructure.filtered;
 
-import com.intellij.ide.util.treeView.AbstractTreeBuilder;
-import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import consulo.ui.ex.tree.AbstractTreeBuilder;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.application.ApplicationManager;
 import consulo.util.concurrent.ActionCallback;
@@ -10,10 +10,10 @@ import consulo.disposer.Disposer;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.PatchedDefaultMutableTreeNode;
 import com.intellij.ui.treeStructure.SimpleTree;
-import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.ui.tree.TreeUtil;
-import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.Update;
+import consulo.ui.ex.tree.Tree;
+import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.util.MergingUpdateQueue;
+import consulo.ui.ex.util.Update;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.util.concurrent.AsyncPromise;

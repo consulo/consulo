@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.debugger.breakpoint.XExpression;
 import consulo.debugger.evaluation.XDebuggerEvaluator;
 import consulo.debugger.frame.XCompositeNode;

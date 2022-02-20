@@ -16,8 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.table.JBTable;
-import com.intellij.ui.treeStructure.Tree;
+import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.tree.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
 import com.intellij.util.containers.Convertor;

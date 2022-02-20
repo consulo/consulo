@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.text.Matcher;

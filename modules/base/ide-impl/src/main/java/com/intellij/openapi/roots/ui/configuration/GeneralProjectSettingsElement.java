@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.compiler.ModuleCompilerUtil;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ModuleRootModel;
@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.collection.Chunk;
 import consulo.component.util.graph.Graph;
-import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
 

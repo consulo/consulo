@@ -21,7 +21,7 @@ import consulo.ui.ex.event.DocumentAdapter;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextArea;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.util.ArrayUtil;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;

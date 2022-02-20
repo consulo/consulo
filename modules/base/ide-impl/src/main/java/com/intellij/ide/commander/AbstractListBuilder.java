@@ -18,7 +18,7 @@ package com.intellij.ide.commander;
 
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.IndexComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;

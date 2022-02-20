@@ -15,6 +15,7 @@
  */
 package com.intellij.util.containers;
 
+import consulo.util.collection.FilteringIterator;
 import consulo.util.lang.function.Condition;
 
 import java.util.Collection;

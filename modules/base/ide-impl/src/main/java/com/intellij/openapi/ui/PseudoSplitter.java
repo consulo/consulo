@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.ui;
 
+import consulo.ui.ex.Splitter;
+
 import javax.swing.*;
 
 /**

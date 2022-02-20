@@ -75,7 +75,7 @@ import consulo.process.ProcessHandler;
 import consulo.project.DumbService;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;

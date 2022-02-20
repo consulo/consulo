@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.TransactionGuard;
 import consulo.application.internal.TransactionGuardEx;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

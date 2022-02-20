@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.SeparatorFactory;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import com.intellij.ui.StateRestoringCheckBox;
 import com.intellij.usageView.UsageViewContentManager;
 import consulo.application.ui.awt.JBUI;

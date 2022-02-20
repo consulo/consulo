@@ -21,7 +21,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementAction;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import com.intellij.util.Consumer;
 import com.intellij.util.IconUtil;

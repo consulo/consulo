@@ -2,7 +2,7 @@
 package com.intellij.ui.hover;
 
 import com.intellij.ui.render.RenderingUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

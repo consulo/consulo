@@ -2,7 +2,7 @@
 package com.intellij.ui.components;
 
 import com.intellij.openapi.ui.LoadingDecorator;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.util.ui.AsyncProcessIcon;
 import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;

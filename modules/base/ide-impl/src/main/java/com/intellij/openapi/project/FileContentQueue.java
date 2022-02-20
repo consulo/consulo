@@ -3,7 +3,7 @@ package com.intellij.openapi.project;
 
 import com.intellij.ide.caches.FileContent;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import consulo.project.Project;

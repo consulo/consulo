@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
@@ -35,11 +35,11 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesC
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.util.concurrent.AsyncResult;

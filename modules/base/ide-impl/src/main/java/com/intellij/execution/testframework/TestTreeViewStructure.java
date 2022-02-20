@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 
 public abstract class TestTreeViewStructure<T extends AbstractTestProxy> extends AbstractTreeStructure {
   private Filter<T> myTestNodesFilter = Filter.NO_FILTER;

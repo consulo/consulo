@@ -5,9 +5,9 @@ import com.intellij.openapi.module.ModuleConfigurationEditor;
 import consulo.project.Project;
 import com.intellij.ui.TabbedPaneWrapper;
 import consulo.disposer.Disposable;
-import consulo.options.ConfigurableUIMigrationUtil;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.ConfigurableUIMigrationUtil;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

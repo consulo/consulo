@@ -10,6 +10,7 @@ import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.util.BlockingProgressIndicator;
 import consulo.application.progress.*;
+import consulo.component.ProcessCanceledException;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.Semaphore;

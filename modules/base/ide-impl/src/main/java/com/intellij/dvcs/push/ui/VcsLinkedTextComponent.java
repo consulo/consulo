@@ -16,7 +16,7 @@
 package com.intellij.dvcs.push.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,10 +16,10 @@
 package com.intellij.ui;
 
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.ui.NullableComponent;
-import com.intellij.openapi.util.Weighted;
-import com.intellij.openapi.wm.IdeGlassPane;
-import com.intellij.openapi.wm.IdeGlassPaneUtil;
+import consulo.ui.ex.NullableComponent;
+import consulo.component.util.Weighted;
+import consulo.ui.ex.IdeGlassPane;
+import consulo.ui.ex.IdeGlassPaneUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.update.UiNotifyConnector;

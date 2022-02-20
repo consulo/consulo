@@ -20,9 +20,9 @@ import javax.swing.tree.TreeNode;
 
 /**
  * @deprecated
- * @see com.intellij.ui.treeStructure.Tree  
+ * @see consulo.ui.ex.tree.Tree
  */
-public class Tree extends com.intellij.ui.treeStructure.Tree {
+public class Tree extends consulo.ui.ex.tree.Tree {
 
   public Tree() {
   }

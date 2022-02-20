@@ -28,6 +28,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.speedSearch.FilteringListModel;
 import com.intellij.util.Function;
 import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.JBSplitter;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;

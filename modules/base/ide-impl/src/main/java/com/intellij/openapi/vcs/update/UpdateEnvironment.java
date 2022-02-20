@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.update;
 
 import consulo.configurable.Configurable;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vcs.FilePath;

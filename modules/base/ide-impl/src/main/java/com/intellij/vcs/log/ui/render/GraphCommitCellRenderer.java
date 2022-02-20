@@ -2,7 +2,7 @@ package com.intellij.vcs.log.ui.render;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import com.intellij.ui.SimpleColoredRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;

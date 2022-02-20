@@ -19,6 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.EdtReplacementThread;
 import consulo.component.ComponentManager;
+import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ExceptionUtil;

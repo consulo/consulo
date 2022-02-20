@@ -44,7 +44,7 @@ import com.intellij.psi.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.application.ui.awt.JBUI;

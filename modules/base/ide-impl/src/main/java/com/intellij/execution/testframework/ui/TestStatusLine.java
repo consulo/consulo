@@ -19,7 +19,7 @@ import consulo.execution.ExecutionBundle;
 import com.intellij.openapi.progress.util.ColorProgressBar;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBProgressBar;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.ui.awt.JBDimension;
 

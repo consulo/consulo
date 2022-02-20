@@ -19,7 +19,7 @@ import com.intellij.ide.RemoteDesktopService;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Splitter;
+import consulo.ui.ex.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;

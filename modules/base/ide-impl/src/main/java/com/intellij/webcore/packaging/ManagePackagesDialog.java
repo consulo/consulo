@@ -7,6 +7,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.lang.LangBundle;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;

@@ -139,7 +139,7 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="1fb9d" class="com.intellij.ui.table.JBTable" binding="myTable">
+                          <component id="1fb9d" class="consulo.ui.ex.table.JBTable" binding="myTable">
                             <constraints/>
                             <properties>
                               <intercellSpacing width="0" height="0"/>

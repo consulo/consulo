@@ -4,7 +4,7 @@ import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

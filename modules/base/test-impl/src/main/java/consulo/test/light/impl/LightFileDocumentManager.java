@@ -15,13 +15,13 @@
  */
 package consulo.test.light.impl;
 
-import consulo.document.impl.DocumentImpl;
-import consulo.language.impl.psi.internal.LoadTextUtil;
-import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
 import consulo.component.ComponentManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.document.impl.DocumentImpl;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 

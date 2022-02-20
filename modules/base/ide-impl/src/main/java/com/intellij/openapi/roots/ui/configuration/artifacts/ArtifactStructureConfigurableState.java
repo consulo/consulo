@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import com.intellij.openapi.ui.MasterDetailsState;
+import consulo.ui.ex.MasterDetailsState;
 import consulo.util.xml.serializer.annotation.Property;
 
 /**

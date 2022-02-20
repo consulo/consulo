@@ -15,7 +15,7 @@
  */
 package consulo.process;
 
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.util.Semaphore;
 import consulo.logging.Logger;
 import consulo.process.event.ProcessAdapter;

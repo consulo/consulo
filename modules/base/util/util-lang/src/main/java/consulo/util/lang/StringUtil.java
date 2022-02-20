@@ -103,6 +103,20 @@ public class StringUtil {
   }
 
   @Contract(pure = true)
+  public static int parseInt(@Nullable String string, final int defaultValue) {
+    if (string == null) {
+      return defaultValue;
+    }
+
+    try {
+      return Integer.parseInt(string);
+    }
+    catch (Exception e) {
+      return defaultValue;
+    }
+  }
+
+  @Contract(pure = true)
   public static boolean startsWithIgnoreCase(@NonNls @Nonnull String str, @NonNls @Nonnull String prefix) {
     final int stringLength = str.length();
     final int prefixLength = prefix.length();

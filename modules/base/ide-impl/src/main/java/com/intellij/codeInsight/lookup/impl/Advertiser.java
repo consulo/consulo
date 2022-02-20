@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import consulo.application.ui.awt.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.JBCurrentTheme;

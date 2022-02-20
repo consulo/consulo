@@ -16,12 +16,12 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.module.Module;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.impl.OrderEntryUtil;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

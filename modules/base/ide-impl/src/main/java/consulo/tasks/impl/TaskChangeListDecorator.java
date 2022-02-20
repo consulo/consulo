@@ -8,7 +8,7 @@ import com.intellij.openapi.vcs.changes.ChangeListDecorator;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskManager;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 
 /**
  * @author VISTALL

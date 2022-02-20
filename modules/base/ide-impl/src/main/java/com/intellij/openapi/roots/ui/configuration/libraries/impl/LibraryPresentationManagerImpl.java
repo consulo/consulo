@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.content.base.BinariesOrderRootType;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 

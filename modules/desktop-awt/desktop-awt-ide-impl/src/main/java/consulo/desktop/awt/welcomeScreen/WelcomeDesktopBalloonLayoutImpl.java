@@ -26,7 +26,7 @@ import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import consulo.application.util.SystemInfo;
 import com.intellij.ui.*;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.util.ui.AbstractLayoutManager;
 import consulo.application.ui.awt.JBUI;
 

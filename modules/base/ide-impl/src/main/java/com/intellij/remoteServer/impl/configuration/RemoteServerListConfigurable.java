@@ -9,7 +9,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.OptionalConfigurable;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.ui.MasterDetailsComponent;
+import consulo.ide.setting.ui.MasterDetailsComponent;
 import com.intellij.remoteServer.ServerType;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.RemoteServersManager;

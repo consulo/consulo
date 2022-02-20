@@ -24,7 +24,7 @@ import consulo.content.library.LibraryTable;
 import consulo.content.library.PersistentLibraryKind;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
 import consulo.content.library.ui.LibraryEditor;
-import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorListener;
+import consulo.ide.setting.module.event.LibraryEditorListener;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
 import consulo.util.collection.Maps;

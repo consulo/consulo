@@ -3,7 +3,7 @@ package com.intellij.openapi.application.impl;
 
 import consulo.application.AccessToken;
 import com.intellij.openapi.application.ex.ApplicationUtil;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;

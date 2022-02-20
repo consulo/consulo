@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.codeEditor.markup.LineSeparatorRenderer;
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.ui.ex.awt.GraphicsConfig;
 import com.intellij.openapi.util.BooleanGetter;
 import consulo.application.ui.awt.GraphicsUtil;
 import consulo.ui.ex.awt.TargetAWT;

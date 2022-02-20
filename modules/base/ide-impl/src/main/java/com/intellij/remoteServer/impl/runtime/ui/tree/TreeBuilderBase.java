@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree;
 
-import com.intellij.ide.util.treeView.AbstractTreeBuilder;
+import consulo.ui.ex.tree.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructureBase;
 import com.intellij.ide.util.treeView.IndexComparator;
 

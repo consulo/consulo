@@ -31,7 +31,7 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.components.labels.LinkLabel;
 import consulo.application.ui.awt.JBUIScale;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ui.ComponentWithEmptyText;
+import consulo.ui.ex.ComponentWithEmptyText;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.update.UiNotifyConnector;

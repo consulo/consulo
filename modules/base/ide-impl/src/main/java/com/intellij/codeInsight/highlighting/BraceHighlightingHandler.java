@@ -66,7 +66,7 @@ import consulo.language.ast.ILazyParseableElementType;
 import com.intellij.psi.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.LightweightHint;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;

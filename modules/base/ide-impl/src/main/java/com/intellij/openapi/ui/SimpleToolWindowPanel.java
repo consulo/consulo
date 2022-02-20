@@ -19,7 +19,7 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataProvider;
 import com.intellij.ui.components.JBPanelWithEmptyText;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import com.intellij.ui.switcher.QuickActionProvider;
 import consulo.util.collection.JBIterable;
 import consulo.application.ui.awt.JBUI;

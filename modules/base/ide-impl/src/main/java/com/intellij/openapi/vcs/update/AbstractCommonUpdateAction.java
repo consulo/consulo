@@ -20,6 +20,7 @@ import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.errorTreeView.HotfixData;
 import consulo.application.progress.*;
+import consulo.component.ProcessCanceledException;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.Presentation;

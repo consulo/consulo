@@ -17,8 +17,8 @@
 package com.intellij.ui;
 
 import com.intellij.ui.components.JBList;
-import com.intellij.util.ui.ComponentWithEmptyText;
-import com.intellij.util.ui.StatusText;
+import consulo.ui.ex.ComponentWithEmptyText;
+import consulo.ui.ex.StatusText;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

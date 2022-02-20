@@ -33,7 +33,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.util.IncorrectOperationException;
 import java.util.HashSet;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

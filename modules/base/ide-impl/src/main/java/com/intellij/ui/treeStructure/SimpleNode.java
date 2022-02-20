@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.ui.tree.LeafState;
+import consulo.ui.ex.tree.LeafState;
 import consulo.application.ui.awt.UIUtil;
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;

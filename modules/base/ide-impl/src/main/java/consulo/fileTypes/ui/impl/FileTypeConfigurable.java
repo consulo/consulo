@@ -17,6 +17,7 @@ package consulo.fileTypes.ui.impl;
 
 import consulo.application.CommonBundle;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
+import consulo.ide.ui.OnePixelSplitter;
 import consulo.language.Language;
 import com.intellij.openapi.actionSystem.ActionToolbarPosition;
 import consulo.application.Application;
@@ -34,7 +35,7 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import com.intellij.util.PairConvertor;
 import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;

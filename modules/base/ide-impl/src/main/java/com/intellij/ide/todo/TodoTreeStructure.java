@@ -143,7 +143,7 @@ public abstract class TodoTreeStructure extends AbstractTreeStructureBase implem
   @Nonnull
   @Override
   public ActionCallback asyncCommit() {
-    return asyncCommitDocuments(myProject);
+    return PsiDocumentManager.asyncCommitDocuments(myProject);
   }
 
   @Nonnull

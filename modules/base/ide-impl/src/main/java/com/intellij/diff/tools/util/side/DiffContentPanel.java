@@ -17,7 +17,7 @@ package com.intellij.diff.tools.util.side;
 
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.InvisibleWrapper;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AbstractLayoutManager;
 

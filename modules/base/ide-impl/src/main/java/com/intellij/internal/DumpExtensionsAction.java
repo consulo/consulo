@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
+import consulo.component.impl.BaseComponentManager;
 import consulo.component.extension.ExtensionPoint;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -40,14 +40,14 @@ public class DumpExtensionsAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    List<ComponentManagerImpl> areas = new ArrayList<>();
-    areas.add((ComponentManagerImpl)Application.get());
+    List<BaseComponentManager> areas = new ArrayList<>();
+    areas.add((BaseComponentManager)Application.get());
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
-      areas.add((ComponentManagerImpl)project);
+      areas.add((BaseComponentManager)project);
       final Module[] modules = ModuleManager.getInstance(project).getModules();
       if (modules.length > 0) {
-        areas.add((ComponentManagerImpl)modules[0]);
+        areas.add((BaseComponentManager)modules[0]);
       }
     }
     System.out.print(areas.size() + " extension areas: ");
@@ -57,7 +57,7 @@ public class DumpExtensionsAction extends DumbAwareAction {
     System.out.println("\n");
 
     List<ExtensionPoint> points = new ArrayList<>();
-    for (ComponentManagerImpl area : areas) {
+    for (BaseComponentManager area : areas) {
       points.addAll(Arrays.asList(area.getExtensionPoints()));
     }
     System.out.println(points.size() + " extension points: ");

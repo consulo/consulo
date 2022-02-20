@@ -28,6 +28,7 @@ import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import consulo.application.progress.*;
+import consulo.component.ProcessCanceledException;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.Condition;
 import consulo.language.psi.*;

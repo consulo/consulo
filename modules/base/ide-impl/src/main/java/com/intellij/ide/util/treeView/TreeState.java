@@ -3,7 +3,9 @@ package com.intellij.ide.util.treeView;
 
 import consulo.navigation.NavigationItem;
 import consulo.application.progress.EmptyProgressIndicator;
+import consulo.ui.ex.tree.AbstractTreeBuilder;
 import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.TreeRunnable;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -20,7 +22,7 @@ import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;

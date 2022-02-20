@@ -23,7 +23,7 @@ import consulo.language.template.ConfigurableTemplateLanguageFileViewProvider;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.psi.PsiManager;
 import consulo.language.file.FileViewProvider;
 import com.intellij.lang.LangBundle;

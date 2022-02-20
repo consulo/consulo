@@ -30,6 +30,7 @@ import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ui.MessageCategory;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.*;
+import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;

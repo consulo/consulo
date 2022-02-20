@@ -15,13 +15,14 @@
  */
 package com.intellij.ide.util;
 
+import consulo.component.impl.BasePropertiesComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.util.ApplicationPropertiesComponent;
+import consulo.application.ApplicationPropertiesComponent;
 
 import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "PropertiesComponent", storages = @Storage("options.xml"))
-public class AppPropertiesComponentImpl extends BasePropertiesComponentImpl implements ApplicationPropertiesComponent {
+public class AppPropertiesComponentImpl extends BasePropertiesComponent implements ApplicationPropertiesComponent, PropertiesComponent {
 }

@@ -17,7 +17,7 @@ package com.intellij.vcs.log.data;
 
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposer;

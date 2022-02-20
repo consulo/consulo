@@ -22,7 +22,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.Splitter;
+import consulo.ui.ex.Splitter;
 import com.intellij.openapi.vcs.ChangeListColumn;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;

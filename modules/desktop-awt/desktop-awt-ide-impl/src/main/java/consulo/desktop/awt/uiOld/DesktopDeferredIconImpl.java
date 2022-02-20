@@ -36,7 +36,7 @@ import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.ui.impl.image.DesktopImage;
 import consulo.logging.Logger;
 import consulo.project.IndexNotReadyException;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.image.Image;

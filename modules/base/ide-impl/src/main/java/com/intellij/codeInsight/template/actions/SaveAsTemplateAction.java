@@ -40,7 +40,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.document.util.TextRange;

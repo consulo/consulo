@@ -15,10 +15,9 @@
  */
 package com.intellij.ui.roots;
 
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import consulo.ui.image.Image;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

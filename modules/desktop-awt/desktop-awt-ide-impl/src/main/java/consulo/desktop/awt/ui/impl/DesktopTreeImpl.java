@@ -17,13 +17,13 @@ package consulo.desktop.awt.ui.impl;
 
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import consulo.ui.ex.tree.PresentationData;
-import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import com.intellij.ui.tree.AsyncTreeModel;
 import com.intellij.ui.tree.StructureTreeModel;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
 import consulo.disposer.Disposable;

@@ -26,7 +26,7 @@ import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.application.*;
 import consulo.language.psi.stub.*;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;

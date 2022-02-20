@@ -23,7 +23,7 @@ import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import com.intellij.util.EventDispatcher;
 import consulo.application.ui.awt.JBUI;
 import consulo.util.concurrent.AsyncResult;

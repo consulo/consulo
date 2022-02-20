@@ -16,7 +16,7 @@
 package com.intellij.vfs;
 
 import consulo.application.Application;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.AsyncVfsEventsListener;

@@ -9,7 +9,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.TextPanel;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.PopupState;
 import consulo.application.ui.awt.JBFont;

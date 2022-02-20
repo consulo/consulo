@@ -17,6 +17,8 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.Painter;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

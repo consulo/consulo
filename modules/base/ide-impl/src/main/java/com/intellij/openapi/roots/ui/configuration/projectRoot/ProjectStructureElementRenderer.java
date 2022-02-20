@@ -19,8 +19,8 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolderImpl;
-import com.intellij.openapi.ui.MasterDetailsComponent;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.ui.awt.UIUtil;

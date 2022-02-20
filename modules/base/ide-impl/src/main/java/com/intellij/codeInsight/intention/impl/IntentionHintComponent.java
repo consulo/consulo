@@ -35,7 +35,7 @@ import com.intellij.ui.PopupMenuListenerAdapter;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.popup.WizardPopup;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.disposer.Disposable;

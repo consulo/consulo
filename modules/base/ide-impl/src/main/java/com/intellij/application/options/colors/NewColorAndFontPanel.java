@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.OnePixelSplitter;
+import consulo.ide.ui.OnePixelSplitter;
 import consulo.ui.ex.awt.TargetAWT;
 
 import javax.annotation.Nonnull;

@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.TableCell;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;

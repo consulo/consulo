@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.issueLinks;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

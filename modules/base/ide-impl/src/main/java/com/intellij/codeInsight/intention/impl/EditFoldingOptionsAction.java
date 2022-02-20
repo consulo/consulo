@@ -20,7 +20,7 @@ import com.intellij.application.options.editor.CodeFoldingConfigurable;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;

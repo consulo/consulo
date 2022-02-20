@@ -21,7 +21,7 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryKind;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

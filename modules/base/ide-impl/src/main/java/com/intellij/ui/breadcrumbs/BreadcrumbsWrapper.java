@@ -36,11 +36,11 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import com.intellij.util.concurrency.NonUrgentExecutor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.MouseEventAdapter;
+import consulo.ui.ex.awt.MouseEventAdapter;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.update.MergingUpdateQueue;
+import consulo.ui.ex.util.MergingUpdateQueue;
 import consulo.ui.ex.update.UiNotifyConnector;
-import com.intellij.util.ui.update.Update;
+import consulo.ui.ex.util.Update;
 import kava.beans.PropertyChangeEvent;
 import javax.annotation.Nonnull;
 

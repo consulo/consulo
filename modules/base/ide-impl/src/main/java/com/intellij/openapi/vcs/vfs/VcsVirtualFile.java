@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.vfs;
 
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;

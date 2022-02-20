@@ -6,6 +6,7 @@ import com.intellij.ide.IdeTooltipManager;
 import consulo.application.ui.awt.JBCurrentTheme;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.util.lang.ref.Ref;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;

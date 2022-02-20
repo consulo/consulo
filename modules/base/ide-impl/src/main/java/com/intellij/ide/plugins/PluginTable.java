@@ -17,7 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TableUtil;
-import com.intellij.ui.table.JBTable;
+import consulo.ui.ex.table.JBTable;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.TextTransferable;
 import com.intellij.xml.util.XmlStringUtil;

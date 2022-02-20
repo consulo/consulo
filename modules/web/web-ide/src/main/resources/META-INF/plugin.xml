@@ -48,7 +48,7 @@
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
                         serviceImplementation="consulo.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
+    <applicationService serviceInterface="consulo.ide.setting.ShowSettingsUtil"
                         serviceImplementation="consulo.options.impl.UnifiedShowSettingsUtil"/>
 
     <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory"

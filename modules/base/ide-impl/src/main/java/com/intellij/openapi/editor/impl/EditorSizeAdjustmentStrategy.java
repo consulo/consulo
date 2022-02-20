@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import gnu.trove.TLongArrayList;
 import javax.annotation.Nonnull;
 

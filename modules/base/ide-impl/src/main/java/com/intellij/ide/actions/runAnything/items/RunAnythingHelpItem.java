@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.runAnything.items;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.image.Image;

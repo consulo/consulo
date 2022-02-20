@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
@@ -29,7 +29,7 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

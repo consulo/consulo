@@ -28,7 +28,7 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScreenUtil;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;

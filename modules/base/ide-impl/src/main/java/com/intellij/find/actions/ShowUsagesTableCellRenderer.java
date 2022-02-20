@@ -22,7 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.content.scope.SearchScope;
 import com.intellij.ui.FileColorManager;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.usages.TextChunk;
 import com.intellij.usages.Usage;

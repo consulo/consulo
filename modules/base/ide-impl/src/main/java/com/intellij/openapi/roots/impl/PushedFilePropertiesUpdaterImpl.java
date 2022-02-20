@@ -12,7 +12,7 @@ import consulo.application.ReadAction;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressWrapper;

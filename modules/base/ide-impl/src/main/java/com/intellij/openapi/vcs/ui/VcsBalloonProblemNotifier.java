@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.ui;
 
-import com.intellij.openapi.util.NamedRunnable;
+import consulo.component.util.NamedRunnable;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

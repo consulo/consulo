@@ -14,7 +14,7 @@ import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBLoadingPanel;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ui.ex.concurrent.EdtScheduledExecutorService;
 import com.intellij.util.ui.AsyncProcessIcon;

@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.tree;
 
-import consulo.application.progress.ProcessCanceledException;
-import com.intellij.ui.LoadingNode;
+import consulo.component.ProcessCanceledException;
+import consulo.ui.ex.tree.LoadingNode;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.Command;
 import com.intellij.util.concurrency.Invoker;

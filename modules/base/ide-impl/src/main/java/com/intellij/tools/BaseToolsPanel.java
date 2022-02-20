@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.annotation.Nullable;

@@ -6,6 +6,7 @@ import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.*;
 import consulo.application.util.Semaphore;
 import consulo.application.util.function.Computable;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;

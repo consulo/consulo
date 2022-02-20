@@ -16,6 +16,7 @@
 package consulo.application.progress;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
 import consulo.util.lang.StringUtil;

@@ -29,7 +29,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;

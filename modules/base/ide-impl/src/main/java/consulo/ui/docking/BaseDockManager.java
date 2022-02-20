@@ -20,7 +20,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.project.Project;
-import com.intellij.openapi.util.MutualMap;
+import consulo.util.collection.MutualMap;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.RelativePoint;

@@ -19,6 +19,8 @@ import com.intellij.ui.components.panels.OpaquePanel;
 import consulo.application.ui.awt.ClientPropertyHolder;
 import consulo.application.ui.awt.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
+import consulo.ui.ex.tree.table.TreeTable;
+import consulo.ui.ex.tree.table.TreeTableTree;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;

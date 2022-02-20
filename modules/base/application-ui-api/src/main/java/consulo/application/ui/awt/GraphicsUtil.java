@@ -17,6 +17,7 @@ package consulo.application.ui.awt;
 
 import consulo.awt.hacking.JComponentHacking;
 import consulo.ui.AntialiasingType;
+import consulo.ui.ex.awt.GraphicsConfig;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

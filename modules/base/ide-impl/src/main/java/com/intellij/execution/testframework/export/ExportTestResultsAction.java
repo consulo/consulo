@@ -16,6 +16,7 @@
 package com.intellij.execution.testframework.export;
 
 import com.intellij.diagnostic.LogMessageEx;
+import consulo.component.ProcessCanceledException;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;

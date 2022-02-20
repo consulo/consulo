@@ -30,7 +30,7 @@ import com.intellij.psi.RefResolveService;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.awt.UIUtil;

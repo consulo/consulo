@@ -16,8 +16,7 @@
 
 package com.intellij.openapi.module.impl;
 
-import consulo.component.util.graph.Graph;
-import consulo.component.util.graph.InboundSemiGraph;
+import consulo.component.util.graph.*;
 import consulo.module.*;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
@@ -28,7 +27,7 @@ import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.module.*;
 import consulo.module.Module;
 import consulo.module.event.ModuleListener;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
@@ -49,7 +48,6 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
-import com.intellij.util.graph.*;
 import consulo.component.messagebus.MessageBus;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;

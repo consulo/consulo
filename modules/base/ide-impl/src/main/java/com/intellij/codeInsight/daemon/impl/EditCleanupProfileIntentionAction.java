@@ -19,7 +19,7 @@ import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInspection.actions.CodeCleanupAction;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;

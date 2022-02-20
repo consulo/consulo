@@ -20,7 +20,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.lang.ExternalLanguageAnnotators;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.util.ui.update.Update;
+import consulo.ui.ex.util.Update;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;

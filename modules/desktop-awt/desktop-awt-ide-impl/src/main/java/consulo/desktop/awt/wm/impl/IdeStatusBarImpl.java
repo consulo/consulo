@@ -41,7 +41,7 @@ import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
 import com.intellij.ui.ComponentUtil;
 import consulo.project.ui.wm.*;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.ui.popup.NotificationPopup;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;

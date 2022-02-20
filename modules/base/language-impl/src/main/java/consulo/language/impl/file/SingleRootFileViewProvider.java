@@ -15,7 +15,7 @@
  */
 package consulo.language.impl.file;
 
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.light.LightVirtualFile;

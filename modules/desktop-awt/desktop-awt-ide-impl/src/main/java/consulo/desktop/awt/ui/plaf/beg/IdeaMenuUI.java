@@ -3,7 +3,7 @@ package consulo.desktop.awt.ui.plaf.beg;
 
 import consulo.application.ui.UISettings;
 import consulo.desktop.awt.ui.plaf.intellij.IdeaPopupMenuUI;
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;

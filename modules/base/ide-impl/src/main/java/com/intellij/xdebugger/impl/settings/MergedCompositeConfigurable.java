@@ -10,7 +10,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TitledSeparator;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ide.setting.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;

@@ -15,13 +15,15 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.SimpleColoredComponent;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public abstract class CustomizeColoredTreeCellRenderer {
   public abstract void customizeCellRenderer(final SimpleColoredComponent renderer, final JTree tree, final Object value, final boolean selected,
-    final boolean expanded, final boolean leaf, final int row, final boolean hasFocus);
+                                             final boolean expanded, final boolean leaf, final int row, final boolean hasFocus);
 
   @Nullable
   public Object getTag() {

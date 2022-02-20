@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.intellij;
 
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.application.ui.awt.ColorUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;

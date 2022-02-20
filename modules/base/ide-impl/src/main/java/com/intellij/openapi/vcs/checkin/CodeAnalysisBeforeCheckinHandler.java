@@ -20,7 +20,7 @@ import consulo.application.CommonBundle;
 import com.intellij.codeInsight.CodeSmellInfo;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;

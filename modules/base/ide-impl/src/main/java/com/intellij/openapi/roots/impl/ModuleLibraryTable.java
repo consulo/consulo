@@ -31,7 +31,7 @@ import consulo.util.lang.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ConvertingIterator;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.FilteringIterator;
+import consulo.util.collection.FilteringIterator;
 import consulo.roots.impl.ModuleRootLayerImpl;
 
 import javax.annotation.Nonnull;

@@ -19,6 +19,8 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.ClickListener;
+
 import java.awt.event.MouseEvent;
 
 public abstract class DoubleClickListener extends ClickListener {

@@ -24,7 +24,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.treeStructure.Tree;
+import consulo.ui.ex.tree.Tree;
 import consulo.debugger.XDebuggerBundle;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

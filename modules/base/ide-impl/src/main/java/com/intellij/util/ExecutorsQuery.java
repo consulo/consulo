@@ -3,7 +3,7 @@ package com.intellij.util;
 
 import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.IndexNotReadyException;
 import javax.annotation.Nonnull;

@@ -21,7 +21,7 @@ import com.intellij.openapi.command.undo.UndoableAction;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.module.ModuleManager;
 import consulo.module.UnloadedModuleDescription;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
 import consulo.project.Project;

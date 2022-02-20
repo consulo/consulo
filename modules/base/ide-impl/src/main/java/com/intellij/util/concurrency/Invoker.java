@@ -5,7 +5,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import consulo.project.IndexNotReadyException;

@@ -16,7 +16,7 @@
 package consulo.module.extension.ui;
 
 import consulo.module.Module;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
@@ -29,7 +29,7 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.PairConsumer;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;

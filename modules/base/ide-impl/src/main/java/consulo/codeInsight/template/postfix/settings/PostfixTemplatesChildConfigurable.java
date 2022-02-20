@@ -25,7 +25,7 @@ import consulo.language.LanguageExtensionPoint;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.ui.CheckBoxList;
-import com.intellij.ui.OnePixelSplitter;
+import consulo.ide.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
 import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposer;

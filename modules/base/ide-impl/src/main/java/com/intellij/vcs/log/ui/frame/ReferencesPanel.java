@@ -17,7 +17,7 @@ package com.intellij.vcs.log.ui.frame;
 
 import consulo.application.ui.awt.ColorUtil;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;

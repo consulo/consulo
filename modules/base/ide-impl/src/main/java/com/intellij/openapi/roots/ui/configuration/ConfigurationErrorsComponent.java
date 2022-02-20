@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.project.Project;
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.ui.ex.awt.GraphicsConfig;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.CollectionListModel;
 import consulo.ui.ex.JBColor;

@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.ui.ClickListener;
+import consulo.ui.ex.ClickListener;
 import consulo.application.ui.awt.JBUI;
 import consulo.application.ui.awt.UIUtil;
 import consulo.ui.ex.awt.TargetAWT;

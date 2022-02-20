@@ -35,6 +35,35 @@ import java.util.function.Predicate;
 public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
 
+  @Contract(pure = true)
+  public static <T, U extends T> U findInstance(@Nonnull Iterable<? extends T> iterable, @Nonnull Class<? extends U> aClass) {
+    return findInstance(iterable.iterator(), aClass);
+  }
+
+  public static <T, U extends T> U findInstance(@Nonnull Iterator<? extends T> iterator, @Nonnull Class<? extends U> aClass) {
+    //noinspection unchecked
+    return (U)find(iterator, FilteringIterator.instanceOf(aClass));
+  }
+
+  @Nullable
+  @Contract(pure = true)
+  public static <T, L extends List<T>> T getLastItem(@Nullable L list, @Nullable T def) {
+    return isEmpty(list) ? def : list.get(list.size() - 1);
+  }
+
+  @Nullable
+  @Contract(pure = true)
+  public static <T, L extends List<T>> T getLastItem(@Nullable L list) {
+    return getLastItem(list, null);
+  }
+
+  public static <E> void swapElements(@Nonnull List<E> list, int index1, int index2) {
+    E e1 = list.get(index1);
+    E e2 = list.get(index2);
+    list.set(index1, e2);
+    list.set(index2, e1);
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <T extends Comparable<? super T>> List<T> sorted(@Nonnull Collection<? extends T> list) {

@@ -24,7 +24,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;

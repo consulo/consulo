@@ -50,7 +50,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Splitter;
+import consulo.ui.ex.Splitter;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.disposer.Disposable;
@@ -66,7 +66,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.*;
 import com.intellij.util.OpenSourceUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

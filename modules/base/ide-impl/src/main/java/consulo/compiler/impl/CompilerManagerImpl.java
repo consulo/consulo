@@ -38,7 +38,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.Chunk;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.util.graph.Graph;
-import com.intellij.util.graph.GraphGenerator;
+import consulo.component.util.graph.GraphGenerator;
 import consulo.component.util.graph.InboundSemiGraph;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;

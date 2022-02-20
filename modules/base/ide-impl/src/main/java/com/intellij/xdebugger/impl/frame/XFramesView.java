@@ -30,7 +30,7 @@ import com.intellij.ui.PopupHandler;
 import com.intellij.ui.PopupMenuListenerAdapter;
 import com.intellij.ui.ScrollPaneFactory;
 import consulo.application.ui.awt.CustomLineBorder;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.application.ui.awt.UIUtil;
 import consulo.debugger.XDebugSession;

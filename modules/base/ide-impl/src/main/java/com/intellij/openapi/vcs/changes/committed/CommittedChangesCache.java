@@ -34,7 +34,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.ProgressManagerQueue;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Computable;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;

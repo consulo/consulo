@@ -87,6 +87,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-component-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-index-io</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -148,6 +153,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-language-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-ide-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

@@ -56,7 +56,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

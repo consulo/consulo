@@ -4,7 +4,7 @@ package com.intellij.openapi.wm.impl.status;
 import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import consulo.application.ui.awt.JBUIScale;
 import consulo.application.ui.awt.JBFont;
 import consulo.application.ui.awt.JBUI;

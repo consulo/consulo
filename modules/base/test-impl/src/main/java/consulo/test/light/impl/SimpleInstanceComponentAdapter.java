@@ -16,7 +16,7 @@
 package consulo.test.light.impl;
 
 import consulo.component.ComponentManager;
-import com.intellij.openapi.extensions.impl.ExtensionComponentAdapter;
+import consulo.component.impl.extension.ExtensionComponentAdapter;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

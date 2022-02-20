@@ -3,12 +3,12 @@ package com.intellij.ide.navigationToolbar;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.navigationToolbar.ui.NavBarUI;
-import com.intellij.ide.util.treeView.TreeAnchorizer;
+import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.disposer.Disposable;
 import consulo.dataContext.DataProvider;
 import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.SimpleColoredComponent;
+import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.collection.JBIterable;
 import consulo.application.ui.awt.UIUtil;

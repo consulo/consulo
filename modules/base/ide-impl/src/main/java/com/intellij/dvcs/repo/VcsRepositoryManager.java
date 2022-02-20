@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.repo;
 
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.impl.VcsInitObject;
 import com.intellij.openapi.vcs.impl.VcsStartupActivity;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.util.Alarm;
+import consulo.ui.ex.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.Topic;

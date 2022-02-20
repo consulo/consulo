@@ -31,7 +31,7 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import com.intellij.util.Function;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

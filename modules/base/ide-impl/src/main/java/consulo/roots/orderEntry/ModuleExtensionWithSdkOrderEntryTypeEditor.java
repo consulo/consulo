@@ -15,7 +15,7 @@
  */
 package consulo.roots.orderEntry;
 
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.roots.impl.ModuleExtensionWithSdkOrderEntryImpl;

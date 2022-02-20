@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import com.intellij.openapi.extensions.impl.LoadingOrder;
+import consulo.component.impl.extension.LoadingOrder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;

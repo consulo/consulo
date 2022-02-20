@@ -23,7 +23,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.CheckedTreeNode;
-import com.intellij.ui.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
 import consulo.debugger.XDebuggerManager;
 import consulo.debugger.breakpoint.ui.XBreakpointGroup;

@@ -22,7 +22,7 @@ import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
-import com.intellij.openapi.util.Weighted;
+import consulo.component.util.Weighted;
 import com.intellij.ui.paint.RectanglePainter;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.GraphicsUtil;

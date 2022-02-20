@@ -26,6 +26,7 @@ import consulo.disposer.Disposable;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
+import consulo.ide.setting.module.event.LibraryEditorListener;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

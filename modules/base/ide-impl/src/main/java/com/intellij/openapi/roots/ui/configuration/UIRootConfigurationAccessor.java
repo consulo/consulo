@@ -16,16 +16,16 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.module.Module;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import com.intellij.openapi.roots.impl.RootConfigurationAccessor;
 import consulo.content.library.Library;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.ProjectStructureSettingsUtil;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.component.util.pointer.NamedPointer;
 
 import javax.annotation.Nonnull;

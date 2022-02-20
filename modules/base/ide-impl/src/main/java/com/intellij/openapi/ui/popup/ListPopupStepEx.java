@@ -1,6 +1,6 @@
 package com.intellij.openapi.ui.popup;
 
-import com.intellij.util.ui.StatusText;
+import consulo.ui.ex.StatusText;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import org.intellij.lang.annotations.MagicConstant;

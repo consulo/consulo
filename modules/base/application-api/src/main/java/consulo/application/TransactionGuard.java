@@ -17,7 +17,7 @@ package consulo.application;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 

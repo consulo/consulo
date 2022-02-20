@@ -25,10 +25,11 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
-import com.intellij.openapi.components.ServiceDescriptor;
+import consulo.component.ProcessCanceledException;
+import consulo.component.impl.extension.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
+import consulo.component.impl.extension.ExtensionAreaId;
 import consulo.application.progress.*;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -452,6 +453,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @RequiredUIAccess
   @Override
   public void dispose() {
+    Application.get().assertIsDispatchThread();
+
     fireApplicationExiting();
 
     ShutDownTracker.getInstance().ensureStopperThreadsFinished();

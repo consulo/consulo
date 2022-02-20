@@ -90,7 +90,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
   @Override
   public Disposable addClickListener(@Nonnull ClickListener clickListener) {
-    com.intellij.ui.ClickListener awtClickListener = new com.intellij.ui.ClickListener() {
+    consulo.ui.ex.ClickListener awtClickListener = new consulo.ui.ex.ClickListener() {
       @Override
       public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         clickListener.clicked(new ClickEvent(SwingComponentDelegate.this));

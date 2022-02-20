@@ -17,13 +17,13 @@ package consulo.bundle.ui;
 
 import com.google.common.base.Predicates;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.options.ShowSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkTypeId;
-import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ui.ComboBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;

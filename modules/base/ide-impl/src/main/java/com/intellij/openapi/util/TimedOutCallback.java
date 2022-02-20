@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.application.util.SimpleTimer;
+import consulo.application.util.SimpleTimerTask;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

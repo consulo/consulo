@@ -4,7 +4,7 @@ package com.intellij.codeInsight.completion;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import consulo.logging.Logger;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressWrapper;

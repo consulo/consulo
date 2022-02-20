@@ -5,7 +5,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.remoteServer.impl.runtime.ui.tree.TreeBuilderBase;
-import com.intellij.ui.treeStructure.Tree;
+import consulo.ui.ex.tree.Tree;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

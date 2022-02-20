@@ -8,7 +8,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
-import static com.intellij.util.ui.tree.TreeUtil.visitVisibleRows;
+import static consulo.ui.ex.tree.TreeUtil.visitVisibleRows;
 import static java.awt.EventQueue.invokeLater;
 
 /**

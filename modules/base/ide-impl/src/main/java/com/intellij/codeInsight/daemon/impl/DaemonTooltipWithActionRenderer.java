@@ -30,7 +30,7 @@ import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.dumb.DumbAware;
-import consulo.application.ui.awt.GraphicsConfig;
+import consulo.ui.ex.awt.GraphicsConfig;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

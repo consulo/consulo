@@ -18,7 +18,8 @@ package org.intellij.plugins.intelliLang;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.ui.SplitterProportionsDataImpl;
+import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.SplitterProportionsDataImpl;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.lang.function.Condition;
@@ -36,7 +37,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.SplitterProportionsData;
+import consulo.ui.ex.SplitterProportionsData;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;

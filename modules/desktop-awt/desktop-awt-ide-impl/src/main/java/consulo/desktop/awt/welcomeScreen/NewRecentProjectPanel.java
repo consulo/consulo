@@ -31,7 +31,7 @@ import consulo.ui.ex.JBColor;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
 import consulo.application.ui.awt.JBDimension;
 import consulo.application.ui.awt.JBUI;

@@ -17,7 +17,7 @@ package consulo.application.util.concurrent;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 

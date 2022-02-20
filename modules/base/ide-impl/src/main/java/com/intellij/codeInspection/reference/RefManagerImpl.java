@@ -21,7 +21,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.IndexNotReadyException;
 import consulo.project.Project;

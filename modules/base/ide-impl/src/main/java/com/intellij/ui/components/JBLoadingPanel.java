@@ -17,7 +17,7 @@ package com.intellij.ui.components;
 
 import com.intellij.openapi.ui.LoadingDecorator;
 import consulo.application.ui.awt.ColorUtil;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AsyncProcessIcon;

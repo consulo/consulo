@@ -20,7 +20,7 @@ import consulo.execution.ExecutionBundle;
 import consulo.execution.executor.Executor;
 import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Splitter;
+import consulo.ui.ex.Splitter;
 import com.intellij.openapi.util.Couple;
 import consulo.ui.annotation.RequiredUIAccess;
 

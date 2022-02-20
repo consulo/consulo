@@ -18,7 +18,7 @@ package consulo.desktop.awt.application.impl;
 import com.google.common.base.MoreObjects;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;

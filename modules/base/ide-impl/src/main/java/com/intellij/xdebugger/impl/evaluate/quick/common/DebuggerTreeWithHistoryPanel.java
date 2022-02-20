@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.evaluate.quick.common;
 
 import consulo.project.Project;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.treeStructure.Tree;
+import consulo.ui.ex.tree.Tree;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -47,7 +47,7 @@ import com.intellij.ui.treeStructure.WeightBasedComparator;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.ex.tree.TreeUtil;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

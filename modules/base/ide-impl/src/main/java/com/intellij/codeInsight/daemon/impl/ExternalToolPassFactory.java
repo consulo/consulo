@@ -27,8 +27,8 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.Update;
+import consulo.ui.ex.util.MergingUpdateQueue;
+import consulo.ui.ex.util.Update;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

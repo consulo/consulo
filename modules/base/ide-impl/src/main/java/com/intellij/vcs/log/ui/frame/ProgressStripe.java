@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.util.NotNullComputable;
 import consulo.application.ui.awt.JBPanel;
-import com.intellij.ui.components.panels.NonOpaquePanel;
+import consulo.ui.ex.NonOpaquePanel;
 import com.intellij.util.ui.AsyncProcessIcon;
 import consulo.disposer.Disposer;
 

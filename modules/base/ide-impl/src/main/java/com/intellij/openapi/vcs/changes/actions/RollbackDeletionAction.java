@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.vcs.AbstractVcs;

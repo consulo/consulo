@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.execution.ui.console.Filter;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import consulo.application.progress.ProcessCanceledException;
+import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;

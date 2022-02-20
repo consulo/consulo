@@ -9,6 +9,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.diagnostic.Attachment;
+import consulo.component.ProcessCanceledException;
 import consulo.util.lang.ref.Ref;
 import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.util.ExceptionUtil;

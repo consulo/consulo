@@ -15,41 +15,41 @@
  */
 package consulo.test.light;
 
-import consulo.application.internal.concurrency.JobLauncher;
 import com.intellij.ide.UiActivityMonitor;
-import consulo.application.ui.UISettings;
-import com.intellij.ide.util.treeView.TreeAnchorizer;
-import consulo.language.LanguageExtensionPoint;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.PsiBuilderFactory;
-import consulo.language.impl.parser.internal.PsiBuilderFactoryImpl;
-import consulo.disposer.Disposable;
-import consulo.application.Application;
 import com.intellij.openapi.application.PathMacroFilter;
-import consulo.application.PathMacros;
-import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
-import consulo.language.file.LanguageFileViewProviders;
-import consulo.language.psi.LanguageSubstitutors;
 import com.intellij.ui.ExpandableItemsHandlerFactory;
 import com.intellij.ui.TreeUIHelper;
-import consulo.component.extension.KeyedLazyInstanceEP;
+import consulo.application.Application;
+import consulo.application.PathMacros;
+import consulo.application.internal.concurrency.JobLauncher;
 import consulo.application.options.PathMacrosService;
+import consulo.application.progress.ProgressManager;
+import consulo.application.ui.UISettings;
 import consulo.component.extension.ExtensionExtender;
+import consulo.component.extension.KeyedLazyInstanceEP;
+import consulo.component.impl.extension.ExtensionsAreaImpl;
+import consulo.disposer.Disposable;
+import consulo.document.FileDocumentManager;
 import consulo.injecting.InjectingContainerBuilder;
-import consulo.language.version.LanguageVersionDefines;
-import consulo.language.version.LanguageVersionResolvers;
+import consulo.language.LanguageExtensionPoint;
+import consulo.language.file.LanguageFileViewProviders;
 import consulo.language.impl.ast.ASTCompositeFactory;
 import consulo.language.impl.ast.ASTLazyFactory;
 import consulo.language.impl.ast.ASTLeafFactory;
 import consulo.language.impl.ast.internal.DefaultASTCompositeFactory;
 import consulo.language.impl.ast.internal.DefaultASTLazyFactory;
 import consulo.language.impl.ast.internal.DefaultASTLeafFactory;
+import consulo.language.impl.parser.internal.PsiBuilderFactoryImpl;
+import consulo.language.parser.LanguageParserDefinitions;
+import consulo.language.parser.PsiBuilderFactory;
+import consulo.language.psi.LanguageSubstitutors;
+import consulo.language.version.LanguageVersionDefines;
+import consulo.language.version.LanguageVersionResolvers;
 import consulo.test.light.impl.*;
+import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import javax.annotation.Nonnull;
 
@@ -104,7 +104,7 @@ public class LightApplicationBuilder {
   }
 
   @Nonnull
-  public static LightApplicationBuilder create(@Nonnull Disposable rootDisposable, @Nonnull DefaultRegistrator registrator ) {
+  public static LightApplicationBuilder create(@Nonnull Disposable rootDisposable, @Nonnull DefaultRegistrator registrator) {
     return new LightApplicationBuilder(rootDisposable, registrator);
   }
 

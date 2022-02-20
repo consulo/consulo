@@ -35,7 +35,7 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.HorizontalLayout;
-import com.intellij.ui.components.panels.Wrapper;
+import consulo.ui.ex.Wrapper;
 import com.intellij.util.EventDispatcher;
 import consulo.application.ui.awt.JBUI;
 import consulo.ui.ex.awt.TargetAWT;

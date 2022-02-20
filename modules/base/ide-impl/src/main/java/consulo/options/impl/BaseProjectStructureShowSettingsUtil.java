@@ -18,9 +18,9 @@ package consulo.options.impl;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.ide.base.BaseShowSettingsUtil;
-import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
-import consulo.roots.ui.configuration.LibrariesConfigurator;
-import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ide.setting.ProjectStructureSettingsUtil;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.roots.ui.configuration.impl.DefaultLibrariesConfigurator;
 
 import javax.annotation.Nonnull;
