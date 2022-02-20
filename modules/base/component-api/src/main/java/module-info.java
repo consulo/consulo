@@ -16,6 +16,7 @@ module consulo.component.api {
   requires transitive consulo.util.concurrent;
   requires transitive consulo.util.collection;
   requires transitive consulo.platform.api;
+  requires transitive consulo.util.jdom;
   requires transitive org.jdom;
   
   requires consulo.injecting.api;

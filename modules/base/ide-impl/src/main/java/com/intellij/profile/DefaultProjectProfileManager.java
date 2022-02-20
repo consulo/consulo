@@ -15,7 +15,7 @@
  */
 package com.intellij.profile;
 
-import com.intellij.openapi.components.MainConfigurationStateSplitter;
+import consulo.component.persist.MainConfigurationStateSplitter;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.language.editor.inspection.scheme.ApplicationProfileManager;
 import consulo.language.editor.inspection.scheme.Profile;

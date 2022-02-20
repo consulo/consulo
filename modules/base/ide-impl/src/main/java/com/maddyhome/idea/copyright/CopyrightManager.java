@@ -16,10 +16,7 @@
 
 package com.maddyhome.idea.copyright;
 
-import com.intellij.openapi.components.*;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import consulo.component.persist.StoragePathMacros;
+import consulo.component.persist.*;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,7 +24,6 @@ import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.PackageSet;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import consulo.logging.Logger;
