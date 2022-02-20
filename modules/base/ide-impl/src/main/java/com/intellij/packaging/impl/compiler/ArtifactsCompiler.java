@@ -17,10 +17,10 @@ package com.intellij.packaging.impl.compiler;
 
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerManager;
-import com.intellij.openapi.compiler.generic.CompileItem;
-import com.intellij.openapi.compiler.generic.GenericCompiler;
-import com.intellij.openapi.compiler.generic.GenericCompilerInstance;
-import com.intellij.openapi.compiler.generic.VirtualFilePersistentState;
+import consulo.compiler.generic.CompileItem;
+import consulo.compiler.generic.GenericCompiler;
+import consulo.compiler.generic.GenericCompilerInstance;
+import consulo.compiler.generic.VirtualFilePersistentState;
 import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.index.io.data.DataExternalizer;

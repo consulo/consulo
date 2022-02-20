@@ -16,8 +16,8 @@
 package com.intellij.compiler.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.compiler.CompileScope;
-import com.intellij.openapi.compiler.ExportableUserDataHolderBase;
+import consulo.compiler.scope.CompileScope;
+import consulo.compiler.util.ExportableUserDataHolderBase;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import com.intellij.openapi.util.io.FileUtil;

@@ -7,6 +7,7 @@ module consulo.component.impl {
   requires transitive consulo.container.api;
   requires transitive consulo.injecting.api;
   requires transitive consulo.proxy;
+  requires transitive jakarta.inject;
 
   requires consulo.container.impl;
   requires consulo.util.nodep;

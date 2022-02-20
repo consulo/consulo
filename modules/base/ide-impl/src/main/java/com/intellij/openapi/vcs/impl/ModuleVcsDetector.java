@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;

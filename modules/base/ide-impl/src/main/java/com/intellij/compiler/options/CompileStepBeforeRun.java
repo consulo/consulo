@@ -25,7 +25,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.application.TransactionGuard;
-import consulo.compiler.CompileScope;
+import consulo.compiler.scope.CompileScope;
 import consulo.compiler.CompileStatusNotification;
 import consulo.compiler.CompilerManager;
 import consulo.module.Module;

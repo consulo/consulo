@@ -41,6 +41,11 @@ public abstract class ContentFolderTypeProvider {
     return typeProvider -> !(typeProvider instanceof ExcludedContentFolderTypeProvider);
   }
 
+  @Nonnull
+  public static Predicate<ContentFolderTypeProvider> onlyExcluded() {
+    return typeProvider -> typeProvider instanceof ExcludedContentFolderTypeProvider;
+  }
+
   public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME = ExtensionPointName.create("consulo.contentFolderTypeProvider");
 
   private final String myId;

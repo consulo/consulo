@@ -20,7 +20,7 @@
 package com.intellij.psi.stubs;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.util.io.EnumeratorStringDescriptor;
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;
 import consulo.language.psi.stub.AbstractStubIndex;
 

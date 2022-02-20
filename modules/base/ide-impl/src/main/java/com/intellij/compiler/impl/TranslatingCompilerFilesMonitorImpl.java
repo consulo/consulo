@@ -15,10 +15,7 @@
  */
 package com.intellij.compiler.impl;
 
-import consulo.compiler.CompileContext;
-import consulo.compiler.CompilerBundle;
-import consulo.compiler.CompilerManager;
-import consulo.compiler.TranslatingCompiler;
+import consulo.compiler.*;
 import consulo.content.ContentIterator;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectTopics;
@@ -27,8 +24,7 @@ import com.intellij.ide.caches.CachesInvalidator;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
-import com.intellij.openapi.compiler.*;
-import com.intellij.openapi.compiler.ex.CompileContextEx;
+import consulo.compiler.impl.CompileContextEx;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -56,10 +52,10 @@ import consulo.index.io.data.DataOutputStream;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
-import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
+import consulo.compiler.TranslatingCompilerFilesMonitorHelper;
 import consulo.compiler.impl.TranslationCompilerFilesMonitorVfsListener;
 import consulo.compiler.impl.TranslationCompilerProjectMonitor;
-import consulo.compiler.make.DependencyCache;
+import consulo.compiler.DependencyCache;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;

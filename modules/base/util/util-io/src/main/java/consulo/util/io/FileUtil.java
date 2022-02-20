@@ -17,6 +17,7 @@
 package consulo.util.io;
 
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ThreeState;
 import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +70,77 @@ public class FileUtil {
   @Nonnull
   public static byte[] getThreadLocalBuffer() {
     return BUFFER.get();
+  }
+
+  /**
+   * Check if the {@code ancestor} is an ancestor of {@code file}.
+   *
+   * @param ancestor supposed ancestor.
+   * @param file     supposed descendant.
+   * @param strict   if {@code false} then this method returns {@code true} if {@code ancestor} equals to {@code file}.
+   * @return {@code true} if {@code ancestor} is parent of {@code file}; {@code false} otherwise.
+   */
+  public static boolean isAncestor(@Nonnull File ancestor, @Nonnull File file, boolean strict) {
+    return isAncestor(ancestor.getPath(), file.getPath(), strict);
+  }
+
+  public static boolean isAncestor(@Nonnull String ancestor, @Nonnull String file, boolean strict) {
+    return !ThreeState.NO.equals(isAncestorThreeState(ancestor, file, strict));
+  }
+
+  /**
+   * Checks if the {@code ancestor} is an ancestor of the {@code file}, and if it is an immediate parent or not.
+   *
+   * @param ancestor supposed ancestor.
+   * @param file     supposed descendant.
+   * @param strict   if {@code false}, the file can be ancestor of itself,
+   *                 i.e. the method returns {@code ThreeState.YES} if {@code ancestor} equals to {@code file}.
+   * @return {@code ThreeState.YES} if ancestor is an immediate parent of the file,
+   * {@code ThreeState.UNSURE} if ancestor is not immediate parent of the file,
+   * {@code ThreeState.NO} if ancestor is not a parent of the file at all.
+   */
+  @Nonnull
+  public static ThreeState isAncestorThreeState(@Nonnull String ancestor, @Nonnull String file, boolean strict) {
+    String ancestorPath = toCanonicalPath(ancestor);
+    String filePath = toCanonicalPath(file);
+    return startsWith(filePath, ancestorPath, strict, OSInfo.isFileSystemCaseSensitive, true);
+  }
+
+  public static boolean startsWith(@Nonnull String path, @Nonnull String start) {
+    return !ThreeState.NO.equals(startsWith(path, start, false, OSInfo.isFileSystemCaseSensitive, false));
+  }
+
+  public static boolean startsWith(@Nonnull String path, @Nonnull String start, boolean caseSensitive) {
+    return !ThreeState.NO.equals(startsWith(path, start, false, caseSensitive, false));
+  }
+
+  @Nonnull
+  private static ThreeState startsWith(@Nonnull String path, @Nonnull String prefix, boolean strict, boolean caseSensitive, boolean checkImmediateParent) {
+    final int pathLength = path.length();
+    final int prefixLength = prefix.length();
+    if (prefixLength == 0) return pathLength == 0 ? ThreeState.YES : ThreeState.UNSURE;
+    if (prefixLength > pathLength) return ThreeState.NO;
+    if (!path.regionMatches(!caseSensitive, 0, prefix, 0, prefixLength)) return ThreeState.NO;
+    if (pathLength == prefixLength) {
+      return strict ? ThreeState.NO : ThreeState.YES;
+    }
+    char lastPrefixChar = prefix.charAt(prefixLength - 1);
+    int slashOrSeparatorIdx = prefixLength;
+    if (lastPrefixChar == '/' || lastPrefixChar == File.separatorChar) {
+      slashOrSeparatorIdx = prefixLength - 1;
+    }
+    char next1 = path.charAt(slashOrSeparatorIdx);
+    if (next1 == '/' || next1 == File.separatorChar) {
+      if (!checkImmediateParent) return ThreeState.YES;
+
+      if (slashOrSeparatorIdx == pathLength - 1) return ThreeState.YES;
+      int idxNext = path.indexOf(next1, slashOrSeparatorIdx + 1);
+      idxNext = idxNext == -1 ? path.indexOf(next1 == '/' ? '\\' : '/', slashOrSeparatorIdx + 1) : idxNext;
+      return idxNext == -1 ? ThreeState.YES : ThreeState.UNSURE;
+    }
+    else {
+      return ThreeState.NO;
+    }
   }
 
   @Nonnull

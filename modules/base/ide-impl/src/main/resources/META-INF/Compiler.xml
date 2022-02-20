@@ -15,11 +15,11 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="compiler.dependencyCache" beanClass="consulo.compiler.make.DependencyCacheEP">
-      <with attribute="implementationClass" implements="consulo.compiler.make.DependencyCache"/>
+    <extensionPoint name="compiler.dependencyCache" beanClass="consulo.compiler.DependencyCacheEP">
+      <with attribute="implementationClass" implements="consulo.compiler.DependencyCache"/>
     </extensionPoint>
 
-    <extensionPoint name="compiler.moduleScopeFactory" interface="consulo.compiler.impl.CompileModuleScopeFactory"/>
+    <extensionPoint name="compiler.moduleScopeFactory" interface="consulo.compiler.scope.CompileModuleScopeFactory"/>
     <extensionPoint name="compiler.sorter" interface="consulo.compiler.CompilerSorter"/>
 
     <extensionPoint name="compiler.beforeTask" interface="consulo.compiler.CompileTask"/>

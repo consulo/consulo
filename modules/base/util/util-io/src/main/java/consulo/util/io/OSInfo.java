@@ -30,4 +30,6 @@ class OSInfo {
   static final boolean isMac = _OS_NAME.startsWith("mac");
   static final boolean isLinux = _OS_NAME.startsWith("linux");
   static final boolean isUnix = !isWindows && !isOS2;
+
+   static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
 }

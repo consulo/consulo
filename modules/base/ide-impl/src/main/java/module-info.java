@@ -531,10 +531,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.command;
   exports com.intellij.openapi.command.impl;
   exports com.intellij.openapi.command.undo;
-  exports com.intellij.openapi.compiler;
-  exports com.intellij.openapi.compiler.ex;
-  exports com.intellij.openapi.compiler.generic;
-  exports com.intellij.openapi.compiler.options;
   exports com.intellij.openapi.components;
   exports com.intellij.openapi.components.impl;
   exports com.intellij.openapi.deployment;
@@ -1106,7 +1102,6 @@ open module consulo.ide.impl {
   //exports consulo.codeInspection;
   exports consulo.codeInspection.ui;
   exports consulo.codeStyle;
-  //exports consulo.command;
   exports consulo.command.impl;
   exports consulo.command.undo;
   exports consulo.command.undo.impl;
@@ -1114,11 +1109,6 @@ open module consulo.ide.impl {
   exports consulo.compiler.impl.build;
   exports consulo.compiler.impl.packagingCompiler;
   exports consulo.compiler.impl.resourceCompiler;
-  exports consulo.compiler.make;
-  exports consulo.compiler.make.impl;
-  exports consulo.compiler.options;
-  exports consulo.compiler.roots;
-  exports consulo.compiler.server;
   exports consulo.components.impl;
   exports consulo.components.impl.stores;
   exports consulo.components.impl.stores.storage;

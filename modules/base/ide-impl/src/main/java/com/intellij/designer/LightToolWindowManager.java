@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;

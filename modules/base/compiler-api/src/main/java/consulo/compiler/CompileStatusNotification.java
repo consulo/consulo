@@ -15,6 +15,8 @@
  */
 package consulo.compiler;
 
+import consulo.compiler.scope.CompileScope;
+
 /**
  * A callback interface passed to ComplerManager methods. Provides notification similar to
  * {@link CompilationStatusListener}.

@@ -15,6 +15,7 @@
  */
 package consulo.compiler;
 
+import consulo.compiler.scope.CompileScope;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
 

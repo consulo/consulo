@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.shelf;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.diff.impl.patch.*;

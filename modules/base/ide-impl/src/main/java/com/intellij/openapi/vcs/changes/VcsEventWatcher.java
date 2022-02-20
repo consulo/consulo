@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes;
 import consulo.module.content.ProjectTopics;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootAdapter;
 import consulo.module.content.layer.event.ModuleRootEvent;

@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import consulo.ui.ex.action.Presentation;
-import consulo.compiler.CompileScope;
+import consulo.compiler.scope.CompileScope;
 import consulo.compiler.CompilerManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;

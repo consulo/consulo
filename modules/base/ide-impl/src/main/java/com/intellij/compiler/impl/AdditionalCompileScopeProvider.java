@@ -16,7 +16,7 @@
 
 package com.intellij.compiler.impl;
 
-import consulo.compiler.CompileScope;
+import consulo.compiler.scope.CompileScope;
 import consulo.compiler.Compiler;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;

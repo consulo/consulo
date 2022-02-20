@@ -16,15 +16,16 @@
 package consulo.compiler.event;
 
 import consulo.compiler.CompileContext;
+import consulo.component.messagebus.Topic;
 
 import java.util.EventListener;
 
 /**
  * A listener for compiler events.
- *
- * @see CompilerTopics#COMPILATION_STATUS
  */
 public interface CompilationStatusListener extends EventListener {
+  Topic<CompilationStatusListener> TOPIC = Topic.create("compilation status", CompilationStatusListener.class);
+
   /**
    * Invoked in a Swing dispatch thread after the compilation is finished.
    *

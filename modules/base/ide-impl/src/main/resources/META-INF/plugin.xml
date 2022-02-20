@@ -300,13 +300,13 @@
     <extensionPoint name="namedScopesHolderProvider" area="PROJECT" interface="consulo.language.psi.search.scope.NamedScopesHolderProvider"/>
 
     <extensionPoint name="compiler.translatingHelper"
-                    interface="consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper"/>
+                    interface="consulo.compiler.TranslatingCompilerFilesMonitorHelper"/>
 
     <extensionPoint name="compiler.resourceCompilerExtension"
                     interface="com.intellij.compiler.impl.resourceCompiler.ResourceCompilerExtension"/>
 
     <extensionPoint name="compiler.additionalOutputDirectoriesProvider"
-                    interface="consulo.compiler.impl.AdditionalOutputDirectoriesProvider"/>
+                    interface="consulo.compiler.AdditionalOutputDirectoriesProvider"/>
     <extensionPoint name="orderRootTypeEditor"
                     beanClass="consulo.component.extension.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="com.intellij.openapi.roots.ui.OrderRootTypeUIFactory"/>
@@ -1634,7 +1634,7 @@
 
     <projectConfigurable id="project.propCompiler.excluded" bundle="consulo.compiler.CompilerBundle" key="actions.exclude.from.compile.text"
                          parentId="project.propCompiler"
-                         instance="consulo.compiler.options.CompilerExcludedConfigurable"/>
+                         instance="consulo.compiler.impl.setting.CompilerExcludedConfigurable"/>
 
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
     <vcsAwareCheckoutListener implementation="com.intellij.openapi.vcs.checkout.RegisterMappingCheckoutListener"/>

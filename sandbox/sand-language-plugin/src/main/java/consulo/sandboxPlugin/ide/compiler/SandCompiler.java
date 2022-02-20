@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.ide.compiler;
 
 import consulo.compiler.CompileContext;
-import consulo.compiler.CompileScope;
+import consulo.compiler.scope.CompileScope;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.TranslatingCompiler;
 import consulo.virtualFileSystem.fileType.FileType;

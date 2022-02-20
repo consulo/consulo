@@ -47,7 +47,7 @@ import consulo.ui.ex.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.EnumeratorLongDescriptor;
-import com.intellij.util.io.EnumeratorStringDescriptor;
+import consulo.index.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.PersistentHashMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;

@@ -16,7 +16,7 @@
 package consulo.compiler;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.compiler.CompileScope;
+import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
 import consulo.navigation.Navigatable;

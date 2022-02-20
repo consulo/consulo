@@ -21,6 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.index.io.EnumeratorIntegerDescriptor;
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.IntInlineKeyDescriptor;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;

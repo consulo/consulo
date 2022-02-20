@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl.jar;
 
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.index.io.data.DataExternalizer;

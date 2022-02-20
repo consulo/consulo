@@ -15,8 +15,8 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import com.intellij.compiler.impl.ModuleCompileScope;
-import consulo.compiler.CompileScope;
+import consulo.compiler.scope.ModuleCompileScope;
+import consulo.compiler.scope.CompileScope;
 import consulo.compiler.CompilerManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

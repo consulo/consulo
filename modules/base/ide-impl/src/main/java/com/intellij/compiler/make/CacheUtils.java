@@ -15,21 +15,18 @@
  */
 package com.intellij.compiler.make;
 
-import com.intellij.compiler.impl.ExitException;
-import consulo.compiler.CompilerBundle;
-import consulo.compiler.CompilerMessage;
-import consulo.compiler.CompilerMessageCategory;
-import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.util.Pair;
-import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
-import consulo.compiler.make.DependencyCache;
+import consulo.compiler.*;
+import consulo.compiler.impl.CompileContextEx;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -65,11 +62,10 @@ public class CacheUtils {
     return true;
   }
 
-  public static Collection<VirtualFile> findDependentFiles(
-    final CompileContextEx context,
-    final Set<VirtualFile> compiledWithErrors,
-    final @javax.annotation.Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter)
-    throws CacheCorruptedException, ExitException {
+  public static Collection<VirtualFile> findDependentFiles(final CompileContextEx context,
+                                                           final Set<VirtualFile> compiledWithErrors,
+                                                           final @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter)
+          throws CacheCorruptedException, ExitException {
 
     context.getProgressIndicator().setText(CompilerBundle.message("progress.checking.dependencies"));
 
@@ -78,9 +74,7 @@ public class CacheUtils {
 
     dependencyCache.findDependentFiles(context, new Ref<CacheCorruptedException>(), filter, dependentFiles, compiledWithErrors);
 
-    context.getProgressIndicator().setText(
-      dependentFiles.size() > 0? CompilerBundle.message("progress.found.dependent.files", dependentFiles.size()) : ""
-    );
+    context.getProgressIndicator().setText(dependentFiles.size() > 0 ? CompilerBundle.message("progress.found.dependent.files", dependentFiles.size()) : "");
 
     return dependentFiles;
   }

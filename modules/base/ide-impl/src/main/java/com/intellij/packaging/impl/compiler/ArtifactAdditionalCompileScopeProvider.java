@@ -16,8 +16,8 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.compiler.impl.AdditionalCompileScopeProvider;
-import com.intellij.compiler.impl.ModuleCompileScope;
-import consulo.compiler.CompileScope;
+import consulo.compiler.scope.ModuleCompileScope;
+import consulo.compiler.scope.CompileScope;
 import consulo.compiler.Compiler;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;

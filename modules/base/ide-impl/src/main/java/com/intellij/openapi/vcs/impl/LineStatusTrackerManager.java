@@ -24,7 +24,7 @@ package com.intellij.openapi.vcs.impl;
 
 import consulo.application.Application;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;

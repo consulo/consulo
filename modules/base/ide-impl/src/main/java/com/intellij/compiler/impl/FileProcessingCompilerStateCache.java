@@ -21,8 +21,8 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.openapi.compiler.ValidityState;
-import com.intellij.openapi.compiler.ValidityStateFactory;
+import consulo.compiler.ValidityState;
+import consulo.compiler.ValidityStateFactory;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;

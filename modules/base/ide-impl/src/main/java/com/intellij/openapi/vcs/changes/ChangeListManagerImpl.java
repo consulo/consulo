@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import consulo.component.persist.StoragePathMacros;
 import consulo.application.progress.EmptyProgressIndicator;
 import com.intellij.openapi.ui.Messages;

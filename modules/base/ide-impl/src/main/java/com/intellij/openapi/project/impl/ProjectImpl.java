@@ -18,7 +18,7 @@ package com.intellij.openapi.project.impl;
 import com.intellij.ide.startup.StartupManagerEx;
 import consulo.application.Application;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import consulo.component.impl.extension.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import consulo.component.impl.extension.ExtensionAreaId;

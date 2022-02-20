@@ -16,8 +16,8 @@
 package com.intellij.compiler.impl;
 
 import consulo.compiler.CompileContext;
-import com.intellij.openapi.compiler.PackagingCompiler;
-import com.intellij.openapi.compiler.ValidityState;
+import consulo.compiler.PackagingCompiler;
+import consulo.compiler.ValidityState;
 import javax.annotation.Nullable;
 
 import java.io.File;

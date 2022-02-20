@@ -8,7 +8,7 @@ import com.intellij.build.issue.BuildIssue;
 import com.intellij.build.progress.BuildProgress;
 import com.intellij.build.progress.BuildProgressDescriptor;
 import com.intellij.compiler.impl.CompilerPropertiesAction;
-import com.intellij.compiler.impl.ExitStatus;
+import consulo.compiler.ExitStatus;
 import com.intellij.compiler.progress.BuildViewService;
 import com.intellij.compiler.progress.ModuleLinkFilter;
 import com.intellij.execution.filters.RegexpFilter;

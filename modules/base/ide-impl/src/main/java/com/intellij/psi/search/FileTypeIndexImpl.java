@@ -11,7 +11,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.indexing.*;
-import com.intellij.util.io.EnumeratorStringDescriptor;
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;
 import javax.annotation.Nonnull;
 

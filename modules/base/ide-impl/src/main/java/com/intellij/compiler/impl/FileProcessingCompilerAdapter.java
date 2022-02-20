@@ -16,8 +16,8 @@
 package com.intellij.compiler.impl;
 
 import consulo.compiler.CompileContext;
-import com.intellij.openapi.compiler.FileProcessingCompiler;
-import com.intellij.openapi.compiler.ValidityState;
+import consulo.compiler.FileProcessingCompiler;
+import consulo.compiler.ValidityState;
 
 import java.io.File;
 

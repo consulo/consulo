@@ -25,6 +25,7 @@ import com.intellij.util.ExceptionUtil;
 import consulo.application.ApplicationManager;
 import consulo.compiler.*;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
+import consulo.compiler.scope.CompileScope;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;

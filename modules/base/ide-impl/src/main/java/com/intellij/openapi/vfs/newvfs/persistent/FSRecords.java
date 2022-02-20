@@ -18,6 +18,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.function.ThrowableRunnable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposer;
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;

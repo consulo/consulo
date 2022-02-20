@@ -14,7 +14,7 @@ import com.intellij.util.containers.FactoryMap;
 import consulo.util.collection.MultiMap;
 import com.intellij.util.indexing.*;
 import consulo.index.io.data.DataExternalizer;
-import com.intellij.util.io.EnumeratorStringDescriptor;
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.data.IOUtil;
 import consulo.index.io.KeyDescriptor;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;

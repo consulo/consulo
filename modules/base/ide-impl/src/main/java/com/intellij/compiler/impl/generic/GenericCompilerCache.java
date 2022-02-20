@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.impl.generic;
 
-import com.intellij.openapi.compiler.generic.GenericCompiler;
+import consulo.compiler.generic.GenericCompiler;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.function.Processor;

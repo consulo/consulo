@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.patch;
 import consulo.application.CommonBundle;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.IdeaTextPatchBuilder;
 import consulo.component.ProcessCanceledException;

@@ -16,90 +16,83 @@
 
 package com.intellij.compiler.impl;
 
-import consulo.project.ui.notification.NotificationType;
-import consulo.application.CommonBundle;
 import com.intellij.build.BuildContentManager;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.compiler.ProblemsView;
-import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.diagnostic.IdeErrorsDialog;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.application.WriteAction;
-import consulo.compiler.*;
-import com.intellij.openapi.compiler.*;
-import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.compiler.ex.CompilerPathsEx;
-import com.intellij.openapi.compiler.generic.GenericCompiler;
-import consulo.compiler.Compiler;
-import consulo.util.lang.Trinity;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
-import consulo.document.FileDocumentManager;
-import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.module.content.layer.ContentEntry;
-import consulo.module.content.layer.ContentFolder;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.WindowManager;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactManager;
 import com.intellij.packaging.impl.artifacts.ArtifactImpl;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactCompilerUtil;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.util.collection.Chunk;
 import com.intellij.util.Function;
 import com.intellij.util.StringBuilderSpinAllocator;
-import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import consulo.util.collection.OrderedSet;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
+import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
+import consulo.application.WriteAction;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.Semaphore;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.compiler.impl.AdditionalOutputDirectoriesProvider;
-import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
-import consulo.compiler.make.DependencyCache;
-import consulo.compiler.make.impl.CompositeDependencyCache;
-import consulo.compiler.roots.CompilerPathsImpl;
+import consulo.application.util.registry.Registry;
+import consulo.compiler.Compiler;
+import consulo.compiler.*;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.event.SourceInstrumentingCompiler;
+import consulo.compiler.generic.GenericCompiler;
+import consulo.compiler.impl.*;
+import consulo.compiler.impl.make.CompositeDependencyCache;
+import consulo.compiler.scope.CompileScope;
+import consulo.compiler.scope.FileIndexCompileScope;
+import consulo.component.ProcessCanceledException;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
-import consulo.logging.Logger;
-import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.util.collection.Maps;
-import consulo.util.collection.Sets;
+import consulo.document.FileDocumentManager;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ContentFolder;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.WindowManager;
+import consulo.util.collection.*;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Trinity;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
+import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jetbrains.annotations.NonNls;
 
@@ -486,7 +479,11 @@ public class CompileDriver {
     compileTask.start(compileWork);
   }
 
-  private ExitStatus doCompile(final CompileContextImpl compileContext, final boolean isRebuild, final boolean forceCompile, final CompileStatusNotification callback, final boolean checkCachesVersion) {
+  private ExitStatus doCompile(final CompileContextImpl compileContext,
+                               final boolean isRebuild,
+                               final boolean forceCompile,
+                               final CompileStatusNotification callback,
+                               final boolean checkCachesVersion) {
     ExitStatus status = ExitStatus.ERRORS;
     boolean wereExceptions = false;
     final long vfsTimestamp = (ManagingFS.getInstance()).getCreationTimestamp();
@@ -990,7 +987,7 @@ public class CompileDriver {
           int round = 0;
           boolean compiledSomethingForThisChunk = false;
           Collection<VirtualFile> dependentFiles = Collections.emptyList();
-          final Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> dependencyFilter = new DependentClassesCumulativeFilter();
+          final Function<consulo.util.lang.Pair<int[], Set<VirtualFile>>, consulo.util.lang.Pair<int[], Set<VirtualFile>>> dependencyFilter = new DependentClassesCumulativeFilter();
 
           do {
             for (int currentCompiler = 0, translatorsLength = translators.length; currentCompiler < translatorsLength; currentCompiler++) {
@@ -2328,13 +2325,13 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
     }
   }
 
-  private static class DependentClassesCumulativeFilter implements Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> {
+  private static class DependentClassesCumulativeFilter implements Function<consulo.util.lang.Pair<int[], Set<VirtualFile>>, consulo.util.lang.Pair<int[], Set<VirtualFile>>> {
 
     private final IntSet myProcessedNames = IntSets.newHashSet();
     private final Set<VirtualFile> myProcessedFiles = new HashSet<>();
 
     @Override
-    public Pair<int[], Set<VirtualFile>> fun(Pair<int[], Set<VirtualFile>> deps) {
+    public consulo.util.lang.Pair<int[], Set<VirtualFile>> fun(consulo.util.lang.Pair<int[], Set<VirtualFile>> deps) {
       final IntSet currentDeps = IntSets.newHashSet(deps.getFirst());
       currentDeps.removeAll(myProcessedNames.toArray());
       myProcessedNames.addAll(deps.getFirst());
@@ -2342,7 +2339,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
       final Set<VirtualFile> depFiles = new HashSet<>(deps.getSecond());
       depFiles.removeAll(myProcessedFiles);
       myProcessedFiles.addAll(deps.getSecond());
-      return new Pair<>(currentDeps.toArray(), depFiles);
+      return consulo.util.lang.Pair.create(currentDeps.toArray(), depFiles);
     }
   }
 }

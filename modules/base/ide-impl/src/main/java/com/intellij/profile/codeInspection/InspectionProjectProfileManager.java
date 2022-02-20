@@ -16,7 +16,7 @@
 package com.intellij.profile.codeInspection;
 
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.profile.DefaultProjectProfileManager;
 import consulo.component.persist.PersistentStateComponent;

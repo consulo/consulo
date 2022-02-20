@@ -22,7 +22,7 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.index.io.data.DataExternalizer;
-import com.intellij.util.io.EnumeratorStringDescriptor;
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.data.IOUtil;
 import com.intellij.util.io.PersistentHashMap;
 import consulo.container.boot.ContainerPathManager;

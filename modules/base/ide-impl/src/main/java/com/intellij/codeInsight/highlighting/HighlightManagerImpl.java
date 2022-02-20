@@ -19,7 +19,7 @@ package com.intellij.codeInsight.highlighting;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.codeEditor.Editor;

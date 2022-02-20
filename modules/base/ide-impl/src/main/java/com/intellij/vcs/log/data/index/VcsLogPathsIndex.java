@@ -31,6 +31,7 @@ import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.impl.VcsChangesLazilyParsedDetails;
 import com.intellij.vcs.log.util.PersistentUtil;
 import consulo.disposer.Disposable;
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 import consulo.logging.Logger;

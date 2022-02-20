@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;

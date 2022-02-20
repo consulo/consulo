@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import com.intellij.openapi.compiler.generic.BuildTarget;
+import consulo.compiler.generic.BuildTarget;
 import consulo.compiler.artifact.Artifact;
 import javax.annotation.Nonnull;
 

@@ -30,7 +30,7 @@ import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ProjectComponent;
+import consulo.project.ProjectComponent;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import com.intellij.openapi.fileTypes.FileTypeManager;

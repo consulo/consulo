@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import com.intellij.openapi.compiler.generic.VirtualFileCompileItem;
+import consulo.compiler.generic.VirtualFileCompileItem;
 import com.intellij.compiler.impl.packagingCompiler.DestinationInfo;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;

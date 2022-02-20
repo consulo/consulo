@@ -18,6 +18,7 @@ package consulo.compiler;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.event.CompilationStatusListener;
+import consulo.compiler.scope.CompileScope;
 import consulo.compiler.setting.ExcludedEntriesConfiguration;
 import consulo.disposer.Disposable;
 import consulo.module.Module;
