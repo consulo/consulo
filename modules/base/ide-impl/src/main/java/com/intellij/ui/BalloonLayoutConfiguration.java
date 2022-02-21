@@ -19,8 +19,8 @@ import consulo.application.AllIcons;
 import consulo.project.ui.notification.Notification;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import consulo.application.util.SystemInfo;
-import consulo.application.ui.awt.JBDimension;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBDimension;
+import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

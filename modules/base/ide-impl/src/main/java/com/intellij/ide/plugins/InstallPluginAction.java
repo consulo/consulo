@@ -25,7 +25,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;

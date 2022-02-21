@@ -43,7 +43,7 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
 import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageInFile;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

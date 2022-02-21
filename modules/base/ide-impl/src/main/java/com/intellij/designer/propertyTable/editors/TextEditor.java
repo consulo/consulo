@@ -19,9 +19,9 @@ import com.intellij.designer.model.PropertiesContainer;
 import com.intellij.designer.model.PropertyContext;
 import com.intellij.designer.propertyTable.InplaceContext;
 import com.intellij.designer.propertyTable.PropertyEditor;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

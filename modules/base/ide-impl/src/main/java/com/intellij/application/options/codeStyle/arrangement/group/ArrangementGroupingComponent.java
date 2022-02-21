@@ -22,10 +22,10 @@ import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementRepr
 import com.intellij.application.options.codeStyle.arrangement.util.ArrangementRuleIndexControl;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.std.*;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

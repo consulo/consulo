@@ -8,7 +8,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="8aadb" class="com.intellij.ui.components.JBLabel" binding="myServersLabel">
+      <component id="8aadb" class="consulo.ui.ex.awt.JBLabel" binding="myServersLabel">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -42,7 +42,7 @@
               <size top="100" left="220" bottom="100" right="220"/>
             </border>
             <children>
-              <component id="76503" class="com.intellij.ui.components.JBLabel">
+              <component id="76503" class="consulo.ui.ex.awt.JBLabel">
                 <constraints border-constraint="Center"/>
                 <properties>
                   <horizontalAlignment value="0"/>
@@ -53,7 +53,7 @@
           </grid>
         </children>
       </grid>
-      <component id="4840c" class="consulo.ui.ex.Splitter" binding="mySplitter">
+      <component id="4840c" class="consulo.ui.ex.awt.Splitter" binding="mySplitter">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>

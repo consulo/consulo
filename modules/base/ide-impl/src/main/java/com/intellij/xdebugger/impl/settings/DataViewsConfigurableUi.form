@@ -77,7 +77,7 @@
               <text resource-bundle="consulo/debugger/XDebuggerBundle" key="setting.value.tooltip.delay.label"/>
             </properties>
           </component>
-          <component id="e0c23" class="com.intellij.ui.components.JBLabel" binding="myTooltipLabel">
+          <component id="e0c23" class="consulo.ui.ex.awt.JBLabel" binding="myTooltipLabel">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="2" use-parent-layout="false"/>
             </constraints>

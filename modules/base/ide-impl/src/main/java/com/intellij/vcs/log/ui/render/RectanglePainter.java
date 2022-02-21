@@ -17,10 +17,10 @@ package com.intellij.vcs.log.ui.render;
 
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.SimpleColoredComponent;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

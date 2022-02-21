@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.settings;
 
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
@@ -30,11 +30,11 @@ import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.ui.ex.tree.TreeUtil;
-import consulo.ui.ex.util.MergingUpdateQueue;
-import consulo.ui.ex.util.Update;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;

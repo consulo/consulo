@@ -18,8 +18,8 @@ package com.intellij.xdebugger.impl.settings;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.application.ui.awt.VerticalFlowLayout;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.debugger.setting.DebuggerSettingsCategory;
 import consulo.ui.annotation.RequiredUIAccess;
 

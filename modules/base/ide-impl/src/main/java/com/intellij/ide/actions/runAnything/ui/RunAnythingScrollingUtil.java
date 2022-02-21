@@ -5,7 +5,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.ui.ListActions;
 import com.intellij.ui.ScrollingUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

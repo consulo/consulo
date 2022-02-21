@@ -31,12 +31,12 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SystemNotifications;
 import com.intellij.ui.TableSpeedSearch;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
-import consulo.ui.ex.tree.table.TreeTable;
+import consulo.ui.ex.awt.tree.table.TreeTable;
 import com.intellij.ui.treeStructure.treetable.TreeTableModel;
 import com.intellij.util.ObjectUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.tree.IndexTreePathState;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.IndexTreePathState;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

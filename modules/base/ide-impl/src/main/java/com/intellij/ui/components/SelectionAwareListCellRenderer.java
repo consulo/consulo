@@ -2,7 +2,7 @@
 package com.intellij.ui.components;
 
 import com.intellij.util.NotNullFunction;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

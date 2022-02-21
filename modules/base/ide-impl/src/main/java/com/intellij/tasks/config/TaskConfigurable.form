@@ -40,7 +40,7 @@
           <text value="&amp;Save context on commit"/>
         </properties>
       </component>
-      <component id="89ca" class="com.intellij.ui.components.JBLabel">
+      <component id="89ca" class="consulo.ui.ex.awt.JBLabel">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -66,7 +66,7 @@
           <text value="Always &amp;display task combo in toolbar"/>
         </properties>
       </component>
-      <component id="f47eb" class="com.intellij.ui.components.JBLabel">
+      <component id="f47eb" class="consulo.ui.ex.awt.JBLabel">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

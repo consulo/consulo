@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.paint;
 
-import com.intellij.util.ui.RegionPainter;
+import consulo.ui.ex.awt.RegionPainter;
 import consulo.colorScheme.EffectType;
 
 import java.awt.*;

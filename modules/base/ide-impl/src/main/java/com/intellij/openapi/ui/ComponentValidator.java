@@ -2,18 +2,17 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
-import consulo.application.ui.awt.*;
-import consulo.application.ui.awt.JBCurrentTheme;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.awt.ColorUtil;
-import com.intellij.ui.ComponentUtil;
-import consulo.ui.ex.event.DocumentAdapter;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.util.Alarm;
-import com.intellij.util.ui.*;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.util.ComponentUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
@@ -39,7 +38,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static consulo.application.ui.awt.JBCurrentTheme.Validator.*;
+import static consulo.ui.ex.awt.JBCurrentTheme.Validator.*;
 
 public class ComponentValidator {
   private static final String PROPERTY_NAME = "JComponent.componentValidator";

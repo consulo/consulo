@@ -1,14 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.components;
 
-import com.intellij.ui.ComponentUtil;
-import com.intellij.ui.components.JBScrollPane.Alignment;
-import consulo.application.ui.awt.JBUIScale;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.ComponentUtil;
+import consulo.ui.ex.awt.JBScrollPane.Alignment;
 import consulo.ui.ex.awt.MouseEventAdapter;
+import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.util.lang.MathUtil;
-import com.intellij.util.ui.*;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.UIUtil;
 import consulo.util.dataholder.Key;
 
 import javax.swing.Timer;

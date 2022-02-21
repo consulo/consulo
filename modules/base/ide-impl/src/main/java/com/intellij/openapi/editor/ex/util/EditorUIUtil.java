@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import consulo.application.ui.awt.DesktopAntialiasingTypeUtil;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.application.util.SystemInfo;
-import consulo.application.ui.awt.MacUIUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.MacUIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import java.awt.*;
 

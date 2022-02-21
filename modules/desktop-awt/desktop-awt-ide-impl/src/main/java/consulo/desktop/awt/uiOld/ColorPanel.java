@@ -16,11 +16,11 @@
 package consulo.desktop.awt.uiOld;
 
 import com.intellij.ui.ColorChooser;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import com.intellij.ui.RelativeFont;
 import com.intellij.ui.UIBundle;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

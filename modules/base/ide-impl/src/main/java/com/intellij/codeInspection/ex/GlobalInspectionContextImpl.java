@@ -43,7 +43,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.internal.concurrency.JobLauncher;
 import consulo.application.progress.*;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.component.ProcessCanceledException;

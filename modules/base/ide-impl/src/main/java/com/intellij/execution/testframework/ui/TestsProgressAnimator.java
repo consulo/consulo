@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.AbstractTestProxy;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

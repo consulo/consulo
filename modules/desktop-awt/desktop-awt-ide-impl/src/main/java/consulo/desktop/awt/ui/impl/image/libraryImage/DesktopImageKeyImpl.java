@@ -16,10 +16,10 @@
 package consulo.desktop.awt.ui.impl.image.libraryImage;
 
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.ImageUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.ui.ex.awt.TargetAWT;
-import consulo.application.ui.awt.UIModificationTracker;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.UIModificationTracker;
 import consulo.desktop.awt.ui.impl.image.DesktopBaseLazyImageImpl;
 import consulo.desktop.awt.ui.impl.image.DesktopImage;
 import consulo.ui.image.IconLibraryManager;

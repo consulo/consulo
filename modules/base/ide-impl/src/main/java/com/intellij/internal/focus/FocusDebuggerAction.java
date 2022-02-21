@@ -21,7 +21,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;

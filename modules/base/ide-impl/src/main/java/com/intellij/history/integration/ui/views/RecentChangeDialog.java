@@ -23,7 +23,7 @@ import com.intellij.history.integration.LocalHistoryBundle;
 import com.intellij.history.integration.ui.models.DirectoryHistoryDialogModel;
 import com.intellij.history.integration.ui.models.RecentChangeDialogModel;
 import consulo.project.Project;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

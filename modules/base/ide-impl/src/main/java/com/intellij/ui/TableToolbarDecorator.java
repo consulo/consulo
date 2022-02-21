@@ -19,7 +19,7 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.ListTableModel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

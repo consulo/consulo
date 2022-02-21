@@ -2,20 +2,23 @@
 package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import consulo.application.ui.awt.*;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
-import consulo.application.ui.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.BorderLayoutPanel;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.WindowMoveListener;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
+import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.border.BorderStyle;
 

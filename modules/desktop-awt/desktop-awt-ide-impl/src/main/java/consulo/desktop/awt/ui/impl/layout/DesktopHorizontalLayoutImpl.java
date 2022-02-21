@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.Component;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.annotation.RequiredUIAccess;

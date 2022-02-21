@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.issueLinks;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.IssueNavigationConfiguration;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 

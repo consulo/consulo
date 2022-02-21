@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.ui.actions;
 
 import consulo.project.Project;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.util.textCompletion.TextCompletionProvider;
 import com.intellij.util.textCompletion.TextFieldWithCompletion;
 import com.intellij.util.ui.AsyncProcessIcon;

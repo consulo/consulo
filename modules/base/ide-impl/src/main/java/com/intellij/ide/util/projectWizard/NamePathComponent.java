@@ -22,9 +22,9 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
 

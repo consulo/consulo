@@ -35,7 +35,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TabbedPaneWrapper;
-import consulo.application.ui.awt.GraphicsUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 

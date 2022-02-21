@@ -17,8 +17,8 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
-import consulo.ui.ex.tree.Tree;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
 

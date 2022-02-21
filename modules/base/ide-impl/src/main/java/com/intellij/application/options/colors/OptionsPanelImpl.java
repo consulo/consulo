@@ -23,9 +23,9 @@ import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.Wrapper;
 import com.intellij.util.EventDispatcher;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

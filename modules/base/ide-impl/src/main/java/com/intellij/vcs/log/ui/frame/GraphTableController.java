@@ -21,7 +21,7 @@ import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import com.intellij.ui.HintHint;
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.Wrapper;
 import com.intellij.vcs.log.CommitId;
 import com.intellij.vcs.log.VcsShortCommitDetails;
 import com.intellij.vcs.log.data.LoadingDetails;

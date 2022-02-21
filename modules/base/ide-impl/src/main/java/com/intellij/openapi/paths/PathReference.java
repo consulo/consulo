@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.paths;
 
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.util.NullableLazyValue;

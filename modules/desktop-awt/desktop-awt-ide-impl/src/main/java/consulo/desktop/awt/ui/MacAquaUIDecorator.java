@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui;
 
-import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.style.StyleManager;
 

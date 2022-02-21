@@ -49,7 +49,7 @@ import com.intellij.ui.AppIcon;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.AppScheduledExecutorService;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;

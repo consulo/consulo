@@ -16,9 +16,11 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.border.IdeaTitledBorder;
-import consulo.application.ui.awt.PanelWithAnchor;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.IdeaTitledBorder;
+import consulo.ui.ex.awt.AnchorableComponent;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.PanelWithAnchor;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

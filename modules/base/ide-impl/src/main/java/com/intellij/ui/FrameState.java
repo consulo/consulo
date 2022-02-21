@@ -19,7 +19,7 @@ import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.awt.hacking.AWTAccessorHacking;
 
 import javax.annotation.Nonnull;

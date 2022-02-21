@@ -42,7 +42,7 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.ui.docking.DockManager;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

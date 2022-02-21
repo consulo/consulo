@@ -35,7 +35,7 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.GridBag;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataContext;
 
 import javax.annotation.Nonnull;

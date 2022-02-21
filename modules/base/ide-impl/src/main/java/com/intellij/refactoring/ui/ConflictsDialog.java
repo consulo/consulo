@@ -29,7 +29,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.util.ArrayUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;

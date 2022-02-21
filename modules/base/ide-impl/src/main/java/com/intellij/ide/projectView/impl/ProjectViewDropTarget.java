@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static consulo.ui.ex.tree.TreeUtil.getLastUserObject;
+import static consulo.ui.ex.awt.tree.TreeUtil.getLastUserObject;
 
 /**
  * @author Anna

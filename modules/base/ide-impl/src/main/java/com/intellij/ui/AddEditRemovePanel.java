@@ -15,10 +15,11 @@
  */
 package com.intellij.ui;
 
-import consulo.ui.ex.table.JBTable;
-import consulo.ui.ex.ComponentWithEmptyText;
-import consulo.ui.ex.StatusText;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awt.ComponentWithEmptyText;
+import consulo.ui.ex.awt.StatusText;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -38,7 +38,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

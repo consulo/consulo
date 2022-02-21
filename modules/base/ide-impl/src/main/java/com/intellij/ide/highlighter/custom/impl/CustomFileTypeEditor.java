@@ -26,8 +26,9 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.GridBag;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 
 import javax.annotation.Nonnull;
 

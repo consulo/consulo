@@ -24,7 +24,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="d30b0" class="com.intellij.ui.components.JBLabel">
+              <component id="d30b0" class="consulo.ui.ex.awt.JBLabel">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -51,7 +51,7 @@
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="4be87" class="com.intellij.ui.components.JBLabel">
+                  <component id="4be87" class="consulo.ui.ex.awt.JBLabel">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -82,7 +82,7 @@
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
               </hspacer>
-              <component id="443be" class="com.intellij.ui.components.JBLabel">
+              <component id="443be" class="consulo.ui.ex.awt.JBLabel">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -90,7 +90,7 @@
                   <text value="Show for non-literals in case of multiple params with the same type"/>
                 </properties>
               </component>
-              <component id="a19f3" class="com.intellij.ui.components.JBLabel">
+              <component id="a19f3" class="consulo.ui.ex.awt.JBLabel">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>

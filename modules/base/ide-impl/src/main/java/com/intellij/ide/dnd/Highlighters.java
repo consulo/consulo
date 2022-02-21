@@ -22,7 +22,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

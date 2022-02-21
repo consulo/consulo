@@ -34,7 +34,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangesTreeList;
 import com.intellij.openapi.vcs.changes.ui.TreeModelBuilder;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;

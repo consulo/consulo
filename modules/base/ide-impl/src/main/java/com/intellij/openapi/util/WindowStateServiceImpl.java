@@ -6,7 +6,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.component.util.ModificationTracker;
 import consulo.logging.Logger;
 import org.jdom.Element;

@@ -1,11 +1,12 @@
 package com.intellij.util.net.ssl;
 
-import com.intellij.ui.*;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.ui.FormBuilder;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.TitledSeparator;
 
 import javax.annotation.Nonnull;
 

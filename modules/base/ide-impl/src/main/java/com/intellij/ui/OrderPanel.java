@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.swing.*;

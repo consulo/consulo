@@ -17,9 +17,9 @@ package consulo.desktop.awt.ui.impl.style;
 
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightColors;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
-import consulo.application.ui.awt.MorphValue;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.MorphValue;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;
 import consulo.logging.Logger;

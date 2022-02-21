@@ -19,12 +19,12 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 
 import javax.annotation.Nonnull;
 

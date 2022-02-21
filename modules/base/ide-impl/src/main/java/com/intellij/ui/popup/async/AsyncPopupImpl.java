@@ -6,11 +6,11 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.disposer.Disposer;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.popup.NextStepHandler;
 import com.intellij.ui.popup.WizardPopup;
-import consulo.ui.ex.util.Alarm;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

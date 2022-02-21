@@ -25,7 +25,7 @@ import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.project.Project;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 /**
  * Abstract base class for the different configuration panels that tries to simplify the use of

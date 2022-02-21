@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.util.NotNullComputable;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.configurable.SimpleConfigurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;

@@ -56,7 +56,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.docking.DockManager;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.ObjectUtil;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;

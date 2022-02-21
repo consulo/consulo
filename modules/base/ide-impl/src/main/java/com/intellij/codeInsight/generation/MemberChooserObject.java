@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.generation;
 
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 
 import javax.swing.*;
 

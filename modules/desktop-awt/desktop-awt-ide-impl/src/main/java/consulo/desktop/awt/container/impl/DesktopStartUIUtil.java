@@ -16,11 +16,11 @@
 package consulo.desktop.awt.container.impl;
 
 import consulo.application.util.SystemInfo;
-import consulo.application.ui.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.util.lang.SystemProperties;
-import com.intellij.util.ui.JBHtmlEditorKit;
-import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.ex.awt.JBHtmlEditorKit;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.logging.Logger;
 
 import javax.swing.*;

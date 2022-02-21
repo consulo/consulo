@@ -2,7 +2,7 @@
 package com.intellij.ide.util.scopeChooser;
 
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.tree.WeighedItem;
+import consulo.component.util.WeighedItem;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
@@ -17,7 +17,7 @@ import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ComboboxWithBrowseButton;
-import consulo.application.ui.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.BitUtil;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;

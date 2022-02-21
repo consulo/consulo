@@ -25,11 +25,11 @@ import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.intellij.psi.codeStyle.presentation.CodeStyleSettingPresentation;
 import com.intellij.ui.OptionGroup;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.components.fields.IntegerField;
 import consulo.util.collection.MultiMap;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

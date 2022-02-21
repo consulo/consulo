@@ -38,8 +38,8 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.PopupHandler;
 import consulo.ui.ex.RelativePoint;
-import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUI;
 import consulo.desktop.editor.impl.ui.DesktopEditorErrorPanelUI;
 import consulo.ui.annotation.RequiredUIAccess;
 

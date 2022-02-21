@@ -16,12 +16,12 @@
 package com.intellij.ui.components;
 
 import com.intellij.openapi.ui.LoadingDecorator;
-import consulo.application.ui.awt.ColorUtil;
-import consulo.ui.ex.NonOpaquePanel;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AsyncProcessIcon;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -23,7 +23,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import com.intellij.ui.PopupHandler;
 import consulo.ui.ex.RelativePoint;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

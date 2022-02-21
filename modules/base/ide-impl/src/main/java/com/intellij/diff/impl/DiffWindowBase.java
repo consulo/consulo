@@ -24,7 +24,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.WindowWrapper;
 import com.intellij.openapi.ui.WindowWrapperBuilder;
-import consulo.application.ui.awt.internal.ImageLoader;
+import consulo.ui.ex.awt.internal.ImageLoader;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;

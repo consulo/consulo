@@ -25,7 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.compiler.artifact.ArtifactType;
 import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

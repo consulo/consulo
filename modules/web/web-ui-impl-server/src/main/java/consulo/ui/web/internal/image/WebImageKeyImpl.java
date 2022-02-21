@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal.image;
 
-import consulo.application.ui.awt.UIModificationTracker;
+import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;

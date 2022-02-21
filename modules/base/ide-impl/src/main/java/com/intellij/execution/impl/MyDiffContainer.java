@@ -20,7 +20,7 @@ import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.AsyncProcessIcon;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
 
 import javax.swing.*;

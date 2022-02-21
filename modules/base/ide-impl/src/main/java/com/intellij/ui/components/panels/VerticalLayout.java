@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.components.panels;
 
-import consulo.application.ui.awt.JBInsets;
+import consulo.ui.ex.awt.JBInsets;
 
 import javax.swing.SwingConstants;
 import java.awt.Component;

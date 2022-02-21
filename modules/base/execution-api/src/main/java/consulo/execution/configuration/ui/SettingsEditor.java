@@ -23,7 +23,7 @@ import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UserActivityWatcher;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
 
 import javax.annotation.Nonnull;

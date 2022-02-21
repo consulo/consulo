@@ -16,8 +16,8 @@
 package com.intellij.openapi.ui;
 
 import consulo.application.AllIcons;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

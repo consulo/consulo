@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

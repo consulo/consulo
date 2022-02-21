@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

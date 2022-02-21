@@ -46,7 +46,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.file.light.LightVirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairFunction;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import consulo.codeEditor.impl.EditorInternal;

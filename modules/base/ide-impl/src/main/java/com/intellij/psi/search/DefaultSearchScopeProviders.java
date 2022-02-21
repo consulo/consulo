@@ -3,7 +3,7 @@ package com.intellij.psi.search;
 
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import com.intellij.ide.projectView.impl.AbstractUrl;
-import consulo.ui.ex.tree.WeighedItem;
+import consulo.component.util.WeighedItem;
 import consulo.application.ReadAction;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;

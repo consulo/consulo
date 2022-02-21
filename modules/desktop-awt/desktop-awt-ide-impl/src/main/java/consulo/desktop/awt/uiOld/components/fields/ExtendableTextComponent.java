@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
-import static consulo.application.ui.awt.JBUI.scale;
+import static consulo.ui.ex.awt.JBUI.scale;
 
 /**
  * @author Konstantin Bulenkov

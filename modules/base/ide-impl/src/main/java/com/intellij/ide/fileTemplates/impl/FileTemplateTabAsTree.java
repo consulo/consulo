@@ -20,11 +20,11 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateDescriptor;
 import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptor;
 import com.intellij.ui.TreeSpeedSearch;
-import consulo.ui.ex.tree.Tree;
+import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.tree.TreeUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

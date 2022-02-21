@@ -23,9 +23,9 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBDimension;
+import consulo.ui.ex.awt.JBDimension;
 
 import javax.swing.*;
 import java.awt.*;

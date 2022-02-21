@@ -12,7 +12,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import consulo.util.collection.JBIterable;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

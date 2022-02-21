@@ -37,7 +37,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="7fe1f" class="com.intellij.ui.components.JBLabel" binding="myLineSeparatorHint">
+              <component id="7fe1f" class="consulo.ui.ex.awt.JBLabel" binding="myLineSeparatorHint">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -76,7 +76,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="d4c0" class="com.intellij.ui.components.JBLabel" binding="myVisualGuidesLabel">
+              <component id="d4c0" class="consulo.ui.ex.awt.JBLabel" binding="myVisualGuidesLabel">
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -84,7 +84,7 @@
                   <text resource-bundle="messages/ApplicationBundle" key="settings.code.style.visual.guides"/>
                 </properties>
               </component>
-              <component id="4b1c0" class="com.intellij.ui.components.JBLabel" binding="myVisualGuidesHint">
+              <component id="4b1c0" class="consulo.ui.ex.awt.JBLabel" binding="myVisualGuidesHint">
                 <constraints>
                   <grid row="4" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -92,7 +92,7 @@
                   <text resource-bundle="messages/ApplicationBundle" key="settings.code.style.general.visual.guides.hint"/>
                 </properties>
               </component>
-              <component id="c2175" class="com.intellij.ui.components.JBLabel">
+              <component id="c2175" class="consulo.ui.ex.awt.JBLabel">
                 <constraints>
                   <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -100,7 +100,7 @@
                   <text resource-bundle="messages/ApplicationBundle" key="margin.columns"/>
                 </properties>
               </component>
-              <component id="4be22" class="com.intellij.ui.components.JBLabel">
+              <component id="4be22" class="consulo.ui.ex.awt.JBLabel">
                 <constraints>
                   <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -167,7 +167,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="1afd0" class="com.intellij.ui.components.JBLabel" binding="myFormatterOffLabel">
+                  <component id="1afd0" class="consulo.ui.ex.awt.JBLabel" binding="myFormatterOffLabel">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="2" use-parent-layout="false"/>
                     </constraints>
@@ -184,7 +184,7 @@
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="96c9" class="com.intellij.ui.components.JBLabel" binding="myFormatterOnLabel">
+                  <component id="96c9" class="consulo.ui.ex.awt.JBLabel" binding="myFormatterOnLabel">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="2" use-parent-layout="false"/>
                     </constraints>

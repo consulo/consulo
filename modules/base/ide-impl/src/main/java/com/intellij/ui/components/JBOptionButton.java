@@ -18,7 +18,7 @@ package com.intellij.ui.components;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import consulo.util.lang.ref.Ref;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;

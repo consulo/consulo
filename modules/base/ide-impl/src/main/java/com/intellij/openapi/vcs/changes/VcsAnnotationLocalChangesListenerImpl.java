@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.MultiMap;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;

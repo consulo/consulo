@@ -49,7 +49,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.function.Processor;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;

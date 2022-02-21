@@ -16,20 +16,20 @@
 
 package com.intellij.ide.commander;
 
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import consulo.application.ui.awt.JBCurrentTheme;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
 import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

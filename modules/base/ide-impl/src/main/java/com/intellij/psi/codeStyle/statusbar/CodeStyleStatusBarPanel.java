@@ -3,9 +3,9 @@ package com.intellij.psi.codeStyle.statusbar;
 
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.wm.impl.status.TextPanel;
-import consulo.application.ui.awt.JBFont;
-import consulo.application.ui.awt.JBUI;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBFont;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;

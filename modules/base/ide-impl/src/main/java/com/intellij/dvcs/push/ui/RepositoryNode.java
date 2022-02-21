@@ -18,11 +18,11 @@ package com.intellij.dvcs.push.ui;
 import com.intellij.dvcs.push.OutgoingResult;
 import com.intellij.dvcs.push.PushTargetPanel;
 import com.intellij.ui.CheckedTreeNode;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

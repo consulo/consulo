@@ -15,8 +15,9 @@
  */
 package com.intellij.util.ui;
 
-import consulo.ui.ex.NonOpaquePanel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBHtmlEditorKit;
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

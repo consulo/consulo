@@ -4,7 +4,7 @@ package com.intellij.openapi.vcs.impl.projectlevelman;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import javax.annotation.Nonnull;
 
 public class FileWatchRequestsManager {

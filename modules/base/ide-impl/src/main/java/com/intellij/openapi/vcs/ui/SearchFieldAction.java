@@ -19,9 +19,9 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.ui.SearchTextField;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;

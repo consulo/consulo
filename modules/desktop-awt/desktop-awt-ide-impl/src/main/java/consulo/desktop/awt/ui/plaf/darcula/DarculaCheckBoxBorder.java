@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import com.intellij.ui.ComponentUtil;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.util.ComponentUtil;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;

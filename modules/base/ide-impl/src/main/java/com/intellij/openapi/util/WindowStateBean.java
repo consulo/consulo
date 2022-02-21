@@ -3,7 +3,7 @@ package com.intellij.openapi.util;
 
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.component.util.ModificationTracker;
 
 import javax.annotation.Nonnull;

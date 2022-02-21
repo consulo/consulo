@@ -32,8 +32,8 @@ import com.intellij.openapi.vcs.history.VcsRevisionDescription;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.text.DateFormatUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

@@ -15,8 +15,8 @@
  */
 package com.intellij.refactoring.changeSignature;
 
-import consulo.application.ui.awt.ColorUtil;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;

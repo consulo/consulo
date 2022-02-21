@@ -4,7 +4,7 @@ import consulo.application.ui.UISettings;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.event.*;

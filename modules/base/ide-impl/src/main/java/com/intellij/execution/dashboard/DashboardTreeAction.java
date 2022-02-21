@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.dashboard;
 
-import consulo.ui.ex.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

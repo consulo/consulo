@@ -29,10 +29,10 @@ import com.intellij.ui.popup.KeepingPopupOpenAction;
 import com.intellij.ui.popup.WizardPopup;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.ListPopupModel;
-import consulo.application.ui.awt.FontUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.FontUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import icons.DvcsImplIcons;
@@ -48,8 +48,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.intellij.util.ObjectUtils.assertNotNull;
-import static consulo.application.ui.awt.UIUtil.DEFAULT_HGAP;
-import static consulo.application.ui.awt.UIUtil.DEFAULT_VGAP;
+import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
+import static consulo.ui.ex.awt.UIUtil.DEFAULT_VGAP;
 
 public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   private static final Key<ListPopupModel> POPUP_MODEL = Key.create("VcsPopupModel");

@@ -33,10 +33,10 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import com.intellij.ui.UIBundle;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

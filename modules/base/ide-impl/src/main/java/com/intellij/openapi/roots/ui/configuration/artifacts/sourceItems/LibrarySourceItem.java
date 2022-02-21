@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.base.BinariesOrderRootType;

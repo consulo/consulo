@@ -27,7 +27,7 @@ import consulo.language.ast.IElementType;
 import com.intellij.util.ArrayUtil;
 import consulo.util.lang.ImmutableCharSequence;
 import com.intellij.util.text.SingleCharSequence;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;

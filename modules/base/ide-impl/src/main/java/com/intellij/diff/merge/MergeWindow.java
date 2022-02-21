@@ -20,7 +20,7 @@ import com.intellij.diff.util.DiffUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
 

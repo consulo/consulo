@@ -8,7 +8,7 @@ import com.intellij.openapi.util.text.HtmlChunk;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
 import com.intellij.psi.codeStyle.modifier.CodeStyleStatusBarUIContributor;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;

@@ -18,18 +18,20 @@ package com.intellij.ui;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
+import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.JBColor;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import consulo.application.ui.awt.CustomLineBorder;
+import consulo.ui.ex.awt.CustomLineBorder;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.MovablePopup;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.ObjectUtil;
 import consulo.ui.ex.awt.MouseEventAdapter;
 import com.intellij.util.ui.MouseEventHandler;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 

@@ -25,7 +25,7 @@ import consulo.project.ui.wm.internal.ApplicationIdeFocusManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.project.util.ExpirableRunnable;
 import consulo.ui.ModalityState;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 

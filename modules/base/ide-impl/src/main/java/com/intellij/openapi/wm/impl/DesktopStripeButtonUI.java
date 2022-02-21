@@ -5,9 +5,9 @@ import consulo.application.ui.UISettings;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

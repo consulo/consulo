@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.util;
 
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 

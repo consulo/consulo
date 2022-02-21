@@ -14,7 +14,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.Semaphore;
-import consulo.application.ui.awt.internal.EDT;
+import consulo.ui.ex.awt.internal.EDT;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

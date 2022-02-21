@@ -25,11 +25,11 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.event.UserActivityListener;
-import consulo.ui.ex.UserActivityWatcher;
+import consulo.ui.ex.awt.UserActivityWatcher;
 import com.intellij.util.EventDispatcher;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

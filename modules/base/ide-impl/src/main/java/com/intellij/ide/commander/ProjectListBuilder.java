@@ -19,7 +19,7 @@ package com.intellij.ide.commander;
 import com.intellij.ide.CopyPasteUtil;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;

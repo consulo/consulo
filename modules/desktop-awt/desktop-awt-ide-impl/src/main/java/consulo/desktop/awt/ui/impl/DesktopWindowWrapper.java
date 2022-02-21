@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ui.Component;
 import consulo.ui.Size;

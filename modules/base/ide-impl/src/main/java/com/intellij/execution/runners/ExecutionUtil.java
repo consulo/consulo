@@ -34,7 +34,7 @@ import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.notification.NotificationType;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.ApplicationManager;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataManager;
 import consulo.logging.Logger;
 import consulo.project.Project;

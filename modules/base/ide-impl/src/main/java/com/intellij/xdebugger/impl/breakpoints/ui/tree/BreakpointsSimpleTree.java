@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints.ui.tree;
 
 import consulo.project.Project;
-import consulo.ui.ex.tree.Tree;
+import consulo.ui.ex.awt.tree.Tree;
 
 public class BreakpointsSimpleTree extends Tree {
   public BreakpointsSimpleTree(Project project, BreakpointItemsTreeController controller) {

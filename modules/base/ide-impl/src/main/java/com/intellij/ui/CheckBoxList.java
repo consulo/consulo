@@ -20,11 +20,11 @@ import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.BidirectionalMap;
-import consulo.application.ui.awt.EmptyIcon;
-import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.awt.EmptyIcon;
+import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

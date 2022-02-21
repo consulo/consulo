@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.impl.EmptyIndentsModel;
 import com.intellij.openapi.editor.impl.SettingsImpl;
 import consulo.codeEditor.markup.MarkupModel;
 import com.intellij.ui.popup.AbstractPopup;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;

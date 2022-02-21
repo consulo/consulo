@@ -19,7 +19,7 @@ import com.intellij.diff.DiffManager;
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.requests.DiffRequest;
 import consulo.project.Project;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 
 /**

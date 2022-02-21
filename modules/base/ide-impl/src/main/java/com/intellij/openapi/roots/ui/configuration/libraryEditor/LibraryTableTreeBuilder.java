@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.ui.ex.tree.AbstractTreeBuilder;
-import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.IndexComparator;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 import javax.annotation.Nonnull;

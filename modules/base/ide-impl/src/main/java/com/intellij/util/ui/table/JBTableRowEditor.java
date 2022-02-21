@@ -17,11 +17,11 @@ package com.intellij.util.ui.table;
 
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.application.ui.awt.VerticalFlowLayout;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

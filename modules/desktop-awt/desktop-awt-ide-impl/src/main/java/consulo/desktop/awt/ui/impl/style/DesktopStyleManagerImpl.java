@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl.style;
 
-import consulo.application.ui.awt.DesktopAntialiasingTypeUtil;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import com.intellij.ide.ui.LafManager;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.AntialiasingType;
 import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;

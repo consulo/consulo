@@ -19,7 +19,7 @@ import com.intellij.diff.DiffContext;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.Wrapper;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

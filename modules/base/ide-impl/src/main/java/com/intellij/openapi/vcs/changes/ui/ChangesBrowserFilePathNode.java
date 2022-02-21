@@ -26,7 +26,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;
 
-import static consulo.application.ui.awt.FontUtil.spaceAndThinSpace;
+import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
 /**
  * @author yole

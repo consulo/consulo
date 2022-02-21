@@ -26,7 +26,7 @@ import com.intellij.ui.HyperlinkLabel;
 import consulo.ui.ex.UserActivityProviderComponent;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TextBoxWithExtensions;

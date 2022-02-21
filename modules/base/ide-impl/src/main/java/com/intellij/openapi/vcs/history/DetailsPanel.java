@@ -25,9 +25,9 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.JBColor;
 import com.intellij.util.ui.HtmlPanel;
-import consulo.ui.ex.StatusText;
-import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.StringHtmlUtil;
+import consulo.ui.ex.awt.StatusText;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.StringHtmlUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

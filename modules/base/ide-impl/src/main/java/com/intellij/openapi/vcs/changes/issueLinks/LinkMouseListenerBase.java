@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.changes.issueLinks;
 
-import consulo.ui.ex.ClickListener;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

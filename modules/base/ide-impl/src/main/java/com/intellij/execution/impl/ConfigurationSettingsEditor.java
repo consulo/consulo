@@ -33,7 +33,7 @@ import com.intellij.openapi.options.*;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.ui.ScrollingUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.containers.Convertor;

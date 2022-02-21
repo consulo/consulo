@@ -21,7 +21,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="4e743" class="com.intellij.ui.components.JBLabel">
+          <component id="4e743" class="consulo.ui.ex.awt.JBLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -30,7 +30,7 @@
               <text value="Command output:"/>
             </properties>
           </component>
-          <scrollpane id="6fb53" class="com.intellij.ui.components.JBScrollPane">
+          <scrollpane id="6fb53" class="consulo.ui.ex.awt.JBScrollPane">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="2" use-parent-layout="false">
                 <preferred-size width="700" height="300"/>
@@ -59,7 +59,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="2e7d0" class="com.intellij.ui.components.JBLabel">
+          <component id="2e7d0" class="consulo.ui.ex.awt.JBLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -90,7 +90,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="294" class="com.intellij.ui.components.JBLabel">
+          <component id="294" class="consulo.ui.ex.awt.JBLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -111,7 +111,7 @@
               <text value="Unknown reason"/>
             </properties>
           </component>
-          <component id="204c8" class="com.intellij.ui.components.JBLabel" binding="myMessageIcon">
+          <component id="204c8" class="consulo.ui.ex.awt.JBLabel" binding="myMessageIcon">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="2" use-parent-layout="false"/>
             </constraints>
@@ -127,7 +127,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="afe8d" class="com.intellij.ui.components.JBLabel">
+          <component id="afe8d" class="consulo.ui.ex.awt.JBLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -157,7 +157,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="26b4" class="com.intellij.ui.components.JBLabel" binding="myDetailsLabel">
+          <component id="26b4" class="consulo.ui.ex.awt.JBLabel" binding="myDetailsLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -165,7 +165,7 @@
               <text value="Details:"/>
             </properties>
           </component>
-          <scrollpane id="2525c" class="com.intellij.ui.components.JBScrollPane">
+          <scrollpane id="2525c" class="consulo.ui.ex.awt.JBScrollPane">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="2" use-parent-layout="false">
                 <preferred-size width="700" height="500"/>

@@ -28,9 +28,9 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.debugger.ui.DebuggerColors;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;

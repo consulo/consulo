@@ -15,10 +15,10 @@
  */
 package consulo.ide.newProject.ui;
 
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.newProject.node.NewModuleContextGroup;

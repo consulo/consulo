@@ -25,11 +25,11 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 
-import static consulo.application.ui.awt.FontUtil.spaceAndThinSpace;
+import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
 /**
  * @author yole

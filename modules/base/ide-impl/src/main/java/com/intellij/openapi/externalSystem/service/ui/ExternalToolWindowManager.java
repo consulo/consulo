@@ -8,7 +8,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.wm.impl.ToolWindowBase;
 import javax.annotation.Nonnull;
 

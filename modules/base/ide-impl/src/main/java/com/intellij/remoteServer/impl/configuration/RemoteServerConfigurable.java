@@ -13,7 +13,7 @@ import com.intellij.remoteServer.runtime.ConnectionStatus;
 import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import consulo.application.util.Semaphore;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.ide.setting.ConfigurableUIMigrationUtil;
 import consulo.ui.annotation.RequiredUIAccess;

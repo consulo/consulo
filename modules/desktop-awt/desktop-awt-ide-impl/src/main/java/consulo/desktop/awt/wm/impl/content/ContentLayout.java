@@ -19,7 +19,7 @@ import consulo.ui.ex.popup.ListPopup;
 import com.intellij.ui.awt.RelativeRectangle;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.swing.*;
 import java.awt.*;

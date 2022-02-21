@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.versionBrowser;
 
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.util.text.DateFormatUtil;
 import com.michaelbaranov.microba.calendar.DatePicker;
 import javax.annotation.Nullable;

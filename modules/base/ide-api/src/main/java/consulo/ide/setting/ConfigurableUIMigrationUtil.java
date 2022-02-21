@@ -17,7 +17,7 @@ package consulo.ide.setting;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 

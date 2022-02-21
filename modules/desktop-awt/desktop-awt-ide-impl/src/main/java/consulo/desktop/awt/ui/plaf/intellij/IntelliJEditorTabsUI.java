@@ -16,10 +16,10 @@
 package consulo.desktop.awt.ui.plaf.intellij;
 
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.LinePainter2D;
+import consulo.ui.ex.awt.paint.LinePainter2D;
 import com.intellij.ui.paint.RectanglePainter2D;
 import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
@@ -27,8 +27,8 @@ import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.tabs.impl.ShapeTransform;
 import com.intellij.ui.tabs.impl.TabLabel;
 import com.intellij.util.Function;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 
 import javax.swing.*;

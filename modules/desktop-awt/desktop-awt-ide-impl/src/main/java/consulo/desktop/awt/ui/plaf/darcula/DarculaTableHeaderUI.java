@@ -2,10 +2,10 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.JBValue;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBValue;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

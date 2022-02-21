@@ -15,9 +15,9 @@
  */
 package com.intellij.ui.treeStructure.filtered;
 
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.SimpleNode;

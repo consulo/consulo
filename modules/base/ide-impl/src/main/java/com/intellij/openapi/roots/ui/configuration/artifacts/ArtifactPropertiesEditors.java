@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import consulo.application.ui.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactProperties;
 import consulo.compiler.artifact.ArtifactPropertiesProvider;

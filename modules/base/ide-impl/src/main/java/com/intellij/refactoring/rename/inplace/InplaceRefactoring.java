@@ -87,7 +87,7 @@ import com.intellij.util.Query;
 import consulo.util.collection.Stack;
 import consulo.ui.ex.PositionTracker;
 import consulo.application.Result;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

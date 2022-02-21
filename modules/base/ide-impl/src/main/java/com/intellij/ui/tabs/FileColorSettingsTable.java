@@ -17,10 +17,10 @@
 package com.intellij.ui.tabs;
 
 import com.intellij.ui.FileColorManager;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.ui.EditableModel;
-import consulo.application.ui.awt.EmptyIcon;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.EmptyIcon;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

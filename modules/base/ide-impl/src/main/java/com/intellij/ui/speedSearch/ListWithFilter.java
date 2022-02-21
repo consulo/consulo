@@ -10,13 +10,13 @@ import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.LightColors;
 import com.intellij.ui.SearchTextField;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.Function;
-import consulo.ui.ex.ComponentWithEmptyText;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.ComponentWithEmptyText;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

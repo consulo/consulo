@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
 import consulo.util.xml.serializer.WriteExternalException;
 import java.util.HashMap;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;

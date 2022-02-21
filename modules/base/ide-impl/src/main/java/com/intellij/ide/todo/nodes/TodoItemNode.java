@@ -2,7 +2,7 @@
 
 package com.intellij.ide.todo.nodes;
 
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.todo.HighlightedRegionProvider;
 import com.intellij.ide.todo.SmartTodoItemPointer;
 import com.intellij.ide.todo.TodoTreeBuilder;

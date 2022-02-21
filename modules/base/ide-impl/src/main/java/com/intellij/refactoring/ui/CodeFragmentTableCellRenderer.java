@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.EditorTextField;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

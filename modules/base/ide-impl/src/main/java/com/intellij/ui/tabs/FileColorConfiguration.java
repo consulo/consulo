@@ -18,7 +18,7 @@ package com.intellij.ui.tabs;
 
 import consulo.project.Project;
 import consulo.language.editor.scope.NamedScopeManager;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

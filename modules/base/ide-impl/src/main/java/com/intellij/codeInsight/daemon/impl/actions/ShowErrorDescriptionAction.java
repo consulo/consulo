@@ -30,7 +30,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 
 import javax.annotation.Nonnull;
 import java.awt.event.KeyEvent;

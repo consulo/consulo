@@ -59,7 +59,7 @@
             </clientProperties>
             <border type="none" title="Files with ignored conflicts"/>
             <children>
-              <scrollpane id="66692" class="com.intellij.ui.components.JBScrollPane">
+              <scrollpane id="66692" class="consulo.ui.ex.awt.JBScrollPane">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>

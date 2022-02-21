@@ -17,11 +17,11 @@
 package com.intellij.ide.favoritesTreeView;
 
 import com.intellij.ide.IdeBundle;
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

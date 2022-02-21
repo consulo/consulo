@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.border.Border;
 import java.awt.*;

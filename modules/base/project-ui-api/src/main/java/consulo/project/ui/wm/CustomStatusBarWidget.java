@@ -16,7 +16,7 @@
 package consulo.project.ui.wm;
 
 import consulo.ui.Component;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

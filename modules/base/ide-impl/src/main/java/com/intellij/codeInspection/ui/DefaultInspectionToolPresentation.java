@@ -41,7 +41,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jdom.IllegalDataException;

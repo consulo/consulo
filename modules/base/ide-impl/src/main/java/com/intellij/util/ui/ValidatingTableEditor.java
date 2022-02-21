@@ -16,8 +16,8 @@
 package com.intellij.util.ui;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.ComponentWithEmptyText;
-import consulo.ui.ex.StatusText;
+import consulo.ui.ex.awt.ComponentWithEmptyText;
+import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import com.intellij.openapi.application.ApplicationBundle;
@@ -30,7 +30,7 @@ import com.intellij.ui.HoverHyperlinkLabel;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.IconUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -36,7 +36,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NonEmptyInputValidator;
 import consulo.util.lang.function.Condition;
 import com.intellij.util.Consumer;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.bundle.SettingsSdksModel;
 import consulo.platform.base.icon.PlatformIconGroup;

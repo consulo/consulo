@@ -8,7 +8,7 @@ import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ui.TimerUtil;
+import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.desktop.editor.DesktopEditorFloatPanel;
 import consulo.desktop.editor.impl.DesktopEditorPanelLayer;
 import consulo.disposer.Disposable;

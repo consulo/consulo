@@ -21,7 +21,7 @@ import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.keymap.impl.DefaultKeymap;
-import consulo.application.ui.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -15,13 +15,13 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.application.ui.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import consulo.application.ui.awt.internal.EDT;
-import consulo.ui.ex.update.UiNotifyConnector;
+import consulo.ui.ex.awt.internal.EDT;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGUniverse;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;

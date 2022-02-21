@@ -35,7 +35,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.ex.content.Content;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.debugger.XDebuggerBundle;
 import consulo.platform.base.icon.PlatformIconGroup;
 

@@ -21,8 +21,8 @@
  */
 package com.intellij.internal.psiView;
 
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.language.ast.ASTNode;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;

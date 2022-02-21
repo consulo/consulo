@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.fileChooser.tree;
 
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import consulo.ui.image.Image;

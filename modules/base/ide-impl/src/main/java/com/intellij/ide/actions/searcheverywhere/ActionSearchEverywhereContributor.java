@@ -23,7 +23,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.WindowManager;
 import consulo.application.util.function.Processor;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

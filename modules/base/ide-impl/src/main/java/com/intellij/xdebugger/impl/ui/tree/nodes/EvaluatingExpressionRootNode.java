@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.debugger.XDebuggerBundle;
 import consulo.debugger.frame.XCompositeNode;
 import consulo.debugger.frame.XValue;

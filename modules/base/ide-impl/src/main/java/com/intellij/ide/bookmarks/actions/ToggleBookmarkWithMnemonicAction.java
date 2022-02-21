@@ -29,7 +29,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
   public ToggleBookmarkWithMnemonicAction() {

@@ -38,7 +38,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.table.JBTable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

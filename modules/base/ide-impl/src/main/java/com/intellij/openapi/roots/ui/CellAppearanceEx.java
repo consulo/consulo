@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui;
 
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 
 import javax.annotation.Nonnull;
 

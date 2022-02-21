@@ -24,7 +24,7 @@ import com.intellij.internal.statistic.beans.UsageDescriptor;
 import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashSet;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Set;

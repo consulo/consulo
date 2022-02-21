@@ -16,7 +16,7 @@ import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import com.intellij.vcs.log.ui.tables.GraphTableModel;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import consulo.disposer.Disposable;

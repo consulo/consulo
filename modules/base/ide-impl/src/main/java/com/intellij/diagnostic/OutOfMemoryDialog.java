@@ -21,11 +21,11 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.MemoryDumpHelper;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.TimeoutUtil;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.container.ExitCodes;
 import consulo.ui.annotation.RequiredUIAccess;
 

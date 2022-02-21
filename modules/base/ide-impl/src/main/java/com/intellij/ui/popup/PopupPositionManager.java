@@ -14,7 +14,7 @@ import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.DimensionService;
 import consulo.util.dataholder.Key;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 
 import javax.annotation.Nonnull;

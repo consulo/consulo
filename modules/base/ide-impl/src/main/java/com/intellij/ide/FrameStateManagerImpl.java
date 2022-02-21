@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.component.util.BusyObject;
 import consulo.disposer.Disposer;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;

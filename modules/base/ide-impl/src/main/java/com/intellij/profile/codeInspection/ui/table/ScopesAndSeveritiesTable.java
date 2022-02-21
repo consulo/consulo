@@ -32,7 +32,7 @@ import com.intellij.profile.codeInspection.ui.ScopesChooser;
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import consulo.util.collection.SmartList;

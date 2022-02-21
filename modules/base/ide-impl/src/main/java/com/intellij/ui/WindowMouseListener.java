@@ -6,7 +6,7 @@ import com.intellij.openapi.progress.util.PotemkinProgress;
 import consulo.application.util.SystemInfo;
 import com.intellij.util.FieldAccessor;
 import com.intellij.util.MethodInvocator;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.awt.hacking.AWTAccessorHacking;
 import org.intellij.lang.annotations.JdkConstants;
 

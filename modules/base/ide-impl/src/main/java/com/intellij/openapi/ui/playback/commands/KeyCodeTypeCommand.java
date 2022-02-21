@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui.playback.commands;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.ui.TypingTarget;
+import consulo.ui.ex.TypingTarget;
 import com.intellij.openapi.ui.playback.PlaybackContext;
 import com.intellij.openapi.util.Pair;
 import consulo.project.ui.IdeFocusManager;

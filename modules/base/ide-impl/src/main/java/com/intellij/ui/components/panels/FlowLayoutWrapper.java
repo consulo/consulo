@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.components.panels;
 
-import consulo.ui.ex.NonOpaquePanel;
+import consulo.ui.ex.awt.NonOpaquePanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -16,9 +16,9 @@
 package com.intellij.dvcs.push.ui;
 
 import consulo.logging.Logger;
-import consulo.application.ui.awt.internal.ImageLoader;
+import consulo.ui.ex.awt.internal.ImageLoader;
 import com.intellij.util.ui.JBImageIcon;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

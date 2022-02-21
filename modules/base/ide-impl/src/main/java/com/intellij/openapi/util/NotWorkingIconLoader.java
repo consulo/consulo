@@ -18,12 +18,12 @@ package com.intellij.openapi.util;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.JBColor;
 import com.intellij.util.ExceptionUtil;
-import consulo.application.ui.awt.internal.ImageLoader;
+import consulo.ui.ex.awt.internal.ImageLoader;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.NonNls;
 

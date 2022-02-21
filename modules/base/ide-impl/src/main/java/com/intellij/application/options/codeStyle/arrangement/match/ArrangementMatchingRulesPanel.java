@@ -26,7 +26,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
-import com.intellij.ui.components.JBScrollPane;
+import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.ui.GridBag;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

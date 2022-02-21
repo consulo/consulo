@@ -11,7 +11,7 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.ListUtil;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
+import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.Consumer;

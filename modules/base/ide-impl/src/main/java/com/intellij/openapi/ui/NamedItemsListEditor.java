@@ -31,7 +31,7 @@ import consulo.configurable.UnnamedConfigurable;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.*;
 import com.intellij.util.IconUtil;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;

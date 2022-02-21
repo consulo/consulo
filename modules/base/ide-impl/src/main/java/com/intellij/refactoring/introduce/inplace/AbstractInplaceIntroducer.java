@@ -48,7 +48,7 @@ import com.intellij.psi.search.searches.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.PositionTracker;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

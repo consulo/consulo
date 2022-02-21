@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.service.task.ui;
 
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentationData;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

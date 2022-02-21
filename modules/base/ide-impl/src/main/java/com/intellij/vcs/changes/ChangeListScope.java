@@ -2,7 +2,7 @@
 package com.intellij.vcs.changes;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.tree.WeighedItem;
+import consulo.component.util.WeighedItem;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.psi.search.scope.packageSet.FilteredNamedScope;

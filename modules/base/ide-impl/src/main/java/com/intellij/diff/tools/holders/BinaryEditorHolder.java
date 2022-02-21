@@ -33,7 +33,7 @@ import consulo.project.ProjectManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 
 import javax.annotation.Nonnull;

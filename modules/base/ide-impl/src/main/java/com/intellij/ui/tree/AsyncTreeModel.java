@@ -2,7 +2,7 @@
 package com.intellij.ui.tree;
 
 import consulo.component.ProcessCanceledException;
-import consulo.ui.ex.tree.LoadingNode;
+import consulo.ui.ex.awt.tree.LoadingNode;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.Command;
 import com.intellij.util.concurrency.Invoker;

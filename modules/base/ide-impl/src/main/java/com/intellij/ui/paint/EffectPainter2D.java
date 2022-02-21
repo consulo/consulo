@@ -2,13 +2,13 @@
 package com.intellij.ui.paint;
 
 import consulo.application.ui.UISettings;
-import consulo.application.ui.awt.LinePainter2D;
-import consulo.application.ui.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.application.util.registry.Registry;
-import consulo.application.ui.awt.paint.PaintUtil.RoundingMode;
-import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
+import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.WavePainter2D;
 import consulo.colorScheme.EffectType;
 import org.jetbrains.annotations.TestOnly;

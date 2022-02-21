@@ -15,11 +15,11 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.PopupBorder;
 import com.intellij.ui.TitlePanel;
 import com.intellij.ui.WindowMoveListener;
-import com.intellij.ui.components.JBLabel;
-import consulo.ui.ex.util.Alarm;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 

@@ -17,7 +17,7 @@ package com.intellij.diff.tools.util;
 
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.AsyncProcessIcon;
 

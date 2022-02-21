@@ -27,7 +27,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.ui.OptionsDialog;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

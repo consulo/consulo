@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.search.scope.AbstractPackageSet;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.application.ui.awt.Colored;
+import consulo.ui.ex.Colored;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

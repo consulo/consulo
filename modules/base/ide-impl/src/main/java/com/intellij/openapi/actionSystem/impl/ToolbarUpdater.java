@@ -11,9 +11,9 @@ import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.util.Comparing;
 import consulo.project.ui.IdeFocusManager;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.update.UiNotifyConnector;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

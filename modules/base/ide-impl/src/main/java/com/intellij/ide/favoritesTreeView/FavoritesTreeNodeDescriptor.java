@@ -16,12 +16,12 @@
 
 package com.intellij.ide.favoritesTreeView;
 
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
 import consulo.component.extension.Extensions;
 import consulo.module.Module;
 import consulo.project.Project;

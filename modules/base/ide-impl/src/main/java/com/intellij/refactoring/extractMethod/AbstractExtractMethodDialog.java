@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.MethodSignatureComponent;
 import com.intellij.refactoring.util.SimpleParameterTablePanel;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import java.util.HashMap;
 import javax.annotation.Nonnull;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;

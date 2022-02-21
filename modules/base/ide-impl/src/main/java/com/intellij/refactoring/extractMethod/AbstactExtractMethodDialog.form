@@ -56,7 +56,7 @@
           </component>
         </children>
       </grid>
-      <scrollpane id="b0a7b" class="com.intellij.ui.components.JBScrollPane">
+      <scrollpane id="b0a7b" class="consulo.ui.ex.awt.JBScrollPane">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -69,7 +69,7 @@
           </component>
         </children>
       </scrollpane>
-      <scrollpane id="ca3f5" class="com.intellij.ui.components.JBScrollPane">
+      <scrollpane id="ca3f5" class="consulo.ui.ex.awt.JBScrollPane">
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -84,7 +84,7 @@
           </component>
         </children>
       </scrollpane>
-      <component id="83be3" class="com.intellij.ui.TitledSeparator">
+      <component id="83be3" class="consulo.ui.ex.awt.TitledSeparator">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -95,7 +95,7 @@
           <BorderFactoryClass class="java.lang.String" value=""/>
         </clientProperties>
       </component>
-      <component id="fada5" class="com.intellij.ui.TitledSeparator">
+      <component id="fada5" class="consulo.ui.ex.awt.TitledSeparator">
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>

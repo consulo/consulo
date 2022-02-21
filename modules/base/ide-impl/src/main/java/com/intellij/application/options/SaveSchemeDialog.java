@@ -24,7 +24,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.component.util.text.UniqueNameGenerator;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

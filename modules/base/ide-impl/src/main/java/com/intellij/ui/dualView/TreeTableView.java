@@ -15,8 +15,8 @@
  */
 package com.intellij.ui.dualView;
 
-import consulo.ui.ex.tree.table.TreeTable;
-import consulo.ui.ex.tree.table.TreeTableTree;
+import consulo.ui.ex.awt.tree.table.TreeTable;
+import consulo.ui.ex.awt.tree.table.TreeTableTree;
 import consulo.util.lang.function.Condition;
 import com.intellij.ui.HighlightableCellRenderer;
 import com.intellij.ui.table.ItemsProvider;

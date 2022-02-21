@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.application.ui.awt.JBPanel;
+import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.TabbedContent;
 import com.intellij.util.ContentUtilEx;

@@ -16,8 +16,8 @@
 package com.intellij.vcs.log.ui.render;
 
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

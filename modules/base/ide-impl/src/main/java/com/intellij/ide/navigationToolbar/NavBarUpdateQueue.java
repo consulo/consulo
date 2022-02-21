@@ -11,10 +11,10 @@ import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.Consumer;
-import consulo.ui.ex.util.MergingUpdateQueue;
-import consulo.ui.ex.util.Update;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.util.concurrent.ActionCallback;
 

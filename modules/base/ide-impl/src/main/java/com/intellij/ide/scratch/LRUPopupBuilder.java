@@ -28,7 +28,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
-import consulo.application.ui.awt.EmptyIcon;
+import consulo.ui.ex.awt.EmptyIcon;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 

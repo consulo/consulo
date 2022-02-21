@@ -36,7 +36,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import consulo.ide.setting.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsStateService;
-import consulo.ui.ex.Splitter;
+import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.function.Conditions;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.util.IconUtil;

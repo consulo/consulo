@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.roots;
 
-import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.image.Image;
 
 import java.awt.*;

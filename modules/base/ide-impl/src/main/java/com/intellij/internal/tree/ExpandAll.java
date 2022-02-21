@@ -18,8 +18,8 @@ package com.intellij.internal.tree;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.swing.*;
 import java.awt.*;

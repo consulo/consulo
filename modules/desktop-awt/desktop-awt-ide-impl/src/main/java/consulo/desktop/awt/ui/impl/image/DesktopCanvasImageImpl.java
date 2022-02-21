@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.UIModificationTracker;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.UIModificationTracker;
 import consulo.desktop.awt.ui.impl.image.canvas.DesktopCanvas2DImpl;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;

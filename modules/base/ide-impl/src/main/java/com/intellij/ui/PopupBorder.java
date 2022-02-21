@@ -15,10 +15,10 @@
  */
 package com.intellij.ui;
 
-import consulo.application.ui.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.application.util.SystemInfo;
 import com.intellij.ui.paint.RectanglePainter;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

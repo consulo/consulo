@@ -2,11 +2,13 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.ClickListener;
-import consulo.application.ui.awt.*;
+import consulo.ui.ex.awt.ClickListener;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBCurrentTheme;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

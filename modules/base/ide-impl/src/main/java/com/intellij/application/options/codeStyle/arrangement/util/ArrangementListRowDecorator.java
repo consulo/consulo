@@ -27,11 +27,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
-import com.intellij.ui.IdeBorderFactory;
-import consulo.ui.ex.SimpleColoredComponent;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.ui.GridBag;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

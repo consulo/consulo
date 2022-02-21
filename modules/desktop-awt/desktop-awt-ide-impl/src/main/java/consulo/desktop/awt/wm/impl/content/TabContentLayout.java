@@ -14,11 +14,11 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import com.intellij.ui.content.TabbedContent;
-import consulo.application.ui.awt.LinePainter2D;
+import consulo.ui.ex.awt.paint.LinePainter2D;
 import com.intellij.ui.tabs.impl.singleRow.MoreTabsIcon;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.BaseButtonBehavior;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui;
 
-import consulo.application.ui.awt.paint.PaintUtil;
-import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

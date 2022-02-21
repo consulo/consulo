@@ -18,7 +18,7 @@ package com.intellij.ui;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -31,7 +31,7 @@ import com.intellij.openapi.vfs.PersistentFSConstants;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.navigation.Navigatable;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.OpenSourceUtil;
 import consulo.util.concurrent.AsyncResult;
 

@@ -51,7 +51,7 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="fd341" class="com.intellij.ui.components.JBLabel" binding="mySourceDirLabel">
+                          <component id="fd341" class="consulo.ui.ex.awt.JBLabel" binding="mySourceDirLabel">
                             <constraints border-constraint="West"/>
                             <properties/>
                           </component>
@@ -68,7 +68,7 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="cba0d" class="com.intellij.ui.components.JBLabel" binding="myTargetDirLabel">
+                          <component id="cba0d" class="consulo.ui.ex.awt.JBLabel" binding="myTargetDirLabel">
                             <constraints border-constraint="West"/>
                             <properties/>
                           </component>
@@ -106,7 +106,7 @@
                                 <properties/>
                                 <border type="none"/>
                                 <children>
-                                  <component id="5d686" class="com.intellij.ui.components.JBLabel" binding="myFilterLabel">
+                                  <component id="5d686" class="consulo.ui.ex.awt.JBLabel" binding="myFilterLabel">
                                     <constraints border-constraint="West"/>
                                     <properties>
                                       <horizontalAlignment value="2"/>
@@ -134,12 +134,12 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <scrollpane id="90582" class="com.intellij.ui.components.JBScrollPane">
+                      <scrollpane id="90582" class="consulo.ui.ex.awt.JBScrollPane">
                         <constraints border-constraint="Center"/>
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="1fb9d" class="consulo.ui.ex.table.JBTable" binding="myTable">
+                          <component id="1fb9d" class="consulo.ui.ex.awt.table.JBTable" binding="myTable">
                             <constraints/>
                             <properties>
                               <intercellSpacing width="0" height="0"/>

@@ -8,7 +8,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="c9355" class="com.intellij.ui.components.JBLabel" binding="myIconLabel">
+      <component id="c9355" class="consulo.ui.ex.awt.JBLabel" binding="myIconLabel">
         <constraints>
           <grid row="0" column="0" row-span="7" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -16,7 +16,7 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="6191f" class="com.intellij.ui.components.JBLabel" binding="myMessageLabel">
+      <component id="6191f" class="consulo.ui.ex.awt.JBLabel" binding="myMessageLabel">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -24,7 +24,7 @@
           <text value="Label"/>
         </properties>
       </component>
-      <component id="95ea7" class="com.intellij.ui.components.JBLabel" binding="myHeapSizeLabel">
+      <component id="95ea7" class="consulo.ui.ex.awt.JBLabel" binding="myHeapSizeLabel">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -41,7 +41,7 @@
           <columns value="6"/>
         </properties>
       </component>
-      <component id="9a867" class="com.intellij.ui.components.JBLabel" binding="myHeapUnitsLabel">
+      <component id="9a867" class="consulo.ui.ex.awt.JBLabel" binding="myHeapUnitsLabel">
         <constraints>
           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -49,7 +49,7 @@
           <text value="MB"/>
         </properties>
       </component>
-      <component id="1027f" class="com.intellij.ui.components.JBLabel" binding="myHeapCurrentValueLabel">
+      <component id="1027f" class="consulo.ui.ex.awt.JBLabel" binding="myHeapCurrentValueLabel">
         <constraints>
           <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -58,7 +58,7 @@
           <text value="Label"/>
         </properties>
       </component>
-      <component id="11e32" class="com.intellij.ui.components.JBLabel" binding="myMetaspaceSizeLabel">
+      <component id="11e32" class="consulo.ui.ex.awt.JBLabel" binding="myMetaspaceSizeLabel">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="1" use-parent-layout="false"/>
         </constraints>
@@ -75,7 +75,7 @@
           <columns value="6"/>
         </properties>
       </component>
-      <component id="e1ed0" class="com.intellij.ui.components.JBLabel" binding="myMetaspaceUnitsLabel">
+      <component id="e1ed0" class="consulo.ui.ex.awt.JBLabel" binding="myMetaspaceUnitsLabel">
         <constraints>
           <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -83,7 +83,7 @@
           <text value="MB"/>
         </properties>
       </component>
-      <component id="59bf8" class="com.intellij.ui.components.JBLabel" binding="myMetaspaceCurrentValueLabel">
+      <component id="59bf8" class="consulo.ui.ex.awt.JBLabel" binding="myMetaspaceCurrentValueLabel">
         <constraints>
           <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -92,7 +92,7 @@
           <text value="Label"/>
         </properties>
       </component>
-      <component id="5ee44" class="com.intellij.ui.components.JBLabel" binding="myCodeCacheSizeLabel">
+      <component id="5ee44" class="consulo.ui.ex.awt.JBLabel" binding="myCodeCacheSizeLabel">
         <constraints>
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="1" use-parent-layout="false"/>
         </constraints>
@@ -109,7 +109,7 @@
           <columns value="6"/>
         </properties>
       </component>
-      <component id="ce95f" class="com.intellij.ui.components.JBLabel" binding="myCodeCacheUnitsLabel">
+      <component id="ce95f" class="consulo.ui.ex.awt.JBLabel" binding="myCodeCacheUnitsLabel">
         <constraints>
           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -117,7 +117,7 @@
           <text value="MB"/>
         </properties>
       </component>
-      <component id="b5c11" class="com.intellij.ui.components.JBLabel" binding="myCodeCacheCurrentValueLabel">
+      <component id="b5c11" class="consulo.ui.ex.awt.JBLabel" binding="myCodeCacheCurrentValueLabel">
         <constraints>
           <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -131,7 +131,7 @@
           <grid row="1" column="5" row-span="3" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
-      <component id="c26a1" class="com.intellij.ui.components.JBLabel" binding="mySettingsFileHintLabel">
+      <component id="c26a1" class="consulo.ui.ex.awt.JBLabel" binding="mySettingsFileHintLabel">
         <constraints>
           <grid row="4" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -139,7 +139,7 @@
           <text value="Label"/>
         </properties>
       </component>
-      <component id="3a803" class="com.intellij.ui.components.JBLabel" binding="myDumpMessageLabel">
+      <component id="3a803" class="consulo.ui.ex.awt.JBLabel" binding="myDumpMessageLabel">
         <constraints>
           <grid row="5" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

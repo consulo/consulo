@@ -17,10 +17,10 @@ package com.intellij.xdebugger.impl.settings;
 
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtilRt;
-import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.border.IdeaTitledBorder;
-import com.intellij.ui.components.JBLabel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeaTitledBorder;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.debugger.XDebuggerBundle;
 import javax.annotation.Nonnull;
 

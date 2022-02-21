@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ApplicationInfo;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;

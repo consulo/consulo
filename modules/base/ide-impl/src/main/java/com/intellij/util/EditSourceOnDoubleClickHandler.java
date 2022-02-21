@@ -2,17 +2,17 @@
 package com.intellij.util;
 
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.DoubleClickListener;
-import consulo.ui.ex.tree.table.TreeTable;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.tree.table.TreeTable;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.tree.ExpandOnDoubleClick;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;

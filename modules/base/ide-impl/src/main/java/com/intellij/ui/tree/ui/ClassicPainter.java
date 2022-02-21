@@ -3,9 +3,9 @@ package com.intellij.ui.tree.ui;
 
 import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
-import consulo.application.ui.awt.LinePainter2D;
-import consulo.application.ui.awt.paint.PaintUtil;
-import consulo.application.ui.awt.JBUIScale;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.JBUIScale;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

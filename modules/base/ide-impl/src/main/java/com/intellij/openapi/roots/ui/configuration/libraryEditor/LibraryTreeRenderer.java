@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

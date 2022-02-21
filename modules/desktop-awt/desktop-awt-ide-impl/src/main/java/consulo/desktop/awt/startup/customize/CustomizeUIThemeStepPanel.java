@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import com.intellij.ide.ui.LafManager;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.ui.plaf.LafWithColorScheme;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;

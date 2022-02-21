@@ -17,9 +17,9 @@ package com.intellij.ui.components;
 
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.ScreenUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.content.library.ui.LibraryEditor;
 import consulo.project.ProjectBundle;
 import consulo.content.OrderRootType;

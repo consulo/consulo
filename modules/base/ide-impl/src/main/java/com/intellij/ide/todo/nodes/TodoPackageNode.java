@@ -16,7 +16,7 @@
 package com.intellij.ide.todo.nodes;
 
 import com.intellij.ide.IdeBundle;
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PackageElementNode;
 import com.intellij.ide.todo.HighlightedRegionProvider;

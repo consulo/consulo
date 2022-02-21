@@ -21,7 +21,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import com.intellij.util.ui.ListTableModel;
 
 import javax.annotation.Nonnull;

@@ -66,10 +66,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ObjectUtils;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.vcs.AnnotationProviderEx;
 import com.intellij.vcsUtil.VcsUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

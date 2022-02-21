@@ -2,10 +2,11 @@
 package com.intellij.ui;
 
 import consulo.application.AllIcons;
+import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.concurrent.EdtScheduledExecutorService;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;

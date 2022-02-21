@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ArrayUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

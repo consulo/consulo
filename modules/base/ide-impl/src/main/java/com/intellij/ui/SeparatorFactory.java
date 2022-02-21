@@ -16,6 +16,8 @@
 
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.TitledSeparator;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

@@ -22,7 +22,7 @@
           <size top="0" left="0" bottom="0" right="0"/>
         </border>
         <children>
-          <component id="63708" class="com.intellij.ui.components.JBLabel">
+          <component id="63708" class="consulo.ui.ex.awt.JBLabel">
             <constraints border-constraint="North"/>
             <properties>
               <font style="1"/>

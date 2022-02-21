@@ -12,7 +12,6 @@ module consulo.ide.api {
   requires transitive consulo.compiler.artifact.api;
 
   exports consulo.ide.setting;
-  exports consulo.ide.setting.ui;
   exports consulo.ide.setting.module;
   exports consulo.ide.setting.bundle;
   exports consulo.ide.setting.module.event;

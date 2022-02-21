@@ -36,12 +36,12 @@ import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PausesStat;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

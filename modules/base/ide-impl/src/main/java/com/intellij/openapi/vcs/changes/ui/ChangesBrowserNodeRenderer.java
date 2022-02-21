@@ -19,7 +19,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import javax.annotation.Nonnull;

@@ -41,8 +41,8 @@ import com.intellij.openapi.vcs.changes.CommitExecutor;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.ui.components.labels.LinkListener;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.awt.LinkListener;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import com.intellij.util.Consumer;
@@ -57,7 +57,7 @@ import java.util.Collection;
 
 import static consulo.application.CommonBundle.getCancelButtonText;
 import static com.intellij.openapi.ui.Messages.*;
-import static consulo.application.ui.awt.UIUtil.getWarningIcon;
+import static consulo.ui.ex.awt.UIUtil.getWarningIcon;
 
 /**
  * @author irengrig

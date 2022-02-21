@@ -15,11 +15,11 @@
  */
 package com.intellij.util.ui;
 
-import consulo.application.ui.awt.EmptyIcon;
+import consulo.ui.ex.awt.EmptyIcon;
 import consulo.application.util.SystemInfo;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;

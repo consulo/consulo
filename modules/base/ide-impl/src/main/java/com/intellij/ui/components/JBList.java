@@ -1,8 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.components;
 
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.ExpandableItemsHandler;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -13,10 +14,12 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.ComponentWithEmptyText;
+import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.ComponentWithExpandableItems;
-import consulo.ui.ex.SimpleColoredComponent;
-import consulo.ui.ex.StatusText;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.StatusText;
+import consulo.ui.ex.awt.util.JBSwingUtilities;
+import consulo.ui.ex.awt.util.ScreenUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

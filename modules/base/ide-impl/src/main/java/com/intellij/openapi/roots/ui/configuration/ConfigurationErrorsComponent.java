@@ -16,17 +16,15 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.application.AllIcons;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.*;
 import consulo.project.Project;
-import consulo.ui.ex.awt.GraphicsConfig;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.CollectionListModel;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.*;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

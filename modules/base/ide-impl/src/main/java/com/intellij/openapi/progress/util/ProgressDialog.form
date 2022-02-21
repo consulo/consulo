@@ -36,7 +36,7 @@
                   <text value=" "/>
                 </properties>
               </component>
-              <component id="cdcf6" class="com.intellij.ui.components.JBLabel" binding="myText2Label">
+              <component id="cdcf6" class="consulo.ui.ex.awt.JBLabel" binding="myText2Label">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="9" fill="1" indent="0" use-parent-layout="false">
                     <minimum-size width="0" height="-1"/>

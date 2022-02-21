@@ -23,8 +23,8 @@ import consulo.project.Project;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vcs.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.util.MergingUpdateQueue;
-import consulo.ui.ex.util.Update;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -18,11 +18,11 @@ package consulo.desktop.awt.ui.plaf.mac;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightColors;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.JBUI;
-import com.intellij.util.ui.RegionPainter;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.plaf.ScrollBarUIConstants;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.RegionPainter;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.ScrollBarUIConstants;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

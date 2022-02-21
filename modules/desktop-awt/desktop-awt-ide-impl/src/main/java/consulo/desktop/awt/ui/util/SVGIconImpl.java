@@ -37,9 +37,9 @@
 package consulo.desktop.awt.ui.util;
 
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.ImageUtil;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awt.JBUI;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGException;

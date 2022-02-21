@@ -35,8 +35,8 @@ import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.util.ParameterizedRunnable;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.ui.ex.util.MergingUpdateQueue;
-import consulo.ui.ex.util.Update;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

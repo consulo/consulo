@@ -19,7 +19,7 @@ import com.intellij.execution.ui.CommonProgramParametersPanel;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;

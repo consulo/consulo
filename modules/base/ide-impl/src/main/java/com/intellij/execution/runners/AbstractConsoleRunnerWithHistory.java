@@ -34,9 +34,9 @@ import consulo.process.local.OSProcessHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.SideBorder;
+import consulo.ui.ex.awt.SideBorder;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

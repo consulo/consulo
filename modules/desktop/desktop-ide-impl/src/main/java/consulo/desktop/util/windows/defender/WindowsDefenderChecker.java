@@ -17,7 +17,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.impl.local.NativeFileWatcherImpl;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;

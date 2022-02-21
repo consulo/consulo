@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui.popup;
 
-import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
 import consulo.project.Project;
 import consulo.ui.ex.popup.PopupStep;
 

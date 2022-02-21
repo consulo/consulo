@@ -27,11 +27,11 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Getter;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.ui.ComponentUtil;
+import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 
 import javax.annotation.Nonnull;

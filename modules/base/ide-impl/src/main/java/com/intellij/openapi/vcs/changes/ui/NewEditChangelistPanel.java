@@ -30,7 +30,7 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

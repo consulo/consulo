@@ -7,8 +7,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

@@ -40,7 +40,7 @@ import consulo.application.progress.ProgressIndicatorEx;
 import consulo.navigation.Navigatable;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.AppIcon;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.compiler.impl.BuildViewServiceFactory;
 import consulo.compiler.impl.CompilerManagerImpl;
 

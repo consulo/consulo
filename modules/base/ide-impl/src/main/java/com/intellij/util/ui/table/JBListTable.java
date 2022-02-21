@@ -22,9 +22,9 @@ import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.ui.AbstractTableCellEditor;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

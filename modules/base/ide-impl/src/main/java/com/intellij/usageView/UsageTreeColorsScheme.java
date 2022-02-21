@@ -18,8 +18,8 @@ package com.intellij.usageView;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.inject.Singleton;
 
 @Singleton

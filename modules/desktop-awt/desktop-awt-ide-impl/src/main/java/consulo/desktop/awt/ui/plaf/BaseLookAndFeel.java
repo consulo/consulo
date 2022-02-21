@@ -1,6 +1,6 @@
 package consulo.desktop.awt.ui.plaf;
 
-import consulo.application.ui.awt.BuildInLookAndFeel;
+import consulo.ui.ex.awt.BuildInLookAndFeel;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

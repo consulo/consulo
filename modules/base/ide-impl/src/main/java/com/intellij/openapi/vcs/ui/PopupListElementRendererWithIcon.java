@@ -7,8 +7,8 @@ import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.ui.popup.list.IconListPopupRenderer;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
-import consulo.application.ui.awt.JBUI;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 

@@ -25,15 +25,15 @@ import consulo.logging.Logger;
 import com.intellij.openapi.help.HelpManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import consulo.ui.ex.Splitter;
-import consulo.application.ui.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableViewSpeedSearch;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

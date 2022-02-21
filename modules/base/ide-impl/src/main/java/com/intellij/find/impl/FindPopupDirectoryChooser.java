@@ -36,7 +36,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

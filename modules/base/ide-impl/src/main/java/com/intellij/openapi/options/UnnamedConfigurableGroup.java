@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options;
 
-import consulo.application.ui.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 

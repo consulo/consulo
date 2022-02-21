@@ -25,7 +25,7 @@ import com.intellij.reference.SoftReference;
 import com.intellij.ui.MouseDragHelper;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.ui.GeometryUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package com.intellij.openapi.application;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.project.DumbService;
 
 import javax.annotation.Nonnull;

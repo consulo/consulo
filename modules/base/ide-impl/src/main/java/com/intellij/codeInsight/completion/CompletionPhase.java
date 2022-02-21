@@ -30,7 +30,7 @@ import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.ThreeState;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;

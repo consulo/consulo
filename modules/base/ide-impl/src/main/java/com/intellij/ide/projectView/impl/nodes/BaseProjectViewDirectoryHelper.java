@@ -23,7 +23,7 @@ package com.intellij.ide.projectView.impl.nodes;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.ui.ex.tree.AbstractTreeUi;
+import consulo.ui.ex.awt.tree.AbstractTreeUi;
 import com.intellij.ide.util.treeView.TreeViewUtil;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;

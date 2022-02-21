@@ -30,7 +30,9 @@ import com.intellij.ui.popup.util.ItemWrapper;
 import com.intellij.ui.popup.util.MasterController;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashSet;
-import consulo.application.ui.awt.JBUI;
+
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.JBUI;
 import consulo.debugger.XDebuggerManager;
 import consulo.debugger.breakpoint.XBreakpoint;
 import consulo.debugger.breakpoint.XBreakpointType;

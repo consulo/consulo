@@ -19,7 +19,7 @@ import com.intellij.diff.DiffContext;
 import com.intellij.diff.tools.util.base.DiffPanelBase;
 import com.intellij.diff.util.DiffUtil;
 import consulo.dataContext.DataProvider;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

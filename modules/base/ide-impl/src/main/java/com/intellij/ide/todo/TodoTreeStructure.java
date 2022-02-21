@@ -19,7 +19,7 @@ package com.intellij.ide.todo;
 import com.intellij.ide.projectView.TreeStructureProvider;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructureBase;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.language.psi.PsiDocumentManager;

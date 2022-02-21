@@ -19,7 +19,7 @@ import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.ui.Component;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import kava.beans.PropertyChangeListener;

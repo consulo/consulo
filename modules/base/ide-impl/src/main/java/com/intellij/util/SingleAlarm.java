@@ -3,7 +3,7 @@ package com.intellij.util;
 
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ModalityState;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

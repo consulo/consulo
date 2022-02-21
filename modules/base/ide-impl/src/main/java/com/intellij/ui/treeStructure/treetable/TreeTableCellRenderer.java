@@ -16,11 +16,11 @@
 package com.intellij.ui.treeStructure.treetable;
 
 import com.intellij.ui.components.panels.OpaquePanel;
-import consulo.application.ui.awt.ClientPropertyHolder;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.ClientPropertyHolder;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
-import consulo.ui.ex.tree.table.TreeTable;
-import consulo.ui.ex.tree.table.TreeTableTree;
+import consulo.ui.ex.awt.tree.table.TreeTable;
+import consulo.ui.ex.awt.tree.table.TreeTableTree;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;

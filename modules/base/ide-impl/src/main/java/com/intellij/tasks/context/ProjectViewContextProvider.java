@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

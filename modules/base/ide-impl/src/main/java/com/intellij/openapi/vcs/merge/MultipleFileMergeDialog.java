@@ -42,14 +42,14 @@ import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ColoredTableCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.Consumer;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 

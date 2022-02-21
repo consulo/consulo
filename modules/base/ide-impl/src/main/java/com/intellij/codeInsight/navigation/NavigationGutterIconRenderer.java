@@ -29,7 +29,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.PsiNavigateUtil;

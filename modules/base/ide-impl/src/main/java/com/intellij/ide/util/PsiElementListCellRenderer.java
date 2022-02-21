@@ -16,7 +16,7 @@ import com.intellij.util.text.MatcherHolder;
 import consulo.application.ReadAction;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.registry.Registry;
 import consulo.component.util.Iconable;
 import consulo.colorScheme.EditorColorsManager;
@@ -31,7 +31,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 

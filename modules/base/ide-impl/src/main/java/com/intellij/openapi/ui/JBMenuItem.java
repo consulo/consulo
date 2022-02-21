@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import consulo.application.ui.awt.GraphicsUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 
 import javax.swing.*;
 import java.awt.*;

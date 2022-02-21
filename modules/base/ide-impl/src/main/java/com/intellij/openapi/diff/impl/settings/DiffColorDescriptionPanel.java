@@ -11,7 +11,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import com.intellij.util.EventDispatcher;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.CheckBox;
 import consulo.ui.ColorBox;
 import consulo.ui.Label;

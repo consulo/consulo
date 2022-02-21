@@ -25,7 +25,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import com.intellij.ui.components.JBScrollPane;
+import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.ui.GridBag;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

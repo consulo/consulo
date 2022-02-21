@@ -23,9 +23,9 @@ import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.util.MinimizeButton;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.ui.components.labels.LinkListener;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.awt.LinkListener;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 

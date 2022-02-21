@@ -16,11 +16,11 @@
 package com.intellij.ui;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.Divider;
+import consulo.ui.ex.awt.Divider;
 import com.intellij.openapi.ui.PseudoSplitter;
-import consulo.ui.ex.Splitter;
+import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.vcs.changes.RefreshablePanel;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

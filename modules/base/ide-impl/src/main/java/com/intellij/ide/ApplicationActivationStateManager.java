@@ -20,8 +20,8 @@ import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;

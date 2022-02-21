@@ -22,10 +22,10 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.update.UiNotifyConnector;
+import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

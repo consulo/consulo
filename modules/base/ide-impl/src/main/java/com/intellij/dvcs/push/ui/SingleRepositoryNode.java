@@ -16,9 +16,9 @@
 package com.intellij.dvcs.push.ui;
 
 import com.intellij.dvcs.push.PushTargetPanel;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import javax.annotation.Nonnull;
 
 public class SingleRepositoryNode extends RepositoryNode {

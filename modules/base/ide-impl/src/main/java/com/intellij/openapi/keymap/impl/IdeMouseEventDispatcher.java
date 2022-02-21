@@ -34,8 +34,8 @@ import com.intellij.openapi.wm.impl.FocusManagerImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.util.ReflectionUtil;
 import java.util.HashMap;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import org.intellij.lang.annotations.JdkConstants;
@@ -51,7 +51,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static com.intellij.ui.components.JBScrollPane.isScrollEvent;
+import static consulo.ui.ex.awt.JBScrollPane.isScrollEvent;
 import static java.awt.event.MouseEvent.*;
 
 /**

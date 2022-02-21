@@ -22,7 +22,7 @@ import consulo.codeEditor.Inlay;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 

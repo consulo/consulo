@@ -27,7 +27,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ReflectionUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.awt.hacking.PopupFactoryHacking;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;

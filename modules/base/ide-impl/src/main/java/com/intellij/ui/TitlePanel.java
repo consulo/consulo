@@ -16,13 +16,13 @@
 
 package com.intellij.ui;
 
-import com.intellij.ui.components.JBLabel;
-import consulo.application.ui.awt.JBCurrentTheme;
-import consulo.application.ui.awt.JBUIScale;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

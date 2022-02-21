@@ -17,12 +17,12 @@ package com.intellij.openapi.roots.libraries.ui.impl;
 
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckedTreeNode;
-import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.awt.ClickListener;
 import com.intellij.ui.dualView.TreeTableView;
 import com.intellij.ui.treeStructure.treetable.ListTreeTableModelOnColumns;
-import consulo.ui.ex.tree.table.TreeTableTree;
+import consulo.ui.ex.awt.tree.table.TreeTableTree;
 import com.intellij.util.ui.ColumnInfo;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;

@@ -17,10 +17,10 @@ import consulo.language.psi.PsiElement;
 import com.intellij.ui.ErrorLabel;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
-import consulo.application.ui.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.ArrayUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,7 +29,7 @@ import java.awt.*;
 
 import static com.intellij.openapi.actionSystem.CommonDataKeys.*;
 import static com.intellij.openapi.actionSystem.LangDataKeys.PSI_ELEMENT_ARRAY;
-import static consulo.application.ui.awt.UIUtil.DEFAULT_HGAP;
+import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 
 public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysPerformingActionGroup {
   private static final Logger LOG = Logger.getInstance(CopyReferencePopup.class);

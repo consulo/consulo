@@ -26,11 +26,11 @@ import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import com.intellij.ui.ColorChooser;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import com.intellij.ui.FileColorManager;
 import consulo.ui.ex.JBColor;
 import com.intellij.util.ArrayUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

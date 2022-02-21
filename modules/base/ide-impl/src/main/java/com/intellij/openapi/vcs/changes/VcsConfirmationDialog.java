@@ -19,7 +19,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.ui.OptionsDialog;
 
 import javax.annotation.Nonnull;

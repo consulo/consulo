@@ -19,10 +19,10 @@ import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.ui.components.JBList;
-import consulo.application.ui.awt.MacUIUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.MacUIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.awt.hacking.BasicComboBoxUIHacking;
 
 import javax.annotation.Nonnull;

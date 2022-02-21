@@ -21,7 +21,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Inject;

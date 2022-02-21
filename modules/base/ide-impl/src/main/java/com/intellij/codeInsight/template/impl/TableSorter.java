@@ -35,7 +35,7 @@ package com.intellij.codeInsight.template.impl;
  */
 
 import consulo.logging.Logger;
-import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.awt.ClickListener;
 import com.intellij.util.ArrayUtil;
 
 import javax.swing.*;

@@ -2,7 +2,7 @@
 package com.intellij.ui.tree.ui;
 
 import com.intellij.ui.TreeActions;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

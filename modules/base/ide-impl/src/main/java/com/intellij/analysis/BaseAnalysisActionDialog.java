@@ -39,7 +39,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.refactoring.util.RadioUpDownListener;
-import com.intellij.ui.TitledSeparator;
+import consulo.ui.ex.awt.TitledSeparator;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

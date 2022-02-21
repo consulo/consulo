@@ -15,10 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;

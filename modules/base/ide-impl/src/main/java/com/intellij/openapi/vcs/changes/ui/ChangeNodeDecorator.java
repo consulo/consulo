@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.changes.Change;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nullable;
 

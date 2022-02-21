@@ -28,7 +28,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.util.concurrent.BoundedTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSetQueue;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.application.*;
 import consulo.application.event.ApplicationListener;
 import consulo.application.internal.TransactionGuardEx;

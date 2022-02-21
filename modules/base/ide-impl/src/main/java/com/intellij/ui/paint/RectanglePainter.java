@@ -15,8 +15,8 @@
  */
 package com.intellij.ui.paint;
 
-import consulo.application.ui.awt.LinePainter2D.StrokeType;
-import com.intellij.util.ui.RegionPainter;
+import consulo.ui.ex.awt.paint.LinePainter2D.StrokeType;
+import consulo.ui.ex.awt.RegionPainter;
 import javax.annotation.Nullable;
 
 import java.awt.*;

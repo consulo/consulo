@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.errorTreeView;
 
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 
 import javax.swing.*;

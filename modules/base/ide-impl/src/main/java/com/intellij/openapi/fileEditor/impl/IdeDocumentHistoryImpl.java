@@ -43,7 +43,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.EnumeratorLongDescriptor;

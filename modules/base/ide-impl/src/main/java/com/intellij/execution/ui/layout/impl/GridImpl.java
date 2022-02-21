@@ -18,12 +18,12 @@ package com.intellij.execution.ui.layout.impl;
 
 import com.intellij.execution.ui.layout.*;
 import consulo.dataContext.DataProvider;
-import consulo.ui.ex.NullableComponent;
-import consulo.ui.ex.Splitter;
+import consulo.ui.ex.awt.NullableComponent;
+import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.util.concurrent.ActionCallback;
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.content.Content;
 import com.intellij.ui.tabs.JBTabsPresentation;
 import consulo.disposer.Disposable;

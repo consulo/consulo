@@ -18,7 +18,7 @@ package com.intellij.diff.tools.util;
 import com.intellij.ide.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

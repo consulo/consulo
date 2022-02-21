@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.application.util.function.Computable;
-import consulo.application.ui.awt.LinePainter2D;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

@@ -17,11 +17,11 @@ package consulo.desktop.awt.facade;
 
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.BitUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.ui.ex.awt.TargetAWT;
-import consulo.ui.ex.awt.internal.TargetAWTFacade;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.container.StartupError;
-import consulo.application.ui.awt.MorphColor;
+import consulo.ui.ex.awt.MorphColor;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.Window;

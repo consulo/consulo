@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.AdvancedLabel;
 import consulo.ui.TextItemPresentation;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;

@@ -16,7 +16,7 @@
 package com.intellij.ui.components.panels;
 
 
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.Wrapper;
 
 import javax.swing.*;
 import java.awt.*;

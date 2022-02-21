@@ -22,7 +22,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.UIBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

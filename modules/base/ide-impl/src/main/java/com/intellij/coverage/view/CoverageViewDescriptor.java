@@ -1,6 +1,6 @@
 package com.intellij.coverage.view;
 
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ui.annotation.RequiredUIAccess;

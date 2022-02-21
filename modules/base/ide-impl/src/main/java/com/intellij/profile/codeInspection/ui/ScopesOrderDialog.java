@@ -27,7 +27,7 @@ import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ListUtil;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

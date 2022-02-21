@@ -48,12 +48,12 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import consulo.application.ui.awt.LinePainter2D;
+import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.document.impl.DocumentUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.util.collection.primitive.ints.IntStack;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.util.dataholder.Key;
 

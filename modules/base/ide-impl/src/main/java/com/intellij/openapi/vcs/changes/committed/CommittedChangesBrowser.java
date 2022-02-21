@@ -22,7 +22,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.ui.ex.Splitter;
+import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.vcs.ChangeListColumn;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
@@ -32,7 +32,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.ui.*;
 import com.intellij.ui.table.TableView;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

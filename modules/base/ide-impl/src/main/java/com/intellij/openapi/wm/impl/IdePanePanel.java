@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.JBPanel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBPanel;
+import consulo.ui.ex.awt.UIUtil;
 
 import java.awt.*;
 

@@ -16,7 +16,7 @@
 package com.intellij.ui.popup.util;
 
 import com.intellij.ui.components.JBList;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 
 import javax.swing.*;
 import java.io.File;

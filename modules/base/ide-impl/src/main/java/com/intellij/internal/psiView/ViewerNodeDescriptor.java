@@ -21,7 +21,7 @@
  */
 package com.intellij.internal.psiView;
 
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 

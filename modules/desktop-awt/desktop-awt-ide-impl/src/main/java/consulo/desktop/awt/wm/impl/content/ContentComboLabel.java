@@ -19,9 +19,9 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.content.Content;
 import com.intellij.ui.popup.PopupState;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;

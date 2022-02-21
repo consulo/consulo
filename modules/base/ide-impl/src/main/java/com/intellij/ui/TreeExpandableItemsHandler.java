@@ -16,8 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.Pair;
-import consulo.ui.ex.tree.Tree;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 
 import javax.swing.*;

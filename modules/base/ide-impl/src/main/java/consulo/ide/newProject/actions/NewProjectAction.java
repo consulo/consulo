@@ -29,7 +29,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.ui.NewProjectDialog;

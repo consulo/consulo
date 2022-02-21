@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import consulo.language.psi.PsiManager;
 import com.intellij.ui.docking.DockManager;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import jakarta.inject.Inject;

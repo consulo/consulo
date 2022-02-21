@@ -16,8 +16,8 @@
 
 package com.intellij.ide.hierarchy;
 
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;

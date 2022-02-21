@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
 import consulo.util.collection.WeakList;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

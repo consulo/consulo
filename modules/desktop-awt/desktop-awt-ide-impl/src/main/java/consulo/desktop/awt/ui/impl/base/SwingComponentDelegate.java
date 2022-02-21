@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl.base;
 
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.ToSwingComponentWrapper;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
@@ -90,7 +90,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
   @Override
   public Disposable addClickListener(@Nonnull ClickListener clickListener) {
-    consulo.ui.ex.ClickListener awtClickListener = new consulo.ui.ex.ClickListener() {
+    consulo.ui.ex.awt.ClickListener awtClickListener = new consulo.ui.ex.awt.ClickListener() {
       @Override
       public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         clickListener.clicked(new ClickEvent(SwingComponentDelegate.this));

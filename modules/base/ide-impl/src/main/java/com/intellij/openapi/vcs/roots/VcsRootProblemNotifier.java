@@ -33,7 +33,7 @@ import static com.intellij.openapi.vcs.VcsNotificationIdsHolder.ROOTS_INVALID;
 import static com.intellij.openapi.vcs.VcsNotificationIdsHolder.ROOTS_REGISTERED;
 import static com.intellij.openapi.vcs.VcsRootError.Type.UNREGISTERED_ROOT;
 import static com.intellij.util.containers.ContainerUtil.*;
-import static consulo.application.ui.awt.UIUtil.BR;
+import static consulo.ui.ex.awt.UIUtil.BR;
 
 /**
  * Searches for Vcs roots problems via {@link VcsRootErrorsFinder} and notifies about them.

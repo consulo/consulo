@@ -1,10 +1,10 @@
 package com.intellij.diagnostic.errordialog;
 
 import com.intellij.openapi.ui.LabeledComponent;
-import consulo.ui.ex.event.DocumentAdapter;
-import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.components.JBScrollPane;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

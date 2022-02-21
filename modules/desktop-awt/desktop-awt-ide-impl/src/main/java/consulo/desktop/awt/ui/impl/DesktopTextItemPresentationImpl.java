@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.SimpleColoredComponent;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;

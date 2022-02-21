@@ -18,6 +18,7 @@ package com.intellij.ui;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.application.util.registry.Registry;
+import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.TableCell;
 
 import javax.annotation.Nonnull;

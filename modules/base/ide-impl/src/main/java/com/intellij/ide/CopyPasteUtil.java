@@ -16,7 +16,7 @@
 
 package com.intellij.ide;
 
-import consulo.ui.ex.tree.AbstractTreeUpdater;
+import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

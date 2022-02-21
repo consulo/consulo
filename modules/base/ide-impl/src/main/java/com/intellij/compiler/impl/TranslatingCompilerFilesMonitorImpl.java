@@ -44,7 +44,7 @@ import com.intellij.openapi.util.Couple;
 import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.SLRUCache;
 import consulo.language.psi.stub.FileBasedIndex;

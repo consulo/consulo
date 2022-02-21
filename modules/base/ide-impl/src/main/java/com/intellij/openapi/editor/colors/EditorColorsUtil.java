@@ -16,11 +16,11 @@
 package com.intellij.openapi.editor.colors;
 
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.util.ColorValueUtil;
 import org.jetbrains.annotations.NonNls;

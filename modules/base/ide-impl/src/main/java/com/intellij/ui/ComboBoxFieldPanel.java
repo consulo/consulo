@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

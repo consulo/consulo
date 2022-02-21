@@ -16,9 +16,9 @@
 package consulo.desktop.awt.uiOld.components;
 
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;

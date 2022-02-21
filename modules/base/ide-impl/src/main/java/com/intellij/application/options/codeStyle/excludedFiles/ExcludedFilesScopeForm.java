@@ -2,8 +2,8 @@
 package com.intellij.application.options.codeStyle.excludedFiles;
 
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.swing.*;
 import java.awt.*;

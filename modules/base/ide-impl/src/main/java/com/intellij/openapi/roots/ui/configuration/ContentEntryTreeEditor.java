@@ -17,9 +17,9 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.tree.AbstractTreeBuilder;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import com.intellij.idea.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataProvider;
@@ -42,9 +42,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TreeSpeedSearch;
-import consulo.ui.ex.tree.Tree;
+import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.ComparatorUtil;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.content.ContentFolderTypeProvider;

@@ -23,7 +23,7 @@ import consulo.ui.ex.JBColor;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.Animator;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.eawt.wrapper.FullScreenUtilitiesWrapper;
 import consulo.logging.Logger;

@@ -37,10 +37,10 @@ import com.intellij.openapi.options.colors.EditorHighlightingProvidingColorSetti
 import com.intellij.openapi.options.colors.RainbowColorSettingsPage;
 import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.EventDispatcher;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import org.intellij.lang.annotations.JdkConstants;

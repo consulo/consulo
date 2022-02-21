@@ -16,10 +16,10 @@
 package com.intellij.openapi.diff.impl.dir;
 
 import com.intellij.ide.diff.DirDiffOperation;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.util.ObjectUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -19,7 +19,7 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.ColoredListCellRenderer;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.colorScheme.TextAttributes;
 import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.language.psi.PsiElement;
@@ -30,7 +30,7 @@ import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.colorScheme.EffectType;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
 import consulo.virtualFileSystem.VirtualFile;
 

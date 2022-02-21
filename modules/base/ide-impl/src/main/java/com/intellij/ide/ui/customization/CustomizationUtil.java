@@ -22,11 +22,11 @@ import consulo.logging.Logger;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.PopupHandler;
-import consulo.ui.ex.tree.Tree;
+import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.annotation.Nonnull;
 

@@ -59,7 +59,7 @@ import com.intellij.refactoring.changeSignature.ChangeSignatureHandler;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.ui.NonFocusableCheckBox;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.PositionTracker;
 import javax.annotation.Nonnull;
 

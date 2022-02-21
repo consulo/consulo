@@ -48,7 +48,7 @@ import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.moduleImport.ModuleImportProvider;

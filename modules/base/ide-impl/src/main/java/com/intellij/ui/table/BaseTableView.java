@@ -18,7 +18,7 @@ package com.intellij.ui.table;
 import consulo.logging.Logger;
 import com.intellij.util.config.Storage;
 import com.intellij.util.ui.ListTableModel;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.table.JBTable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

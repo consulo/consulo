@@ -16,7 +16,7 @@
 package com.intellij.ide.favoritesTreeView;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.impl.AbstractUrl;
 import com.intellij.ide.util.treeView.AbstractTreeNode;

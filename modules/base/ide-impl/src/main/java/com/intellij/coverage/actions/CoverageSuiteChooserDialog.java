@@ -17,7 +17,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
 import java.util.HashMap;
 import com.intellij.util.text.DateFormatUtil;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 

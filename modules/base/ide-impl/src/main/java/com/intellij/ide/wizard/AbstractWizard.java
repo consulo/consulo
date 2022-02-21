@@ -13,8 +13,8 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
 import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.ui.mac.TouchbarDataKeys;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.update.UiNotifyConnector;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 

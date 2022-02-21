@@ -37,7 +37,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.actionSystem.ActionToolbarFactory;
 import consulo.actionSystem.impl.LocalizeHelper;
 import consulo.actionSystem.impl.UnifiedActionPopupMenuImpl;

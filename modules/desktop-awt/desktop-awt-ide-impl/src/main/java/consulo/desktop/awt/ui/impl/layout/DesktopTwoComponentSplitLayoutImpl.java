@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.ui.ex.Splitter;
-import consulo.ide.ui.OnePixelSplitter;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.OnePixelSplitter;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

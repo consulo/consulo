@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.vcs.configurable;
 
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBox;
@@ -36,7 +36,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.Function;
 import com.intellij.util.UriUtil;
@@ -61,8 +61,8 @@ import java.util.*;
 
 import static com.intellij.openapi.vcs.VcsConfiguration.getInstance;
 import static com.intellij.openapi.vcs.VcsConfiguration.ourMaximumFileForBaseRevisionSize;
-import static consulo.application.ui.awt.UIUtil.DEFAULT_HGAP;
-import static consulo.application.ui.awt.UIUtil.DEFAULT_VGAP;
+import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
+import static consulo.ui.ex.awt.UIUtil.DEFAULT_VGAP;
 
 /**
  * @author yole

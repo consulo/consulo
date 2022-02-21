@@ -18,7 +18,7 @@ package com.intellij.ide;
 import consulo.ui.ex.popup.Balloon;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.RelativePoint;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.component.util.ComparableObject;
 
 import javax.annotation.Nullable;

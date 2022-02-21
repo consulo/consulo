@@ -17,7 +17,7 @@ package com.intellij.ui.popup.util;
 
 import consulo.project.Project;
 import com.intellij.ui.ColoredListCellRenderer;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 
 import javax.swing.*;
 

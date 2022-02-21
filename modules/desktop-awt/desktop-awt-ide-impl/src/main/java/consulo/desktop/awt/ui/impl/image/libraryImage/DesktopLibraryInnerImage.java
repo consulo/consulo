@@ -1,6 +1,6 @@
 package consulo.desktop.awt.ui.impl.image.libraryImage;
 
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

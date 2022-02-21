@@ -2,8 +2,8 @@ package com.intellij.coverage.view;
 
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

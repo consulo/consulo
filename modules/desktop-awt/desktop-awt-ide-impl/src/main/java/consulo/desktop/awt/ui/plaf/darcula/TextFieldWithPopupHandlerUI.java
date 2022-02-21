@@ -7,10 +7,10 @@ import consulo.util.lang.function.Condition;
 import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent.Extension;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.TestOnly;
 
@@ -31,7 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.Objects;
 
 import static com.intellij.openapi.util.text.StringUtil.isEmpty;
-import static consulo.application.ui.awt.JBUI.scale;
+import static consulo.ui.ex.awt.JBUI.scale;
 
 /**
  * @author Konstantin Bulenkov

@@ -29,7 +29,7 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
 import com.intellij.xml.util.XmlStringUtil;
 import javax.annotation.Nonnull;

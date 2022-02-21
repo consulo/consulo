@@ -49,7 +49,7 @@ import com.intellij.ui.docking.DockManager;
 import consulo.util.collection.SmartList;
 import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.impl.RunToolWindowManager;

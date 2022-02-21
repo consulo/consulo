@@ -26,7 +26,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

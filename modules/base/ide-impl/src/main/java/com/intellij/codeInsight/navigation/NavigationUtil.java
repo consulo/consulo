@@ -61,7 +61,7 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;

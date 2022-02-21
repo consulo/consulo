@@ -15,13 +15,13 @@
  */
 package com.intellij.vcs.log.ui.render;
 
-import consulo.application.ui.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.awt.ColorUtil;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
 import com.intellij.vcs.log.data.VcsLogData;

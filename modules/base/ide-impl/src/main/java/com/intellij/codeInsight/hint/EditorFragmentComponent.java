@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.hint;
 
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -21,10 +21,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
-import com.intellij.ui.ScreenUtil;
-import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

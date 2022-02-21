@@ -38,7 +38,7 @@ import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NonEmptyInputValidator;
 import com.intellij.openapi.util.Comparing;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ide.setting.module.LibrariesConfigurator;

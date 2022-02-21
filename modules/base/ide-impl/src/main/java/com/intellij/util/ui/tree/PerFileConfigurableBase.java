@@ -29,7 +29,7 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
@@ -40,16 +40,16 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AbstractTableCellEditor;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.image.Image;
@@ -71,7 +71,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.intellij.openapi.util.Pair.pair;
-import static com.intellij.ui.IdeBorderFactory.*;
+import static consulo.ui.ex.awt.IdeBorderFactory.*;
 
 /**
  * @author peter

@@ -18,7 +18,7 @@ package com.intellij.ui.debugger.extensions;
 
 import consulo.application.AllIcons;
 import consulo.logging.Logger;
-import consulo.ui.ex.Splitter;
+import consulo.ui.ex.awt.Splitter;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleColoredText;

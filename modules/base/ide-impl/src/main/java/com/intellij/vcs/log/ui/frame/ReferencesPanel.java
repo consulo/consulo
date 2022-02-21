@@ -15,14 +15,14 @@
  */
 package com.intellij.vcs.log.ui.frame;
 
-import consulo.application.ui.awt.ColorUtil;
-import com.intellij.ui.components.JBLabel;
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.Wrapper;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
 import com.intellij.vcs.log.ui.render.LabelIcon;

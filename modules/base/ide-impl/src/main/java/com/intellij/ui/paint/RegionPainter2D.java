@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.paint;
 
-import com.intellij.util.ui.RegionPainter;
+import consulo.ui.ex.awt.RegionPainter;
 
 import javax.annotation.Nullable;
 import java.awt.*;

@@ -16,10 +16,10 @@
 
 package com.intellij.util.ui;
 
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.update.UiNotifyConnector;
-import consulo.ui.ex.awt.TargetAWT;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;

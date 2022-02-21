@@ -19,7 +19,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.awt.FontUtil;
+import consulo.ui.ex.awt.FontUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

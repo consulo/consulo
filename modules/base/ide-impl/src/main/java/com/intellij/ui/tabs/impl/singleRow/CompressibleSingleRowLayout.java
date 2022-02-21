@@ -19,7 +19,7 @@ import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.tabs.impl.TabLabel;
-import consulo.application.ui.awt.GraphicsUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 
 import java.util.Arrays;
 import java.util.Iterator;

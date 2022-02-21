@@ -34,7 +34,7 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.disposer.Disposable;

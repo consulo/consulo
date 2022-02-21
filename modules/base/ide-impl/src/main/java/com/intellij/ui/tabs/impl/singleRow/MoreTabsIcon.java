@@ -16,7 +16,7 @@
 package com.intellij.ui.tabs.impl.singleRow;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

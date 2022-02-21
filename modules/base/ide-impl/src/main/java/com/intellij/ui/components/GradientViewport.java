@@ -16,8 +16,8 @@
 package com.intellij.ui.components;
 
 import consulo.application.util.registry.Registry;
-import consulo.application.ui.awt.ColorUtil;
-import consulo.ui.ex.JBViewport;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.JBViewport;
 
 import javax.annotation.Nullable;
 

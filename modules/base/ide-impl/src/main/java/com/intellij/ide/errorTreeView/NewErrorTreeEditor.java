@@ -17,9 +17,9 @@ package com.intellij.ide.errorTreeView;
 
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.tree.LoadingNode;
-import consulo.ui.ex.tree.Tree;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.tree.LoadingNode;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import javax.annotation.Nullable;
 

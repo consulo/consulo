@@ -23,7 +23,6 @@ import consulo.util.xml.serializer.annotation.Transient;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.ui.awt.*;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.SystemInfo;
 import consulo.component.persist.PersistentStateComponent;

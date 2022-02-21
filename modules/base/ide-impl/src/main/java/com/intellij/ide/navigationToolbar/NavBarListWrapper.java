@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.util.dataholder.Key;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.ScrollingUtil;
-import com.intellij.ui.components.JBScrollPane;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

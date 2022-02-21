@@ -16,10 +16,10 @@
 
 package consulo.desktop.awt.uiOld;
 
-import consulo.application.ui.awt.ScalableIcon;
+import consulo.ui.ex.awt.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

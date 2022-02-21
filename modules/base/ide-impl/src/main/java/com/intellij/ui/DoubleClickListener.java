@@ -19,7 +19,7 @@
  */
 package com.intellij.ui;
 
-import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.awt.ClickListener;
 
 import java.awt.event.MouseEvent;
 

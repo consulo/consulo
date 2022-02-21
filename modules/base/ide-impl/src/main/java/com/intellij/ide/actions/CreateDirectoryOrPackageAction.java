@@ -38,7 +38,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.Trinity;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ide.actions.CreateDirectoryOrPackageType;
 import consulo.module.extension.ModuleExtension;
 import consulo.language.psi.PsiPackageSupportProvider;

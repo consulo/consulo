@@ -22,7 +22,7 @@ import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import com.intellij.ui.ScrollPaneFactory;
 import consulo.annotation.DeprecationInfo;
 import javax.annotation.Nonnull;

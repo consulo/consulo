@@ -21,13 +21,13 @@ import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.ui.SeparatorFactory;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.ui.StateRestoringCheckBox;
 import com.intellij.usageView.UsageViewContentManager;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;

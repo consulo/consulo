@@ -3,9 +3,9 @@ package com.intellij.ui.popup;
 
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.ui.ScrollPaneFactory;
-import consulo.ui.ex.tree.table.TreeTable;
+import consulo.ui.ex.awt.tree.table.TreeTable;
 import com.intellij.util.Consumer;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.swing.*;
 import java.awt.*;

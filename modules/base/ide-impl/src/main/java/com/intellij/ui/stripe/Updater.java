@@ -19,12 +19,12 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapManager;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.util.MergingUpdateQueue;
-import consulo.ui.ex.util.Update;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
 import consulo.disposer.Disposable;
-import consulo.ui.plaf.ScrollBarUIConstants;
+import consulo.ui.ex.awt.ScrollBarUIConstants;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

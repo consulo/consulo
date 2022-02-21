@@ -17,12 +17,12 @@ package com.intellij.openapi.progress.util;
 
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import com.intellij.util.NotNullProducer;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

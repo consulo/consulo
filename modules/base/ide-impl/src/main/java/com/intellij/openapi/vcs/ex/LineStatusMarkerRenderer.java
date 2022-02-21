@@ -28,10 +28,10 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.util.Function;
 import com.intellij.util.PairConsumer;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.codeEditor.markup.*;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

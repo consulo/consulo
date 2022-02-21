@@ -2,6 +2,7 @@
 package com.intellij.ui.scroll;
 
 import consulo.application.util.registry.Registry;
+import consulo.ui.ex.awt.scroll.TouchScrollUtil;
 
 import javax.annotation.Nonnull;
 
@@ -13,8 +14,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static com.intellij.ui.scroll.MouseWheelSmoothScroll.*;
-import static com.intellij.ui.scroll.SmoothScrollUtil.*;
+import static consulo.ui.ex.awt.scroll.MouseWheelSmoothScroll.*;
+import static consulo.ui.ex.awt.scroll.SmoothScrollUtil.*;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 

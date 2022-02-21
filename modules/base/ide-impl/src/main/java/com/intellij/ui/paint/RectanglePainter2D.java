@@ -1,12 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.paint;
 
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.JBUI.ScaleContext;
-import consulo.application.ui.awt.LinePainter2D;
-import consulo.application.ui.awt.LinePainter2D.Align;
-import consulo.application.ui.awt.LinePainter2D.StrokeType;
-import consulo.application.ui.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUI.ScaleContext;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.paint.LinePainter2D.Align;
+import consulo.ui.ex.awt.paint.LinePainter2D.StrokeType;
+import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
@@ -17,7 +17,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.EnumSet;
 
-import static consulo.application.ui.awt.paint.PaintUtil.alignToInt;
+import static consulo.ui.ex.awt.paint.PaintUtil.alignToInt;
 
 /**
  * Draws or fills a rectangle with a stroke defined by {@link StrokeType}. The size of the rectangle is exactly

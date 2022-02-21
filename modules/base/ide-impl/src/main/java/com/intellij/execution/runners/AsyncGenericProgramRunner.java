@@ -23,7 +23,7 @@ import consulo.execution.RunProfileStarter;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.configuration.RunnerSettings;
 import consulo.util.concurrent.AsyncResult;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 /**

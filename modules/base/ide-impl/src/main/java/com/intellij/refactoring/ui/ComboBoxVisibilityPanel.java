@@ -18,7 +18,7 @@ package com.intellij.refactoring.ui;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.ui.DialogUtil;
+import consulo.ui.ex.awt.util.DialogUtil;
 import com.intellij.util.ui.UpDownHandler;
 
 import javax.swing.*;

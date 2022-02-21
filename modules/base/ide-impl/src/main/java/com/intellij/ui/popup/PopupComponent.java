@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import consulo.application.util.SystemInfo;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.awt.hacking.PopupHacking;
 import consulo.logging.Logger;
 

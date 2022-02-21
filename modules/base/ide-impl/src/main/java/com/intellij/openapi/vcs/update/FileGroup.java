@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import com.intellij.vcsUtil.VcsUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;

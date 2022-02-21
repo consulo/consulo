@@ -8,7 +8,7 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.project.Project;
 import consulo.component.util.BusyObject;
 import com.intellij.util.containers.FactoryMap;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import jakarta.inject.Singleton;

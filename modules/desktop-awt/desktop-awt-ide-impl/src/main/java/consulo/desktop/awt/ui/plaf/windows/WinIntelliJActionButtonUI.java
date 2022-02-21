@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.plaf.windows;
 import com.intellij.openapi.actionSystem.ActionButtonComponent;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.ui.paint.RectanglePainter2D;
-import consulo.application.ui.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.desktop.awt.ui.plaf.intellij.ActionButtonUI;
 
 import javax.swing.*;

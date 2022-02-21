@@ -11,7 +11,7 @@ import consulo.ui.ex.awt.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindow;
 import com.intellij.ui.*;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

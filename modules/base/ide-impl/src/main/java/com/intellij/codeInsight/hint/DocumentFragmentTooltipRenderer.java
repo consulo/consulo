@@ -22,7 +22,7 @@ import consulo.document.DocumentFragment;
 import consulo.document.util.TextRange;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 

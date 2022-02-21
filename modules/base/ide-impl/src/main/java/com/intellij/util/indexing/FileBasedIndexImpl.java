@@ -87,7 +87,7 @@ import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

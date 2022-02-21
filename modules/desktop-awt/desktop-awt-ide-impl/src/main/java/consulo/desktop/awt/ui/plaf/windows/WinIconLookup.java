@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.windows;
 
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.ui.plaf.darcula.LafIconLookup;
 import consulo.desktop.ui.laf.windows.icon.WindowsIconGroup;
 import consulo.ui.image.Image;

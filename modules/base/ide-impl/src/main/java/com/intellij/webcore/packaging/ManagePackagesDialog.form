@@ -50,7 +50,7 @@
                   <size top="0" left="0" bottom="0" right="0"/>
                 </border>
                 <children>
-                  <scrollpane id="8853a" class="com.intellij.ui.components.JBScrollPane">
+                  <scrollpane id="8853a" class="consulo.ui.ex.awt.JBScrollPane">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                         <preferred-size width="300" height="-1"/>

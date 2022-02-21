@@ -3,11 +3,11 @@ package com.intellij.ide.todo;
 
 import com.intellij.ide.todo.nodes.SummaryNode;
 import com.intellij.ide.todo.nodes.TodoItemNode;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.ui.HighlightableCellRenderer;
 import com.intellij.ui.HighlightedRegion;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

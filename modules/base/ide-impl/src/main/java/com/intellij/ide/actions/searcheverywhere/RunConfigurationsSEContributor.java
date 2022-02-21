@@ -18,13 +18,13 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.application.ui.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.ObjectUtils;
 import consulo.application.util.function.Processor;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 

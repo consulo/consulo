@@ -33,7 +33,7 @@ import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.EditorTextField;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.Consumer;
@@ -55,7 +55,7 @@ import com.intellij.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPane
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeState;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;

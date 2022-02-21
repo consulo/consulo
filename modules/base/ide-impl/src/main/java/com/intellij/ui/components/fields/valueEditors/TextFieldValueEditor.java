@@ -3,7 +3,7 @@ package com.intellij.ui.components.fields.valueEditors;
 
 import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

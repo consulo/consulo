@@ -5,12 +5,12 @@ import consulo.desktop.awt.ui.plaf.VisualPaddingsProvider;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListener;
-import com.intellij.ui.ComponentUtil;
+import consulo.ui.ex.awt.util.ComponentUtil;
 import com.intellij.ui.EditorTextField;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.MacUIUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.util.MacUIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

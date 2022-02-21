@@ -20,17 +20,17 @@
 package com.intellij.ide.bookmarks.actions;
 
 import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightColors;
-import consulo.application.ui.awt.CustomLineBorder;
+import consulo.ui.ex.awt.CustomLineBorder;
 import com.intellij.ui.components.panels.HorizontalLayout;
-import consulo.ui.ex.NonOpaquePanel;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.BorderLayoutPanel;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.BorderLayoutPanel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;

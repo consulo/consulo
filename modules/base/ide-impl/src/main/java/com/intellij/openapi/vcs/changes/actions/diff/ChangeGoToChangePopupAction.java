@@ -20,7 +20,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.util.Consumer;
-import consulo.ui.ex.update.UiNotifyConnector;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

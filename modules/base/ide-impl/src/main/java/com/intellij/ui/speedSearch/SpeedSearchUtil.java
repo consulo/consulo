@@ -19,13 +19,13 @@ import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.Matcher;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

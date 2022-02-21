@@ -2,14 +2,14 @@
 package com.intellij.openapi.ui.impl;
 
 import com.intellij.ide.ui.LafManager;
-import consulo.application.ui.awt.internal.JreHiDpiUtil;
+import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import com.intellij.util.IconUtil;
-import consulo.application.ui.awt.ImageUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.JBUI.ScaleContext;
-import consulo.application.ui.awt.JBUI.ScaleContextAware;
-import consulo.application.ui.awt.JBUI.ScaleContextSupport;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUI.ScaleContext;
+import consulo.ui.ex.awt.JBUI.ScaleContextAware;
+import consulo.ui.ex.awt.JBUI.ScaleContextSupport;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

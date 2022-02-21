@@ -33,7 +33,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Queue;
 import com.intellij.util.exception.FrequentErrorLogger;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.application.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

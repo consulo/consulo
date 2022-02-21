@@ -21,11 +21,11 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TransparentPanel;
 import consulo.util.collection.JBIterable;
-import consulo.application.ui.awt.EmptyIcon;
-import consulo.application.ui.awt.JBUI;
-import consulo.ui.ex.util.MergingUpdateQueue;
-import consulo.ui.ex.util.Update;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.EmptyIcon;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

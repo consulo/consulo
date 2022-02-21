@@ -15,11 +15,11 @@
  */
 package com.intellij.ui.components;
 
-import consulo.ui.ex.ComponentWithEmptyText;
-import com.intellij.util.ui.JBSwingUtilities;
-import consulo.ui.ex.StatusText;
-import consulo.application.ui.awt.JBPanel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.ComponentWithEmptyText;
+import consulo.ui.ex.awt.util.JBSwingUtilities;
+import consulo.ui.ex.awt.StatusText;
+import consulo.ui.ex.awt.JBPanel;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

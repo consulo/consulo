@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.disposer.Disposable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

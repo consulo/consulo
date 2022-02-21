@@ -21,10 +21,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.tree.LoadingNode;
-import consulo.ui.ex.SimpleColoredComponent;
-import com.intellij.util.ui.JBHtmlEditorKit;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.tree.LoadingNode;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.JBHtmlEditorKit;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.ui.image.Image;
 

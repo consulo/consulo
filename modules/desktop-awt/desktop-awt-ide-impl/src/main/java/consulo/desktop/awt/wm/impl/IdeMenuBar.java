@@ -33,13 +33,13 @@ import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.status.ClockPanel;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
-import com.intellij.ui.ScreenUtil;
-import consulo.application.ui.awt.CustomLineBorder;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.CustomLineBorder;
 import com.intellij.util.ui.Animator;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ide.base.BaseDataManager;
 import consulo.ui.ex.action.*;
 

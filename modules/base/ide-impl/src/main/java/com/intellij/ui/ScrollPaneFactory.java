@@ -16,8 +16,9 @@
 package com.intellij.ui;
 
 
-import com.intellij.ui.components.JBScrollPane;
-import consulo.application.ui.awt.SideBorder;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.SideBorder;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;

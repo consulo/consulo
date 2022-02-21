@@ -41,7 +41,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -17,7 +17,7 @@ import consulo.codeEditor.FoldingGroup;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import consulo.ui.ex.Splitter;
+import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
-import com.intellij.ui.IdeBorderFactory;
-import consulo.application.ui.awt.SideBorder;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.SideBorder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 

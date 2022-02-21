@@ -1,12 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui;
 
-import consulo.ui.ex.NonOpaquePanel;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.ui.components.panels.OpaquePanel;
-import consulo.application.ui.awt.JBCurrentTheme;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

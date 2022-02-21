@@ -30,11 +30,11 @@ import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.text.DateFormatUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;

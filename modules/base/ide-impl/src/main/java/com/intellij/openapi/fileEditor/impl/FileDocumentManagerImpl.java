@@ -45,7 +45,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.UIBundle;
-import com.intellij.ui.components.JBScrollPane;
+import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;

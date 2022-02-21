@@ -3,13 +3,14 @@ package com.intellij.ui.components.labels;
 
 import consulo.application.AllIcons;
 import com.intellij.openapi.ui.popup.IPopupChooserBuilder;
+import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.util.PopupState;
-import consulo.application.ui.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.Consumer;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

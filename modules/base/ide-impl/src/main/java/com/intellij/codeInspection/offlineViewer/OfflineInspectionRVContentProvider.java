@@ -33,7 +33,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

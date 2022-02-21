@@ -21,7 +21,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.util.lang.ref.Ref;
 import com.intellij.util.ExceptionUtil;
 import consulo.application.util.Semaphore;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;

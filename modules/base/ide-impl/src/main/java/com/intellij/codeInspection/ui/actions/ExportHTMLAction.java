@@ -52,7 +52,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import consulo.application.util.function.ThrowableRunnable;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ui.annotation.RequiredUIAccess;

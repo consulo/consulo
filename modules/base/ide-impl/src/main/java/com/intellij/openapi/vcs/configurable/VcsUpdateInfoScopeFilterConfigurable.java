@@ -25,8 +25,8 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.NamedScopesHolder;
-import com.intellij.ui.components.labels.LinkLabel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 

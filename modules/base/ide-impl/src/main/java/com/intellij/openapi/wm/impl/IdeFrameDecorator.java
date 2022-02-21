@@ -19,10 +19,10 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import consulo.annotation.ReviewAfterMigrationToJRE;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.Window;
 

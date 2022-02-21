@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.ui.render;
 
 import com.intellij.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

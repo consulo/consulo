@@ -30,7 +30,7 @@ import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.ui.HideableDecorator;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.panels.VerticalLayout;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 

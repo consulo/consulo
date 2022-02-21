@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl.taskBar;
 
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;

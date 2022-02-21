@@ -10,12 +10,12 @@ import com.intellij.openapi.options.CompositeConfigurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.colors.pages.GeneralColorsPage;
-import com.intellij.ui.components.labels.LinkLabel;
+import consulo.ui.ex.awt.LinkLabel;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.VerticalLayout;
-import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

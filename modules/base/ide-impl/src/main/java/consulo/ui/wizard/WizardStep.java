@@ -16,7 +16,7 @@
 package consulo.ui.wizard;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

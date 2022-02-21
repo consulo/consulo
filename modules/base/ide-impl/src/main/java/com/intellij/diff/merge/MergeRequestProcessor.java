@@ -36,10 +36,10 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.base.BaseDataManager;
 import consulo.ui.annotation.RequiredUIAccess;
 

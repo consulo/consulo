@@ -15,13 +15,13 @@
  */
 package com.intellij.ide.util.treeView;
 
-import consulo.ui.ex.tree.AbstractTreeUi;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.AbstractTreeUi;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentationData;
 import consulo.ui.ex.ColoredItemPresentation;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;

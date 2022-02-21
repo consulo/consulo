@@ -20,8 +20,8 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.idea.ActionsBundle;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.ui.components.labels.LinkListener;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.awt.LinkListener;
 
 /**
  * User: anna

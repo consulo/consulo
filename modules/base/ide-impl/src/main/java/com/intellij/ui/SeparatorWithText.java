@@ -16,9 +16,9 @@
 package com.intellij.ui;
 
 import consulo.application.ui.UISettings;
-import consulo.application.ui.awt.JBCurrentTheme;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.accessibility.Accessible;

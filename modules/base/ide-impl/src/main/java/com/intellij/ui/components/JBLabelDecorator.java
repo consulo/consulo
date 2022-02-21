@@ -15,7 +15,8 @@
  */
 package com.intellij.ui.components;
 
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 

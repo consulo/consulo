@@ -15,19 +15,17 @@
  */
 package com.intellij.vcs.log.ui.frame;
 
-import consulo.application.ui.awt.*;
 import consulo.project.Project;
-import consulo.application.ui.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import com.intellij.openapi.vcs.ui.FontUtil;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.awt.ColorUtil;
-import consulo.application.ui.awt.JBPanel;
-import com.intellij.ui.components.JBScrollPane;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.*;

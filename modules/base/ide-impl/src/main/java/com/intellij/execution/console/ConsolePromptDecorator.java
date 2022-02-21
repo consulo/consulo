@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

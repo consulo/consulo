@@ -25,7 +25,7 @@ import consulo.ui.ex.IconDeferrer;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.AlertIcon;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SoftReference;

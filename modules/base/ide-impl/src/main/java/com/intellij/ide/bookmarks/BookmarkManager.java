@@ -45,7 +45,7 @@ import consulo.language.psi.event.PsiDocumentListener;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.component.messagebus.MessageBus;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;

@@ -13,8 +13,8 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.awt.JBInsets;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

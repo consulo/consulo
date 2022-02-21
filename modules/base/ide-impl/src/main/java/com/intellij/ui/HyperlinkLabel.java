@@ -17,13 +17,13 @@
 package com.intellij.ui;
 
 import com.intellij.ide.BrowserUtil;
-import consulo.application.ui.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 

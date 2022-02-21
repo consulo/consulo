@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.event.WindowManagerListener;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

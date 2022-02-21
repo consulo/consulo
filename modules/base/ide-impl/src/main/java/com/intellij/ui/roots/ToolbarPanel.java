@@ -19,7 +19,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionToolbar;
-import consulo.application.ui.awt.CustomLineBorder;
+import consulo.ui.ex.awt.CustomLineBorder;
 
 import javax.swing.*;
 import java.awt.*;

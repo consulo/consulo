@@ -15,7 +15,7 @@
  */
 package consulo.ide.util;
 
-import consulo.application.ui.awt.internal.ImageLoader;
+import consulo.ui.ex.awt.internal.ImageLoader;
 
 import java.awt.*;
 import java.net.URL;

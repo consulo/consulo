@@ -2,7 +2,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.openapi.util.Couple;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

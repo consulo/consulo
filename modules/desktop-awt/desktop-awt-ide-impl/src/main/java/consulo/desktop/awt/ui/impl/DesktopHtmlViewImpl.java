@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import com.intellij.ui.HyperlinkAdapter;
-import com.intellij.util.ui.JBHtmlEditorKit;
+import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;

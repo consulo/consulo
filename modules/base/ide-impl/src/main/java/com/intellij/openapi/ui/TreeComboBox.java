@@ -17,11 +17,11 @@ package com.intellij.openapi.ui;
 
 import consulo.component.util.Iconable;
 import consulo.application.util.SystemInfo;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.ui.SimpleColoredRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.collection.Stack;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

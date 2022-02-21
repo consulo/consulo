@@ -21,7 +21,7 @@ import consulo.ui.ex.action.Shortcut;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.ui.Messages;
-import consulo.ui.ex.Splitter;
+import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;

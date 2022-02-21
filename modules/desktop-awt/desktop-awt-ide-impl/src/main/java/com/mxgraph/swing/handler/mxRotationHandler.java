@@ -1,7 +1,7 @@
 package com.mxgraph.swing.handler;
 
 import consulo.application.AllIcons;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMouseAdapter;
 import com.mxgraph.util.*;

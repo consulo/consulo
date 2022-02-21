@@ -15,9 +15,9 @@
  */
 package com.intellij.ui.treeStructure;
 
-import consulo.ui.ex.tree.AbstractTreeBuilder;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.application.ApplicationManager;
 import consulo.ui.UIAccess;
 

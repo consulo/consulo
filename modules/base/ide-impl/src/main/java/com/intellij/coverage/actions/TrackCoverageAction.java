@@ -22,7 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nullable;

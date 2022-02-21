@@ -13,7 +13,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import consulo.application.util.registry.Registry;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;

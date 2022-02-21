@@ -4,7 +4,7 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import consulo.application.ui.UISettings;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -37,10 +37,10 @@ import com.intellij.ui.components.breadcrumbs.Crumb;
 import com.intellij.util.concurrency.NonUrgentExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.MouseEventAdapter;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.util.MergingUpdateQueue;
-import consulo.ui.ex.update.UiNotifyConnector;
-import consulo.ui.ex.util.Update;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awt.util.Update;
 import kava.beans.PropertyChangeEvent;
 import javax.annotation.Nonnull;
 
@@ -56,7 +56,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.intellij.ui.RelativeFont.SMALL;
-import static consulo.application.ui.awt.UIUtil.getLabelFont;
+import static consulo.ui.ex.awt.UIUtil.getLabelFont;
 
 /**
  * @author spleaner

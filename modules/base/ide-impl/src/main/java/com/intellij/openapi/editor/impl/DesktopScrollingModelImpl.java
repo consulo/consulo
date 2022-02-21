@@ -28,7 +28,7 @@ import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
-import com.intellij.ui.components.Interpolable;
+import consulo.ui.ex.awt.Interpolable;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.ui.Animator;
 import consulo.annotation.DeprecationInfo;

@@ -4,9 +4,9 @@ import com.intellij.diagnostic.Developer;
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.ui.ComboboxSpeedSearch;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.util.containers.ComparatorUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

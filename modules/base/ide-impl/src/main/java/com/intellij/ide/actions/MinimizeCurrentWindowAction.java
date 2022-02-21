@@ -22,7 +22,7 @@ import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.mac.MacMainFrameDecorator;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

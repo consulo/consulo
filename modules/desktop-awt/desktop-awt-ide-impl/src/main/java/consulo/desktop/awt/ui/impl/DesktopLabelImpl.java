@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import com.intellij.ui.components.JBLabel;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;

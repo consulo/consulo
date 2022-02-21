@@ -1,6 +1,6 @@
 package com.intellij.ui.components;
 
-import com.intellij.ui.AnchorableComponent;
+import consulo.ui.ex.awt.AnchorableComponent;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

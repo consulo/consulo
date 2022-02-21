@@ -5,8 +5,8 @@ import consulo.application.ui.UISettings;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

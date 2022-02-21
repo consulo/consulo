@@ -30,7 +30,7 @@ import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
-import consulo.application.ui.awt.MacUIUtil;
+import consulo.ui.ex.awt.util.MacUIUtil;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;

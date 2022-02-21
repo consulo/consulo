@@ -23,7 +23,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 

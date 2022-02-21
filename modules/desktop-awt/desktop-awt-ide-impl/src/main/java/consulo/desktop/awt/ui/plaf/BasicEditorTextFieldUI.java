@@ -16,9 +16,9 @@
 package consulo.desktop.awt.ui.plaf;
 
 import consulo.codeEditor.Editor;
-import com.intellij.ui.ComponentUtil;
+import consulo.ui.ex.awt.util.ComponentUtil;
 import com.intellij.ui.EditorTextField;
-import consulo.application.ui.awt.JBInsets;
+import consulo.ui.ex.awt.JBInsets;
 
 import javax.swing.*;
 import javax.swing.border.Border;

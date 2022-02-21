@@ -19,8 +19,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

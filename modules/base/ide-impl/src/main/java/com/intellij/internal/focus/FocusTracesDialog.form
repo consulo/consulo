@@ -27,7 +27,7 @@
             </constraints>
             <properties/>
           </component>
-          <scrollpane id="ef29" class="com.intellij.ui.components.JBScrollPane">
+          <scrollpane id="ef29" class="consulo.ui.ex.awt.JBScrollPane">
             <constraints>
               <splitpane position="left"/>
             </constraints>
@@ -36,7 +36,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="3cc44" class="consulo.ui.ex.table.JBTable" binding="myRequestsTable">
+              <component id="3cc44" class="consulo.ui.ex.awt.table.JBTable" binding="myRequestsTable">
                 <constraints/>
                 <properties>
                   <autoResizeMode value="3"/>

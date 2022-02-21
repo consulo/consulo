@@ -28,7 +28,7 @@ import com.intellij.refactoring.classMembers.MemberInfoChange;
 import com.intellij.refactoring.classMembers.MemberInfoChangeListener;
 import com.intellij.refactoring.classMembers.MemberInfoModel;
 import com.intellij.ui.*;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.table.JBTable;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;

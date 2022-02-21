@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.dashboard;
 
-import consulo.ui.ex.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import javax.annotation.Nonnull;
 
 /**

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.util.awt.migration;
 
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

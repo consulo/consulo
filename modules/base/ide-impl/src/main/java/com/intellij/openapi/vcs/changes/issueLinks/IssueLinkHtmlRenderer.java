@@ -20,7 +20,7 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.IssueNavigationConfiguration;
 import com.intellij.util.containers.Convertor;
 import com.intellij.xml.util.XmlTagUtilBase;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import java.util.List;
 

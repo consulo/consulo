@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.gotoByName;
 
-import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.ui.ex.awt.tree.TreeAnchorizer;
 import consulo.application.ApplicationManager;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.util.containers.ContainerUtil;

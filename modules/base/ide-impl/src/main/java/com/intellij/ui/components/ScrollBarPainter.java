@@ -7,13 +7,13 @@ import consulo.colorScheme.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.MixedColorProducer;
 import com.intellij.ui.paint.RectanglePainter;
-import com.intellij.util.ui.RegionPainter;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.RegionPainter;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

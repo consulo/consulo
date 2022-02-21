@@ -19,8 +19,8 @@ import consulo.application.AllIcons;
 import com.intellij.notification.impl.NotificationsConfigurable;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.setting.ShowSettingsUtil;
-import com.intellij.util.ui.JBRectangle;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBRectangle;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

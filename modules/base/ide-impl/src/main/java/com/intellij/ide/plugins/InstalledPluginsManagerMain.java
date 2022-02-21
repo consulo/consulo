@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.io.ZipUtil;
-import consulo.ui.ex.StatusText;
+import consulo.ui.ex.awt.StatusText;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.virtualFileSystem.archive.ArchiveFileType;

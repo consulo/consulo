@@ -4,7 +4,7 @@
  */
 package com.mxgraph.util;
 
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import com.mxgraph.io.mxCodecRegistry;
 import com.mxgraph.model.mxCellPath;
 import com.mxgraph.model.mxICell;

@@ -20,7 +20,7 @@ import consulo.application.ui.UISettings;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.MouseDragHelper;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;

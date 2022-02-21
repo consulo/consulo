@@ -48,7 +48,7 @@ import com.intellij.util.NullableFunction;
 import consulo.virtualFileSystem.util.PathsList;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtilRt;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
 import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;

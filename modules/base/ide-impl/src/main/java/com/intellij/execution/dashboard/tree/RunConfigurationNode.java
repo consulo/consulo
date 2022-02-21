@@ -24,7 +24,7 @@ import com.intellij.execution.dashboard.DashboardRunConfigurationStatus;
 import com.intellij.execution.dashboard.RunDashboardContributor;
 import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManagerImpl;
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

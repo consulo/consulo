@@ -21,7 +21,7 @@
  */
 package com.intellij.ide.util.treeView;
 
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 
 import java.util.Comparator;
 

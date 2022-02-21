@@ -20,7 +20,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.ui.MultiLineLabelUI;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 
 import javax.swing.*;
 import java.awt.*;

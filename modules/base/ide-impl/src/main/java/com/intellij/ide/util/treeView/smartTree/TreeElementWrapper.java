@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util.treeView.smartTree;
 
-import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.awt.tree.PresentationData;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.NodeProvider;
 import consulo.fileEditor.structureView.tree.ProvidingTreeModel;

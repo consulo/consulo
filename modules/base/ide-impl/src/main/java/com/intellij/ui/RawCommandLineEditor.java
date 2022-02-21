@@ -15,14 +15,14 @@
  */
 package com.intellij.ui;
 
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.Wrapper;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.ValueComponent;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

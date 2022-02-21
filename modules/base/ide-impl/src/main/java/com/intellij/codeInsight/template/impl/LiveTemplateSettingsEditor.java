@@ -22,7 +22,8 @@ import com.intellij.codeInsight.template.EverywhereContextType;
 import com.intellij.codeInsight.template.TemplateContextType;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.ui.ex.ClickListener;
+import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ui.ex.JBColor;
 import consulo.document.Document;
@@ -47,10 +48,10 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import com.intellij.util.ui.GridBag;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.tree.TreeUtil;
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.update.UiNotifyConnector;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -101,14 +102,14 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
     createComponents(allowNoContext);
 
-    myKeyField.getDocument().addDocumentListener(new consulo.ui.ex.event.DocumentAdapter() {
+    myKeyField.getDocument().addDocumentListener(new consulo.ui.ex.awt.event.DocumentAdapter() {
       @Override
       protected void textChanged(javax.swing.event.DocumentEvent e) {
         myTemplate.setKey(myKeyField.getText().trim());
         nodeChanged.run();
       }
     });
-    myDescription.getDocument().addDocumentListener(new consulo.ui.ex.event.DocumentAdapter() {
+    myDescription.getDocument().addDocumentListener(new consulo.ui.ex.awt.event.DocumentAdapter() {
       @Override
       protected void textChanged(javax.swing.event.DocumentEvent e) {
         myTemplate.setDescription(myDescription.getText().trim());

@@ -3,13 +3,13 @@ package consulo.desktop.awt.uiOld.components.fields;
 
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.ScreenUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.application.AllIcons;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.uiOld.Expandable;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent.Extension;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 
 import javax.annotation.Nonnull;

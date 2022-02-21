@@ -22,10 +22,10 @@ import consulo.project.Project;
 import consulo.util.concurrent.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
-import consulo.ui.ex.NonOpaquePanel;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.wm.impl.ContentManagerBase;
 import org.jetbrains.annotations.NonNls;
 

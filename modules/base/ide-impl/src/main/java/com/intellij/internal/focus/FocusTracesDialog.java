@@ -20,8 +20,8 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.impl.FocusRequestInfo;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.table.JBTable;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

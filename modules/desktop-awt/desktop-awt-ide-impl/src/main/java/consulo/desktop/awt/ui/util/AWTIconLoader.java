@@ -17,19 +17,19 @@ package consulo.desktop.awt.ui.util;
 
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
-import consulo.application.ui.awt.ScalableIcon;
+import consulo.ui.ex.awt.ScalableIcon;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.RetrievableIcon;
-import consulo.application.ui.awt.paint.PaintUtil;
-import consulo.application.ui.awt.internal.ImageLoader;
+import consulo.ui.ex.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.internal.ImageLoader;
 import com.intellij.util.ReflectionUtil;
-import consulo.application.ui.awt.internal.RetinaImage;
-import consulo.application.ui.awt.ImageUtil;
+import consulo.ui.ex.awt.internal.RetinaImage;
+import consulo.ui.ex.awt.ImageUtil;
 import com.intellij.util.ui.JBImageIcon;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.application.ui.awt.UIModificationTracker;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.UIModificationTracker;
 import consulo.logging.Logger;
 import consulo.desktop.awt.ui.impl.image.DesktopLazyImageImpl;
 import consulo.ui.style.StyleManager;
@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static consulo.application.ui.awt.JBUI.ScaleType.*;
+import static consulo.ui.ex.awt.JBUI.ScaleType.*;
 
 /**
  * @author VISTALL

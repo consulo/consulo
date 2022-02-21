@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.table.JBTable;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooser;
 

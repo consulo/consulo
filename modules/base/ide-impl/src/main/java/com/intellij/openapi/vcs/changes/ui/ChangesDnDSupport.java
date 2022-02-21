@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
-import consulo.ui.ex.tree.Tree;
+import consulo.ui.ex.awt.tree.Tree;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,10 +16,10 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.JBFont;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.JBFont;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
-import static consulo.application.ui.awt.JBUI.ScaleType.OBJ_SCALE;
+import static consulo.ui.ex.awt.JBUI.ScaleType.OBJ_SCALE;
 
 /**
  * @author VISTALL

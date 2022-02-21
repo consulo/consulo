@@ -15,8 +15,8 @@
  */
 package com.intellij.ui.popup;
 
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.popup.JWindowPopupFactory;
 
 import javax.annotation.Nonnull;

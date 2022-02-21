@@ -4,12 +4,12 @@ package com.intellij.openapi.ui;
 import consulo.application.CommonBundle;
 import com.intellij.ide.RemoteDesktopService;
 import com.intellij.ui.components.JBLayeredPane;
-import consulo.ui.ex.NonOpaquePanel;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.AsyncProcessIcon;
-import consulo.application.ui.awt.ImageUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 

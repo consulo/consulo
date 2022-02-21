@@ -24,7 +24,7 @@ import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeymapManager;
-import com.intellij.ui.components.JBScrollPane;
+import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 
 import javax.swing.*;

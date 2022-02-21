@@ -19,10 +19,10 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionGroup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.ui.ex.ClickListener;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

@@ -10,7 +10,7 @@ import java.awt.*;
 import java.util.Collection;
 
 import static consulo.application.util.SystemInfo.isMac;
-import static com.intellij.ui.components.JBScrollPane.IGNORE_SCROLLBAR_IN_INSETS;
+import static consulo.ui.ex.awt.JBScrollPane.IGNORE_SCROLLBAR_IN_INSETS;
 
 public final class RenderingHelper {
   /**

@@ -15,16 +15,16 @@
  */
 package consulo.roots.ui;
 
-import consulo.application.ui.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.impl.StaticAnchoredButton;
 import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
-import consulo.application.ui.awt.CustomLineBorder;
+import consulo.ui.ex.awt.CustomLineBorder;
 import com.intellij.util.EventDispatcher;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;

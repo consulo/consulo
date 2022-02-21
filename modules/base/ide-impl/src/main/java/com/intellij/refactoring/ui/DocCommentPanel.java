@@ -26,8 +26,8 @@ package com.intellij.refactoring.ui;
 
 import com.intellij.refactoring.util.DocCommentPolicy;
 import com.intellij.refactoring.RefactoringBundle;
-import com.intellij.ui.IdeBorderFactory;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

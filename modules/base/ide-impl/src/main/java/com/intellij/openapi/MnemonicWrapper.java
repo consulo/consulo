@@ -5,7 +5,7 @@ import consulo.application.ui.UISettings;
 import consulo.logging.Logger;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

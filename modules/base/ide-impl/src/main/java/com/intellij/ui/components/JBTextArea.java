@@ -1,14 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.components;
 
-import com.intellij.ui.ComponentUtil;
-import consulo.ui.ex.event.DocumentAdapter;
+import consulo.ui.ex.awt.util.ComponentUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.ObjectUtils;
-import consulo.ui.ex.ComponentWithEmptyText;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
-import consulo.ui.ex.StatusText;
+import consulo.ui.ex.awt.ComponentWithEmptyText;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.StatusText;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

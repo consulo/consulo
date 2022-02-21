@@ -41,7 +41,7 @@ import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.TextTransferable;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.debugger.XSourcePosition;
 import consulo.debugger.evaluation.XDebuggerEditorsProvider;
 import consulo.debugger.frame.XDebuggerTreeNodeHyperlink;

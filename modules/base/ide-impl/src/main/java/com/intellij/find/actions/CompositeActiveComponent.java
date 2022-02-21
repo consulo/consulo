@@ -16,8 +16,8 @@
 package com.intellij.find.actions;
 
 import com.intellij.ui.ActiveComponent;
-import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

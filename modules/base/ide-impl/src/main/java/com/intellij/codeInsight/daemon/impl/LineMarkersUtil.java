@@ -4,7 +4,7 @@ package com.intellij.codeInsight.daemon.impl;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.MarkupModelEx;

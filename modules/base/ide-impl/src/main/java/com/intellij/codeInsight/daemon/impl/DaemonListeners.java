@@ -68,7 +68,7 @@ import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

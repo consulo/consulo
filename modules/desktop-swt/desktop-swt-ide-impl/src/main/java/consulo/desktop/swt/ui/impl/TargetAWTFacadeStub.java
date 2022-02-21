@@ -19,7 +19,7 @@ import consulo.ui.Rectangle2D;
 import consulo.ui.Size;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import consulo.ui.ex.awt.internal.TargetAWTFacade;
+import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 

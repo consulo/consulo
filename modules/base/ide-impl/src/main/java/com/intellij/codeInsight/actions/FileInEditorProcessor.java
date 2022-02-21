@@ -32,7 +32,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
-import consulo.application.ui.awt.ColorUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import com.intellij.ui.HyperlinkAdapter;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightweightHint;

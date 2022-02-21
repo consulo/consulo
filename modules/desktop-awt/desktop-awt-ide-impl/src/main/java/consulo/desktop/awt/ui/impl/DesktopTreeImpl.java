@@ -16,14 +16,14 @@
 package consulo.desktop.awt.ui.impl;
 
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
 import com.intellij.ui.tree.AsyncTreeModel;
 import com.intellij.ui.tree.StructureTreeModel;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
 import consulo.disposer.Disposable;

@@ -33,7 +33,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;

@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.evaluate.quick.common;
 
 import com.intellij.concurrency.ResultConsumer;
-import consulo.ui.ex.tree.Tree;
+import consulo.ui.ex.awt.tree.Tree;
 import javax.annotation.Nonnull;
 
 /**

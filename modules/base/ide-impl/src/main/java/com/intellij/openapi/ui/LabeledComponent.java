@@ -17,10 +17,10 @@ package com.intellij.openapi.ui;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.IdeBorderFactory;
-import consulo.application.ui.awt.PanelWithAnchor;
-import com.intellij.ui.components.JBLabel;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.PanelWithAnchor;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

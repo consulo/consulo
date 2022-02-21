@@ -3,15 +3,15 @@ package com.intellij.ide.navigationToolbar;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.navigationToolbar.ui.NavBarUI;
-import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.ui.ex.awt.tree.TreeAnchorizer;
 import consulo.disposer.Disposable;
 import consulo.dataContext.DataProvider;
 import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiElement;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.collection.JBIterable;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;

@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.diff.util;
 
-import consulo.ui.ex.Wrapper;
+import consulo.ui.ex.awt.Wrapper;
 
 import javax.swing.*;
 import java.awt.event.ComponentAdapter;

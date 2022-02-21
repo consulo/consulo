@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.ui.ex.awt.IdeBorderFactory;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

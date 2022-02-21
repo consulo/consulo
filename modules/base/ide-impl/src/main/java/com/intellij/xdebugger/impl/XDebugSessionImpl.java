@@ -34,7 +34,7 @@ import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.dataContext.DataManager;
 import consulo.debugger.*;

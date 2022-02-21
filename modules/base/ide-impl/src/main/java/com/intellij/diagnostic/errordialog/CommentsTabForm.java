@@ -3,8 +3,8 @@ package com.intellij.diagnostic.errordialog;
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.ui.IdeBorderFactory;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

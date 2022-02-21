@@ -20,7 +20,7 @@ import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeyState;
 import consulo.application.util.registry.Registry;
 import consulo.util.lang.SystemProperties;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionEventVisitor;

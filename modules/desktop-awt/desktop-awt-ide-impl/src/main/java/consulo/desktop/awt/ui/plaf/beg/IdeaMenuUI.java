@@ -7,11 +7,11 @@ import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;
-import consulo.application.ui.awt.LinePainter2D;
-import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.GraphicsUtil;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;

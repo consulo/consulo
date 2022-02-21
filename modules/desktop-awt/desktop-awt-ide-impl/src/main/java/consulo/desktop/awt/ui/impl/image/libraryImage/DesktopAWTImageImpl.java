@@ -1,11 +1,11 @@
 package consulo.desktop.awt.ui.impl.image.libraryImage;
 
 import consulo.ui.ex.JBColor;
-import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
-import consulo.application.ui.awt.internal.RetinaImage;
+import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
+import consulo.ui.ex.awt.internal.RetinaImage;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import consulo.application.ui.awt.ImageUtil;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awt.JBUI;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

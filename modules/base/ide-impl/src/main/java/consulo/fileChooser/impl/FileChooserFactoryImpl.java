@@ -17,7 +17,7 @@ package consulo.fileChooser.impl;
 
 import consulo.application.PathMacros;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;

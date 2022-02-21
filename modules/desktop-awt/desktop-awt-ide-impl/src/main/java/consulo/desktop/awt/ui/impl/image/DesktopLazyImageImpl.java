@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import consulo.ui.ex.awt.TargetAWT;
-import consulo.application.ui.awt.UIModificationTracker;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

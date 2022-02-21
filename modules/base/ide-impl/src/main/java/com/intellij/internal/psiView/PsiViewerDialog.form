@@ -58,20 +58,20 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <scrollpane id="73bab" class="com.intellij.ui.components.JBScrollPane">
+                      <scrollpane id="73bab" class="consulo.ui.ex.awt.JBScrollPane">
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="628d6" class="consulo.ui.ex.tree.Tree" binding="myPsiTree" custom-create="true">
+                          <component id="628d6" class="consulo.ui.ex.awt.tree.Tree" binding="myPsiTree" custom-create="true">
                             <constraints/>
                             <properties/>
                           </component>
                         </children>
                       </scrollpane>
-                      <component id="1a9fa" class="com.intellij.ui.TitledSeparator" binding="myPsiTreeSeparator">
+                      <component id="1a9fa" class="consulo.ui.ex.awt.TitledSeparator" binding="myPsiTreeSeparator">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -106,7 +106,7 @@
                             </constraints>
                             <properties/>
                           </component>
-                          <component id="287f6" class="com.intellij.ui.TitledSeparator" binding="myRefsSeparator">
+                          <component id="287f6" class="consulo.ui.ex.awt.TitledSeparator" binding="myRefsSeparator">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                             </constraints>
@@ -124,20 +124,20 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <scrollpane id="690aa" class="com.intellij.ui.components.JBScrollPane">
+                          <scrollpane id="690aa" class="consulo.ui.ex.awt.JBScrollPane">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="7dc8f" class="consulo.ui.ex.tree.Tree" binding="myBlockTree" custom-create="true">
+                              <component id="7dc8f" class="consulo.ui.ex.awt.tree.Tree" binding="myBlockTree" custom-create="true">
                                 <constraints/>
                                 <properties/>
                               </component>
                             </children>
                           </scrollpane>
-                          <component id="62949" class="com.intellij.ui.TitledSeparator" binding="myBlockTreeSeparator">
+                          <component id="62949" class="consulo.ui.ex.awt.TitledSeparator" binding="myBlockTreeSeparator">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                             </constraints>
@@ -212,7 +212,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="69754" class="com.intellij.ui.components.JBLabel" binding="myDialectLabel">
+              <component id="69754" class="consulo.ui.ex.awt.JBLabel" binding="myDialectLabel">
                 <constraints border-constraint="West"/>
                 <properties>
                   <labelFor value="91e46"/>
@@ -261,7 +261,7 @@
           </component>
         </children>
       </grid>
-      <component id="9944b" class="com.intellij.ui.TitledSeparator" binding="myTextSeparator">
+      <component id="9944b" class="consulo.ui.ex.awt.TitledSeparator" binding="myTextSeparator">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>

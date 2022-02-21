@@ -36,7 +36,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.ui.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.Consumer;

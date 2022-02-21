@@ -21,10 +21,10 @@ import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.HyperlinkAdapter;
-import com.intellij.ui.IdeBorderFactory;
+import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.Wrapper;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.Wrapper;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import javax.annotation.Nonnull;
 

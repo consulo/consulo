@@ -8,7 +8,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <scrollpane id="2e11" class="com.intellij.ui.components.JBScrollPane">
+      <scrollpane id="2e11" class="consulo.ui.ex.awt.JBScrollPane">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -55,7 +55,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="9c196" class="com.intellij.ui.components.JBLabel">
+          <component id="9c196" class="consulo.ui.ex.awt.JBLabel">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="34" height="14"/>

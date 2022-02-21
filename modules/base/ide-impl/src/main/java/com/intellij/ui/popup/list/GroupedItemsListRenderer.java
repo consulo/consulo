@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.popup.ListItemDescriptor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ErrorLabel;
 import com.intellij.ui.GroupedElementsRenderer;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

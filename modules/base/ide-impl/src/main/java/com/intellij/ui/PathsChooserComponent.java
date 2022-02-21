@@ -22,8 +22,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Consumer;
-import consulo.ui.ex.ComponentWithEmptyText;
-import consulo.ui.ex.StatusText;
+import consulo.ui.ex.awt.ComponentWithEmptyText;
+import consulo.ui.ex.awt.StatusText;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -2,17 +2,20 @@
 package com.intellij.openapi.wm.impl.status;
 
 import consulo.application.ui.UISettings;
-import consulo.application.ui.awt.*;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.ui.UIBundle;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.concurrent.EdtExecutorService;
-import com.intellij.util.ui.*;
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.update.UiNotifyConnector;
+import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

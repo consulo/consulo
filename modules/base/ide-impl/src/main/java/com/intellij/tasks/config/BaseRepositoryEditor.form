@@ -28,7 +28,7 @@
                   <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                 </constraints>
               </vspacer>
-              <component id="fec04" class="com.intellij.ui.components.JBLabel" binding="myUrlLabel">
+              <component id="fec04" class="consulo.ui.ex.awt.JBLabel" binding="myUrlLabel">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -108,7 +108,7 @@
                   <text value="Lo&amp;gin Anonymously"/>
                 </properties>
               </component>
-              <component id="22736" class="com.intellij.ui.components.JBLabel" binding="myUsernameLabel">
+              <component id="22736" class="consulo.ui.ex.awt.JBLabel" binding="myUsernameLabel">
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -126,7 +126,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="70c27" class="com.intellij.ui.components.JBLabel" binding="myPasswordLabel">
+              <component id="70c27" class="consulo.ui.ex.awt.JBLabel" binding="myPasswordLabel">
                 <constraints>
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -164,7 +164,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="bb533" class="com.intellij.ui.components.JBLabel" binding="myComment">
+              <component id="bb533" class="consulo.ui.ex.awt.JBLabel" binding="myComment">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>

@@ -11,7 +11,7 @@ import com.intellij.util.concurrency.FutureResult;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;

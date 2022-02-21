@@ -27,7 +27,7 @@ import consulo.util.concurrent.ActionCallback;
 import com.intellij.openapi.util.DimensionService;
 import consulo.util.collection.MutualMap;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.NonOpaquePanel;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import com.intellij.ui.tabs.JBTabs;
@@ -37,7 +37,7 @@ import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.TabLabel;
 import com.intellij.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

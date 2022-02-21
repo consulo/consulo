@@ -1,7 +1,7 @@
 package com.intellij.coverage;
 
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 
 /**

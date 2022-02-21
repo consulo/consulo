@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.ui;
 
 import com.intellij.openapi.editor.impl.FontFallbackIterator;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

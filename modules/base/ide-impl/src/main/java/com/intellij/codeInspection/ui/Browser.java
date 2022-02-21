@@ -40,7 +40,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

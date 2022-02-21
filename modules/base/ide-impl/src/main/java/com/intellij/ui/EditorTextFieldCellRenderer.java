@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.EditorColors;
@@ -34,7 +34,7 @@ import com.intellij.openapi.util.*;
 import consulo.application.util.LineTokenizer;
 import com.intellij.util.ObjectUtils;
 import consulo.util.lang.CharSequenceSubSequence;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 

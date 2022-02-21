@@ -6,7 +6,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;

@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.searcheverywhere;
 
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.util.Alarm;
 import javax.annotation.Nonnull;
 
 import java.util.*;

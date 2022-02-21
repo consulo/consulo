@@ -19,7 +19,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.ui.color.ColorValue;
 import consulo.colorScheme.EffectType;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -21,10 +21,10 @@ import com.intellij.openapi.vcs.changes.issueLinks.ClickableTreeCellRenderer;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeNodePartListener;
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 import com.intellij.ui.MultilineTreeCellRenderer;
-import consulo.ui.ex.SimpleColoredComponent;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.util.ArrayUtil;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

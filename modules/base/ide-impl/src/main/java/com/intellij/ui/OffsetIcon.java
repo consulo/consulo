@@ -3,7 +3,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.IconUtil2;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Contract;

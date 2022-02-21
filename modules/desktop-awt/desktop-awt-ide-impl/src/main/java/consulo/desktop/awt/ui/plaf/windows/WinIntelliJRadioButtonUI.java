@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.windows;
 
-import consulo.application.ui.awt.EmptyIcon;
-import consulo.application.ui.awt.JBInsets;
-import consulo.application.ui.awt.JBUI;
+import consulo.ui.ex.awt.EmptyIcon;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.JBUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaRadioButtonUI;
 
 import javax.swing.*;

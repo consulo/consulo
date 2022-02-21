@@ -21,8 +21,8 @@ import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecution
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.project.Project;
 import com.intellij.ui.TreeSpeedSearch;
-import consulo.ui.ex.tree.Tree;
-import consulo.ui.ex.util.Alarm;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.Producer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;

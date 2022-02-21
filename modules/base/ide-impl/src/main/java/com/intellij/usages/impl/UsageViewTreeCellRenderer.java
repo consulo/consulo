@@ -17,22 +17,22 @@ package com.intellij.usages.impl;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
 import consulo.ui.ex.DarculaColors;
-import consulo.application.ui.awt.FontUtil;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.FontUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.document.util.TextRange;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

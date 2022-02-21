@@ -27,9 +27,9 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchConditio
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
-import com.intellij.ui.ComponentUtil;
-import com.intellij.ui.IdeBorderFactory;
-import consulo.ui.ex.table.JBTable;
+import consulo.ui.ex.awt.util.ComponentUtil;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.ui.AbstractTableCellEditor;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

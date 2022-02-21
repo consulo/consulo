@@ -58,7 +58,7 @@ import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiElement;
-import consulo.ui.ex.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

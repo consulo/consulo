@@ -2,11 +2,14 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.ide.IdeEventQueue;
-import consulo.application.ui.awt.*;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import com.intellij.util.ui.table.JBTableRowEditor;
-import consulo.application.ui.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBValue;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.MacUIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.RelativePoint;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;

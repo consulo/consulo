@@ -20,7 +20,7 @@ import com.intellij.openapi.module.ModuleConfigurationEditor;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.CompositeDisposable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

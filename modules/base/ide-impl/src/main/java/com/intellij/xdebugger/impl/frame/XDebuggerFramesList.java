@@ -28,7 +28,7 @@ import com.intellij.ui.FileColorManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.ui.TextTransferable;
-import consulo.application.ui.awt.UIUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.debugger.XDebuggerBundle;
 import consulo.debugger.XSourcePosition;
 import consulo.debugger.frame.XStackFrame;

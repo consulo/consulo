@@ -17,9 +17,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.application.util.SystemInfo;
-import consulo.ui.ex.ClickListener;
-import com.intellij.ui.IdeBorderFactory;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

@@ -17,9 +17,9 @@ package com.intellij.profile.codeInspection.ui.inspectionsTree;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
-import consulo.ui.ex.table.JBTable;
-import consulo.application.ui.awt.UIUtil;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;

@@ -39,7 +39,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

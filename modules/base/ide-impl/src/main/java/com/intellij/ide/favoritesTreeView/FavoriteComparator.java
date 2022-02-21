@@ -6,7 +6,7 @@
 package com.intellij.ide.favoritesTreeView;
 
 import com.intellij.ide.projectView.impl.GroupByTypeComparator;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeDescriptor;
 
 /**
  * @author Konstantin Bulenkov

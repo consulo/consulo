@@ -23,7 +23,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.ui.ex.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 
 /**
  * Allows to modify the painting of changelists in the Changes view. Classes implementing this

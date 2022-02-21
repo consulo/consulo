@@ -3,11 +3,11 @@ package com.intellij.ide.ui.newItemPopup;
 
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
-import consulo.application.ui.awt.JBCurrentTheme;
-import consulo.application.ui.awt.JBUIScale;
-import consulo.application.ui.awt.JBUI;
-import consulo.ui.ex.awt.TargetAWT;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

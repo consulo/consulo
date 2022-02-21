@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import com.intellij.ui.UIBundle;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.ex.awt.JBLabel;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
