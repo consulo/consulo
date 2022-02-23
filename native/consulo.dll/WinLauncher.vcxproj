@@ -113,12 +113,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)\jdk6\include;$(SolutionDir)\jdk6\include\win32;$(IncludePath)</IncludePath>
-    <TargetName>consulo-x86</TargetName>
+    <TargetName>consulo</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)\jdk6\include;$(SolutionDir)\jdk6\include\win32;$(IncludePath)</IncludePath>
-    <TargetName>consulo-x86-64</TargetName>
+    <TargetName>consulo64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <LinkIncremental>false</LinkIncremental>

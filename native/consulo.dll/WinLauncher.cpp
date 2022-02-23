@@ -42,13 +42,6 @@ HANDLE hEvent;
 HANDLE hSingleInstanceWatcherThread;
 const int FILE_MAPPING_SIZE = 16000;
 
-// java 9 module mode
-#define RUN_IN_MODULE_MODE
-
-#ifndef RUN_IN_MODULE_MODE
-#define BOOTCLASSPATH "consulo-bootstrap.jar;consulo-container-api.jar;consulo-container-impl.jar;consulo-desktop-bootstrap.jar;consulo-util-nodep.jar"
-#endif
-
 #define CONSULO_JRE "CONSULO_JRE"
 
 #ifdef _M_X64
@@ -412,10 +405,6 @@ void AddModulePathOptions(std::vector<std::string>& vmOptionLines)
 
 void AddPredefinedVMOptions(std::vector<std::string>& vmOptionLines)
 {
-	// deprecated options - will removed later
-	vmOptionLines.push_back("-Didea.properties.file=" + EncodeWideACP(std::wstring(propertiesFilePath)));
-	vmOptionLines.push_back("-Didea.home.path=" + EncodeWideACP(std::wstring(workingDirectoryPath)));
-
 	vmOptionLines.push_back("-Dconsulo.properties.file=" + EncodeWideACP(std::wstring(propertiesFilePath)));
 	vmOptionLines.push_back("-Dconsulo.home.path=" + EncodeWideACP(std::wstring(workingDirectoryPath)));
 	vmOptionLines.push_back("-Dconsulo.app.home.path=" + EncodeWideACP(std::wstring(appHomePath)));
@@ -447,25 +436,15 @@ bool LoadVMOptions(WCHAR* targetVmOptionFile)
     }
   }
 
-#ifdef RUN_IN_MODULE_MODE
   std::wstring systemVmOptions = GetAdjacentDirW(L"bin") + L"\\app.vmoptions";
 
   if (GetFileAttributes(systemVmOptions.c_str()) != INVALID_FILE_ATTRIBUTES)
   {
       LoadVMOptionsFile(systemVmOptions.c_str(), vmOptionLines);
   }
-#endif
-
-  // deprecated options - will removed later
-  vmOptionLines.push_back(std::string("-Djb.vmOptions=") + EncodeWideACP(used));
 
   vmOptionLines.push_back(std::string("-Dconsulo.vm.options.files=") + EncodeWideACP(used));
-
-#ifdef RUN_IN_MODULE_MODE
   AddModulePathOptions(vmOptionLines);
-#else
-  AddClassPathOptions(vmOptionLines);
-#endif
 
   AddPredefinedVMOptions(vmOptionLines);
 
