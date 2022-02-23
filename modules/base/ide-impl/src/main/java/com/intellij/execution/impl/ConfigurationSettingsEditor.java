@@ -34,7 +34,7 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.ScrollingUtil;
+import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.containers.Convertor;
 import org.jetbrains.annotations.NonNls;

@@ -23,6 +23,7 @@ import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.util.text.Matcher;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 

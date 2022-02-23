@@ -18,10 +18,11 @@ package com.intellij.ui;
 
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.Convertor;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 

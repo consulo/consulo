@@ -25,13 +25,13 @@ import com.intellij.execution.testframework.sm.runner.ui.PropagateSelectionHandl
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.PopupHandler;
-import com.intellij.ui.TableUtil;
+import consulo.ui.ex.awt.util.TableUtil;
 import com.intellij.ui.table.BaseTableView;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.config.Storage;

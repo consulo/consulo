@@ -18,6 +18,8 @@ package com.intellij.openapi.keymap;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;

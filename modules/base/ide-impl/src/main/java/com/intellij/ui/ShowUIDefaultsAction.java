@@ -27,6 +27,7 @@ import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.PairFunction;
 import consulo.ui.ex.awt.EmptyIcon;
+import consulo.ui.ex.awt.util.TableUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

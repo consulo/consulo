@@ -20,7 +20,6 @@ import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;

@@ -25,7 +25,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.dumb.DumbAware;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;

@@ -18,7 +18,6 @@ package com.intellij.ide.hierarchy;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MultiLineLabelUI;

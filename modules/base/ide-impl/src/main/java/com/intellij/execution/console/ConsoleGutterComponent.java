@@ -17,7 +17,6 @@ package com.intellij.execution.console;
 
 import com.intellij.codeInsight.hint.TooltipController;
 import com.intellij.codeInsight.hint.TooltipGroup;
-import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import consulo.colorScheme.EditorFontType;
@@ -28,6 +27,7 @@ import com.intellij.ui.HintHint;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
@@ -154,7 +154,7 @@ class ConsoleGutterComponent extends JComponent implements MouseMotionListener {
       g.fillRect(clip.x, clip.y, Math.min(clip.width, maxContentWidth - clip.x), clip.height);
     }
 
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
 
     Graphics2D g2 = (Graphics2D)g;
     Object hint = g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING);

@@ -11,7 +11,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
-import com.intellij.ui.components.panels.OpaquePanel;
+import consulo.ui.ex.awt.OpaquePanel;
 import com.intellij.ui.mac.TouchbarDataKeys;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;

@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.action.Shortcut;
 import com.intellij.openapi.keymap.KeyMapBundle;
-import com.intellij.openapi.keymap.Keymap;
+import consulo.ui.ex.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.impl.ShortcutRestrictions;
 import com.intellij.openapi.ui.DialogWrapper;

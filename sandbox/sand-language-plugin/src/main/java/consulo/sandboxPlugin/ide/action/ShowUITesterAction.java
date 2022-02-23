@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.ide.action;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.sandboxPlugin.ui.UITester;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.dialog.DialogService;

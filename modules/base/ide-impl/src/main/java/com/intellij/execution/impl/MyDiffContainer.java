@@ -18,8 +18,8 @@ package com.intellij.execution.impl;
 import consulo.disposer.Disposable;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.AbstractLayoutManager;
-import com.intellij.util.ui.AnimatedIcon;
-import com.intellij.util.ui.AsyncProcessIcon;
+import consulo.ui.ex.awt.AnimatedIconComponent;
+import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
 
@@ -34,7 +34,7 @@ import java.awt.*;
 * Time: 3:13 PM
 */
 public class MyDiffContainer extends JBLayeredPane implements Disposable {
-  private final AnimatedIcon myIcon = new AsyncProcessIcon(getClass().getName());
+  private final AnimatedIconComponent myIcon = new AsyncProcessIcon(getClass().getName());
 
   private final JComponent myContent;
   private final JComponent myLoadingPanel;

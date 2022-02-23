@@ -16,7 +16,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.language.file.LanguageFileType;
 import consulo.language.plain.PlainTextLanguage;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;

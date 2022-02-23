@@ -3,7 +3,7 @@ package com.intellij.openapi.actionSystem.ex;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;

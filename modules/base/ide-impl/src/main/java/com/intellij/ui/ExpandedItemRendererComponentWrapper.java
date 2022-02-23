@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.AbstractLayoutManager;
-import com.intellij.util.ui.accessibility.AbstractAccessibleContextDelegate;
+import consulo.ui.ex.awt.accessibility.AbstractAccessibleContextDelegate;
 import javax.annotation.Nonnull;
 
 import javax.accessibility.Accessible;

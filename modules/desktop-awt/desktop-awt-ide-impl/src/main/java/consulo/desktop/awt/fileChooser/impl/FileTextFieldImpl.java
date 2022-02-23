@@ -6,8 +6,8 @@ import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.FileTextField;
-import com.intellij.openapi.keymap.Keymap;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.ui.ListActions;
-import com.intellij.ui.ScrollingUtil;
+import consulo.ui.ex.awt.ScrollingUtil;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.ui.update.LazyUiDisposable;
@@ -43,7 +43,7 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.*;
 
-import static com.intellij.openapi.actionSystem.IdeActions.ACTION_CODE_COMPLETION;
+import static consulo.ui.ex.action.IdeActions.ACTION_CODE_COMPLETION;
 import static com.intellij.openapi.application.ModalityState.stateForComponent;
 import static consulo.desktop.awt.fileChooser.impl.FileTextFieldUtil.createMatcher;
 

@@ -44,7 +44,7 @@ import com.intellij.problems.ProblemListener;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.event.PsiTreeChangeListener;
-import com.intellij.ui.ScrollingUtil;
+import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.component.messagebus.MessageBusConnection;
 
 import javax.annotation.Nonnull;

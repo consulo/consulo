@@ -3,6 +3,8 @@ package com.intellij.ui.tree;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.tree.TreeVisitor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

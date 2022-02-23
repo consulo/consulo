@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner.ui.statistics;
 
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 
 /**
  * @author Roman Chernyatchik

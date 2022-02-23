@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import consulo.component.util.ActiveRunnable;
 import consulo.component.util.Weighted;
@@ -39,7 +38,7 @@ import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowPassInfo;
 import com.intellij.ui.tabs.impl.table.TableLayout;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.Animator;
+import consulo.ui.ex.awt.Animator;
 import consulo.ui.ex.awt.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import consulo.ui.ex.awt.UIUtil;

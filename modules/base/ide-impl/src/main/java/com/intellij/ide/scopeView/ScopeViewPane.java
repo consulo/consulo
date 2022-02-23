@@ -27,7 +27,7 @@ import consulo.language.editor.scope.NamedScopeManager;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;

@@ -43,7 +43,7 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.application.dumb.DumbAware;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.action.*;

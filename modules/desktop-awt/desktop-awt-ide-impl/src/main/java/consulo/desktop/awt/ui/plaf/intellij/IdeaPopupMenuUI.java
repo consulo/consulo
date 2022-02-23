@@ -1,13 +1,13 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.intellij;
 
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.SystemInfoRt;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBValue;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -62,7 +62,7 @@ public class IdeaPopupMenuUI extends BasicPopupMenuUI {
       return;
     }
 
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
     Rectangle rectangle = popupMenu.getBounds();
     int cornerRadiusX = CORNER_RADIUS_X.get();
     int cornerRadiusY = CORNER_RADIUS_Y.get();

@@ -31,6 +31,7 @@ import com.intellij.ui.*;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;

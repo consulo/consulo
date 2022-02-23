@@ -6,6 +6,7 @@
 package com.intellij.ui.speedSearch;
 
 import consulo.dataContext.DataProvider;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.text.StringUtil;

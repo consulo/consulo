@@ -16,12 +16,11 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.actions.ActivateToolWindowAction;
-import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.application.ui.UISettings;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
@@ -34,6 +33,7 @@ import consulo.project.ui.wm.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.util.MacKeymapUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Couple;
 
@@ -46,7 +46,7 @@ public class EditorEmptyTextPainter {
   public static EditorEmptyTextPainter ourInstance = new EditorEmptyTextPainter();
 
   public void paintEmptyText(@Nonnull final JComponent splitters, @Nonnull Graphics g) {
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
     g.setColor(new JBColor(Gray._80, Gray._160));
     g.setFont(JBUI.Fonts.label(16f));
     UIUtil.TextPainter painter = new UIUtil.TextPainter().withLineSpacing(1.8f);

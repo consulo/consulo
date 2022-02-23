@@ -18,7 +18,7 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.project.ui.wm.ToolWindow;
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;

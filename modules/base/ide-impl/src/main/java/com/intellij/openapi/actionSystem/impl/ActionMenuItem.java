@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.util.TextWithMnemonic;

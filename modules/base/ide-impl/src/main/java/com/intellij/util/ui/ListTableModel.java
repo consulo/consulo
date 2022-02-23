@@ -16,6 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.ColumnInfo;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

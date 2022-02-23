@@ -15,7 +15,7 @@ import com.intellij.openapi.util.*;
 import consulo.util.lang.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.tree.TreeVisitor;
+import consulo.ui.ex.awt.tree.TreeVisitor;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtils;
 import consulo.util.collection.SmartList;

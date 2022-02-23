@@ -14,7 +14,7 @@ import consulo.language.editor.intention.HintAction;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;

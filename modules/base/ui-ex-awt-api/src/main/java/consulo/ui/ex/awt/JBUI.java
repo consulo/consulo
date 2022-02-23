@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.application.ui.awt.internal.JreHiDpiUtil;
 import consulo.application.util.SystemInfo;
+import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import consulo.util.lang.Pair;
 import kava.beans.PropertyChangeListener;
 

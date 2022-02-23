@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.configurable.Configurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurableProvider;
 import consulo.ui.annotation.RequiredUIAccess;

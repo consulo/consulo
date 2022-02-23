@@ -37,7 +37,7 @@ import consulo.application.WriteAction;
 import consulo.fileEditor.FileEditor;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.virtualFileSystem.VirtualFile;

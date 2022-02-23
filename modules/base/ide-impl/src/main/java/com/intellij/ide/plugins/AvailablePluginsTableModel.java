@@ -22,7 +22,7 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;

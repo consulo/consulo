@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.history;
 
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import consulo.platform.base.icon.PlatformIconGroup;

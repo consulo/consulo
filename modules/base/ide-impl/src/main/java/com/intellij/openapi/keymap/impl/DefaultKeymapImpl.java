@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.keymap.impl;
 
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.MouseShortcut;
-import com.intellij.openapi.keymap.Keymap;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.application.util.SystemInfo;
 import org.jdom.Element;

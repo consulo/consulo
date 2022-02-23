@@ -21,7 +21,6 @@ import com.intellij.ide.actions.ViewToolbarAction;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;

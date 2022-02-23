@@ -53,10 +53,13 @@ const int FILE_MAPPING_SIZE = 16000;
 
 #ifdef _M_X64
 bool need64BitJRE = true;
-#define BITS_STR "64-bit"
+#define BITS_STR "x86-64"
+#elif _M_ARM64
+bool need64BitJRE = true;
+#define BITS_STR "AArch64"
 #else
 bool need64BitJRE = false;
-#define BITS_STR "32-bit"
+#define BITS_STR "x86"
 #endif
 
 std::string EncodeWideACP(const std::wstring &str)
@@ -93,11 +96,9 @@ bool IsValidJRE(const char* path)
 
 bool Is64BitJRE(const char* path)
 {
-  std::string cfgPath(path);
   std::string cfgJava9Path(path);
-  cfgPath += "\\lib\\amd64\\jvm.cfg";
   cfgJava9Path += "\\lib\\jvm.cfg";
-  return FileExists(cfgPath) || FileExists(cfgJava9Path);
+  return FileExists(cfgJava9Path);
 }
 
 bool FindValidJVM(const char* path)
@@ -218,7 +219,7 @@ bool FindJVMInRegistryWithVersion(std::string version, bool wow64_32)
 
 bool FindJVMInRegistry()
 {
-#ifndef _M_X64
+#ifndef _M_X64 && _M_ARM64
   if (FindJVMInRegistryWithVersion("11", true))
     return true;
   if (FindJVMInRegistryWithVersion("12", true))
@@ -228,6 +229,10 @@ bool FindJVMInRegistry()
   if (FindJVMInRegistryWithVersion("14", true))
       return true;
   if (FindJVMInRegistryWithVersion("15", true))
+      return true;
+  if (FindJVMInRegistryWithVersion("16", true))
+      return true;
+  if (FindJVMInRegistryWithVersion("17", true))
       return true;
 
   std::string currentVersion2 = FindJRECurrentVersionRegistryKey(true);
@@ -245,6 +250,10 @@ bool FindJVMInRegistry()
   if (FindJVMInRegistryWithVersion("14", true))
       return true;
   if (FindJVMInRegistryWithVersion("15", true))
+      return true;
+  if (FindJVMInRegistryWithVersion("16", true))
+      return true;
+  if (FindJVMInRegistryWithVersion("17", true))
       return true;
 
   std::string currentVersion = FindJRECurrentVersionRegistryKey(false);
@@ -393,30 +402,13 @@ std::string CollectBootJars(const std::string& jarList)
   return result;
 }
 
-#ifndef RUN_IN_MODULE_MODE
-std::string BuildClassPath()
-{
-  std::string classpathLibs = std::string(BOOTCLASSPATH);
-  std::string result = CollectBootJars(classpathLibs);
-  return result;
-}
-
-void AddClassPathOptions(std::vector<std::string>& vmOptionLines)
-{
-    std::string classPath = BuildClassPath();
-    if (classPath.size() == 0) return;
-    vmOptionLines.push_back(std::string("-Djava.class.path=") + classPath);
-}
-#else
-
 void AddModulePathOptions(std::vector<std::string>& vmOptionLines)
 {
     std::wstring bootDir = GetAdjacentDirW(L"boot");
     vmOptionLines.push_back("--module-path=" + EncodeWideACP(bootDir) + ";" + EncodeWideACP(bootDir) + "/spi");
-    vmOptionLines.push_back("-Djdk.module.main=consulo.desktop.bootstrap");
+    vmOptionLines.push_back("-Djdk.module.main=consulo.desktop.awt.bootstrap");
     vmOptionLines.push_back("-Dconsulo.module.path.boot=true");
 }
-#endif
 
 void AddPredefinedVMOptions(std::vector<std::string>& vmOptionLines)
 {
@@ -572,7 +564,7 @@ jobjectArray PrepareCommandLine()
 
 bool RunMainClass()
 {
-  std::string mainClassName = "consulo/desktop/boot/main/Main";
+  std::string mainClassName = "consulo/desktop/awt/boot/main/Main";
   jclass mainClass = env->FindClass(mainClassName.c_str());
   if (!mainClass)
   {
@@ -607,8 +599,8 @@ void CallCommandLineProcessor(const std::wstring& curDir, const std::wstring& ar
 {
   JNIEnv *env;
   JavaVMAttachArgs attachArgs;
-  attachArgs.version = JNI_VERSION_1_2;
-  attachArgs.name = "WinLauncher external command processing thread";
+  attachArgs.version = JNI_VERSION_10;
+  attachArgs.name = "Launcher external command processing thread";
   attachArgs.group = NULL;
   jvm->AttachCurrentThread((void**)&env, &attachArgs);
 

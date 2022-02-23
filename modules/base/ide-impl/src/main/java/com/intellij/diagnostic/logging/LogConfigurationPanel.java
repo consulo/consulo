@@ -35,8 +35,10 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.ui.AbstractTableCellEditor;
 import com.intellij.util.ui.CellEditorComponentWithBrowseButton;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.util.TableUtil;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -37,7 +37,7 @@ import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorWithText;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;

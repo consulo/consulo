@@ -22,7 +22,7 @@ package com.intellij.ide.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ide.setting.ShowSettingsUtil;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ide.plugins.PluginsConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;

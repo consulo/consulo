@@ -22,7 +22,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomePopupAction;
 import com.intellij.ui.JBCardLayout;

@@ -31,6 +31,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.disposer.Disposer;

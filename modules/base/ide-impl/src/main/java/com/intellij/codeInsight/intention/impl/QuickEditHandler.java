@@ -50,6 +50,8 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.*;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;

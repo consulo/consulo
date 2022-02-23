@@ -24,7 +24,7 @@ import consulo.application.WriteAction;
 import consulo.module.Module;
 import consulo.configurable.ConfigurationException;
 import consulo.ide.setting.ShowSettingsUtil;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;

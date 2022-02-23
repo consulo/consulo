@@ -7,7 +7,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.project.ui.wm.*;

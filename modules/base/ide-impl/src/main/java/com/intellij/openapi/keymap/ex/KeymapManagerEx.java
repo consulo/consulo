@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.keymap.ex;
 
-import com.intellij.openapi.keymap.Keymap;
-import com.intellij.openapi.keymap.KeymapManager;
-import com.intellij.openapi.keymap.KeymapManagerListener;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import com.intellij.openapi.keymap.impl.KeymapImpl;
 import com.intellij.openapi.options.SchemesManager;
 import javax.annotation.Nonnull;

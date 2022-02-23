@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.ui.ScrollingUtil;
+import consulo.ui.ex.awt.ScrollingUtil;
 import jakarta.inject.Inject;
 
 public class EndHandler extends EditorActionHandler {

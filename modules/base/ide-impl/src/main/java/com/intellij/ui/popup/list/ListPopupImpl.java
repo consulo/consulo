@@ -12,7 +12,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
 import com.intellij.ui.ListActions;
-import com.intellij.ui.ScrollingUtil;
+import consulo.ui.ex.awt.ScrollingUtil;
 import com.intellij.ui.SeparatorWithText;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.ClosableByLeftArrow;

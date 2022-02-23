@@ -2,7 +2,6 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.application.AllIcons;
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -10,6 +9,7 @@ import com.intellij.util.ObjectUtils;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.MacUIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
@@ -192,7 +192,7 @@ public class DarculaButtonUI extends BasicButtonUI {
 
     if (isSquare(b)) {
       if (b.getIcon() == AllIcons.General.Ellipsis) {
-        UISettings.setupAntialiasing(g);
+        UISettingsUtil.setupAntialiasing(g);
         paintText(g, b, textRect, text);
       }
       else if (b.getIcon() != null) {
@@ -211,7 +211,7 @@ public class DarculaButtonUI extends BasicButtonUI {
           v.paint(g, textRect);
         }
         else {
-          UISettings.setupAntialiasing(g);
+          UISettingsUtil.setupAntialiasing(g);
           paintText(g, b, textRect, text);
         }
       }

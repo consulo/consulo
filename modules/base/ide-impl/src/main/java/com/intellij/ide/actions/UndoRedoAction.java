@@ -23,7 +23,7 @@ import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.command.undo.UndoManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 

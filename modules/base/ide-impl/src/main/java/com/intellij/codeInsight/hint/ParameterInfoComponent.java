@@ -6,7 +6,7 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.parameterInfo.ParameterInfoHandler;
 import com.intellij.lang.parameterInfo.ParameterInfoUIContextEx;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorFontType;

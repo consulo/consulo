@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.CustomShortcutSet;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;

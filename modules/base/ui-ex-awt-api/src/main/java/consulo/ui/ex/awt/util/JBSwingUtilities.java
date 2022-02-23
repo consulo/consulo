@@ -16,17 +16,16 @@
 package consulo.ui.ex.awt.util;
 
 import consulo.disposer.Disposable;
-import consulo.application.util.SystemInfo;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.PairFunction;
-import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.util.lang.ObjectUtil;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiFunction;
 
 /**
  * @author gregsh
@@ -35,15 +34,13 @@ import java.util.List;
  */
 public class JBSwingUtilities {
 
-  private static final boolean LEGACY_JDK = !SystemInfo.isJavaVersionAtLeast(8, 0, 0);
-
   /**
    * Replaces SwingUtilities#isLeftMouseButton() for consistency with other button-related methods
    *
    * @see SwingUtilities#isLeftMouseButton(MouseEvent)
    */
   public static boolean isLeftMouseButton(MouseEvent anEvent) {
-    return LEGACY_JDK ? (anEvent.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) > 0 : SwingUtilities.isLeftMouseButton(anEvent);
+    return SwingUtilities.isLeftMouseButton(anEvent);
   }
 
   /**
@@ -53,7 +50,7 @@ public class JBSwingUtilities {
    * @see InputEvent#BUTTON2_MASK
    */
   public static boolean isMiddleMouseButton(MouseEvent anEvent) {
-    return LEGACY_JDK ? (anEvent.getModifiersEx() & InputEvent.BUTTON2_DOWN_MASK) > 0 : SwingUtilities.isMiddleMouseButton(anEvent);
+    return SwingUtilities.isMiddleMouseButton(anEvent);
   }
 
   /**
@@ -63,14 +60,13 @@ public class JBSwingUtilities {
    * @see InputEvent#BUTTON3_MASK
    */
   public static boolean isRightMouseButton(MouseEvent anEvent) {
-    return LEGACY_JDK ? (anEvent.getModifiersEx() & InputEvent.BUTTON3_DOWN_MASK) > 0 : SwingUtilities.isRightMouseButton(anEvent);
+    return SwingUtilities.isRightMouseButton(anEvent);
   }
 
 
-  private static final List<PairFunction<JComponent, Graphics2D, Graphics2D>> ourGlobalTransform =
-          ContainerUtil.createEmptyCOWList();
+  private static final List<BiFunction<JComponent, Graphics2D, Graphics2D>> ourGlobalTransform = new CopyOnWriteArrayList<>();
 
-  public static Disposable addGlobalCGTransform(final PairFunction<JComponent, Graphics2D, Graphics2D> fun) {
+  public static Disposable addGlobalCGTransform(final BiFunction<JComponent, Graphics2D, Graphics2D> fun) {
     ourGlobalTransform.add(fun);
     return new Disposable() {
       @Override
@@ -83,8 +79,8 @@ public class JBSwingUtilities {
   @Nonnull
   public static Graphics2D runGlobalCGTransform(@Nonnull JComponent c, @Nonnull Graphics g) {
     Graphics2D gg = (Graphics2D)g;
-    for (PairFunction<JComponent, Graphics2D, Graphics2D> transform : ourGlobalTransform) {
-      gg = ObjectUtils.notNull(transform.fun(c, gg));
+    for (BiFunction<JComponent, Graphics2D, Graphics2D> transform : ourGlobalTransform) {
+      gg = ObjectUtil.notNull(transform.apply(c, gg));
     }
     return gg;
   }

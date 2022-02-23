@@ -22,6 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
@@ -29,8 +30,10 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Use this class to postpone task execution and optionally merge identical tasks. This is needed e.g. to reflect in UI status of some
@@ -47,7 +50,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   private volatile boolean myActive;
   private volatile boolean mySuspended;
 
-  private final Map<Integer, Map<Update, Update>> myScheduledUpdates = ContainerUtil.newTreeMap();
+  private final Map<Integer, Map<Update, Update>> myScheduledUpdates = new TreeMap<>();
 
   private final Alarm myWaiterForMerge;
 
@@ -398,7 +401,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   }
 
   private void put(@Nonnull Update update) {
-    Map<Update, Update> updates = myScheduledUpdates.computeIfAbsent(update.getPriority(), __ -> ContainerUtil.newLinkedHashMap());
+    Map<Update, Update> updates = myScheduledUpdates.computeIfAbsent(update.getPriority(), __ -> new LinkedHashMap<>());
     final Update existing = updates.remove(update);
     if (existing != null && existing != update) {
       existing.setProcessed();

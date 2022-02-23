@@ -18,7 +18,7 @@ package com.intellij.ui.stripe;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ShortcutSet;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;

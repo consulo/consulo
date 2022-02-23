@@ -21,7 +21,7 @@ import com.intellij.ide.plugins.PluginsTableRenderer;
 import consulo.container.plugin.PluginId;
 import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.ui.BooleanTableCellRenderer;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nonnull;

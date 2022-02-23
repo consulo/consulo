@@ -16,15 +16,11 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.actionSystem.*;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesListView;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

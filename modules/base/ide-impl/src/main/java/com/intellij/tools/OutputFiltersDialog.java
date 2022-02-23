@@ -25,6 +25,7 @@ import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ScrollingUtil;
 
 import javax.annotation.Nonnull;
 

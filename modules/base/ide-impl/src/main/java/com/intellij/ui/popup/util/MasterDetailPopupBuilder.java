@@ -16,7 +16,6 @@
 package com.intellij.ui.popup.util;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.*;
 import consulo.project.Project;

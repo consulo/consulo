@@ -19,7 +19,7 @@ import com.intellij.ide.UiActivityMonitor;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
-import com.intellij.ui.ExpandableItemsHandlerFactory;
+import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
 import com.intellij.ui.TreeUIHelper;
 import consulo.application.Application;
 import consulo.application.PathMacros;

@@ -16,6 +16,8 @@
 package com.intellij.ui.dualView;
 
 import consulo.ui.ex.awt.tree.table.TreeTable;
+import consulo.ui.ex.awt.tree.table.TreeTableCellRenderer;
+import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.ui.ex.awt.tree.table.TreeTableTree;
 import consulo.util.lang.function.Condition;
 import com.intellij.ui.HighlightableCellRenderer;
@@ -23,8 +25,8 @@ import com.intellij.ui.table.ItemsProvider;
 import com.intellij.ui.table.SelectionProvider;
 import com.intellij.ui.treeStructure.treetable.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.SortableColumnModel;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.SortableColumnModel;
 import consulo.logging.Logger;
 
 import javax.swing.*;

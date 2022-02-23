@@ -20,7 +20,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

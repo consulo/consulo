@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.status;
 
-import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.NonOpaquePanel;
@@ -9,6 +8,7 @@ import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.JBFont;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -37,7 +37,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
 
   @Override
   public void updateUI() {
-    UISettings.setupComponentAntialiasing(this);
+    UISettingsUtil.setupComponentAntialiasing(this);
     Object value = UIManager.getDefaults().get(RenderingHints.KEY_FRACTIONALMETRICS);
     if (value == null) value = RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
     putClientProperty(RenderingHints.KEY_FRACTIONALMETRICS, value);
@@ -70,7 +70,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
 
     Graphics2D g2 = (Graphics2D)g;
     g2.setFont(getFont());
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
 
     Rectangle bounds = new Rectangle(panelWidth, panelHeight);
     FontMetrics fm = g.getFontMetrics();

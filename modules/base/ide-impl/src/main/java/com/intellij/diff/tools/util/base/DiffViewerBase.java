@@ -31,6 +31,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.CalledInBackground;
 import consulo.navigation.Navigatable;

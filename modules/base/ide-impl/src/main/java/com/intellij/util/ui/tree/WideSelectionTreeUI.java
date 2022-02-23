@@ -15,18 +15,19 @@
  */
 package com.intellij.util.ui.tree;
 
+import com.intellij.ui.tree.ui.DefaultTreeUI;
+import consulo.annotation.DeprecationInfo;
+import consulo.application.util.SystemInfo;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.event.MouseEventAdapter;
+import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import consulo.application.util.SystemInfo;
-import consulo.util.lang.SystemProperties;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.MouseEventAdapter;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.TreeUI;
@@ -71,9 +72,9 @@ public class WideSelectionTreeUI extends BasicTreeUI {
   /**
    * Creates new {@code WideSelectionTreeUI} object.
    *
-   * @param wideSelection           flag that determines if wide selection should be used
-   * @param wideSelectionCondition  strategy that determine if wide selection should be used for a target row (it's zero-based index
-   *                                is given to the condition as an argument)
+   * @param wideSelection          flag that determines if wide selection should be used
+   * @param wideSelectionCondition strategy that determine if wide selection should be used for a target row (it's zero-based index
+   *                               is given to the condition as an argument)
    */
   public WideSelectionTreeUI(final boolean wideSelection, @Nonnull Condition<Integer> wideSelectionCondition) {
     myWideSelection = wideSelection;
@@ -245,7 +246,8 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     if (isCustomIndent()) {
       int off = tree.isRootVisible() ? 8 : 0;
       return 8 * depth + 8 + off;
-    } else {
+    }
+    else {
       return super.getRowX(row, depth);
     }
   }
@@ -308,7 +310,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
   public static boolean isWideSelection(@Nonnull JTree tree) {
     TreeUI ui = tree.getUI();
-    return ui instanceof WideSelectionTreeUI && ((WideSelectionTreeUI)ui).isWideSelection() || ui != null && ui.getClass().getName().equals("com.intellij.ui.tree.ui.DefaultTreeUI");
+    return ui instanceof WideSelectionTreeUI && ((WideSelectionTreeUI)ui).isWideSelection() || ui != null && ui.getClass().getName().equals(DefaultTreeUI.class.getName());
   }
 
   @Override
@@ -430,15 +432,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
   }
 
   @Override
-  protected void paintExpandControl(Graphics g,
-                                    Rectangle clipBounds,
-                                    Insets insets,
-                                    Rectangle bounds,
-                                    TreePath path,
-                                    int row,
-                                    boolean isExpanded,
-                                    boolean hasBeenExpanded,
-                                    boolean isLeaf) {
+  protected void paintExpandControl(Graphics g, Rectangle clipBounds, Insets insets, Rectangle bounds, TreePath path, int row, boolean isExpanded, boolean hasBeenExpanded, boolean isLeaf) {
     boolean isPathSelected = tree.getSelectionModel().isPathSelected(path);
     if (!isLeaf(row)) {
       setExpandedIcon(UIUtil.getTreeNodeIcon(true, isPathSelected, tree.hasFocus()));

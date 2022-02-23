@@ -15,17 +15,14 @@
  */
 package com.intellij.dvcs.push.ui;
 
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.util.lang.function.Condition;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;

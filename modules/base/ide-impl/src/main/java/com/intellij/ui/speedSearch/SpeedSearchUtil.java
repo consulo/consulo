@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.actions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorLastActionTracker;

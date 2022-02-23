@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
-import static com.intellij.ui.speedSearch.SpeedSearchSupply.getSupply;
+import static consulo.ui.ex.awt.speedSearch.SpeedSearchSupply.getSupply;
 import static com.intellij.util.ObjectUtils.tryCast;
 
 public abstract class TreeActions extends SwingActionDelegate {

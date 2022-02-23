@@ -4,8 +4,10 @@ package consulo.ui.ex.awt.tree;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.*;
-import consulo.application.ui.awt.UIUtil;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Progressive;
 import consulo.application.util.SimpleTimer;
 import consulo.application.util.SimpleTimerTask;
 import consulo.application.util.concurrent.QueueProcessor;
@@ -16,18 +18,16 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.util.BusyObject;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.update.UiNotifyConnector;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MutualMap;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.*;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.EmptyRunnable;
-import consulo.util.lang.Pair;
-import consulo.util.lang.TimeoutUtil;
+import consulo.util.lang.*;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.util.lang.ref.Ref;
@@ -732,7 +732,7 @@ public class AbstractTreeUi {
     };
 
     if (bgLoading) {
-      queueToBackground(build, update).onSuccess(new TreeConsumer<Void>("AbstractTreeUi.initRootNodeNowIfNeeded: on processed queueToBackground") {
+      queueToBackground(build, update).onSuccess(new TreeRunnable.TreeConsumer<Void>("AbstractTreeUi.initRootNodeNowIfNeeded: on processed queueToBackground") {
         @Override
         public void perform() {
           invokeLaterIfNeeded(false, new TreeRunnable("AbstractTreeUi.initRootNodeNowIfNeeded: on processed queueToBackground later") {
@@ -1075,7 +1075,7 @@ public class AbstractTreeUi {
           final NodeDescriptor descriptor = getDescriptorFrom(path.getLastPathComponent());
           if (descriptor != null) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-            maybeYield(() -> update(descriptor, false).onSuccess(new TreeConsumer<Boolean>("AbstractTreeUi.updateRow: inner") {
+            maybeYield(() -> update(descriptor, false).onSuccess(new TreeRunnable.TreeConsumer<Boolean>("AbstractTreeUi.updateRow: inner") {
               @Override
               public void perform() {
                 updateRow(row + 1, pass);
@@ -1119,7 +1119,7 @@ public class AbstractTreeUi {
     update(descriptor, false).onSuccess(changes -> {
       if (!isValid(descriptor)) {
         if (isInStructure(prevElement)) {
-          Object toUpdate = ObjectUtils.notNull(getTreeStructure().getParentElement(prevElement), getTreeStructure().getRootElement());
+          Object toUpdate = ObjectUtil.notNull(getTreeStructure().getParentElement(prevElement), getTreeStructure().getRootElement());
           getUpdater().addSubtreeToUpdateByElement(toUpdate);
           return;
         }
@@ -1247,7 +1247,7 @@ public class AbstractTreeUi {
       }
       else {
         if (!descriptorIsReady) {
-          update(descriptor, false).onSuccess(new TreeConsumer<Boolean>("AbstractTreeUi.doUpdateChildren") {
+          update(descriptor, false).onSuccess(new TreeRunnable.TreeConsumer<Boolean>("AbstractTreeUi.doUpdateChildren") {
             @Override
             public void perform() {
               if (processAlwaysLeaf(node) || !updateChildren) return;
@@ -1349,7 +1349,7 @@ public class AbstractTreeUi {
 
     //noinspection unchecked
     processExistingNodes(node, elementToIndexMap, pass, canSmartExpand(node, toSmartExpand), forceUpdate, wasExpanded, preloadedChildren)
-            .onSuccess(new TreeConsumer("AbstractTreeUi.updateNodeChildrenNow: on done processExistingNodes") {
+            .onSuccess(new TreeRunnable.TreeConsumer("AbstractTreeUi.updateNodeChildrenNow: on done processExistingNodes") {
               @Override
               public void perform() {
                 if (isDisposed(node)) {
@@ -1402,7 +1402,7 @@ public class AbstractTreeUi {
                   }
                 });
               }
-            }).onError(new TreeConsumer<Throwable>("AbstractTreeUi.updateNodeChildrenNow: on reject processExistingNodes") {
+            }).onError(new TreeRunnable.TreeConsumer<Throwable>("AbstractTreeUi.updateNodeChildrenNow: on reject processExistingNodes") {
       @Override
       public void perform() {
         removeFromUpdatingChildren(node);
@@ -2592,7 +2592,7 @@ public class AbstractTreeUi {
 
     final DefaultMutableTreeNode[] nodeToProcessActions = new DefaultMutableTreeNode[1];
 
-    final TreeConsumer<Void> finalizeRunnable = new TreeConsumer<Void>("AbstractTreeUi.queueBackgroundUpdate: finalize") {
+    final TreeRunnable.TreeConsumer<Void> finalizeRunnable = new TreeRunnable.TreeConsumer<Void>("AbstractTreeUi.queueBackgroundUpdate: finalize") {
       @Override
       public void perform() {
         invokeLaterIfNeeded(false, new TreeRunnable("AbstractTreeUi.queueBackgroundUpdate: finalize later") {
@@ -2717,7 +2717,7 @@ public class AbstractTreeUi {
         });
       }
     };
-    queueToBackground(buildRunnable, updateRunnable).onSuccess(finalizeRunnable).onError(new TreeConsumer<Throwable>("AbstractTreeUi.queueBackgroundUpdate: on rejected") {
+    queueToBackground(buildRunnable, updateRunnable).onSuccess(finalizeRunnable).onError(new TreeRunnable.TreeConsumer<Throwable>("AbstractTreeUi.queueBackgroundUpdate: on rejected") {
       @Override
       public void perform() {
         updateInfo.getPass().expire();
@@ -2987,7 +2987,7 @@ public class AbstractTreeUi {
           promise = Promises.resolvedPromise(changes.get());
         }
 
-        promise.onSuccess(new TreeConsumer<Boolean>("AbstractTreeUi.processExistingNode: on done index updating after update") {
+        promise.onSuccess(new TreeRunnable.TreeConsumer<Boolean>("AbstractTreeUi.processExistingNode: on done index updating after update") {
           @Override
           public void perform() {
             if (childDesc.get().getIndex() != index.intValue()) {
@@ -2998,7 +2998,7 @@ public class AbstractTreeUi {
         });
       }
 
-      promise.onSuccess(new TreeConsumer<Boolean>("AbstractTreeUi.processExistingNode: on done index updating") {
+      promise.onSuccess(new TreeRunnable.TreeConsumer<Boolean>("AbstractTreeUi.processExistingNode: on done index updating") {
         @Override
         public void perform() {
           if (!oldElement.equals(newElement.get()) || forceRemapping.get()) {

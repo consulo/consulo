@@ -2,7 +2,6 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.IdeBundle;
-import consulo.application.ui.UISettings;
 import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import consulo.ui.ex.awt.GraphicsConfig;
@@ -12,6 +11,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import com.intellij.ui.InplaceButton;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.Wrapper;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.util.collection.JBIterable;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import com.intellij.util.ui.GridBag;
@@ -245,7 +245,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
       }
 
       final GraphicsConfig c = GraphicsUtil.setupAAPainting(g);
-      UISettings.setupAntialiasing(g);
+      UISettingsUtil.setupAntialiasing(g);
 
       int arc = 8;
       Color bg = getBackground();

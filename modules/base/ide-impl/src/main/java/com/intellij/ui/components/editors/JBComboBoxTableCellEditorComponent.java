@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.TableUtil;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.components.JBList;

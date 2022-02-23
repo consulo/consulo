@@ -20,6 +20,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
+import consulo.application.ui.UIFontManager;
 import consulo.application.ui.UISettings;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaLookAndFeelInfo;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
@@ -736,11 +737,11 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     //    uiDefaults.put(entry.getKey(), entry.getValue());
     //  }
     //} else
-    UISettings uiSettings = UISettings.getInstance();
-    if (uiSettings.OVERRIDE_NONIDEA_LAF_FONTS) {
+    UIFontManager uiSettings = UIFontManager.getInstance();
+    if (uiSettings.isOverrideFont()) {
       storeOriginalFontDefaults(uiDefaults);
-      JBUI.setUserScaleFactor(uiSettings.FONT_SIZE / UIUtil.DEF_SYSTEM_FONT_SIZE);
-      initFontDefaults(uiDefaults, UIUtil.getFontWithFallback(uiSettings.FONT_FACE, Font.PLAIN, uiSettings.getFontSize()));
+      JBUI.setUserScaleFactor(uiSettings.getFontSize() / UIUtil.DEF_SYSTEM_FONT_SIZE);
+      initFontDefaults(uiDefaults, UIUtil.getFontWithFallback(uiSettings.getFontName(), Font.PLAIN, uiSettings.getFontSize()));
     }
     else {
       restoreOriginalFontDefaults(uiDefaults);

@@ -19,9 +19,11 @@
 #include <algorithm>
 
 #ifdef _M_X64
-const WCHAR* TARGET_LIBRARY = L"consulo64.dll";
+const WCHAR* TARGET_LIBRARY = L"consulo-x64.dll";
+#elif _M_ARM64
+const WCHAR* TARGET_LIBRARY = L"consulo-arm64.dll";
 #else
-const WCHAR* TARGET_LIBRARY = L"consulo.dll";
+const WCHAR* TARGET_LIBRARY = L"consulo-x86.dll";
 #endif
 
 bool startsWith(const WCHAR *str, const WCHAR *pre)

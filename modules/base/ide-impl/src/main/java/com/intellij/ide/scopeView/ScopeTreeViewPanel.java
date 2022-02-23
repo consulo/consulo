@@ -38,7 +38,7 @@ import com.intellij.ide.util.treeView.TreeState;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.search.scope.*;
 import consulo.ui.ex.action.ActionPlaces;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ide.CopyPasteManager;

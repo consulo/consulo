@@ -19,6 +19,7 @@
  */
 package consulo.ui.ex.awt.util;
 
+import consulo.ui.ex.Colored;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
 

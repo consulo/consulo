@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.openapi.util.Pair;

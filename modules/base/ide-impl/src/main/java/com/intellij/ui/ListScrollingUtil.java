@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.ScrollingUtil;
+
 /**
  * @deprecated use {@link ScrollingUtil} instead (to be removed in IDEA 17)
  * @see ScrollingUtil

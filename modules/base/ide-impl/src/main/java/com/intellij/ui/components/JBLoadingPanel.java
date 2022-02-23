@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.AsyncProcessIcon;
+import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;

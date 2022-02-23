@@ -16,6 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.util.PairConvertor;
+import consulo.ui.ex.awt.ScrollingUtil;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

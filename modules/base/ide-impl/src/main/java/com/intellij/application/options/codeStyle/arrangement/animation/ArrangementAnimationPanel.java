@@ -16,9 +16,10 @@
 package com.intellij.application.options.codeStyle.arrangement.animation;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import consulo.application.ui.UISettings;
 import com.intellij.util.ui.GridBag;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -71,7 +72,7 @@ public class ArrangementAnimationPanel extends JPanel {
     myImage = UIUtil.createImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
     assert myImage != null;
     final Graphics2D graphics = myImage.createGraphics();
-    UISettings.setupAntialiasing(graphics);
+    UISettingsUtil.setupAntialiasing(graphics);
     graphics.setClip(0, 0, size.width, size.height);
     graphics.setColor(UIUtil.getListBackground());
     graphics.fillRect(0, 0, size.width, size.height);

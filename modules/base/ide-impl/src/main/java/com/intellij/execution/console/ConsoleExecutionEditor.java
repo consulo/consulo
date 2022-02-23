@@ -5,7 +5,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.ide.GeneralSettings;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.EmptyAction;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.document.Document;

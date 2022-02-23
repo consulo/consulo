@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.breakpoints;
 
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.ide.startup.StartupManagerEx;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

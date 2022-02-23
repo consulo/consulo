@@ -10,7 +10,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import com.intellij.ui.components.JBPanelWithEmptyText;
 import com.intellij.ui.paint.EffectPainter;
-import com.intellij.ui.paint.RectanglePainter;
+import consulo.ui.ex.awt.paint.RectanglePainter;
 import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.*;

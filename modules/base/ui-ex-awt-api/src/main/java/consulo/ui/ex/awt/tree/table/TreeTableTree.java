@@ -15,12 +15,10 @@
  */
 package consulo.ui.ex.awt.tree.table;
 
-import consulo.ui.ex.tree.Tree;
-import consulo.application.ui.awt.UIUtil;
-import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.Tree;
 
 import javax.annotation.Nullable;
-
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;

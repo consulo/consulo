@@ -13,7 +13,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.components.panels.OpaquePanel;
+import consulo.ui.ex.awt.OpaquePanel;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

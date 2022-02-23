@@ -18,15 +18,15 @@ package com.intellij.diff.tools.util;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.util.ui.AnimatedIcon;
-import com.intellij.util.ui.AsyncProcessIcon;
+import consulo.ui.ex.awt.AnimatedIconComponent;
+import consulo.ui.ex.awt.AsyncProcessIcon;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class StatusPanel extends JPanel {
   private final JLabel myTextLabel;
-  private final AnimatedIcon myBusySpinner;
+  private final AnimatedIconComponent myBusySpinner;
 
   public StatusPanel() {
     super(new BorderLayout());

@@ -19,8 +19,8 @@ import consulo.application.AllIcons;
 import com.intellij.ide.bookmarks.BookmarkItem;
 import com.intellij.ide.bookmarks.BookmarkManager;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonShortcuts;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.ui.ListUtil;
 

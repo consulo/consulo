@@ -17,8 +17,8 @@ package com.intellij.ide.plugins;
 
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.container.plugin.PluginId;
-import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.SortableColumnModel;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.SortableColumnModel;
 import consulo.container.plugin.PluginDescriptor;
 
 import javax.swing.*;

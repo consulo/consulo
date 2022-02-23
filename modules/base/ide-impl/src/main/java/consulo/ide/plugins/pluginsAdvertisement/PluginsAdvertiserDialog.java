@@ -21,7 +21,7 @@ import com.intellij.ide.plugins.PluginTable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.TableUtil;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.BorderLayoutPanel;

@@ -18,14 +18,15 @@ package consulo.desktop.awt.ui.dialog;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
 import consulo.dataContext.DataProvider;
@@ -857,7 +858,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       if (!SystemInfo.isMac || UIUtil.isUnderAquaLookAndFeel()) {  // avoid rendering problems with non-aqua (alloy) LaFs under mac
         // actually, it's a bad idea to globally enable this for dialog graphics since renderers, for example, may not
         // inherit graphics so rendering hints won't be applied and trees or lists may render ugly.
-        UISettings.setupAntialiasing(g);
+        UISettingsUtil.setupAntialiasing(g);
       }
 
       super.paint(g);

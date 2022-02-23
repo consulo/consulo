@@ -15,6 +15,7 @@
  */
 package com.intellij.notification.impl.ui;
 
+import consulo.application.ui.UIFontManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import com.intellij.openapi.ui.MessageType;
@@ -128,12 +129,8 @@ public class NotificationsUtil {
 
   @Nullable
   public static Pair<String, Integer> getFontData() {
-    UISettings uiSettings = UISettings.getInstance();
-    if (uiSettings.OVERRIDE_NONIDEA_LAF_FONTS) {
-      return Pair.create(uiSettings.FONT_FACE, uiSettings.FONT_SIZE);
-    }
-    Pair<String, Integer> systemFontData = JBUIScale.getSystemFontData();
-    return systemFontData == null ? null : systemFontData;
+    UIFontManager uiFontManager = UIFontManager.getInstance();
+    return Pair.create(uiFontManager.getFontName(), uiFontManager.getFontSize());
   }
 
   @Nullable

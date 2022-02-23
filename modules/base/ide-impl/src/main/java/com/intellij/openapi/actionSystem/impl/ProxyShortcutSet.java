@@ -17,7 +17,7 @@ package com.intellij.openapi.actionSystem.impl;
 
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.KeymapManager;
 import javax.annotation.Nonnull;
 
 /**

@@ -16,7 +16,6 @@
 package consulo.desktop.awt.ui.plaf.intellij;
 
 import consulo.application.AllIcons;
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
@@ -28,6 +27,7 @@ import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
@@ -91,7 +91,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.
 
     icon.paintIcon(null, g, iconRect.x, iconRect.y);
 
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
     g.setColor(c.isButtonEnabled() ? c.getForeground() : UIUtil.getInactiveTextColor());
     BasicGraphicsUtils.drawStringUnderlineCharAt(c, (Graphics2D)g, text, getMnemonicCharIndex(c, action, text), textRect.x, textRect.y + fm.getAscent());
   }

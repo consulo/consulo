@@ -19,7 +19,7 @@ import com.intellij.dvcs.DvcsUtil;
 import com.intellij.dvcs.repo.Repository;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

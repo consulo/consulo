@@ -25,6 +25,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.util.Couple;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;

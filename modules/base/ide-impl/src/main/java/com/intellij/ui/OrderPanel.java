@@ -19,6 +19,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.util.TableUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

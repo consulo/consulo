@@ -31,7 +31,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableViewSpeedSearch;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.text.DateFormatUtil;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.actions.SettingsEntryPointActionProvider;
 import consulo.application.Application;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;

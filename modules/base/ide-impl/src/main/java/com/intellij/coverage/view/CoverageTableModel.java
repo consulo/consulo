@@ -5,8 +5,8 @@ import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.ide.commander.AbstractListBuilder;
 import consulo.project.Project;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.SortableColumnModel;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.SortableColumnModel;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

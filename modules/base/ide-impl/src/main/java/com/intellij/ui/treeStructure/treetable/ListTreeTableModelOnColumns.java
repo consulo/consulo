@@ -15,8 +15,9 @@
  */
 package com.intellij.ui.treeStructure.treetable;
 
-import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.SortableColumnModel;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.SortableColumnModel;
+import consulo.ui.ex.awt.tree.table.TreeTableModel;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -25,7 +26,7 @@ import javax.swing.tree.TreePath;
 import java.util.*;
 
 public class ListTreeTableModelOnColumns extends DefaultTreeModel
-  implements TreeTableModel, SortableColumnModel{
+        implements TreeTableModel, SortableColumnModel{
 
   private ColumnInfo[] myColumns;
   private JTree myTree;

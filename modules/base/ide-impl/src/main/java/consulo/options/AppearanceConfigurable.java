@@ -15,14 +15,14 @@
  */
 package consulo.options;
 
+import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.util.NotNullComputable;
+import consulo.application.ui.UIFontManager;
 import consulo.application.ui.UISettings;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.util.NotNullComputable;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.configurable.SimpleConfigurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
@@ -30,6 +30,7 @@ import consulo.platform.base.localize.IdeLocalize;
 import consulo.platform.base.localize.KeyMapLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibrary;
@@ -222,10 +223,11 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
   @Override
   protected boolean isModified(@Nonnull LayoutImpl component) {
     UISettings settings = UISettings.getInstance();
+    UIFontManager uiFontManager = UIFontManager.getInstance();
 
     boolean isModified = false;
-    isModified |= !Comparing.equal(component.myFontCombo.getValue(), settings.FONT_FACE);
-    isModified |= !Comparing.equal(component.myFontSizeCombo.getValue(), Integer.toString(settings.FONT_SIZE));
+    isModified |= !Comparing.equal(component.myFontCombo.getValue(), uiFontManager.getFontName());
+    isModified |= !Comparing.equal(component.myFontSizeCombo.getValue(), Integer.toString(uiFontManager.getFontSize()));
     isModified |= component.myAntialiasingInIDE.getValue() != settings.IDE_AA_TYPE;
     isModified |= component.myAntialiasingInEditor.getValue() != settings.EDITOR_AA_TYPE;
     isModified |= component.myAnimateWindowsCheckBox.getValue() != settings.ANIMATE_WINDOWS;
@@ -264,8 +266,9 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
   @Override
   protected void reset(@Nonnull LayoutImpl component) {
     UISettings settings = UISettings.getInstance();
+    UIFontManager uiFontManager = UIFontManager.getInstance();
 
-    component.myFontCombo.setValue(settings.FONT_FACE);
+    component.myFontCombo.setValue(uiFontManager.getFontName());
     component.myAntialiasingInIDE.setValue(settings.IDE_AA_TYPE);
     component.myAntialiasingInEditor.setValue(settings.EDITOR_AA_TYPE);
     component.myFontSizeCombo.setValue(Integer.toString(settings.FONT_SIZE));
@@ -298,16 +301,18 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
   @Override
   protected void apply(@Nonnull LayoutImpl component) throws ConfigurationException {
     UISettings settings = UISettings.getInstance();
-    int _fontSize = getIntValue(component.myFontSizeCombo, settings.FONT_SIZE);
+    UIFontManager uiFontManager = UIFontManager.getInstance();
+
+    int _fontSize = getIntValue(component.myFontSizeCombo, uiFontManager.getFontSize());
     int _presentationFontSize = getIntValue(component.myPresentationModeFontSize, settings.PRESENTATION_MODE_FONT_SIZE);
     boolean shouldUpdateUI = false;
     String _fontFace = component.myFontCombo.getValue();
 
     StyleManager styleManager = StyleManager.get();
 
-    if (_fontSize != settings.FONT_SIZE || !settings.FONT_FACE.equals(_fontFace)) {
-      settings.FONT_SIZE = _fontSize;
-      settings.FONT_FACE = _fontFace;
+    if (_fontSize != uiFontManager.getFontSize() || !uiFontManager.getFontName().equals(_fontFace)) {
+      uiFontManager.setFontSize(_fontSize);
+      uiFontManager.setFontName(_fontFace);
       shouldUpdateUI = true;
     }
 

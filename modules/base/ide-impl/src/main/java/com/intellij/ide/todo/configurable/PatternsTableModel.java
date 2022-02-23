@@ -17,7 +17,7 @@
 package com.intellij.ide.todo.configurable;
 
 import com.intellij.psi.search.TodoPattern;
-import com.intellij.util.ui.ItemRemovable;
+import consulo.ui.ex.awt.ItemRemovable;
 import com.intellij.ide.IdeBundle;
 import consulo.ui.image.Image;
 

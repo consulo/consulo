@@ -33,7 +33,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
@@ -58,6 +58,7 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.configurable.ConfigurableSession;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;

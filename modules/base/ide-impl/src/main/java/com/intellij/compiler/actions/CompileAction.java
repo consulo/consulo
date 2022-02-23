@@ -22,6 +22,7 @@ import consulo.compiler.CompilerManager;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;

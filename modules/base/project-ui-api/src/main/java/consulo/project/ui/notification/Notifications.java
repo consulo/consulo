@@ -17,15 +17,14 @@ package consulo.project.ui.notification;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.ui.ex.util.Alarm;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.messagebus.Topic;
-import consulo.application.ui.awt.UIUtil;
-import consulo.disposer.Disposer;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author spleaner
@@ -66,7 +65,7 @@ public interface Notifications {
         doNotify(notification, project);
       }
       else {
-        UIUtil.invokeLaterIfNeeded(() -> doNotify(notification, project));
+        project.getApplication().getLastUIAccess().giveIfNeed(() -> doNotify(notification, project));
       }
     }
 
@@ -87,11 +86,11 @@ public interface Notifications {
 
     public static void notifyAndHide(@Nonnull final Notification notification, @Nullable Project project) {
       notify(notification);
-      Alarm alarm = new Alarm(project == null ? Application.get() : project);
-      alarm.addRequest(() -> {
-        notification.expire();
-        Disposer.dispose(alarm);
-      }, 5000);
+      AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+        if (project == null || !project.isDisposed()) {
+          notification.expire();
+        }
+      }, 5, TimeUnit.SECONDS);
     }
   }
 }

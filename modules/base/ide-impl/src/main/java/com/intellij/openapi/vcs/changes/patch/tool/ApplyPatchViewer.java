@@ -41,7 +41,7 @@ import consulo.codeEditor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import consulo.document.impl.DocumentImpl;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataProvider;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

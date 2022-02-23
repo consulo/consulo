@@ -21,7 +21,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.ex.awt.VerticalFlowLayout;

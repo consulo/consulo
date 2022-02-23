@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.textarea;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.editor.EditorCopyPasteHelper;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SelectionModel;

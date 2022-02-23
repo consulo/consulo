@@ -16,7 +16,7 @@
 package com.intellij.diagnostic;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnOutOfPermGenMemoryErrorAction extends DumbAwareAction {

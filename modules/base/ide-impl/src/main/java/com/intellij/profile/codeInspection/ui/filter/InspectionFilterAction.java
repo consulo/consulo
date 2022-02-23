@@ -29,7 +29,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.Toggleable;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import consulo.application.dumb.DumbAware;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.editor.rawHighlight.SeverityProvider;

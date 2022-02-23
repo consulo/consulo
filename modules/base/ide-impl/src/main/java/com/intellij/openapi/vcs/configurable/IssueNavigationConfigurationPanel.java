@@ -29,7 +29,7 @@ import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.Nls;

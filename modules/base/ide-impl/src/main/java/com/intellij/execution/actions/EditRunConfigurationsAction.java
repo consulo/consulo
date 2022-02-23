@@ -22,7 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.fileEditor.FileEditorManager;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.execution.ui.editor.RunConfigurationFileEditorEarlyAccessDescriptor;

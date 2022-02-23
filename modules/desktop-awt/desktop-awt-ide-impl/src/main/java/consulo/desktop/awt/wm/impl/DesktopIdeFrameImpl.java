@@ -20,7 +20,6 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.ProjectUtil;
-import consulo.application.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.MnemonicHelper;
 import consulo.ui.ex.action.ActionManager;
@@ -33,6 +32,7 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -148,7 +148,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     @Override
     public void paint(@Nonnull Graphics g) {
-      UISettings.setupAntialiasing(g);
+      UISettingsUtil.setupAntialiasing(g);
       //noinspection Since15
       super.paint(g);
     }

@@ -19,7 +19,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataProvider;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;

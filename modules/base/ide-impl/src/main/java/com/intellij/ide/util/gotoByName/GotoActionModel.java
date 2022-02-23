@@ -10,7 +10,6 @@ import com.intellij.ide.actions.ApplyIntentionAction;
 import consulo.application.ui.UISettings;
 import com.intellij.ide.ui.search.BooleanOptionDescription;
 import com.intellij.ide.ui.search.OptionDescription;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

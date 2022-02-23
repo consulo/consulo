@@ -24,7 +24,7 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.configurable.Configurable;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 

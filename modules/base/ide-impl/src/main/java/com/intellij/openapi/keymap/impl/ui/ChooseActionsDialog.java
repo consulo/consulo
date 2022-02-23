@@ -24,7 +24,7 @@ import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.keymap.KeyMapBundle;
-import com.intellij.openapi.keymap.Keymap;
+import consulo.ui.ex.keymap.Keymap;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;

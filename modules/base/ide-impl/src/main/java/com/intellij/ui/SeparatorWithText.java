@@ -15,10 +15,11 @@
  */
 package com.intellij.ui;
 
-import consulo.application.ui.UISettings;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
+
 import javax.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
@@ -27,7 +28,7 @@ import javax.accessibility.AccessibleRole;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.intellij.ui.paint.RectanglePainter.FILL;
+import static consulo.ui.ex.awt.paint.RectanglePainter.FILL;
 import static javax.swing.SwingConstants.CENTER;
 import static javax.swing.SwingConstants.LEFT;
 import static javax.swing.SwingUtilities.layoutCompoundLabel;
@@ -118,7 +119,7 @@ public class SeparatorWithText extends JComponent implements Accessible {
         paintLinePart(g, bounds.x, textR.x, -hGap, y);
         paintLinePart(g, textR.x + textR.width, bounds.x + bounds.width, hGap, y);
       }
-      UISettings.setupAntialiasing(g);
+      UISettingsUtil.setupAntialiasing(g);
       g.setColor(getTextForeground());
       g.drawString(label, textR.x, textR.y);
     }

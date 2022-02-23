@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;

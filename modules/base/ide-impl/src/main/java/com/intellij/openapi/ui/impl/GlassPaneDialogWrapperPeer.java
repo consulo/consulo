@@ -19,7 +19,6 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.RemoteDesktopService;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
@@ -30,6 +29,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.IdeFocusManager;
@@ -544,7 +544,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
 
     @Override
     public void paint(final Graphics g) {
-      UISettings.setupAntialiasing(g);
+      UISettingsUtil.setupAntialiasing(g);
       super.paint(g);
     }
 

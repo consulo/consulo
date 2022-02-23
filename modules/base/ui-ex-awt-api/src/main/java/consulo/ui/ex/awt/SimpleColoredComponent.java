@@ -17,6 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -24,6 +25,7 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.primitive.ints.IntIntMap;
@@ -133,7 +135,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
   @Override
   public void updateUI() {
-    UISettings.setupComponentAntialiasing(this);
+    UISettingsUtil.setupComponentAntialiasing(this);
   }
 
   @Nonnull
@@ -873,7 +875,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   }
 
   protected void applyAdditionalHints(@Nonnull Graphics2D g) {
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
   }
 
   @Override

@@ -244,5 +244,7 @@
     <eapDescriptor implementation="consulo.desktop.awt.fileChooser.impl.system.windows2.IFileDialogEarlyAccessProgramDescriptor"/>
 
     <applicationService serviceInterface="consulo.ui.dialog.DialogService" serviceImplementation="consulo.desktop.awt.ui.dialog.DesktopAwtDialogService"/>
+
+    <applicationService serviceInterface="consulo.application.ui.UISettings" serviceImplementation="consulo.desktop.awt.application.ui.impl.DesktopAWTUISettings"/>
   </extensions>
 </consulo-plugin>

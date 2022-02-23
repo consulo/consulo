@@ -18,7 +18,7 @@ package com.intellij.find.editorHeaderActions;
 import com.intellij.find.EditorSearchSession;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 
 public class RemoveOccurrenceAction extends OccurrenceAction {
   public RemoveOccurrenceAction() {

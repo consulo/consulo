@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.TableCell;
+import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;

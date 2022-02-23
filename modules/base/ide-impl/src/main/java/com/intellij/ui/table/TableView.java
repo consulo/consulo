@@ -15,11 +15,11 @@
  */
 package com.intellij.ui.table;
 
-import com.intellij.ui.TableUtil;
+import consulo.ui.ex.awt.util.TableUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
-import com.intellij.util.ui.SortableColumnModel;
+import consulo.ui.ex.awt.SortableColumnModel;
 import com.intellij.util.ui.TableViewModel;
 import javax.annotation.Nonnull;
 

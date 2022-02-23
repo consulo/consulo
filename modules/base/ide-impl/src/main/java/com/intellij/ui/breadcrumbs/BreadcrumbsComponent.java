@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.breadcrumbs;
 
-import consulo.application.ui.UISettings;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.EditorColors;
@@ -23,7 +23,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.util.Weighted;
-import com.intellij.ui.paint.RectanglePainter;
+import consulo.ui.ex.awt.paint.RectanglePainter;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.JBInsets;
@@ -397,7 +397,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
     }
 
     private void repaint(@Nonnull final Graphics2D g2, @Nonnull final List<? extends Crumb> crumbList, @Nonnull final Painter painter, final int height) {
-      UISettings.setupAntialiasing(g2);
+      UISettingsUtil.setupAntialiasing(g2);
 
       //final int height = myImage.getHeight();
       final int pageOffset = getPageOffset();

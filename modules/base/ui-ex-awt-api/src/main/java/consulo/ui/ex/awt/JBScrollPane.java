@@ -8,6 +8,8 @@ import consulo.logging.Logger;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.scroll.LatchingScroll;
 import consulo.ui.ex.awt.scroll.MouseWheelSmoothScroll;
+import consulo.ui.ex.awt.scroll.TouchScroll;
+import consulo.ui.ex.awt.scroll.TouchScrollUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;

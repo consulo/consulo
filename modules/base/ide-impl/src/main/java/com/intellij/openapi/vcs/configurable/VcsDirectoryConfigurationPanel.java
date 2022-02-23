@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.vcs.configurable;
 
+import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.configurable.ConfigurationException;

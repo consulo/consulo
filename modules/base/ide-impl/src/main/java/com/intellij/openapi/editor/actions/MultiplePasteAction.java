@@ -25,10 +25,7 @@ import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.UIBundle;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.*;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;

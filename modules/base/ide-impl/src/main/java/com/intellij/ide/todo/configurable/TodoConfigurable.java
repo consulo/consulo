@@ -31,6 +31,7 @@ import com.intellij.ui.*;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.ui.Table;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

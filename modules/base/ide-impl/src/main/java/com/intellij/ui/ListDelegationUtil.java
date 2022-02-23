@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.util.concurrent.ActionCallback;
 
 import javax.swing.*;

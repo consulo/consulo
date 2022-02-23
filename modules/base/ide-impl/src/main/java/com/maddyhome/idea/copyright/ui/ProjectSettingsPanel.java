@@ -15,6 +15,7 @@
  */
 package com.maddyhome.idea.copyright.ui;
 
+import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.scopeChooser.PackageSetChooserCombo;

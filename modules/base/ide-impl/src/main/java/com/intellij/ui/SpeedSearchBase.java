@@ -21,7 +21,7 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.speedSearch.SpeedSearch;
-import com.intellij.ui.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import com.intellij.util.text.NameUtilCore;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

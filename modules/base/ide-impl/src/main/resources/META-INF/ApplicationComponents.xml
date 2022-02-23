@@ -31,7 +31,7 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.keymap.KeymapManager</interface-class>
+      <interface-class>consulo.ui.ex.keymap.KeymapManager</interface-class>
       <implementation-class>com.intellij.openapi.keymap.impl.KeymapManagerImpl</implementation-class>
     </component>
 

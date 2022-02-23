@@ -15,13 +15,11 @@
  */
 package consulo.ui.ex.awt;
 
-import com.intellij.ui.AnchorableComponent;
-import consulo.application.ui.awt.ColorUtil;
-import consulo.util.lang.SystemProperties;
-import com.intellij.util.ui.JBHtmlEditorKit;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.StringHtmlUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.lang.SystemProperties;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;

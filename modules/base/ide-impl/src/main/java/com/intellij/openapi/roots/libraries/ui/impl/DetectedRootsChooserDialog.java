@@ -28,7 +28,7 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.treetable.TreeColumnInfo;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ComboBoxCellEditor;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;

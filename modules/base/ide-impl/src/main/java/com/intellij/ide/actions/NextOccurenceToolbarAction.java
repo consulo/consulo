@@ -19,7 +19,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.OccurenceNavigator;
 import consulo.ui.ex.action.ActionManager;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 
 public class NextOccurenceToolbarAction extends NextOccurenceAction {
   private final OccurenceNavigator myNavigator;

@@ -27,6 +27,9 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.util;
   exports consulo.ui.ex.event;
   exports consulo.ui.ex.concurrent;
+  exports consulo.ui.ex.awtUnsafe;
+  exports consulo.ui.ex.keymap;
+  exports consulo.ui.ex.keymap.event;
 
   exports consulo.ui.ex.awtUnsafe.internal to consulo.desktop.awt.ide.impl;
 

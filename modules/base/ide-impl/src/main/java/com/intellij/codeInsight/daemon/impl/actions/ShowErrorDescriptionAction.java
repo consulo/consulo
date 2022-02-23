@@ -23,7 +23,7 @@ import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.ShowErrorDescriptionHandler;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;

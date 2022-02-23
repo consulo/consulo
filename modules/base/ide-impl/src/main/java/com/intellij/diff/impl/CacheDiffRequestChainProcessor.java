@@ -30,7 +30,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressWindow;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;

@@ -20,6 +20,7 @@
 package com.intellij.ui.speedSearch;
 
 import consulo.application.util.function.Computable;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;

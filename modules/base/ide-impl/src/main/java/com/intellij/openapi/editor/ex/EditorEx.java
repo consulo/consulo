@@ -31,6 +31,7 @@ import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import consulo.codeEditor.markup.MarkupEditorFilter;
 import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
+import consulo.ui.ex.awt.Animator;
 import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
@@ -306,7 +307,7 @@ public interface EditorEx extends Editor {
    * Allows to register a callback that will be called one each repaint of the editor vertical scrollbar.
    * This is needed to allow a parent component draw above the scrollbar components (e.g. in the merge tool),
    * otherwise the drawings are cleared once the scrollbar gets repainted (which may happen suddenly, because the scrollbar UI uses the
-   * {@link com.intellij.util.ui.Animator} to draw itself.
+   * {@link Animator} to draw itself.
    *
    * @param callback callback which will be called from the {@link JComponent#paint(Graphics)} method of
    *                 the editor vertical scrollbar.

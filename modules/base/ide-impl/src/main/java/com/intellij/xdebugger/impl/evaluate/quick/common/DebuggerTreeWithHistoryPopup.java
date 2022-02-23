@@ -26,7 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.AbstractPopup;
-import com.intellij.ui.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.ui.tree.TreeModelAdapter;

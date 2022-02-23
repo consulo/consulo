@@ -7,7 +7,7 @@ import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonShortcuts;
+import consulo.ui.ex.action.CommonShortcuts;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

@@ -6,7 +6,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import javax.annotation.Nonnull;
 
 public class ClearConsoleAction extends DumbAwareAction {

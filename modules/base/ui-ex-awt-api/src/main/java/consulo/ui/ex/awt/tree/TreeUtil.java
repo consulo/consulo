@@ -1,33 +1,29 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.tree;
 
-import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ui.ScrollingUtil;
-import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.ui.tree.TreeVisitor;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.Range;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
-import consulo.application.ui.awt.JBUI;
-import consulo.application.ui.awt.UIUtil;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.BasicTreeUIHacking;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
-import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.ScrollingUtil;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.JBTreeTraverser;
 import consulo.util.collection.TreeTraversal;
 import consulo.util.concurrent.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Range;
 import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.Contract;
 
@@ -48,6 +44,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static consulo.ui.ex.awt.tree.TreeVisitor.Action.*;
 import static java.util.stream.Collectors.toList;
 
 public final class TreeUtil {
@@ -981,7 +978,7 @@ public final class TreeUtil {
   @Nonnull
   public static Promise<?> promiseExpand(@Nonnull JTree tree, int depth) {
     AsyncPromise<?> promise = new AsyncPromise<>();
-    promiseMakeVisible(tree, path -> depth < path.getPathCount() ? TreeVisitor.Action.SKIP_SIBLINGS : TreeVisitor.Action.CONTINUE, promise).onError(promise::setError).onSuccess(path -> {
+    promiseMakeVisible(tree, path -> depth < path.getPathCount() ? SKIP_SIBLINGS : CONTINUE, promise).onError(promise::setError).onSuccess(path -> {
       if (promise.isCancelled()) return;
       promise.setResult(null);
     });
@@ -1460,18 +1457,18 @@ public final class TreeUtil {
   @Nonnull
   private static Promise<TreePath> promiseMakeVisible(@Nonnull JTree tree, @Nonnull TreeVisitor visitor, @Nonnull AsyncPromise<?> promise) {
     return promiseVisit(tree, path -> {
-      if (promise.isCancelled()) return TreeVisitor.Action.SKIP_SIBLINGS;
+      if (promise.isCancelled()) return SKIP_SIBLINGS;
       TreeVisitor.Action action = visitor.visit(path);
-      if (action == TreeVisitor.Action.CONTINUE || action == TreeVisitor.Action.INTERRUPT) {
+      if (action == CONTINUE || action == INTERRUPT) {
         // do not expand children if parent path is collapsed
         if (!tree.isVisible(path)) {
           if (!promise.isCancelled()) {
             LOG.debug("tree expand canceled");
             promise.cancel();
           }
-          return TreeVisitor.Action.SKIP_SIBLINGS;
+          return SKIP_SIBLINGS;
         }
-        if (action == TreeVisitor.Action.CONTINUE) expandPathWithDebug(tree, path);
+        if (action == CONTINUE) expandPathWithDebug(tree, path);
       }
       return action;
     });
@@ -1606,7 +1603,7 @@ public final class TreeUtil {
    */
   @Nonnull
   public static Promise<TreePath> promiseSelectFirst(@Nonnull JTree tree) {
-    return promiseSelect(tree, path -> !tree.isRootVisible() && path.getParentPath() == null ? TreeVisitor.Action.CONTINUE : TreeVisitor.Action.INTERRUPT);
+    return promiseSelect(tree, path -> !tree.isRootVisible() && path.getParentPath() == null ? CONTINUE : INTERRUPT);
   }
 
   /**
@@ -1655,9 +1652,9 @@ public final class TreeUtil {
 
     TreePath path = new TreePath(root);
     switch (visitor.visit(path)) {
-      case Action.INTERRUPT:
+      case INTERRUPT:
         return path; // root path is found
-      case Action.CONTINUE:
+      case CONTINUE:
         break; // visit children
       default:
         return null; // skip children
@@ -1675,16 +1672,16 @@ public final class TreeUtil {
       }
       else {
         switch (visitor.visit(next)) {
-          case Action.INTERRUPT:
+          case INTERRUPT:
             return next; // path is found
-          case Action.CONTINUE:
+          case CONTINUE:
             path = next;
             stack.push(children(model, path));
             break;
-          case Action.SKIP_SIBLINGS:
+          case SKIP_SIBLINGS:
             siblings.clear();
             break;
-          case Action.SKIP_CHILDREN:
+          case SKIP_CHILDREN:
             break;
         }
       }
@@ -1752,7 +1749,7 @@ public final class TreeUtil {
     visitVisibleRows(tree, path -> {
       T object = mapper.apply(path);
       if (object != null) consumer.accept(object);
-      return TreeVisitor.Action.CONTINUE;
+      return CONTINUE;
     });
   }
 

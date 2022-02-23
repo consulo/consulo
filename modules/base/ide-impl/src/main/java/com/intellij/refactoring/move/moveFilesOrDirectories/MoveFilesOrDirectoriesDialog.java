@@ -19,7 +19,7 @@ package com.intellij.refactoring.move.moveFilesOrDirectories;
 import com.intellij.ide.util.DirectoryUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.fileChooser.FileChooserDescriptor;

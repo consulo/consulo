@@ -23,7 +23,7 @@ import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.DiffBundle;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;

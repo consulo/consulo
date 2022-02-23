@@ -12,7 +12,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.SplitterProportionsData;

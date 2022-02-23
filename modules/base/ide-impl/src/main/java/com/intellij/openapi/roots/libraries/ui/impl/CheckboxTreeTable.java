@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.ClickListener;
 import com.intellij.ui.dualView.TreeTableView;
 import com.intellij.ui.treeStructure.treetable.ListTreeTableModelOnColumns;
 import consulo.ui.ex.awt.tree.table.TreeTableTree;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.swing.tree.DefaultTreeModel;

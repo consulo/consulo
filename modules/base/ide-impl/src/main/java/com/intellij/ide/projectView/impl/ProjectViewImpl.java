@@ -95,7 +95,7 @@ import consulo.ui.ex.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import com.intellij.ui.switcher.QuickActionProvider;
-import com.intellij.ui.tree.TreeVisitor;
+import consulo.ui.ex.awt.tree.TreeVisitor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.io.URLUtil;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.merge;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 
 /**
  * Represents the state of a multiple file merge operation.

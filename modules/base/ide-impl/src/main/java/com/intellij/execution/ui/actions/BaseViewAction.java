@@ -20,7 +20,7 @@ import com.intellij.execution.ui.layout.Grid;
 import com.intellij.execution.ui.layout.Tab;
 import com.intellij.execution.ui.layout.ViewContext;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.content.Content;
 
 public abstract class BaseViewAction extends DumbAwareAction {

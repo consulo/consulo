@@ -20,7 +20,7 @@ import com.intellij.codeInsight.hint.actions.ShowImplementationsAction;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.lang.LangBundle;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.fileChooser.tree;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.tree.TreeVisitor;
+import consulo.ui.ex.awt.tree.TreeVisitor;
 import javax.annotation.Nonnull;
 
 import static com.intellij.openapi.vfs.VfsUtilCore.isAncestor;

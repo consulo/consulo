@@ -17,7 +17,7 @@ package consulo.wm.impl.welcomeScreen;
 
 import com.intellij.ide.BrowserUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

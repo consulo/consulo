@@ -2,6 +2,8 @@
 package com.intellij.ui.render;
 
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.util.RenderingUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

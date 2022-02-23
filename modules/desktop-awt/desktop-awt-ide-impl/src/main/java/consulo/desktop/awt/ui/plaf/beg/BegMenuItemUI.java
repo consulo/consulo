@@ -15,12 +15,12 @@
  */
 package consulo.desktop.awt.ui.plaf.beg;
 
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.impl.ActionMenuItem;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -87,7 +87,7 @@ public class BegMenuItemUI extends BasicMenuItemUI {
 
   @Override
   public void paint(Graphics g, JComponent comp) {
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
     JMenuItem jmenuitem = (JMenuItem)comp;
     ButtonModel buttonmodel = jmenuitem.getModel();
     int mnemonicIndex = jmenuitem.getDisplayedMnemonicIndex();

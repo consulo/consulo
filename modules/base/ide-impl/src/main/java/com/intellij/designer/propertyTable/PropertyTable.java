@@ -40,6 +40,7 @@ import consulo.codeEditor.util.TextAttributesUtil;
 import consulo.logging.Logger;
 import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.ui.ToolwindowPaintUtil;
 

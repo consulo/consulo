@@ -21,7 +21,7 @@ import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
-import com.intellij.util.ui.ItemRemovable;
+import consulo.ui.ex.awt.ItemRemovable;
 import javax.annotation.Nonnull;
 
 import javax.swing.table.AbstractTableModel;

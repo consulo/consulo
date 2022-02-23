@@ -15,6 +15,8 @@
  */
 package com.intellij.util.ui;
 
+import consulo.ui.ex.awt.SortableColumnModel;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.table.AbstractTableModel;

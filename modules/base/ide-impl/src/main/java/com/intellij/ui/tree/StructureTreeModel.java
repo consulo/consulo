@@ -2,15 +2,12 @@
 package com.intellij.ui.tree;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.ui.ex.awt.tree.AbstractTreeStructure;
-import consulo.ui.ex.awt.tree.LeafState;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.*;
 import com.intellij.ide.util.treeView.ValidateableNode;
 import consulo.application.progress.ProgressManager;
 import com.intellij.util.concurrency.Invoker;
 import com.intellij.util.concurrency.InvokerSupplier;
 import com.intellij.util.ui.tree.AbstractTreeModel;
-import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

@@ -33,7 +33,7 @@ import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.document.Document;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;

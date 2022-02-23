@@ -10,6 +10,7 @@ import consulo.ui.ex.JBColor;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EffectType;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;

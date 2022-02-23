@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import consulo.content.library.Library;

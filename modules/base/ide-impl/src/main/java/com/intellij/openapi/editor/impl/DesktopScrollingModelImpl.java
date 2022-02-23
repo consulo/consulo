@@ -30,7 +30,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ui.ex.awt.Interpolable;
 import consulo.util.lang.SystemProperties;
-import com.intellij.util.ui.Animator;
+import consulo.ui.ex.awt.Animator;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposer;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;

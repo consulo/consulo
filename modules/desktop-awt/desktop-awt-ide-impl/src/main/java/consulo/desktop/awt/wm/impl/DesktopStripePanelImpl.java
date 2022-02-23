@@ -17,8 +17,8 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import com.intellij.openapi.keymap.Keymap;
-import com.intellij.openapi.keymap.KeymapManagerListener;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.ToolWindowAnchor;

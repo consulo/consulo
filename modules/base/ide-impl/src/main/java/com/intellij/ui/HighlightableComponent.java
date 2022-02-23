@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui;
 
-import consulo.application.ui.UISettings;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -40,7 +40,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
 
   @Override
   public void updateUI() {
-    UISettings.setupComponentAntialiasing(this);
+    UISettingsUtil.setupComponentAntialiasing(this);
   }
 
   public void setText(@Nullable String text) {
@@ -334,7 +334,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
   }
 
   protected void applyRenderingHints(Graphics g) {
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
   }
 
   protected int getTextOffset() {

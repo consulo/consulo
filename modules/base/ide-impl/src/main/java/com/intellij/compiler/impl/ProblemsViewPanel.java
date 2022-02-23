@@ -18,11 +18,11 @@ package com.intellij.compiler.impl;
 import consulo.compiler.impl.CompilerWorkspaceConfiguration;
 import consulo.compiler.impl.HelpID;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
-import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanel {
   public ProblemsViewPanel(Project project) {

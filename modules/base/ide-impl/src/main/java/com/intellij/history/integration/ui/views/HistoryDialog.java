@@ -61,8 +61,8 @@ import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.Consumer;
 import consulo.ui.ex.awt.internal.ImageLoader;
 import com.intellij.util.ui.AbstractLayoutManager;
-import com.intellij.util.ui.AnimatedIcon;
-import com.intellij.util.ui.AsyncProcessIcon;
+import consulo.ui.ex.awt.AnimatedIconComponent;
+import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.application.util.function.Computable;
@@ -584,7 +584,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
   }
 
   private static class MyDiffContainer extends JBLayeredPane implements Disposable {
-    private AnimatedIcon myIcon = new AsyncProcessIcon.Big(this.getClass().getName());
+    private AnimatedIconComponent myIcon = new AsyncProcessIcon.Big(this.getClass().getName());
 
     private JComponent myContent;
     private JComponent myLoadingPanel;

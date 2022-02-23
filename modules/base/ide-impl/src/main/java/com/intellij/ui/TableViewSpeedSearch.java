@@ -16,6 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.util.TableUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

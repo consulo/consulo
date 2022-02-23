@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl;
 
-import consulo.application.ui.UISettings;
 import consulo.project.ui.wm.ToolWindowAnchor;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -151,7 +151,7 @@ public final class DesktopStripeButtonUI extends BasicToggleButtonUI {
       }
 
       // paint text
-      UISettings.setupAntialiasing(g2);
+      UISettingsUtil.setupAntialiasing(g2);
       if (text != null) {
         if (model.isEnabled()) {
           /* paint the text normally */

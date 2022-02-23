@@ -31,7 +31,7 @@ import com.intellij.profile.codeInspection.ui.table.ScopesAndSeveritiesTable;
 import com.intellij.profile.codeInspection.ui.table.ThreeStateCheckBoxRenderer;
 import com.intellij.ui.DoubleClickListener;
 import consulo.ui.ex.awt.tree.table.TreeTable;
-import com.intellij.ui.treeStructure.treetable.TreeTableModel;
+import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.ui.ex.awt.tree.table.TreeTableTree;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.NullableFunction;

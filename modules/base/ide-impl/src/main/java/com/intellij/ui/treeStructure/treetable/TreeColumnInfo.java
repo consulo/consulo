@@ -15,7 +15,8 @@
  */
 package com.intellij.ui.treeStructure.treetable;
 
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.tree.table.TreeTableModel;
 
 /**
  * @author peter

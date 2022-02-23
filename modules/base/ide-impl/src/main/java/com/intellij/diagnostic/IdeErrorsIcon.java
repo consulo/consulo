@@ -2,7 +2,7 @@
 package com.intellij.diagnostic;
 
 import consulo.application.AllIcons;
-import com.intellij.ui.AnimatedIcon.Blinking;
+import consulo.ui.ex.awt.AnimatedIcon.Blinking;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;

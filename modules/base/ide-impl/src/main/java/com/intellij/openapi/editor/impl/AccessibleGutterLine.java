@@ -2,7 +2,6 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.codeEditor.markup.GutterMark;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.TextAnnotationGutterProvider;
@@ -12,10 +11,11 @@ import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import com.intellij.openapi.editor.markup.ActiveGutterRenderer;
 import consulo.codeEditor.markup.LineMarkerRenderer;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.ObjectUtils;

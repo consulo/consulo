@@ -19,13 +19,13 @@ import com.intellij.ide.CutProvider;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.PasteProvider;
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.document.DocumentRunnable;
@@ -52,7 +52,7 @@ import consulo.application.util.function.Computable;
 import consulo.application.util.SystemInfo;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.Grayer;
+import consulo.ui.ex.awt.Grayer;
 import consulo.ui.ex.awt.Magnificator;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
@@ -234,7 +234,7 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
       EditorUIUtil.setupAntialiasing(gg);
     }
     else {
-      UISettings.setupAntialiasing(gg);
+      UISettingsUtil.setupAntialiasing(gg);
     }
     gg.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, myEditor.myFractionalMetricsHintValue);
     AffineTransform origTx = PaintUtil.alignTxToInt(gg, PaintUtil.insets2offset(getInsets()), true, false, PaintUtil.RoundingMode.CEIL);
@@ -373,7 +373,7 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
     // work. We do however need to provide a TextUI implementation since some
     // screen reader support code will invoke it
     setUI(new EditorAccessibilityTextUI());
-    UISettings.setupEditorAntialiasing(this);
+    UISettingsUtil.setupEditorAntialiasing(this);
     invalidate();
   }
 

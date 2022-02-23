@@ -8,7 +8,7 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import com.intellij.ui.components.panels.OpaquePanel;
+import consulo.ui.ex.awt.OpaquePanel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.IconUtil;
 import com.intellij.util.text.Matcher;

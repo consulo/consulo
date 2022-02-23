@@ -18,6 +18,7 @@ package com.intellij.openapi.editor.actionSystem;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.document.Document;
 import consulo.document.ReadonlyFragmentModificationHandler;
+import consulo.ui.ex.action.IdeActions;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -39,7 +40,7 @@ public abstract class EditorActionManager {
    * Returns the handler currently defined for the specified editor actions.
    *
    * @param actionId the ID of the action for which the handler is requested. Possible
-   *                 IDs are defined in the {@link com.intellij.openapi.actionSystem.IdeActions} class
+   *                 IDs are defined in the {@link IdeActions} class
    *                 by constants starting with <code>ACTION_EDITOR_</code>.
    * @return the handler currently defined for the action.
    */
@@ -49,7 +50,7 @@ public abstract class EditorActionManager {
    * Sets the handler for the specified editor actions.
    *
    * @param actionId the ID of the action for which the handler is set. Possible
-   *                 IDs are defined in the {@link com.intellij.openapi.actionSystem.IdeActions} class
+   *                 IDs are defined in the {@link IdeActions} class
    *                 by constants starting with <code>ACTION_EDITOR_</code>.
    * @return the handler previously defined for the action.
    */

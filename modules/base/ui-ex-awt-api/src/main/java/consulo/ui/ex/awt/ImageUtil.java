@@ -15,10 +15,10 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.ui.awt.internal.ImageLoader;
-import consulo.application.ui.awt.internal.JBHiDPIScaledImage;
-import consulo.application.ui.awt.internal.RetinaImage;
-import consulo.application.ui.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.internal.ImageLoader;
+import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
+import consulo.ui.ex.awt.internal.RetinaImage;
+import consulo.ui.ex.awt.paint.PaintUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageObserver;
 
-import static consulo.application.ui.awt.JBUI.ScaleType.SYS_SCALE;
+import static consulo.ui.ex.awt.JBUI.ScaleType.SYS_SCALE;
 
 /**
  * @author Konstantin Bulenkov

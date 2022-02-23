@@ -2,9 +2,9 @@
 package com.intellij.ide.actions.runAnything.ui;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonShortcuts;
+import consulo.ui.ex.action.CommonShortcuts;
 import com.intellij.ui.ListActions;
-import com.intellij.ui.ScrollingUtil;
+import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

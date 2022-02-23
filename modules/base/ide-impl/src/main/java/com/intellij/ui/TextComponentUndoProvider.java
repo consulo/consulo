@@ -17,12 +17,9 @@
 package com.intellij.ui;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.keymap.KeymapManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.keymap.Keymap;
 
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -46,7 +43,7 @@ public class TextComponentUndoProvider implements Disposable {
       }
     };
     myTextComponent.getDocument().addUndoableEditListener(myUndoableEditListener);
-    com.intellij.openapi.keymap.Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
+    Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
     Shortcut[] undoShortcuts = activeKeymap.getShortcuts(IdeActions.ACTION_UNDO);
     Shortcut[] redoShortcuts = activeKeymap.getShortcuts(IdeActions.ACTION_REDO);
 

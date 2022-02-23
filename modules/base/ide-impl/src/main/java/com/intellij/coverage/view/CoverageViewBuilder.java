@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.TableUtil;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

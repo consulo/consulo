@@ -34,7 +34,7 @@ import consulo.language.impl.psi.internal.PsiManagerEx;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.ScrollingUtil;
+import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBRadioButton;

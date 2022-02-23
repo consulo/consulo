@@ -26,6 +26,7 @@ import consulo.ui.ex.JBColor;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.Matcher;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

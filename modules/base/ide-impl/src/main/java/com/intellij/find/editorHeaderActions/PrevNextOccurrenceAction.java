@@ -7,7 +7,7 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

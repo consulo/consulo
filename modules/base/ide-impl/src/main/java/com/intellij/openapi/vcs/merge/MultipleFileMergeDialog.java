@@ -47,7 +47,7 @@ import com.intellij.ui.table.TableView;
 import com.intellij.util.Consumer;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;

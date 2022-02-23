@@ -24,7 +24,7 @@ import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.VisualPosition;
 import consulo.language.Language;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import consulo.document.event.DocumentEvent;

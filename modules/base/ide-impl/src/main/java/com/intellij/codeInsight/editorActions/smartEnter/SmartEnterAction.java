@@ -23,7 +23,7 @@ import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.language.Language;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;

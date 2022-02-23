@@ -23,7 +23,7 @@ import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 

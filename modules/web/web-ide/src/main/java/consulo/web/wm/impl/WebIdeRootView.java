@@ -27,6 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.wm.impl.UnifiedStatusBarImpl;
 

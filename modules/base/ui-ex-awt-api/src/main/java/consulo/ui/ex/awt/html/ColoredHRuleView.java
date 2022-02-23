@@ -24,8 +24,8 @@
  */
 package consulo.ui.ex.awt.html;
 
-import consulo.application.ui.awt.ColorUtil;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.util.ColorUtil;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.*;

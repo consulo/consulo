@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.paint;
 
-import consulo.application.ui.UISettings;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.application.util.registry.Registry;
@@ -11,6 +10,9 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.WavePainter2D;
 import consulo.colorScheme.EffectType;
+import consulo.ui.ex.awt.paint.RectanglePainter2D;
+import consulo.ui.ex.awt.paint.RegionPainter2D;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -161,7 +163,7 @@ public enum EffectPainter2D implements RegionPainter2D<Font> {
     if (width > 0 && height > 0) {
       if (Registry.is("ide.text.effect.new.metrics")) {
         if (font == null) font = g.getFont();
-        RoundingMode roundingMode = !UIUtil.isJreHiDPIEnabled() || painter != WAVE_UNDERSCORE || font.getSize2D() / UISettings.getDefFontSize() > 1 ?
+        RoundingMode roundingMode = !UIUtil.isJreHiDPIEnabled() || painter != WAVE_UNDERSCORE || font.getSize2D() / UISettingsUtil.getDefFontSize() > 1 ?
                                     RoundingMode.FLOOR : RoundingMode.CEIL;
         LineMetrics metrics = font.getLineMetrics("", g.getFontRenderContext());
         double devPixel = PaintUtil.devPixel(g);
@@ -201,7 +203,7 @@ public enum EffectPainter2D implements RegionPainter2D<Font> {
 
   private static double maybeScaleFontMetricsThickness(double fontMetricsThickness, @Nonnull Font font) {
     float fontScale = JBUI.getFontScale(font.getSize2D());
-    float normalizedFontScale = font.getSize2D() / UISettings.getDefFontSize();
+    float normalizedFontScale = font.getSize2D() / UISettingsUtil.getDefFontSize();
     if (normalizedFontScale > 1) {
       // k==1.0 with normalizedFontScale==1.0, k->0.5 fast enough with normalizedFontScale increasing
       double k = 1 / (Math.pow(normalizedFontScale, 2) + 1) + 0.5;

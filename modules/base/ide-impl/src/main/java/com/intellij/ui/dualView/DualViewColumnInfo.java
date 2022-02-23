@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.dualView;
 
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 
 /**
  * author: lesya

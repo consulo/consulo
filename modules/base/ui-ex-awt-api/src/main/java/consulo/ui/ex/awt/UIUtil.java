@@ -15,9 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
-import com.sun.imageio.plugins.common.ImageUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ui.awt.paint.PaintUtil;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableRunnable;
@@ -30,7 +28,12 @@ import consulo.logging.Logger;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.internal.*;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awt.util.StringHtmlUtil;
 import consulo.ui.ex.util.LafProperty;
 import consulo.ui.image.ImageKey;

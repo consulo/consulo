@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.swing.JList;
 
-import static com.intellij.ui.speedSearch.SpeedSearchSupply.getSupply;
+import static consulo.ui.ex.awt.speedSearch.SpeedSearchSupply.getSupply;
 import static com.intellij.util.ObjectUtils.tryCast;
 
 /**

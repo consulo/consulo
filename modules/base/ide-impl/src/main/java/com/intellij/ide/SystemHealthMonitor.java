@@ -28,7 +28,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.ThrowableComputable;

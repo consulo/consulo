@@ -21,7 +21,7 @@ import consulo.ui.ex.action.ShortcutSet;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;

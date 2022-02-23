@@ -41,7 +41,7 @@ import consulo.navigation.NavigationItem;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.FoldingModelEx;

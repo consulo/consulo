@@ -20,7 +20,7 @@ import com.intellij.diff.comparison.DiffTooBigException;
 import com.intellij.diff.tools.util.base.DiffPanelBase;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
-import com.intellij.util.ui.AsyncProcessIcon;
+import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
 

@@ -20,7 +20,7 @@ import com.intellij.notification.EventLog;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

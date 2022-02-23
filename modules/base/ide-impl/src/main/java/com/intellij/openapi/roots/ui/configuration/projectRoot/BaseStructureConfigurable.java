@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
-import com.intellij.openapi.keymap.Keymap;
-import com.intellij.openapi.keymap.KeymapManager;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.module.Module;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import com.intellij.util.IconUtil;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awt.UIUtil;

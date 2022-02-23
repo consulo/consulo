@@ -15,11 +15,6 @@
  */
 package consulo.application.ui;
 
-import consulo.util.xml.serializer.Accessor;
-import consulo.util.xml.serializer.SerializationFilter;
-import consulo.util.xml.serializer.XmlSerializerUtil;
-import consulo.util.xml.serializer.annotation.Property;
-import consulo.util.xml.serializer.annotation.Transient;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -32,15 +27,12 @@ import consulo.component.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.ui.AntialiasingType;
 import consulo.ui.ex.ColorBlindness;
-import consulo.util.lang.Pair;
-import consulo.util.lang.SystemProperties;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.util.xml.serializer.annotation.Transient;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.awt.*;
 
 @Singleton
 @State(name = "UISettings", storages = @Storage("ui.lnf.xml"))
@@ -88,36 +80,19 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   }
 
   /**
-   * Returns the default font size scaled by #defFontScale
-   *
-   * @return the default scaled font size
-   */
-  public static float getDefFontSize() {
-    return Math.round(UIUtil.DEF_SYSTEM_FONT_SIZE * getDefFontScale());
-  }
-
-  /**
-   * Returns the default font scale, which depends on the HiDPI mode (see JBUI#ScaleType).
-   * <p>
-   * The font is represented:
-   * - in relative (dpi-independent) points in the JRE-managed HiDPI mode, so the method returns 1.0f
-   * - in absolute (dpi-dependent) points in the IDE-managed HiDPI mode, so the method returns the default screen scale
-   *
-   * @return the system font scale
-   */
-  public static float getDefFontScale() {
-    return UIUtil.isJreHiDPIEnabled() ? 1f : JBUI.sysScale();
-  }
-
-  /**
    * Not tabbed pane.
    */
   public static final int ANIMATION_DURATION = 300; // Milliseconds
 
-  @Property(filter = FontFilter.class)
+  //@Property(filter = FontFilter.class)
+  @Deprecated
   public String FONT_FACE;
-  @Property(filter = FontFilter.class)
+  //@Property(filter = FontFilter.class)
+  @Deprecated
   public int FONT_SIZE;
+  @Deprecated
+  public boolean OVERRIDE_NONIDEA_LAF_FONTS = false;
+
   public int RECENT_FILES_LIMIT = 50;
   public int CONSOLE_COMMAND_HISTORY_LIMIT = 300;
   public boolean OVERRIDE_CONSOLE_CYCLE_BUFFER_SIZE = false;
@@ -171,7 +146,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public int ALPHA_MODE_DELAY = 1500;
   public float ALPHA_MODE_RATIO = 0.5f;
   public int MAX_CLIPBOARD_CONTENTS = 5;
-  public boolean OVERRIDE_NONIDEA_LAF_FONTS = false;
   public boolean SHOW_ICONS_IN_MENUS = true;
   public boolean DISABLE_MNEMONICS = SystemInfo.isMac; // IDEADEV-33409, should be disabled by default on MacOS
   public boolean DISABLE_MNEMONICS_IN_CONTROLS = false;
@@ -201,12 +175,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean FULL_PATHS_IN_WINDOW_HEADER;
 
-  private final ComponentTreeEventDispatcher<UISettingsListener> myDispatcher = ComponentTreeEventDispatcher.create(UISettingsListener.class);
-
-  public UISettings() {
-    setSystemFontFaceAndSize();
-  }
-
   @Deprecated
   @DeprecationInfo("Use UISettingsListener#TOPIC")
   public void addUISettingsListener(UISettingsListener listener) {
@@ -224,38 +192,11 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
    */
   public void fireUISettingsChanged() {
     incModificationCount();
-    myDispatcher.getMulticaster().uiSettingsChanged(this);
+    notifyDispatcher();
     ApplicationManager.getApplication().getMessageBus().syncPublisher(UISettingsListener.TOPIC).uiSettingsChanged(this);
   }
 
-  private void setSystemFontFaceAndSize() {
-    if (FONT_FACE == null || FONT_SIZE <= 0) {
-      final Pair<String, Integer> fontData = getSystemFontFaceAndSize();
-      FONT_FACE = fontData.first;
-      FONT_SIZE = fontData.second;
-    }
-  }
-
-  public static Pair<String, Integer> getSystemFontFaceAndSize() {
-    final Pair<String, Integer> fontData = JBUIScale.getSystemFontData();
-    if (fontData != null) {
-      return fontData;
-    }
-
-    return Pair.create("Dialog", 12);
-  }
-
-  public static class FontFilter implements SerializationFilter {
-    @Override
-    public boolean accepts(@Nonnull Accessor accessor, Object bean) {
-      UISettings settings = (UISettings)bean;
-      return !hasDefaultFontSetting(settings);
-    }
-  }
-
-  private static boolean hasDefaultFontSetting(final UISettings settings) {
-    final Pair<String, Integer> fontData = getSystemFontFaceAndSize();
-    return fontData.first.equals(settings.FONT_FACE) && fontData.second.equals(settings.FONT_SIZE);
+  protected void notifyDispatcher() {
   }
 
   @Override
@@ -284,29 +225,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
       ALPHA_MODE_RATIO = 0.5f;
     }
 
-    setSystemFontFaceAndSize();
-    // 1. Sometimes system font cannot display standard ASCII symbols. If so we have
-    // find any other suitable font withing "preferred" fonts first.
-    boolean fontIsValid = UIUtil.isValidFont(new Font(FONT_FACE, Font.PLAIN, FONT_SIZE));
-    if (!fontIsValid) {
-      @NonNls final String[] preferredFonts = {"dialog", "Arial", "Tahoma"};
-      for (String preferredFont : preferredFonts) {
-        if (UIUtil.isValidFont(new Font(preferredFont, Font.PLAIN, FONT_SIZE))) {
-          FONT_FACE = preferredFont;
-          fontIsValid = true;
-          break;
-        }
-      }
-
-      // 2. If all preferred fonts are not valid in current environment
-      // we have to find first valid font (if any)
-      if (!fontIsValid) {
-        String[] fontNames = UIUtil.getValidFontNames(false);
-        if (fontNames.length > 0) {
-          FONT_FACE = fontNames[0];
-        }
-      }
-    }
+    validateFont();
 
     if (MAX_CLIPBOARD_CONTENTS <= 0) {
       MAX_CLIPBOARD_CONTENTS = 5;
@@ -315,38 +234,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     fireUISettingsChanged();
   }
 
-  public static final boolean FORCE_USE_FRACTIONAL_METRICS = SystemProperties.getBooleanProperty("idea.force.use.fractional.metrics", false);
-
-  public static void setupFractionalMetrics(final Graphics2D g2d) {
-    if (FORCE_USE_FRACTIONAL_METRICS) {
-      g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-    }
-  }
-
-  /* This method must not be used for set up antialiasing for editor components
-   */
-  public static void setupAntialiasing(final Graphics g) {
-    Graphics2D g2d = (Graphics2D)g;
-    g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
-
-    Application application = ApplicationManager.getApplication();
-    if (application == null) {
-      // We cannot use services while Application has not been loaded yet
-      // So let's apply the default hints.
-      UIUtil.applyRenderingHints(g);
-      return;
-    }
-
-    UISettings uiSettings = getInstanceOrNull();
-
-    if (uiSettings != null) {
-      g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, DesktopAntialiasingTypeUtil.getKeyForCurrentScope(false));
-    }
-    else {
-      g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-    }
-
-    setupFractionalMetrics(g2d);
+  protected void validateFont() {
   }
 
   public int getEditorTabLimit() {
@@ -619,19 +507,5 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     if (SystemInfo.isWindows) return 1684366536;
     if (SystemInfo.isMac) return 845374563;
     return 729434056;
-  }
-
-  /**
-   * @see #setupComponentAntialiasing(JComponent)
-   */
-  public static void setupComponentAntialiasing(JComponent component) {
-    GraphicsUtil.setAntialiasingType(component, DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());
-  }
-
-  public static void setupEditorAntialiasing(JComponent component) {
-    UISettings settings = getInstanceOrNull();
-    if (settings != null) {
-      GraphicsUtil.setAntialiasingType(component, settings.EDITOR_AA_TYPE);
-    }
   }
 }

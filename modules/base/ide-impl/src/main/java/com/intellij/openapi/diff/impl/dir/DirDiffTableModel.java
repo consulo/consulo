@@ -41,7 +41,7 @@ import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.TableUtil;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLoadingPanel;
 import consulo.ui.ex.awt.table.JBTable;

@@ -28,7 +28,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;

@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import consulo.application.ui.UISettings;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.CustomLineBorder;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -34,7 +34,7 @@ public class EditorHeaderComponent extends JPanel {
 
   @Override
   public void paint(@Nonnull Graphics g) {
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
     super.paint(g);
   }
 }

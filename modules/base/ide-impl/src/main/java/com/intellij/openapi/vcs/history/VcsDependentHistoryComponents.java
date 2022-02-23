@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.history;
 
 import com.intellij.util.Consumer;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 
 import javax.swing.*;
 

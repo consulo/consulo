@@ -4,7 +4,7 @@ import com.intellij.diagnostic.DiagnosticBundle;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import consulo.logging.attachment.Attachment;
 

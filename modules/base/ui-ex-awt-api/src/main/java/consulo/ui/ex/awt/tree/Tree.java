@@ -20,12 +20,10 @@ import consulo.application.ReadAction;
 import consulo.application.util.Queryable;
 import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.ComponentWithExpandableItems;
-import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ui.ex.awt.MouseEventAdapter;
-import consulo.ui.ex.awt.StatusText;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.ExpandableItemsHandler;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.internal.DarkThemeCalculator;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.util.lang.function.Condition;
@@ -46,8 +44,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Tree extends JTree implements ComponentWithEmptyText, ComponentWithExpandableItems<Integer>, Autoscroll, Queryable,
-                                           ComponentWithFileColors, TreePathBackgroundSupplier {
+public class Tree extends JTree implements ComponentWithEmptyText, ComponentWithExpandableItems<Integer>, Autoscroll, Queryable, ComponentWithFileColors, TreePathBackgroundSupplier {
   private final StatusText myEmptyText;
   private final ExpandableItemsHandler<Integer> myExpandableItemsHandler;
 

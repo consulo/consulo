@@ -1,15 +1,15 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import com.intellij.ui.components.JBScrollPane.Alignment;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.JBViewportHacking;
 import consulo.ui.ex.TypingTarget;
-import consulo.ui.ex.awt.util.ComponentUtil;
-import consulo.ui.ex.awt.util.JBSwingUtilities;
+import consulo.ui.ex.awt.JBScrollPane.Alignment;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.util.ComponentUtil;
+import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -113,16 +113,16 @@ public class JBViewport extends JViewport implements ZoomableViewport {
 
   // Checks whether blit-accelerated scrolling is feasible, and if so, checks whether true double buffering is available.
   private void checkScrollingCapabilities() {
-    if (myPreviousNotification == null || myPreviousNotification.isExpired()) {
-      if (!Boolean.TRUE.equals(isWindowBlitterAvailableFor(this))) {
-        myPreviousNotification = notify("Scrolling: cannot use window blitter");
-      }
-      else {
-        if (!Boolean.TRUE.equals(isTrueDoubleBufferingAvailableFor(this))) {
-          myPreviousNotification = notify("Scrolling: cannot use true double buffering");
-        }
-      }
-    }
+    //if (myPreviousNotification == null || myPreviousNotification.isExpired()) {
+    //  if (!Boolean.TRUE.equals(isWindowBlitterAvailableFor(this))) {
+    //    myPreviousNotification = notify("Scrolling: cannot use window blitter");
+    //  }
+    //  else {
+    //    if (!Boolean.TRUE.equals(isTrueDoubleBufferingAvailableFor(this))) {
+    //      myPreviousNotification = notify("Scrolling: cannot use true double buffering");
+    //    }
+    //  }
+    //}
   }
 
   /* Blit-acceleration copies as much of the rendered area as possible and then repaints only newly exposed region.
@@ -154,9 +154,9 @@ public class JBViewport extends JViewport implements ZoomableViewport {
     return JBViewportHacking.isTrueDoubleBufferingAvailableFor(component);
   }
 
-  private static Notification notify(String message) {
-    return null; // FIXME [VISTALL] stub
-  }
+  //private static Notification notify(String message) {
+  //  return null; // FIXME [VISTALL] stub
+  //}
 
   @Override
   public Color getBackground() {

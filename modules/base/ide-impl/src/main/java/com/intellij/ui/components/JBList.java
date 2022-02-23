@@ -2,8 +2,7 @@
 package com.intellij.ui.components;
 
 import consulo.ui.ex.ExpandableItemsHandler;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -12,12 +11,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.*;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.ComponentWithExpandableItems;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.ScreenUtil;
 

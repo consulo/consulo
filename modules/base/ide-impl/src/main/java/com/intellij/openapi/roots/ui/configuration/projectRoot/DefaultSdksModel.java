@@ -25,7 +25,7 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.content.bundle.*;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;

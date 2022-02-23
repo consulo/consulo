@@ -3,7 +3,6 @@ package com.intellij.openapi.actionSystem.impl;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.ui.ex.RelativePoint;
@@ -20,6 +19,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.util.TextWithMnemonic;
@@ -959,7 +959,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
         if (myTextValue != LocalizeValue.empty()) {
           FontMetrics fontMetrics = getFontMetrics(getFont());
           int top = (getHeight() - fontMetrics.getHeight()) / 2;
-          UISettings.setupAntialiasing(g);
+          UISettingsUtil.setupAntialiasing(g);
           g.setColor(JBColor.foreground());
           g.drawString(myTextValue.getValue(), gap * 2 + center + gap, top + fontMetrics.getAscent());
         }
@@ -976,7 +976,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       else {
         Graphics g = graphics.create();
         try {
-          UISettings.setupAntialiasing(g);
+          UISettingsUtil.setupAntialiasing(g);
           return fontMetrics.getStringBounds(text, g).getBounds().width;
         }
         finally {

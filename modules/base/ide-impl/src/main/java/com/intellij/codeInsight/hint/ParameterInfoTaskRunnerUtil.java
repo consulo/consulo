@@ -17,7 +17,7 @@ import com.intellij.ui.components.JBLoadingPanel;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ui.ex.concurrent.EdtScheduledExecutorService;
-import com.intellij.util.ui.AsyncProcessIcon;
+import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

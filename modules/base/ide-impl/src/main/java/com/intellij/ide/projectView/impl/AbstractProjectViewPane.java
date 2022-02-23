@@ -45,7 +45,7 @@ import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.ui.tree.AsyncTreeModel;
 import com.intellij.ui.tree.TreePathUtil;
-import com.intellij.ui.tree.TreeVisitor;
+import consulo.ui.ex.awt.tree.TreeVisitor;
 import com.intellij.ui.tree.project.ProjectFileNode;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;

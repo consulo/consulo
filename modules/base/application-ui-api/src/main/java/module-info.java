@@ -8,7 +8,6 @@ module consulo.application.ui.api {
 
   requires transitive consulo.application.api;
   requires transitive consulo.ui.ex.api;
-  requires transitive consulo.proxy;
   requires transitive kava.beans;
 
   exports consulo.application.ui;

@@ -18,7 +18,7 @@ package com.intellij.execution.util;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathMappingSettings;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 
 final class PathMappingTable extends ListTableWithButtons<PathMappingSettings.PathMapping> {

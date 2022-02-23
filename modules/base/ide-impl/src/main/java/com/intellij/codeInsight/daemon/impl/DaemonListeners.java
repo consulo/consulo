@@ -18,6 +18,7 @@ import com.intellij.ide.PowerSaveMode;
 import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.ide.todo.TodoConfiguration;
 import com.intellij.openapi.actionSystem.*;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;

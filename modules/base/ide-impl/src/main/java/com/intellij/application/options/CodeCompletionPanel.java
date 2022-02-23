@@ -23,7 +23,7 @@ import com.intellij.ide.PowerSaveMode;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullComputable;

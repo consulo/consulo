@@ -32,6 +32,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.Pair;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.IdeFocusManager;

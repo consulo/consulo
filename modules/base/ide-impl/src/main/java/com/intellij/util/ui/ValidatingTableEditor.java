@@ -16,6 +16,7 @@
 package com.intellij.util.ui;
 
 import consulo.application.AllIcons;
+import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.action.AnActionEvent;

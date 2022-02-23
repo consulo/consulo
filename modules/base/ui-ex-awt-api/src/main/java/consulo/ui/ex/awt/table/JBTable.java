@@ -17,17 +17,16 @@ package consulo.ui.ex.awt.table;
 
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.ComponentWithExpandableItems;
+import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.TableCell;
-import consulo.ui.ex.awt.JBViewport;
-import consulo.ui.ex.awt.StatusText;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.update.Activatable;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;

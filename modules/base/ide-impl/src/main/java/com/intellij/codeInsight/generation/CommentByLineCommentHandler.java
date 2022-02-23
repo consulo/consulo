@@ -31,7 +31,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.language.Language;
 import consulo.language.LanguageCommenters;
 import consulo.language.inject.InjectedLanguageManager;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.document.Document;

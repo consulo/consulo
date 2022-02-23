@@ -15,7 +15,8 @@
  */
 package com.intellij.ui.treeStructure.treetable;
 
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.tree.table.TreeTableModel;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -24,7 +25,7 @@ import javax.swing.tree.TreeNode;
 /**
  * author: lesya
  */
-public class ListTreeTableModel extends DefaultTreeModel implements TreeTableModel{
+public class ListTreeTableModel extends DefaultTreeModel implements TreeTableModel {
 
   private final ColumnInfo[] myColumns;
 

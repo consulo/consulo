@@ -18,6 +18,7 @@ package com.intellij.ui;
 
 import com.intellij.util.containers.Convertor;
 import consulo.ui.ex.awt.tree.table.TreeTable;
+import consulo.ui.ex.awt.util.TableUtil;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;

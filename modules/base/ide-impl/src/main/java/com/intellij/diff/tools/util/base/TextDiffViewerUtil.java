@@ -28,7 +28,6 @@ import com.intellij.diff.util.DiffUtil;
 import consulo.application.AllIcons;
 import com.intellij.internal.statistic.UsageTrigger;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.editor.ex.EditorEx;

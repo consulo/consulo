@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.beg;
 
-import consulo.application.ui.UISettings;
 import consulo.desktop.awt.ui.plaf.intellij.IdeaPopupMenuUI;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.application.util.SystemInfo;
@@ -12,6 +11,7 @@ import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
@@ -66,7 +66,7 @@ public class IdeaMenuUI extends BasicMenuUI {
 
   @Override
   public void paint(Graphics g, JComponent comp) {
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
     JMenu jMenu = (JMenu)comp;
     ButtonModel buttonmodel = jMenu.getModel();
     int mnemonicIndex = jMenu.getDisplayedMnemonicIndex();

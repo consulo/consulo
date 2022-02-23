@@ -22,7 +22,7 @@ import consulo.language.editor.intention.IntentionAction;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.injected.editor.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;

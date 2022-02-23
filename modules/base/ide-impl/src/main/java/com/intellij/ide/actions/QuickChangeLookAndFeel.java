@@ -19,7 +19,7 @@ import com.intellij.ide.ui.LafManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

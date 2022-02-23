@@ -15,7 +15,7 @@
  */
 package consulo.project.ui.notification;
 
-import consulo.application.ui.awt.UIUtil;
+import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.logging.Logger;
@@ -322,7 +322,7 @@ public class Notification {
   public void expire() {
     if (!myExpired.compareAndSet(false, true)) return;
 
-    UIUtil.invokeLaterIfNeeded(() -> hideBalloon());
+    Application.get().getLastUIAccess().giveIfNeed(() -> hideBalloon());
     NotificationsManager.getNotificationsManager().expire(this);
 
     Runnable whenExpired = myWhenExpired;

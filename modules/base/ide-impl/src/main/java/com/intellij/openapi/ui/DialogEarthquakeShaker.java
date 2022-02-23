@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui;
 
 import consulo.disposer.Disposer;
-import com.intellij.util.ui.Animator;
+import consulo.ui.ex.awt.Animator;
 
 import javax.swing.*;
 import java.awt.*;

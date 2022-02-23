@@ -1281,7 +1281,7 @@
 
     <applicationService serviceInterface="com.intellij.ui.TreeUIHelper"
                         serviceImplementation="com.intellij.ui.TreeUIHelperImpl"/>
-    <applicationService serviceInterface="com.intellij.ui.ExpandableItemsHandlerFactory"
+    <applicationService serviceInterface="consulo.ui.ex.awt.ExpandableItemsHandlerFactory"
                         serviceImplementation="com.intellij.ui.ExpandTipHandlerFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.keymap.KeymapGroupFactory"
                         serviceImplementation="com.intellij.openapi.keymap.impl.KeymapGroupFactoryImpl"/>
@@ -1293,7 +1293,6 @@
                         serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingManagerImpl"/>
     <applicationService serviceInterface="com.intellij.ide.plugins.PluginManagerUISettings"
                         serviceImplementation="com.intellij.ide.plugins.PluginManagerUISettings"/>
-    <applicationService serviceImplementation="consulo.application.ui.UISettings"/>
     <applicationService serviceInterface="com.intellij.codeInsight.hint.HintManager"
                         serviceImplementation="com.intellij.codeInsight.hint.HintManagerImpl"/>
     <applicationService serviceInterface="com.intellij.codeInsight.hint.TooltipController"
@@ -2783,7 +2782,7 @@
     <projectService serviceInterface="com.intellij.build.BuildWorkspaceConfiguration"
                     serviceImplementation="consulo.compiler.impl.build.BuildWorkspaceConfigurationImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ui.SuitableFontProvider" serviceImplementation="com.intellij.ui.SuitableFontProviderImpl"/>
+    <applicationService serviceInterface="consulo.ui.ex.awt.SuitableFontProvider" serviceImplementation="com.intellij.ui.SuitableFontProviderImpl"/>
 
     <settingsEntryPointActionProvider implementation="com.intellij.openapi.updateSettings.impl.UpdateSettingsEntryPointActionProvider"/>
 

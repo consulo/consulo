@@ -25,7 +25,7 @@ package com.intellij.openapi.vcs.changes.committed;
 import com.intellij.openapi.vcs.ChangeListColumn;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 
 import javax.swing.*;

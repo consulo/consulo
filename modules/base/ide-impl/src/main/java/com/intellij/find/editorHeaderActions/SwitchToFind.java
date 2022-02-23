@@ -6,7 +6,7 @@ import com.intellij.find.FindUtil;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.dumb.DumbAware;
 import javax.annotation.Nonnull;

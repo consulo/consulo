@@ -18,7 +18,7 @@ package com.intellij.refactoring.util;
 import consulo.language.Language;
 import consulo.project.Project;
 import com.intellij.refactoring.extractMethod.AbstractVariableData;
-import com.intellij.util.ui.ColumnInfo;
+import consulo.ui.ex.awt.ColumnInfo;
 
 import java.util.function.Predicate;
 

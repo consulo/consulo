@@ -1,5 +1,3 @@
-import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
-
 /**
  * @author VISTALL
  * @since 13/01/2022
@@ -61,6 +59,7 @@ open module consulo.ide.impl {
   requires transitive consulo.compiler.artifact.api;
   requires transitive consulo.ide.api;
   requires transitive consulo.component.impl;
+  requires transitive consulo.ui.ex.awt.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -126,8 +125,6 @@ open module consulo.ide.impl {
   requires transitive jakarta.inject;
   requires transitive kava.beans;
   requires transitive org.slf4j;
-
-  uses TargetAWTFacade;
 
   provides consulo.ui.image.IconLibraryDescriptor with consulo.ui.ex.impl.LightIconLibraryDescriptor, consulo.ui.ex.impl.DarkIconLibraryDescriptor;
 
@@ -902,7 +899,6 @@ open module consulo.ide.impl {
   exports com.intellij.tools;
   exports com.intellij.ui;
   exports com.intellij.ui.awt;
-  exports com.intellij.ui.border;
   exports com.intellij.ui.breadcrumbs;
   exports com.intellij.ui.components;
   exports com.intellij.ui.components.breadcrumbs;
@@ -935,7 +931,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.popup.util;
   exports com.intellij.ui.render;
   exports com.intellij.ui.roots;
-  exports com.intellij.ui.scroll;
   exports com.intellij.ui.speedSearch;
   exports com.intellij.ui.stripe;
   exports com.intellij.ui.switcher;
@@ -1128,7 +1123,6 @@ open module consulo.ide.impl {
   //exports consulo.desktop.util;
   exports consulo.desktop.util.awt;
   exports consulo.desktop.util.awt.graphics;
-  exports consulo.desktop.util.awt.html;
   exports consulo.desktop.util.awt.laf;
   exports consulo.desktop.util.awt.migration;
   exports consulo.desktop.wm.impl;
@@ -1264,7 +1258,6 @@ open module consulo.ide.impl {
   exports consulo.ui.docking;
   exports consulo.ui.docking.impl;
   exports consulo.ui.ex.impl;
-  exports consulo.ui.plaf;
   exports consulo.ui.popup;
   //exports consulo.ui.tree;
   exports consulo.ui.tree.impl;

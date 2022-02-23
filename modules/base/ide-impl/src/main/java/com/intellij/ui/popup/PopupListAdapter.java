@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import consulo.util.dataholder.Key;
 import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.ListUtil;
-import com.intellij.ui.ScrollingUtil;
+import consulo.ui.ex.awt.ScrollingUtil;
 import com.intellij.ui.components.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.ui.speedSearch.ListWithFilter;

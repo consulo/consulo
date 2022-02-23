@@ -15,13 +15,11 @@
  */
 package consulo.ui.ex.awt.tree.table;
 
-import com.intellij.ui.TableUtil;
-import com.intellij.ui.table.JBTable;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.ui.accessibility.ScreenReader;
-import consulo.application.ui.awt.JBUI;
-import sun.jvm.hotspot.ui.treetable.TreeTableModel;
-import sun.jvm.hotspot.ui.treetable.TreeTableModelAdapter;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awt.util.TableUtil;
+import consulo.util.lang.ObjectUtil;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

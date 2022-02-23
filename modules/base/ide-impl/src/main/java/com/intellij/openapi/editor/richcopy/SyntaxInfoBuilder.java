@@ -3,7 +3,6 @@ package com.intellij.openapi.editor.richcopy;
 
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.FontPreferences;
@@ -22,6 +21,7 @@ import consulo.application.util.SystemInfo;
 import consulo.language.ast.TokenType;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -533,7 +533,7 @@ public final class SyntaxInfoBuilder {
       int javaFontSize = scheme.getEditorFontSize();
       float fontSize = SystemInfo.isMac || ApplicationManager.getApplication().isHeadlessEnvironment()
                        ? javaFontSize
-                       : javaFontSize * 0.75f / UISettings.getDefFontScale(); // matching font size in external apps
+                       : javaFontSize * 0.75f / UISettingsUtil.getDefFontScale(); // matching font size in external apps
 
       builder = new SyntaxInfo.Builder(myDefaultForeground, myDefaultBackground, fontSize);
       myIndentSymbolsToStrip = indentSymbolsToStrip;

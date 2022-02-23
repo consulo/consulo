@@ -2,7 +2,7 @@
 package com.intellij.ui;
 
 import consulo.ui.ex.awt.NonOpaquePanel;
-import com.intellij.ui.components.panels.OpaquePanel;
+import consulo.ui.ex.awt.OpaquePanel;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;

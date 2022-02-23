@@ -16,7 +16,7 @@
 package com.intellij.diff.actions.impl;
 
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.dumb.DumbAware;
 

@@ -16,12 +16,12 @@
 package com.intellij.openapi.editor.ex.util;
 
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
-import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 
 import java.awt.*;
 
@@ -42,7 +42,7 @@ public class EditorUIUtil {
     g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST, lcdContrastValue);
     g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, DesktopAntialiasingTypeUtil.getKeyForCurrentScope(true));
 
-    UISettings.setupFractionalMetrics(g2d);
+    UISettingsUtil.setupFractionalMetrics(g2d);
   }
 
   public static void hideCursorInEditor(Editor editor) {

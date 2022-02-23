@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonShortcuts;
+import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.configurable.Configurable;

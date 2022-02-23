@@ -25,7 +25,7 @@ import com.intellij.injected.editor.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.navigation.NavigationItem;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;

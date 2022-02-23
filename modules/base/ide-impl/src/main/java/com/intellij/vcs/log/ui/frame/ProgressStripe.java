@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.util.NotNullComputable;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import com.intellij.util.ui.AsyncProcessIcon;
+import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;

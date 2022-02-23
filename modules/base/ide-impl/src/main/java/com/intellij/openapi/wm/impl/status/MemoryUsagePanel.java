@@ -13,6 +13,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -134,7 +135,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
       int barWidth = size.width - INDENT;
       myBufferedImage = ImageUtil.createImage(g, barWidth, size.height, BufferedImage.TYPE_INT_RGB);
       Graphics2D g2 = JBSwingUtilities.runGlobalCGTransform(this, myBufferedImage.createGraphics());
-      UISettings.setupAntialiasing(g2);
+      UISettingsUtil.setupAntialiasing(g2);
 
       g2.setFont(getFont());
       int textHeight = g2.getFontMetrics().getAscent();

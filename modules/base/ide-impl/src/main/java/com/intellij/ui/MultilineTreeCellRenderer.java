@@ -15,12 +15,12 @@
  */
 package com.intellij.ui;
 
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -155,7 +155,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
     currBaseLine += myTextInsets.top;
     g.setFont(getFont());
     g.setColor(fgColor);
-    UISettings.setupAntialiasing(g);
+    UISettingsUtil.setupAntialiasing(g);
 
     if (!StringUtil.isEmpty(myPrefix)) {
       g.drawString(myPrefix, myTextInsets.left - myPrefixWidth + 1, currBaseLine);

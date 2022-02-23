@@ -15,6 +15,8 @@
  */
 package com.intellij.util.ui;
 
+import consulo.ui.ex.awt.ItemRemovable;
+
 /**
  * @author Konstantin Bulenkov
  * @since 11.0

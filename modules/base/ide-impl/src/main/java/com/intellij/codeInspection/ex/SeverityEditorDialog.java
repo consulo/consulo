@@ -47,6 +47,7 @@ import com.intellij.ui.components.JBList;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.style.StandardColors;
 import consulo.util.concurrent.AsyncResult;
 import org.jdom.Element;

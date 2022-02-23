@@ -21,7 +21,7 @@ import consulo.document.impl.event.PrioritizedDocumentListener;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.undoRedo.CommandProcessor;

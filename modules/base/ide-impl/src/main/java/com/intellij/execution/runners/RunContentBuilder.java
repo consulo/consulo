@@ -22,7 +22,7 @@ import com.intellij.execution.ui.ObservableConsoleView;
 import com.intellij.execution.ui.RunContentManagerImpl;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;

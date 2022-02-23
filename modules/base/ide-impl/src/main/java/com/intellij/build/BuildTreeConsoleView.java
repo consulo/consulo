@@ -18,7 +18,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.OccurenceNavigator;
 import com.intellij.ide.OccurenceNavigatorSupport;
 import com.intellij.ide.actions.EditSourceAction;
-import consulo.application.ui.UISettings;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.tree.AbstractTreeStructure;
 import consulo.ui.ex.awt.tree.NodeDescriptor;
@@ -46,6 +45,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NonNavigatable;
@@ -55,7 +55,7 @@ import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.ui.tree.AsyncTreeModel;
 import com.intellij.ui.tree.StructureTreeModel;
 import com.intellij.ui.tree.TreePathUtil;
-import com.intellij.ui.tree.TreeVisitor;
+import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
@@ -97,7 +97,7 @@ import java.util.function.Supplier;
 import static com.intellij.build.BuildConsoleUtils.getMessageTitle;
 import static com.intellij.build.BuildView.CONSOLE_VIEW_NAME;
 import static com.intellij.openapi.util.text.StringUtil.isEmpty;
-import static com.intellij.ui.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
+import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
 import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
 import static com.intellij.ui.render.RenderingHelper.SHRINK_LONG_RENDERER;
 import static com.intellij.ui.tree.ui.DefaultTreeUI.AUTO_EXPAND_ALLOWED;
@@ -1275,7 +1275,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
 
     @Override
     protected void paintComponent(Graphics g) {
-      UISettings.setupAntialiasing(g);
+      UISettingsUtil.setupAntialiasing(g);
       Shape clip = null;
       int width = getWidth();
       int height = getHeight();

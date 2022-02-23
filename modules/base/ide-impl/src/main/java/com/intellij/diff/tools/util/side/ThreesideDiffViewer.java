@@ -33,7 +33,7 @@ import com.intellij.diff.util.ThreeSide;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;

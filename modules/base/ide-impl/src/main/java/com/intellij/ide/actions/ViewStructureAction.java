@@ -32,7 +32,7 @@ import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.virtualFileSystem.VirtualFile;

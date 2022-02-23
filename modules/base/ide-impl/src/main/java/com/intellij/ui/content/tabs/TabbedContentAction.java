@@ -15,17 +15,13 @@
  */
 package com.intellij.ui.content.tabs;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.ShadowAction;
 import consulo.disposer.Disposer;
 import com.intellij.ui.UIBundle;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 
 import javax.annotation.Nonnull;
 

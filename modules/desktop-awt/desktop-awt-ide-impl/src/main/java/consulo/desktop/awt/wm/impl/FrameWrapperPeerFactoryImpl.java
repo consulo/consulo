@@ -16,13 +16,13 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.dataContext.DataManager;
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.openapi.ui.FrameWrapperPeerFactory;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
@@ -176,7 +176,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
 
     @Override
     public void paint(Graphics g) {
-      UISettings.setupAntialiasing(g);
+      UISettingsUtil.setupAntialiasing(g);
       super.paint(g);
     }
   }
@@ -274,7 +274,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
 
     @Override
     public void paint(Graphics g) {
-      UISettings.setupAntialiasing(g);
+      UISettingsUtil.setupAntialiasing(g);
       super.paint(g);
     }
   }

@@ -27,7 +27,7 @@ import consulo.codeEditor.*;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;

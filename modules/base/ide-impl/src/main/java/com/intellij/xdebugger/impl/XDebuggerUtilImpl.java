@@ -21,7 +21,7 @@ import consulo.debugger.breakpoint.*;
 import consulo.language.Language;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.codeEditor.Caret;

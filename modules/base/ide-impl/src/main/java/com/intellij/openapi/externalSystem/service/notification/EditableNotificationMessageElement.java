@@ -19,15 +19,11 @@ import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.errorTreeView.*;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
-import com.intellij.openapi.actionSystem.*;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPopupMenu;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

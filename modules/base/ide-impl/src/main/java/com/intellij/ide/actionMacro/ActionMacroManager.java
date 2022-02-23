@@ -46,7 +46,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.util.Consumer;
-import com.intellij.util.ui.AnimatedIcon;
+import consulo.ui.ex.awt.AnimatedIconComponent;
 import com.intellij.util.ui.BaseButtonBehavior;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.awt.UIUtil;
@@ -172,9 +172,9 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
 
   private class Widget implements CustomStatusBarWidget, Consumer<MouseEvent> {
 
-    private AnimatedIcon myIcon =
-            new AnimatedIcon("Macro recording", new Image[]{AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3, AllIcons.Ide.Macro.Recording_4},
-                             AllIcons.Ide.Macro.Recording_1, 1000);
+    private AnimatedIconComponent myIcon =
+            new AnimatedIconComponent("Macro recording", new Image[]{AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3, AllIcons.Ide.Macro.Recording_4},
+                                      AllIcons.Ide.Macro.Recording_1, 1000);
     private StatusBar myStatusBar;
     private final WidgetPresentation myPresentation;
 

@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.TreeExpander;
 import consulo.ui.ex.action.ActionManager;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
+import consulo.ui.ex.action.IdeActions;
 
 public class ExpandAllToolbarAction extends TreeExpandAllActionBase {
   private TreeExpander myTreeExpander;

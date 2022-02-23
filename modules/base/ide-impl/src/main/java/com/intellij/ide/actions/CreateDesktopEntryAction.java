@@ -30,7 +30,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.application.util.SystemInfo;
